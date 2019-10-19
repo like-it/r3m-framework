@@ -11,5 +11,10 @@
             "name": "Remco van der Velde",
             "email": "remco@priya.software"
         }
-    ]
+    ],
+    "autoload" : {        
+        "psr-4" : {
+            "R3m\\Io\\" : "src/"
+        }
+    }
 }
