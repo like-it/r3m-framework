@@ -61,6 +61,121 @@ class Core {
             $result[] = $string;
         }
         return $result;
+    }       
+    
+    public static function object($input='', $output='object',$type='root'){
+        if(is_bool($input)){
+            if($output == 'object' || $output == 'json'){
+                $data = new stdClass();
+                if(empty($input)){
+                    $data->false = false;
+                } else {
+                    $data->true = true;
+                }
+                if($output == 'json'){
+                    $data = json_encode($data);
+                }
+                return $data;
+            }
+            elseif($output == 'array') {
+                return array($input);
+            } else {
+                throw new Exception(Core::EXCEPTION_OBJECT_OUTPUT);
+            }
+        }
+        if(is_null($input)){
+            if($output == 'object'){
+                return new stdClass();
+            }
+            elseif($output == 'array'){
+                return array();
+            }
+            elseif($output == 'json'){
+                return '{}';
+            }
+        }
+        if(is_array($input) && $output == 'object'){
+            return Core::array_object($input);
+        }
+        if(is_string($input)){
+            $input = trim($input);
+            if($output=='object'){
+                if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
+                    /* why replace newlines ?
+                     $input = str_replace(
+                     array(
+                     "\r",
+                     "\n"
+                     ),
+                     array(
+                     '',
+                     ''
+                     ),
+                     $input
+                     );
+                     */
+                    $json = json_decode($input);
+                    if(json_last_error()){
+                        new Exception(json_last_error_msg());
+                    }
+                    return $json;
+                }
+                elseif(substr($input,0,1)=='[' && substr($input,-1,1)==']'){
+                    $input = str_replace(
+                        array(
+                            "\r",
+                            "\n"
+                        ),
+                        array(
+                            '',
+                            ''
+                        ),
+                        $input
+                        );
+                    $json = json_decode($input);
+                    if(json_last_error()){
+                        throw new Exception(json_last_error_msg());
+                    }
+                    return $json;
+                }
+            }
+            elseif(stristr($output, 'json') !== false){
+                if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
+                    $input = json_decode($input);
+                }
+            }
+            elseif($output=='array'){
+                if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
+                    return json_decode($input, true);
+                }
+                elseif(substr($input,0,1)=='[' && substr($input,-1,1)==']'){
+                    return json_decode($input, true);
+                }
+            }
+        }
+        if(stristr($output, 'json') !== false && stristr($output, 'data') !== false){
+            $data = str_replace('"', '&quot;',json_encode($input));
+        }
+        elseif(stristr($output, 'json') !== false && stristr($output, 'line') !== false){
+            $data = json_encode($input);
+        } else {
+            $data = json_encode($input, JSON_PRETTY_PRINT);
+        }
+        if($output=='object'){
+            return json_decode($data);
+        }
+        elseif(stristr($output, 'json') !== false){
+            if($type=='child'){
+                return substr($data,1,-1);
+            } else {
+                return $data;
+            }
+        }
+        elseif($output=='array'){
+            return json_decode($data,true);
+        } else {
+            throw new Exception(Core::EXCEPTION_OBJECT_OUTPUT);
+        }
     }
 
     public static function object_delete($attributeList=array(), $object='', $parent='', $key=null){

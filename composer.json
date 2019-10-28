@@ -1,20 +1,23 @@
 {
-    "name": "r3m/framework",
-    "description": "r3m framework",
-    "type": "framework",
-    "require": {
-        "monolog/monolog": "^2.0"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Remco van der Velde",
-            "email": "remco@priya.software"
-        }
-    ],
-    "autoload" : {        
-        "psr-4" : {
-            "R3m\\Io\\" : "src/"
-        }
-    }
+	"name" : "r3m/framework",
+	"description" : "r3m framework",
+	"type" : "framework",
+	"require" : {
+		"monolog/monolog" : "^2.0",
+		"smarty/smarty" : "^3.1"
+	},
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Remco van der Velde",
+			"email" : "remco@priya.software"
+		}
+	],
+	"autoload" : {
+		"files" : [
+			"smarty/smarty/libs/bootstrap.php"
+		],
+		"psr-4" : {
+			"R3m\\Io\\" : "src/"
+		}
+	}
 }
