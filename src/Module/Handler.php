@@ -40,7 +40,7 @@ class Handler {
     
     public const COOKIE_DELETE = 'delete';  
 
-    public static function request($object){
+    public static function request_configure($object){
         $object->data(
             App::NAMESPACE . '.' . 
             Handler::NAME_REQUEST . '.' .
@@ -127,6 +127,8 @@ class Handler {
                 if(substr($request->request, -1) != '/'){
                     $request->request .= '/';
                 }               
+            } else {
+                $request->request = '/';
             }
         }
         return $request;

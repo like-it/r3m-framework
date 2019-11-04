@@ -34,7 +34,7 @@ class Autoload {
     public static function configure($object){
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);        
         $autoload = new Autoload();        
-        $autoload->addPrefix('Host',  $config->data('project.dir.host'));
+        $autoload->addPrefix('Host',  $config->data('project.dir.host'));        
         $autoload->register();               
     }    
     

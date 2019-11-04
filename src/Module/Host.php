@@ -13,112 +13,101 @@ namespace R3m\Io\Module;
 use stdClass;
 use R3m\Io\App;
 use R3m\Io\Config;
-use R3m\Io\Module\Data;
 
 class Host {
     public const SCHEME_HTTP = 'http';
     public const SCHEME_HTTPS = 'https';
-   
+              
     public static function configure($object){
         if(defined('IS_CLI')){
             return $object;
         }
-        $object->data('host.url', Host::url());
-        $object->data('host.scheme', Host::scheme());
-        $object->data('host.extension', Host::extension());
-        $object->data('host.domain', Host::domain());
+        $key = 'host.url';
+        $value = Host::url();
+        $object->data($key, $value);
         
-        $subdomain = Host::subdomain();
+        $key = 'host.scheme';
+        $value = Host::scheme();
+        $object->data($key, $value);
         
-        $object->data('host.subdomain', $subdomain);
+        $key = 'host.extension';
+        $value = Host::extension();
+        $object->data($key, $value);
+        
+        $key = 'host.domain';
+        $value = Host::domain();
+        $object->data($key, $value);
+                
+        $key = 'host.subdomain';
+        $subdomain = Host::subdomain();        
+        $object->data($key, $subdomain);
         
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
-            
-        if(empty($subdomain)){
-            $config->data(
-                'host.dir.root',
+        $key = 'host.dir.root';  
+        if(empty($subdomain)){                     
+            $value = 
                 $config->data('project.dir.root') .
-                'host' .
+                $config->data(Config::DICTIONARY . '.' . Config::HOST) .
                 $config->data('ds') .
-                $object->data('host.domain') .
-                $config->data('ds') .
-                $object->data('host.extension') .
-                $config->data('ds')
-            );
-            $config->data(
-                'host.namespace',                
-                'Host' .
-                '\\' .
-                ucfirst($object->data('host.domain')).
-                '\\' .
-                ucfirst($object->data('host.extension')) .
-                '\\'
-            );
-            
+                Config::ucfirst_sentence(
+                    $object->data('host.domain') .
+                    $config->data('ds') .
+                    $object->data('host.extension') .
+                    $config->data('ds'),
+                    $config->data('ds')
+                );                        
         } else {
-            $config->data(
-                'host.dir.root',                
+            $value = 
                 $config->data('project.dir.root') .
-                'host' .
+                $config->data(Config::DICTIONARY . '.' . Config::HOST) .
                 $config->data('ds') .
-                $object->data('host.subdomain') .
-                $config->data('ds') .
-                $object->data('host.domain') .
-                $config->data('ds') .
-                $object->data('host.extension') .
+                Config::ucfirst_sentence(
+                    $object->data('host.subdomain') .
+                    $config->data('ds') .
+                    $object->data('host.domain') .
+                    $config->data('ds') .
+                    $object->data('host.extension') .
+                    $config->data('ds'),
                 $config->data('ds')
-            );
-            $config->data(
-                'host.namespace',
-                'Host' .
-                '\\' .
-                ucfirst($object->data('host.subdomain')) . //per "." ucfirst ?
-                '\\' .
-                ucfirst($object->data('host.domain')).
-                '\\' .
-                ucfirst($object->data('host.extension')) .
-                '\\'
-            );
-        }        
-        $config->data(
-            'host.dir.data',
+                );            
+        }     
+        $config->data($key, $value);
+        
+        $key = 'host.dir.data';
+        $value = 
             $config->data('host.dir.root') .
-            $config->data('data') .
-            $config->data('ds')             
-        );       
-        $config->data(
-            'host.dir.cache',
-            dirname($config->data('framework.dir.cache')) .
-            $config->data('ds') .
-            Config::HOST .
-            $config->data('ds')
-        );        
-        $config->data(
-            'host.dir.public',
-            $config->data('host.dir.root') .            
-            $config->data(Config::HTML) .
-            $config->data('ds')
-        );
-        $config->data(
-            'host.dir.source',
+            $config->data(Config::DICTIONARY . '.' . Config::DATA) .
+            $config->data('ds');            
+        $config->data($key, $value);
+        
+        $key = 'host.dir.cache';
+        $value = 
+            Dir::name($config->data('framework.dir.cache'), 2) .            
+            $config->data(Config::DICTIONARY . '.' . Config::HOST) .
+            $config->data('ds');
+        $config->data($key, $value);
+            
+        $key = 'host.dir.public';
+        $value = 
             $config->data('host.dir.root') .
-            $config->data(Config::SOURCE) .
-            $config->data('ds')
-        );
-        $config->data(
-            'host.dir.view',
+            $config->data(Config::DICTIONARY . '.' . Config::PUBLIC) .
+            $config->data('ds');
+        $config->data($key, $value);
+        
+        $key = 'host.dir.source';
+        $value = 
             $config->data('host.dir.root') .
-            $config->data(Config::VIEW) .
-            $config->data('ds')
-        );
-        /*
-        $config->data(
-            'host.dir.cli',
+            $config->data(Config::DICTIONARY . '.' . Config::SOURCE) .
+            $config->data('ds');
+
+        $config->data($key, $value);
+            
+        $key = 'host.dir.view';
+        $value =
             $config->data('host.dir.root') .
-            $config->data(Config::CLI) .
-            $config->data('ds')
-        );
-        */      
+            $config->data(Config::DICTIONARY . '.' . Config::VIEW) .
+            $config->data('ds');
+        $config->data($key, $value);                                          
         return $object;
     }
 

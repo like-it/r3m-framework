@@ -17,33 +17,42 @@ use R3m\Io\Module\Handler;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
 
-class Route {
+class Route extends Data{
     public const NAMESPACE = __NAMESPACE__;
     public const NAME = 'Route';
+    public const SELECT = 'Route_select';
+    
+    private $get;
+    
+    public function get($get=null){
+        if($get !== null){
+            $this->setGet($get);
+        }
+        return $this->getGet();        
+    }
+    
+    private function setGet($get=null){
+        $this->get = $get;
+    }
+    
+    private function getGet(){
+        return $this->get;
+    }
     
     public static function request($object){
         if(defined('IS_CLI')){                        
             $request = new stdClass();
-            $request->path = $object->parameter($object->data(HANDLER::REQUEST_INPUT), 0);
-            
-            //check for existence of files.
-            
-//             $url = $object->data(App::NAMESPACE . '.config')->data('framework.dir.cli') . $request->module . '.php';
-                          
-            dd($request);
-            
-            
+            $request->path = $object->parameter($object->data(HANDLER::REQUEST_INPUT), 0);                         
+            dd($request);                      
             if(File::exist($url)){
-                $read = File::read($url);
-                
-                dd($read);
-                
+                $read = File::read($url);                
+                dd($read);                
             }                      
             return $request;                                    
         } else {
             $input = Route::input($object);
             $select = new stdClass();
-            $select->input = $input;
+            $select->input = $input;            
             $select->deep = substr_count($input->request, '/');                                   
             $select->attribute = explode('/', $input->request);
             array_pop($select->attribute);
@@ -62,7 +71,10 @@ class Route {
             }  
             $select->host = array_unique($select->host);
             $request = Route::select($object, $select);
-            return $request;
+            
+            $route =  $object->data(App::NAMESPACE . '.' . Route::NAME);
+//             dd($route);
+            return $route->get($request);            
         }
     }
     
@@ -292,8 +304,7 @@ class Route {
     
     public static function configure($object){
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
-        $url = $config->data('project.dir.data') . $config->data('project.route.filename');
-        
+        $url = $config->data('project.dir.data') . $config->data('project.route.filename');        
         if(empty($config->data('project.route.url'))){
             $config->data('project.route.url', $url);
         }
@@ -301,7 +312,7 @@ class Route {
         
         if(File::Exist($url)){
             $read = File::read($url);            
-            $data = new Data(Core::object($read));            
+            $data = new Route(Core::object($read));            
             $object->data(App::NAMESPACE . '.' . Route::NAME, $data);
         } 
         Route::load($object);

@@ -10,7 +10,6 @@ namespace R3m\Io\Module;
 
 use stdClass;
 use Exception;
-use R3m\Io\App;
 
 class File {
     const CHMOD = 0640;
@@ -28,13 +27,7 @@ class File {
 
     public static function mtime($url=''){
         return filemtime($url);
-    }
-
-    public static function diskusage($url=''){
-        system('du ' . $url, $usage);
-        var_dump($usage);
-        exit;
-    }
+    }    
 
     public static function link($source, $destination){
         system('ln -s ' . $source . ' ' . $destination);
@@ -82,6 +75,7 @@ class File {
                 $group = $explode[1];
             }
         }
+        $output = [];
         if($recursive){
             exec('chown ' . $owner . ':' . $group . ' -R ' . $url, $output);
         } else {
@@ -135,7 +129,7 @@ class File {
             return $resource;
         }
         //change to //flock exec see lock / unlock
-        $lock = flock($resource, LOCK_EX);
+        flock($resource, LOCK_EX);
         for ($written = 0; $written < strlen($data); $written += $fwrite) {
             $fwrite = fwrite($resource, substr($data, $written));
             if ($fwrite === false) {
@@ -163,7 +157,7 @@ class File {
             return $resource;
         }
         //change to //flock exec see lock / unlock
-        $lock = flock($resource, LOCK_EX);
+        flock($resource, LOCK_EX);
         for ($written = 0; $written < strlen($data); $written += $fwrite) {
             $fwrite = fwrite($resource, substr($data, $written));
             if ($fwrite === false) {
