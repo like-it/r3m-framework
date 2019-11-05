@@ -9,7 +9,7 @@
 namespace R3m\Io\Module;
 
 use Exception;
-use Smarty;
+//use Smarty;
 use R3m\Io\App;
 use R3m\Io\Config;
 
