@@ -14,15 +14,8 @@
 		}
 	],
 	"autoload" : {
-		"files" : [
-			"vendor/smarty/smarty/libs/bootstrap.php"
-		],
-		"psr-0" : {
-			"Twig_" : "vendor/twig/twig/lib/"
-		},
 		"psr-4" : {
-			"R3m\\Io\\" : "src/",
-			"Twig\\" : "vendor/twig/twig/src/"
+			"R3m\\Io\\" : "src/"
 		}
 	}
 }
