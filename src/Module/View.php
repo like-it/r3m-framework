@@ -9,13 +9,13 @@
 namespace R3m\Io\Module;
 
 use Exception;
-//use Smarty;
 use R3m\Io\App;
 use R3m\Io\Config;
+use R3m\Io\Module\Parse;
 
-class View {
-    public const SMARTY = 'Smarty';
+class View {    
     
+    public const PARSE = 'Parse';
     public const TEMPLATE = 'Template';
     public const COMPILE = 'Compile';
     public const CONFIG = 'Config';
@@ -128,19 +128,21 @@ class View {
     public static function configure($object){
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         
-        $key = 'smarty.dir.template';
-        $value = $config->data('host.dir.cache') . View::SMARTY . $config->data('ds') . View::TEMPLATE . $config->data('ds');
+        $key = 'parse.dir.template';
+        $value = $config->data('host.dir.cache') . View::PARSE . $config->data('ds') . View::TEMPLATE . $config->data('ds');
         $config->data($key, $value);
         
-        $key = 'smarty.dir.compile';
-        $value = $config->data('host.dir.cache') . View::SMARTY . $config->data('ds') . View::COMPILE . $config->data('ds');
+        $key = 'parse.dir.compile';
+        $value = $config->data('host.dir.cache') . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
+        $value = $config->data('host.dir.data') . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
         $config->data($key, $value);
         
-        $key = 'smarty.dir.cache';
-        $value = $config->data('host.dir.cache') . View::SMARTY . $config->data('ds') . View::CACHE . $config->data('ds');
+        $key = 'parse.dir.cache';
+        $value = $config->data('host.dir.cache') . View::PARSE . $config->data('ds') . View::CACHE . $config->data('ds');
+        $value = $config->data('host.dir.data') . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
         $config->data($key, $value);
         
-        $key = 'smarty.dir.plugin';
+        $key = 'parse.dir.plugin';
         $value = [];
         $value[] =
             $config->data('framework.dir.source') .
@@ -163,7 +165,7 @@ class View {
         ;
         $config->data($key, $value);
                                
-        $key = 'smarty.dir.plugin';
+        $key = 'parse.dir.plugin';
         $value = $config->data($key);
         $value[] =
             $config->data('host.dir.root') .
@@ -173,6 +175,7 @@ class View {
         $config->data($key, $value);                                    
     }
     
+    /*
     public function view($object, $url=''){
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $dir = Dir::name($url);
@@ -196,6 +199,7 @@ class View {
         
         
     }
+    */
     
     /**
      * 
@@ -205,8 +209,21 @@ $twig = new \Twig\Environment($loader, [
 ]);
      */
     
+    public static function view($object, $url){
+        
+        $read = File::read($url);        
+        $data = [
+            'title' => 'test'
+            
+        ];                
+        $result = Parse::compile($read, $data);
+        
+        
+        dd($url);
+    }
+    
     /*
-    public function view($object, $url=''){
+    public static function view($object, $url=''){
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);        
         $dir = Dir::name($url);                
         $dir_template = $dir;
@@ -228,8 +245,9 @@ $twig = new \Twig\Environment($loader, [
         $list = $config->data('smarty.dir.plugin');        
         if(!empty($list) && is_array($list)){
             foreach ($list as $path){
-                if(File::exist($path)){                    
-                    $smarty->addPluginsDir($path);
+                if(File::exist($path)){ 
+                    d($path);
+                    $smarty->setPluginsDir($path);
                 }                
             }
         }               
@@ -251,6 +269,6 @@ $twig = new \Twig\Environment($loader, [
         $smarty->error_reporting = E_ALL;        
         $fetch = trim($smarty->fetch($url));              
         return $fetch;
-    }
-    */
+    } 
+    */   
 }
