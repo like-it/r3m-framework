@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d46ad1e0f401fc775b2f7b867865965",
+    "content-hash": "de84982bf2bd7541398f25ceb6477a59",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -133,6 +133,39 @@
                 "psr-3"
             ],
             "time": "2019-11-01T11:05:21+00:00"
+        },
+        {
+            "name": "r3m/module-parse",
+            "version": "0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/like-it/r3m-module-parse.git",
+                "reference": "1060266bb0da0fa619f0b47fd987c6d9c0580492"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/like-it/r3m-module-parse/zipball/1060266bb0da0fa619f0b47fd987c6d9c0580492",
+                "reference": "1060266bb0da0fa619f0b47fd987c6d9c0580492",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "R3m\\Io\\Module\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Remco",
+                    "email": "remco@priya.software"
+                }
+            ],
+            "description": "Templating",
+            "time": "2019-11-05T19:26:12+00:00"
         },
         {
             "name": "smarty/smarty",
