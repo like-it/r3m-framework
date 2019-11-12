@@ -12,9 +12,9 @@ use stdClass;
 use Exception;
 
 class File {
-    const CHMOD = 0640;
-    const TYPE = 'File';
-    const SCHEME_HTTP = 'http';
+    public const CHMOD = 0640;
+    public const TYPE = 'File';
+    public const SCHEME_HTTP = 'http';            
 
     public static function is($url=''){
         $url = rtrim($url, '/');
