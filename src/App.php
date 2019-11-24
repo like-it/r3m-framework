@@ -9,6 +9,7 @@ use R3m\Io\Module\Host;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Route;
 use R3m\Io\Module\File;
+use R3m\Io\Module\FileRequest;
 use R3m\Io\Module\View;
 
 use Exception;
@@ -30,17 +31,25 @@ class App extends Data {
         View::configure($object);
 //         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         Autoload::configure($object);
-        Route::configure($object);        
-        $route = Route::request($object);                              
-        if($route === false){
-            $object->data('smarty.request', Route::input($object)->request);            
-            echo View::get($object, '404');
-            die;
+        Route::configure($object);
+        
+        $file = FileRequest::get($object);
+        
+        if($file === false){
+            $route = Route::request($object);            
+            if($route === false){
+                throw new Exception('couldn\'t determine route');
+                //             $object->data('view.request', Route::input($object)->request);
+                //             echo View::view($object, '404.tpl');
+                //             die;
+            } else {
+                $result = $route->controller::{$route->function}($object);
+                //             dd($result);
+                return $result;
+            }       
         } else {
-            $result = $route->controller::{$route->function}($object);
-//             dd($result);
-            return $result;
-        }        
+            return $file;
+        }                                       
     }
     
     public function request($attribute=null, $value=null){

@@ -11,8 +11,10 @@ namespace R3m\Io\Module;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
+use R3m\Io\Module\Twig\Extension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use Twig\TwigFilter;
 
 class View {    
     
@@ -118,33 +120,74 @@ class View {
         $config->data($key, $value);                                    
     }
     
-    
+    /*
     public function view($object, $url=''){
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $dir = Dir::name($url);
+        $file = str_replace($dir, '', $url);
         $dir_template = $dir;
-                
         $dir_base = Dir::name($dir);
         $dir_config = $dir_base . $config->data(Config::DICTIONARY . '.' . Config::DATA) . $config->data('ds');
         $dir_compile = $config->data('parse.dir.compile');
         $dir_cache = $config->data('parse.dir.cache');
         
         $loader = new FilesystemLoader($dir_template);
+        
+        //         dd($dir_cache);
+        
         $twig = new Environment($loader, [
             'cache' => $dir_cache,
             'debug' => true
         ]);
-//         $twig->addGlobal('text', new Text());
+        
+        $twig->addExtension(new Extension($object));
+        
+        
+        //         $template = new Template();
+        
+        //         echo $template->web();
+        //         die;
+        
+        //         $filter = new TwigFilter('web', ['Template', 'web']);
+        
+        //         $twig->addFilter($filter);
+        //         $twig->addGlobal("template", new Template());
+        $data = (array) $object->data();
+        $data['template'] = $file;
+        //         $load = 'Structure.tpl';
+        $load = $file;
+        
+        
+        $template = $twig->load($load);
+        return $template->render($data);
+    }
+    */
+    
+    public function view($object, $url=''){
+        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+        $dir = Dir::name($url);
+        $file = str_replace($dir, '', $url);        
+        $dir_template = $dir;                
+        $dir_base = Dir::name($dir);
+        $dir_config = $dir_base . $config->data(Config::DICTIONARY . '.' . Config::DATA) . $config->data('ds');
+        $dir_compile = $config->data('parse.dir.compile');
+        $dir_cache = $config->data('parse.dir.cache');
+        
+        $read = File::read($url);
+        
+        $parse = new Parse($object);
+        
+        $read = $parse->compile($read, []);
+        
+        
+        dd($read);
+        
+//         $parse = new Parse();
         
         
         
-        $template = $twig->load('Welcome.tpl');
         
-        echo $template->render(['the' => 'variables', 'go' => 'here']);
-        die;
-        
-        
-        
+                                       
     }
       
 }

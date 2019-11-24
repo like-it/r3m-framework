@@ -22,21 +22,26 @@ class Route extends Data{
     public const NAME = 'Route';
     public const SELECT = 'Route_select';
     
-    private $get;
+    private $current;
     
-    public function get($get=null){
-        if($get !== null){
-            $this->setGet($get);
+    public function current($current=null){
+        if($current !== null){
+            $this->setCurrent($current);
         }
-        return $this->getGet();        
+        return $this->getCurrent();        
     }
     
-    private function setGet($get=null){
-        $this->get = $get;
+    private function setCurrent($current=null){
+        $this->current = $current;
     }
     
-    private function getGet(){
-        return $this->get;
+    private function getCurrent(){
+        return $this->current;
+    }
+    
+    public function get($name='', $option=[]){
+        d($option);
+        dd($name);
     }
     
     public static function request($object){
@@ -74,7 +79,7 @@ class Route extends Data{
             
             $route =  $object->data(App::NAMESPACE . '.' . Route::NAME);
 //             dd($route);
-            return $route->get($request);            
+            return $route->current($request);            
         }
     }
     
