@@ -13,6 +13,11 @@ use R3m\Io\Module\Data;
 use Exception;
 
 class Value {
+    public const TYPE_CAST_BOOLEAN = 'bool';
+    public const TYPE_CAST_INT = 'int';
+    public const TYPE_CAST_FLOAT = 'float';
+    public const TYPE_CAST_STRING = 'string';
+
 
     public static function get($record=[]){
         switch($record['type']){
@@ -21,6 +26,7 @@ class Value {
                 return $record['execute'];
             break;
             case Token::TYPE_BOOLEAN :
+            case Token::TYPE_EXCLAMATION :
                 return $record['value'];
             break;
             case Token::TYPE_STRING :
@@ -31,14 +37,40 @@ class Value {
                 return $record['value'];
             break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
-                return '$this->parse()->compile(' . substr($record['value'], 1, -1) . ', $this->storage()->data())';
+                return '$this->parse()->compile(\'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)) . '\', $this->storage()->data())';
+            break;
+            case Token::TYPE_CAST :
+                return Value::getCast($record);
             break;
             default:
-                $debug = debug_backtrace(true);
-                dd($debug);
+//                 $debug = debug_backtrace(true);
+//                 dd($debug);
                 d($record);
                 throw new Exception('Variable value type ' .  $record['type'] . ' not defined');
         }
+    }
+
+    private function getCast($record=[]){
+        switch(strtolower($record['value'])){
+            case 'bool':
+            case 'boolean':
+                $result = Value::TYPE_CAST_BOOLEAN;
+            break;
+            case 'int':
+            case 'integer':
+                $result = Value::TYPE_CAST_INT;
+            break;
+            case 'float':
+            case 'double':
+                $result = Value::TYPE_CAST_FLOAT;
+            break;
+            case 'string':
+                $result = Value::TYPE_CAST_STRING;
+            break;
+            default:
+                throw new Exception('could not create cast: ' . $record['value']);
+        }
+        return '(' . $result . ')';
     }
 
 

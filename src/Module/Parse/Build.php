@@ -263,13 +263,16 @@ class Build {
 
                 switch($type){
                     case Build::VARIABLE_ASSIGN :
-                        $run[] = $this->indent(2) . Variable::Assign($this, $selection, $storage);
+                        $run[] = $this->indent(2) . Variable::Assign($this, $selection, $storage) . ';';
                     break;
                     case Build::VARIABLE_DEFINE :
-                        $run[] = $this->indent(2) . Variable::Define($this, $selection, $storage);
+                        $run[] = $this->indent(2) . 'echo' . ' ' . Variable::Define($this, $selection, $storage) . ';';
+                    break;
+                    case Build::METHOD :
+                        $run[] = $this->indent(2) . 'echo' . ' ' . Method::create($this, $selection, $storage) . ';';
                     break;
                     default:
-                        throw new Exception('type undefined');
+                        throw new Exception('type (' . $type . ') undefined');
 
                 }
                 $is_tag = false;
@@ -297,12 +300,14 @@ class Build {
                     return Build::VARIABLE_DEFINE;
                 }
             break;
+            case Token::TYPE_METHOD :
+                return Build::METHOD;
             default:
-                throw new Exception('Undefined type');
+                d($record);
+                throw new Exception('Undefined type (' . $record['type'] . ')');
 
         }
     }
-
 
     private function createRequire($document=[]){
         $document = $this->createRequireCategory('modifier', $document);
@@ -445,6 +450,7 @@ class Build {
             if($record['type'] == Token::TYPE_METHOD){
                 $name = 'function_' . str_replace('.', '_', $record['method']['name']);
                 $tree[$nr]['method']['php_name'] = $name;
+//                 d($name);
                 $storage->data('function.' . $name, new stdClass());
             }
         }

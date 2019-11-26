@@ -22,7 +22,8 @@ class Variable {
                 $assign = '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $value = Variable::getValue($build, $token, $storage);
-                $assign .= $value . ');';
+//                 d($value);
+                $assign .= $value . ')';
                 return $assign;
             break;
             case '+=' :
@@ -34,7 +35,7 @@ class Variable {
                 $assign .= '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\'), ';
                 $value = Variable::getValue($build, $token, $storage);
-                $assign .= $value . '));';
+                $assign .= $value . '))';
                 return $assign;
             break;
             case '-=' :
@@ -46,7 +47,7 @@ class Variable {
                 $assign .= '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\'), ';
                 $value = Variable::getValue($build, $token, $storage);
-                $assign .= $value . '));';
+                $assign .= $value . '))';
                 return $assign;
             break;
             case '.=' :
@@ -58,7 +59,7 @@ class Variable {
                 $assign .= '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\'), ';
                 $value = Variable::getValue($build, $token, $storage);
-                $assign .= $value . '));';
+                $assign .= $value . '))';
                 return $assign;
             break;
             case '++' :
@@ -69,7 +70,7 @@ class Variable {
                 $assign .= '$this->assign_plus_plus(' ;
                 $assign .= '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\')';
-                $assign .= '));';
+                $assign .= '))';
                 return $assign;
             break;
             case '--' :
@@ -80,7 +81,7 @@ class Variable {
                 $assign .= '$this->assign_min_min(' ;
                 $assign .= '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\')';
-                $assign .= '));';
+                $assign .= '))';
                 return $assign;
             break;
             default: throw new Exception('Variable operator not defined');
@@ -107,7 +108,16 @@ class Variable {
                     $define_modifier .= $modifier['php_name'] . '($this->parse(), $this->storage(), ' . $define . ', ';
                     if($modifier['has_attribute']){
                         foreach($modifier['attribute'] as $attribute){
-                            $define_modifier .= $attribute['value'] . ', ';
+                            d($variable['variable']['modifier'][1][0]);
+                            switch($attribute['type']){
+                                case 'variable' :
+                                    $temp = [];
+                                    $temp[] = $attribute;
+                                    $define_modifier .= Variable::define($build, $temp, $storage) . ', ';
+                                break;
+                                default :
+                                    $define_modifier .= Value::get($attribute) . ', ';
+                            }
                         }
                     }
                     $define_modifier = substr($define_modifier, 0, -2) . ')';
@@ -116,7 +126,7 @@ class Variable {
                 }
             }
         }
-        return 'echo ' . $define . ';';
+        return $define;
     }
 
     public static function getValue($build, $token=[], Data $storage){
@@ -167,9 +177,18 @@ class Variable {
                 break;
             }
         }
-        $record = reset($operator);
-        $record = Method::get($build, $record, $storage);
-        return Value::get($record);
+        $operator_counter = 0;
+        $result = '';
+        while(count($operator) >= 1){
+            $record = array_shift($operator);
+            $record = Method::get($build, $record, $storage);
+            $result .= Value::get($record);
+            $operator_counter++;
+            if($operator_counter > $operator_max){
+                break;
+            }
+        }
+        return $result;
     }
 
 }

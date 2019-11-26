@@ -9,6 +9,7 @@
 
 namespace R3m\Io\Module\Parse;
 
+use Exception;
 use R3m\Io\Module\Data;
 
 class Method {
@@ -44,6 +45,16 @@ class Method {
             dd($record);
         }
         return $record;
+    }
+
+    public static function create($build, $token=[], Data $storage){
+        $method = array_shift($token);
+        $record = Method::get($build, $method, $storage);
+        if($record['type'] === Token::TYPE_CODE){
+            return $record['value'];
+        }
+        d($record);
+        throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
 }

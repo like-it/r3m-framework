@@ -119,7 +119,8 @@ class Token {
         Token::TYPE_CURLY_CLOSE,
         Token::TYPE_DOT,
         Token::TYPE_COMMA,
-        Token::TYPE_SEMI_COLON
+        Token::TYPE_SEMI_COLON,
+        Token::TYPE_EXCLAMATION
     ];
 
     public const TYPE_NAME_BREAK = [
@@ -136,6 +137,8 @@ class Token {
         Token::TYPE_SEMI_COLON,
         Token::TYPE_COLON,
         Token::TYPE_DOUBLE_COLON,
+        Token::TYPE_EXCLAMATION,
+        Token::TYPE_IS
     ];
 
     public const TYPE_STRING_BREAK = [
@@ -613,12 +616,34 @@ class Token {
         $prepare = Token::prepare($prepare, $count);
         $token = Token::define($prepare);
         $token = Token::group($token);
+        $token = Token::cast($token);
         $token = Token::method($token);
 //         dd($token[8]['method']['attribute']);
         return $token;
     }
 
-    public function method($token=[]){
+    public static function cast($token=[]){
+        $previous_nr = null;
+        $previous_previous_nr = null;
+        foreach($token as $nr => $record){
+            if(
+                $previous_nr !== null &&
+                $previous_previous_nr !== null &&
+                $record['value'] == ')' &&
+                $token[$previous_previous_nr]['value'] == '(' &&
+                $token[$previous_nr]['type'] == Token::TYPE_STRING
+            ){
+                $token[$previous_nr]['type'] = Token::TYPE_CAST;
+                unset($token[$nr]);
+                unset($token[$previous_previous_nr]);
+            }
+            $previous_previous_nr = $previous_nr;
+            $previous_nr = $nr;
+        }
+        return $token;
+    }
+
+    public static function method($token=[]){
         $selection = [];
         $collect = false;
         $depth = null;
@@ -664,15 +689,11 @@ class Token {
                 $token[$target]['method']['attribute'][$attribute_nr][$nr] = $record;
                 unset($token[$nr]);
             }
-
-
         }
-
-
         return $token;
     }
 
-    public function group($token=[]){
+    public static function group($token=[]){
         $is_outside = true;
         $result = [];
         foreach($token as $nr => $record){
@@ -804,7 +825,7 @@ class Token {
         return $token;
     }
 
-    public static function prepare($token=[], $count=0){
+    private static function prepare($token=[], $count=0){
         $bug = false;
         $hex = null;
         $start = null;
@@ -1284,7 +1305,8 @@ class Token {
                 }
                 if(
                     $method_nr !== null &&
-                    isset($before_reverse[0])
+                    isset($before_reverse[0]) &&
+                    $token[$method_nr]['type'] != Token::TYPE_VARIABLE
                     ){
                         $value = implode('', array_reverse($before_reverse));
                         $token[$method_nr]['type'] = Token::TYPE_METHOD;
