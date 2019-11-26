@@ -11,7 +11,8 @@ namespace R3m\Io\Module\Parse;
 
 class Token {
     public const TYPE_NULL = 'null';
-    public const TYPE_STRING = 'string';    
+    public const TYPE_STRING = 'string';
+    public const TYPE_CODE = 'code';
     public const TYPE_BOOLEAN = 'boolean';
     public const TYPE_BOOLEAN_AND = 'boolean-and';
     public const TYPE_BOOLEAN_OR = 'boolean-or';
@@ -103,12 +104,12 @@ class Token {
     public const LITERAL_OPEN = '{literal}';
     public const LITERAL_CLOSE = '{/literal}';
     public const TYPE_TAG_CLOSE = 'tag-close';
-    
+
     public const DIRECTION_LTR = 'ltr';
     public const DIRECTION_RTL = 'rtl';
-    
+
     public const MODIFIER_DIRECTION = 'direction';
-    
+
     public const TYPE_SINGLE = [
         Token::TYPE_PARENTHESE_OPEN,
         Token::TYPE_PARENTHESE_CLOSE,
@@ -120,7 +121,7 @@ class Token {
         Token::TYPE_COMMA,
         Token::TYPE_SEMI_COLON
     ];
-    
+
     public const TYPE_NAME_BREAK = [
         Token::TYPE_WHITESPACE,
         Token::TYPE_PARENTHESE_OPEN,
@@ -136,7 +137,7 @@ class Token {
         Token::TYPE_COLON,
         Token::TYPE_DOUBLE_COLON,
     ];
-    
+
     public const TYPE_STRING_BREAK = [
         Token::TYPE_METHOD,
         Token::TYPE_VARIABLE,
@@ -144,7 +145,7 @@ class Token {
         Token::TYPE_COMMA,
         Token::TYPE_SEMI_COLON
     ];
-    
+
     public const TYPE_ASSIGN = [
         '=',
         '+=',
@@ -159,14 +160,14 @@ class Token {
         '^='.
         '&=',
         '|='
-    ];    
-    
+    ];
+
     public static function split($string='', $length=1, $encoding='UTF-8') {
         $array = [];
         if(is_array($string)){
             $debug = debug_backtrace(true);
             dd($debug);
-            
+
         }
         $strlen = mb_strlen($string);
         for($i=0; $i<$strlen; $i=$i+$length){
@@ -375,7 +376,7 @@ class Token {
         }
         return $record;
     }
-    
+
     public static function tree($string=''){
         $array = Token::split($string);
         $token = array();
@@ -609,13 +610,69 @@ class Token {
             $prepare[] = $record;
             unset($token[$nr]);
         }
-        $prepare = Token::prepare($prepare, $count);        
+        $prepare = Token::prepare($prepare, $count);
         $token = Token::define($prepare);
         $token = Token::group($token);
+        $token = Token::method($token);
+//         dd($token[8]['method']['attribute']);
         return $token;
     }
-    
-    private function group($token=[]){
+
+    public function method($token=[]){
+        $selection = [];
+        $collect = false;
+        $depth = null;
+        $target = null;
+        $skip = 0;
+        $skip_unset = 0;
+        $attribute_nr = 0;
+        foreach($token as $nr => $record){
+            if($skip > 0){
+                $skip--;
+                continue;
+            }
+            elseif($skip_unset > 0){
+                unset($token[$nr]);
+                $skip_unset--;
+                continue;
+            }
+            if(
+                $target === null &&
+                $record['type'] == Token::TYPE_METHOD
+            ){
+                $target = $nr;
+
+                $depth = $record['depth'];
+                $skip_unset = 1;
+            }
+            elseif(
+                array_key_exists($target, $token) &&
+                $record['value'] == ')' &&
+                $depth == $record['depth'] - 1
+            ){
+                $target = null;
+                $depth = null;
+                $attribute_nr = 0;
+                unset($token[$nr]);
+            }
+            elseif($target !== null){
+                if($record['type'] == Token::TYPE_COMMA){
+                    $attribute_nr++;
+                    unset($token[$nr]);
+                    continue;
+                }
+                $token[$target]['method']['attribute'][$attribute_nr][$nr] = $record;
+                unset($token[$nr]);
+            }
+
+
+        }
+
+
+        return $token;
+    }
+
+    public function group($token=[]){
         $is_outside = true;
         $result = [];
         foreach($token as $nr => $record){
@@ -623,11 +680,11 @@ class Token {
                 $is_outside = false;
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
-                $is_outside = true;    
+                $is_outside = true;
                 continue;
             }
             if($is_outside === true){
-                $is_outside = $nr;                
+                $is_outside = $nr;
             } elseif($is_outside === false) {
                 if($record['type'] == Token::TYPE_WHITESPACE){
                     unset($token[$nr]);
@@ -638,32 +695,61 @@ class Token {
                 $token[$is_outside]['type'] = Token::TYPE_STRING;
                 unset($token[$nr]);
             }
-        }        
+        }
         return $token;
     }
-    
-    private static function define($token=[]){
-        $define = [];        
+
+    private static function modifier($token=[]){
+        foreach($token as $token_nr => $modifier_list){
+            $modifier = null;
+            $is_attribute = 0;
+            foreach($modifier_list as $modifier_nr => $modifier_record){
+                if($modifier === null){
+                    $modifier = $modifier_nr;
+                    continue;
+                }
+                if($modifier_record['value'] == ':'){
+                    $is_attribute++;
+                    unset($token[$token_nr][$modifier_nr]);
+                    continue;
+                }
+                if($is_attribute == 0){
+                    $token[$token_nr][$modifier]['value'] .= $modifier_record['value'];
+                    $token[$token_nr][$modifier]['has_attribute'] = false;
+                    unset($token[$token_nr][$modifier_nr]);
+                } else {
+                    $token[$token_nr][$modifier]['attribute'][] = $modifier_record;
+                    $token[$token_nr][$modifier]['has_attribute'] = true;
+                    unset($token[$token_nr][$modifier_nr]);
+                }
+            }
+        }
+        return $token;
+    }
+
+
+    public static function define($token=[]){
+        $define = [];
         $method = [];
         $variable = [];
         $unset = [];
         $is_method = null;
         $is_variable = null;
         $depth = null;
-        $attribute_nr = 0; 
+        $attribute_nr = 0;
         $variable_nr = 0;
         foreach($token as $nr => $record){
             if($record['type'] == Token::TYPE_METHOD){
                 $is_method = $nr;
-                $depth = $record['depth'];                
+                $depth = $record['depth'];
             }
-            elseif($is_method !== null){                
+            elseif($is_method !== null){
                 if($record['value'] == '(' && $record['depth'] == $depth + 1){
                     if(!empty($method)){
                         foreach($method as $unset => $item){
-                            $token[$is_method]['value'] .= $item['value'];                            
+                            $token[$is_method]['value'] .= $item['value'];
                             unset($token[$unset]);
-                        }                                                
+                        }
                     }
                     $method = [];
                     $is_method = null;
@@ -673,11 +759,11 @@ class Token {
                 if($record['type'] == Token::TYPE_WHITESPACE){
                     continue;
                 }
-                $method[$nr] = $record;                                
+                $method[$nr] = $record;
             }
             elseif(
-                $record['type'] == Token::TYPE_VARIABLE && 
-                key_exists('has_modifier', $record['variable']) && 
+                $record['type'] == Token::TYPE_VARIABLE &&
+                key_exists('has_modifier', $record['variable']) &&
                 $record['variable']['has_modifier'] === true
             ){
                 $is_variable = $nr;
@@ -688,7 +774,7 @@ class Token {
                     unset($token[$nr]);
                     continue;
                 }
-                elseif($record['type'] == Token::TYPE_PARENTHESE_CLOSE){                    
+                elseif($record['type'] == Token::TYPE_PARENTHESE_CLOSE){
                     continue;
                 }
                 elseif($record['type'] == Token::TYPE_PIPE){
@@ -697,27 +783,28 @@ class Token {
                     continue;
                 }
                 elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
+                    $variable = Token::modifier($variable);
                     $token[$is_variable]['variable']['modifier'] = $variable;
                     $is_variable = null;
-                    $variable_nr = 0;                
+                    $variable_nr = 0;
                     $variable = [];
                     continue;
                 }
-                               
+
                 if(empty($variable[$variable_nr])){
-                    $variable[$variable_nr] = [];                    
-                    $record['type'] = Token::TYPE_MODIFIER;  
+                    $variable[$variable_nr] = [];
+                    $record['type'] = Token::TYPE_MODIFIER;
 //                     $record['attribute'];
                 }
                 $variable[$variable_nr][] = $record;
                 unset($token[$nr]);
             }
-            
+
         }
         return $token;
     }
-    
-    private static function prepare($token=[], $count=0){
+
+    public static function prepare($token=[], $count=0){
         $bug = false;
         $hex = null;
         $start = null;
@@ -819,7 +906,7 @@ class Token {
                     unset($token[$nr]);
                     $previous_nr = $is_tag_close_nr;
                     continue;
-                    
+
                 }
             }
             elseif($variable_nr !== null){
@@ -845,8 +932,8 @@ class Token {
                             $token[$variable_nr]['variable']['name'] .= $record['value'];
                             $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                             $token[$variable_nr]['variable']['operator'] = $token[$next]['value'];
-                            $check_1 = $next_next + 1;
-                            $check_2 = $next_next + 2;
+                            $check_1 = $next + 1;
+                            $check_2 = $next + 2;
                             if(
                                 isset($token[$check_1]) &&
                                 isset($token[$check_2]) &&
@@ -939,9 +1026,10 @@ class Token {
                                 $token[$variable_nr]['variable']['is_assign'] = true;
                                 $token[$variable_nr]['variable']['operator'] = $token[$next_next]['value'];
                                 $token[$variable_nr]['value'] = $value;
+
                                 unset($token[$variable_nr]['variable']['has_modifier']);
                                 $variable_nr = null;
-                                $skip += 2;
+                                $skip_unset += 2; //was skip
                                 unset($token[$nr]);
                                 $previous_nr = $nr;
                                 continue;
@@ -1125,8 +1213,8 @@ class Token {
                     for($i = ($quote_double['nr'] + 1); $i <= $nr; $i++){
                         unset($token[$i]);
                     }
-                    $token[$quote_double['nr']]['execute'] = str_replace('\\"','"', substr($token[$quote_double['nr']]['value'], 1, -1));
-                    $token[$quote_double['nr']]['is_executed'] = false;
+//                     $token[$quote_double['nr']]['execute'] = str_replace('\\"','"', substr($token[$quote_double['nr']]['value'], 1, -1));
+//                     $token[$quote_double['nr']]['is_executed'] = false;
                     $token[$quote_double['nr']]['is_quote_double'] = true;
                     $quote_double = null;
                     $previous_nr = $nr;
@@ -1185,7 +1273,7 @@ class Token {
                                     Token::TYPE_NAME_BREAK
                                     ) ||
                                 $token[$i]['is_operator'] === true
-                                
+
                                 ){
                                     break;
                             }
@@ -1201,6 +1289,7 @@ class Token {
                         $value = implode('', array_reverse($before_reverse));
                         $token[$method_nr]['type'] = Token::TYPE_METHOD;
                         $token[$method_nr]['method']['name'] = strtolower(trim($value));
+                        //add attributes...
                         //                     $token[$method_nr]['token']['parenthese_close_nr'] = $nr;
                 }
             }
@@ -1318,9 +1407,9 @@ class Token {
         }
         return $token;
     }
-    
-    
-    
+
+
+
     private static function type($char=null){
         switch($char){
             case '.' :
@@ -1400,5 +1489,5 @@ class Token {
                 return Token::TYPE_STRING;
                 break;
         }
-    }        
+    }
 }

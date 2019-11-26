@@ -18,26 +18,29 @@ use R3m\Io\Config;
 class Autoload {
     const DIR = __DIR__;
     const FILE = 'Autoload.json';
+    const NAME = 'Autoload';
     const EXT_PHP = 'php';
     const EXT_TPL = 'tpl';
     const EXT_JSON = 'json';
     const EXT_CLASS_PHP = 'class.php';
     const EXT_TRAIT_PHP = 'trait.php';
-    
+
     protected $expose;
     protected $read;
     protected $fileList;
-    
+
     public $prefixList = array();
     public $environment = 'production';
-        
+
     public static function configure($object){
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);        
-        $autoload = new Autoload();        
-        $autoload->addPrefix('Host',  $config->data('project.dir.host'));        
-        $autoload->register();               
-    }    
-    
+        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+        $autoload = new Autoload();
+        $autoload->addPrefix('Host',  $config->data('project.dir.host'));
+        $autoload->register();
+
+        $object->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M, $autoload);
+    }
+
     public function register($method='load', $prepend=false){
         $functions = spl_autoload_functions();
         if(is_array($functions)){
@@ -50,11 +53,11 @@ class Autoload {
         }
         return spl_autoload_register(array($this, $method), true, $prepend);
     }
-    
+
     public function unregister($method='load'){
         return spl_autoload_unregister(array($this, $method));
     }
-    
+
     public function priority(){
         $functions = spl_autoload_functions();
         foreach($functions as $nr => $function){
@@ -65,22 +68,22 @@ class Autoload {
             }
         }
     }
-    
+
     private function setEnvironment($environment='production'){
         $this->environment = $environment;
     }
-    
+
     private function getEnvironment(){
         return $this->environment;
     }
-    
+
     public function environment($environment=null){
         if($environment !== null){
             $this->setEnvironment($environment);
         }
         return $this->getEnvironment();
     }
-    
+
     public function addPrefix($prefix='', $directory='', $extension=''){
         $prefix = trim($prefix, '\\\/'); //.'\\';
         $directory = str_replace('\\\/', DIRECTORY_SEPARATOR, rtrim($directory,'\\\/')) . DIRECTORY_SEPARATOR; //see File::dir()
@@ -99,15 +102,15 @@ class Autoload {
         }
         $this->setPrefixList($list);
     }
-    
+
     private function setPrefixList($list = array()){
         $this->prefixList = $list;
     }
-    
+
     private function getPrefixList(){
         return $this->prefixList;
     }
-    
+
     public function load($load){
         $file = $this->locate($load);
         if (!empty($file)) {
@@ -116,7 +119,7 @@ class Autoload {
         }
         return false;
     }
-    
+
     public function fileList($item=array(), $url=''){
         if(empty($item)){
             return array();
@@ -172,9 +175,9 @@ class Autoload {
             $data[] = $item['directory'] . $item['baseName'] . '.' . Autoload::EXT_TRAIT_PHP;
             $data[] = $item['directory'] . $item['baseName'] . '.' . Autoload::EXT_PHP;
             $data[] = '[---]';
-            
+
             $this->fileList[$item['baseName']][] = $data;
-            
+
             $result = array();
             foreach($data as $nr => $file){
                 if($file === '[---]'){
@@ -184,7 +187,7 @@ class Autoload {
             }
             return $result;
     }
-    
+
     public function locate($load=null, $is_data=false){
         // $this->environment($this->data('priya.environment'));
         $dir = dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . 'Temp' . DIRECTORY_SEPARATOR;
@@ -260,10 +263,10 @@ class Autoload {
         if($this->environment() == 'development' || !empty($this->expose())){
             $object = new stdClass();
             $object->load = $load;
-            
+
             $debug = debug_backtrace(true);
             $output = [];
-            
+
             for($i=0; $i < 5; $i++){
                 if(!isset($debug[$i])){
                     continue;
@@ -275,8 +278,8 @@ class Autoload {
                 $attribute = $load;
             }
             if(
-                isset($item) && 
-                isset($item['baseName']) && 
+                isset($item) &&
+                isset($item['baseName']) &&
                 isset($this->fileList[$item['baseName']])
             ){
                 $object->{$attribute} = $this->fileList[$item['baseName']];
@@ -296,7 +299,7 @@ class Autoload {
         }
         return false;
     }
-    
+
     public function __destruct(){
         if(!empty($this->read)){
             $dir = dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . 'Temp' . DIRECTORY_SEPARATOR;
@@ -304,7 +307,7 @@ class Autoload {
             $this->write($url, $this->read);
         }
     }
-    
+
     private function cache($file='', $class=''){
         if(empty($this->read)){
             $dir = dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . 'Temp' . DIRECTORY_SEPARATOR;
@@ -320,7 +323,7 @@ class Autoload {
         }
         $this->read->autoload->{$caller}->{$class} = (string) $file;
     }
-    
+
     protected function write($url='', $data=''){
         $data = (string) json_encode($data, JSON_PRETTY_PRINT);
         if(empty($data)){
@@ -353,7 +356,7 @@ class Autoload {
             return $fwrite;
         }
     }
-    
+
     private function read($url=''){
         if(file_exists($url) === false){
             $this->read = new stdClass();
@@ -365,7 +368,7 @@ class Autoload {
         }
         return $this->read;
     }
-    
+
     private function removeExtension($filename='', $extension=array()){
         foreach($extension as $ext){
             $ext = '.' . ltrim($ext, '.');
@@ -377,13 +380,13 @@ class Autoload {
         }
         return $filename;
     }
-    
+
     public function expose($expose=null){
         if(!empty($expose) || $expose === false){
             $this->expose = (bool) $expose;
         }
         return $this->expose;
     }
-    
-    
+
+
 }

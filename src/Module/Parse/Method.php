@@ -11,34 +11,39 @@ namespace R3m\Io\Module\Parse;
 
 use R3m\Io\Module\Data;
 
-class Method {        
-    
-    public static function create($token=[], Data $storage){ 
-        
-        foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_METHOD){
-                $record = Method::attribute($record, $storage);
+class Method {
+
+    public static function get($build, $record=[], Data $storage){
+        if($record['type'] != Token::TYPE_METHOD){
+            return $record;
+        }
+        $attribute = '';
+        if(array_key_exists('attribute', $record['method'])){
+            foreach($record['method']['attribute'] as $nr => $token){
+                $count = count($token);
+                $token = Token::define($token);
+                $token = Token::method($token);
+                $token = $build->require('function', $token);
+                $value = Variable::getValue($build, $token, $storage);
+                $attribute .= $value . ', ';
             }
-            
+            $attribute = substr($attribute, 0, -2);
         }
-        
-        
-        dd($token);
-        
-        
-        return $token;
-    }
-    
-    private static function attribute($method=[], Data $storage){
-        if(array_key_exists('method', $method)){
-            $attribute = $method['method']['attribute'];
-            
-            $tag = Tag::create($attribute);
-            dd($tag);
-            
-            
-            
+        if(array_key_exists('php_name', $record['method'])){
+            $result = $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+            $record['value'] = $result;
+            $record['type'] = Token::TYPE_CODE;
+        } else {
+            d($record);
+            $debug = debug_backtrace(true);
+            dd($debug);
+            $record['method']['php_name'] = 'function_' . str_replace('.', '_', $record['value']);
+            $result = $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+            $record['value'] = $result;
+            $record['type'] = Token::TYPE_CODE;
+            dd($record);
         }
+        return $record;
     }
-    
+
 }
