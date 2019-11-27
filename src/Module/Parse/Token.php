@@ -120,7 +120,9 @@ class Token {
         Token::TYPE_DOT,
         Token::TYPE_COMMA,
         Token::TYPE_SEMI_COLON,
-        Token::TYPE_EXCLAMATION
+        Token::TYPE_EXCLAMATION,
+        Token::TYPE_QUOTE_SINGLE,
+        Token::TYPE_QUOTE_DOUBLE
     ];
 
     public const TYPE_NAME_BREAK = [

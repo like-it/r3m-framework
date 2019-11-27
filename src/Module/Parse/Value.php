@@ -37,10 +37,14 @@ class Value {
                 return $record['value'];
             break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
-                return '$this->parse()->compile(\'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)) . '\', $this->storage()->data())';
+                return '$this->parse()->compile(\'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)) . '\', [], $this->storage())';
             break;
             case Token::TYPE_CAST :
                 return Value::getCast($record);
+            break;
+            case Token::TYPE_VARIABLE :
+                //missing storage from document
+                return '$this->storage()->data(\'' . $record['variable']['attribute'] .'\')';
             break;
             default:
 //                 $debug = debug_backtrace(true);

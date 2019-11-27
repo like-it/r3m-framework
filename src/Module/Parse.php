@@ -58,11 +58,11 @@ class Parse {
         return $this->object;
     }
 
-    public function compile($string='', $data=[]){
-
-        $storage = new Data();
+    public function compile($string='', $data=[], $storage=null){
+        if($storage === null){
+            $storage = new Data();
+        }
         $storage->data($data);
-
 //         $key = sha1($string);
 
 //         $this->object->data('build.compile.key', $key);
@@ -86,6 +86,9 @@ class Parse {
         }
         $document = $build->create('header', $document);
         $document = $build->create('class', $document);
+
+        $build->indent(2);
+
         $document = $build->document($tree, $document);
         $document = $build->create('run', $document);
         $document = $build->create('require', $document);
@@ -95,62 +98,10 @@ class Parse {
         $write = $build->write($url, $document);
 
         $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
-
-        d($class);
-
         $template = new $class(new Parse($this->object()), $storage);
 
         $string = $template->run();
-
-        echo $string;
-        die;
-
-
-
-//         $tree = $build->add('plugin')
-
-//         $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
-
-
-
-
-
-
-//         d($build->storage());
-
-
-
-        /**
-         * require functions, modifiers
-         *
-         * } replace with ; in document (for ending)
-         */
-
-//         dd($tree);
-
-        dd('done');
-
-
-        dd($token);
-
-
-//         $tag = Tag::create($string);
-/*
-        foreach($tag as $nr => $record){
-            if(array_key_exists('tag', $record)){
-                $record = Tag::explore($record);
-                $record = Variable::assign($record, $storage);
-                $record = Variable::define($record, $storage);
-                $record = Method::create($record, $storage);
-
-                $tag[$nr] = $record;
-            }
-        }
-  */
-
-        dd($tag);
         return $string;
-
     }
 
 }

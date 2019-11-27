@@ -108,9 +108,11 @@ class Variable {
                     $define_modifier .= $modifier['php_name'] . '($this->parse(), $this->storage(), ' . $define . ', ';
                     if($modifier['has_attribute']){
                         foreach($modifier['attribute'] as $attribute){
-                            d($variable['variable']['modifier'][1][0]);
                             switch($attribute['type']){
-                                case 'variable' :
+                                case Token::TYPE_METHOD :
+                                    dd($attribute);
+                                break;
+                                case TOKEN::TYPE_VARIABLE:
                                     $temp = [];
                                     $temp[] = $attribute;
                                     $define_modifier .= Variable::define($build, $temp, $storage) . ', ';

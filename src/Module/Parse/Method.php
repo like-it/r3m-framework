@@ -31,7 +31,32 @@ class Method {
             $attribute = substr($attribute, 0, -2);
         }
         if(array_key_exists('php_name', $record['method'])){
-            $result = $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+            if(
+                in_array(
+                    $record['method']['php_name'],
+                    [
+                        'if',
+                        'elseif',
+                        'else.if',
+                        'for',
+                        'foreach',
+                        'while',
+                        'switch'
+                    ]
+                )
+            ){
+                $name = $record['method']['name'];
+                if($name === 'elseif'){
+                    $name = '} ' . $name;
+                }
+                elseif($name === 'else.if'){
+                    $name = '} elseif';
+                }
+                $result = $name . '(' . $attribute . ')';
+            } else {
+                $result = $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+            }
+
             $record['value'] = $result;
             $record['type'] = Token::TYPE_CODE;
         } else {
@@ -45,6 +70,16 @@ class Method {
             dd($record);
         }
         return $record;
+    }
+
+    public static function create_control($build, $token=[], Data $storage){
+        $method = array_shift($token);
+        $record = Method::get($build, $method, $storage);
+        if($record['type'] === Token::TYPE_CODE){
+            return $record['value'];
+        }
+        d($record);
+        throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
     public static function create($build, $token=[], Data $storage){

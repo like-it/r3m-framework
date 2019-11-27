@@ -27,6 +27,10 @@ class Build {
     private const VARIABLE_ASSIGN = 'variable-assign';
     private const VARIABLE_DEFINE = 'variable-define';
     private const METHOD = 'method';
+    private const METHOD_CONTROL = 'method-control';
+    private const CODE = 'code';
+    private const ELSE = 'else';
+    private const TAG_CLOSE = 'tag-close';
 
     private $indent;
     private $object;
@@ -36,6 +40,10 @@ class Build {
         $this->object($object);
 
         $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+
+        if(empty($config)){
+            throw new Exception('Config not found in object');
+        }
 
         $compile = $config->data('dictionary.compile');
         if(empty($compile)){
@@ -77,7 +85,7 @@ class Build {
         }
     }
 
-    private function indent($indent=1){
+    public function indent($indent=1){
         $this->indent = $indent;
         return str_repeat("\t", $indent);
     }
@@ -97,7 +105,7 @@ class Build {
 
         $storage->data('placeholder.run', '// R3M-IO-' . Core::uuid());
 
-        $document[] = '';
+//         $document[] = '';
         $document[] = $this->indent(0) . 'class ' . $class . ' extends Main {';
         /*
         $document[] = $this->indent(1) . 'private $parse;';
@@ -251,7 +259,7 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
-                $run[] = $this->indent(2) . 'echo \'' . $record['value'] . '\';';
+                $run[] = $this->indent() . 'echo \'' . $record['value'] . '\';';
             }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
                 $is_tag = true;
@@ -263,13 +271,29 @@ class Build {
 
                 switch($type){
                     case Build::VARIABLE_ASSIGN :
-                        $run[] = $this->indent(2) . Variable::Assign($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . Variable::Assign($this, $selection, $storage) . ';';
                     break;
                     case Build::VARIABLE_DEFINE :
-                        $run[] = $this->indent(2) . 'echo' . ' ' . Variable::Define($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . 'echo' . ' ' . Variable::Define($this, $selection, $storage) . ';';
                     break;
                     case Build::METHOD :
-                        $run[] = $this->indent(2) . 'echo' . ' ' . Method::create($this, $selection, $storage) . ';';
+//                         d($selection);
+                        $run[] = $this->indent() . 'echo' . ' ' . Method::create($this, $selection, $storage) . ';';
+//                         $run[] = $this->indent() . Method::create($this, $selection, $storage) . ';';
+                    break;
+                    case Build::METHOD_CONTROL :
+                        $this->indent++;
+                        $run[] = $this->indent() . Method::create_control($this, $selection, $storage) . '{';
+//                         dd($selection);
+                    break;
+                    case Build::ELSE :
+                        $run[] = $this->indent() . '} else {';
+                    break;
+                    case Build::TAG_CLOSE :
+                        $run[] = $this->indent() . '}';
+                    break;
+                    case Build::CODE :
+//                         dd($selection);
                     break;
                     default:
                         throw new Exception('type (' . $type . ') undefined');
@@ -301,8 +325,46 @@ class Build {
                 }
             break;
             case Token::TYPE_METHOD :
-                return Build::METHOD;
+                if(
+                    in_array(
+                        $record['method']['php_name'],
+                        [
+                            'if',
+                            'elseif',
+                            'else.if',
+                            'for',
+                            'for.each',
+                            'while',
+                            'switch'
+                        ]
+                    )
+                ){
+                    return Build::METHOD_CONTROL;
+                } else {
+                    return Build::METHOD;
+                }
+            break;
+            case Token::TYPE_TAG_CLOSE :
+                return Build::TAG_CLOSE;
+            break;
+            case Token::TYPE_STRING :
+                if(
+                    in_array(
+                        $record['value'],
+                        [
+                            'else'
+                        ]
+                    )
+                ){
+                    return Build::ELSE;
+                }
+                $debug = debug_backtrace(true);
+                d($debug);
+                d($record);
+                break;
             default:
+                $debug = debug_backtrace(true);
+                d($debug);
                 d($record);
                 throw new Exception('Undefined type (' . $record['type'] . ')');
 
@@ -448,10 +510,27 @@ class Build {
         $storage = $this->storage();
         foreach($tree as $nr => $record){
             if($record['type'] == Token::TYPE_METHOD){
-                $name = 'function_' . str_replace('.', '_', $record['method']['name']);
+                if(
+                    !in_array(
+                        $record['method']['name'],
+                        [
+                            'if',
+                            'else.if',
+                            'elseif',
+                            'for',
+                            'for.each',
+                            'foreach',
+                            'while',
+                            'switch'
+                        ]
+                    )
+                ){
+                    $name = 'function_' . str_replace('.', '_', $record['method']['name']);
+                    $storage->data('function.' . $name, new stdClass());
+                } else {
+                    $name = str_replace('.', '', $record['method']['name']);
+                }
                 $tree[$nr]['method']['php_name'] = $name;
-//                 d($name);
-                $storage->data('function.' . $name, new stdClass());
             }
         }
         return $tree;
