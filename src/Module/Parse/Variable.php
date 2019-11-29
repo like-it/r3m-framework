@@ -17,6 +17,9 @@ class Variable {
 
     public static function assign($build, $token=[], Data $storage){
         $variable = array_shift($token);
+        if(!array_key_exists('variable', $variable)){
+            return '';
+        }
         switch($variable['variable']['operator']){
             case '=' :
                 $assign = '$this->storage()->data(\'';
@@ -167,8 +170,16 @@ class Variable {
         $operator = $token;
         while(Operator::has($operator)){
             $statement = Operator::get($operator);
+//             d($operator);
+//             $debug = debug_backtrace(true);
+//             d($debug[0]);
             $operator = Operator::remove($operator, $statement);
             $statement = Operator::create($statement);
+
+            if(empty($statement)){
+                throw new Exception('Operator error');
+            }
+
             $key = key($statement);
             $operator[$key]['value'] = $statement[$key];
             $operator[$key]['type'] = Token::TYPE_CODE;
@@ -184,6 +195,7 @@ class Variable {
         while(count($operator) >= 1){
             $record = array_shift($operator);
             $record = Method::get($build, $record, $storage);
+//             d($operator);
             $result .= Value::get($record);
             $operator_counter++;
             if($operator_counter > $operator_max){

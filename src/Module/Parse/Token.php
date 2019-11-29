@@ -20,6 +20,10 @@ class Token {
     public const TYPE_OCT = 'octal';
     public const TYPE_HEX = 'hexadecimal';
     public const TYPE_FLOAT = 'float';
+    public const TYPE_FOR = 'for';
+    public const TYPE_FOREACH = 'foreach';
+    public const TYPE_BREAK = 'break';
+    public const TYPE_CONTINUE = 'continue';
     public const TYPE_ARRAY = 'array';
     public const TYPE_OBJECT = 'object';
     public const TYPE_VARIABLE = 'variable';
@@ -616,6 +620,7 @@ class Token {
             unset($token[$nr]);
         }
         $prepare = Token::prepare($prepare, $count);
+//         d($prepare);
         $token = Token::define($prepare);
         $token = Token::group($token);
         $token = Token::cast($token);
@@ -653,6 +658,7 @@ class Token {
         $skip = 0;
         $skip_unset = 0;
         $attribute_nr = 0;
+        $assign_nr = 0;
         foreach($token as $nr => $record){
             if($skip > 0){
                 $skip--;
@@ -680,15 +686,41 @@ class Token {
                 $target = null;
                 $depth = null;
                 $attribute_nr = 0;
+                $assign_nr = 0;
                 unset($token[$nr]);
             }
             elseif($target !== null){
-                if($record['type'] == Token::TYPE_COMMA){
-                    $attribute_nr++;
-                    unset($token[$nr]);
-                    continue;
+                if($token[$target]['method']['name'] == Token::TYPE_FOR){
+//                     d($record);
+                    if($record['type'] == Token::TYPE_SEMI_COLON){
+                        $attribute_nr++;
+//                         $assign_nr = 0;
+                        unset($token[$nr]);
+                        continue;
+                    }
+                    /*
+                    if($record['type'] == Token::TYPE_COMMA){
+                        $assign_nr++;
+                        unset($token[$nr]);
+                        continue;
+                    }
+                    if($record['type'] == Token::TYPE_SEMI_COLON){
+                        $attribute_nr++;
+                        $assign_nr = 0;
+                        unset($token[$nr]);
+                        continue;
+                    }
+                    */
+//                     $record['token_nr'] = $nr;
+                    $token[$target]['method']['attribute'][$attribute_nr][$nr] = $record;
+                } else {
+                    if($record['type'] == Token::TYPE_COMMA){
+                        $attribute_nr++;
+                        unset($token[$nr]);
+                        continue;
+                    }
+                    $token[$target]['method']['attribute'][$attribute_nr][$nr] = $record;
                 }
-                $token[$target]['method']['attribute'][$attribute_nr][$nr] = $record;
                 unset($token[$nr]);
             }
         }
@@ -762,6 +794,11 @@ class Token {
         $attribute_nr = 0;
         $variable_nr = 0;
         foreach($token as $nr => $record){
+            if(key_exists('type', $record) === false){
+                d($record);
+                $debug = debug_backtrace(true);
+                dd($debug);
+            }
             if($record['type'] == Token::TYPE_METHOD){
                 $is_method = $nr;
                 $depth = $record['depth'];
@@ -939,7 +976,9 @@ class Token {
                         [
                             Token::TYPE_PARENTHESE_OPEN, //used by modifier
                             Token::TYPE_PARENTHESE_CLOSE,
-                            Token::TYPE_COMMA
+                            Token::TYPE_COMMA,
+                            Token::TYPE_CURLY_CLOSE,
+                            Token::TYPE_CURLY_OPEN
                         ]
                         )
                     ){

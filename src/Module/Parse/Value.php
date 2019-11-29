@@ -26,15 +26,17 @@ class Value {
                 return $record['execute'];
             break;
             case Token::TYPE_BOOLEAN :
+            case Token::TYPE_NULL :
+            case Token::TYPE_COMMA  :
             case Token::TYPE_EXCLAMATION :
-                return $record['value'];
-            break;
-            case Token::TYPE_STRING :
-                return '\'' . $record['value'] . '\'';
-            break;
+            case Token::TYPE_BRACKET_SQUARE_OPEN :
+            case Token::TYPE_BRACKET_SQUARE_CLOSE :
             case Token::TYPE_CODE :
             case Token::TYPE_QUOTE_SINGLE_STRING :
                 return $record['value'];
+            break;
+            case Token::TYPE_STRING :
+                return '\'' . $record['value'] . '\''; //might need str_replace on quote_single (') to (\')
             break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
                 return '$this->parse()->compile(\'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)) . '\', [], $this->storage())';
@@ -47,7 +49,7 @@ class Value {
                 return '$this->storage()->data(\'' . $record['variable']['attribute'] .'\')';
             break;
             default:
-//                 $debug = debug_backtrace(true);
+                $debug = debug_backtrace(true);
 //                 dd($debug);
                 d($record);
                 throw new Exception('Variable value type ' .  $record['type'] . ' not defined');

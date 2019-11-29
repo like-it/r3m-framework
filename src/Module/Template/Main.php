@@ -126,4 +126,44 @@ class Main {
 	    return $variable1 % $variable2;
 	}
 
+	protected function value_smaller($variable1=null, $variable2=null){
+	    return $variable1 < $variable2;
+	}
+
+	protected function value_smaller_equal($variable1=null, $variable2=null){
+	    return $variable1 <= $variable2;
+	}
+
+	protected function value_smaller_smaller($variable1=null, $variable2=null){
+	    return $variable1 << $variable2;
+	}
+
+	protected function value_greater($variable1=null, $variable2=null){
+	    return $variable1 > $variable2;
+	}
+
+	protected function value_greater_equal($variable1=null, $variable2=null){
+	    return $variable1 >= $variable2;
+	}
+
+	protected function value_greater_greater($variable1=null, $variable2=null){
+	    return $variable1 >> $variable2;
+	}
+
+	protected function value_not_equal($variable1=null, $variable2=null){
+	    return $variable1 != $variable2;
+	}
+
+	protected function value_not_identical($variable1=null, $variable2=null){
+	    return $variable1 !== $variable2;
+	}
+
+	protected function value_equal($variable1=null, $variable2=null){
+	    return $variable1 == $variable2;
+	}
+
+	protected function value_identical($variable1=null, $variable2=null){
+	    return $variable1 === $variable2;
+	}
+
 }

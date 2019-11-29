@@ -32,7 +32,7 @@ class Build {
     private const ELSE = 'else';
     private const TAG_CLOSE = 'tag-close';
 
-    private $indent;
+    public $indent;
     private $object;
     private $storage;
 
@@ -85,9 +85,11 @@ class Build {
         }
     }
 
-    public function indent($indent=1){
-        $this->indent = $indent;
-        return str_repeat("\t", $indent);
+    public function indent($indent=null){
+        if($indent !== null){
+            $this->indent = $indent;
+        }
+        return str_repeat("\t", $this->indent);
     }
 
     private function createClass($document=[]){
@@ -124,6 +126,8 @@ class Build {
         $document[] = $this->indent(2) . 'return ob_get_clean();';
         $document[] = $this->indent(1) . '}';
         $document[] = '';
+
+        $this->indent(2);
 
         /*
         $document[] = $this->indent(1) . 'public function parse($parse=null){';
@@ -245,7 +249,7 @@ class Build {
     public function document($tree=[], $document=[]){
         $is_tag = false;
         $tag = null;
-
+        $this->indent(2);
         $storage = $this->storage();
 
         $run = $storage->data('run');
@@ -253,7 +257,12 @@ class Build {
             $run = [];
         }
         $type = null;
+        $select = null;
         $selection = [];
+
+        $is_debug = false;
+
+//         d($tree);
         foreach($tree as $nr => $record){
             if(
                 $is_tag === false &&
@@ -277,19 +286,45 @@ class Build {
                         $run[] = $this->indent() . 'echo' . ' ' . Variable::Define($this, $selection, $storage) . ';';
                     break;
                     case Build::METHOD :
-//                         d($selection);
+                        d($selection);
                         $run[] = $this->indent() . 'echo' . ' ' . Method::create($this, $selection, $storage) . ';';
 //                         $run[] = $this->indent() . Method::create($this, $selection, $storage) . ';';
                     break;
                     case Build::METHOD_CONTROL :
-                        $this->indent++;
-                        $run[] = $this->indent() . Method::create_control($this, $selection, $storage) . '{';
-//                         dd($selection);
+                        $control = Method::create_control($this, $selection, $storage);
+
+                        $explode = explode(' ', $control, 2);
+                        if(
+                            in_array(
+                                $explode[0],
+                                [
+                                    'break',
+                                    'continue'
+                                ]
+                            )
+                        ){
+                            $run[] = $this->indent() . $control . ';';
+                        }
+                        elseif(
+                            array_key_exists('method', $select) &&
+                            $select['method']['php_name'] == Token::TYPE_FOREACH
+                        ){
+                            $run[] = $this->indent() . $control;
+                            $this->indent($this->indent+1);
+                        }
+                        else {
+                            $run[] = $this->indent() . $control . ' {';
+                            $this->indent($this->indent+1);
+                        }
+                        $control = null;
                     break;
                     case Build::ELSE :
+                        $this->indent($this->indent-1);
                         $run[] = $this->indent() . '} else {';
+                        $this->indent($this->indent+1);
                     break;
                     case Build::TAG_CLOSE :
+                        $this->indent($this->indent-1);
                         $run[] = $this->indent() . '}';
                     break;
                     case Build::CODE :
@@ -306,6 +341,7 @@ class Build {
             if($is_tag !== false){
                 if($type === null){
                     $type = Build::getType($record);
+                    $select = $record;
                 }
                 $selection[$nr] = $record;
             }
@@ -334,8 +370,11 @@ class Build {
                             'else.if',
                             'for',
                             'for.each',
+                            'foreach',
                             'while',
-                            'switch'
+                            'switch',
+                            'break',
+                            'continue'
                         ]
                     )
                 ){
@@ -521,7 +560,9 @@ class Build {
                             'for.each',
                             'foreach',
                             'while',
-                            'switch'
+                            'switch',
+                            'break',
+                            'continue'
                         ]
                     )
                 ){

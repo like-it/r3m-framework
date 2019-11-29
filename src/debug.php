@@ -19,7 +19,6 @@ function d($data=null){
         echo implode('<br>' . PHP_EOL, $explode);
         echo '</pre>';
     }
-
 }
 
 function dd($data=null){

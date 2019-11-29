@@ -9,6 +9,8 @@
 
 namespace R3m\Io\Module\Parse;
 
+use Exception;
+
 class Operator {
 
     public static function has($token=array()){
@@ -22,53 +24,65 @@ class Operator {
     }
 
     public static function get($token=[]){
-//         $get = Operator::get_code($token);
-//         d($get);
         $get = false;
         if($get === false){
-            $get = Operator::get_multiply($token);
+            $get = Operator::get_by_type($token, Token::TYPE_IS_MULTIPLY);
         }
         if($get === false){
-            $get = Operator::get_divide($token);
+            $get = Operator::get_by_type($token, Token::TYPE_IS_DIVIDE);
         }
         if($get === false){
-            $get = Operator::get_modulo($token);
+            $get = Operator::get_by_type($token, Token::TYPE_IS_MODULO);
         }
         if($get === false){
-            $get = Operator::get_plus($token);
+            $get = Operator::get_by_type($token, Token::TYPE_IS_PLUS);
         }
         if($get === false){
-            $get = Operator::get_minus($token);
+            $get = Operator::get_by_type($token, Token::TYPE_IS_MINUS);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_SMALLER);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_SMALLER_EQUAL);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_SMALLER_SMALLER);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_GREATER);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_GREATER_EQUAL);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_GREATER_GREATER);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_EQUAL);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_ARRAY_OPERATOR);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_IDENTICAL);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_NOT_EQUAL);
+        }
+        if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_IS_NOT_IDENTICAL);
         }
         return $get;
     }
 
-    private static function get_code($token=[]){
-        $operator = [];
-        $previous = null;
-        $previous_previous = null;
-        $previous_nr = null;
-        $previous_previous_nr = null;
-        foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_CODE){
-                dd($token);
-                $operator[$previous_previous_nr] = $previous_previous;
-                $operator[$previous_nr] = $previous;
-                $operator[$nr] = $record;
-            }
-            $previous_previous = $previous;
-            $previous_previous_nr = $previous_nr;
-            $previous_nr = $nr;
-            $previous = $record;
-
+    private static function get_by_type($token=[], $type=''){
+        if(empty($type)){
+            throw new Exception('Type cannot be empty');
         }
-        return false;
-    }
-
-    private static function get_multiply($token=[]){
         $operator = [];
         foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_IS_MULTIPLY){
+            if($record['type'] == $type){
                 $operator[$previous_nr] = $previous;
                 $operator[$nr] = $record;
             }
@@ -81,78 +95,14 @@ class Operator {
         }
         return false;
     }
-
-    private static function get_divide($token=[]){
-        $operator = [];
-        foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_IS_DIVIDE){
-                $operator[$previous_nr] = $previous;
-                $operator[$nr] = $record;
-            }
-            elseif(!empty($operator)){
-                $operator[$nr] = $record;
-                return $operator;
-            }
-            $previous_nr = $nr;
-            $previous = $record;
-        }
-        return false;
-    }
-
-    private static function get_modulo($token=[]){
-        $operator = [];
-        foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_IS_MODULO){
-                $operator[$previous_nr] = $previous;
-                $operator[$nr] = $record;
-            }
-            elseif(!empty($operator)){
-                $operator[$nr] = $record;
-                return $operator;
-            }
-            $previous_nr = $nr;
-            $previous = $record;
-        }
-        return false;
-    }
-
-    private static function get_plus($token=[]){
-        $operator = [];
-        foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_IS_PLUS){
-                $operator[$previous_nr] = $previous;
-                $operator[$nr] = $record;
-            }
-            elseif(!empty($operator)){
-                $operator[$nr] = $record;
-                return $operator;
-            }
-            $previous_nr = $nr;
-            $previous = $record;
-        }
-        return false;
-    }
-
-    private static function get_minus($token=[]){
-        $operator = [];
-        foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_IS_MINUS){
-                $operator[$previous_nr] = $previous;
-                $operator[$nr] = $record;
-            }
-            elseif(!empty($operator)){
-                $operator[$nr] = $record;
-                return $operator;
-            }
-            $previous_nr = $nr;
-            $previous = $record;
-        }
-        return false;
-    }
-
 
     public static function remove($token=[], $statement=[]){
         $assign_key = false;
+        if($statement === false){
+            d($token);
+            $debug = debug_backtrace(true);
+            dd($debug);
+        }
         foreach($statement as $nr => $record){
             if($assign_key === false){
                 $assign_key = true;
@@ -200,6 +150,41 @@ class Operator {
             case '-' :
                 $result[$assign_key] = '$this->value_minus(' . $left_value . ', ' . $right_value . ')';
             break;
+            case '<' :
+                $result[$assign_key] = '$this->value_smaller(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '<=' :
+                $result[$assign_key] = '$this->value_smaller_equal(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '<<' :
+                $result[$assign_key] = '$this->value_smaller_smaller(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '>' :
+                $result[$assign_key] = '$this->value_greater(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '>=' :
+                $result[$assign_key] = '$this->value_greater_equal(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '>>' :
+                $result[$assign_key] = '$this->value_greater_greater(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '!=' :
+                $result[$assign_key] = '$this->value_not_equal(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '!==' :
+                $result[$assign_key] = '$this->value_not_identical(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '==' :
+                $result[$assign_key] = '$this->value_equal(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '===' :
+                $result[$assign_key] = '$this->value_identical(' . $left_value . ', ' . $right_value . ')';
+            break;
+            case '=>' :
+                $result[$assign_key] = $left_value . ' => ' . $right_value;
+                break;
+            default :
+                throw new Exception('Unknown operator (' . $operator['value'] .')');
         }
         return $result;
     }
