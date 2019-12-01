@@ -391,6 +391,7 @@ class Token {
         $token = array();
         $row = 1;
         $column = 1;
+        $nr = -1;
         foreach($array as $nr => $char){
             $type = Token::type($char);
             $record = [];

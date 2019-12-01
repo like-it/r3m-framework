@@ -13,6 +13,7 @@ use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Parse\Token;
 use R3m\Io\Module\Parse\Build;
+use R3m\Io\Module\Parse\Literal;
 
 use stdClass;
 
@@ -73,6 +74,9 @@ class Parse {
         if(File::exist($url)){
             //cache file
         }
+
+        $string = literal::apply($string, $storage);
+
         $tree = Token::tree($string);
 
         $tree = $build->require('function', $tree);
@@ -101,6 +105,7 @@ class Parse {
         $template = new $class(new Parse($this->object()), $storage);
 
         $string = $template->run();
+        $string = Literal::restore($string, $storage);
         return $string;
     }
 

@@ -260,15 +260,24 @@ class Build {
         $select = null;
         $selection = [];
 
-        $is_debug = false;
+        $skip_nr = null;
 
 //         d($tree);
         foreach($tree as $nr => $record){
             if(
+                $skip_nr !== null &&
+                $nr > $skip_nr
+            ){
+                $skip_nr = null;
+            }
+            elseif($skip_nr !== null){
+                continue;
+            }
+            if(
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
-                $run[] = $this->indent() . 'echo \'' . $record['value'] . '\';';
+                $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
             }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
                 $is_tag = true;
@@ -280,10 +289,10 @@ class Build {
 
                 switch($type){
                     case Build::VARIABLE_ASSIGN :
-                        $run[] = $this->indent() . Variable::Assign($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . Variable::assign($this, $selection, $storage) . ';';
                     break;
                     case Build::VARIABLE_DEFINE :
-                        $run[] = $this->indent() . 'echo' . ' ' . Variable::Define($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . 'echo' . ' ' . Variable::define($this, $selection, $storage) . ';';
                     break;
                     case Build::METHOD :
                         d($selection);
@@ -291,32 +300,39 @@ class Build {
 //                         $run[] = $this->indent() . Method::create($this, $selection, $storage) . ';';
                     break;
                     case Build::METHOD_CONTROL :
-                        $control = Method::create_control($this, $selection, $storage);
+                        if($select['method']['name'] == 'capture.append'){
+                            $selection = Method::capture_selection($this, $tree, $selection, $storage);
+                            $run[] = $this->indent() . Method::create_capture($this, $selection, $storage) . ';';
+                            foreach($selection as $skip_nr => $item){
 
-                        $explode = explode(' ', $control, 2);
-                        if(
-                            in_array(
-                                $explode[0],
-                                [
-                                    'break',
-                                    'continue'
-                                ]
-                            )
-                        ){
-                            $run[] = $this->indent() . $control . ';';
+                            }
+                        } else {
+                            $control = Method::create_control($this, $selection, $storage);
+                            $explode = explode(' ', $control, 2);
+                            if(
+                                in_array(
+                                    $explode[0],
+                                    [
+                                        'break',
+                                        'continue'
+                                    ]
+                                    )
+                                ){
+                                    $run[] = $this->indent() . $control . ';';
+                            }
+                            elseif(
+                                array_key_exists('method', $select) &&
+                                $select['method']['php_name'] == Token::TYPE_FOREACH
+                                ){
+                                    $run[] = $this->indent() . $control;
+                                    $this->indent($this->indent+1);
+                            }
+                            else {
+                                $run[] = $this->indent() . $control . ' {';
+                                $this->indent($this->indent+1);
+                            }
+                            $control = null;
                         }
-                        elseif(
-                            array_key_exists('method', $select) &&
-                            $select['method']['php_name'] == Token::TYPE_FOREACH
-                        ){
-                            $run[] = $this->indent() . $control;
-                            $this->indent($this->indent+1);
-                        }
-                        else {
-                            $run[] = $this->indent() . $control . ' {';
-                            $this->indent($this->indent+1);
-                        }
-                        $control = null;
                     break;
                     case Build::ELSE :
                         $this->indent($this->indent-1);
@@ -324,8 +340,10 @@ class Build {
                         $this->indent($this->indent+1);
                     break;
                     case Build::TAG_CLOSE :
-                        $this->indent($this->indent-1);
-                        $run[] = $this->indent() . '}';
+                        if($select['tag']['name'] != '/capture.append'){
+                            $this->indent($this->indent-1);
+                            $run[] = $this->indent() . '}';
+                        }
                     break;
                     case Build::CODE :
 //                         dd($selection);
@@ -367,14 +385,14 @@ class Build {
                         [
                             'if',
                             'elseif',
-                            'else.if',
                             'for',
-                            'for.each',
                             'foreach',
                             'while',
                             'switch',
                             'break',
-                            'continue'
+                            'continue',
+                            'capture',
+                            'capture_append'
                         ]
                     )
                 ){
@@ -562,14 +580,29 @@ class Build {
                             'while',
                             'switch',
                             'break',
-                            'continue'
+                            'continue',
+                            'capture',
+                            'capture.append'
                         ]
                     )
                 ){
                     $name = 'function_' . str_replace('.', '_', $record['method']['name']);
                     $storage->data('function.' . $name, new stdClass());
                 } else {
-                    $name = str_replace('.', '', $record['method']['name']);
+                    if(
+                        in_array(
+                            $record['method']['name'],
+                            [
+                                'capture.append'
+                            ]
+                        )
+                    ){
+                        $name = str_replace('.', '_', $record['method']['name']);
+                        $storage->data('function.' . $name, new stdClass());
+                    } else {
+                        $name = str_replace('.', '', $record['method']['name']);
+                    }
+
                 }
                 $tree[$nr]['method']['php_name'] = $name;
             }

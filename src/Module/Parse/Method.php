@@ -304,4 +304,51 @@ class Method {
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
+    public static function create_capture($build, $token=[], Data $storage){
+        $method = array_shift($token);
+        foreach($token as $nr => $item){
+            $token[$nr]['value'] = str_replace('\'', '\\\'', $item['value']);
+        }
+        $method['method']['attribute'][] = $token;
+        $record = Method::get($build, $method, $storage);
+        //         d($record);
+        if($record['type'] === Token::TYPE_CODE){
+            return $record['value'];
+        }
+
+        throw new Exception('Method type (' . $record['type'] . ') undefined');
+    }
+
+    public static function capture_selection($build, $tree=[], $selection=[], Data $storage){
+        $key = key($selection);
+        $is_collect = false;
+        foreach($tree as $nr => $record){
+            if($nr == $key){
+                $is_collect = true;
+            }
+            if($is_collect === true){
+                if(
+                    $record['type'] == Token::TYPE_TAG_CLOSE &&
+                    $record['tag']['name'] == '/capture.append'
+                ){
+                    $is_collect = false;
+                    break;
+                }
+                elseif(
+                    in_array(
+                        $record['type'],
+                        [
+                            Token::TYPE_CURLY_CLOSE,
+                            Token::TYPE_CURLY_OPEN
+                        ]
+                    )
+                ){
+                    continue;
+                }
+                $selection[$nr] = $record;
+            }
+        }
+        return $selection;
+    }
+
 }
