@@ -193,9 +193,10 @@ class Variable {
         $operator_counter = 0;
         $result = '';
         while(count($operator) >= 1){
+//             d($operator);
             $record = array_shift($operator);
             $record = Method::get($build, $record, $storage);
-//             d($operator);
+
             $result .= Value::get($record);
             $operator_counter++;
             if($operator_counter > $operator_max){

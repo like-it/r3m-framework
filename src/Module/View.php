@@ -8,13 +8,10 @@
  */
 namespace R3m\Io\Module;
 
+use stdClass;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
-use R3m\Io\Module\Twig\Extension;
-use Twig\Loader\FilesystemLoader;
-use Twig\Environment;
-use Twig\TwigFilter;
 
 class View {
 
@@ -134,7 +131,8 @@ class View {
         $parse = new Parse($object);
         $data = clone $object->data();
         unset($data->{APP::NAMESPACE});
-        $data->config = $config->data();
+        $data->r3m = new stdClass();
+        $data->r3m->config = $config->data();
         $read = $parse->compile($read, $data);
         return $read;
     }

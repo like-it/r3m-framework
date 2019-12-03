@@ -21,6 +21,7 @@ class Parse {
     public const PLUGIN = 'Plugin';
 
     private $object;
+    private $storage;
 
     public function __construct($object){
         $this->object($object);
@@ -59,53 +60,87 @@ class Parse {
         return $this->object;
     }
 
-    public function compile($string='', $data=[], $storage=null){
+    public function storage($storage=null){
+        if($storage !== null){
+            $this->setStorage($storage);
+        }
+        return $this->getStorage();
+    }
+
+    private function setStorage($storage=null){
+        $this->storage = $storage;
+    }
+
+    private function getStorage(){
+        return $this->storage;
+    }
+
+    public function compile($string='', $data=[], $storage=null, $is_debug=false){
         if($storage === null){
-            $storage = new Data();
+            $storage = $this->storage(new Data());
         }
         $storage->data($data);
-//         $key = sha1($string);
 
-//         $this->object->data('build.compile.key', $key);
-
-        $build = new Build($this->object());
-        $url = $build->url($string);
-
-        if(File::exist($url)){
-            //cache file
+        if(is_array($string)){
+            foreach($string as $key => $value){
+                $string[$key] = $this->compile($value, $data, $storage, $is_debug);
+            }
         }
+        elseif(is_object($string)){
+            foreach($string as $key => $value){
+                $string->$key = $this->compile($value, $data, $storage, $is_debug);
+            }
+        } else {
+            $build = new Build($this->object());
+            $url = $build->url($string);
 
-        $string = literal::apply($string, $storage);
+            if(File::exist($url)){
+                //cache file
+            }
 
-        $tree = Token::tree($string);
+            $string = literal::apply($string, $storage);
 
-        $tree = $build->require('function', $tree);
-        $tree = $build->require('modifier', $tree);
+            $tree = Token::tree($string, $is_debug);
+            $tree = $build->require('function', $tree);
+            $tree = $build->require('modifier', $tree);
 
 
-        $build_storage = $build->storage();
-        $document = $build_storage->data('document');
-        if(empty($document)){
-            $document = [];
+            if($is_debug === 2){
+//                 d($string);
+//                 d($storage->data('keywords'));
+//                 d($tree);
+            }
+
+            $build_storage = $build->storage();
+            $document = $build_storage->data('document');
+            if(empty($document)){
+                $document = [];
+            }
+            $document = $build->create('header', $document);
+            $document = $build->create('class', $document);
+
+            $build->indent(2);
+
+            $document = $build->document($tree, $document, $storage);
+            $document = $build->create('run', $document);
+            $document = $build->create('require', $document);
+            $document = $build->create('use', $document);
+
+
+            $write = $build->write($url, $document);
+
+            if($is_debug === 2){
+//                 d($document);
+//                 d( $build->storage()->data('class'));
+            }
+
+            $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
+            $template = new $class(new Parse($this->object()), $storage);
+
+            $string = $template->run();
+            $string = Literal::restore($string, $storage);
+
         }
-        $document = $build->create('header', $document);
-        $document = $build->create('class', $document);
-
-        $build->indent(2);
-
-        $document = $build->document($tree, $document);
-        $document = $build->create('run', $document);
-        $document = $build->create('require', $document);
-        $document = $build->create('use', $document);
-
-
-        $write = $build->write($url, $document);
-
-        $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
-        $template = new $class(new Parse($this->object()), $storage);
-
-        $string = $template->run();
-        $string = Literal::restore($string, $storage);
         return $string;
     }
 

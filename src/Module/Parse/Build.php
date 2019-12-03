@@ -18,6 +18,7 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\Autoload;
+use R3m\Io\Module\Parse;
 
 class Build {
     public const TEMPLATE = 'Template';
@@ -243,13 +244,16 @@ class Build {
         $dir = Dir::name($url);
         $create = Dir::create($dir);
 
+//         echo $write;
+
         return File::write($url, $write);
     }
 
-    public function document($tree=[], $document=[]){
+    public function document($tree=[], $document=[], Data $data){
         $is_tag = false;
         $tag = null;
         $this->indent(2);
+        $counter = 0;
         $storage = $this->storage();
 
         $run = $storage->data('run');
@@ -279,6 +283,67 @@ class Build {
             ){
                 $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
             }
+            elseif($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
+                $counter++;
+//                 $run[] =  $this->indent() . '$string = \'' . str_replace(['\'', '\"'], ['\\\'', '\"'], $record['value']). '\';';
+//                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
+                $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
+//                 $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage(), ' . $counter . ');';
+                $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage(), ' . $counter . ');';
+//                 $run[] =  $this->indent() . '$string = " $this->parse()->compile($string, [], $this->storage(), ' . $counter . ') ";';
+
+
+                if($counter === 2){
+//                     $run[] = 'dd($string);';
+                }
+//                 $run[] = '$string = "' . '$string' . '";';
+                $run[] =  $this->indent() .  'echo \'"\' . $string . \'"\';';
+//                 $run[] =  $this->indent() . 'd($string);';
+
+
+                /*
+                $parse = new Parse($this->object());
+
+                $string = substr($record['value'], 1, -1);
+                d($string);
+                d($data->data());
+                $string = $parse->compile($string, [], $data, 123);
+                */
+
+//                 d($record);
+                /*
+                $parse = new Parse($this->object());
+                $string = substr($record['value'], 1, -1);
+
+                $string = $parse->compile($string, [], $data, 123);
+
+                */
+
+//                 d($string);
+//                 d($data);
+
+
+//                 $string = '"' . $string . '"';
+//                 ($string);
+//                 $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $string) . '\';';
+
+
+//                 $storage->data('use.R3m\\Io\\Module\\Parse', new stdClass());
+/*
+//                 $run[] =  $this->indent() . '$parse = new Parse($this->object());';
+                $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', $record['value']). '\';';
+                $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage());';
+                $run[] =  $this->indent() . 'echo $string;';
+
+                */
+//                 d($run);
+
+                /*
+                $string = '"' . $string . '"';
+                d($string);
+                $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $string) . '\';';
+                */
+            }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
                 $is_tag = true;
 //                 $selection[$nr] = $record;
@@ -292,10 +357,11 @@ class Build {
                         $run[] = $this->indent() . Variable::assign($this, $selection, $storage) . ';';
                     break;
                     case Build::VARIABLE_DEFINE :
+//                         d($selection);
                         $run[] = $this->indent() . 'echo' . ' ' . Variable::define($this, $selection, $storage) . ';';
                     break;
                     case Build::METHOD :
-                        d($selection);
+//                         d($selection);
                         $run[] = $this->indent() . 'echo' . ' ' . Method::create($this, $selection, $storage) . ';';
 //                         $run[] = $this->indent() . Method::create($this, $selection, $storage) . ';';
                     break;
@@ -348,6 +414,17 @@ class Build {
                     case Build::CODE :
 //                         dd($selection);
                     break;
+                    case Token::TYPE_QUOTE_DOUBLE_STRING :
+                        d($selection);
+
+
+
+//                         $parse = new Parse($this->object());
+
+
+//                         d($run);
+//                         d($select);
+//                         dd($selection);
                     default:
                         throw new Exception('type (' . $type . ') undefined');
 
@@ -358,6 +435,7 @@ class Build {
             }
             if($is_tag !== false){
                 if($type === null){
+//                     d($tree);
                     $type = Build::getType($record);
                     $select = $record;
                 }
@@ -419,6 +497,8 @@ class Build {
                 d($debug);
                 d($record);
                 break;
+            case Token::TYPE_QUOTE_DOUBLE_STRING :
+                return Token::TYPE_QUOTE_DOUBLE_STRING;
             default:
                 $debug = debug_backtrace(true);
                 d($debug);

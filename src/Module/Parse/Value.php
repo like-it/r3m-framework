@@ -50,8 +50,8 @@ class Value {
             break;
             default:
                 $debug = debug_backtrace(true);
-//                 dd($debug);
                 d($record);
+                dd($debug);
                 throw new Exception('Variable value type ' .  $record['type'] . ' not defined');
         }
     }

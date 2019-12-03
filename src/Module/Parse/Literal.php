@@ -18,16 +18,16 @@ class Literal {
     public static function apply($string='', Data $data){
         $explode = explode('{literal}', $string, 2);
 
-        $key = $data->data('literal.key');
+        $key = $data->data('r3m.parse.literal.key');
         if(empty($key)){
             $uuid = Core::uuid();
-            $data->data('literal.key', $uuid);
+            $data->data('r3m.parse.literal.key', $uuid);
         }
         if(isset($explode[1])){
             $temp = explode('{/literal}', $explode[1], 2);
             $uuid = Core::uuid();
-            $data->data('literal.' . $uuid, $temp[0]);
-            $temp[1] = 'literal-' . $data->data('literal.key') . '-' . $uuid . $temp[1];
+            $data->data('r3m.parse.literal.' . $uuid, $temp[0]);
+            $temp[1] = 'literal-' . $data->data('r3m.parse.literal.key') . '-' . $uuid . $temp[1];
             $explode[1] = $temp[1];
             $string = implode('', $explode);
             $explode = explode('{literal}', $string, 2);
@@ -39,11 +39,11 @@ class Literal {
     }
 
     public static function restore($string='', Data $data){
-        $tag = 'literal-' . $data->data('literal.key') . '-';
+        $tag = 'literal-' . $data->data('r3m.parse.literal.key') . '-';
         $explode = explode($tag, $string, 2);
         if(isset($explode[1])){
             $key = substr($explode[1], 0, 36);
-            $string =  str_replace($tag . $key, $data->data('literal.' . $key), $string);
+            $string =  str_replace($tag . $key, $data->data('r3m.parse.literal.' . $key), $string);
             $explode = explode($tag, $string, 2);
             if(isset($explode[1])){
                 return Literal::restore($string, $data);
