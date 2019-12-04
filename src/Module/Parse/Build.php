@@ -266,6 +266,8 @@ class Build {
 
         $skip_nr = null;
 
+        $is_control = false;
+
 //         d($tree);
         foreach($tree as $nr => $record){
             if(
@@ -285,64 +287,9 @@ class Build {
             }
             elseif($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
                 $counter++;
-//                 $run[] =  $this->indent() . '$string = \'' . str_replace(['\'', '\"'], ['\\\'', '\"'], $record['value']). '\';';
-//                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
-//                 $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage(), ' . $counter . ');';
-                $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage(), ' . $counter . ');';
-//                 $run[] =  $this->indent() . '$string = " $this->parse()->compile($string, [], $this->storage(), ' . $counter . ') ";';
-
-
-                if($counter === 2){
-//                     $run[] = 'dd($string);';
-                }
-//                 $run[] = '$string = "' . '$string' . '";';
+                $run[] =  $this->indent() . '$string = $this->parse()->compile($string, $this->storage()->data(), $this->storage(), ' . $counter . ');';
                 $run[] =  $this->indent() .  'echo \'"\' . $string . \'"\';';
-//                 $run[] =  $this->indent() . 'd($string);';
-
-
-                /*
-                $parse = new Parse($this->object());
-
-                $string = substr($record['value'], 1, -1);
-                d($string);
-                d($data->data());
-                $string = $parse->compile($string, [], $data, 123);
-                */
-
-//                 d($record);
-                /*
-                $parse = new Parse($this->object());
-                $string = substr($record['value'], 1, -1);
-
-                $string = $parse->compile($string, [], $data, 123);
-
-                */
-
-//                 d($string);
-//                 d($data);
-
-
-//                 $string = '"' . $string . '"';
-//                 ($string);
-//                 $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $string) . '\';';
-
-
-//                 $storage->data('use.R3m\\Io\\Module\\Parse', new stdClass());
-/*
-//                 $run[] =  $this->indent() . '$parse = new Parse($this->object());';
-                $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', $record['value']). '\';';
-                $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage());';
-                $run[] =  $this->indent() . 'echo $string;';
-
-                */
-//                 d($run);
-
-                /*
-                $string = '"' . $string . '"';
-                d($string);
-                $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $string) . '\';';
-                */
             }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
                 $is_tag = true;
@@ -361,7 +308,7 @@ class Build {
                         $run[] = $this->indent() . 'echo' . ' ' . Variable::define($this, $selection, $storage) . ';';
                     break;
                     case Build::METHOD :
-//                         d($selection);
+                        d($select);
                         $run[] = $this->indent() . 'echo' . ' ' . Method::create($this, $selection, $storage) . ';';
 //                         $run[] = $this->indent() . Method::create($this, $selection, $storage) . ';';
                     break;
@@ -394,8 +341,10 @@ class Build {
                                     $this->indent($this->indent+1);
                             }
                             else {
+                                d($control);
                                 $run[] = $this->indent() . $control . ' {';
                                 $this->indent($this->indent+1);
+                                $is_control = true;
                             }
                             $control = null;
                         }

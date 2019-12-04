@@ -627,13 +627,16 @@ class Token {
         */
         $token = Token::define($prepare);
         $token = Token::group($token);
+//         dd($token);
         /*
         if($is_debug === 2){
             d($token);
         }
         */
         $token = Token::cast($token);
+
         $token = Token::method($token);
+//         dd($token);
         return $token;
     }
 
@@ -736,6 +739,8 @@ class Token {
     }
 
     public static function group($token=[]){
+        //check 113
+        //should not be grouped.
         $is_outside = true;
         $result = [];
         $is_set = false;
@@ -749,8 +754,8 @@ class Token {
                 continue;
             }
             elseif($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
-                $is_outside = true;
-                $is_set = false;
+//                 $is_outside = true;
+//                 $is_set = false;
                 continue;
             }
             if($is_outside === true){
