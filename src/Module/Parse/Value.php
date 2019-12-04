@@ -39,7 +39,8 @@ class Value {
                 return '\'' . $record['value'] . '\''; //might need str_replace on quote_single (') to (\')
             break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
-                return '$this->parse()->compile(\'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)) . '\', [], $this->storage())';
+//                 return '$this->parse()->compile(\'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)) . '\', [], $this->storage())';
+                return '$this->parse()->compile('. $record['value'] . ', [], $this->storage())';
             break;
             case Token::TYPE_CAST :
                 return Value::getCast($record);

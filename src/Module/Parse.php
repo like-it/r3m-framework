@@ -110,7 +110,7 @@ class Parse {
             if($is_debug === 2){
 //                 d($string);
 //                 d($storage->data('keywords'));
-                d($tree);
+//                 d($tree);
             }
 
             $build_storage = $build->storage();

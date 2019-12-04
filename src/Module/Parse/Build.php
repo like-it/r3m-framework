@@ -288,7 +288,7 @@ class Build {
             elseif($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
                 $counter++;
                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
-                $run[] =  $this->indent() . '$string = $this->parse()->compile($string, $this->storage()->data(), $this->storage(), ' . $counter . ');';
+                $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage(), ' . $counter . ');';
                 $run[] =  $this->indent() .  'echo \'"\' . $string . \'"\';';
             }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
@@ -308,7 +308,7 @@ class Build {
                         $run[] = $this->indent() . 'echo' . ' ' . Variable::define($this, $selection, $storage) . ';';
                     break;
                     case Build::METHOD :
-                        d($select);
+//                         d($select);
                         $run[] = $this->indent() . 'echo' . ' ' . Method::create($this, $selection, $storage) . ';';
 //                         $run[] = $this->indent() . Method::create($this, $selection, $storage) . ';';
                     break;
@@ -341,7 +341,7 @@ class Build {
                                     $this->indent($this->indent+1);
                             }
                             else {
-                                d($control);
+//                                 d($control);
                                 $run[] = $this->indent() . $control . ' {';
                                 $this->indent($this->indent+1);
                                 $is_control = true;
