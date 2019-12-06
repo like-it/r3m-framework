@@ -739,6 +739,47 @@ class Token {
     }
 
     public static function group($token=[]){
+
+        $is_outside = true;
+        foreach($token as $nr => $record){
+            if($record['type'] == Token::TYPE_CURLY_OPEN){
+                $is_outside = false;
+                continue;
+            }
+            elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
+                $is_outside = true;
+                continue;
+            }
+            if($is_outside === true){
+                $is_outside = $nr;
+            }
+            if($is_outside === false && $record['type'] == Token::TYPE_WHITESPACE) {
+                unset($token[$nr]);
+                continue;
+            }
+            if(is_int($is_outside)){
+                if($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
+                    $is_outside = true;
+                    continue;
+                } else {
+                    $token[$is_outside]['type'] = Token::TYPE_STRING;
+                    $token[$is_outside]['is_operator'] = false;
+                    unset($token[$is_outside]['direction']);
+                    if($nr != $is_outside){
+                        $token[$is_outside]['value'].= $record['value'];
+
+                        unset($token[$nr]);
+                    }
+                }
+            }
+        }
+//         d($token);
+        return $token;
+    }
+
+    /*
+    public static function group($token=[]){
+//         d($token);
         //check 113
         //should not be grouped.
         $is_outside = true;
@@ -753,7 +794,7 @@ class Token {
                 $is_set = false;
                 continue;
             }
-            elseif($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
+            elseif($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING && $is_outside !== false){
 //                 $is_outside = true;
 //                 $is_set = false;
                 continue;
@@ -766,6 +807,7 @@ class Token {
                 }
                 continue;
             } else {
+                d($record);
                 $is_set = true;
                 $token[$is_outside]['value'].= $record['value'];
                 $token[$is_outside]['type'] = Token::TYPE_STRING;
@@ -804,8 +846,12 @@ class Token {
             }
 
         }
+        if(isset($token[32])){
+            d($token[32]);
+        }
         return $token;
     }
+    */
 
     private static function modifier($token=[]){
         foreach($token as $token_nr => $modifier_list){

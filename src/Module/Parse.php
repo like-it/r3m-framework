@@ -107,12 +107,6 @@ class Parse {
 
 //             d($tree);
 
-            if($is_debug === 2){
-//                 d($string);
-//                 d($storage->data('keywords'));
-//                 d($tree);
-            }
-
             $build_storage = $build->storage();
             $document = $build_storage->data('document');
             if(empty($document)){
@@ -130,11 +124,6 @@ class Parse {
 
 
             $write = $build->write($url, $document);
-
-            if($is_debug === 2){
-//                 d($document);
-//                 d( $build->storage()->data('class'));
-            }
 
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
             $template = new $class(new Parse($this->object()), $storage);
