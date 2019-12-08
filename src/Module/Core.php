@@ -61,8 +61,8 @@ class Core {
             $result[] = $string;
         }
         return $result;
-    }       
-    
+    }
+
     public static function object($input='', $output='object',$type='root'){
         if(is_bool($input)){
             if($output == 'object' || $output == 'json'){
@@ -427,14 +427,48 @@ class Core {
             return $object;
         }
     }
-    
+
     public static function uuid(){
         $data = openssl_random_pseudo_bytes(16);
         assert(strlen($data) == 16);
-        
+
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
-        
+
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+
+    public static function uuid_variable(){
+        $uuid = Core::uuid();
+
+        $search = [];
+        $search[] = 0;
+        $search[] = 1;
+        $search[] = 2;
+        $search[] = 3;
+        $search[] = 4;
+        $search[] = 5;
+        $search[] = 6;
+        $search[] = 7;
+        $search[] = 8;
+        $search[] = 9;
+        $search[] = '-';
+
+        $replace = [];
+        $replace[] = 'g';
+        $replace[] = 'h';
+        $replace[] = 'i';
+        $replace[] = 'j';
+        $replace[] = 'k';
+        $replace[] = 'l';
+        $replace[] = 'm';
+        $replace[] = 'n';
+        $replace[] = 'p';
+        $replace[] = 'q';
+        $replace[] = '_';
+
+        $variable = '$' . str_replace($search, $replace, $uuid);
+
+        return $variable;
     }
 }
