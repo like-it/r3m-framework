@@ -17,7 +17,7 @@ class Method {
     public const WHERE_BEFORE = 'before';
     public const WHERE_AFTER = 'after';
 
-    public static function get($build, $record=[], Data $storage){
+    public static function get($build, $record=[], Data $storage, $is_debug = false){
         if($record['type'] != Token::TYPE_METHOD){
             return $record;
         }
@@ -108,7 +108,11 @@ class Method {
                 $token = Token::method($token);
                 $token = $build->require('function', $token);
 
-                $value = Variable::getValue($build, $token, $storage);
+                if($is_debug){
+//                     d($token);
+                }
+
+                $value = Variable::getValue($build, $token, $storage, $is_debug);
                 $attribute .= $value . ', ';
             }
             if($record['method']['php_name'] == Token::TYPE_FOR){
@@ -227,7 +231,7 @@ class Method {
                 }
 
             } else {
-                $result = $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+                $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
             }
 
             $record['value'] = $result;
@@ -310,7 +314,8 @@ class Method {
             $token[$nr]['value'] = str_replace('\'', '\\\'', $item['value']);
         }
         $method['method']['attribute'][] = $token;
-        $record = Method::get($build, $method, $storage);
+//         d($method['method']['attribute']);
+        $record = Method::get($build, $method, $storage, true);
         //         d($record);
         if($record['type'] === Token::TYPE_CODE){
             return $record['value'];

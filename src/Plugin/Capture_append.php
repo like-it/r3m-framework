@@ -5,7 +5,6 @@ use R3m\Io\Module\Data;
 
 
 function capture_append(Parse $parse, Data $data, $name, $value=null){
-
     $list = $data->data($name);
     if(empty($list)){
         $list = [];

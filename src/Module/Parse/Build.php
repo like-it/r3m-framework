@@ -55,7 +55,6 @@ class Build {
             $config->data('dictionary.template', Build::TEMPLATE);
         }
         $this->storage(new Data());
-
         $dir_plugin = [];
         $dir_plugin[] = $config->data('host.dir.plugin');
         $dir_plugin[] = $config->data('project.dir.plugin');
@@ -99,14 +98,15 @@ class Build {
         $storage = $this->storage();
         $key = $storage->data('key');
         $class = $config->data('dictionary.template') . '_' . $key;
-        $storage->data('class', $class);
+//         $storage->data('class', $class);
 
 
-//         $storage->data('use.R3m\\Io\\Module\\Parse', new stdClass());
-//         $storage->data('use.R3m\\Io\\Module\\Data', new stdClass());
+        $storage->data('use.R3m\\Io\\Module\\Parse', new stdClass());
+        $storage->data('use.R3m\\Io\\Module\\Data', new stdClass());
         $storage->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
 
         $storage->data('placeholder.run', '// R3M-IO-' . Core::uuid());
+        $storage->data('placeholder.function', '// R3M-IO-' . Core::uuid());
 
 //         $document[] = '';
         $document[] = $this->indent(0) . 'class ' . $class . ' extends Main {';
@@ -127,7 +127,7 @@ class Build {
         $document[] = $this->indent(2) . 'return ob_get_clean();';
         $document[] = $this->indent(1) . '}';
         $document[] = '';
-
+        $document[] = $this->indent(0) . $storage->data('placeholder.function');
         $this->indent(2);
 
         /*
@@ -201,6 +201,50 @@ class Build {
         }
         return $document;
     }
+
+    private function createRequireContent($type='', $document=[]){
+        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        $storage = $this->storage();
+
+        $dir_plugin = $storage->data('plugin');
+
+        $data = $storage->data($type);
+
+//         dd($storage->data());
+
+        if(empty($data)){
+            return $document;
+        }
+
+        $placeholder = $storage->data('placeholder.function');
+
+        foreach($data as $name => $record){
+            foreach($dir_plugin as $nr => $dir){
+                $file = ucfirst($name) . $config->data('extension.php');
+                $url = $dir . $file;
+
+                if(File::exist($url)){
+                    $read = File::read($url);
+                    $explode = explode('function', $read);
+                    $explode[0] = '';
+                    $read = implode('function', $explode);
+                    $document = str_replace($placeholder, $read . $placeholder, $document);
+
+
+//                     $document[] = 'if(!function_exists(\'R3m\\Io\\Module\\Compile\\' . $name . '\')){';
+//                     $document[] = $read;
+//                     $document[] = '}';
+                }
+            }
+        }
+        $document = str_replace('function ' . $type, 'private function ' . $type, $document);
+//         $document = str_replace('function function_', 'private function function_', $document);
+//         $storage->data('use.stdClass', new stdClass());
+//         $storage->data('use.Exception', new stdClass());
+//         $storage->data('use.R3m\\Io\\Module\\File', new stdClass());
+        return $document;
+    }
+
 
     private function createRequireCategory($type='', $document=[]){
         $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
@@ -458,8 +502,8 @@ class Build {
     }
 
     private function createRequire($document=[]){
-        $document = $this->createRequireCategory('modifier', $document);
-        $document = $this->createRequireCategory('function', $document);
+        $document = $this->createRequireContent('modifier', $document);
+        $document = $this->createRequireContent('function', $document);
 
         $this->storage()->data('document', $document);
 
@@ -470,13 +514,7 @@ class Build {
         if(empty($document)){
             $document = [];
         }
-        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
-        $this->storage()->data('placeholder.use', '// R3M-IO-' . Core::uuid());
-
-        $namespace = 'R3m\\Io\\Module\\' .  $config->data('dictionary.compile');
-
-        $this->storage()->data('namespace', $namespace);
-
+        $namespace = $this->storage()->data('namespace');
         $document[] = '<?php';
         $document[] = 'namespace ' . $namespace . ';';
         $document[] = '';
@@ -493,6 +531,26 @@ class Build {
         $this->storage()->data('document', $document);
 
         return $document;
+    }
+
+    public function meta(){
+        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        $this->storage()->data('placeholder.use', '// R3M-IO-' . Core::uuid());
+
+        $namespace = 'R3m\\Io\\Module\\' .  $config->data('dictionary.compile');
+
+        $this->storage()->data('namespace', $namespace);
+
+        $key = $this->storage()->data('key');
+        $class = $config->data('dictionary.template') . '_' . $key;
+        $this->storage()->data('class', $class);
+
+        $meta = [
+            'namespace' => $namespace,
+            'class' => $class
+        ];
+
+        return $meta;
     }
 
     public function object($object=null){
@@ -551,6 +609,7 @@ class Build {
             ;
             $storage->data('url', $url);
             $storage->data('key', $key);
+            $this->meta();
         }
         return $url;
     }

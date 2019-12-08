@@ -14,7 +14,7 @@ use Exception;
 class File {
     public const CHMOD = 0640;
     public const TYPE = 'File';
-    public const SCHEME_HTTP = 'http';            
+    public const SCHEME_HTTP = 'http';
 
     public static function is($url=''){
         $url = rtrim($url, '/');
@@ -27,7 +27,7 @@ class File {
 
     public static function mtime($url=''){
         return filemtime($url);
-    }    
+    }
 
     public static function link($source, $destination){
         system('ln -s ' . $source . ' ' . $destination);
@@ -40,7 +40,9 @@ class File {
 
     public static function touch($url='', $time=null, $atime=null){
         if($atime === null){
-            return @touch($url, $time);
+//             $exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
+//             echo $exec . "\n";
+            return @touch($url, $time); //wsdl not working
         } else {
             return @touch($url, $time, $atime);
         }

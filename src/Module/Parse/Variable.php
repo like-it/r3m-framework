@@ -108,7 +108,7 @@ class Variable {
         ){
             foreach($variable['variable']['modifier'] as $nr => $modifier_list){
                 foreach($modifier_list as $modifier_nr => $modifier){
-                    $define_modifier .= $modifier['php_name'] . '($this->parse(), $this->storage(), ' . $define . ', ';
+                    $define_modifier .= '$this->' . $modifier['php_name'] . '($this->parse(), $this->storage(), ' . $define . ', ';
                     if($modifier['has_attribute']){
                         foreach($modifier['attribute'] as $attribute){
                             switch($attribute['type']){
@@ -134,7 +134,7 @@ class Variable {
         return $define;
     }
 
-    public static function getValue($build, $token=[], Data $storage){
+    public static function getValue($build, $token=[], Data $storage, $is_debug=false){
         $set_max = 1024;
         $set_counter = 0;
         $operator_max = 1024;
@@ -195,13 +195,40 @@ class Variable {
         while(count($operator) >= 1){
 //             d($operator);
             $record = array_shift($operator);
-            $record = Method::get($build, $record, $storage);
+            $record = Method::get($build, $record, $storage, $is_debug);
 
-            $result .= Value::get($record);
+            $result .= Value::get($record, $is_debug);
+
+            if(
+                in_array(
+                    $record['type'],
+                    [
+                        Token::TYPE_STRING ,
+                        Token::TYPE_QUOTE_DOUBLE_STRING,
+                        Token::TYPE_VARIABLE
+
+                    ]
+                )
+            ){
+                $result .= ' . ';
+            }
             $operator_counter++;
             if($operator_counter > $operator_max){
                 break;
             }
+        }
+        if(
+            in_array(
+                $record['type'],
+                [
+                    Token::TYPE_STRING ,
+                    Token::TYPE_QUOTE_DOUBLE_STRING,
+                    Token::TYPE_VARIABLE
+
+                ]
+                )
+            ){
+                $result = substr($result,0, -3);
         }
         return $result;
     }

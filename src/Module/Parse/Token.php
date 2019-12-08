@@ -773,85 +773,8 @@ class Token {
                 }
             }
         }
-//         d($token);
         return $token;
     }
-
-    /*
-    public static function group($token=[]){
-//         d($token);
-        //check 113
-        //should not be grouped.
-        $is_outside = true;
-        $result = [];
-        $is_set = false;
-        foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_CURLY_OPEN){
-                $is_outside = false;
-            }
-            elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
-                $is_outside = true;
-                $is_set = false;
-                continue;
-            }
-            elseif($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING && $is_outside !== false){
-//                 $is_outside = true;
-//                 $is_set = false;
-                continue;
-            }
-            if($is_outside === true){
-                $is_outside = $nr;
-            } elseif($is_outside === false) {
-                if($record['type'] == Token::TYPE_WHITESPACE){
-                    unset($token[$nr]);
-                }
-                continue;
-            } else {
-                d($record);
-                $is_set = true;
-                $token[$is_outside]['value'].= $record['value'];
-                $token[$is_outside]['type'] = Token::TYPE_STRING;
-                $token[$is_outside]['is_operator'] = false;
-                unset($token[$is_outside]['direction']);
-                unset($token[$nr]);
-            }
-        }
-        if($is_set === false){
-            if(isset($nr)){
-                if(in_array(
-                        $token[$nr]['type'],
-                        [
-                            Token::TYPE_QUOTE_DOUBLE_STRING,
-                        ]
-                    )
-                ){
-                    $token[$nr]['type'] = Token::TYPE_QUOTE_DOUBLE_STRING;
-                    $token[$nr]['value'] = substr($token[$nr]['value'], 1, -1);
-                }
-                elseif(
-                    !in_array(
-                        $token[$nr]['type'],
-                        [
-                            Token::TYPE_CURLY_CLOSE
-
-                        ]
-                    )
-                ) {
-                    $token[$nr]['type'] = Token::TYPE_STRING;
-                }
-                $token[$nr]['is_operator'] = false;
-                unset($token[$nr]['direction']);
-            } else {
-                dd($token);
-            }
-
-        }
-        if(isset($token[32])){
-            d($token[32]);
-        }
-        return $token;
-    }
-    */
 
     private static function modifier($token=[]){
         foreach($token as $token_nr => $modifier_list){

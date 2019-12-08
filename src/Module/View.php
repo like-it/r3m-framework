@@ -23,8 +23,20 @@ class View {
 
 
     public static function locate($object, $template=''){
-        $called = get_called_class();
-        $dir = $called::DIR;
+
+        $temp = $object->data('template');
+        $called = '';
+        if($temp !== null && property_exists($temp, 'dir')){
+            $dir = $temp->dir;
+
+        } else {
+            $called = get_called_class();
+            $dir = $called::DIR;
+        }
+        if($temp !== null && property_exists($temp, 'name')){
+            $template = $temp->name;
+
+        }
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         if(substr($dir, -1) != $config->data('ds')){
             $dir .= $config->data('ds');
@@ -128,12 +140,18 @@ class View {
         $dir_cache = $config->data('parse.dir.cache');
 
         $read = File::read($url);
+        $mtime = File::mtime($url);
+
         $parse = new Parse($object);
+        $parse->storage()->data('r3m.parse.view.url', $url);
+        $parse->storage()->data('r3m.parse.view.mtime', $mtime);
+
         $data = clone $object->data();
         unset($data->{APP::NAMESPACE});
         $data->r3m = new stdClass();
         $data->r3m->config = $config->data();
-        $read = $parse->compile($read, $data);
+        $read = $parse->compile($read, $data, $parse->storage());
+//         $object->data('r3m.parse.storage', $parse->storage());
         return $read;
     }
 

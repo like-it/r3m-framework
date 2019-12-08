@@ -166,4 +166,17 @@ class Main {
 	    return $variable1 === $variable2;
 	}
 
+	protected function cache_write($url){
+	    if(opcache_is_script_cached($url) === false){
+	        opcache_compile_file($url);
+	    }
+	}
+
+	protected function cache_invalidate($url){
+	    if(opcache_is_script_cached($url) === false){
+	        opcache_invalidate($url, true);
+	    }
+	}
+
+
 }
