@@ -4,8 +4,7 @@
 	"type" : "framework",
 	"require" : {
 		"monolog/monolog" : "^2.0",
-		"twig/twig" : "^2.0",
-		"delboy1978uk/form": "^2.0"
+		"delboy1978uk/form" : "^2.0"
 	},
 	"license" : "MIT",
 	"authors" : [{
@@ -14,13 +13,9 @@
 		}
 	],
 	"autoload" : {
-		"psr-0" : {
-			"Twig_" : "vendor/twig/twig/lib/"
-		},
-		"psr-4" : {		
+		"psr-4" : {
 			"R3m\\Io\\" : "src/",
-			"Twig\\" : "vendor/twig/twig/src/",
-			"Del\\Form\\": "vendor/delboy1978uk/form/src/"
+			"Del\\Form\\" : "vendor/delboy1978uk/form/src/"
 		}
 	}
 }
