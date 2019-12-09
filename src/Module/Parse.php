@@ -116,7 +116,7 @@ class Parse {
             }
             */
 
-            /*
+
             if(File::exist($url) && File::mtime($url) == $mtime){
                 //cache file
                 $meta = $build->meta();
@@ -127,7 +127,7 @@ class Parse {
                 $string = Literal::restore($string, $storage);
                 return $string;
             }
-            */
+
             $string = literal::apply($string, $storage);
 
             $tree = Token::tree($string, $is_debug);
