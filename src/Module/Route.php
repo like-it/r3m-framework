@@ -11,6 +11,7 @@
 namespace R3m\Io\Module;
 
 use stdClass;
+use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Handler;
@@ -21,6 +22,8 @@ class Route extends Data{
     public const NAMESPACE = __NAMESPACE__;
     public const NAME = 'Route';
     public const SELECT = 'Route_select';
+
+    private const SELECT_DEFAULT = 'info';
 
     private $current;
 
@@ -39,21 +42,103 @@ class Route extends Data{
         return $this->current;
     }
 
-    public function get($name='', $option=[]){
-        d($option);
-        dd($name);
+    public static function get($object, $name='', $option=[]){
+        $route = $object->data(App::DATA_ROUTE);
+        $get = $route->data($name);
+        if(empty($get)){
+            return;
+        }
+        foreach($option as $key => $value){
+            if(is_numeric($key)){
+                $explode = explode('}', $get->path, 2);
+                $temp = explode('{$', $explode[0], 2);
+
+                if(array_key_exists(1, $temp)){
+                    $key = $temp[1];
+                    $get->path = str_replace('{$' . $key . '}', $value, $get->path);
+                }
+            } else {
+                $get->path = str_replace('{$' . $key . '}', $value, $get->path);
+            }
+
+        }
+        $url = $object->data('host.url') . $get->path;
+        return $url;
+    }
+
+    private static function input_request($object, $input, $glue='/'){
+        $request = [];
+        foreach($input as $key => $value){
+            $request[] = $value;
+        }
+        $input->request = implode($glue, $request);
+        if(substr($input->request, -1, 1) != $glue){
+            $input->request .= $glue;
+        }
+        return $input;
+    }
+
+    private static function add_request($object, $request){
+        if(empty($request)){
+            return $object;
+        }
+        $temp =  $object->data(App::DATA_REQUEST);
+
+//         d($request);
+        if(!property_exists($request, 'request')){
+            return $object;
+        }
+        if(is_array($request->request) || is_object($request->request)){
+            foreach($request->request as $key => $value){
+                $temp->{$key} = $value;
+            }
+        }
+        return $object;
+    }
+
+    private static function select_info($object, $record){
+        $select = new stdClass();
+        $select->parameter = new stdClass();
+        $select->attribute = [];
+        $select->method = Handler::method();
+        $select->host = [];
+        $select->attribute[] = Route::SELECT_DEFAULT;
+        $key = 0;
+        $select->parameter->{$key} =  Route::SELECT_DEFAULT;
+        foreach($record->parameter as $key => $value){
+            $select->parameter->{$key + 1} = $value;
+        }
+        return $select;
     }
 
     public static function request($object){
         if(defined('IS_CLI')){
-            $request = new stdClass();
-            $request->path = $object->parameter($object->data(HANDLER::REQUEST_INPUT), 0);
-            dd($request);
-            if(File::exist($url)){
-                $read = File::read($url);
-                dd($read);
+            $input = Route::input($object);
+            $select = new stdClass();
+            $select->parameter = $input;
+            $key = 0;
+            $select->attribute = [];
+            if(property_exists($select->parameter, $key)){
+                $select->attribute[] = $select->parameter->{$key};
+            } else {
+                $select->attribute[] = '';
             }
-            return $request;
+            $select->method = Handler::method();
+            $select->host = [];
+            $request = Route::select_cli($object, $select);
+            if($request === false){
+                $select = Route::select_info($object, $select);
+                $request = Route::select_cli($object, $select);
+//                 throw new Exception('Request not found');
+            }
+            if(property_exists($request, 'request') && is_object($request->request)){
+                $request->request = Core::object_merge(clone $select->parameter, $request->request);
+            } else {
+                $request->request = $select->parameter;
+            }
+            $route =  $object->data(App::DATA_ROUTE);
+            $object = Route::add_request($object, $request);
+            return $route->current($request);
         } else {
             $input = Route::input($object);
             $select = new stdClass();
@@ -77,23 +162,52 @@ class Route extends Data{
             $select->host = array_unique($select->host);
             $request = Route::select($object, $select);
 
-            $route =  $object->data(App::NAMESPACE . '.' . Route::NAME);
+            $route =  $object->data(App::DATA_ROUTE);
 //             dd($route);
             return $route->current($request);
         }
     }
 
     public static function input($object){
-        $input = $object->data(
-            App::NAMESPACE . '.' .
-            Handler::NAME_REQUEST . '.' .
-            Handler::NAME_INPUT
-        );
+        $input = $object->data(App::DATA_REQUEST);
         return $input;
     }
 
+    private static function select_cli($object, $select){
+        $route =  $object->data(App::DATA_ROUTE);
+        $match = false;
+        $data = $route->data();
+        if(Core::object_is_empty($data)){
+            return false;
+        }
+        if(!is_object($data)){
+            return false;
+        }
+        $current = false;
+        foreach($data as $record){
+            if(property_exists($record, 'resource')){
+                continue;
+            }
+            $match = Route::is_match_cli($object, $record, $select);
+            //             d($record);
+            //             d($select);
+            if($match === true){
+                $current = $record;
+                break;
+            }
+        }
+        if($current !== false){
+            $current = Route::prepare($object, $current, $select);
+            $current->parameter = $select->parameter;
+            //             $current->select = $select;
+            return $current;
+        }
+        return false;
+    }
+
+
     private static function select($object, $select){
-        $route =  $object->data(App::NAMESPACE . '.' . Route::NAME);
+        $route =  $object->data(App::DATA_ROUTE);
         $match = false;
         $data = $route->data();
         if(empty($data)){
@@ -111,6 +225,8 @@ class Route extends Data{
                 continue;
             }
             $match = Route::is_match($object, $record, $select);
+//             d($record);
+//             d($select);
             if($match === true){
                 $current = $record;
                 break;
@@ -138,7 +254,7 @@ class Route extends Data{
             $allowed_host[] = $host;
         }
 
-        $config =  $object->data(App::NAMESPACE . '.'  . Config::NAME);
+        $config =  $object->data(App::DATA_CONFIG);
         $localdomain = $config->data(Config::LOCALHOST_EXTENSION);
 
         $allowed_host_new = [];
@@ -199,10 +315,16 @@ class Route extends Data{
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 $variable = Route::get_variable($part);
+//                 d($variable);
                 if(property_exists($route->request, $variable)){
                     continue;
                 }
-                $route->request->{$variable} = $attribute[$nr];
+//                 d($attribute);
+//                 d($variable);
+                if(array_key_exists($nr, $attribute)){
+                    $route->request->{$variable} = $attribute[$nr];
+                }
+//                 d($route->request);
             }
         }
         $controller = explode('.', $route->controller);
@@ -216,6 +338,9 @@ class Route extends Data{
         $explode = explode('/', $route->path);
         array_pop($explode);
         $attribute = $select->attribute;
+        if(empty($attribute)){
+            return true;
+        }
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 continue;
@@ -286,6 +411,29 @@ class Route extends Data{
         return true;
     }
 
+    private static function is_match_cli($object, $route, $select){
+        /*
+        $is_match = Route::is_match_by_deep($object, $route, $select);
+        if($is_match === false){
+            return $is_match;
+        }
+        $route = Route::add_localhost($object, $route);
+        $is_match = Route::is_match_by_host($object, $route, $select);
+        if($is_match === false){
+            return $is_match;
+        }
+        */
+        $is_match = Route::is_match_by_attribute($object, $route, $select);
+        if($is_match === false){
+            return $is_match;
+        }
+        $is_match = Route::is_match_by_method($object, $route, $select);
+        if($is_match === false){
+            return $is_match;
+        }
+        return $is_match;
+    }
+
     private static function is_match($object, $route, $select){
         $is_match = Route::is_match_by_deep($object, $route, $select);
         if($is_match === false){
@@ -308,17 +456,18 @@ class Route extends Data{
     }
 
     public static function configure($object){
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
-        $url = $config->data('project.dir.data') . $config->data('project.route.filename');
-        if(empty($config->data('project.route.url'))){
-            $config->data('project.route.url', $url);
+        $config = $object->data(App::DATA_CONFIG);
+        $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
+
+        if(empty($config->data(Config::DATA_PROJECT_ROUTE_URL))){
+            $config->data(Config::DATA_PROJECT_ROUTE_URL, $url);
         }
-        $url = $config->data('project.route.url');
+        $url = $config->data(Config::DATA_PROJECT_ROUTE_URL);
 
         if(File::Exist($url)){
             $read = File::read($url);
             $data = new Route(Core::object($read));
-            $object->data(App::NAMESPACE . '.' . Route::NAME, $data);
+            $object->data(App::DATA_ROUTE, $data);
         }
         Route::load($object);
     }
@@ -344,7 +493,7 @@ class Route extends Data{
 
     public static function load($object){
         $reload = false;
-        $route = $object->data(App::NAMESPACE . '.' . Route::NAME);
+        $route = $object->data(App::DATA_ROUTE);
         if(empty($route)){
             return;
         }
@@ -394,7 +543,7 @@ class Route extends Data{
         $temp = explode('{', $explode[0], 2);
         if(isset($temp[1])){
             $attribute = substr($temp[1], 1);
-            $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+            $config = $object->data(App::DATA_CONFIG);
             $value = $config->data($attribute);
             $resource = str_replace('{$' . $attribute . '}', $value, $resource);
             return Route::parse($object, $resource);

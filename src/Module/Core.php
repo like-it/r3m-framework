@@ -21,6 +21,10 @@ class Core {
         '.'
     ];
 
+    public static function redirect($url=''){
+        header('Location: ' . $url);
+    }
+
     public static function array_object($array=array()){
         $object = new stdClass();
         foreach ($array as $key => $value){

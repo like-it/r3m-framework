@@ -15,25 +15,30 @@ use R3m\Io\Config;
 
 class FileRequest {
     const REQUEST = 'Request';
- 
+
     public static function get($object){
-        
+
         $request = $object->data(App::NAMESPACE . '.' . FileRequest::REQUEST);
-        
-        $input = substr($request->Input->request, 0, -1);
+
+        $input = '';
+        if(property_exists($request, 'Input') && property_exists($request->Input, 'request')){
+            $input = substr($request->Input->request, 0, -1);
+        }
+
+
         $dir = Dir::name($input);
         $file = str_replace($dir,'', $input);
         $extension = File::extension($file);
-        
+
         if(empty($extension)){
             return false;
         }
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
-        
+
         $location = [];
         $location[] = $config->data('host.dir.public') . $dir . $file;
         $location[] = $config->data('project.dir.public') . $dir . $file;
-        
+
         foreach($location as $url){
             if(File::exist($url)){
                 return File::read($url);
@@ -42,5 +47,5 @@ class FileRequest {
         Handler::response_header('HTTP/1.0 404 Not Found', 404);
         exit();
     }
-    
+
 }

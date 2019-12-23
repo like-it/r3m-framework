@@ -19,9 +19,14 @@ class App extends Data {
     public const NAME = 'App';
     public const R3M = 'R3m';
 
+    public const DATA_ROUTE = App::NAMESPACE . '.' . Route::NAME;
+    public const DATA_CONFIG = App::NAMESPACE . '.' . Config::NAME;
+    public const DATA_REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
+    public const DATA_AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
+
     public function __construct($autoload, $config){
-        $this->data(App::NAMESPACE . '.Autoload.Composer', $autoload);
-        $this->data(App::NAMESPACE . '.' . Config::NAME, $config);
+        $this->data(App::DATA_AUTOLOAD_COMPOSER, $autoload);
+        $this->data(App::DATA_CONFIG, $config);
         App::is_cli();
         require_once 'debug.php';
     }
@@ -30,22 +35,15 @@ class App extends Data {
         Handler::request_configure($object);
         Host::configure($object);
         View::configure($object);
-//         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         Autoload::configure($object);
         Route::configure($object);
-
         $file = FileRequest::get($object);
-
         if($file === false){
             $route = Route::request($object);
             if($route === false){
                 throw new Exception('couldn\'t determine route');
-                //             $object->data('view.request', Route::input($object)->request);
-                //             echo View::view($object, '404.tpl');
-                //             die;
             } else {
                 $result = $route->controller::{$route->function}($object);
-                //             dd($result);
                 return $result;
             }
         } else {
@@ -55,10 +53,21 @@ class App extends Data {
 
     public function request($attribute=null, $value=null){
         $object = $this;
+        if($attribute !== null && $value !== null){
+            if($attribute == 'delete'){
+                Core::object_delete($value, $object);
+            } else {
+                Core::object_set($attribute, $value, $object->data('R3m\\Io.Request.Input'));
+            }
 
-        dd($object->data());
-        //App::NAMESPACE . '.' . Config::NAME
+        }
+        elseif($attribute !== null){
+            return Core::object_get($attribute, $object->data('R3m\\Io.Request.Input'));
+        }
+    }
 
+    public static function parameter($object, $parameter='', $offset=0){
+        return parent::parameter($object->data(App::DATA_REQUEST), $parameter, $offset);
     }
 
     public function session($attribute=null, $value=null){
@@ -76,6 +85,4 @@ class App extends Data {
             return true;
         }
     }
-
 }
-

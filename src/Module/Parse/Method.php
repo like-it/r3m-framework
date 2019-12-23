@@ -22,6 +22,7 @@ class Method {
             return $record;
         }
         $attribute = '';
+        /*
         if(
             !array_key_exists('attribute', $record['method']) &&
             in_array(
@@ -32,6 +33,12 @@ class Method {
                     Token::TYPE_CONTINUE
                 ]
             )
+        ){
+            $record['method']['attribute'] = [];
+        }
+        */
+        if(
+            !array_key_exists('attribute', $record['method'])
         ){
             $record['method']['attribute'] = [];
         }
@@ -113,7 +120,7 @@ class Method {
                 }
 
                 $value = Variable::getValue($build, $token, $storage, $is_debug);
-                $attribute .= $value . ', ';
+                $attribute .= $value . ', '; //#
             }
             if($record['method']['php_name'] == Token::TYPE_FOR){
                 $assign = [];
@@ -231,7 +238,12 @@ class Method {
                 }
 
             } else {
-                $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+                if(empty($attribute)){
+                    $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                } else {
+                    $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+                }
+
             }
 
             $record['value'] = $result;

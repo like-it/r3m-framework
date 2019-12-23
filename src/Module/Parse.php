@@ -108,14 +108,7 @@ class Parse {
             $storage->data('r3m.parse.compile.url', $url);
             $mtime = $storage->data('r3m.parse.view.mtime');
 
-//             opcache_invalidate($url, true);
-
-            /*
-            if(File::exist($url) && File::mtime($url) != $mtime){
-                opcache_invalidate($url, true);
-            }
-            */
-
+            opcache_invalidate($url, true);
 
             if(File::exist($url) && File::mtime($url) == $mtime){
                 //cache file
@@ -127,6 +120,12 @@ class Parse {
                 $string = Literal::restore($string, $storage);
                 return $string;
             }
+
+            /*
+            elseif(File::exist($url) && File::mtime($url) != $mtime){
+                opcache_invalidate($url, true);
+            }
+            */
 
             $string = literal::apply($string, $storage);
 
@@ -155,6 +154,7 @@ class Parse {
 
             if($mtime !== null){
                 File::touch($url, $mtime);
+
                 /*
                 opcache_invalidate($url, true);
 

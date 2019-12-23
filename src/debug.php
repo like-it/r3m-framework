@@ -11,11 +11,17 @@ function d($data=null){
     var_dump($data);
     $data = ob_get_contents();
     ob_end_clean();
+    $temp = explode(':', $data, 3);
+    $temp[0] = '';
+    $temp[1] = '';
+    $data = implode('', $temp);
     $explode = explode(PHP_EOL, $data);
-    array_shift($explode);
+    $shift = array_shift($explode);
     if(defined('IS_CLI')){
+        echo $shift . PHP_EOL . PHP_EOL;
         echo implode(PHP_EOL, $explode);
     } else {
+        echo $shift . '<br><br>' . PHP_EOL . PHP_EOL;
         echo implode('<br>' . PHP_EOL, $explode);
         echo '</pre>';
     }
@@ -32,11 +38,18 @@ function dd($data=null){
     var_dump($data);
     $data = ob_get_contents();
     ob_end_clean();
+    $temp = explode(':', $data, 3);
+    $temp[0] = '';
+    $temp[1] = '';
+    $data = implode('', $temp);
     $explode = explode(PHP_EOL, $data);
-    array_shift($explode);
+    $shift = array_shift($explode);
+
     if(defined('IS_CLI')){
+        echo $shift . PHP_EOL . PHP_EOL;
         echo implode(PHP_EOL, $explode);
     } else {
+        echo $shift . '<br><br>' . PHP_EOL . PHP_EOL;
         echo implode('<br>' . PHP_EOL, $explode);
         echo '</pre>';
     }

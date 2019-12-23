@@ -3,6 +3,7 @@
 namespace R3m\Io\Module;
 
 use stdClass;
+use Exception;
 
 class Data {
     private $data;
@@ -10,8 +11,8 @@ class Data {
     public function __construct($data=null){
         $this->data($data);
     }
-    
-    
+
+
     /**
      * @example
      *
@@ -31,7 +32,7 @@ class Data {
             //classname adjustment
             $parameter = basename(str_replace('\\', '//', $parameter));
         }
-        if(is_numeric($parameter)){
+        if(is_numeric($parameter) && is_object($data)){
             if(property_exists($data, $parameter)){
                 $param = ltrim($data->{$parameter}, '-');
                 $result = $param;
@@ -44,31 +45,54 @@ class Data {
                 is_object($data)
                 ){
                     foreach($data as $key => $param){
-                        $param = ltrim($param, '-');
-                        $param = rtrim($param);
-                        $tmp = explode('=', $param);
-                        if(count($tmp) > 1){
-                            $param = array_shift($tmp);
-                            $value = implode('=', $tmp);
-                        }
-                        if(strtolower($param) == strtolower($parameter)){
-                            if($offset !== 0){
-                                if(property_exists($data, ($key + $offset))){
-                                    $value = rtrim(ltrim($data->{($key + $offset)}, '-'));
-                                } else {
-                                    $result = null;
-                                    break;
+                        if(is_numeric($key)){
+                            $param = ltrim($param, '-');
+                            $param = rtrim($param);
+                            $tmp = explode('=', $param);
+                            if(count($tmp) > 1){
+                                $param = array_shift($tmp);
+                                $value = implode('=', $tmp);
+                            }
+                            if(strtolower($param) == strtolower($parameter)){
+                                if($offset !== 0){
+                                    if(property_exists($data, ($key + $offset))){
+                                        $value = rtrim(ltrim($data->{($key + $offset)}, '-'));
+                                    } else {
+                                        $result = null;
+                                        break;
+                                    }
                                 }
+                                if(isset($value) && $value !== null){
+                                    $result = $value;
+                                } else {
+                                    $result = true;
+                                    return $result;
+                                }
+                                break;
                             }
-                            if(isset($value) && $value !== null){
-                                $result = $value;
-                            } else {
-                                $result = true;
-                                return $result;
-                            }
-                            break;
+                            $value = null;
                         }
-                        $value = null;
+                        elseif($key == $parameter){
+                            if($offset < 0){
+                                while($offset < 0){
+                                    $param = prev($data);
+                                    $offset++;
+                                }
+                                return $param;
+                            }
+                            elseif($offset == 0){
+                                return $param;
+                            } else {
+                                while($offset > 0){
+                                    $param = next($data);
+                                    $offset--;
+                                }
+                                return $param;
+                            }
+
+                        }
+                        $pointer = next($data);
+
                     }
             }
         }

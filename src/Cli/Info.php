@@ -9,14 +9,25 @@
 namespace R3m\Io\Cli;
 
 use Exception;
+use R3m\Io\App;
+use R3m\Io\Config;
+use R3m\Io\Module\View;
 
-class Info {
+class Info extends View {
     const DIR = __DIR__;
-    
-    public function run(){
-//         $this->cli('create', 'Logo');
-        $data = $this->request('data');
-        //need host cli info files throught route
-        echo Info::view($this);
+
+    public static function run($object){
+        $debug = debug_backtrace(true);
+        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+        $config->data('framework.environment', Config::MODE_PRODUCTION);
+        $action = $object::parameter($object, 'info', 1);
+        $url = Info::locate($object, 'Info\\' . $action);
+        if(empty($url)){
+//             $config->data('framework.environment', Config::MODE_DEVELOPMENT);
+            $url = Info::locate($object, 'Info');
+
+        }
+        $main = Info::view($object, $url);
+        return $main;
     }
 }

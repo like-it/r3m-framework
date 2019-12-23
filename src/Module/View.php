@@ -62,6 +62,7 @@ class View {
             $explode[] = $config->data('dictionary.view');
         }
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+//         dd($config->data('framework.environment'));
         $url = false;
         foreach($list as $file){
             if(File::exist($file)){
@@ -129,7 +130,7 @@ class View {
         $config->data($key, $value);
     }
 
-    public function view($object, $url=''){
+    public function view($object, $url){
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $dir = Dir::name($url);
         $file = str_replace($dir, '', $url);

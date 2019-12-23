@@ -219,6 +219,7 @@ class Build {
         $placeholder = $storage->data('placeholder.function');
 
         foreach($data as $name => $record){
+            $exist = false;
             foreach($dir_plugin as $nr => $dir){
                 $file = ucfirst($name) . $config->data('extension.php');
                 $url = $dir . $file;
@@ -230,11 +231,15 @@ class Build {
                     $read = implode('function', $explode);
                     $document = str_replace($placeholder, $read . $placeholder, $document);
 
-
+                    $exist = true;
 //                     $document[] = 'if(!function_exists(\'R3m\\Io\\Module\\Compile\\' . $name . '\')){';
 //                     $document[] = $read;
 //                     $document[] = '}';
                 }
+            }
+            if($exist === false){
+                d($url);
+                throw new Exception('Function not found: ' . $name);
             }
         }
         $document = str_replace('function ' . $type, 'private function ' . $type, $document);
@@ -330,9 +335,9 @@ class Build {
                 $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
             }
             elseif($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
-                $counter++;
+//                 $counter++;
                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
-                $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage(), ' . $counter . ');';
+                $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage());';
                 $run[] =  $this->indent() .  'echo \'"\' . $string . \'"\';';
             }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){

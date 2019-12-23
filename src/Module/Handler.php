@@ -16,7 +16,7 @@ use Exception;
 use R3m\Io\App;
 use R3m\Io\Module\Core;
 
-class Handler { 
+class Handler {
     public const NAMESPACE = __NAMESPACE__;
     public const NAME = 'Handler';
     public const NAME_SESSION = 'Session';
@@ -26,7 +26,7 @@ class Handler {
     public const NAME_HEADER = 'Header';
     public const NAME_INPUT = 'Input';
     public const NAME_FILE = 'File';
-    
+
     public const SESSION = 'session';
     public const SESSION_HAS = 'has';
     public const SESSION_START = 'start';
@@ -37,12 +37,14 @@ class Handler {
     public const REQUEST_HEADER = 'request.header';
     public const REQUEST_INPUT = 'request.input';
     public const REQUEST_FILE = 'request.file';
-    
-    public const COOKIE_DELETE = 'delete';  
+
+    public const COOKIE_DELETE = 'delete';
+
+    public const METHOD_CLI = 'CLI';
 
     public static function request_configure($object){
         $object->data(
-            App::NAMESPACE . '.' . 
+            App::NAMESPACE . '.' .
             Handler::NAME_REQUEST . '.' .
             Handler::NAME_HEADER,
             Handler::request_header()
@@ -58,7 +60,7 @@ class Handler {
             Handler::NAME_REQUEST . '.' .
             Handler::NAME_FILE,
             Handler::request_file()
-        );                            
+        );
     }
 
     private static function request_header(){
@@ -120,13 +122,16 @@ class Handler {
             array_shift($temp);
             $request = $temp;
             $request = Core::array_object($request);
+            foreach($request as $key => $value){
+                $request->{$key} = trim($value);
+            }
         } else {
             $request = $_REQUEST;
             $request = Handler::request_key_group($request);
             if(property_exists($request, 'request')){
                 if(substr($request->request, -1) != '/'){
                     $request->request .= '/';
-                }               
+                }
             } else {
                 $request->request = '/';
             }
@@ -153,9 +158,12 @@ class Handler {
             $method = $_SERVER['REQUEST_METHOD'];
             return $method;
         }
+        elseif(defined('IS_CLI')){
+            return Handler::METHOD_CLI;
+        }
         throw new Exception('Method undefined');
     }
-    
+
     public static function session($attribute=null, $value=null){
         if($attribute == Handler::SESSION_HAS){
             return isset($_SESSION);

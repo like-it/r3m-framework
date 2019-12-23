@@ -26,7 +26,12 @@ class Variable {
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $value = Variable::getValue($build, $token, $storage);
 //                 d($value);
-                $assign .= $value . ')';
+                if(empty($value)){
+                    dd($assign);
+                } else {
+                    $assign .= $value . ')';
+                }
+
                 return $assign;
             break;
             case '+=' :

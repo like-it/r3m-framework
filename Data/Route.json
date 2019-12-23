@@ -1,11 +1,31 @@
 {
     "r3m-io-cli-info": {
-        "path": "info",
+        "path": "info/",
         "request" : {
             "page" : "Page",
             "document" : "Cli"
         },
         "controller" : "R3m.Io.Cli.Info.run",
+        "language" : "en",
+        "method": [
+            "CLI"
+        ]
+    },
+    "r3m-io-cli-info-module": {
+        "path": "info/{$module}",
+        "request" : {
+            "page" : "Page",
+            "document" : "Cli"
+        },
+        "controller" : "R3m.Io.Cli.Info.run",
+        "language" : "en",
+        "method": [
+            "CLI"
+        ]
+    },
+    "r3m-io-cli-autoload-action": {
+        "path": "autoload",
+        "controller" : "R3m.Io.Cli.Autoload.run",
         "language" : "en",
         "method": [
             "CLI"

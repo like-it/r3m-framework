@@ -203,6 +203,7 @@ class Dir {
         exec('rm -rf ' . $dir);
         return true;
     }
+
     public function delete($dir=''){
         if(is_dir($dir) === false){
             return true;
