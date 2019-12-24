@@ -19,24 +19,30 @@ use R3m\Io\Module\View;
 use R3m\Io\Module\Parse;
 
 class Version extends View{
-    const NAME = 'Version';
-    const DIR = __DIR__;
+    public const NAME = 'Version';
+    public const DIR = __DIR__;
 
-    const COMMAND_INFO = 'info';
-    const COMMAND_UPDATE = 'update';
-    const COMMAND = [
+    private const COMMAND_INFO = 'info';
+    private const COMMAND_UPDATE = 'update';
+    private const COMMAND = [
         Version::COMMAND_INFO,
         Version::COMMAND_UPDATE
     ];
 
-    const DEFAULT_COMMAND = Version::COMMAND_INFO;
+    private const DEFAULT_COMMAND = Version::COMMAND_INFO;
 
-    const UPDATE_COMMAND = [
-            '{binary()} version info',
+    private const UPDATE_COMMAND = [
+        '{binary()} version info',
     ];
 
-    const EXCEPTION_COMMAND_PARAMETER = '{$command}';
-    const EXCEPTION_COMMAND = 'invalid command (' . Version::EXCEPTION_COMMAND_PARAMETER . ')';
+    public const DATA_FRAMEWORK_VERSION = 'framework.version';
+    public const DATA_FRAMEWORK_BUILT = 'framework.built';
+    public const DATA_FRAMEWORK_MAJOR = 'framework.major';
+    public const DATA_FRAMEWORK_MINOR = 'framework.minor';
+    public const DATA_FRAMEWORK_PATCH = 'framework.patch';
+
+    public const EXCEPTION_COMMAND_PARAMETER = '{$command}';
+    public const EXCEPTION_COMMAND = 'invalid command (' . Version::EXCEPTION_COMMAND_PARAMETER . ')';
 
     public static function run($object){
         $command = $object->parameter($object, Version::NAME, 1);
@@ -63,27 +69,27 @@ class Version extends View{
 
     private static function update($object){
         $config = $object->data(App::DATA_CONFIG);
-        $config_url = $config->data('framework.dir.data') . Config::CONFIG;
+        $config_url = $config->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
         if(File::exist($config_url)){
             $read = Core::object(File::read($config_url));
             $data = new Data($read);
             $version = $object->parameter($object, Version::COMMAND_UPDATE, 1);
             if($version === null){
-                $data->data('framework.patch', $data->data('framework.patch') + 1);
+                $data->data(Version::DATA_FRAMEWORK_PATCH, intval($data->data(Version::DATA_FRAMEWORK_PATCH)) + 1);
             } else {
                 $explode = explode('.', $version, 3);
                 if(isset($explode[0])){
-                    $data->data('framework.major', $explode[0]);
+                    $data->data(Version::DATA_FRAMEWORK_MAJOR, $explode[0]);
                 }
                 if(isset($explode[1])){
-                    $data->data('framework.minor', $explode[1]);
+                    $data->data(Version::DATA_FRAMEWORK_MINOR, $explode[1]);
                 }
                 if(isset($explode[2])){
-                    $data->data('framework.patch', $explode[2]);
+                    $data->data(Version::DATA_FRAMEWORK_PATCH, $explode[2]);
                 }
             }
-            $data->data('framework.version', $data->data('framework.major') . '.' . $data->data('framework.minor') . '.' . ($data->data('framework.patch')));
-            $data->data('framework.built', date('Y-m-d H:i:s'));
+            $data->data(Version::DATA_FRAMEWORK_VERSION, $data->data(Version::DATA_FRAMEWORK_MAJOR) . '.' . $data->data(Version::DATA_FRAMEWORK_MINOR) . '.' . ($data->data(Version::DATA_FRAMEWORK_PATCH)));
+            $data->data(Version::DATA_FRAMEWORK_BUILT, date('Y-m-d H:i:s'));
             $write = Core::object($data->data(), 'json');
             File::write($config_url, $write);
         }
