@@ -180,12 +180,16 @@ class File {
 
     public static function read($url=''){
         if(strpos($url, File::SCHEME_HTTP) !== false){
-          //check network connection first (@) added for that              //error
-         $file = @file($url);
-         if(!is_array($file)){
-            return false;
-         }
+            //check network connection first (@) added for that              //error
+            $file = @file($url);
+            if(!is_array($file)){
+                return false;
+            }
             return implode('', $file);
+        }
+        if(empty($url)){
+            $debug = debug_backtrace(true);
+            dd($debug);
         }
         return implode('',file($url));
     }

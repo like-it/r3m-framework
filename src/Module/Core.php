@@ -21,6 +21,126 @@ class Core {
         '.'
     ];
 
+    const OBJECT_JSON = 'json';
+    const OBJECT_ARRAY = 'array';
+    const OBJECT_OBJECT = 'object';
+
+    const OBJECT_TYPE_ROOT = 'root';
+    const OBJECT_TYPE_CHILD = 'child';
+
+
+
+    const SHELL_DETACHED = 'detached';
+    const SHELL_PROCESS = 'process';
+
+    const OUTPUT_MODE_IMPLICIT = 'implicit';
+    const OUTPUT_MODE_EXPLICIT = 'explicit';
+    const OUTPUT_MODE_DEFAULT = CORE::OUTPUT_MODE_EXPLICIT;
+
+    const OUTPUT_MODE = [
+            Core::OUTPUT_MODE_IMPLICIT,
+            Core::OUTPUT_MODE_EXPLICIT,
+    ];
+
+    const MODE_INTERACTIVE = CORE::OUTPUT_MODE_IMPLICIT;
+    const MODE_PASSIVE = CORE::OUTPUT_MODE_EXPLICIT;
+
+    public static function detach($command){
+        return Core::execute($command, $output, Core::SHELL_DETACHED);
+    }
+
+    public static function async($command){
+        if(stristr($command, '&') === false){
+            $command .= ' &';
+        }
+        return Core::execute($command, $output, Core::SHELL_PROCESS);
+    }
+
+    public static function execute($command, &$output=[], $type=null){
+        if($output === null){
+            $output = [];
+        }
+        $result = [
+                'pid' => getmypid()
+        ];
+        if(
+            in_array(
+                $type,
+                [
+                    Core::SHELL_DETACHED,
+                    Core::SHELL_PROCESS
+                ]
+            )
+        ){
+            $pid = pcntl_fork();
+            switch($pid) {
+                // fork errror
+                case -1 :
+                    return false;
+                case 0 :
+                    //in child process
+                    //create a seperate process to execute another process (async);
+                    exec($command, $output);
+                    if($type != Core::SHELL_PROCESS){
+                                //                         echo implode(PHP_EOL, $output) . PHP_EOL;
+                    }
+                    $output = [];
+                    exit();
+                default :
+                    if($type == Core::SHELL_PROCESS){
+                        pcntl_waitpid(0, $status, WNOHANG);
+                        $status = pcntl_wexitstatus($status);
+                        $child = [
+                            'status' => $status,
+                            'pid' => $pid
+                        ];
+                        $result['child'] = $child;
+                        return $result;
+                    }
+                    //main process (parent)
+                    while (pcntl_waitpid(0, $status) != -1) {
+                        //add max execution time here / time outs etc..
+                        $status = pcntl_wexitstatus($status);
+                        $child = [
+                            'status' => $status,
+                            'pid' => $pid
+                        ];
+                        $result['child'] = $child;
+                    }
+            }
+            return $result;
+        } else {
+            return exec($command, $output);
+        }
+    }
+
+    public static function output_mode($mode = null){
+        if(!in_array($mode, Core::OUTPUT_MODE)){
+            $mode = Core::OUTPUT_MODE_DEFAULT;
+        }
+        switch($mode){
+            case  Core::MODE_INTERACTIVE :
+                ob_implicit_flush(true);
+                ob_end_flush();
+                break;
+            case  Core::MODE_INTERACTIVE :
+                ob_implicit_flush(false);
+                ob_end_flush();
+                break;
+            default :
+                ob_implicit_flush(false);
+                ob_end_flush();
+        }
+    }
+
+    public static function interactive(){
+        return Core::output_mode(Core::MODE_INTERACTIVE);
+    }
+
+    public static function passive(){
+        return Core::output_mode(Core::MODE_PASSIVE);
+    }
+
     public static function redirect($url=''){
         header('Location: ' . $url);
     }
@@ -67,43 +187,49 @@ class Core {
         return $result;
     }
 
-    public static function object($input='', $output='object',$type='root'){
+    public static function object($input='', $output=null,$type=null){
+        if($output === null){
+            $output = Core::OBJECT_OBJECT;
+        }
+        if($type === null){
+            $type = Core::OBJECT_TYPE_ROOT;
+        }
         if(is_bool($input)){
-            if($output == 'object' || $output == 'json'){
+            if($output == Core::OBJECT_OBJECT || $output == Core::OBJECT_JSON){
                 $data = new stdClass();
                 if(empty($input)){
                     $data->false = false;
                 } else {
                     $data->true = true;
                 }
-                if($output == 'json'){
+                if($output == Core::OBJECT_JSON){
                     $data = json_encode($data);
                 }
                 return $data;
             }
-            elseif($output == 'array') {
+            elseif($output == Core::OBJECT_ARRAY) {
                 return array($input);
             } else {
                 throw new Exception(Core::EXCEPTION_OBJECT_OUTPUT);
             }
         }
         if(is_null($input)){
-            if($output == 'object'){
+            if($output == Core::OBJECT_OBJECT){
                 return new stdClass();
             }
-            elseif($output == 'array'){
+            elseif($output == Core::OBJECT_ARRAY){
                 return array();
             }
-            elseif($output == 'json'){
+            elseif($output == Core::OBJECT_JSON){
                 return '{}';
             }
         }
-        if(is_array($input) && $output == 'object'){
+        if(is_array($input) && $output == Core::OBJECT_OBJECT){
             return Core::array_object($input);
         }
         if(is_string($input)){
             $input = trim($input);
-            if($output=='object'){
+            if($output == Core::OBJECT_OBJECT){
                 if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
                     /* why replace newlines ?
                      $input = str_replace(
@@ -143,12 +269,12 @@ class Core {
                     return $json;
                 }
             }
-            elseif(stristr($output, 'json') !== false){
+            elseif(stristr($output, Core::OBJECT_JSON) !== false){
                 if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
                     $input = json_decode($input);
                 }
             }
-            elseif($output=='array'){
+            elseif($output == Core::OBJECT_ARRAY){
                 if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
                     return json_decode($input, true);
                 }
@@ -157,25 +283,25 @@ class Core {
                 }
             }
         }
-        if(stristr($output, 'json') !== false && stristr($output, 'data') !== false){
+        if(stristr($output, Core::OBJECT_JSON) !== false && stristr($output, 'data') !== false){
             $data = str_replace('"', '&quot;',json_encode($input));
         }
-        elseif(stristr($output, 'json') !== false && stristr($output, 'line') !== false){
+        elseif(stristr($output, Core::OBJECT_JSON) !== false && stristr($output, 'line') !== false){
             $data = json_encode($input);
         } else {
             $data = json_encode($input, JSON_PRETTY_PRINT);
         }
-        if($output=='object'){
+        if($output == Core::OBJECT_OBJECT){
             return json_decode($data);
         }
-        elseif(stristr($output, 'json') !== false){
-            if($type=='child'){
+        elseif(stristr($output, Core::OBJECT_JSON) !== false){
+            if($type==Core::OBJECT_TYPE_CHILD){
                 return substr($data,1,-1);
             } else {
                 return $data;
             }
         }
-        elseif($output=='array'){
+        elseif($output == Core::OBJECT_ARRAY){
             return json_decode($data,true);
         } else {
             throw new Exception(Core::EXCEPTION_OBJECT_OUTPUT);

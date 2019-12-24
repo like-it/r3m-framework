@@ -6,10 +6,11 @@
  * @changeLog
  *     -    all
  */
-namespace R3m\Io\Cli;
+namespace R3m\Io\Cli\Autoload\Controller;
 
 use Exception;
 use R3m\Io\App;
+use R3m\Io\Config;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\View;
 
@@ -17,16 +18,24 @@ class Autoload extends View{
     const NAME = 'Autoload';
     const DIR = __DIR__;
 
+    const COMMAND_INFO = 'info';
     const COMMAND_RESTART = 'restart';
     const COMMAND = [
+        Autoload::COMMAND_INFO,
         Autoload::COMMAND_RESTART
     ];
+
+    const DEFAULT_COMMAND = Autoload::COMMAND_RESTART;
 
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';
     const EXCEPTION_COMMAND = 'invalid command (' . Autoload::EXCEPTION_COMMAND_PARAMETER . ')';
 
     public static function run($object){
         $command = $object->parameter($object, Autoload::NAME, 1);
+
+        if($command === null){
+            $command = Autoload::DEFAULT_COMMAND;
+        }
         if(!in_array($command, Autoload::COMMAND)){
             $exception = str_replace(
                 Autoload::EXCEPTION_COMMAND_PARAMETER,
@@ -35,19 +44,20 @@ class Autoload extends View{
             );
             throw new Exception($exception);
         }
-        switch($command){
-            case Autoload::COMMAND_RESTART :
-                return Autoload::{$command}($object);
-            break;
-        }
+        return Autoload::{$command}($object);
     }
 
+    private static function info($object){
+        $url = Autoload::locate($object, ucfirst(__FUNCTION__));
+        return Autoload::view($object, $url);
+    }
+
+
     private static function restart($object){
-        $config = $object->data(App::DATA_CONFIG);
-        $dir_root = $config->data('framework.dir.root');
-        $temp  = $dir_root . 'Temp' . $config->data('ds');
-        Dir::remove($temp);
-        $url = Autoload::locate($object, Autoload::NAME . '/' . 'Restart');
+        $autoload = $object->data(App::DATA_AUTOLOAD_R3M);
+        $cache_dir = $autoload->cache_dir();
+        Dir::remove($cache_dir);
+        $url = Autoload::locate($object, ucfirst(__FUNCTION__));
         return Autoload::view($object, $url);
     }
 }

@@ -4,14 +4,13 @@ namespace R3m\Io;
 
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\File;
 
 class Config extends Data {
     public const NAME = 'Config';
 
     public const MODE_PRODUCTION = 'production';
     public const MODE_DEVELOPMENT = 'development';
-
-    public const VALUE_DS = DIRECTORY_SEPARATOR;
 
     public const DATA = 'data';
     public const VALUE_DATA = 'Data';
@@ -44,6 +43,7 @@ class Config extends Data {
     public const VALUE_PLUGIN = 'Plugin';
 
     public const DS = 'ds';
+    public const VALUE_DS = DIRECTORY_SEPARATOR;
 
     public const VIEW = 'view';
     public const VALUE_VIEW = 'View';
@@ -55,10 +55,13 @@ class Config extends Data {
     ];
 
     public const ROUTE = 'Route.json';
+    public const CONFIG = 'Config.json';
 
     public const DICTIONARY = 'dictionary';
 
     public const DATA_DIR_VENDOR = 'dir.vendor';
+    public const DATA_FRAMEWORK_VERSION = 'framework.version';
+    public const DATA_FRAMEWORK_BUILT = 'framework.built';
     public const DATA_FRAMEWORK_DIR = 'framework.dir';
     public const DATA_FRAMEWORK_DIR_ROOT = Config::DATA_FRAMEWORK_DIR . '.' .'root';
     public const DATA_FRAMEWORK_DIR_VENDOR = Config::DATA_FRAMEWORK_DIR . '.' .'vendor';
@@ -88,10 +91,15 @@ class Config extends Data {
             unset($config[Config::DATA_DIR_VENDOR]);
         }
         $this->default();
+        $url = $this->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
+        if(File::exist($url)){
+            $read = Core::object(File::read($url));
+            $this->data(Core::object_merge($this->data(), $read));
+        }
+        //maybe merge this too...
         foreach($config as $attribute => $value){
             $this->data($attribute, $value);
         }
-        //         $this->register();
     }
 
     public function default(){

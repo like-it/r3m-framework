@@ -18,6 +18,7 @@ use R3m\Io\Config;
 class Autoload {
     const DIR = __DIR__;
     const FILE = 'Autoload.json';
+    const TEMP = 'Temp';
     const NAME = 'Autoload';
     const EXT_PHP = 'php';
     const EXT_TPL = 'tpl';
@@ -29,16 +30,24 @@ class Autoload {
     protected $read;
     protected $fileList;
 
+    protected $cache_dir;
+
     public $prefixList = array();
     public $environment = 'production';
 
     public static function configure($object){
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+        $config = $object->data(App::DATA_CONFIG);
         $autoload = new Autoload();
-        $autoload->addPrefix('Host',  $config->data('project.dir.host'));
+        $autoload->addPrefix('Host',  $config->data(Config::DATA_PROJECT_DIR_HOST));
+        $cache_dir =
+            $config->data(Config::DATA_FRAMEWORK_DIR_CACHE) .
+            Autoload::NAME .
+            $config->data(Config::DS)
+        ;
+        $autoload->cache_dir($cache_dir);
         $autoload->register();
 
-        $object->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M, $autoload);
+        $object->data(App::DATA_AUTOLOAD_R3M, $autoload);
     }
 
     public function register($method='load', $prepend=false){
@@ -190,7 +199,8 @@ class Autoload {
 
     public function locate($load=null, $is_data=false){
         // $this->environment($this->data('priya.environment'));
-        $dir = dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . 'Temp' . DIRECTORY_SEPARATOR;
+//         $dir = dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . Autoload::TEMP . DIRECTORY_SEPARATOR;
+        $dir = $this->cache_dir();
         $url = $dir . Autoload::FILE;
         $load = ltrim($load, '\\');
         $prefixList = $this->getPrefixList();
@@ -302,15 +312,22 @@ class Autoload {
 
     public function __destruct(){
         if(!empty($this->read)){
-            $dir = dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . 'Temp' . DIRECTORY_SEPARATOR;
+            $dir = $this->cache_dir(); //dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . Autoload::TEMP . DIRECTORY_SEPARATOR;
             $url = $dir . Autoload::FILE;
             $this->write($url, $this->read);
         }
     }
 
+    public function cache_dir($directory=null){
+        if($directory !== null){
+            $this->cache_dir = $directory;
+        }
+        return $this->cache_dir;
+    }
+
     private function cache($file='', $class=''){
         if(empty($this->read)){
-            $dir = dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . 'Temp' . DIRECTORY_SEPARATOR;
+            $dir = $this->cache_dir(); //dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . Autoload::TEMP . DIRECTORY_SEPARATOR;
             $url = $dir . Autoload::FILE;
             $this->read = $this->read($url);
         }
@@ -362,7 +379,7 @@ class Autoload {
             $this->read = new stdClass();
             return $this->read;
         }
-        $this->read =  json_decode(implode('',file($url)));
+        $this->read =  json_decode(implode('', file($url)));
         if(empty($this->read)){
             $this->read = new stdClass();
         }

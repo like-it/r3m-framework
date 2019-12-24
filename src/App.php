@@ -23,6 +23,7 @@ class App extends Data {
     public const DATA_CONFIG = App::NAMESPACE . '.' . Config::NAME;
     public const DATA_REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
     public const DATA_AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
+    public const DATA_AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;
 
     public function __construct($autoload, $config){
         $this->data(App::DATA_AUTOLOAD_COMPOSER, $autoload);

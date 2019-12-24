@@ -131,6 +131,11 @@ class View {
     }
 
     public function view($object, $url){
+        if(empty($url)){
+            $debug = debug_backtrace(true);
+            d($debug);
+            throw new Exception('Url is empty');
+        }
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $dir = Dir::name($url);
         $file = str_replace($dir, '', $url);
@@ -140,6 +145,9 @@ class View {
         $dir_compile = $config->data('parse.dir.compile');
         $dir_cache = $config->data('parse.dir.cache');
 
+        if(File::exist($url) === false){
+            throw new Exception('Url (' . $url .')doesn\'t exist');
+        }
         $read = File::read($url);
         $mtime = File::mtime($url);
 

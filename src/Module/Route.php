@@ -518,6 +518,12 @@ class Route extends Data{
             if(File::exist($item->resource)){
                 $read = File::read($item->resource);
                 $resource = Core::object($read);
+
+                if(Core::object_is_empty($resource)){
+                    throw new Exception('Could not read route file (' . $item->resource .')');
+                }
+
+
                 foreach($resource as $resource_key => $resource_item){
                     $check = $route->data($resource_key);
                     if(empty($check)){

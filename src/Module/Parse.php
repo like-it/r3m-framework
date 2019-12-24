@@ -19,9 +19,12 @@ use stdClass;
 
 class Parse {
     public const PLUGIN = 'Plugin';
+    public const TEMPLATE = 'Template';
+    public const COMPILE = 'Compile';
 
     private $object;
     private $storage;
+    private $cache_dir;
 
     public function __construct($object){
         $this->object($object);
@@ -42,7 +45,16 @@ class Parse {
         if(empty($dir_plugin)){
             $config->data('framework.dir.plugin', $config->data('framework.dir.source') . Parse::PLUGIN . $config->data('ds'));
         }
-
+        $compile = $config->data('dictionary.compile');
+        if(empty($compile)){
+            $config->data('dictionary.compile', Parse::COMPILE);
+        }
+        $template = $config->data('dictionary.template');
+        if(empty($template)){
+            $config->data('dictionary.template', Parse::TEMPLATE);
+        }
+        $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
+        $this->cache_dir($cache_dir);
     }
 
     public function object($object=null){
@@ -75,6 +87,13 @@ class Parse {
         return $this->storage;
     }
 
+    public function cache_dir($cache_dir=null){
+        if($cache_dir !== null){
+            $this->cache_dir = $cache_dir;
+        }
+        return $this->cache_dir;
+    }
+
     public function compile($string='', $data=[], $storage=null, $is_debug=false){
         if($storage === null){
             $storage = $this->storage(new Data());
@@ -103,6 +122,7 @@ class Parse {
         else {
 //             $string = str_replace('&quot;', '"', $string);
             $build = new Build($this->object());
+            $build->cache_dir($this->cache_dir());
             $url = $build->url($string);
 
             $storage->data('r3m.parse.compile.url', $url);

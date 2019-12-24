@@ -1,31 +1,39 @@
 {
     "r3m-io-cli-info": {
-        "path": "info/",
-        "request" : {
-            "page" : "Page",
-            "document" : "Cli"
-        },
-        "controller" : "R3m.Io.Cli.Info.run",
+        "path": "info",
+        "controller" : "R3m.Io.Cli.Info.Controller.Info.run",
         "language" : "en",
         "method": [
             "CLI"
         ]
     },
-    "r3m-io-cli-info-module": {
-        "path": "info/{$module}",
-        "request" : {
-            "page" : "Page",
-            "document" : "Cli"
-        },
-        "controller" : "R3m.Io.Cli.Info.run",
-        "language" : "en",
-        "method": [
-            "CLI"
-        ]
-    },
-    "r3m-io-cli-autoload-action": {
+    "r3m-io-cli-autoload": {
         "path": "autoload",
-        "controller" : "R3m.Io.Cli.Autoload.run",
+        "controller" : "R3m.Io.Cli.Autoload.Controller.Autoload.run",
+        "language" : "en",
+        "method": [
+            "CLI"
+        ]
+    },
+    "r3m-io-cli-parse": {
+        "path": "parse",
+        "controller" : "R3m.Io.Cli.Parse.Controller.Parse.run",
+        "language" : "en",
+        "method": [
+            "CLI"
+        ]
+    },
+    "r3m-io-cli-cache": {
+        "path": "cache",
+        "controller" : "R3m.Io.Cli.Cache.Controller.Cache.run",
+        "language" : "en",
+        "method": [
+            "CLI"
+        ]
+    },
+    "r3m-io-cli-version": {
+        "path": "version",
+        "controller" : "R3m.Io.Cli.Version.Controller.Version.run",
         "language" : "en",
         "method": [
             "CLI"

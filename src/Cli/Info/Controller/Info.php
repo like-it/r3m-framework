@@ -6,7 +6,7 @@
  * @changeLog
  *     -    all
  */
-namespace R3m\Io\Cli;
+namespace R3m\Io\Cli\Info\Controller;
 
 use Exception;
 use R3m\Io\App;
@@ -15,19 +15,19 @@ use R3m\Io\Module\View;
 
 class Info extends View {
     const DIR = __DIR__;
+    const NAME = 'Info';
 
     public static function run($object){
         $debug = debug_backtrace(true);
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $config->data('framework.environment', Config::MODE_PRODUCTION);
-        $action = $object::parameter($object, 'info', 1);
-        $url = Info::locate($object, 'Info\\' . $action);
+        $command = $object::parameter($object, Info::NAME, 1);
+        $url = Info::locate($object, 'Info\\' . $command);
         if(empty($url)){
-//             $config->data('framework.environment', Config::MODE_DEVELOPMENT);
+            $config->data('framework.environment', Config::MODE_DEVELOPMENT);
             $url = Info::locate($object, 'Info');
 
         }
-        $main = Info::view($object, $url);
-        return $main;
+        return Info::view($object, $url);
     }
 }

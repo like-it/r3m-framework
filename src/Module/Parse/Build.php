@@ -21,8 +21,6 @@ use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Parse;
 
 class Build {
-    public const TEMPLATE = 'Template';
-    public const COMPILE = 'Compile';
     public const NAME = 'Build';
 
     private const VARIABLE_ASSIGN = 'variable-assign';
@@ -36,6 +34,7 @@ class Build {
     public $indent;
     private $object;
     private $storage;
+    private $cache_dir;
 
     public function __construct($object=null){
         $this->object($object);
@@ -45,7 +44,7 @@ class Build {
         if(empty($config)){
             throw new Exception('Config not found in object');
         }
-
+        /*
         $compile = $config->data('dictionary.compile');
         if(empty($compile)){
             $config->data('dictionary.compile', Build::COMPILE);
@@ -54,6 +53,7 @@ class Build {
         if(empty($template)){
             $config->data('dictionary.template', Build::TEMPLATE);
         }
+        */
         $this->storage(new Data());
         $dir_plugin = [];
         $dir_plugin[] = $config->data('host.dir.plugin');
@@ -588,6 +588,13 @@ class Build {
         return $this->storage;
     }
 
+    public function cache_dir($cache_dir=null){
+        if($cache_dir !== null){
+            $this->cache_dir = $cache_dir;
+        }
+        return $this->cache_dir;
+    }
+
     public function url($string=null){
         $storage = $this->storage();
         $url = $storage->data('url');
@@ -595,10 +602,11 @@ class Build {
             $key = sha1($string);
 
             $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
-            $dir =
-                $config->data('project.dir.data') .
-                $config->data('dictionary.compile') .
-                $config->data('ds');
+            $dir = $this->cache_dir();
+
+            if(empty($dir)){
+                throw new Exception('Cache dir empty in Build');
+            }
 
             $autoload = $this->object()->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
             $autoload->unregister();
