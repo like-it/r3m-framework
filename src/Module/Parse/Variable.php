@@ -99,7 +99,9 @@ class Variable {
 
     public static function define($build, $token=[], Data $storage){
         $variable = array_shift($token);
-
+        if(!array_key_exists('variable', $variable)){
+            return '';
+        }
 
 
         $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';

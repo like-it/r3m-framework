@@ -1,1 +1,1 @@
-{$url = "{$r3m.config.framework.dir.root}LICENSE"}{ if(file.exist($url)) }{file.read($url)}{ /if }
+{$url = "{$r3m.config.framework.dir.root}LICENSE"}{ if(file.exist($url)) }{file.read($url)}{ else }License file doesn't exist.{ /if }

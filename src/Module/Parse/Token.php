@@ -845,6 +845,7 @@ class Token {
             }
             elseif(
                 $record['type'] == Token::TYPE_VARIABLE &&
+                key_exists('variable', $record) &&
                 key_exists('has_modifier', $record['variable']) &&
                 $record['variable']['has_modifier'] === true
             ){
@@ -1266,6 +1267,15 @@ class Token {
                 } else {
                     $quote_single['value'] .= $record['value'];
                     $previous_nr = $nr;
+                    if($token[$next]['value'] == '{'){
+                        $token[$quote_single['nr']]['type'] = Token::TYPE_STRING;
+                        $token[$quote_single['nr']]['value'] = $quote_single['value'];
+                        for($i = ($quote_single['nr'] + 1); $i <= $nr; $i++){
+                            unset($token[$i]);
+                        }
+                        $quote_single = null;
+                        $quote_single_toggle = false;
+                    }
                     continue;
                 }
             } else {
@@ -1304,6 +1314,15 @@ class Token {
                 } else {
                     $quote_double['value'] .= $record['value'];
                     $previous_nr = $nr;
+                    if($token[$next]['value'] == '{'){
+                        $token[$quote_double['nr']]['type'] = Token::TYPE_STRING;
+                        $token[$quote_double['nr']]['value'] = $quote_double['value'];
+                        for($i = ($quote_double['nr'] + 1); $i <= $nr; $i++){
+                            unset($token[$i]);
+                        }
+                        $quote_double = null;
+                        $quote_double_toggle = false;
+                    }
                     continue;
                 }
             } else {

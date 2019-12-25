@@ -314,10 +314,7 @@ class Build {
         $selection = [];
 
         $skip_nr = null;
-
         $is_control = false;
-
-//         d($tree);
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -451,7 +448,10 @@ class Build {
     private static function getType($record=[]){
         switch($record['type']){
             case Token::TYPE_VARIABLE :
-                if($record['variable']['is_assign'] === true){
+                if(
+                    array_key_exists('variable', $record) &&
+                    $record['variable']['is_assign'] === true
+                ){
                     return Build::VARIABLE_ASSIGN;
                 } else {
                     return Build::VARIABLE_DEFINE;
@@ -647,7 +647,11 @@ class Build {
     private function requireModifier($tree=[]){
         $storage = $this->storage();
         foreach($tree as $nr => $record){
-            if($record['type'] == Token::TYPE_VARIABLE && array_key_exists('has_modifier', $record['variable'])){
+            if(
+                $record['type'] == Token::TYPE_VARIABLE &&
+                array_key_exists('variable', $record) &&
+                array_key_exists('has_modifier', $record['variable'])
+            ){
                 foreach($record['variable']['modifier'] as $modifier_list_nr => $modifier_list){
                     foreach($modifier_list as $modifier_nr => $modifier){
                         if(
