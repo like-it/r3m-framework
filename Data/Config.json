@@ -4,6 +4,16 @@
         "minor": "0",
         "patch": "14",
         "version": "0.0.14",
-        "built": "2019-12-24 02:31:58"
+        "built": "2019-12-24 02:31:58",
+        "default" : {
+            "route" : [
+                "info",
+                "autoload",
+                "parse",
+                "cache",
+                "license",
+                "version"
+            ]
+        }
     }
 }

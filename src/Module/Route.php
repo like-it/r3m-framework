@@ -189,8 +189,6 @@ class Route extends Data{
                 continue;
             }
             $match = Route::is_match_cli($object, $record, $select);
-            //             d($record);
-            //             d($select);
             if($match === true){
                 $current = $record;
                 break;
@@ -199,7 +197,6 @@ class Route extends Data{
         if($current !== false){
             $current = Route::prepare($object, $current, $select);
             $current->parameter = $select->parameter;
-            //             $current->select = $select;
             return $current;
         }
         return false;
@@ -470,6 +467,7 @@ class Route extends Data{
             $object->data(App::DATA_ROUTE, $data);
         }
         Route::load($object);
+        Route::framework($object);
     }
 
     private function item_path($object, $item){
@@ -501,8 +499,7 @@ class Route extends Data{
         if(empty($data)){
             return;
         }
-        foreach($data as
-            $item){
+        foreach($data as $item){
             if(!is_object($item)){
                 continue;
             }
@@ -538,6 +535,26 @@ class Route extends Data{
         }
         if($reload === true){
             Route::load($object);
+        }
+    }
+
+    private static function framework($object){
+        $config = $object->data(App::DATA_CONFIG);
+        $route = $object->data(App::DATA_ROUTE);
+        $default_route = $config->data('framework.default.route');
+        foreach($default_route as $record){
+            $path = strtolower($record);
+            $control = ucfirst($path);
+            $attribute = 'r3m-io-cli-' . $path;
+            $item = new stdClass();
+            $item->path = $path . '/';
+            $item->controller = 'R3m.Io.Cli.' . $control . '.Controller.' . $control . '.run';
+            $item->language = 'en';
+            $item->method = [
+                "CLI"
+            ];
+            $item->deep = 1;
+            $route->data($attribute, $item);
         }
     }
 
