@@ -246,7 +246,7 @@ class Config extends Data {
 
         $key = Config::DATA_FRAMEWORK_DIR_CLI;
         $value =
-            $this->data($key = Config::DATA_FRAMEWORK_DIR_ROOT) .
+            $this->data(Config::DATA_FRAMEWORK_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::CLI) .
             $this->data(Config::DS);
         $this->data($key, $value);

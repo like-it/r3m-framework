@@ -1,4 +1,4 @@
 Parse CLI:
 
-{binary()} parse info                        parse information
-{binary()} parse restart                     removes cache files
+{binary()} cache info                        cache information
+{binary()} cache clear                       removes cache files

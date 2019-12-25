@@ -31,6 +31,14 @@
             "CLI"
         ]
     },
+    "r3m-io-cli-license": {
+        "path": "license",
+        "controller" : "R3m.Io.Cli.License.Controller.License.run",
+        "language" : "en",
+        "method": [
+            "CLI"
+        ]
+    },
     "r3m-io-cli-version": {
         "path": "version",
         "controller" : "R3m.Io.Cli.Version.Controller.Version.run",

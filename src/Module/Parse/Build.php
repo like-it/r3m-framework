@@ -334,7 +334,10 @@ class Build {
             ){
                 $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
             }
-            elseif($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
+            elseif(
+                $is_tag === false &&
+                $record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING
+            ){
 //                 $counter++;
                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
                 $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage());';
