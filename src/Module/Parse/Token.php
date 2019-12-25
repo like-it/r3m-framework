@@ -1267,7 +1267,10 @@ class Token {
                 } else {
                     $quote_single['value'] .= $record['value'];
                     $previous_nr = $nr;
-                    if($token[$next]['value'] == '{'){
+                    if(
+                        $next !== null &&
+                        $token[$next]['value'] == '{'
+                    ){
                         $token[$quote_single['nr']]['type'] = Token::TYPE_STRING;
                         $token[$quote_single['nr']]['value'] = $quote_single['value'];
                         for($i = ($quote_single['nr'] + 1); $i <= $nr; $i++){
@@ -1314,7 +1317,10 @@ class Token {
                 } else {
                     $quote_double['value'] .= $record['value'];
                     $previous_nr = $nr;
-                    if($token[$next]['value'] == '{'){
+                    if(
+                        $next !== null &&
+                        $token[$next]['value'] == '{'
+                    ){
                         $token[$quote_double['nr']]['type'] = Token::TYPE_STRING;
                         $token[$quote_double['nr']]['value'] = $quote_double['value'];
                         for($i = ($quote_double['nr'] + 1); $i <= $nr; $i++){

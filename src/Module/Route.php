@@ -26,6 +26,22 @@ class Route extends Data{
     private const SELECT_DEFAULT = 'info';
 
     private $current;
+    private $url;
+    private $cache_url;
+
+    public function url($url=null){
+        if($url !== null){
+            $this->url = $url;
+        }
+        return $this->url;
+    }
+
+    public function cache_url($url=null){
+        if($url !== null){
+            $this->cache_url = $url;
+        }
+        return $this->cache_url;
+    }
 
     public function current($current=null){
         if($current !== null){
@@ -345,7 +361,7 @@ class Route extends Data{
             if(array_key_exists($nr, $attribute) === false){
                 return false;
             }
-            if($part != $attribute[$nr]){
+            if(strtolower($part) != strtolower($attribute[$nr])){
                 return false;
             }
         }
@@ -454,20 +470,115 @@ class Route extends Data{
 
     public static function configure($object){
         $config = $object->data(App::DATA_CONFIG);
-        $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
 
+        $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
         if(empty($config->data(Config::DATA_PROJECT_ROUTE_URL))){
             $config->data(Config::DATA_PROJECT_ROUTE_URL, $url);
         }
         $url = $config->data(Config::DATA_PROJECT_ROUTE_URL);
+        $cache_url = $config->data(Config::DATA_PROJECT_DIR_DATA) . 'Cache' . $config->data('ds') . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
+        $cache = Route::cache_read($object, $url, $cache_url);
+        $cache = Route::cache_invalidate($object, $cache);
 
-        if(File::Exist($url)){
-            $read = File::read($url);
-            $data = new Route(Core::object($read));
-            $object->data(App::DATA_ROUTE, $data);
+        if(empty($cache)){
+            if(File::Exist($url)){
+                $read = File::read($url);
+                $data = new Route(Core::object($read));
+                $data->url($url);
+                $data->cache_url($cache_url);
+                $object->data(App::DATA_ROUTE, $data);
+                Route::load($object);
+                Route::framework($object);
+                Route::cache_write($object);
+            }
+        } else {
+            $object->data(App::DATA_ROUTE, $cache);
         }
-        Route::load($object);
-        Route::framework($object);
+    }
+
+    private static function cache_invalidate($object, $cache){
+        $has_resource = false;
+        $invalidate = true;
+
+        if(empty($cache)){
+            return;
+        }
+
+        $data = $cache->data();
+        foreach($data as $record){
+            if(property_exists($record, 'resource')){
+                $has_resource = true;
+                if(!File::exist($record->resource)){
+                    break;
+                }
+                if(!property_exists($record, 'mtime')){
+                    break;
+                }
+                if(File::mtime($record->resource) != $record->mtime){
+                    break;
+                }
+                continue;
+            }
+            $invalidate = false;
+            break;
+        }
+        if(
+            $invalidate &&
+            $has_resource
+        ){
+            $cache_url = $cache->cache_url();
+            File::delete($cache_url);
+            return false;
+        }
+        elseif($has_resource === false) {
+            $cache_url = $cache->cache_url();
+            File::delete($cache_url);
+            return false;
+        } else {
+            return $cache;
+        }
+    }
+
+    private static function cache_read($object, $url, $cache_url){
+        if(File::Exist($cache_url)){
+            $read = File::read($cache_url);
+            $data = new Route(Core::object($read));
+            $data->url($url);
+            $data->cache_url($cache_url);
+            return $data;
+        }
+    }
+
+    private static function cache_write($object){
+        $config = $object->data(App::DATA_CONFIG);
+        $route = $object->data(App::DATA_ROUTE);
+        $data = $route->data();
+        $result = new Data();
+        $url = $route->url();
+        $cache_url = $route->cache_url();
+        $cache_dir = Dir::name($cache_url);
+
+        $main = new stdClass();
+        $main->resource = $url;
+        $main->read = true;
+        $main->mtime = File::mtime($url);
+
+        $result->data(Core::uuid(), $main);
+        foreach($data as $key => $record){
+            if(property_exists($record, 'resource') === false){
+                continue;
+            }
+            $result->data($key, $record);
+        }
+        foreach($data as $key => $record){
+            if(property_exists($record, 'resource')){
+                continue;
+            }
+            $result->data($key, $record);
+        }
+        $write = Core::object($result->data(), Core::OBJECT_JSON);
+        Dir::create($cache_dir, Dir::CHMOD);
+        return File::write($cache_url, $write);
     }
 
     private function item_path($object, $item){
@@ -529,6 +640,7 @@ class Route extends Data{
                 }
                 $reload = true;
                 $item->read = true;
+                $item->mtime = File::mtime($item->resource);
             } else {
                 $item->read = false;
             }
