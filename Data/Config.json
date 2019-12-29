@@ -12,7 +12,9 @@
                 "parse",
                 "cache",
                 "license",
-                "version"
+                "version",
+                "uuid",
+                "route"
             ]
         }
     }

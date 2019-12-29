@@ -33,7 +33,8 @@ class Cache extends View{
 
     const CLEAR_COMMAND = [
         '{binary()} autoload restart',
-        '{binary()} parse restart'
+        '{binary()} parse restart',
+        '{binary()} route restart'
     ];
 
 
