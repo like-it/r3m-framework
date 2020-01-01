@@ -483,7 +483,7 @@ class Route extends Data{
         $cache = Route::cache_invalidate($object, $cache);
 
         if(empty($cache)){
-            if(File::Exist($url)){
+            if(File::exist($url)){
                 $read = File::read($url);
                 $data = new Route(Core::object($read));
                 $data->url($url);
@@ -495,7 +495,15 @@ class Route extends Data{
             }
         } else {
             $object->data(App::DATA_ROUTE, $cache);
+
             //check cache_time_check for 1 minute caches
+        }
+    }
+
+    private static function cache_mtime($object, $cache){
+        $time = strtotime(date('Y-m-d H:i:00'));
+        if(File::mtime($cache->cache_url()) != $time){
+            return File::touch($cache->cache_url(), $time, $time);
         }
     }
 
@@ -506,9 +514,11 @@ class Route extends Data{
         if(empty($cache)){
             return;
         }
-
+        $time = strtotime(date('Y-m-d H:i:00'));
+        if($time == File::mtime($cache->cache_url())){
+            return $cache;
+        }
         $data = $cache->data();
-
         //default_uuid need
         //read default_uuid timestamp
         //compare with current timestamp,
@@ -544,6 +554,7 @@ class Route extends Data{
             File::delete($cache_url);
             return false;
         } else {
+            Route::cache_mtime($object, $cache);
             return $cache;
         }
     }
@@ -587,7 +598,10 @@ class Route extends Data{
         }
         $write = Core::object($result->data(), Core::OBJECT_JSON);
         Dir::create($cache_dir, Dir::CHMOD);
-        return File::write($cache_url, $write);
+        $byte =  File::write($cache_url, $write);
+        $time = strtotime(date('Y-m-d H:i:00'));
+        $touch = File::touch($cache_url, $time, $time);
+        return $byte;
     }
 
     private function item_path($object, $item){
