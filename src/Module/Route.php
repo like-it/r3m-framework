@@ -29,8 +29,6 @@ class Route extends Data{
     private $url;
     private $cache_url;
 
-    private const DEFAULT_CACHE_KEY = 'aae4db95-a386-4aba-b2bf-d7fd1b7589f7';
-
     public function url($url=null){
         if($url !== null){
             $this->url = $url;
@@ -519,11 +517,6 @@ class Route extends Data{
             return $cache;
         }
         $data = $cache->data();
-        //default_uuid need
-        //read default_uuid timestamp
-        //compare with current timestamp,
-        //if smaller return $cache // quicker
-
         foreach($data as $record){
             if(property_exists($record, 'resource')){
                 $has_resource = true;
