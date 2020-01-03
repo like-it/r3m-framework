@@ -10,111 +10,111 @@
 namespace R3m\Io\Module\Parse;
 
 class Token {
-    public const TYPE_NULL = 'null';
-    public const TYPE_STRING = 'string';
-    public const TYPE_CODE = 'code';
-    public const TYPE_BOOLEAN = 'boolean';
-    public const TYPE_BOOLEAN_AND = 'boolean-and';
-    public const TYPE_BOOLEAN_OR = 'boolean-or';
-    public const TYPE_INT = 'integer';
-    public const TYPE_OCT = 'octal';
-    public const TYPE_HEX = 'hexadecimal';
-    public const TYPE_FLOAT = 'float';
-    public const TYPE_FOR = 'for';
-    public const TYPE_FOREACH = 'foreach';
-    public const TYPE_BREAK = 'break';
-    public const TYPE_CONTINUE = 'continue';
-    public const TYPE_ARRAY = 'array';
-    public const TYPE_OBJECT = 'object';
-    public const TYPE_VARIABLE = 'variable';
-    public const TYPE_OPERATOR = 'operator';
-    public const TYPE_DOT = 'dot';
-    public const TYPE_COLON = 'colon';
-    public const TYPE_DOUBLE_COLON = 'double-colon';
-    public const TYPE_DOUBLE_ARROW = 'double-arrow';
-    public const TYPE_AS = 'as';
-    public const TYPE_SEMI_COLON = 'semi-colon';
-    public const TYPE_COMMA = 'comma';
-    public const TYPE_MIXED = 'mixed';
-    public const TYPE_WHITESPACE = 'whitespace';
-    public const TYPE_STATEMENT = 'statement';
-    public const TYPE_PARENTHESE = 'parenthese';
-    public const TYPE_BRACKET = 'bracket';
-    public const TYPE_NUMBER = 'number';
-    public const TYPE_SET = 'set';
-    public const TYPE_METHOD = 'method';
-    public const TYPE_FUNCTION = 'function';
-    public const TYPE_MODIFIER = 'modifier';
-    public const TYPE_CLASS = 'class';
-    public const TYPE_TRAIT = 'trait';
-    public const TYPE_EXCLAMATION = 'exclamation';
-    public const TYPE_CONTROL = 'control';
-    public const TYPE_WHILE = 'while';
-    public const TYPE_QUOTE_SINGLE = 'quote-single';
-    public const TYPE_QUOTE_DOUBLE = 'quote-double';
-    public const TYPE_QUOTE_SINGLE_STRING = 'quote-single-string';
-    public const TYPE_QUOTE_DOUBLE_STRING = 'quote-double-string';
-    public const TYPE_BACKSLASH = 'backslash';
-    public const TYPE_BRACKET_SQUARE_OPEN = 'bracket-square-open';
-    public const TYPE_BRACKET_SQUARE_CLOSE = 'bracket-square-close';
-    public const TYPE_CURLY_OPEN = 'curly-open';
-    public const TYPE_CURLY_CLOSE = 'curly-close';
-    public const TYPE_PARENTHESE_OPEN = 'parenthese-open';
-    public const TYPE_PARENTHESE_CLOSE = 'parenthese-close';
-    public const TYPE_COMMENT_OPEN = 'comment-open';
-    public const TYPE_COMMENT_CLOSE = 'comment-close';
-    public const TYPE_DOC_COMMENT_OPEN = 'doc-comment-open';
-    public const TYPE_COMMENT_SINGLE_LINE = 'comment-single-line';
-    public const TYPE_COMMENT = 'comment';
-    public const TYPE_DOC_COMMENT = 'doc-comment';
-    public const TYPE_AMPERSAND = 'ampersand';
-    public const TYPE_QUESTION = 'question';
-    public const TYPE_PIPE = 'pipe';
-    public const TYPE_LITERAL = 'tag-literal';
-    public const TYPE_IS_OBJECT_OPERATOR = 'is-object-operator';
-    public const TYPE_IS_ARRAY_OPERATOR = 'is-array-operator';
-    public const TYPE_IS_EQUAL = 'is-equal';
-    public const TYPE_IS_NOT_EQUAL = 'is-not-equal';
-    public const TYPE_IS_GREATER_EQUAL = 'is-greater-equal';
-    public const TYPE_IS_SMALLER_EQUAL = 'is-smaller-equal';
-    public const TYPE_IS_GREATER = 'is-greater';
-    public const TYPE_IS_SMALLER = 'is-smaller';
-    public const TYPE_IS_IDENTICAL = 'is-identical';
-    public const TYPE_IS_NOT_IDENTICAL = 'is-not-identical';
-    public const TYPE_IS_GREATER_GREATER = 'is-greater-greater';
-    public const TYPE_IS_SMALLER_SMALLER = 'is-smaller-smaller';
-    public const TYPE_IS = 'is';
-    public const TYPE_IS_PLUS_EQUAL = 'is-plus-equal';
-    public const TYPE_IS_MINUS_EQUAL = 'is-minus-equal';
-    public const TYPE_IS_MULTIPLY_EQUAL = 'is-multiply-equal';
-    public const TYPE_IS_DIVIDE_EQUAL = 'is-divide-equal';
-    public const TYPE_IS_OR_EQUAL = 'is-or-equal';
-    public const TYPE_IS_MODULO_EQUAL = 'is-modulo-equal';
-    public const TYPE_IS_POWER_EQUAL = 'is-power-equal';
-    public const TYPE_IS_XOR_EQUAL = 'is-xor-equal';
-    public const TYPE_IS_AND_EQUAL = 'is-and-equal';
-    public const TYPE_IS_PLUS = 'is-plus';
-    public const TYPE_IS_MINUS = 'is-minus';
-    public const TYPE_IS_MULTIPLY = 'is-multiply';
-    public const TYPE_IS_DIVIDE = 'is-divide';
-    public const TYPE_IS_MODULO = 'is-modulo';
-    public const TYPE_IS_PLUS_PLUS = 'is-plus-plus';
-    public const TYPE_IS_MINUS_MINUS = 'is-minus-minus';
-    public const TYPE_IS_SPACESHIP = 'is-spaceship';
-    public const TYPE_IS_POWER = 'is-power';
-    public const TYPE_IS_COALESCE = 'is-coalesce';
-    public const TYPE_REM = 'rem';
-    public const TYPE_CAST = 'cast';
-    public const LITERAL_OPEN = '{literal}';
-    public const LITERAL_CLOSE = '{/literal}';
-    public const TYPE_TAG_CLOSE = 'tag-close';
+    const TYPE_NULL = 'null';
+    const TYPE_STRING = 'string';
+    const TYPE_CODE = 'code';
+    const TYPE_BOOLEAN = 'boolean';
+    const TYPE_BOOLEAN_AND = 'boolean-and';
+    const TYPE_BOOLEAN_OR = 'boolean-or';
+    const TYPE_INT = 'integer';
+    const TYPE_OCT = 'octal';
+    const TYPE_HEX = 'hexadecimal';
+    const TYPE_FLOAT = 'float';
+    const TYPE_FOR = 'for';
+    const TYPE_FOREACH = 'foreach';
+    const TYPE_BREAK = 'break';
+    const TYPE_CONTINUE = 'continue';
+    const TYPE_ARRAY = 'array';
+    const TYPE_OBJECT = 'object';
+    const TYPE_VARIABLE = 'variable';
+    const TYPE_OPERATOR = 'operator';
+    const TYPE_DOT = 'dot';
+    const TYPE_COLON = 'colon';
+    const TYPE_DOUBLE_COLON = 'double-colon';
+    const TYPE_DOUBLE_ARROW = 'double-arrow';
+    const TYPE_AS = 'as';
+    const TYPE_SEMI_COLON = 'semi-colon';
+    const TYPE_COMMA = 'comma';
+    const TYPE_MIXED = 'mixed';
+    const TYPE_WHITESPACE = 'whitespace';
+    const TYPE_STATEMENT = 'statement';
+    const TYPE_PARENTHESE = 'parenthese';
+    const TYPE_BRACKET = 'bracket';
+    const TYPE_NUMBER = 'number';
+    const TYPE_SET = 'set';
+    const TYPE_METHOD = 'method';
+    const TYPE_FUNCTION = 'function';
+    const TYPE_MODIFIER = 'modifier';
+    const TYPE_CLASS = 'class';
+    const TYPE_TRAIT = 'trait';
+    const TYPE_EXCLAMATION = 'exclamation';
+    const TYPE_CONTROL = 'control';
+    const TYPE_WHILE = 'while';
+    const TYPE_QUOTE_SINGLE = 'quote-single';
+    const TYPE_QUOTE_DOUBLE = 'quote-double';
+    const TYPE_QUOTE_SINGLE_STRING = 'quote-single-string';
+    const TYPE_QUOTE_DOUBLE_STRING = 'quote-double-string';
+    const TYPE_BACKSLASH = 'backslash';
+    const TYPE_BRACKET_SQUARE_OPEN = 'bracket-square-open';
+    const TYPE_BRACKET_SQUARE_CLOSE = 'bracket-square-close';
+    const TYPE_CURLY_OPEN = 'curly-open';
+    const TYPE_CURLY_CLOSE = 'curly-close';
+    const TYPE_PARENTHESE_OPEN = 'parenthese-open';
+    const TYPE_PARENTHESE_CLOSE = 'parenthese-close';
+    const TYPE_COMMENT_OPEN = 'comment-open';
+    const TYPE_COMMENT_CLOSE = 'comment-close';
+    const TYPE_DOC_COMMENT_OPEN = 'doc-comment-open';
+    const TYPE_COMMENT_SINGLE_LINE = 'comment-single-line';
+    const TYPE_COMMENT = 'comment';
+    const TYPE_DOC_COMMENT = 'doc-comment';
+    const TYPE_AMPERSAND = 'ampersand';
+    const TYPE_QUESTION = 'question';
+    const TYPE_PIPE = 'pipe';
+    const TYPE_LITERAL = 'tag-literal';
+    const TYPE_IS_OBJECT_OPERATOR = 'is-object-operator';
+    const TYPE_IS_ARRAY_OPERATOR = 'is-array-operator';
+    const TYPE_IS_EQUAL = 'is-equal';
+    const TYPE_IS_NOT_EQUAL = 'is-not-equal';
+    const TYPE_IS_GREATER_EQUAL = 'is-greater-equal';
+    const TYPE_IS_SMALLER_EQUAL = 'is-smaller-equal';
+    const TYPE_IS_GREATER = 'is-greater';
+    const TYPE_IS_SMALLER = 'is-smaller';
+    const TYPE_IS_IDENTICAL = 'is-identical';
+    const TYPE_IS_NOT_IDENTICAL = 'is-not-identical';
+    const TYPE_IS_GREATER_GREATER = 'is-greater-greater';
+    const TYPE_IS_SMALLER_SMALLER = 'is-smaller-smaller';
+    const TYPE_IS = 'is';
+    const TYPE_IS_PLUS_EQUAL = 'is-plus-equal';
+    const TYPE_IS_MINUS_EQUAL = 'is-minus-equal';
+    const TYPE_IS_MULTIPLY_EQUAL = 'is-multiply-equal';
+    const TYPE_IS_DIVIDE_EQUAL = 'is-divide-equal';
+    const TYPE_IS_OR_EQUAL = 'is-or-equal';
+    const TYPE_IS_MODULO_EQUAL = 'is-modulo-equal';
+    const TYPE_IS_POWER_EQUAL = 'is-power-equal';
+    const TYPE_IS_XOR_EQUAL = 'is-xor-equal';
+    const TYPE_IS_AND_EQUAL = 'is-and-equal';
+    const TYPE_IS_PLUS = 'is-plus';
+    const TYPE_IS_MINUS = 'is-minus';
+    const TYPE_IS_MULTIPLY = 'is-multiply';
+    const TYPE_IS_DIVIDE = 'is-divide';
+    const TYPE_IS_MODULO = 'is-modulo';
+    const TYPE_IS_PLUS_PLUS = 'is-plus-plus';
+    const TYPE_IS_MINUS_MINUS = 'is-minus-minus';
+    const TYPE_IS_SPACESHIP = 'is-spaceship';
+    const TYPE_IS_POWER = 'is-power';
+    const TYPE_IS_COALESCE = 'is-coalesce';
+    const TYPE_REM = 'rem';
+    const TYPE_CAST = 'cast';
+    const LITERAL_OPEN = '{literal}';
+    const LITERAL_CLOSE = '{/literal}';
+    const TYPE_TAG_CLOSE = 'tag-close';
 
-    public const DIRECTION_LTR = 'ltr';
-    public const DIRECTION_RTL = 'rtl';
+    const DIRECTION_LTR = 'ltr';
+    const DIRECTION_RTL = 'rtl';
 
-    public const MODIFIER_DIRECTION = 'direction';
+    const MODIFIER_DIRECTION = 'direction';
 
-    public const TYPE_SINGLE = [
+    const TYPE_SINGLE = [
         Token::TYPE_PARENTHESE_OPEN,
         Token::TYPE_PARENTHESE_CLOSE,
         Token::TYPE_BRACKET_SQUARE_OPEN,
@@ -129,7 +129,7 @@ class Token {
         Token::TYPE_QUOTE_DOUBLE
     ];
 
-    public const TYPE_NAME_BREAK = [
+    const TYPE_NAME_BREAK = [
         Token::TYPE_WHITESPACE,
         Token::TYPE_PARENTHESE_OPEN,
         Token::TYPE_PARENTHESE_CLOSE,
@@ -147,7 +147,7 @@ class Token {
         Token::TYPE_IS
     ];
 
-    public const TYPE_STRING_BREAK = [
+    const TYPE_STRING_BREAK = [
         Token::TYPE_METHOD,
         Token::TYPE_VARIABLE,
         Token::TYPE_OPERATOR,
@@ -155,7 +155,7 @@ class Token {
         Token::TYPE_SEMI_COLON
     ];
 
-    public const TYPE_ASSIGN = [
+    const TYPE_ASSIGN = [
         '=',
         '+=',
         '-=',

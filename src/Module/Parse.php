@@ -18,9 +18,9 @@ use R3m\Io\Module\Parse\Literal;
 use stdClass;
 
 class Parse {
-    public const PLUGIN = 'Plugin';
-    public const TEMPLATE = 'Template';
-    public const COMPILE = 'Compile';
+    const PLUGIN = 'Plugin';
+    const TEMPLATE = 'Template';
+    const COMPILE = 'Compile';
 
     private $object;
     private $storage;

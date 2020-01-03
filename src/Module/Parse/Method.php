@@ -14,8 +14,8 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\Core;
 
 class Method {
-    public const WHERE_BEFORE = 'before';
-    public const WHERE_AFTER = 'after';
+    const WHERE_BEFORE = 'before';
+    const WHERE_AFTER = 'after';
 
     public static function get($build, $record=[], Data $storage, $is_debug = false){
         if($record['type'] != Token::TYPE_METHOD){

@@ -7,82 +7,84 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 
 class Config extends Data {
-    public const NAME = 'Config';
+    const NAME = 'Config';
 
-    public const MODE_PRODUCTION = 'production';
-    public const MODE_DEVELOPMENT = 'development';
+    const MODE_PRODUCTION = 'production';
+    const MODE_DEVELOPMENT = 'development';
 
-    public const DATA = 'data';
-    public const VALUE_DATA = 'Data';
+    const DATA = 'data';
+    const VALUE_DATA = 'Data';
 
-    public const PUBLIC = 'public';
-    public const VALUE_PUBLIC = 'Public';
+    const PUBLIC = 'public';
+    const VALUE_PUBLIC = 'Public';
 
-    public const HOST = 'host';
-    public const VALUE_HOST = 'Host';
+    const HOST = 'host';
+    const VALUE_HOST = 'Host';
 
-    public const CACHE = 'cache';
-    public const VALUE_CACHE = '/tmp/r3m/io/';
+    const CACHE = 'cache';
+    const VALUE_CACHE = '/tmp/r3m/io/';
 
-    public const SOURCE = 'Source';
-    public const VALUE_SOURCE = 'src';
+    const SOURCE = 'Source';
+    const VALUE_SOURCE = 'src';
 
-    public const CLI = 'cli';
-    public const VALUE_CLI = 'Cli';
+    const CLI = 'cli';
+    const VALUE_CLI = 'Cli';
 
-    public const MODULE = 'module';
-    public const VALUE_MODULE = 'Module';
+    const MODULE = 'module';
+    const VALUE_MODULE = 'Module';
 
-    public const FRAMEWORK = 'framework';
-    public const VALUE_FRAMEWORK = 'r3m/framework';
+    const FRAMEWORK = 'framework';
+    const VALUE_FRAMEWORK = 'r3m/framework';
 
-    public const ENVIRONMENT = 'environment';
-    public const VALUE_ENVIRONMENT = Config::MODE_PRODUCTION;
+    const ENVIRONMENT = 'environment';
+    const VALUE_ENVIRONMENT = Config::MODE_PRODUCTION;
 
-    public const PLUGIN = 'plugin';
-    public const VALUE_PLUGIN = 'Plugin';
+    const PLUGIN = 'plugin';
+    const VALUE_PLUGIN = 'Plugin';
 
-    public const DS = 'ds';
-    public const VALUE_DS = DIRECTORY_SEPARATOR;
+    const DS = 'ds';
+    const VALUE_DS = DIRECTORY_SEPARATOR;
 
-    public const VIEW = 'view';
-    public const VALUE_VIEW = 'View';
+    const VIEW = 'view';
+    const VALUE_VIEW = 'View';
 
-    public const LOCALHOST_EXTENSION = 'localhost.extension';
-    public const VALUE_LOCALHOST_EXTENSION =  [
+    const LOCALHOST_EXTENSION = 'localhost.extension';
+    const VALUE_LOCALHOST_EXTENSION =  [
         'local',
         'develop'
     ];
 
-    public const ROUTE = 'Route.json';
-    public const CONFIG = 'Config.json';
+    const ROUTE = 'Route.json';
+    const CONFIG = 'Config.json';
 
-    public const DICTIONARY = 'dictionary';
+    const DICTIONARY = 'dictionary';
 
-    public const DATA_DIR_VENDOR = 'dir.vendor';
-    public const DATA_FRAMEWORK_VERSION = 'framework.version';
-    public const DATA_FRAMEWORK_BUILT = 'framework.built';
-    public const DATA_FRAMEWORK_DIR = 'framework.dir';
-    public const DATA_FRAMEWORK_DIR_ROOT = Config::DATA_FRAMEWORK_DIR . '.' .'root';
-    public const DATA_FRAMEWORK_DIR_VENDOR = Config::DATA_FRAMEWORK_DIR . '.' .'vendor';
-    public const DATA_FRAMEWORK_DIR_SOURCE = Config::DATA_FRAMEWORK_DIR . '.' .'source';
-    public const DATA_FRAMEWORK_DIR_DATA = Config::DATA_FRAMEWORK_DIR . '.' .'data';
-    public const DATA_FRAMEWORK_DIR_CLI = Config::DATA_FRAMEWORK_DIR . '.' .'cli';
-    public const DATA_FRAMEWORK_DIR_CACHE = Config::DATA_FRAMEWORK_DIR . '.' .'cache';
-    public const DATA_FRAMEWORK_DIR_MODULE = Config::DATA_FRAMEWORK_DIR . '.' .'module';
+    const DATA_PDO = 'pdo';
 
-    public const DATA_FRAMEWORK_ENVIRONMENT = 'framework.environment';
+    const DATA_DIR_VENDOR = 'dir.vendor';
+    const DATA_FRAMEWORK_VERSION = 'framework.version';
+    const DATA_FRAMEWORK_BUILT = 'framework.built';
+    const DATA_FRAMEWORK_DIR = 'framework.dir';
+    const DATA_FRAMEWORK_DIR_ROOT = Config::DATA_FRAMEWORK_DIR . '.' .'root';
+    const DATA_FRAMEWORK_DIR_VENDOR = Config::DATA_FRAMEWORK_DIR . '.' .'vendor';
+    const DATA_FRAMEWORK_DIR_SOURCE = Config::DATA_FRAMEWORK_DIR . '.' .'source';
+    const DATA_FRAMEWORK_DIR_DATA = Config::DATA_FRAMEWORK_DIR . '.' .'data';
+    const DATA_FRAMEWORK_DIR_CLI = Config::DATA_FRAMEWORK_DIR . '.' .'cli';
+    const DATA_FRAMEWORK_DIR_CACHE = Config::DATA_FRAMEWORK_DIR . '.' .'cache';
+    const DATA_FRAMEWORK_DIR_MODULE = Config::DATA_FRAMEWORK_DIR . '.' .'module';
 
-    public const DATA_PROJECT_ROUTE_FILENAME = 'project.route.filename';
-    public const DATA_PROJECT_ROUTE_URL = 'project.route.url';
-    public const DATA_PROJECT_DIR = 'project.dir';
-    public const DATA_PROJECT_DIR_ROOT =  Config::DATA_PROJECT_DIR . '.' . 'root';
-    public const DATA_PROJECT_DIR_VENDOR =  Config::DATA_PROJECT_DIR . '.' . 'vendor';
-    public const DATA_PROJECT_DIR_SOURCE =  Config::DATA_PROJECT_DIR . '.' . 'source';
-    public const DATA_PROJECT_DIR_DATA =  Config::DATA_PROJECT_DIR . '.' . 'data';
-    public const DATA_PROJECT_DIR_CLI =  Config::DATA_PROJECT_DIR . '.' . 'cli';
-    public const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
-    public const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
+    const DATA_FRAMEWORK_ENVIRONMENT = 'framework.environment';
+
+    const DATA_PROJECT_ROUTE_FILENAME = 'project.route.filename';
+    const DATA_PROJECT_ROUTE_URL = 'project.route.url';
+    const DATA_PROJECT_DIR = 'project.dir';
+    const DATA_PROJECT_DIR_ROOT =  Config::DATA_PROJECT_DIR . '.' . 'root';
+    const DATA_PROJECT_DIR_VENDOR =  Config::DATA_PROJECT_DIR . '.' . 'vendor';
+    const DATA_PROJECT_DIR_SOURCE =  Config::DATA_PROJECT_DIR . '.' . 'source';
+    const DATA_PROJECT_DIR_DATA =  Config::DATA_PROJECT_DIR . '.' . 'data';
+    const DATA_PROJECT_DIR_CLI =  Config::DATA_PROJECT_DIR . '.' . 'cli';
+    const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
+    const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
 
     public function __construct($config=[]){
         if(array_key_exists(Config::DATA_DIR_VENDOR, $config)){
@@ -99,6 +101,15 @@ class Config extends Data {
         //maybe merge this too...
         foreach($config as $attribute => $value){
             $this->data($attribute, $value);
+        }
+    }
+
+    public static function configure($object){
+        $config = $object->data(App::DATA_CONFIG);
+        $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . Config::CONFIG;
+        if(File::exist($url)){
+            $read = Core::object(File::read($url));
+            $config->data(Core::object_merge($config->data(), $read));
         }
     }
 

@@ -15,15 +15,15 @@ use R3m\Io\Module\View;
 use Exception;
 
 class App extends Data {
-    public const NAMESPACE = __NAMESPACE__;
-    public const NAME = 'App';
-    public const R3M = 'R3m';
+    const NAMESPACE = __NAMESPACE__;
+    const NAME = 'App';
+    const R3M = 'R3m';
 
-    public const DATA_ROUTE = App::NAMESPACE . '.' . Route::NAME;
-    public const DATA_CONFIG = App::NAMESPACE . '.' . Config::NAME;
-    public const DATA_REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
-    public const DATA_AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
-    public const DATA_AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;
+    const DATA_ROUTE = App::NAMESPACE . '.' . Route::NAME;
+    const DATA_CONFIG = App::NAMESPACE . '.' . Config::NAME;
+    const DATA_REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
+    const DATA_AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
+    const DATA_AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;
 
     public function __construct($autoload, $config){
         $this->data(App::DATA_AUTOLOAD_COMPOSER, $autoload);
@@ -33,6 +33,7 @@ class App extends Data {
     }
 
     public static function run($object){
+        Config::configure($object);
         Handler::request_configure($object);
         Host::configure($object);
         View::configure($object);

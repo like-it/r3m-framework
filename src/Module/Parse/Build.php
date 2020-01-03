@@ -21,15 +21,15 @@ use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Parse;
 
 class Build {
-    public const NAME = 'Build';
+    const NAME = 'Build';
 
-    private const VARIABLE_ASSIGN = 'variable-assign';
-    private const VARIABLE_DEFINE = 'variable-define';
-    private const METHOD = 'method';
-    private const METHOD_CONTROL = 'method-control';
-    private const CODE = 'code';
-    private const ELSE = 'else';
-    private const TAG_CLOSE = 'tag-close';
+    const VARIABLE_ASSIGN = 'variable-assign';
+    const VARIABLE_DEFINE = 'variable-define';
+    const METHOD = 'method';
+    const METHOD_CONTROL = 'method-control';
+    const CODE = 'code';
+    const ELSE = 'else';
+    const TAG_CLOSE = 'tag-close';
 
     public $indent;
     private $object;

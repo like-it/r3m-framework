@@ -13,11 +13,10 @@ use R3m\Io\Module\Data;
 use Exception;
 
 class Value {
-    public const TYPE_CAST_BOOLEAN = 'bool';
-    public const TYPE_CAST_INT = 'int';
-    public const TYPE_CAST_FLOAT = 'float';
-    public const TYPE_CAST_STRING = 'string';
-
+    const TYPE_CAST_BOOLEAN = 'bool';
+    const TYPE_CAST_INT = 'int';
+    const TYPE_CAST_FLOAT = 'float';
+    const TYPE_CAST_STRING = 'string';
 
     public static function get($record=[]){
         switch($record['type']){

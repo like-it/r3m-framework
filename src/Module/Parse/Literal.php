@@ -14,7 +14,6 @@ use R3m\Io\Module\Core;
 
 class Literal {
 
-
     public static function apply($string='', Data $data){
         $explode = explode('{literal}', $string, 2);
 

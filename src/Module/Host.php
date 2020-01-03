@@ -15,9 +15,9 @@ use R3m\Io\App;
 use R3m\Io\Config;
 
 class Host {
-    public const SCHEME_HTTP = 'http';
-    public const SCHEME_HTTPS = 'https';
-              
+    const SCHEME_HTTP = 'http';
+    const SCHEME_HTTPS = 'https';
+
     public static function configure($object){
         if(defined('IS_CLI')){
             return $object;
@@ -25,27 +25,27 @@ class Host {
         $key = 'host.url';
         $value = Host::url();
         $object->data($key, $value);
-        
+
         $key = 'host.scheme';
         $value = Host::scheme();
         $object->data($key, $value);
-        
+
         $key = 'host.extension';
         $value = Host::extension();
         $object->data($key, $value);
-        
+
         $key = 'host.domain';
         $value = Host::domain();
         $object->data($key, $value);
-                
+
         $key = 'host.subdomain';
-        $subdomain = Host::subdomain();        
+        $subdomain = Host::subdomain();
         $object->data($key, $subdomain);
-        
+
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
-        $key = 'host.dir.root';  
-        if(empty($subdomain)){                     
-            $value = 
+        $key = 'host.dir.root';
+        if(empty($subdomain)){
+            $value =
                 $config->data('project.dir.root') .
                 $config->data(Config::DICTIONARY . '.' . Config::HOST) .
                 $config->data('ds') .
@@ -55,9 +55,9 @@ class Host {
                     $object->data('host.extension') .
                     $config->data('ds'),
                     $config->data('ds')
-                );                        
+                );
         } else {
-            $value = 
+            $value =
                 $config->data('project.dir.root') .
                 $config->data(Config::DICTIONARY . '.' . Config::HOST) .
                 $config->data('ds') .
@@ -69,45 +69,45 @@ class Host {
                     $object->data('host.extension') .
                     $config->data('ds'),
                 $config->data('ds')
-                );            
-        }     
+                );
+        }
         $config->data($key, $value);
-        
+
         $key = 'host.dir.data';
-        $value = 
+        $value =
             $config->data('host.dir.root') .
             $config->data(Config::DICTIONARY . '.' . Config::DATA) .
-            $config->data('ds');            
+            $config->data('ds');
         $config->data($key, $value);
-        
+
         $key = 'host.dir.cache';
-        $value = 
-            Dir::name($config->data('framework.dir.cache'), 2) .            
+        $value =
+            Dir::name($config->data('framework.dir.cache'), 2) .
             $config->data(Config::DICTIONARY . '.' . Config::HOST) .
             $config->data('ds');
         $config->data($key, $value);
-            
+
         $key = 'host.dir.public';
-        $value = 
+        $value =
             $config->data('host.dir.root') .
             $config->data(Config::DICTIONARY . '.' . Config::PUBLIC) .
             $config->data('ds');
         $config->data($key, $value);
-        
+
         $key = 'host.dir.source';
-        $value = 
+        $value =
             $config->data('host.dir.root') .
             $config->data(Config::DICTIONARY . '.' . Config::SOURCE) .
             $config->data('ds');
 
         $config->data($key, $value);
-            
+
         $key = 'host.dir.view';
         $value =
             $config->data('host.dir.root') .
             $config->data(Config::DICTIONARY . '.' . Config::VIEW) .
             $config->data('ds');
-        $config->data($key, $value);                                          
+        $config->data($key, $value);
         return $object;
     }
 

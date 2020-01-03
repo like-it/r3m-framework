@@ -1,0 +1,59 @@
+<?php
+/**
+ * @author         Remco van der Velde
+ * @since         19-07-2015
+ * @version        1.0
+ * @changeLog
+ *  -    all
+ */
+namespace R3m\Io\Module;
+
+use stdClass;
+use R3m\Io\App;
+use R3m\Io\Config;
+use Exception;
+use PDO;
+
+class Database {
+
+    public static function connect($object){
+        $config = $object->data(App::DATA_CONFIG);
+
+        $environment = $config->data(Config::DATA_FRAMEWORK_ENVIRONMENT);
+
+        $data = $config->data(Config::DATA_PDO . '.' . $environment);
+
+        if(empty($data)){
+            throw new Exception('Config data missing for environment (' . $environment .')');
+        }
+
+        $dsn = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'dsn');
+        $username = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'username');
+        $password = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'password');
+        $options = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'options');
+
+        $pdo = null;
+        if(empty($username) && empty($password) && empty($options)){
+            //sqlite
+            try {
+                $pdo = new PDO($dsn);
+            } catch (PDOException $e) {
+                echo 'Connection failed: ' . $e->getMessage();
+            }
+        }
+        elseif(empty($options)){
+            try {
+                $pdo = new PDO($dsn, $username, $password);
+            } catch (PDOException $e) {
+                echo 'Connection failed: ' . $e->getMessage();
+            }
+        } else {
+            try {
+                $pdo = new PDO($dsn, $username, $password, $options);
+            } catch (PDOException $e) {
+                echo 'Connection failed: ' . $e->getMessage();
+            }
+        }
+        return $pdo;
+    }
+}

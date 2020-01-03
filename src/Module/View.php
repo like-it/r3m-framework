@@ -14,12 +14,11 @@ use R3m\Io\App;
 use R3m\Io\Config;
 
 class View {
-
-    public const PARSE = 'Parse';
-    public const TEMPLATE = 'Template';
-    public const COMPILE = 'Compile';
-    public const CONFIG = 'Config';
-    public const CACHE = 'Cache';
+    const PARSE = 'Parse';
+    const TEMPLATE = 'Template';
+    const COMPILE = 'Compile';
+    const CONFIG = 'Config';
+    const CACHE = 'Cache';
 
 
     public static function locate($object, $template=''){

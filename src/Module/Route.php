@@ -19,11 +19,11 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
 
 class Route extends Data{
-    public const NAMESPACE = __NAMESPACE__;
-    public const NAME = 'Route';
-    public const SELECT = 'Route_select';
+    const NAMESPACE = __NAMESPACE__;
+    const NAME = 'Route';
+    const SELECT = 'Route_select';
 
-    private const SELECT_DEFAULT = 'info';
+    const SELECT_DEFAULT = 'info';
 
     private $current;
     private $url;

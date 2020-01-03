@@ -17,30 +17,30 @@ use R3m\Io\App;
 use R3m\Io\Module\Core;
 
 class Handler {
-    public const NAMESPACE = __NAMESPACE__;
-    public const NAME = 'Handler';
-    public const NAME_SESSION = 'Session';
-    public const NAME_REQUEST = 'Request';
-    public const NAME_COOKIE = 'Cookie';
+    const NAMESPACE = __NAMESPACE__;
+    const NAME = 'Handler';
+    const NAME_SESSION = 'Session';
+    const NAME_REQUEST = 'Request';
+    const NAME_COOKIE = 'Cookie';
 
-    public const NAME_HEADER = 'Header';
-    public const NAME_INPUT = 'Input';
-    public const NAME_FILE = 'File';
+    const NAME_HEADER = 'Header';
+    const NAME_INPUT = 'Input';
+    const NAME_FILE = 'File';
 
-    public const SESSION = 'session';
-    public const SESSION_HAS = 'has';
-    public const SESSION_START = 'start';
-    public const SESSION_CLOSE = 'close';
-    public const SESSION_DELETE = 'delete';
+    const SESSION = 'session';
+    const SESSION_HAS = 'has';
+    const SESSION_START = 'start';
+    const SESSION_CLOSE = 'close';
+    const SESSION_DELETE = 'delete';
 
-    public const REQUEST = 'request';
-    public const REQUEST_HEADER = 'request.header';
-    public const REQUEST_INPUT = 'request.input';
-    public const REQUEST_FILE = 'request.file';
+    const REQUEST = 'request';
+    const REQUEST_HEADER = 'request.header';
+    const REQUEST_INPUT = 'request.input';
+    const REQUEST_FILE = 'request.file';
 
-    public const COOKIE_DELETE = 'delete';
+    const COOKIE_DELETE = 'delete';
 
-    public const METHOD_CLI = 'CLI';
+    const METHOD_CLI = 'CLI';
 
     public static function request_configure($object){
         $object->data(
