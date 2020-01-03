@@ -98,17 +98,10 @@ class Route extends Data{
         if(empty($request)){
             return $object;
         }
-        $temp =  $object->data(App::DATA_REQUEST);
-
-//         d($request);
-        if(!property_exists($request, 'request')){
-            return $object;
-        }
-        if(is_array($request->request) || is_object($request->request)){
-            foreach($request->request as $key => $value){
-                $temp->{$key} = $value;
-            }
-        }
+        $object->data(App::DATA_REQUEST)->data(Core::object_merge(
+                $object->data(App::DATA_REQUEST)->data(),
+                $request->request->data()
+        ));
         return $object;
     }
 
@@ -142,15 +135,21 @@ class Route extends Data{
             $select->method = Handler::method();
             $select->host = [];
             $request = Route::select_cli($object, $select);
+
             if($request === false){
                 $select = Route::select_info($object, $select);
                 $request = Route::select_cli($object, $select);
             }
+
+            $request->request->data(Core::object_merge(clone $select->parameter, $request->request->data()));
+
+            /*
             if(property_exists($request, 'request') && is_object($request->request)){
                 $request->request = Core::object_merge(clone $select->parameter, $request->request);
             } else {
                 $request->request = $select->parameter;
             }
+            */
             $route =  $object->data(App::DATA_ROUTE);
             $object = Route::add_request($object, $request);
             return $route->current($request);
@@ -174,7 +173,7 @@ class Route extends Data{
             $request = Route::select($object, $select);
 
             $route =  $object->data(App::DATA_ROUTE);
-//             dd($route);
+            $object = Route::add_request($object, $request);
             return $route->current($request);
         }
     }
@@ -314,7 +313,10 @@ class Route extends Data{
         $explode = explode('/', $route->path);
         array_pop($explode);
         $attribute = $select->attribute;
-        if(!property_exists($route, 'request')){
+
+        if(property_exists($route, 'request')){
+            $route->request = new Data($route->request);
+        } else {
             $route->request = new Data();
         }
         foreach($explode as $nr => $part){
