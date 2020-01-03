@@ -131,7 +131,7 @@ class Route extends Data{
         if(defined('IS_CLI')){
             $input = Route::input($object);
             $select = new stdClass();
-            $select->parameter = $input;
+            $select->parameter = $input->data();
             $key = 0;
             $select->attribute = [];
             if(property_exists($select->parameter, $key)){
@@ -145,7 +145,6 @@ class Route extends Data{
             if($request === false){
                 $select = Route::select_info($object, $select);
                 $request = Route::select_cli($object, $select);
-//                 throw new Exception('Request not found');
             }
             if(property_exists($request, 'request') && is_object($request->request)){
                 $request->request = Core::object_merge(clone $select->parameter, $request->request);
@@ -159,8 +158,8 @@ class Route extends Data{
             $input = Route::input($object);
             $select = new stdClass();
             $select->input = $input;
-            $select->deep = substr_count($input->request, '/');
-            $select->attribute = explode('/', $input->request);
+            $select->deep = substr_count($input->data('request'), '/');
+            $select->attribute = explode('/', $input->data('request'));
             array_pop($select->attribute);
             $select->method = Handler::method();
             $select->host = [];
@@ -168,12 +167,8 @@ class Route extends Data{
             $subdomain = Host::subdomain();
             if($subdomain){
                 $select->host[] = $subdomain . '.' . Host::domain() . '.' . Host::extension();
-//                 $select->host[] = $subdomain . '.' . Host::domain() . '.' . 'local';
-//                 $select->host[] = $subdomain . '.' . Host::domain() . '.' . 'develop';
             } else {
                 $select->host[] = Host::domain() . '.' . Host::extension();
-//                 $select->host[] = Host::domain() . '.' . 'local';
-//                 $select->host[] = Host::domain() . '.' . 'develop';
             }
             $select->host = array_unique($select->host);
             $request = Route::select($object, $select);
@@ -238,8 +233,6 @@ class Route extends Data{
                 continue;
             }
             $match = Route::is_match($object, $record, $select);
-//             d($record);
-//             d($select);
             if($match === true){
                 $current = $record;
                 break;
@@ -247,7 +240,6 @@ class Route extends Data{
         }
         if($current !== false){
             $current = Route::prepare($object, $current, $select);
-//             $current->select = $select;
             return $current;
         }
         return false;
@@ -323,22 +315,24 @@ class Route extends Data{
         array_pop($explode);
         $attribute = $select->attribute;
         if(!property_exists($route, 'request')){
-            $route->request = new stdClass();
+            $route->request = new Data();
         }
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 $variable = Route::get_variable($part);
-//                 d($variable);
                 if(property_exists($route->request, $variable)){
                     continue;
                 }
-//                 d($attribute);
-//                 d($variable);
                 if(array_key_exists($nr, $attribute)){
-                    $route->request->{$variable} = $attribute[$nr];
+                    $route->request->data($variable, $attribute[$nr]);
                 }
-//                 d($route->request);
             }
+        }
+        foreach($object->data(App::DATA_REQUEST) as $key => $record){
+            if($key == 'request'){
+                continue;
+            }
+            $route->request->data($key, $record);
         }
         $controller = explode('.', $route->controller);
         $function = array_pop($controller);
@@ -425,17 +419,6 @@ class Route extends Data{
     }
 
     private static function is_match_cli($object, $route, $select){
-        /*
-        $is_match = Route::is_match_by_deep($object, $route, $select);
-        if($is_match === false){
-            return $is_match;
-        }
-        $route = Route::add_localhost($object, $route);
-        $is_match = Route::is_match_by_host($object, $route, $select);
-        if($is_match === false){
-            return $is_match;
-        }
-        */
         $is_match = Route::is_match_by_attribute($object, $route, $select);
         if($is_match === false){
             return $is_match;
@@ -493,8 +476,6 @@ class Route extends Data{
             }
         } else {
             $object->data(App::DATA_ROUTE, $cache);
-
-            //check cache_time_check for 1 minute caches
         }
     }
 
@@ -513,7 +494,10 @@ class Route extends Data{
             return;
         }
         $time = strtotime(date('Y-m-d H:i:00'));
-        if($time == File::mtime($cache->cache_url())){
+        if(
+            File::exist($cache->cache_url()) &&
+            $time == File::mtime($cache->cache_url())
+        ){
             return $cache;
         }
         $data = $cache->data();
@@ -539,7 +523,9 @@ class Route extends Data{
             $has_resource
         ){
             $cache_url = $cache->cache_url();
-            File::delete($cache_url);
+            if(File::exist($cache_url)){
+                File::delete($cache_url);
+            }
             return false;
         }
         elseif($has_resource === false) {
@@ -642,12 +628,9 @@ class Route extends Data{
             if(File::exist($item->resource)){
                 $read = File::read($item->resource);
                 $resource = Core::object($read);
-
                 if(Core::object_is_empty($resource)){
                     throw new Exception('Could not read route file (' . $item->resource .')');
                 }
-
-
                 foreach($resource as $resource_key => $resource_item){
                     $check = $route->data($resource_key);
                     if(empty($check)){

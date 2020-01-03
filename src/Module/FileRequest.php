@@ -17,14 +17,10 @@ class FileRequest {
     const REQUEST = 'Request';
 
     public static function get($object){
+        $request = $object->data(App::DATA_REQUEST);
 
-        $request = $object->data(App::NAMESPACE . '.' . FileRequest::REQUEST);
-
-        $input = '';
-        if(property_exists($request, 'Input') && property_exists($request->Input, 'request')){
-            $input = substr($request->Input->request, 0, -1);
-        }
-
+        $input = $request->data('request');
+        $input = substr($input, 0, -1);
 
         $dir = Dir::name($input);
         $file = str_replace($dir,'', $input);
@@ -33,7 +29,7 @@ class FileRequest {
         if(empty($extension)){
             return false;
         }
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+        $config = $object->data(App::DATA_CONFIG);
 
         $location = [];
         $location[] = $config->data('host.dir.public') . $dir . $file;
@@ -41,6 +37,22 @@ class FileRequest {
 
         foreach($location as $url){
             if(File::exist($url)){
+                $host = $object->data('host.url');
+                $etag = sha1($url);
+                $mtime = File::mtime($url);
+                $contentType = $config->data('contentType.' . $extension);
+                if(empty($contentType)){
+                    Handler::response_header('HTTP/1.0 415 Unsupported Media Type', 415);
+                    exit();
+                }
+                if(!headers_sent()){
+                    $gm = gmdate('D, d M Y H:i:s T', $mtime);
+                    Handler::response_header('Last-Modified: '. $gm);
+                    Handler::response_header('Content-Type: ' . $contentType);
+                    Handler::response_header('ETag: ' . $etag . '-' . $gm);
+                    Handler::response_header('Cache-Control: public');
+                    Handler::response_header('Access-Control-Allow-Origin: http://' . $host);
+                }
                 return File::read($url);
             }
         }

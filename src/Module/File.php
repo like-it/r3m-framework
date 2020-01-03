@@ -26,7 +26,7 @@ class File {
     }
 
     public static function mtime($url=''){
-        return filemtime($url);
+        return @filemtime($url); //added @ async deletes & reads can cause triggers otherways
     }
 
     public static function link($source, $destination){
@@ -191,7 +191,11 @@ class File {
             $debug = debug_backtrace(true);
             dd($debug);
         }
-        return implode('',file($url));
+        $file = @file($url);
+        if(!empty($file)){
+            return implode('', $file);
+        }
+        return '';
     }
 
     public static function copy($source='', $destination=''){
@@ -199,7 +203,7 @@ class File {
     }
 
     public static function delete($url=''){
-        return unlink($url);
+        return @unlink($url); //added @ async deletes & reads can cause triggers otherways
     }
 
     public static function extension($url=''){

@@ -135,8 +135,37 @@ class Handler {
             } else {
                 $request->request = '/';
             }
+            $input =
+                htmlspecialchars(
+                    htmlspecialchars_decode(
+                        implode(
+                            '',
+                            file('php://input')
+                        ),
+                        ENT_NOQUOTES
+                    ),
+                    ENT_NOQUOTES,
+                    'UTF-8'
+                );
+            if(!empty($input)){
+                $input = json_decode($input);
+            }
+            if(!empty($input)){
+                foreach($input as $record){
+                    if(
+                        property_exists($record, 'name') &&
+                        property_exists($record, 'value') &&
+                        $record->name != 'request'
+                    ){
+                        $request->{$record->name} = $record->value;
+                    }
+                }
+            }
         }
-        return $request;
+        $data = new Data();
+        $data->data($request);
+        return $data;
+//         return $request;
     }
 
     private static function request_key_group($data){

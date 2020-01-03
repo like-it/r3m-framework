@@ -40,7 +40,6 @@ class Cache extends View{
 
     public static function run($object){
         $command = $object->parameter($object, Cache::NAME, 1);
-
         if($command === null){
             $command = Cache::DEFAULT_COMMAND;
         }

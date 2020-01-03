@@ -68,7 +68,7 @@ class App extends Data {
     }
 
     public static function parameter($object, $parameter='', $offset=0){
-        return parent::parameter($object->data(App::DATA_REQUEST), $parameter, $offset);
+        return parent::parameter($object->data(App::DATA_REQUEST)->data(), $parameter, $offset);
     }
 
     public function session($attribute=null, $value=null){

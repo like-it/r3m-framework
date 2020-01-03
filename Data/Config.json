@@ -17,5 +17,21 @@
                 "route"
             ]
         }
+    },
+    "contentType": {
+        "txt": "text\/plain",
+        "html": "text\/html",
+        "css": "text\/css",
+        "js": "application\/javascript",
+        "json": "application\/json",
+        "ico": "image\/x-icon",
+        "png": "image\/png",
+        "jpg": "image\/jpeg",
+        "gif": "image\/gif",
+        "svg": "image\/svg+xml",
+        "woff": "application\/font-woff",
+        "ttf": "font\/ttf",
+        "wav": "audio\/wav",
+        "mp3": "audio\/mp3"
     }
 }
