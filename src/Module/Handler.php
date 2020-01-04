@@ -67,7 +67,7 @@ class Handler {
         //check if cli
 
         if(defined('IS_CLI')){
-            return new stdClass();
+            return Core::array_object($_SERVER);
         } else {
             //In Cli mode apache functions aren't defined
             return Core::array_object(apache_request_headers());
@@ -151,13 +151,16 @@ class Handler {
                 $input = json_decode($input);
             }
             if(!empty($input)){
-                foreach($input as $record){
+//                 dd($input);
+                foreach($input as $key => $record){
                     if(
                         property_exists($record, 'name') &&
                         property_exists($record, 'value') &&
                         $record->name != 'request'
                     ){
                         $request->{$record->name} = $record->value;
+                    } else {
+                        $request->{$key} = $record;
                     }
                 }
             }

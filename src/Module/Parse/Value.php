@@ -50,6 +50,8 @@ class Value {
                 //missing storage from document
                 return '$this->storage()->data(\'' . $record['variable']['attribute'] .'\')';
             break;
+            case Token::TYPE_METHOD :
+                return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
             default:
                 $debug = debug_backtrace(true);
                 d($record);

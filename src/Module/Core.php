@@ -187,7 +187,7 @@ class Core {
         return $result;
     }
 
-    public static function object($input='', $output=null,$type=null){
+    public static function object($input='', $output=null, $type=null){
         if($output === null){
             $output = Core::OBJECT_OBJECT;
         }

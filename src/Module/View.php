@@ -12,6 +12,7 @@ use stdClass;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
+use R3m\Io\Module\Parse\Literal;
 
 class View {
     const PARSE = 'Parse';
@@ -21,15 +22,24 @@ class View {
     const CACHE = 'Cache';
 
 
-    public static function locate($object, $template=''){
+    public static function locate($object, $template=null){
 
         $temp = $object->data('template');
         $called = '';
-        if($temp !== null && property_exists($temp, 'dir')){
+        if($template === null && $temp !== null && property_exists($temp, 'dir')){
             $dir = $temp->dir;
-
-        } else {
+        }
+        elseif(
+            is_object($template) &&
+            property_exists($template, 'name') &&
+            property_exists($template, 'dir')
+        ){
+            $dir = $template->dir;
+            $template = $template->name;
+        }
+        else {
             $called = get_called_class();
+//             d($called);
             $dir = $called::DIR;
         }
         if($temp !== null && property_exists($temp, 'name')){
@@ -159,8 +169,14 @@ class View {
         $data->r3m = new stdClass();
         $data->r3m->config = $config->data();
         $read = $parse->compile($read, $data, $parse->storage());
+
+        Parse::readback($object, $parse, App::SCRIPT);
+        Parse::readback($object, $parse, App::LINK);
+        Parse::readback($object, $parse, App::TITLE);
+
 //         $object->data('r3m.parse.storage', $parse->storage());
         return $read;
     }
+
 
 }

@@ -197,4 +197,20 @@ class Parse {
         return $string;
     }
 
+    public static function readback($object, $parse, $type=null){
+        $data = $parse->storage()->data($type);
+        if(is_array($data)){
+            foreach($data as $key => $value){
+                $data[$key] = Literal::restore($value, $parse->storage());
+            }
+        }
+        elseif(is_object($data)){
+            foreach($data as $key => $value){
+                $data->$key = Literal::restore($value, $parse->storage());
+            }
+        } else {
+            $data = Literal::restore($data, $parse->storage());
+        }
+        return $object->data($type, $data);
+    }
 }
