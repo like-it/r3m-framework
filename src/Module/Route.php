@@ -140,7 +140,9 @@ class Route extends Data{
                 $select = Route::select_info($object, $select);
                 $request = Route::select_cli($object, $select);
             }
-
+            if($request === false){
+                throw new Exception('Exception in request');
+            }
             $request->request->data(Core::object_merge(clone $select->parameter, $request->request->data()));
 
             /*
@@ -185,6 +187,9 @@ class Route extends Data{
 
     private static function select_cli($object, $select){
         $route =  $object->data(App::DATA_ROUTE);
+        if(empty($route)){
+            return false;
+        }
         $match = false;
         $data = $route->data();
         if(Core::object_is_empty($data)){
@@ -551,6 +556,10 @@ class Route extends Data{
     }
 
     private static function cache_write($object){
+        if (posix_getuid() === 0){
+            //don't write cache file as root, otherways it will be inaccessible
+            return false;
+        }
         $config = $object->data(App::DATA_CONFIG);
         $route = $object->data(App::DATA_ROUTE);
         $data = $route->data();

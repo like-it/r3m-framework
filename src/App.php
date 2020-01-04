@@ -4,6 +4,7 @@ namespace R3m\Io;
 
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Database;
 use R3m\Io\Module\Handler;
 use R3m\Io\Module\Host;
 use R3m\Io\Module\Autoload;
@@ -21,6 +22,7 @@ class App extends Data {
 
     const DATA_ROUTE = App::NAMESPACE . '.' . Route::NAME;
     const DATA_CONFIG = App::NAMESPACE . '.' . Config::NAME;
+    const DATABASE = App::NAMESPACE . '.' . Database::NAME;
     const DATA_REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
     const DATA_AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
     const DATA_AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;

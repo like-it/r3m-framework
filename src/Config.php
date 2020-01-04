@@ -27,6 +27,9 @@ class Config extends Data {
     const SOURCE = 'Source';
     const VALUE_SOURCE = 'src';
 
+    const BINARY = 'Binary';
+    const VALUE_BINARY = 'Bin';
+
     const CLI = 'cli';
     const VALUE_CLI = 'Cli';
 
@@ -67,6 +70,7 @@ class Config extends Data {
     const DATA_FRAMEWORK_DIR = 'framework.dir';
     const DATA_FRAMEWORK_DIR_ROOT = Config::DATA_FRAMEWORK_DIR . '.' .'root';
     const DATA_FRAMEWORK_DIR_VENDOR = Config::DATA_FRAMEWORK_DIR . '.' .'vendor';
+//     const DATA_FRAMEWORK_DIR_BINARY = Config::DATA_FRAMEWORK_DIR . '.' .'binary';
     const DATA_FRAMEWORK_DIR_SOURCE = Config::DATA_FRAMEWORK_DIR . '.' .'source';
     const DATA_FRAMEWORK_DIR_DATA = Config::DATA_FRAMEWORK_DIR . '.' .'data';
     const DATA_FRAMEWORK_DIR_CLI = Config::DATA_FRAMEWORK_DIR . '.' .'cli';
@@ -79,6 +83,7 @@ class Config extends Data {
     const DATA_PROJECT_ROUTE_URL = 'project.route.url';
     const DATA_PROJECT_DIR = 'project.dir';
     const DATA_PROJECT_DIR_ROOT =  Config::DATA_PROJECT_DIR . '.' . 'root';
+    const DATA_PROJECT_DIR_BINARY =  Config::DATA_PROJECT_DIR . '.' . 'binary';
     const DATA_PROJECT_DIR_VENDOR =  Config::DATA_PROJECT_DIR . '.' . 'vendor';
     const DATA_PROJECT_DIR_SOURCE =  Config::DATA_PROJECT_DIR . '.' . 'source';
     const DATA_PROJECT_DIR_DATA =  Config::DATA_PROJECT_DIR . '.' . 'data';
@@ -120,6 +125,10 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::SOURCE;
         $value = Config::VALUE_SOURCE;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::BINARY;
+        $value = Config::VALUE_BINARY;
         $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::CACHE;
@@ -183,6 +192,13 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::SOURCE) .
+            $this->data(Config::DS);
+        $this->data($key, $value);
+
+        $key = Config::DATA_PROJECT_DIR_BINARY;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::BINARY) .
             $this->data(Config::DS);
         $this->data($key, $value);
 

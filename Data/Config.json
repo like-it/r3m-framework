@@ -14,7 +14,8 @@
                 "license",
                 "version",
                 "uuid",
-                "route"
+                "route",
+                "bin"
             ]
         }
     },
