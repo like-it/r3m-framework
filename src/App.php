@@ -21,7 +21,7 @@ class App extends Data {
     const NAME = 'App';
     const R3M = 'R3m';
 
-    const TITLE = 'meta.title';
+//     const TITLE = 'meta.title';
     const SCRIPT = 'script';
     const LINK = 'link';
 
@@ -32,17 +32,18 @@ class App extends Data {
     const CONTENT_TYPE_CLI = 'text/cli';
     const CONTENT_TYPE_FORM = 'application/x-www-form-urlencoded';
 
-    const DATA_ROUTE = App::NAMESPACE . '.' . Route::NAME;
-    const DATA_CONFIG = App::NAMESPACE . '.' . Config::NAME;
+    const ROUTE = App::NAMESPACE . '.' . Route::NAME;
+    const CONFIG = App::NAMESPACE . '.' . Config::NAME;
+    const REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
     const DATABASE = App::NAMESPACE . '.' . Database::NAME;
-    const DATA_REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
     const REQUEST_HEADER = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_HEADER;
-    const DATA_AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
-    const DATA_AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;
+
+    const AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
+    const AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;
 
     public function __construct($autoload, $config){
-        $this->data(App::DATA_AUTOLOAD_COMPOSER, $autoload);
-        $this->data(App::DATA_CONFIG, $config);
+        $this->data(App::AUTOLOAD_COMPOSER, $autoload);
+        $this->data(App::CONFIG, $config);
         App::is_cli();
         require_once 'debug.php';
     }
@@ -90,16 +91,16 @@ class App extends Data {
         if($contentType == App::CONTENT_TYPE_JSON){
             $json = new stdClass();
             $json->html = $output;
-            $json->title = $object->data(App::TITLE);
+//             $json->title = $object->data(App::TITLE);
             if($object->data('method')){
                 $json->method = $object->data('method');
             } else {
-                $json->method = $object->data(App::DATA_REQUEST)->data('method');
+                $json->method = $object->data(App::REQUEST)->data('method');
             }
             if($object->data('target')){
                 $json->target = $object->data('target');
             } else {
-                $json->target = $object->data(App::DATA_REQUEST)->data('target');
+                $json->target = $object->data(App::REQUEST)->data('target');
             }
             $json->script = $object->data(App::SCRIPT);
             $json->link = $object->data(App::LINK);
@@ -124,7 +125,7 @@ class App extends Data {
     }
 
     public static function parameter($object, $parameter='', $offset=0){
-        return parent::parameter($object->data(App::DATA_REQUEST)->data(), $parameter, $offset);
+        return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
     public function session($attribute=null, $value=null){

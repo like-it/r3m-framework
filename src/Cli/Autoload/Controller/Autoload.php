@@ -54,7 +54,7 @@ class Autoload extends View{
 
 
     private static function restart($object){
-        $autoload = $object->data(App::DATA_AUTOLOAD_R3M);
+        $autoload = $object->data(App::AUTOLOAD_R3M);
         $cache_dir = $autoload->cache_dir();
         Dir::remove($cache_dir);
         $url = Autoload::locate($object, ucfirst(__FUNCTION__));

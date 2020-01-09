@@ -36,7 +36,7 @@ class Autoload {
     public $environment = 'production';
 
     public static function configure($object){
-        $config = $object->data(App::DATA_CONFIG);
+        $config = $object->data(App::CONFIG);
         $autoload = new Autoload();
         $autoload->addPrefix('Host',  $config->data(Config::DATA_PROJECT_DIR_HOST));
         $cache_dir =
@@ -47,7 +47,7 @@ class Autoload {
         $autoload->cache_dir($cache_dir);
         $autoload->register();
 
-        $object->data(App::DATA_AUTOLOAD_R3M, $autoload);
+        $object->data(App::AUTOLOAD_R3M, $autoload);
     }
 
     public function register($method='load', $prepend=false){

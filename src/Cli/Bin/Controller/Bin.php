@@ -35,7 +35,7 @@ class Bin extends View {
     }
 
     private static function create($object){
-        $config = $object->data(App::DATA_CONFIG);
+        $config = $object->data(App::CONFIG);
         $execute = $config->data(Config::DATA_PROJECT_DIR_BINARY) . Bin::EXE;
         Dir::create($config->data(Config::DATA_PROJECT_DIR_BINARY), Dir::CHMOD);
         $dir = Dir::name(Bin::DIR) . $config->data(Config::DICTIONARY . '.' . Config::DATA) . $config->data('ds');

@@ -54,7 +54,7 @@ class Route extends View{
 
 
     private static function restart($object){
-        $route = $object->data(App::DATA_ROUTE);
+        $route = $object->data(App::ROUTE);
         $cache_url = $route->cache_url();
 
         if(File::exist($cache_url)){

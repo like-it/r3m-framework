@@ -21,7 +21,7 @@ class Database {
     const FETCH = PDO::FETCH_OBJ;
 
     public static function connect($object, $environment=null){
-        $config = $object->data(App::DATA_CONFIG);
+        $config = $object->data(App::CONFIG);
         if(empty($environment)){
             $environment = $config->data(Config::DATA_FRAMEWORK_ENVIRONMENT);
         }

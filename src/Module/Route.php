@@ -59,7 +59,7 @@ class Route extends Data{
     }
 
     public static function get($object, $name='', $option=[]){
-        $route = $object->data(App::DATA_ROUTE);
+        $route = $object->data(App::ROUTE);
         $get = $route->data($name);
         if(empty($get)){
             return;
@@ -76,9 +76,12 @@ class Route extends Data{
             } else {
                 $get->path = str_replace('{$' . $key . '}', $value, $get->path);
             }
-
         }
-        $url = $object->data('host.url') . $get->path;
+        if($get->path == '/'){
+            $url = $object->data('host.url');
+        } else {
+            $url = $object->data('host.url') . $get->path;
+        }
         return $url;
     }
 
@@ -98,8 +101,8 @@ class Route extends Data{
         if(empty($request)){
             return $object;
         }
-        $object->data(App::DATA_REQUEST)->data(Core::object_merge(
-                $object->data(App::DATA_REQUEST)->data(),
+        $object->data(App::REQUEST)->data(Core::object_merge(
+                $object->data(App::REQUEST)->data(),
                 $request->request->data()
         ));
         return $object;
@@ -152,7 +155,7 @@ class Route extends Data{
                 $request->request = $select->parameter;
             }
             */
-            $route =  $object->data(App::DATA_ROUTE);
+            $route =  $object->data(App::ROUTE);
             $object = Route::add_request($object, $request);
             return $route->current($request);
         } else {
@@ -174,19 +177,19 @@ class Route extends Data{
             $select->host = array_unique($select->host);
             $request = Route::select($object, $select);
 
-            $route =  $object->data(App::DATA_ROUTE);
+            $route =  $object->data(App::ROUTE);
             $object = Route::add_request($object, $request);
             return $route->current($request);
         }
     }
 
     public static function input($object){
-        $input = $object->data(App::DATA_REQUEST);
+        $input = $object->data(App::REQUEST);
         return $input;
     }
 
     private static function select_cli($object, $select){
-        $route =  $object->data(App::DATA_ROUTE);
+        $route =  $object->data(App::ROUTE);
         if(empty($route)){
             return false;
         }
@@ -219,7 +222,7 @@ class Route extends Data{
 
 
     private static function select($object, $select){
-        $route =  $object->data(App::DATA_ROUTE);
+        $route =  $object->data(App::ROUTE);
         $match = false;
         $data = $route->data();
         if(empty($data)){
@@ -263,7 +266,7 @@ class Route extends Data{
             $allowed_host[] = $host;
         }
 
-        $config =  $object->data(App::DATA_CONFIG);
+        $config =  $object->data(App::CONFIG);
         $localdomain = $config->data(Config::LOCALHOST_EXTENSION);
 
         $allowed_host_new = [];
@@ -335,7 +338,7 @@ class Route extends Data{
                 }
             }
         }
-        foreach($object->data(App::DATA_REQUEST) as $key => $record){
+        foreach($object->data(App::REQUEST) as $key => $record){
             if($key == 'request'){
                 continue;
             }
@@ -459,7 +462,7 @@ class Route extends Data{
     }
 
     public static function configure($object){
-        $config = $object->data(App::DATA_CONFIG);
+        $config = $object->data(App::CONFIG);
 
         $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
         if(empty($config->data(Config::DATA_PROJECT_ROUTE_URL))){
@@ -476,13 +479,13 @@ class Route extends Data{
                 $data = new Route(Core::object($read));
                 $data->url($url);
                 $data->cache_url($cache_url);
-                $object->data(App::DATA_ROUTE, $data);
+                $object->data(App::ROUTE, $data);
                 Route::load($object);
                 Route::framework($object);
                 Route::cache_write($object);
             }
         } else {
-            $object->data(App::DATA_ROUTE, $cache);
+            $object->data(App::ROUTE, $cache);
         }
     }
 
@@ -560,8 +563,8 @@ class Route extends Data{
             //don't write cache file as root, otherways it will be inaccessible
             return false;
         }
-        $config = $object->data(App::DATA_CONFIG);
-        $route = $object->data(App::DATA_ROUTE);
+        $config = $object->data(App::CONFIG);
+        $route = $object->data(App::ROUTE);
         $data = $route->data();
         $result = new Data();
         $url = $route->url();
@@ -615,7 +618,7 @@ class Route extends Data{
 
     public static function load($object){
         $reload = false;
-        $route = $object->data(App::DATA_ROUTE);
+        $route = $object->data(App::ROUTE);
         if(empty($route)){
             return;
         }
@@ -661,8 +664,8 @@ class Route extends Data{
     }
 
     private static function framework($object){
-        $config = $object->data(App::DATA_CONFIG);
-        $route = $object->data(App::DATA_ROUTE);
+        $config = $object->data(App::CONFIG);
+        $route = $object->data(App::ROUTE);
         $default_route = $config->data('framework.default.route');
         foreach($default_route as $record){
             $path = strtolower($record);
@@ -688,7 +691,7 @@ class Route extends Data{
         $temp = explode('{', $explode[0], 2);
         if(isset($temp[1])){
             $attribute = substr($temp[1], 1);
-            $config = $object->data(App::DATA_CONFIG);
+            $config = $object->data(App::CONFIG);
             $value = $config->data($attribute);
             $resource = str_replace('{$' . $attribute . '}', $value, $resource);
             return Route::parse($object, $resource);

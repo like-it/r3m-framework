@@ -68,7 +68,7 @@ class Version extends View{
 
 
     private static function update($object){
-        $config = $object->data(App::DATA_CONFIG);
+        $config = $object->data(App::CONFIG);
         $config_url = $config->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
         if(File::exist($config_url)){
             $read = Core::object(File::read($config_url));

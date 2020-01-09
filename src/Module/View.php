@@ -172,7 +172,7 @@ class View {
 
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
-        Parse::readback($object, $parse, App::TITLE);
+//         Parse::readback($object, $parse, App::TITLE);
 
 //         $object->data('r3m.parse.storage', $parse->storage());
         return $read;

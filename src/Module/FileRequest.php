@@ -17,7 +17,7 @@ class FileRequest {
     const REQUEST = 'Request';
 
     public static function get($object){
-        $request = $object->data(App::DATA_REQUEST);
+        $request = $object->data(App::REQUEST);
 
         $input = $request->data('request');
         $input = substr($input, 0, -1);
@@ -29,7 +29,7 @@ class FileRequest {
         if(empty($extension)){
             return false;
         }
-        $config = $object->data(App::DATA_CONFIG);
+        $config = $object->data(App::CONFIG);
 
         $location = [];
         $location[] = $config->data('host.dir.public') . $dir . $file;
