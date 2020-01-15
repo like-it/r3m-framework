@@ -61,6 +61,7 @@ class Route extends Data{
     public static function get($object, $name='', $option=[]){
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
+//         d($get);
         if(empty($get)){
             return;
         }

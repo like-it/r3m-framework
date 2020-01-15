@@ -22,7 +22,7 @@ class FileRequest {
         $input = $request->data('request');
         $input = substr($input, 0, -1);
 
-        $dir = Dir::name($input);
+        $dir = str_replace(['../','..'], '', Dir::name($input));
         $file = str_replace($dir,'', $input);
         $extension = File::extension($file);
 
@@ -32,6 +32,8 @@ class FileRequest {
         $config = $object->data(App::CONFIG);
 
         $location = [];
+
+        $location[] = $config->data('host.dir.root') . $dir . 'Public' . $config->data('ds') . $file;
         $location[] = $config->data('host.dir.public') . $dir . $file;
         $location[] = $config->data('project.dir.public') . $dir . $file;
 
@@ -57,6 +59,7 @@ class FileRequest {
             }
         }
         Handler::response_header('HTTP/1.0 404 Not Found', 404);
+        d($location);
         exit();
     }
 

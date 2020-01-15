@@ -52,6 +52,7 @@ class Method {
                 $as_is = false;
                 $is_key_value = false;
                 $has_key = false;
+//                 dd($record['method']['attribute'][0]);
                 foreach($record['method']['attribute'][0] as $nr => $item){
                     if(
                         in_array(
@@ -63,6 +64,7 @@ class Method {
                     ){
                         $is_key_value = true;
                     }
+                    $record['method']['attribute'][0][$nr]['is_foreach'] = true;
                 }
                 foreach($record['method']['attribute'][0] as $nr => $item){
                     if(
@@ -119,6 +121,10 @@ class Method {
 //                     d($token);
                 }
 
+                if($record['method']['php_name'] == Token::TYPE_FOREACH){
+//                     $is_debug = 'foreach';
+                }
+
                 $value = Variable::getValue($build, $token, $storage, $is_debug);
                 $attribute .= $value . ', '; //#
             }
@@ -161,7 +167,9 @@ class Method {
                     substr($assign_after, 0, -2);
             }
             elseif($record['method']['php_name'] == Token::TYPE_FOREACH){
+//                 dd($attribute);
                 $attribute = substr($attribute, 0, -2);
+//                 dd($attribute);
                 $assign = '';
                 $is_assign = false;
                 $token = [];
@@ -174,6 +182,7 @@ class Method {
                         $item['type_old'] == Token::TYPE_VARIABLE
                     ){
                        $assign .= $build->indent() . '$this->storage()->data(\'' . $item['variable']['attribute'] . '\', ' . $item['value'] . ');' . "\n";
+//                        dd($assign);
                     }
                 }
                 $build->indent -= 1;
@@ -233,6 +242,7 @@ class Method {
                 } else {
                     $result = $name . '(' . $attribute . ')';
                     if(!empty($assign)){
+//                         dd($attribute);
                         $result .= '{' . "\n" . $assign;
                     }
                 }

@@ -55,6 +55,8 @@ class Database {
                 echo 'Connection failed: ' . $e->getMessage();
             }
         }
+        // fix LIMIT 0, 1000
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
         return $pdo;
     }
 }

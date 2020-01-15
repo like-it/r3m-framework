@@ -142,6 +142,11 @@ class Variable {
     }
 
     public static function getValue($build, $token=[], Data $storage, $is_debug=false){
+        if($is_debug === 'foreach'){
+//             dd($token);
+        }
+
+
         $set_max = 1024;
         $set_counter = 0;
         $operator_max = 1024;
@@ -175,7 +180,13 @@ class Variable {
             }
         }
         $operator = $token;
+        if($is_debug === 'foreach'){
+//             dd($operator);
+        }
         while(Operator::has($operator)){
+            if($is_debug === 'foreach'){
+                d('has oper');
+            }
             $statement = Operator::get($operator);
 //             d($operator);
 //             $debug = debug_backtrace(true);
@@ -203,40 +214,48 @@ class Variable {
 //             d($operator);
             $record = array_shift($operator);
             $record = Method::get($build, $record, $storage, $is_debug);
-
             $result .= Value::get($record, $is_debug);
-
+            /**
+             * below breaks a lot, foreach, but also route.get so disabled
+             */
+//             d($record);
             if(
                 in_array(
                     $record['type'],
                     [
                         Token::TYPE_STRING ,
                         Token::TYPE_QUOTE_DOUBLE_STRING,
-                        Token::TYPE_VARIABLE
+//                         Token::TYPE_VARIABLE
 
                     ]
-                )
+                ) &&
+                empty($record['is_foreach'])
             ){
+
                 $result .= ' . ';
             }
+
             $operator_counter++;
             if($operator_counter > $operator_max){
                 break;
             }
         }
+        //this too see below breaks a lot, foreach, but also route.get so disabled
+
         if(
             in_array(
                 $record['type'],
                 [
                     Token::TYPE_STRING ,
                     Token::TYPE_QUOTE_DOUBLE_STRING,
-                    Token::TYPE_VARIABLE
+//                     Token::TYPE_VARIABLE
 
                 ]
                 )
             ){
                 $result = substr($result,0, -3);
         }
+
         return $result;
     }
 
