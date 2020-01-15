@@ -55,11 +55,20 @@ class Build {
         }
         */
         $this->storage(new Data());
-        $dir_plugin = [];
-        $dir_plugin[] = $config->data('host.dir.plugin');
-        $dir_plugin[] = $config->data('project.dir.plugin');
-        $dir_plugin[] = $config->data('framework.dir.plugin');
 
+        $dir_plugin = $config->data('parse.dir.plugin');
+
+        if(empty($dir_plugin)){
+            $dir_plugin = [];
+            $dir_plugin[] = $config->data('host.dir.plugin');
+            $dir_plugin[] = $config->data('project.dir.plugin');
+            $dir_plugin[] = $config->data('framework.dir.plugin');
+            $dir_plugin[] = $config->data('controller.dir.plugin');
+        }
+        else {
+//             $dir_plugin[] = $config->data('controller.dir.plugin');
+        }
+//         d($dir_plugin);
         $this->storage()->data('plugin', $dir_plugin);
     }
 
@@ -239,6 +248,7 @@ class Build {
             }
             if($exist === false){
                 d($url);
+                d($dir_plugin);
                 throw new Exception('Function not found: ' . $name);
             }
         }
@@ -439,7 +449,6 @@ class Build {
                 }
                 $selection[$nr] = $record;
             }
-
         }
         $storage->data('run', $run);
         return $document;

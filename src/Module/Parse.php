@@ -40,10 +40,13 @@ class Parse {
         if(empty($dir_plugin)){
             $config->data('host.dir.plugin', $config->data('host.dir.root') . Parse::PLUGIN . $config->data('ds'));
         }
-
         $dir_plugin = $config->data('framework.dir.plugin');
         if(empty($dir_plugin)){
             $config->data('framework.dir.plugin', $config->data('framework.dir.source') . Parse::PLUGIN . $config->data('ds'));
+        }
+        $dir_plugin = $config->data('controller.dir.plugin');
+        if(empty($dir_plugin)){
+            $config->data('controller.dir.plugin', $config->data('controller.dir.root') . Parse::PLUGIN . $config->data('ds'));
         }
         $compile = $config->data('dictionary.compile');
         if(empty($compile)){

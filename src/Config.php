@@ -91,6 +91,11 @@ class Config extends Data {
     const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
     const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
 
+    const DATA_CONTROLLER_DIR = 'controller.dir';
+    const DATA_CONTROLLER_DIR_ROOT = Config::DATA_CONTROLLER_DIR . '.' .'root';
+    const DATA_CONTROLLER_DIR_SOURCE = Config::DATA_FRAMEWORK_DIR . '.' .'source';
+
+
     public function __construct($config=[]){
         if(array_key_exists(Config::DATA_DIR_VENDOR, $config)){
             $this->data(Config::DATA_PROJECT_DIR_VENDOR, $config[Config::DATA_DIR_VENDOR]);
@@ -273,7 +278,7 @@ class Config extends Data {
 
         $key = Config::DATA_FRAMEWORK_DIR_CLI;
         $value =
-            $this->data(Config::DATA_FRAMEWORK_DIR_ROOT) .
+            $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $this->data(Config::DICTIONARY . '.' . Config::CLI) .
             $this->data(Config::DS);
         $this->data($key, $value);

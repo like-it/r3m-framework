@@ -143,6 +143,7 @@ class Core {
 
     public static function redirect($url=''){
         header('Location: ' . $url);
+        exit;
     }
 
     public static function array_object($array=array()){

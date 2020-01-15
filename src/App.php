@@ -52,7 +52,7 @@ class App extends Data {
         Config::configure($object);
         Handler::request_configure($object);
         Host::configure($object);
-        View::configure($object);
+//         View::configure($object);
         Autoload::configure($object);
         Route::configure($object);
         $file = FileRequest::get($object);
@@ -62,6 +62,8 @@ class App extends Data {
                 throw new Exception('couldn\'t determine route');
             } else {
                 App::contentType($object);
+//                 $route->controller::prerun($object);
+                $route->controller::configure($object);
                 $result = $route->controller::{$route->function}($object);
                 $result = App::result($object, $result);
                 return $result;

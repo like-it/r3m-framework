@@ -117,7 +117,7 @@ class View {
             ) .
             $config->data(Config::DS)
         ;
-        $config->data($key, $value);
+//         $config->data($key, $value);
         $value[] =
             $config->data('project.dir.source') .
             $config->data(
@@ -127,16 +127,52 @@ class View {
             ) .
             $config->data(Config::DS)
         ;
-        $config->data($key, $value);
+        $dir = get_called_class()::DIR . $config->data('ds');
+        $config->data('controller.dir.source', $dir);
+        $config->data('controller.dir.root', Dir::name($dir));
+        $config->data('controller.dir.plugin',
+            $config->data('controller.dir.root') .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::PLUGIN
+            ) .
+            $config->data(Config::DS)
+        );
 
-        $key = 'parse.dir.plugin';
-        $value = $config->data($key);
         $value[] =
-            $config->data('host.dir.root') .
-            $config->data(Config::DICTIONARY . '.' . Config::PLUGIN) .
-            $config->data('ds')
+            $config->data('controller.dir.root') .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::PLUGIN
+            ) .
+            $config->data(Config::DS)
         ;
         $config->data($key, $value);
+
+//         $key = 'parse.dir.plugin';
+//         $value = $config->data($key);
+
+        $host_dir_root = $config->data('host.dir.root');
+
+        if(!empty($host_dir_root)){
+            $value[] =
+                $host_dir_root .
+                $config->data(Config::DICTIONARY . '.' . Config::PLUGIN) .
+                $config->data('ds')
+            ;
+        }
+        $config->data($key, $value);
+
+
+
+
+
+
+//         $debug = debug_backtrace(true);
+//         dd($debug);
+//         dd($config->data());
     }
 
     public function view($object, $url){
