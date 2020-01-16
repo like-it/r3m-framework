@@ -4,7 +4,7 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 
-function function_site_delete(Parse $parse, Data $data){
+function function_site_enable(Parse $parse, Data $data){
 
     $attribute = func_get_args();
 
@@ -15,6 +15,7 @@ function function_site_delete(Parse $parse, Data $data){
 
     if(!empty($server) && is_object($server)){
         $url = '/etc/apache2/sites-available/';
+        $url2 = '/etc/apache2/sites-enabled/';
         $dir = new \R3m\Io\Module\Dir();
         $read = $dir->read($url);
         foreach($read as $file){
@@ -22,7 +23,9 @@ function function_site_delete(Parse $parse, Data $data){
                 continue;
             }
             if(stristr($file->name, str_replace('.', '-', $server->name)) !== false){
-                \R3m\Io\Module\File::delete($file->url);
+                $exec = 'ln -s ' . $file->url . ' '  . $url2 . $file->name;
+                $output = [];
+                \R3m\Io\Module\Core::execute($exec, $output);
             }
         }
     } else {

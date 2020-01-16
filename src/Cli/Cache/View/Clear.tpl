@@ -1,1 +1,1 @@
-Cache clear successful.
+{cache.clear()}Cache clear successful.

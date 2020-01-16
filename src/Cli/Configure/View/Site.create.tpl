@@ -1,1 +1,1 @@
-{$server.name = terminal.readline('Domain name: ')}{site.create($server)}
+{$server.name = parameter('create', 1)}{if(is.empty($server.name))}{$server.name = terminal.readline('Domain name: ')}{/if}{site.create($server)}

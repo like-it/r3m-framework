@@ -1,1 +1,2 @@
 Route restarted.
+{route.restart()}

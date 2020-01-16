@@ -1,1 +1,2 @@
 Parse restarted.
+{parse.restart()}

@@ -54,9 +54,11 @@ class Parse extends View{
 
 
     private static function restart($object){
+        /*
         $parse = new Parser($object);
         $cache_dir = $parse->cache_dir();
         Dir::remove($cache_dir);
+        */
         $url = Parse::locate($object, ucfirst(__FUNCTION__));
         return Parse::view($object, $url);
     }

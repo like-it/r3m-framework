@@ -132,18 +132,17 @@ class Parse {
             $mtime = $storage->data('r3m.parse.view.mtime');
 
 //             opcache_invalidate($url, true);
-            if($is_debug === false){
-                if(File::exist($url) && File::mtime($url) == $mtime){
-                    //cache file
-                    $meta = $build->meta();
-                    $class = $meta['namespace'] . '\\' . $meta['class'];
-                    $template = new $class(new Parse($this->object()), $storage);
+            if(File::exist($url) && File::mtime($url) == $mtime){
+                //cache file
+                $meta = $build->meta();
+                $class = $meta['namespace'] . '\\' . $meta['class'];
+                $template = new $class(new Parse($this->object()), $storage);
 
-                    $string = $template->run();
-                    $string = Literal::restore($string, $storage);
-                    return $string;
-                }
+                $string = $template->run();
+                $string = Literal::restore($string, $storage);
+                return $string;
             }
+
 
 
             /*

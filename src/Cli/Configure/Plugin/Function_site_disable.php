@@ -4,7 +4,7 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 
-function function_site_delete(Parse $parse, Data $data){
+function function_site_disable(Parse $parse, Data $data){
 
     $attribute = func_get_args();
 
@@ -14,7 +14,7 @@ function function_site_delete(Parse $parse, Data $data){
     $server = array_shift($attribute);
 
     if(!empty($server) && is_object($server)){
-        $url = '/etc/apache2/sites-available/';
+        $url = '/etc/apache2/sites-enabled/';
         $dir = new \R3m\Io\Module\Dir();
         $read = $dir->read($url);
         foreach($read as $file){

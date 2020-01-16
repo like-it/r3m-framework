@@ -108,12 +108,42 @@ class View {
 
         $key = 'parse.dir.plugin';
         $value = [];
-        $value[] =
-            $config->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
+        $host_dir_root = $config->data('host.dir.root');
+        if(!empty($host_dir_root)){
+            $value[] =
+            $host_dir_root .
+            $config->data(Config::DICTIONARY . '.' . Config::PLUGIN) .
+            $config->data('ds')
+            ;
+        }
+        $dir = get_called_class()::DIR . $config->data(Config::DS);
+        $config->data(Config::DATA_CONTROLLER_DIR_SOURCE, $dir);
+        $config->data(Config::DATA_CONTROLLER_DIR_ROOT, Dir::name($dir));
+        $config->data(Config::DATA_CONTROLLER_DIR_DATA,
+            $config->data('controller.dir.root') .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::DATA
+                ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_CONTROLLER_DIR_PLUGIN,
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
             $config->data(
                 Config::DICTIONARY .
                 '.' .
                 Config::PLUGIN
+                ) .
+            $config->data(Config::DS)
+        );
+
+        $value[] =
+        $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+        $config->data(
+            Config::DICTIONARY .
+            '.' .
+            Config::PLUGIN
             ) .
             $config->data(Config::DS)
         ;
@@ -126,46 +156,16 @@ class View {
             ) .
             $config->data(Config::DS)
         ;
-        $dir = get_called_class()::DIR . $config->data(Config::DS);
-        $config->data(Config::DATA_CONTROLLER_DIR_SOURCE, $dir);
-        $config->data(Config::DATA_CONTROLLER_DIR_ROOT, Dir::name($dir));
-        $config->data(Config::DATA_CONTROLLER_DIR_DATA,
-            $config->data('controller.dir.root') .
-            $config->data(
-                Config::DICTIONARY .
-                '.' .
-                Config::DATA
-            ) .
-            $config->data(Config::DS)
-        );
-        $config->data(Config::DATA_CONTROLLER_DIR_PLUGIN,
-            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
-            $config->data(
-                Config::DICTIONARY .
-                '.' .
-                Config::PLUGIN
-            ) .
-            $config->data(Config::DS)
-        );
-
         $value[] =
-            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+            $config->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $config->data(
                 Config::DICTIONARY .
                 '.' .
                 Config::PLUGIN
-            ) .
-            $config->data(Config::DS)
+                ) .
+                $config->data(Config::DS)
         ;
-        $config->data($key, $value);
-        $host_dir_root = $config->data('host.dir.root');
-        if(!empty($host_dir_root)){
-            $value[] =
-                $host_dir_root .
-                $config->data(Config::DICTIONARY . '.' . Config::PLUGIN) .
-                $config->data('ds')
-            ;
-        }
+//         $config->data($key, $value);
         $config->data($key, $value);
     }
 

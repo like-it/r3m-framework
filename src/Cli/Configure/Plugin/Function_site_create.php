@@ -25,19 +25,10 @@ function function_site_create(Parse $parse, Data $data){
         $read = \R3m\Io\Module\File::read($url);
         $data = new \stdClass();
         $data->server = $server;
-        $write = $parse->compile($read, $data, $parse->storage(), 'string');
+        $write = $parse->compile($read, $data, $parse->storage());
         \R3m\Io\Module\File::write($server->url, $write);
     } else {
         throw new \Exception('Server variable needs to be an object');
     }
-
-
-
-
-
-
-
-
-
 }
 

@@ -60,16 +60,6 @@ class Cache extends View{
     }
 
     private static function clear($object){
-        $parse = new Parse($object);
-        $command = Cache::CLEAR_COMMAND;
-        foreach($command as $record){
-            $execute = $parse->compile($record);
-            echo 'Executing: ' . $execute . "...\n";
-            $output = [];
-            Core::execute($execute, $output);
-            $output[] = '';
-            echo implode("\n", $output);
-        }
         $url = Cache::locate($object, ucfirst(__FUNCTION__));
         return Cache::view($object, $url);
     }
