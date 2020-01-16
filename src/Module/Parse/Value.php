@@ -31,6 +31,8 @@ class Value {
             case Token::TYPE_BRACKET_SQUARE_OPEN :
             case Token::TYPE_BRACKET_SQUARE_CLOSE :
             case Token::TYPE_CODE :
+            case Token::TYPE_PARENTHESE_OPEN :
+            case Token::TYPE_PARENTHESE_CLOSE :
             case Token::TYPE_QUOTE_SINGLE_STRING :
                 return $record['value'];
             break;

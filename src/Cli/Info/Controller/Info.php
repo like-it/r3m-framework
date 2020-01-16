@@ -18,7 +18,6 @@ class Info extends View {
     const NAME = 'Info';
 
     public static function run($object){
-        $debug = debug_backtrace(true);
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $config->data('framework.environment', Config::MODE_PRODUCTION);
         $command = $object::parameter($object, Info::NAME, 1);

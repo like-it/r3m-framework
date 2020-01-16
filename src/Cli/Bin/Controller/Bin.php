@@ -29,28 +29,7 @@ class Bin extends View {
             $name = Bin::DEFAULT_NAME;
         }
         $object->data('name', $name);
-        Bin::create($object);
         $url = Bin::locate($object, 'Info');
         return Bin::view($object, $url);
-    }
-
-    private static function create($object){
-        $config = $object->data(App::CONFIG);
-        $execute = $config->data(Config::DATA_PROJECT_DIR_BINARY) . Bin::EXE;
-        Dir::create($config->data(Config::DATA_PROJECT_DIR_BINARY), Dir::CHMOD);
-        $dir = Dir::name(Bin::DIR) . $config->data(Config::DICTIONARY . '.' . Config::DATA) . $config->data('ds');
-        $source = $dir . Bin::EXE;
-        if(File::exist($execute)){
-            File::delete($execute);
-        }
-        File::copy($source, $execute);
-        $name = $object->data('name');
-        $url = Bin::TARGET . $name;
-        $content = [];
-        $content[] = '#!/bin/sh';
-        $content[] = 'php ' . $execute . ' "$@"';
-        $content = implode(PHP_EOL, $content);
-        File::write($url, $content);
-        shell_exec('chmod +x ' . $url);
     }
 }
