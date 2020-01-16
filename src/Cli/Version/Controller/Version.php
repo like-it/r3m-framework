@@ -19,30 +19,30 @@ use R3m\Io\Module\View;
 use R3m\Io\Module\Parse;
 
 class Version extends View{
-    public const NAME = 'Version';
-    public const DIR = __DIR__;
+    const NAME = 'Version';
+    const DIR = __DIR__;
 
-    private const COMMAND_INFO = 'info';
-    private const COMMAND_UPDATE = 'update';
-    private const COMMAND = [
+    const COMMAND_INFO = 'info';
+    const COMMAND_UPDATE = 'update';
+    const COMMAND = [
         Version::COMMAND_INFO,
         Version::COMMAND_UPDATE
     ];
 
-    private const DEFAULT_COMMAND = Version::COMMAND_INFO;
+    const DEFAULT_COMMAND = Version::COMMAND_INFO;
 
-    private const UPDATE_COMMAND = [
+    const UPDATE_COMMAND = [
         '{binary()} version info',
     ];
 
-    public const DATA_FRAMEWORK_VERSION = 'framework.version';
-    public const DATA_FRAMEWORK_BUILT = 'framework.built';
-    public const DATA_FRAMEWORK_MAJOR = 'framework.major';
-    public const DATA_FRAMEWORK_MINOR = 'framework.minor';
-    public const DATA_FRAMEWORK_PATCH = 'framework.patch';
+    const DATA_FRAMEWORK_VERSION = 'framework.version';
+    const DATA_FRAMEWORK_BUILT = 'framework.built';
+    const DATA_FRAMEWORK_MAJOR = 'framework.major';
+    const DATA_FRAMEWORK_MINOR = 'framework.minor';
+    const DATA_FRAMEWORK_PATCH = 'framework.patch';
 
-    public const EXCEPTION_COMMAND_PARAMETER = '{$command}';
-    public const EXCEPTION_COMMAND = 'invalid command (' . Version::EXCEPTION_COMMAND_PARAMETER . ')';
+    const EXCEPTION_COMMAND_PARAMETER = '{$command}';
+    const EXCEPTION_COMMAND = 'invalid command (' . Version::EXCEPTION_COMMAND_PARAMETER . ')';
 
     public static function run($object){
         $command = $object->parameter($object, Version::NAME, 1);
