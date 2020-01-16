@@ -152,7 +152,9 @@ class Token {
         Token::TYPE_VARIABLE,
         Token::TYPE_OPERATOR,
         Token::TYPE_COMMA,
-        Token::TYPE_SEMI_COLON
+        Token::TYPE_SEMI_COLON,
+        Token::TYPE_CURLY_OPEN,
+        Token::TYPE_CURLY_CLOSE,
     ];
 
     const TYPE_ASSIGN = [
@@ -615,28 +617,16 @@ class Token {
             }
         }
         $prepare = [];
+
         foreach($token as $nr => $record){
             $prepare[] = $record;
             unset($token[$nr]);
         }
         $prepare = Token::prepare($prepare, $count, $is_debug);
-        /*
-        if($is_debug === 2){
-            d($prepare);
-        }
-        */
         $token = Token::define($prepare, $is_debug);
         $token = Token::group($token, $is_debug);
-//         dd($token);
-        /*
-        if($is_debug === 2){
-            d($token);
-        }
-        */
         $token = Token::cast($token, $is_debug);
-
         $token = Token::method($token, $is_debug);
-//         dd($token);
         return $token;
     }
 
@@ -738,8 +728,7 @@ class Token {
         return $token;
     }
 
-    public static function group($token=[]){
-
+    public static function group($token=[], $is_debug=false){
         $is_outside = true;
         foreach($token as $nr => $record){
             if($record['type'] == Token::TYPE_CURLY_OPEN){
@@ -1181,19 +1170,23 @@ class Token {
                 $record['type'] == Token::TYPE_DOC_COMMENT &&
                 $quote_single_toggle === false &&
                 $quote_double_toggle === false
-                ){
-                    $doc_comment_open_nr = $nr;
-                    $previous_nr = $nr;
-                    continue;
+            ){
+                $doc_comment_open_nr = $nr;
+                $previous_nr = $nr;
+                continue;
             }
             elseif(
                 $record['type'] == Token::TYPE_COMMENT_SINGLE_LINE &&
                 $quote_single_toggle === false &&
                 $quote_double_toggle === false
-                ){
-                    $comment_single_line_nr = $nr;
-                    $previous_nr = $nr;
-                    continue;
+            ){
+                if($is_debug == '197'){
+                    d('1');
+                    dd($record);
+                }
+                $comment_single_line_nr = $nr;
+                $previous_nr = $nr;
+                continue;
             }
             elseif(
                 $record['type'] == Token::TYPE_IS_DIVIDE &&

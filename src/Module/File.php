@@ -33,6 +33,25 @@ class File {
         system('ln -s ' . $source . ' ' . $destination);
     }
 
+    public static function count($directory='', $include_directory=false){
+        $dir = new Dir();
+        $read = $dir->read($directory);
+        if(!empty($include_directory)){
+            return count($read);
+        } else {
+            $count = 0;
+            foreach($read as $file){
+                if(!property_exists($file, 'type')){
+                    continue;
+                }
+                if($file->type == File::TYPE){
+                    $count++;
+                }
+            }
+            return $count;
+        }
+    }
+
     public static function exist($url){ //File::exist means File has exist and not exist
         $url = rtrim($url, '/');
         return file_exists($url);

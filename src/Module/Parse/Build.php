@@ -359,6 +359,12 @@ class Build {
 //                 $selection[$nr] = $record;
 
                 switch($type){
+                    case Token::TYPE_STRING :
+                        dd($selection);
+                    break;
+                    case Token::TYPE_CURLY_CLOSE :
+                        dd($selection);
+                    break;
                     case Build::VARIABLE_ASSIGN :
                         $run[] = $this->indent() . Variable::assign($this, $selection, $storage) . ';';
                     break;
@@ -434,6 +440,8 @@ class Build {
 //                         d($select);
 //                         dd($selection);
                     default:
+//                         d($is_tag);
+//                         die;
                         throw new Exception('type (' . $type . ') undefined');
 
                 }
@@ -448,6 +456,12 @@ class Build {
                     $select = $record;
                 }
                 $selection[$nr] = $record;
+            } else {
+//                 echo $record['value'];
+
+//                 d($record);
+//                 $type = Build::getType($record);
+//                 $select = $record;
             }
         }
         $storage->data('run', $run);
@@ -503,12 +517,12 @@ class Build {
                 ){
                     return Build::ELSE;
                 }
-                $debug = debug_backtrace(true);
-                d($debug);
-                d($record);
+                return Token::TYPE_STRING;
                 break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
                 return Token::TYPE_QUOTE_DOUBLE_STRING;
+            case Token::TYPE_CURLY_CLOSE :
+                return Token::TYPE_CURLY_CLOSE;
             default:
                 $debug = debug_backtrace(true);
                 d($debug);

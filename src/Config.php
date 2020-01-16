@@ -76,6 +76,7 @@ class Config extends Data {
     const DATA_FRAMEWORK_DIR_CLI = Config::DATA_FRAMEWORK_DIR . '.' .'cli';
     const DATA_FRAMEWORK_DIR_CACHE = Config::DATA_FRAMEWORK_DIR . '.' .'cache';
     const DATA_FRAMEWORK_DIR_MODULE = Config::DATA_FRAMEWORK_DIR . '.' .'module';
+    const DATA_FRAMEWORK_DIR_PLUGIN =  Config::DATA_FRAMEWORK_DIR . '.' . 'plugin';
 
     const DATA_FRAMEWORK_ENVIRONMENT = 'framework.environment';
 
@@ -90,10 +91,13 @@ class Config extends Data {
     const DATA_PROJECT_DIR_CLI =  Config::DATA_PROJECT_DIR . '.' . 'cli';
     const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
     const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
+    const DATA_PROJECT_DIR_PLUGIN =  Config::DATA_PROJECT_DIR . '.' . 'plugin';
 
     const DATA_CONTROLLER_DIR = 'controller.dir';
     const DATA_CONTROLLER_DIR_ROOT = Config::DATA_CONTROLLER_DIR . '.' .'root';
-    const DATA_CONTROLLER_DIR_SOURCE = Config::DATA_FRAMEWORK_DIR . '.' .'source';
+    const DATA_CONTROLLER_DIR_SOURCE = Config::DATA_CONTROLLER_DIR . '.' .'source';
+    const DATA_CONTROLLER_DIR_DATA = Config::DATA_CONTROLLER_DIR . '.' .'data';
+    const DATA_CONTROLLER_DIR_PLUGIN = Config::DATA_CONTROLLER_DIR . '.' .'plugin';
 
 
     public function __construct($config=[]){
@@ -190,6 +194,7 @@ class Config extends Data {
         $this->data('extension.zip', '.zip');
         $this->data('extension.rar', '.rar');
         $this->data('extension.tpl', '.tpl');
+        $this->data('extension.conf', '.conf');
 
         $this->data(Config::LOCALHOST_EXTENSION, Config::VALUE_LOCALHOST_EXTENSION);
 

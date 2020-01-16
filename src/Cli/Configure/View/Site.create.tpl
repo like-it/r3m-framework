@@ -1,0 +1,1 @@
+{$server.name = terminal.readline('Domain name: ')}{site.create($server)}

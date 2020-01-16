@@ -1,0 +1,1 @@
+{$host = terminal.readline('Hostname: ')}{host.delete($host)}

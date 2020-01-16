@@ -14,7 +14,8 @@ use R3m\io\Module\Dir;
 
 class Configure extends View {
     const DIR = __DIR__;
-    const NAME = 'Uuid';
+    const NAME = 'Configure';
+    const INFO = 'Info';
 
     /*
     public static function prerun($object){
@@ -25,15 +26,16 @@ class Configure extends View {
     */
 
     public static function run($object){
-        $action = $object->parameter($object, 'configure', 1);
-        switch(strtolower($action)){
-            case 'host' :
-                $url = Configure::locate($object, 'Host');
-                return Configure::view($object, $url);
-            break;
-
+        $module = $object->parameter($object, 'configure', 1);
+        if(empty($module)){
+            $module = Configure::INFO;
         }
-        $url = Configure::locate($object, 'Info');
+        $action = $object->parameter($object, 'configure', 2);
+        if(!empty($action)){
+            $url = Configure::locate($object, ucfirst(strtolower($module)) . '.' . strtolower($action));
+        } else {
+            $url = Configure::locate($object, ucfirst(strtolower($module)));
+        }
         return Configure::view($object, $url);
     }
 }
