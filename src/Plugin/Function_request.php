@@ -6,7 +6,12 @@ use R3m\Io\Module\Data;
 
 function function_request(Parse $parse, Data $data, $attribute=null, $value=null){
     $object = $parse->object();
-    return $object->data('R3m\\Io.Request');
-//     d($object->data('R3m\\Io.Request'));
-//     dd($url);
+    if($attribute === null){
+        return $object->data('R3m\\Io.Request.Input');
+    }
+    elseif($value === null){
+        return $object->data('R3m\\Io.Request.Input')->data($attribute);
+    } else {
+        $object->data('R3m\\Io.Request.Input')->data($attribute, $value);
+    }
 }

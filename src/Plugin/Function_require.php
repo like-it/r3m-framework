@@ -6,7 +6,7 @@ use R3m\Io\Module\Data;
 
 function function_require(Parse $parse, Data $data, $url=''){
     $read = '';
-    if(File::exist($url)){
+    if(\R3m\Io\Module\File::exist($url)){
         $read = \R3m\Io\Module\File::read($url);
     } else {
         throw new Exception('Require: file not found: ' . $url);

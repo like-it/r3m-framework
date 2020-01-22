@@ -61,9 +61,9 @@ class Build {
         if(empty($dir_plugin)){
             $dir_plugin = [];
             $dir_plugin[] = $config->data('host.dir.plugin');
+            $dir_plugin[] = $config->data('controller.dir.plugin');
             $dir_plugin[] = $config->data('project.dir.plugin');
             $dir_plugin[] = $config->data('framework.dir.plugin');
-            $dir_plugin[] = $config->data('controller.dir.plugin');
         }
         else {
 //             $dir_plugin[] = $config->data('controller.dir.plugin');
@@ -226,13 +226,11 @@ class Build {
         }
 
         $placeholder = $storage->data('placeholder.function');
-
         foreach($data as $name => $record){
             $exist = false;
             foreach($dir_plugin as $nr => $dir){
                 $file = ucfirst($name) . $config->data('extension.php');
                 $url = $dir . $file;
-
                 if(File::exist($url)){
                     $read = File::read($url);
                     $explode = explode('function', $read);

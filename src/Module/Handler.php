@@ -116,6 +116,7 @@ class Handler {
     }
 
     private static function request_input(){
+        $data = new Data();
         if(defined('IS_CLI')){
             global $argc, $argv;
             $temp = $argv;
@@ -123,7 +124,8 @@ class Handler {
             $request = $temp;
             $request = Core::array_object($request);
             foreach($request as $key => $value){
-                $request->{$key} = trim($value);
+//                 $request->{$key} = trim($value);
+                $data->data($key, trim($value));
             }
         } else {
             $request = $_REQUEST;
@@ -135,6 +137,7 @@ class Handler {
             } else {
                 $request->request = '/';
             }
+            $data->data('request', $request->request);
             $input =
                 htmlspecialchars(
                     htmlspecialchars_decode(
@@ -158,15 +161,22 @@ class Handler {
                         property_exists($record, 'value') &&
                         $record->name != 'request'
                     ){
-                        $request->{$record->name} = $record->value;
+//                         $request->{$record->name} = $record->value;
+                        if($record->value !== null){
+                            $data->data($record->name, $record->value);
+                        }
                     } else {
-                        $request->{$key} = $record;
+//                         d($key);
+//                         $request->{$key} = $record;
+                        if($record !== null){
+                            $data->data($key, $record);
+                        }
                     }
                 }
             }
         }
-        $data = new Data();
-        $data->data($request);
+
+//         $data->data($request);
         return $data;
 //         return $request;
     }

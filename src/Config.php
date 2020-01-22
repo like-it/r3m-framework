@@ -51,6 +51,9 @@ class Config extends Data {
     const VIEW = 'view';
     const VALUE_VIEW = 'View';
 
+    const MODEL = 'model';
+    const VALUE_MODEL = 'Model';
+
     const LOCALHOST_EXTENSION = 'localhost.extension';
     const VALUE_LOCALHOST_EXTENSION =  [
         'local',
@@ -98,7 +101,8 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_SOURCE = Config::DATA_CONTROLLER_DIR . '.' .'source';
     const DATA_CONTROLLER_DIR_DATA = Config::DATA_CONTROLLER_DIR . '.' .'data';
     const DATA_CONTROLLER_DIR_PLUGIN = Config::DATA_CONTROLLER_DIR . '.' .'plugin';
-
+    const DATA_CONTROLLER_DIR_MODEL = Config::DATA_CONTROLLER_DIR . '.' .'model';
+    const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
 
     public function __construct($config=[]){
         if(array_key_exists(Config::DATA_DIR_VENDOR, $config)){
@@ -163,6 +167,11 @@ class Config extends Data {
         $key = Config::DICTIONARY . '.' . Config::VIEW;
         $value = Config::VALUE_VIEW;
         $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::MODEL;
+        $value = Config::VALUE_MODEL;
+        $this->data($key, $value);
+
 
         $key = Config::DICTIONARY . '.' . Config::FRAMEWORK;
         $value = Config::VALUE_FRAMEWORK;
