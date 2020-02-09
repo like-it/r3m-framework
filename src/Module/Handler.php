@@ -157,6 +157,7 @@ class Handler {
 //                 dd($input);
                 foreach($input as $key => $record){
                     if(
+                        is_object($record) &&
                         property_exists($record, 'name') &&
                         property_exists($record, 'value') &&
                         $record->name != 'request'

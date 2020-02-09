@@ -20,6 +20,16 @@ class Dir {
 
     private $node;
 
+    public static function change($dir=''){
+        $tmp = getcwd() . DIRECTORY_SEPARATOR;
+
+        if(is_dir($dir) === false){
+            Dir::create($dir, Dir::CHMOD);
+        }
+        chdir($dir);
+        return $tmp;
+    }
+
     public static function create($url='', $chmod=''){
         $url = rtrim($url, '/');
         if(File::exist($url) && !Dir::is($url)){

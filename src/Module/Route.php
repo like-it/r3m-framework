@@ -65,23 +65,23 @@ class Route extends Data{
         if(empty($get)){
             return;
         }
+        $path = $get->path;
         foreach($option as $key => $value){
             if(is_numeric($key)){
                 $explode = explode('}', $get->path, 2);
                 $temp = explode('{$', $explode[0], 2);
-
                 if(array_key_exists(1, $temp)){
-                    $key = $temp[1];
-                    $get->path = str_replace('{$' . $key . '}', $value, $get->path);
+                    $variable = $temp[1];
+                    $path = str_replace('{$' . $variable . '}', $value, $path);
                 }
             } else {
-                $get->path = str_replace('{$' . $key . '}', $value, $get->path);
+                $path = str_replace('{$' . $key . '}', $value, $path);
             }
         }
-        if($get->path == '/'){
+        if($path == '/'){
             $url = $object->data('host.url');
         } else {
-            $url = $object->data('host.url') . $get->path;
+            $url = $object->data('host.url') . $path;
         }
         return $url;
     }

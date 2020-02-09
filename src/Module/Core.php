@@ -53,6 +53,7 @@ class Core {
         if(stristr($command, '&') === false){
             $command .= ' &';
         }
+        $output = [];
         return Core::execute($command, $output, Core::SHELL_PROCESS);
     }
 
