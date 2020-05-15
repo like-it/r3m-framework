@@ -218,7 +218,9 @@ class View {
         $data = clone $object->data();
         unset($data->{APP::NAMESPACE});
         $data->r3m = new stdClass();
-        $data->r3m->config = $config->data();
+//         $data->r3m->config = $config->data();
+        $data->r3m->io = new stdClass();
+        $data->r3m->io->config = $config->data();
         $read = $parse->compile($read, $data, $parse->storage());
 
         Parse::readback($object, $parse, App::SCRIPT);

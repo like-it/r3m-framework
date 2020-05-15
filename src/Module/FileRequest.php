@@ -44,21 +44,21 @@ class FileRequest {
                 $mtime = File::mtime($url);
                 $contentType = $config->data('contentType.' . $extension);
                 if(empty($contentType)){
-                    Handler::response_header('HTTP/1.0 415 Unsupported Media Type', 415);
+                    Handler::header('HTTP/1.0 415 Unsupported Media Type', 415);
                     exit();
                 }
                 if(!headers_sent()){
                     $gm = gmdate('D, d M Y H:i:s T', $mtime);
-                    Handler::response_header('Last-Modified: '. $gm);
-                    Handler::response_header('Content-Type: ' . $contentType);
-                    Handler::response_header('ETag: ' . $etag . '-' . $gm);
-                    Handler::response_header('Cache-Control: public');
-                    Handler::response_header('Access-Control-Allow-Origin: http://' . $host);
+                    Handler::header('Last-Modified: '. $gm);
+                    Handler::header('Content-Type: ' . $contentType);
+                    Handler::header('ETag: ' . $etag . '-' . $gm);
+                    Handler::header('Cache-Control: public');
+                    Handler::header('Access-Control-Allow-Origin: http://' . $host);
                 }
                 return File::read($url);
             }
         }
-        Handler::response_header('HTTP/1.0 404 Not Found', 404);
+        Handler::header('HTTP/1.0 404 Not Found', 404);
         d($location);
         exit();
     }

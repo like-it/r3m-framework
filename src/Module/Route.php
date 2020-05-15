@@ -471,6 +471,7 @@ class Route extends Data{
         }
         $url = $config->data(Config::DATA_PROJECT_ROUTE_URL);
         $cache_url = $config->data(Config::DATA_PROJECT_DIR_DATA) . 'Cache' . $config->data('ds') . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
+
         $cache = Route::cache_read($object, $url, $cache_url);
         $cache = Route::cache_invalidate($object, $cache);
 
@@ -561,6 +562,8 @@ class Route extends Data{
 
     private static function cache_write($object){
         if (posix_getuid() === 0){
+//             $route = $object->data(App::ROUTE);
+//             dd($route->data());
             //don't write cache file as root, otherways it will be inaccessible
             return false;
         }

@@ -45,6 +45,13 @@ class Core {
     const MODE_INTERACTIVE = CORE::OUTPUT_MODE_IMPLICIT;
     const MODE_PASSIVE = CORE::OUTPUT_MODE_EXPLICIT;
 
+    public static function binary(){
+        if(array_key_exists('_', $_SERVER)){
+            $dirname = \R3m\Io\Module\Dir::name($_SERVER['_']);
+            return str_replace($dirname, '', $_SERVER['_']);
+        }
+    }
+
     public static function detach($command){
         return Core::execute($command, $output, Core::SHELL_DETACHED);
     }
@@ -122,15 +129,15 @@ class Core {
         switch($mode){
             case  Core::MODE_INTERACTIVE :
                 ob_implicit_flush(true);
-                ob_end_flush();
+                @ob_end_flush();
                 break;
             case  Core::MODE_INTERACTIVE :
                 ob_implicit_flush(false);
-                ob_end_flush();
+                @ob_end_flush();
                 break;
             default :
                 ob_implicit_flush(false);
-                ob_end_flush();
+                @ob_end_flush();
         }
     }
 

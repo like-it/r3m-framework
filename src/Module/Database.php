@@ -47,12 +47,14 @@ class Database {
                 $pdo = new PDO($dsn, $username, $password);
             } catch (PDOException $e) {
                 echo 'Connection failed: ' . $e->getMessage();
+                exit;
             }
         } else {
             try {
                 $pdo = new PDO($dsn, $username, $password, $options);
             } catch (PDOException $e) {
                 echo 'Connection failed: ' . $e->getMessage();
+                exit;
             }
         }
         // fix LIMIT 0, 1000

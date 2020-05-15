@@ -214,7 +214,11 @@ class Variable {
 //             d($operator);
             $record = array_shift($operator);
             $record = Method::get($build, $record, $storage, $is_debug);
+//             d($record);
+            $record['is_attribute'] = false;
             $result .= Value::get($record, $is_debug);
+//             d($record);
+//             d($result);
             /**
              * below breaks a lot, foreach, but also route.get so disabled
              */
@@ -255,7 +259,7 @@ class Variable {
             ){
                 $result = substr($result,0, -3);
         }
-
+// d($result);
         return $result;
     }
 

@@ -113,8 +113,14 @@ class Method {
                 }
             }
             foreach($record['method']['attribute'] as $nr => $token){
+                $recod['method']['attribute'][$nr]['method'] = $record['method'];
+            }
+            foreach($record['method']['attribute'] as $nr => $token){
                 $token = Token::define($token);
                 $token = Token::method($token);
+                $token = Token::attribute($token);
+//                 $token['test']['method'] = $record['method'];
+//                 d($record['method']['attribute']);
                 $token = $build->require('function', $token);
 
                 if($is_debug){
@@ -126,6 +132,12 @@ class Method {
                 }
 
                 $value = Variable::getValue($build, $token, $storage, $is_debug);
+//                 d($record);
+//                 d($value);
+                if(substr($value,0,2) == '\'"'){
+                    dd($value);
+                }
+
                 $attribute .= $value . ', '; //#
             }
             if($record['method']['php_name'] == Token::TYPE_FOR){
@@ -338,7 +350,9 @@ class Method {
         $method['method']['attribute'][] = $token;
 //         d($method['method']['attribute']);
         $record = Method::get($build, $method, $storage, true);
-        //         d($record);
+//                 d($record);
+//                 $debug = debug_backtrace(true);
+//                 d($debug[0]);
         if($record['type'] === Token::TYPE_CODE){
             return $record['value'];
         }

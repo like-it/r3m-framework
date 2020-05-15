@@ -38,14 +38,25 @@ class Literal {
     }
 
     public static function restore($string='', Data $data){
-        $tag = 'literal-' . $data->data('r3m.parse.literal.key') . '-';
-        $explode = explode($tag, $string, 2);
-        if(isset($explode[1])){
-            $key = substr($explode[1], 0, 36);
-            $string =  str_replace($tag . $key, $data->data('r3m.parse.literal.' . $key), $string);
+        if(is_object($string)){
+            foreach($string as $key => $value){
+                $string->{$key} = Literal::restore($value, $data);
+            }
+        }
+        elseif(is_array($string)){
+            foreach($string as $key => $value){
+                $string[$key] = Literal::restore($value, $data);
+            }
+        } else {
+            $tag = 'literal-' . $data->data('r3m.parse.literal.key') . '-';
             $explode = explode($tag, $string, 2);
             if(isset($explode[1])){
-                return Literal::restore($string, $data);
+                $key = substr($explode[1], 0, 36);
+                $string =  str_replace($tag . $key, $data->data('r3m.parse.literal.' . $key), $string);
+                $explode = explode($tag, $string, 2);
+                if(isset($explode[1])){
+                    return Literal::restore($string, $data);
+                }
             }
         }
         return $string;

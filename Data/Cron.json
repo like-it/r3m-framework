@@ -1,0 +1,6 @@
+{
+	"cron" : {
+    	"lock" : "{$r3m.config.controller.dir.data}Cron/.Lock",
+    	"dir" : "{dir.read(\"{$r3m.config.controller.dir.data}Cron/.Task/\")}"
+    }
+}

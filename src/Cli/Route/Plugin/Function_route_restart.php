@@ -15,6 +15,6 @@ function function_route_restart(Parse $parse, Data $data){
     $route = $object->data(\R3m\Io\App::ROUTE);
     $cache_url = $route->cache_url();
     if(\R3m\Io\Module\File::exist($cache_url)){
-        \R3m\Io\Module\Dir::remove($cache_url);
+        \R3m\Io\Module\File::delete($cache_url);
     }
 }

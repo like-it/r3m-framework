@@ -105,12 +105,15 @@ class Parse {
 
         if(is_array($string)){
             foreach($string as $key => $value){
-                $string[$key] = $this->compile($value, $data, $storage, $is_debug);
+                $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
             }
         }
         elseif(is_object($string)){
+//             d($string);
             foreach($string as $key => $value){
-                $string->$key = $this->compile($value, $data, $storage, $is_debug);
+//                 d($value);
+                $value = $this->compile($value, $storage->data(), $storage, $is_debug);
+                $string->$key = $value;
             }
         }
         elseif(stristr($string, '{') === false){
@@ -152,8 +155,10 @@ class Parse {
             */
 
             $string = literal::apply($string, $storage);
-//             $is_debug = 1;
+            $is_debug = 1;
             $tree = Token::tree($string, $is_debug);
+//             dd($tree);
+
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
 
@@ -191,10 +196,7 @@ class Parse {
             $template = new $class(new Parse($this->object()), $storage);
 
             $string = $template->run();
-
             $string = Literal::restore($string, $storage);
-
-//             $string = str_replace("\n", "\n", $string);
         }
         return $string;
     }

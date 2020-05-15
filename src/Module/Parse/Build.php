@@ -110,6 +110,7 @@ class Build {
 //         $storage->data('class', $class);
 
 
+        $storage->data('use.Exception', new stdClass());
         $storage->data('use.R3m\\Io\\Module\\Parse', new stdClass());
         $storage->data('use.R3m\\Io\\Module\\Data', new stdClass());
         $storage->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
@@ -323,6 +324,7 @@ class Build {
 
         $skip_nr = null;
         $is_control = false;
+//         dd($tree);
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -343,6 +345,18 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING
             ){
+//                 d($record['value']);
+
+                /*
+                if(
+                    in_array(
+                        substr($record['value'], 0, 1),
+                        [
+                            '\'',
+                            '"'
+                    ]))
+                */
+
 //                 $counter++;
                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
                 $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage());';
@@ -368,12 +382,17 @@ class Build {
                     break;
                     case Build::VARIABLE_DEFINE :
 //                         d($selection);
-                        $run[] = $this->indent() . 'echo' . ' ' . Variable::define($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . '$variable = ' . Variable::define($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
+                        $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
+                        $run[] = $this->indent() . 'else { echo $variable; } ';
                     break;
                     case Build::METHOD :
 //                         d($select);
-                        $run[] = $this->indent() . 'echo' . ' ' . Method::create($this, $selection, $storage) . ';';
-//                         $run[] = $this->indent() . Method::create($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . '$method = ' . Method::create($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . 'if (is_object($method)){ return $method; }';
+                        $run[] = $this->indent() . 'elseif (is_array($method)){ return $method; }';
+                        $run[] = $this->indent() . 'else { echo $method; }';
                     break;
                     case Build::METHOD_CONTROL :
                         if($select['method']['name'] == 'capture.append'){

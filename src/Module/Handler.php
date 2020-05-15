@@ -42,6 +42,12 @@ class Handler {
 
     const METHOD_CLI = 'CLI';
 
+    const DELETE = 'DELETE';
+    const GET = 'GET';
+    const PATCH = 'PATCH';
+    const POST = 'POST';
+    const PUT = 'PUT';
+
     public static function request_configure($object){
         $object->data(
             App::NAMESPACE . '.' .
@@ -74,7 +80,7 @@ class Handler {
         }
     }
 
-    public static function response_header($string='', $http_response_code=null, $replace=true){
+    public static function header($string='', $http_response_code=null, $replace=true){
         if(empty($string)){
             return headers_list();
         }

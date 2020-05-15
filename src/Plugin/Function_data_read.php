@@ -10,6 +10,8 @@ function function_data_read(Parse $parse, Data $data, $url=''){
         $data->data(\R3m\Io\Module\Core::object_merge($data->data(),$read));
         $read = $parse->compile($data->data(), [], $data, 'css');
         return $read;
+    } else {
+        throw new Exception('Error: url=' . $url . ' not found');
     }
     return '';
 }

@@ -14,9 +14,11 @@
                 "license",
                 "version",
                 "uuid",
+                "password",
                 "route",
                 "bin",
-                "configure"
+                "configure",
+                "service"
             ]
         }
     },

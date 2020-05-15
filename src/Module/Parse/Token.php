@@ -625,8 +625,14 @@ class Token {
         $prepare = Token::prepare($prepare, $count, $is_debug);
         $token = Token::define($prepare, $is_debug);
         $token = Token::group($token, $is_debug);
+        foreach($token as $nr => $record){
+//             d($record);
+        }
         $token = Token::cast($token, $is_debug);
         $token = Token::method($token, $is_debug);
+
+
+
         return $token;
     }
 
@@ -647,6 +653,13 @@ class Token {
             }
             $previous_previous_nr = $previous_nr;
             $previous_nr = $nr;
+        }
+        return $token;
+    }
+
+    public static function attribute($token=[]){
+        foreach($token as $nr => $record){
+            $token[$nr]['is_attribute'] = true;
         }
         return $token;
     }
@@ -730,12 +743,21 @@ class Token {
 
     public static function group($token=[], $is_debug=false){
         $is_outside = true;
+
         foreach($token as $nr => $record){
             if($record['type'] == Token::TYPE_CURLY_OPEN){
                 $is_outside = false;
                 continue;
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
+                $is_outside = true;
+                continue;
+            }
+            elseif($record['type'] == Token::TYPE_COMMENT){
+                $is_outside = true;
+                continue;
+            }
+            elseif($record['type'] == Token::TYPE_DOC_COMMENT){
                 $is_outside = true;
                 continue;
             }
@@ -750,7 +772,8 @@ class Token {
                 if($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
                     $is_outside = true;
                     continue;
-                } else {
+                }
+                else {
                     $token[$is_outside]['type'] = Token::TYPE_STRING;
                     $token[$is_outside]['is_operator'] = false;
                     unset($token[$is_outside]['direction']);
@@ -762,6 +785,7 @@ class Token {
                 }
             }
         }
+
         return $token;
     }
 
@@ -897,7 +921,9 @@ class Token {
         $comment_single_line_nr = null;
         $is_tag_close_nr = null;
         $tag_close = '';
+//         dd($token);
         foreach($token as $nr => $record){
+//             d($record);
             $record['depth'] = $depth;
             $token[$nr]['depth'] = $depth;
             $next = null;
@@ -923,6 +949,7 @@ class Token {
                 $quote_single_toggle === false &&
                 $quote_double_toggle === false
                 ){
+//                     dd($token[$comment_open_nr]);
                     if($comment_open_nr !== null){
                         $token[$comment_open_nr]['value'] .= $record['value'];
                         $comment_open_nr = null;

@@ -34,6 +34,7 @@ class Value {
             case Token::TYPE_PARENTHESE_OPEN :
             case Token::TYPE_PARENTHESE_CLOSE :
             case Token::TYPE_QUOTE_SINGLE_STRING :
+//             case Token::TYPE_WHITESPACE :
                 return $record['value'];
             break;
             case Token::TYPE_STRING :
@@ -43,7 +44,16 @@ class Value {
                 if(stristr($record['value'], '{') === false){
                     return $record['value'];
                 }
-                return 'str_replace([\'\n\', \'\t\'], ["\n", "\t"], $this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage()))';
+//                 $debug = debug_backtrace(true);
+//                 dd($debug);
+//                                 d($record);
+                if(!empty($record['is_attribute'])){
+                    return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
+                } else {
+                    return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
+                }
+//                 return '"\' . ' . 'str_replace([\'\n\', \'\t\'], ["\n", "\t"], $this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage()))' . ' . "\'';
+//                 return '\'"\' . ' . 'str_replace([\'\n\', \'\t\'], ["\n", "\t"], $this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage()))' . ' . \'"\'';
             break;
             case Token::TYPE_CAST :
                 return Value::getCast($record);
@@ -54,11 +64,16 @@ class Value {
             break;
             case Token::TYPE_METHOD :
                 return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+            break;
+            case Token::TYPE_WHITESPACE :
+                return;
+            break;
             default:
                 $debug = debug_backtrace(true);
                 d($record);
                 dd($debug);
                 throw new Exception('Variable value type ' .  $record['type'] . ' not defined');
+            break;
         }
     }
 

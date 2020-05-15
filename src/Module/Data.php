@@ -181,7 +181,7 @@ class Data {
     }
 
     private function deleteData($attribute=null){
-        return $this->object_delete($attribute, $this->data());
+        return Core::object_delete($attribute, $this->data());
     }
 
 }
