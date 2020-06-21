@@ -215,7 +215,8 @@ class Variable {
             $record = array_shift($operator);
             $record = Method::get($build, $record, $storage, $is_debug);
 //             d($record);
-            $record['is_attribute'] = false;
+//             d($record['method']['attribute']);
+//             $record['is_attribute'] = false;
             $result .= Value::get($record, $is_debug);
 //             d($record);
 //             d($result);

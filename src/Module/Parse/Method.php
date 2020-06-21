@@ -113,12 +113,10 @@ class Method {
                 }
             }
             foreach($record['method']['attribute'] as $nr => $token){
-                $recod['method']['attribute'][$nr]['method'] = $record['method'];
-            }
-            foreach($record['method']['attribute'] as $nr => $token){
                 $token = Token::define($token);
                 $token = Token::method($token);
-                $token = Token::attribute($token);
+//                 $token = Token::attribute($token);
+//                 d($token);
 //                 $token['test']['method'] = $record['method'];
 //                 d($record['method']['attribute']);
                 $token = $build->require('function', $token);
@@ -132,7 +130,7 @@ class Method {
                 }
 
                 $value = Variable::getValue($build, $token, $storage, $is_debug);
-//                 d($record);
+//                 d($token);
 //                 d($value);
                 if(substr($value,0,2) == '\'"'){
                     dd($value);
