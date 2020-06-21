@@ -47,10 +47,12 @@ class Value {
 //                 $debug = debug_backtrace(true);
 //                 dd($debug);
 //                                 d($record);
-                if(!empty($record['is_attribute'])){
-                    return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-                } else {
+//                 return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
+                if($record['depth'] == 0){
                     return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
+                } else {
+                    return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
+
                 }
 //                 return '"\' . ' . 'str_replace([\'\n\', \'\t\'], ["\n", "\t"], $this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage()))' . ' . "\'';
 //                 return '\'"\' . ' . 'str_replace([\'\n\', \'\t\'], ["\n", "\t"], $this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage()))' . ' . \'"\'';
