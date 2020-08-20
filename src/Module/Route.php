@@ -58,9 +58,36 @@ class Route extends Data{
         return $this->current;
     }
 
+
+    public static function has_host($select='', $url=''){
+        $url = Host::remove_scheme($url);
+        $allowed_host = [];
+        $disallowed_host = [];
+        foreach($select->host as $host){
+            $host = strtolower($host);
+            if(substr($host, 0, 1) == '!'){
+                $disallowed_host[] = substr($host, 1);
+                continue;
+            }
+            $allowed_host[] = $host;
+        }
+        if(in_array($url, $disallowed_host)){
+            return false;
+        }
+        if(in_array($url, $allowed_host)){
+            return $select;
+        }
+        return false;
+    }
+
     public static function get($object, $name='', $option=[]){
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
+        if(empty($get)){
+            return;
+        }
+        $get = $route::add_localhost($object, $get);
+        $get = $route::has_host($get, $object->data('host.url'));
 //         d($get);
         if(empty($get)){
             return;
@@ -253,7 +280,7 @@ class Route extends Data{
         return false;
     }
 
-    private static function add_localhost($object, $route){
+    public static function add_localhost($object, $route){
         if(!property_exists($route, 'host')){
             return $route;
         }

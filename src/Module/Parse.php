@@ -105,12 +105,14 @@ class Parse {
 
         if(is_array($string)){
             foreach($string as $key => $value){
+//                 $value = str_replace('{$compatibility {&', '{$', $value); //bugfix php
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
             }
         }
         elseif(is_object($string)){
 //             d($string);
             foreach($string as $key => $value){
+//                 $value = str_replace('{$compatibility {&', '{$', $value); //bugfix php
 //                 d($value);
                 $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                 $string->$key = $value;
@@ -126,6 +128,13 @@ class Parse {
             return $string;
         }
         else {
+            $oldstring = $string;
+//             $string = str_replace(' {&', '{$', $string); //bugfix php
+
+//                 d($oldstring);
+//                 d($string);
+
+
 //             $string = str_replace('&quot;', '"', $string);
             $build = new Build($this->object());
             $build->cache_dir($this->cache_dir());

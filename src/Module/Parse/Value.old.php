@@ -18,7 +18,7 @@ class Value {
     const TYPE_CAST_FLOAT = 'float';
     const TYPE_CAST_STRING = 'string';
 
-    public static function get($record=[]){
+    public static function get($record=[], $is_assign=false){
         switch($record['type']){
             case Token::TYPE_INT :
             case Token::TYPE_FLOAT :
@@ -47,7 +47,7 @@ class Value {
                     return $record['value'];
                 }
                 if($record['depth'] == 0){
-                    if(!empty($record['is_assign'])){
+                    if($is_assign === true){
                         return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
                     } else {
                         return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
