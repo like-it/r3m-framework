@@ -111,10 +111,8 @@ class Build {
 
 
         $storage->data('use.Exception', new stdClass());
-        $storage->data('use.R3m\\Io\\App', new stdClass());
         $storage->data('use.R3m\\Io\\Module\\Parse', new stdClass());
         $storage->data('use.R3m\\Io\\Module\\Data', new stdClass());
-        $storage->data('use.R3m\\Io\\Module\\Route', new stdClass());
         $storage->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
 
         $storage->data('placeholder.run', '// R3M-IO-' . Core::uuid());
@@ -381,7 +379,6 @@ class Build {
                         dd($selection);
                     break;
                     case Build::VARIABLE_ASSIGN :
-//                         dd($selection);
                         $run[] = $this->indent() . Variable::assign($this, $selection, $storage) . ';';
                     break;
                     case Build::VARIABLE_DEFINE :

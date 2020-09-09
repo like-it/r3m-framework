@@ -36,6 +36,7 @@ class FileRequest {
         $location[] = $config->data('host.dir.root') . $dir . 'Public' . $config->data('ds') . $file;
         $location[] = $config->data('host.dir.public') . $dir . $file;
         $location[] = $config->data('project.dir.public') . $dir . $file;
+//         $location[] = '/' . $dir . $file;
 
         foreach($location as $url){
             if(File::exist($url)){

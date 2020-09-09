@@ -20,12 +20,11 @@ class Variable {
         if(!array_key_exists('variable', $variable)){
             return '';
         }
-        $token = Variable::addAssign($token);
         switch($variable['variable']['operator']){
             case '=' :
                 $assign = '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
-                $value = Variable::getValue($build, $token, $storage);
+                $value = Variable::getValue($build, $token, $storage, true);
                 if(stristr($value, '"') && stristr($value, '\'') !== false){
 //                     d($value);
                 }
@@ -101,14 +100,6 @@ class Variable {
         }
     }
 
-    private static function addAssign($token=[]){
-        foreach ($token as $nr => $record){
-            $record['is_assign'] = true;
-            $token[$nr] = $record;
-        }
-        return $token;
-    }
-
     public static function define($build, $token=[], Data $storage){
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
@@ -153,7 +144,9 @@ class Variable {
         return $define;
     }
 
-    public static function getValue($build, $token=[], Data $storage){
+    public static function getValue($build, $token=[], Data $storage, $is_assign=false){
+
+
         $set_max = 1024;
         $set_counter = 0;
         $operator_max = 1024;
@@ -214,11 +207,11 @@ class Variable {
         while(count($operator) >= 1){
 //             d($operator);
             $record = array_shift($operator);
-            $record = Method::get($build, $record, $storage);
+            $record = Method::get($build, $record, $storage, $is_assign);
 //             d($record);
 //             d($record['method']['attribute']);
 //             $record['is_attribute'] = false;
-            $result .= Value::get($record);
+            $result .= Value::get($record, $is_assign);
 //             d($record);
 //             d($result);
             /**

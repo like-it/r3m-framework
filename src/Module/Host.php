@@ -183,6 +183,17 @@ class Host {
         return false;
     }
 
+    public static function remove_scheme($url=''){
+        $explode = explode('://', $url, 2);
+        if(isset($explode[1])){
+            if(substr($explode[1], -1, 1) == '/'){
+                return substr($explode[1], 0, -1);
+            }
+            return $explode[1];
+        }
+        return '';
+    }
+
     public static function scheme(){
         $scheme = Host::SCHEME_HTTP;
         if(!empty($_SERVER['REQUEST_SCHEME'])){

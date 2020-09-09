@@ -21,4 +21,5 @@
 #
 # m h  dom mon dow   command
 
-* 16 * * * {binary()} info &>> /home/remco/test.txt
+# 15 13 * * * {binary()} yobit dice dice 10
+0 13 * * * {binary()} yobit dice easy 10
