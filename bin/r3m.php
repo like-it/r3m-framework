@@ -20,4 +20,10 @@ $config = new R3m\Io\Config(
 $config->data('framework.environment', R3m\Io\Config::MODE_DEVELOPMENT);
 
 $app = new R3m\Io\App($autoload, $config);
+if(method_exists($app, 'preRun')){
+	echo R3m\Io\App::preRun($app);
+}
 echo R3m\Io\App::run($app);
+if(method_exists($app, 'postRun')){
+	echo R3m\Io\App::postRun($app);
+}
