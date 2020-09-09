@@ -166,9 +166,9 @@ class Route extends Data{
             $select->method = Handler::method();
             $select->host = [];
             $request = Route::select_cli($object, $select);
-
-            if($request === false){
-                $select = Route::select_info($object, $select);
+                                    
+            if($request === false){            	
+                $select = Route::select_info($object, $select);                                
                 $request = Route::select_cli($object, $select);
             }
             if($request === false){
@@ -512,6 +512,11 @@ class Route extends Data{
                 Route::load($object);
                 Route::framework($object);
                 Route::cache_write($object);
+            } else {
+            	$data = new Route();
+            	$object->data(App::ROUTE, $data);
+            	Route::load($object);
+            	Route::framework($object);
             }
         } else {
             $object->data(App::ROUTE, $cache);
