@@ -11,13 +11,9 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_is_numeric(Parse $parse, Data $data){
-    $attribute = func_get_args();
-    array_shift($attribute);
-    array_shift($attribute);
-    $numeric = array_shift($attribute);
+function function_is_numeric(Parse $parse, Data $data, $numeric=null){
     if(strtolower($numeric) == 'nan'){
         $numeric = NAN;
     }
-    return is_numeric($nan);
+    return is_numeric($numeric);
 }

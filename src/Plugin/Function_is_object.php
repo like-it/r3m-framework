@@ -11,13 +11,6 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_is_int(Parse $parse, Data $data){
-    $attribute = func_get_args();
-    array_shift($attribute);
-    array_shift($attribute);
-    $int = array_shift($attribute);
-    if(strtolower($int) == 'nan'){
-        $int = NAN;
-    }
-    return is_int($int);
+function function_is_object(Parse $parse, Data $data, $object=null){
+    return is_object($object);
 }

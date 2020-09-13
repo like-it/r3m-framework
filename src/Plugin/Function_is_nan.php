@@ -11,11 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_is_nan(Parse $parse, Data $data){
-    $attribute = func_get_args();
-    array_shift($attribute);
-    array_shift($attribute);
-    $nan = array_shift($attribute);
+function function_is_nan(Parse $parse, Data $data, $nan=null){
     if(strtolower($nan) == 'nan'){
         $nan = NAN;
     }

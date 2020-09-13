@@ -11,9 +11,6 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_is_int(Parse $parse, Data $data, $int=null){
-    if(strtolower($int) == 'nan'){
-        $int = NAN;
-    }
-    return is_int($int);
+function function_is_countable(Parse $parse, Data $data, $countable=null){
+    return is_countable($countable);
 }

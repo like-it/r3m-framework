@@ -11,11 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_is_debug(Parse $parse, Data $data){
-    $attribute = func_get_args();
-    array_shift($attribute);
-    array_shift($attribute);
-    $is_debug = array_shift($attribute);
+function function_is_debug(Parse $parse, Data $data, $is_debug=null){
     if($is_debug === null){
         return $parse->object()->data('is.debug');
     } else {

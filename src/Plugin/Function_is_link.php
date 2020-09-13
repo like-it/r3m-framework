@@ -11,10 +11,6 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_is_link(Parse $parse, Data $data){
-    $attribute = func_get_args();
-    array_shift($attribute);
-    array_shift($attribute);
-    $link = array_shift($attribute);
+function function_is_link(Parse $parse, Data $data, $link=null){
     return is_link($link);
 }
