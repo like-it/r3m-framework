@@ -220,7 +220,6 @@ class Build {
         $storage = $this->storage();
 
         $dir_plugin = $storage->data('plugin');
-
         $data = $storage->data($type);
 
 //         dd($storage->data());
@@ -240,9 +239,19 @@ class Build {
                     $explode = explode('function', $read);
                     $explode[0] = '';
                     $read = implode('function', $explode);
+                    $indent = $this->indent - 1;
+
+                    $read = explode("\n", $read);
+                    foreach($read as $nr => $row){
+                        $read[$nr] = $this->indent($indent) . $row;
+                    }
+                    $read = implode("\n", $read);
+                    $read .= "\n";
+                    $this->indent = $this->indent + 1;
                     $document = str_replace($placeholder, $read . $placeholder, $document);
 
                     $exist = true;
+                    break;
 //                     $document[] = 'if(!function_exists(\'R3m\\Io\\Module\\Compile\\' . $name . '\')){';
 //                     $document[] = $read;
 //                     $document[] = '}';
