@@ -9,6 +9,7 @@
 
 namespace R3m\Io\Module;
 
+use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Parse\Token;
@@ -202,10 +203,14 @@ class Parse {
                 */
             }
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
-            $template = new $class(new Parse($this->object()), $storage);
 
-            $string = $template->run();
-            $string = Literal::restore($string, $storage);
+            $exists = class_exists($class);
+
+            if($exists){
+                $template = new $class(new Parse($this->object()), $storage);
+                $string = $template->run();
+                $string = Literal::restore($string, $storage);
+            }
         }
         return $string;
     }

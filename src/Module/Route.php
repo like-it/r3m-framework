@@ -319,7 +319,8 @@ class Route extends Data{
                     $disallowed_host_new[] = $prefix . '.' . $extension;
                 }
             }
-            $route->host = array_merge($allowed_host_new, $disallowed_host_new);
+            $host = array_merge($allowed_host_new, $disallowed_host_new);
+            $route->host = array_unique($host, SORT_STRING);
         }
         return $route;
     }
