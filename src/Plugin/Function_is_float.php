@@ -11,12 +11,13 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_content_type(Parse $parse, Data $data){
-
+function function_is_float(Parse $parse, Data $data){
     $attribute = func_get_args();
-
     array_shift($attribute);
     array_shift($attribute);
-
-    return $parse->object()->data(\R3m\Io\App::CONTENT_TYPE);
+    $float = array_shift($attribute);
+    if(strtolower($float) == 'nan'){
+        $float = NAN;
+    }
+    return is_float($float);
 }
