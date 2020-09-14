@@ -11,6 +11,6 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_implode(Parse $parse, Data $data, $glue=null, $array=[]){
+function function_implode(Parse $parse, Data $data, $glue='', $array=[]){
     return implode($glue, $array);
 }
