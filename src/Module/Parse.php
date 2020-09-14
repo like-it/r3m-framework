@@ -129,14 +129,6 @@ class Parse {
             return $string;
         }
         else {
-            $oldstring = $string;
-//             $string = str_replace(' {&', '{$', $string); //bugfix php
-
-//                 d($oldstring);
-//                 d($string);
-
-
-//             $string = str_replace('&quot;', '"', $string);
             $build = new Build($this->object());
             $build->cache_dir($this->cache_dir());
             $url = $build->url($string);
@@ -192,8 +184,7 @@ class Parse {
             $write = $build->write($url, $document);
 
             if($mtime !== null){
-                File::touch($url, $mtime);
-
+                $touch = File::touch($url, $mtime);
                 /*
                 opcache_invalidate($url, true);
 
