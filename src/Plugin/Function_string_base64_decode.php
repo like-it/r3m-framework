@@ -11,8 +11,11 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_repeat(Parse $parse, Data $data, $input, $multiplier=0){
-    $multiplier = abs($multiplier);
-    $result = str_repeat($input, $multiplier);
+function function_string_base64_decode(Parse $parse, Data $data, $string=null, $strict=null){
+    if(empty($strict)){
+        $result = base64_decode($string);
+    } else {
+        $result = base64_decode($string, true);
+    }
     return $result;
 }

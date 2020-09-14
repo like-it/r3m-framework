@@ -11,18 +11,8 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_parameter(Parse $parse, Data $data){
-
-    $attribute = func_get_args();
-
-    array_shift($attribute);
-    array_shift($attribute);
-
-    $name = array_shift($attribute);
-    $offset = array_shift($attribute);
-
+function function_parameter(Parse $parse, Data $data, $name=null, $offset=null){
     $object = $parse->object();
     $parameter = $object->parameter($object, $name, $offset);
-
     return $parameter;
 }

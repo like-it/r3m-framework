@@ -11,8 +11,11 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_repeat(Parse $parse, Data $data, $input, $multiplier=0){
-    $multiplier = abs($multiplier);
-    $result = str_repeat($input, $multiplier);
+function function_string_uppercase_word(Parse $parse, Data $data, $string='', $delimiter=null){
+    if(empty($delimiter)){
+        $result = ucwords($string);
+    } else {
+        $result = ucwords($string, $delimiter);
+    }
     return $result;
 }

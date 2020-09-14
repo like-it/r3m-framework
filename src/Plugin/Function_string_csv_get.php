@@ -11,8 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_repeat(Parse $parse, Data $data, $input, $multiplier=0){
-    $multiplier = abs($multiplier);
-    $result = str_repeat($input, $multiplier);
+function function_string_csv_get(Parse $parse, Data $data, $input='', $delimiter=',', $enclosure='"', $escape='\\'){
+    $result = str_getcsv($input, $delimiter, $enclosure, $escape);
     return $result;
 }

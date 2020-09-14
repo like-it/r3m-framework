@@ -24,6 +24,30 @@ function function_object_new(Parse $parse, Data $data){
     switch($count){
         case 1 :
             return new $name(array_shift($attribute));
+            break;
+        case 2 :
+            return new $name(array_shift($attribute), array_shift($attribute));
+            break;
+        case 3 :
+            return new $name(array_shift($attribute), array_shift($attribute), array_shift($attribute));
+            break;
+        case 4 :
+            return new $name(array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute));
+            break;
+        case 5 :
+            return new $name(array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute));
+            break;
+        case 6 :
+            return new $name(array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute));
+            break;
+        case 7 :
+            return new $name(array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute));
+            break;
+        case 8 :
+            return new $name(array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute));
+            break;
+        case 9 :
+            return new $name(array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute), array_shift($attribute));
         break;
         default :
             return new $name();

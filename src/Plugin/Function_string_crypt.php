@@ -11,8 +11,11 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_repeat(Parse $parse, Data $data, $input, $multiplier=0){
-    $multiplier = abs($multiplier);
-    $result = str_repeat($input, $multiplier);
+function function_string_crypt(Parse $parse, Data $data, $string='', $salt=null){
+    if(!empty($salt)){
+        $result = crypt($string, $salt);
+    } else {
+        $result = crypt($string);
+    }
     return $result;
 }
