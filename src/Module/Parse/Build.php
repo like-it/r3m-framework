@@ -63,6 +63,7 @@ class Build {
 
         $this->storage()->data('use.Exception', new stdClass());
         $this->storage()->data('use.R3m\\Io\\App', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Core', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Data', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());
