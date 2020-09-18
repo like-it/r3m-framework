@@ -11,9 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_password_hash(Parse $parse, Data $data, $password='', $cost=12){
-    $result = password_hash($password, PASSWORD_BCRYPT, [
-        'cost' => $cost
-    ]);
+function function_password_info_get(Parse $parse, Data $data, $hash=''){
+    $result = password_get_info($hash);
     return $result;
 }
