@@ -275,4 +275,8 @@ class File {
         $result .= '.' . $extension;
         return $result;
     }
+
+    public static function size($url=''){
+        return filesize($url);
+    }
 }

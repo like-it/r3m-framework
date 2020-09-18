@@ -39,7 +39,7 @@ class Build {
     public function __construct($object=null){
         $this->object($object);
 
-        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        $config = $this->object()->data(App::CONFIG);
 
         if(empty($config)){
             throw new Exception('Config not found in object');
@@ -55,6 +55,19 @@ class Build {
         }
         */
         $this->storage(new Data());
+
+        $this->storage()->data('time.start', microtime(true));
+        $this->storage()->data('placeholder.generation.time', '// R3M-IO-' . Core::uuid());
+        $this->storage()->data('placeholder.run', '// R3M-IO-' . Core::uuid());
+        $this->storage()->data('placeholder.function', '// R3M-IO-' . Core::uuid());
+
+        $this->storage()->data('use.Exception', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\App', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Core', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Data', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
 
         $dir_plugin = $config->data('parse.dir.plugin');
 
@@ -102,23 +115,12 @@ class Build {
     }
 
     private function createClass($document=[]){
-        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        $config = $this->object()->data(App::CONFIG);
 
         $storage = $this->storage();
         $key = $storage->data('key');
         $class = $config->data('dictionary.template') . '_' . $key;
 //         $storage->data('class', $class);
-
-
-        $storage->data('use.Exception', new stdClass());
-        $storage->data('use.R3m\\Io\\App', new stdClass());
-        $storage->data('use.R3m\\Io\\Module\\Parse', new stdClass());
-        $storage->data('use.R3m\\Io\\Module\\Data', new stdClass());
-        $storage->data('use.R3m\\Io\\Module\\Route', new stdClass());
-        $storage->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
-
-        $storage->data('placeholder.run', '// R3M-IO-' . Core::uuid());
-        $storage->data('placeholder.function', '// R3M-IO-' . Core::uuid());
 
 //         $document[] = '';
         $document[] = $this->indent(0) . 'class ' . $class . ' extends Main {';
@@ -135,7 +137,6 @@ class Build {
         $document[] = '';
         $document[] = $this->indent(1) . 'public function run(){';
         $document[] = $this->indent(2) . 'ob_start();';
-        $document[] = $this->indent(2) . '$compatibility = \'\';';
         $document[] = $this->indent(0) . $storage->data('placeholder.run');
         $document[] = $this->indent(2) . 'return ob_get_clean();';
         $document[] = $this->indent(1) . '}';
@@ -216,11 +217,10 @@ class Build {
     }
 
     private function createRequireContent($type='', $document=[]){
-        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
 
         $dir_plugin = $storage->data('plugin');
-
         $data = $storage->data($type);
 
 //         dd($storage->data());
@@ -240,9 +240,19 @@ class Build {
                     $explode = explode('function', $read);
                     $explode[0] = '';
                     $read = implode('function', $explode);
+                    $indent = $this->indent - 1;
+
+                    $read = explode("\n", $read);
+                    foreach($read as $nr => $row){
+                        $read[$nr] = $this->indent($indent) . $row;
+                    }
+                    $read = implode("\n", $read);
+                    $read .= "\n";
+                    $this->indent = $this->indent + 1;
                     $document = str_replace($placeholder, $read . $placeholder, $document);
 
                     $exist = true;
+                    break;
 //                     $document[] = 'if(!function_exists(\'R3m\\Io\\Module\\Compile\\' . $name . '\')){';
 //                     $document[] = $read;
 //                     $document[] = '}';
@@ -254,7 +264,7 @@ class Build {
                 throw new Exception('Function not found: ' . $name);
             }
         }
-        $document = str_replace('function ' . $type, 'private function ' . $type, $document);
+//
 //         $document = str_replace('function function_', 'private function function_', $document);
 //         $storage->data('use.stdClass', new stdClass());
 //         $storage->data('use.Exception', new stdClass());
@@ -264,7 +274,7 @@ class Build {
 
 
     private function createRequireCategory($type='', $document=[]){
-        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
 
         $dir_plugin = $storage->data('plugin');
@@ -301,12 +311,11 @@ class Build {
 
     public function write($url, $document=[]){
         $write = implode("\n", $document);
-
+        $this->storage()->data('time.end', microtime(true));
+        $this->storage()->data('time.duration', $this->storage()->data('time.end') - $this->storage()->data('time.start'));
+        $write = str_replace($this->storage()->data('placeholder.generation.time'), round($this->storage()->data('time.duration') * 1000, 2). ' msec', $write);
         $dir = Dir::name($url);
         $create = Dir::create($dir);
-
-//         echo $write;
-
         return File::write($url, $write);
     }
 
@@ -563,6 +572,12 @@ class Build {
         $document = $this->createRequireContent('modifier', $document);
         $document = $this->createRequireContent('function', $document);
 
+        $document = str_replace('function ' . 'capture', 'private function ' . 'capture', $document);
+        $document = str_replace('function ' . 'modifier', 'private function ' . 'modifier', $document);
+        $document = str_replace('function ' . 'function', 'private function ' . 'function', $document);
+
+
+
         $this->storage()->data('document', $document);
 
         return $document;
@@ -572,16 +587,20 @@ class Build {
         if(empty($document)){
             $document = [];
         }
+        $config = $this->object()->data(App::CONFIG);
         $namespace = $this->storage()->data('namespace');
         $document[] = '<?php';
         $document[] = 'namespace ' . $namespace . ';';
         $document[] = '';
         $document[] = '/**';
-        $document[] = ' * @copyright                (c) https://r3m.io 2019 - ' . date('Y');
-        $document[] = ' * @version                  1.0';
+        $document[] = ' * @copyright                (c) Remco van der Velde 2019 - ' . date('Y');
+        $document[] = ' * @version                  ' . $config->data('framework.version');
+        $document[] = ' * @license                  MIT';
         $document[] = ' * @note                     Auto generated file, do not modify!';
         $document[] = ' * @author                   R3m\Io\Module\Parse\Build';
         $document[] = ' * @author                   Remco van der Velde';
+        $document[] = ' * @genration-date           ' . date('Y-m-d H:i:s');
+        $document[] = ' * @generation-time          ' . $this->storage()->data('placeholder.generation.time');
         $document[] = ' */';
         $document[] = '';
         $document[] = $this->storage()->data('placeholder.use');
@@ -592,7 +611,7 @@ class Build {
     }
 
     public function meta(){
-        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        $config = $this->object()->data(App::CONFIG);
         $this->storage()->data('placeholder.use', '// R3M-IO-' . Core::uuid());
 
         $namespace = 'R3m\\Io\\Module\\' .  $config->data('dictionary.compile');
@@ -653,8 +672,7 @@ class Build {
         $url = $storage->data('url');
         if($string !== null && $url === null){
             $key = sha1($string);
-
-            $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+            $config = $this->object()->data(App::CONFIG);
             $dir = $this->cache_dir();
             $uuid = posix_geteuid();
             if(empty($dir)){
