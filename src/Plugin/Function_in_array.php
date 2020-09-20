@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_array_in(Parse $parse, Data $data, $needle='', $haystack=[], $strict=false){
+function function_in_array(Parse $parse, Data $data, $needle='', $haystack=[], $strict=false){
     if(!empty($strict)){
         $result = in_array($needle, $haystack, true);
     } else {
