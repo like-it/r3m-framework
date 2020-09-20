@@ -37,5 +37,13 @@
         "ttf": "font\/ttf",
         "wav": "audio\/wav",
         "mp3": "audio\/mp3"
+    },
+    "parse" : {
+    	"plugin" : {
+    		"multi_line" : [
+    			"capture.prepend",
+    			"capture.append"
+    		]
+    	}
     }
 }

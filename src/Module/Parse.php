@@ -27,16 +27,29 @@ class Parse {
     private $storage;
     private $cache_dir;
 
-    public function __construct($object){
+    public function __construct($object, $storage=null){
         $this->object($object);
-        $this->storage(new Data());
-        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        if($storage === null){
+            $this->storage(new Data());
+            $this->configure();
+            $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+            $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
+            $this->cache_dir($cache_dir);
 
+        } else {
+            $this->storage($storage);
+            $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+            $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
+            $this->cache_dir($cache_dir);
+        }
+    }
+
+    private function configure(){
+        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
         $dir_plugin = $config->data('project.dir.plugin');
         if(empty($dir_plugin)){
             $config->data('project.dir.plugin', $config->data('project.dir.root') . Parse::PLUGIN . $config->data('ds'));
         }
-
         $dir_plugin = $config->data('host.dir.plugin');
         if(empty($dir_plugin)){
             $config->data('host.dir.plugin', $config->data('host.dir.root') . Parse::PLUGIN . $config->data('ds'));
@@ -57,9 +70,8 @@ class Parse {
         if(empty($template)){
             $config->data('dictionary.template', Parse::TEMPLATE);
         }
-        $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
-        $this->cache_dir($cache_dir);
     }
+
 
     public function object($object=null){
         if($object !== null){
@@ -131,10 +143,21 @@ class Parse {
         else {
             $build = new Build($this->object());
             $build->cache_dir($this->cache_dir());
-            $url = $build->url($string);
 
-            $storage->data('r3m.parse.compile.url', $url);
-            $mtime = $storage->data('r3m.parse.view.mtime');
+            $source = $storage->data('r3m.io.parse.view.source');
+
+            if(empty($source)){
+                $url = $build->url($string, [
+                    'source' => $storage->data('r3m.io.parse.view.url')
+                ]);
+            } else {
+                $url = $build->url($string, [
+                    'source' => $storage->data('r3m.io.parse.view.source.url'),
+                    'parent' => $storage->data('r3m.io.parse.view.url')
+                ]);
+            }
+            $storage->data('r3m.io.parse.compile.url', $url);
+            $mtime = $storage->data('r3m.io.parse.view.mtime');
 
 //             opcache_invalidate($url, true);
             if(File::exist($url) && File::mtime($url) == $mtime){
@@ -171,15 +194,15 @@ class Parse {
             if(empty($document)){
                 $document = [];
             }
-            $document = $build->create('header', $document);
-            $document = $build->create('class', $document);
+            $document = $build->create('header', $tree, $document);
+            $document = $build->create('class', $tree, $document);
 
             $build->indent(2);
 
             $document = $build->document($tree, $document, $storage);
-            $document = $build->create('run', $document);
-            $document = $build->create('require', $document);
-            $document = $build->create('use', $document);
+            $document = $build->create('run', $tree, $document);
+            $document = $build->create('require', $tree, $document);
+            $document = $build->create('use', $tree, $document);
 
             $write = $build->write($url, $document);
 

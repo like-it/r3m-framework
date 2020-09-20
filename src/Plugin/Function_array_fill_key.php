@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_array_fill(Parse $parse, Data $data, $start_index=0, number=1, $value=''){
-    $result = array_fill($start_index, $number, $value);
+function function_array_fill(Parse $parse, Data $data, $start_index=0, $entries=1, $value=''){
+    $result = array_fill($start_index, $entries, $value);
     return $result;
 }

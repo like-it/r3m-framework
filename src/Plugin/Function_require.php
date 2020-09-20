@@ -15,8 +15,12 @@ function function_require(Parse $parse, Data $data, $url=''){
     $read = '';
     if(\R3m\Io\Module\File::exist($url)){
         $read = \R3m\Io\Module\File::read($url);
+        $mtime = \R3m\Io\Module\File::mtime($url);
+        $data->data('r3m.io.parse.view.source.url', $url);
+        $parse->storage()->data('r3m.io.parse.view.source.mtime', $mtime);
     } else {
-        throw new Exception('Require: file not found: ' . $url);
+        $text = 'Require: file not found: ' . $url . ' in template: ' . $data->data('r3m.io.parse.view.source.url');
+        throw new Exception($text);
     }
     return $parse->compile($read, [], $data);
 }

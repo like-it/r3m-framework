@@ -15,10 +15,8 @@ function function_view(Parse $parse, Data $data, $template=null){
     $url = \R3m\Io\Module\View::locate($parse->object(), $template);
     $read = \R3m\Io\Module\File::read($url);
     $mtime = \R3m\Io\Module\File::mtime($url);
-    $parse->storage()->data('r3m.parse.view.url', $url);
-    $parse->storage()->data('r3m.parse.view.mtime', $mtime);
-
+    $data->data('r3m.io.parse.view.source.url', $url);
+    $parse->storage()->data('r3m.io.parse.view.source.mtime', $mtime);
     $read = $parse->compile($read, [], $data);
-
     return $read;
 }

@@ -85,13 +85,13 @@ class Build {
         $this->storage()->data('plugin', $dir_plugin);
     }
 
-    public function create($type='', $document=[]){
+    public function create($type='', $tree=[], $document=[], $options=[]){
         switch($type){
             case 'header' :
                 return $this->createHeader($document);
             break;
             case 'require' :
-                return $this->createRequire($document);
+                return $this->createRequire($document, $tree);
             break;
             case 'use' :
                 return $this->createUse($document);
@@ -259,9 +259,9 @@ class Build {
                 }
             }
             if($exist === false){
-                d($url);
-                d($dir_plugin);
-                throw new Exception('Function not found: ' . $name);
+                $value = $record['value'];
+                $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
+                throw new Exception('Function not found: ' . $text);
             }
         }
 //
@@ -408,12 +408,22 @@ class Build {
                         $run[] = $this->indent() . 'else { echo $method; }';
                     break;
                     case Build::METHOD_CONTROL :
-                        if($select['method']['name'] == 'capture.append'){
+                        if(
+                            in_array(
+                                $select['method']['name'],
+                                [
+                                    'capture.prepend',
+                                    'capture.append',
+                                ]
+                            )
+                        ){
                             $selection = Method::capture_selection($this, $tree, $selection, $storage);
                             $run[] = $this->indent() . Method::create_capture($this, $selection, $storage) . ';';
+                            /*
                             foreach($selection as $skip_nr => $item){
 
                             }
+                            */
                         } else {
                             $control = Method::create_control($this, $selection, $storage);
                             $explode = explode(' ', $control, 2);
@@ -450,10 +460,24 @@ class Build {
                         $this->indent($this->indent+1);
                     break;
                     case Build::TAG_CLOSE :
+                        if(
+                            !in_array(
+                                $select['tag']['name'],
+                                [
+                                    '/capture.prepend',
+                                    '/capture.append'
+                                ]
+                            )
+                        ){
+                            $this->indent($this->indent-1);
+                            $run[] = $this->indent() . '}';
+                        }
+                        /*
                         if($select['tag']['name'] != '/capture.append'){
                             $this->indent($this->indent-1);
                             $run[] = $this->indent() . '}';
                         }
+                        */
                     break;
                     case Build::CODE :
 //                         dd($selection);
@@ -526,6 +550,7 @@ class Build {
                             'break',
                             'continue',
                             'capture',
+                            'capture_prepend',
                             'capture_append'
                         ]
                     )
@@ -599,7 +624,12 @@ class Build {
         $document[] = ' * @note                     Auto generated file, do not modify!';
         $document[] = ' * @author                   R3m\Io\Module\Parse\Build';
         $document[] = ' * @author                   Remco van der Velde';
-        $document[] = ' * @genration-date           ' . date('Y-m-d H:i:s');
+        if($this->storage()->data('parent')){
+            $document[] = ' * @parent                   ' . $this->storage()->data('parent');
+        }
+        $document[] = ' * @source                   ' . $this->storage()->data('source');
+//         d($this->storage()->data('source'));
+        $document[] = ' * @generation-date           ' . date('Y-m-d H:i:s');
         $document[] = ' * @generation-time          ' . $this->storage()->data('placeholder.generation.time');
         $document[] = ' */';
         $document[] = '';
@@ -667,7 +697,7 @@ class Build {
         return $this->cache_dir;
     }
 
-    public function url($string=null){
+    public function url($string=null, $options=[]){
         $storage = $this->storage();
         $url = $storage->data('url');
         if($string !== null && $url === null){
@@ -693,6 +723,18 @@ class Build {
             ;
             $storage->data('url', $url);
             $storage->data('key', $key);
+
+            if(!empty($options['parent'])){
+                $storage->data('parent', $options['parent']);
+            }
+
+            if(!empty($options['source'])){
+                $storage->data('source', $options['source']);
+            }
+
+//             d($storage);
+
+
             $this->meta();
         }
         return $url;
@@ -728,7 +770,7 @@ class Build {
                         ){
                             $name = 'modifier_' . str_replace('.', '_', $modifier['value']);
                             $tree[$nr]['variable']['modifier'][$modifier_list_nr][$modifier_nr]['php_name'] = $name;
-                            $storage->data('modifier.' . $name, new stdClass());
+                            $storage->data('modifier.' . $name, $record);
                         }
 
                     }
@@ -758,23 +800,25 @@ class Build {
                             'break',
                             'continue',
                             'capture',
+                            'capture.prepend',
                             'capture.append'
                         ]
                     )
                 ){
                     $name = 'function_' . str_replace('.', '_', $record['method']['name']);
-                    $storage->data('function.' . $name, new stdClass());
+                    $storage->data('function.' . $name, $record);
                 } else {
                     if(
                         in_array(
                             $record['method']['name'],
                             [
+                                'capture.prepend',
                                 'capture.append'
                             ]
                         )
                     ){
                         $name = str_replace('.', '_', $record['method']['name']);
-                        $storage->data('function.' . $name, new stdClass());
+                        $storage->data('function.' . $name, $record);
                     } else {
                         $name = str_replace('.', '', $record['method']['name']);
                     }

@@ -364,6 +364,9 @@ class Method {
         foreach($tree as $nr => $record){
             if($nr == $key){
                 $is_collect = true;
+                d($tree);
+                dd($nr);
+                //need tag_name
             }
             if($is_collect === true){
                 if(
