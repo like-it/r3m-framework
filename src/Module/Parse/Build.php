@@ -321,6 +321,12 @@ class Build {
         return File::write($url, $write);
     }
 
+    public static function getPluginMultiline($object=''){
+        $config = $object->data(App::CONFIG);
+        $array = $config->data('parse.plugin.multi_line');
+        return $array;
+    }
+
     public function document($tree=[], $document=[], Data $data){
         $is_tag = false;
         $tag = null;
@@ -360,8 +366,8 @@ class Build {
                 $record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING
             ){
                 if($this->is_debug == 'link'){
-//                     d($tree);
-//                     dd($record);
+                    d($tree);
+                    dd($record);
                 }
 //                 d($record['value']);
 
@@ -414,24 +420,20 @@ class Build {
                         $run[] = $this->indent() . 'else { echo $method; }';
                     break;
                     case Build::METHOD_CONTROL :
+                        $multi_line = Build::getPluginMultiline($this->object());
                         if(
                             in_array(
                                 $select['method']['name'],
-                                [
-                                    'capture.prepend',
-                                    'capture.append',
-                                ]
+                                $multi_line
+                                //capture.append
                             )
                         ){
                             $selection = Method::capture_selection($this, $tree, $selection, $storage);
                             $run[] = $this->indent() . Method::create_capture($this, $selection, $storage) . ';';
 
-                            $skip_nr = array_key_last($selection);
-                            /*
                             foreach($selection as $skip_nr => $item){
                                 //need skip_nr
                             }
-                            */
 
                         } else {
                             $control = Method::create_control($this, $selection, $storage);
@@ -469,13 +471,15 @@ class Build {
                         $this->indent($this->indent+1);
                     break;
                     case Build::TAG_CLOSE :
+                        $multi_line = Build::getPluginMultiline($this->object());
+                        foreach($multi_line as $nr => $plugin){
+                            $multi_line[$nr] = '/' . $plugin;
+                        }
                         if(
                             !in_array(
                                 $select['tag']['name'],
-                                [
-                                    '/capture.prepend',
-                                    '/capture.append'
-                                ]
+                                $multi_line
+                                //'/capture.append'
                             )
                         ){
                             $this->indent($this->indent-1);
@@ -517,7 +521,7 @@ class Build {
             if($is_tag !== false){
                 if($type === null){
 //                     d($tree);
-                    $type = Build::getType($record);
+                    $type = Build::getType($this->object(), $record);
                     $select = $record;
                 }
                 $selection[$nr] = $record;
@@ -533,7 +537,7 @@ class Build {
         return $document;
     }
 
-    private static function getType($record=[]){
+    private static function getType($object='', $record=[]){
         switch($record['type']){
             case Token::TYPE_VARIABLE :
                 if(
@@ -546,22 +550,34 @@ class Build {
                 }
             break;
             case Token::TYPE_METHOD :
+                $multi_line = Build::getPluginMultiline($object);
+                foreach($multi_line as $nr => $plugin){
+                    $multi_line[$nr] = 'function_' . str_replace('.', '_', $plugin);
+                }
+                $method = [
+                    'if',
+                    'elseif',
+                    'for',
+                    'foreach',
+                    'while',
+                    'switch',
+                    'break',
+                    'continue',
+                ];
+                $method = array_merge($method, $multi_line);
                 if(
                     in_array(
                         $record['method']['php_name'],
-                        [
-                            'if',
-                            'elseif',
-                            'for',
-                            'foreach',
-                            'while',
-                            'switch',
-                            'break',
-                            'continue',
-                            'capture',
-                            'capture_prepend',
-                            'capture_append'
-                        ]
+                        $method
+//                             'if',
+//                             'elseif',
+//                             'for',
+//                             'foreach',
+//                             'while',
+//                             'switch',
+//                             'break',
+//                             'continue',
+//                             'capture_append'
                     )
                 ){
                     return Build::METHOD_CONTROL;
@@ -794,39 +810,50 @@ class Build {
         $storage = $this->storage();
         foreach($tree as $nr => $record){
             if($record['type'] == Token::TYPE_METHOD){
+                $multi_line = Build::getPluginMultiline($this->object());
+                $method = [
+                    'if',
+                    'else.if',
+                    'elseif',
+                    'for',
+                    'for.each',
+                    'foreach',
+                    'while',
+                    'switch',
+                    'break',
+                    'continue',
+                ];
+                $method = array_merge($method, $multi_line);
                 if(
                     !in_array(
                         $record['method']['name'],
-                        [
-                            'if',
-                            'else.if',
-                            'elseif',
-                            'for',
-                            'for.each',
-                            'foreach',
-                            'while',
-                            'switch',
-                            'break',
-                            'continue',
-                            'capture',
-                            'capture.prepend',
-                            'capture.append'
-                        ]
+                        $method
+//                             'if',
+//                             'else.if',
+//                             'elseif',
+//                             'for',
+//                             'for.each',
+//                             'foreach',
+//                             'while',
+//                             'switch',
+//                             'break',
+//                             'continue',
+//                             'capture.append'
                     )
                 ){
                     $name = 'function_' . str_replace('.', '_', $record['method']['name']);
                     $storage->data('function.' . $name, $record);
                 } else {
+                    $multi_line = Build::getPluginMultiline($this->object());
                     if(
                         in_array(
                             $record['method']['name'],
-                            [
-                                'capture.prepend',
-                                'capture.append'
-                            ]
+                            $multi_line
+//                                 'capture.prepend',
+//                                 'capture.append'
                         )
                     ){
-                        $name = str_replace('.', '_', $record['method']['name']);
+                        $name = 'function_' . str_replace('.', '_', $record['method']['name']);
                         $storage->data('function.' . $name, $record);
                     } else {
                         $name = str_replace('.', '', $record['method']['name']);

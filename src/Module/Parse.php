@@ -113,26 +113,16 @@ class Parse {
 
         if(is_array($string)){
             foreach($string as $key => $value){
-//                 $value = str_replace('{$compatibility {&', '{$', $value); //bugfix php
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
             }
         }
         elseif(is_object($string)){
-//             d($string);
             foreach($string as $key => $value){
-//                 $value = str_replace('{$compatibility {&', '{$', $value); //bugfix php
-//                 d($value);
                 $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                 $string->$key = $value;
             }
         }
         elseif(stristr($string, '{') === false){
-            /*
-            d($string);
-            if(substr($string, 0, 1) == '"' && substr($string, -1, 1) == '"'){
-                return str_replace(['\n', '\t'],["\n", "\t"], substr($string, 1, -1));
-            }
-            */
             return $string;
         }
         else {
@@ -175,15 +165,9 @@ class Parse {
             */
 
             $string = literal::apply($string, $storage);
-//             $is_debug = 1;
             $tree = Token::tree($string, $is_debug);
-//             dd($tree);
-
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
-
-//             d($tree);
-
             $build_storage = $build->storage();
             $document = $build_storage->data('document');
             if(empty($document)){
@@ -191,21 +175,11 @@ class Parse {
             }
             $document = $build->create('header', $tree, $document);
             $document = $build->create('class', $tree, $document);
-
             $build->indent(2);
-
             $document = $build->document($tree, $document, $storage);
             $document = $build->create('run', $tree, $document);
             $document = $build->create('require', $tree, $document);
             $document = $build->create('use', $tree, $document);
-
-            /*
-            if($is_debug == 'link'){
-                dd($document);
-            }
-            */
-
-
             $write = $build->write($url, $document);
 
             if($mtime !== null){
@@ -228,12 +202,6 @@ class Parse {
                 $string = Literal::restore($string, $storage);
             }
         }
-        /*
-        if($is_debug == 'link'){
-            dd($string);
-        }
-        */
-
         return $string;
     }
 
