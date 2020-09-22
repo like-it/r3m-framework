@@ -29,18 +29,11 @@ class Parse {
 
     public function __construct($object, $storage=null){
         $this->object($object);
+        $this->configure();
         if($storage === null){
             $this->storage(new Data());
-            $this->configure();
-            $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
-            $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
-            $this->cache_dir($cache_dir);
-
         } else {
             $this->storage($storage);
-            $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
-            $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
-            $this->cache_dir($cache_dir);
         }
     }
 
@@ -70,6 +63,8 @@ class Parse {
         if(empty($template)){
             $config->data('dictionary.template', Parse::TEMPLATE);
         }
+        $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
+        $this->cache_dir($cache_dir);
     }
 
 
@@ -141,7 +136,7 @@ class Parse {
             return $string;
         }
         else {
-            $build = new Build($this->object());
+            $build = new Build($this->object(), $is_debug);
             $build->cache_dir($this->cache_dir());
 
             $source = $storage->data('r3m.io.parse.view.source');
@@ -180,7 +175,7 @@ class Parse {
             */
 
             $string = literal::apply($string, $storage);
-            $is_debug = 1;
+//             $is_debug = 1;
             $tree = Token::tree($string, $is_debug);
 //             dd($tree);
 
@@ -204,6 +199,13 @@ class Parse {
             $document = $build->create('require', $tree, $document);
             $document = $build->create('use', $tree, $document);
 
+            /*
+            if($is_debug == 'link'){
+                dd($document);
+            }
+            */
+
+
             $write = $build->write($url, $document);
 
             if($mtime !== null){
@@ -226,6 +228,12 @@ class Parse {
                 $string = Literal::restore($string, $storage);
             }
         }
+        /*
+        if($is_debug == 'link'){
+            dd($string);
+        }
+        */
+
         return $string;
     }
 

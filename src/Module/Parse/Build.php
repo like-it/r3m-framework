@@ -35,8 +35,10 @@ class Build {
     private $object;
     private $storage;
     private $cache_dir;
+    private $is_debug;
 
-    public function __construct($object=null){
+    public function __construct($object=null, $is_debug=false){
+        $this->is_debug = $is_debug;
         $this->object($object);
 
         $config = $this->object()->data(App::CONFIG);
@@ -357,6 +359,10 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING
             ){
+                if($this->is_debug == 'link'){
+//                     d($tree);
+//                     dd($record);
+                }
 //                 d($record['value']);
 
                 /*
@@ -419,11 +425,14 @@ class Build {
                         ){
                             $selection = Method::capture_selection($this, $tree, $selection, $storage);
                             $run[] = $this->indent() . Method::create_capture($this, $selection, $storage) . ';';
+
+                            $skip_nr = array_key_last($selection);
                             /*
                             foreach($selection as $skip_nr => $item){
-
+                                //need skip_nr
                             }
                             */
+
                         } else {
                             $control = Method::create_control($this, $selection, $storage);
                             $explode = explode(' ', $control, 2);
