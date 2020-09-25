@@ -87,7 +87,6 @@ class Main {
 	protected function value_plus($variable1=null, $variable2=null){
         $type1 = getType($variable1);
         $type2 = getType($variable2);
-
         if(
             $type1 == Token::TYPE_STRING ||
             $type2 == Token::TYPE_STRING

@@ -12,7 +12,7 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_preg_match_all(Parse $parse, Data $data, $pattern=null, $subject=null, $match_attribute=null, $flags=PREG_PATTERN_ORDER, $offset=0){
-    if(is_string($flags){
+    if(is_string($flags)){
         $flags = constant($flags);
     }
     if($match_attribute !== null){
