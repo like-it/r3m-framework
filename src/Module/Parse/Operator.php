@@ -10,6 +10,7 @@
 namespace R3m\Io\Module\Parse;
 
 use Exception;
+use R3m\Io\Module\Data;
 
 class Operator {
 
@@ -113,7 +114,7 @@ class Operator {
         return $token;
     }
 
-    public static function create($statement=[]){
+    public static function create(Data $storage, $statement=[]){
         $assign_key = null;
         $left = null;
         $operator = null;
@@ -132,8 +133,8 @@ class Operator {
 
         }
         $result = [];
-        $left_value = Value::get($left);
-        $right_value = Value::get($right);
+        $left_value = Value::get($storage, $left);
+        $right_value = Value::get($storage, $right);
         switch($operator['value']){
             case '*' :
                 $result[$assign_key] = '$this->value_multiply(' . $left_value . ', ' . $right_value . ')';

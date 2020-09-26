@@ -140,7 +140,7 @@ class Variable {
                                     $define_modifier .= Variable::define($build, $temp, $storage) . ', ';
                                 break;
                                 default :
-                                    $define_modifier .= Value::get($attribute) . ', ';
+                                    $define_modifier .= Value::get($storage, $attribute) . ', ';
                             }
                         }
                     }
@@ -166,7 +166,7 @@ class Variable {
             while(Operator::has($set)){
                 $statement = Operator::get($set);
                 $set = Operator::remove($set, $statement);
-                $statement = Operator::create($statement);
+                $statement = Operator::create($storage, $statement);
                 $key = key($statement);
                 $set[$key]['value'] = $statement[$key];
                 $set[$key]['type'] = Token::TYPE_CODE;
@@ -193,7 +193,7 @@ class Variable {
 //             $debug = debug_backtrace(true);
 //             d($debug[0]);
             $operator = Operator::remove($operator, $statement);
-            $statement = Operator::create($statement);
+            $statement = Operator::create($storage, $statement);
 
             if(empty($statement)){
                 throw new Exception('Operator error');
@@ -218,7 +218,7 @@ class Variable {
 //             d($record);
 //             d($record['method']['attribute']);
 //             $record['is_attribute'] = false;
-            $result .= Value::get($record);
+            $result .= Value::get($storage, $record);
 //             d($record);
 //             d($result);
             /**
@@ -259,6 +259,9 @@ class Variable {
                 ]
                 )
             ){
+                if($storage->data('is.debug') == 'select'){
+                    d($result);
+                }
                 $result = substr($result,0, -3);
         }
 // d($result);

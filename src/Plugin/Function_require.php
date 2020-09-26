@@ -19,6 +19,9 @@ function function_require(Parse $parse, Data $data, $url=''){
         $data->data('r3m.io.parse.view.source.url', $url);
         $parse->storage()->data('r3m.io.parse.view.source.mtime', $mtime);
     } else {
+        d($url);
+        $debug = debug_backtrace(true);
+        dd($debug);
         $text = 'Require: file not found: ' . $url . ' in template: ' . $data->data('r3m.io.parse.view.source.url');
         throw new Exception($text);
     }

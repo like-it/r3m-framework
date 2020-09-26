@@ -109,8 +109,11 @@ class Parse {
         if($storage === null){
             $storage = $this->storage(new Data());
         }
-        $storage->data(Core::object_merge($storage->data(), $data));
-
+        if(is_object($data)){
+            $storage->data(Core::object_merge($storage->data(), $data));
+        } else {
+            $storage->data($data);
+        }
         if(is_array($string)){
             foreach($string as $key => $value){
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
@@ -166,6 +169,16 @@ class Parse {
 
             $string = literal::apply($string, $storage);
             $tree = Token::tree($string, $is_debug);
+
+            if($storage->data('is.debug') == 'select'){
+                /*
+                d($string);
+                dd($tree);
+                */
+            }
+
+
+
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();

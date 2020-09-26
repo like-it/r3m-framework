@@ -9,7 +9,10 @@
 
 namespace R3m\Io\Module\Parse;
 
+use R3m\Io\Module\Core;
+
 use R3m\Io\Module\Data;
+use R3m\io\Module\File;
 use Exception;
 
 class Value {
@@ -18,7 +21,9 @@ class Value {
     const TYPE_CAST_FLOAT = 'float';
     const TYPE_CAST_STRING = 'string';
 
-    public static function get($record=[]){
+    public static function get(Data $storage, $record=[]){
+//         $debug = debug_backtrace(true);
+//         dd($debug);
         switch($record['type']){
             case Token::TYPE_INT :
             case Token::TYPE_FLOAT :
@@ -44,20 +49,34 @@ class Value {
             break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
                 if(stristr($record['value'], '{') === false){
+//                     d($record);
                     return $record['value'];
                 }
+                if($record['depth'] > 0){
+//                     $write = File::read($storage->data('debug.url'));
+//                     $string = Core::object($record, 'json');
+//                     $write .= $string . "\n";
+//                     File::write($storage->data('debug.url'), $write);
+                    return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
+                }
+                elseif(!empty($record['is_assign'])){
+                    return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
+                } else {
+//                     d($record['value']);
+                    return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
+                }
+                /*
                 if($record['depth'] == 0){
                     if(!empty($record['is_assign'])){
                         return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
                     } else {
                         return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
                     }
-                }
-                else {
+                } else {
                     return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
 
                 }
-
+                */
 
 
 //                 $record['value'] = str_replace('{$', '{\$', $record['value']);
@@ -107,6 +126,11 @@ class Value {
             break;
             case Token::TYPE_VARIABLE :
                 //missing storage from document
+
+                if($record['depth'] == 0){
+//                     dd($record);
+                }
+
                 return '$this->storage()->data(\'' . $record['variable']['attribute'] .'\')';
             break;
             case Token::TYPE_METHOD :

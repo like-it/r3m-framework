@@ -70,8 +70,7 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Data', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
-        $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
-        $this->storage()->data('debug.url', $debug_url);
+
         $dir_plugin = $config->data('parse.dir.plugin');
 
         if(empty($dir_plugin)){
@@ -210,17 +209,12 @@ class Build {
         $run = $storage->data('run');
         $content = implode("\n", $run);
         $count = 0;
-        if(is_array($document)){
-            foreach($document as $nr => $row){
-                $document[$nr] = str_replace($storage->data('placeholder.run'), $content, $row, $count);
-                if($count > 0){
-                    break;
-                }
+        foreach($document as $nr => $row){
+            $document[$nr] = str_replace($storage->data('placeholder.run'), $content, $row, $count);
+            if($count > 0){
+                break;
             }
-        } else {
-            dd($document);
         }
-
         return $document;
     }
 
@@ -397,7 +391,7 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING
             ){
-                if($this->is_debug == 'select'){
+                if($this->is_debug == 'link'){
                     d($tree);
                     dd($record);
                 }
@@ -439,11 +433,9 @@ class Build {
                         $run[] = $this->indent() . Variable::assign($this, $selection, $storage) . ';';
                     break;
                     case Build::VARIABLE_DEFINE :
-
                         if($is_debug == 'select'){
-//                             d($selection);
+                            d($selection);
                         }
-
 //                         d($selection);
                         $run[] = $this->indent() . '$variable = ' . Variable::define($this, $selection, $storage) . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
