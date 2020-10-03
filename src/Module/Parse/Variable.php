@@ -23,6 +23,8 @@ class Variable {
         if($storage->data('is.debug') === true){
             dd($token);
         }
+        if($storage->data('is.debug')){
+        }
         $token = Variable::addAssign($token);
         switch($variable['variable']['operator']){
             case '=' :
@@ -218,14 +220,31 @@ class Variable {
         }
         $operator_counter = 0;
         $result = '';
+        $in_array = false;
+        if($storage->data('is.debug')){
+//             d($operator);
+        }
         while(count($operator) >= 1){
-            if($storage->data('is.debug') == 'assign'){
+            if($storage->data('is.debug') == 'bar'){
                 d($operator);
             }
 //             $run[] = Variable::assign($build, $selection, $storage) . ';';
 //             d($operator);
             $record = array_shift($operator);
+            if($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
+                $in_array = true;
+                if($storage->data('is.debug')){
+//                     $debug = debug_backtrace(true);
 
+
+//                     dd($token);
+//                     dd($debug);
+                }
+            }
+            elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
+                $in_array = false;
+            }
+            /*
             if(
                 in_array(
                     $record['type'],
@@ -237,7 +256,14 @@ class Variable {
                 ){
                     continue;
             }
+            */
             $record = Method::get($build, $record, $storage);
+
+            if($storage->data('is.debug') == 'string'){
+//                 d($record);
+            }
+
+
             $result .= Value::get($storage, $record);
             if(
                 in_array(
@@ -250,7 +276,8 @@ class Variable {
 
                     ]
                 ) &&
-                empty($record['is_foreach'])
+                empty($record['is_foreach']) &&
+                $in_array === false
             ){
 
                 $result .= ' . ';
@@ -275,12 +302,16 @@ class Variable {
 //                     Token::TYPE_VARIABLE
 
                 ]
-                )
-            ){
+            ) &&
+            $in_array === false
+        ){
                 if($storage->data('is.debug') == 'select'){
                     d($result);
                 }
                 $result = substr($result,0, -3);
+        }
+        if($storage->data('is.debug') == 'string'){
+//             d($result);
         }
 //         d($result);
 

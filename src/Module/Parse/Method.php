@@ -21,6 +21,8 @@ class Method {
         if($record['type'] != Token::TYPE_METHOD){
             return $record;
         }
+        if($storage->data('is.debug')){
+        }
         $attribute = '';
         /*
         if(
@@ -137,7 +139,9 @@ class Method {
                 if($record['method']['php_name'] == Token::TYPE_FOREACH){
 //                     $is_debug = 'foreach';
                 }
-
+                if($storage->data('is.debug')){
+//                     d($record['method']['attribute']);
+                }
                 $value = Variable::getValue($build, $token, $storage, $is_debug);
                 if($storage->data('is.debug') == 'assign'){
                     d($value);

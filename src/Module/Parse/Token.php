@@ -668,6 +668,7 @@ class Token {
         $selection = [];
         $collect = false;
         $depth = null;
+        $square_depth = 0;
         $target = null;
         $skip = 0;
         $skip_unset = 0;
@@ -728,7 +729,18 @@ class Token {
 //                     $record['token_nr'] = $nr;
                     $token[$target]['method']['attribute'][$attribute_nr][$nr] = $record;
                 } else {
-                    if($record['type'] == Token::TYPE_COMMA){
+                    if($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
+                        $square_depth++;
+                        //possible array
+                    }
+                    elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
+                        $square_depth--;
+                        //possible array
+                    }
+                    elseif(
+                        $square_depth == 0 &&
+                        $record['type'] == Token::TYPE_COMMA
+                    ){
                         $attribute_nr++;
                         unset($token[$nr]);
                         continue;
