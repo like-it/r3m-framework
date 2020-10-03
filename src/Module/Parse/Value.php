@@ -137,6 +137,8 @@ class Value {
                 return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
             break;
             case Token::TYPE_WHITESPACE :
+            case Token::TYPE_CURLY_CLOSE :
+            case Token::TYPE_CURLY_OPEN :
                 return;
             break;
             default:

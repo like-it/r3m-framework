@@ -907,6 +907,7 @@ class Token {
         $skip = 0;
         $skip_unset = 0;
         $depth = 0;
+        $curly_count = 0;
         $parenthese_open = null;
         $quote_single = null;
         $quote_single_toggle = false;
@@ -943,6 +944,14 @@ class Token {
             }
             if($nr < ($count - 2)){
                 $next_next = $nr + 2;
+            }
+            $record['curly_count'] = $curly_count;
+            if($record['type'] == Token::TYPE_CURLY_OPEN){
+                $curly_count++;
+                $record['curly_count'] = $curly_count;
+            }
+            elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
+                $curly_count--;
             }
             if(
                 $record['type'] == Token::TYPE_COMMENT_CLOSE &&
@@ -1176,22 +1185,22 @@ class Token {
                 $record['type'] == Token::TYPE_VARIABLE &&
                 $quote_single_toggle === false &&
                 $quote_double_toggle === false
-                ){
-                    $variable_nr = $nr;
-                    $token[$variable_nr]['variable']['name'] = $record['value'];
-                    $token[$variable_nr]['variable']['attribute'] = substr($record['value'], 1);
-                    $token[$variable_nr]['variable']['is_assign'] = false;
-                    $value = $record['value'];
-                    continue;
+            ){
+                $variable_nr = $nr;
+                $token[$variable_nr]['variable']['name'] = $record['value'];
+                $token[$variable_nr]['variable']['attribute'] = substr($record['value'], 1);
+                $token[$variable_nr]['variable']['is_assign'] = false;
+                $value = $record['value'];
+                continue;
             }
             elseif(
                 $record['type'] == Token::TYPE_COMMENT &&
                 $quote_single_toggle === false &&
                 $quote_double_toggle === false
-                ){
-                    $comment_open_nr = $nr;
-                    $previous_nr = $nr;
-                    continue;
+            ){
+                $comment_open_nr = $nr;
+                $previous_nr = $nr;
+                continue;
             }
             elseif(
                 $record['type'] == Token::TYPE_DOC_COMMENT &&
@@ -1207,10 +1216,6 @@ class Token {
                 $quote_single_toggle === false &&
                 $quote_double_toggle === false
             ){
-                if($is_debug == '197'){
-                    d('1');
-                    dd($record);
-                }
                 $comment_single_line_nr = $nr;
                 $previous_nr = $nr;
                 continue;
@@ -1395,11 +1400,17 @@ class Token {
                 }
             }
             elseif($record['type'] == Token::TYPE_PARENTHESE_OPEN){
-                $depth++;
+                if($record['curly_count'] > 0){
+                    $depth++;
+                }
+
             }
             $token[$nr]['depth'] = $depth;
             if($record['type'] == Token::TYPE_PARENTHESE_CLOSE){
-                $depth--;
+                if($record['curly_count'] > 0){
+                    $depth--;
+                }
+
                 $is_start_method = false;
                 $is_whitespace = false;
                 $before_reverse = [];

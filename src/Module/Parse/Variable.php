@@ -20,6 +20,9 @@ class Variable {
         if(!array_key_exists('variable', $variable)){
             return '';
         }
+        if($storage->data('is.debug') === true){
+            dd($token);
+        }
         $token = Variable::addAssign($token);
         switch($variable['variable']['operator']){
             case '=' :
@@ -115,6 +118,10 @@ class Variable {
             return '';
         }
 
+        if($storage->data('is.debug') === true){
+            d($storage->data('is.debug'));
+            dd($token);
+        }
 
         $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         $define_modifier = '';
@@ -212,24 +219,32 @@ class Variable {
         $operator_counter = 0;
         $result = '';
         while(count($operator) >= 1){
+            if($storage->data('is.debug') == 'assign'){
+                d($operator);
+            }
+//             $run[] = Variable::assign($build, $selection, $storage) . ';';
 //             d($operator);
             $record = array_shift($operator);
+
+            if(
+                in_array(
+                    $record['type'],
+                    [
+                        Token::TYPE_CURLY_CLOSE,
+                        Token::TYPE_CURLY_OPEN
+                    ]
+                    )
+                ){
+                    continue;
+            }
             $record = Method::get($build, $record, $storage);
-//             d($record);
-//             d($record['method']['attribute']);
-//             $record['is_attribute'] = false;
             $result .= Value::get($storage, $record);
-//             d($record);
-//             d($result);
-            /**
-             * below breaks a lot, foreach, but also route.get so disabled
-             */
-//             d($record);
             if(
                 in_array(
                     $record['type'],
                     [
                         Token::TYPE_STRING ,
+                        Token::TYPE_QUOTE_SINGLE_STRING,
                         Token::TYPE_QUOTE_DOUBLE_STRING,
 //                         Token::TYPE_VARIABLE
 
@@ -241,6 +256,7 @@ class Variable {
                 $result .= ' . ';
             }
 
+
             $operator_counter++;
             if($operator_counter > $operator_max){
                 break;
@@ -248,11 +264,13 @@ class Variable {
         }
         //this too see below breaks a lot, foreach, but also route.get so disabled
 
+
         if(
             in_array(
                 $record['type'],
                 [
                     Token::TYPE_STRING ,
+                    Token::TYPE_QUOTE_SINGLE_STRING,
                     Token::TYPE_QUOTE_DOUBLE_STRING,
 //                     Token::TYPE_VARIABLE
 
@@ -264,6 +282,9 @@ class Variable {
                 }
                 $result = substr($result,0, -3);
         }
+//         d($result);
+
+
 // d($result);
         return $result;
     }

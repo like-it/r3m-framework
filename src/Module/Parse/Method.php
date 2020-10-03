@@ -121,6 +121,15 @@ class Method {
 //                 d($record['method']['attribute']);
                 $token = $build->require('function', $token);
 
+                if($storage->data('is.debug') == 'assign'){
+                    d($token);
+                }
+                if($storage->data('is.debug')){
+//                     d($token);
+                }
+
+
+
                 if($is_debug){
 //                     d($token);
                 }
@@ -130,6 +139,9 @@ class Method {
                 }
 
                 $value = Variable::getValue($build, $token, $storage, $is_debug);
+                if($storage->data('is.debug') == 'assign'){
+                    d($value);
+                }
 //                 d($token);
 //                 d($value);
                 if(substr($value,0,2) == '\'"'){
@@ -197,6 +209,9 @@ class Method {
                 }
                 $build->indent -= 1;
             } else {
+                if($storage->data('is.debug') == 'assign'){
+                    dd($attribute);
+                }
                 $attribute = substr($attribute, 0, -2);
             }
         } else {
@@ -342,12 +357,28 @@ class Method {
 
     public static function create_capture($build, $token=[], Data $storage){
         $method = array_shift($token);
+
         foreach($token as $nr => $item){
-            $token[$nr]['value'] = str_replace('\'', '\\\'', $item['value']);
+            if(
+                in_array(
+                    $item['type'],
+                    [
+                        Token::TYPE_QUOTE_SINGLE_STRING,
+                        Token::TYPE_QUOTE_DOUBLE_STRING
+                    ]
+                )
+            ){
+                $token[$nr]['value'] = str_replace('\'', '\\\'', $item['value']);
+            }
         }
+
+        //storage->data('is.debug') === true
         $method['method']['attribute'][] = $token;
 //         d($method['method']['attribute']);
         $record = Method::get($build, $method, $storage, true);
+        if($storage->data('is.debug')){
+//             d($record);
+        }
 //                 d($record);
 //                 $debug = debug_backtrace(true);
 //                 d($debug[0]);
@@ -364,15 +395,25 @@ class Method {
         foreach($tree as $nr => $record){
             if($nr == $key){
                 $is_collect = true;
+                $is_curly_close = false;
             }
             if($is_collect === true){
+                if(
+                    $record['type'] == Token::TYPE_CURLY_CLOSE &&
+                    $is_curly_close === false
+                ){
+                    $is_curly_close = true;
+                    continue;
+                }
                 if(
                     $record['type'] == Token::TYPE_TAG_CLOSE &&
                     $record['tag']['name'] == '/capture.append'
                 ){
                     $is_collect = false;
+                    array_pop($selection);
                     break;
                 }
+                /*
                 elseif(
                     in_array(
                         $record['type'],
@@ -383,7 +424,7 @@ class Method {
                     )
                 ){
                     continue;
-                }
+                }*/
                 $selection[$nr] = $record;
             }
         }

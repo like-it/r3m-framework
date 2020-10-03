@@ -129,6 +129,11 @@ class Parse {
             return $string;
         }
         else {
+            if(stristr($string, '{$is.debug = true}') !== false){
+                $storage->data('is.debug', true);
+            }
+
+
             $build = new Build($this->object(), $is_debug);
             $build->cache_dir($this->cache_dir());
 

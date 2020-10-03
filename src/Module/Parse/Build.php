@@ -358,8 +358,9 @@ class Build {
 
 
         $is_debug = '';
-        if($data->data('is.debug') == 'select'){
-            $is_debug = 'select';
+        if(!empty($data->data('is.debug'))){
+            $is_debug = $data->data('is.debug');
+            $storage->data('is.debug', $data->data('is.debug'));
         }
 
 
@@ -373,6 +374,9 @@ class Build {
 
         $skip_nr = null;
         $is_control = false;
+        if($is_debug == 'assign'){
+//             dd($tree);
+        }
 //         dd($tree);
         foreach($tree as $nr => $record){
             if(
@@ -384,7 +388,7 @@ class Build {
             elseif($skip_nr !== null){
                 continue;
             }
-            if($is_debug == 'select'){
+            if($is_debug == 'assign'){
 //                 d($record);
             }
             if(
@@ -435,14 +439,22 @@ class Build {
                         dd($selection);
                     break;
                     case Build::VARIABLE_ASSIGN :
+                        if($is_debug == 'assign'){
+//                             d($selection);
+//                             dd($select);
+                        }
 //                         dd($selection);
                         $run[] = $this->indent() . Variable::assign($this, $selection, $storage) . ';';
+                        if($is_debug == 'assign'){
+                            d($run);
+                        }
                     break;
                     case Build::VARIABLE_DEFINE :
-
-                        if($is_debug == 'select'){
-//                             d($selection);
+                        /*
+                        if($is_debug == 'assign'){
+                            dd($selection);
                         }
+                        */
 
 //                         d($selection);
                         $run[] = $this->indent() . '$variable = ' . Variable::define($this, $selection, $storage) . ';';
@@ -466,8 +478,34 @@ class Build {
                                 //capture.append
                             )
                         ){
+                            if($is_debug == 'assign'){
+                                $storage->data('is.debug', 'assign');
+                            }
+
+                            if($is_debug == 'menu'){
+//                                 d($selection);
+
+                            }
+
+
                             $selection = Method::capture_selection($this, $tree, $selection, $storage);
+
+                            if($storage->data('is.debug') == 'menu'){
+//                                 dd($selection);
+                            }
+
+
+                            if($is_debug == 'assign'){
+                                $storage->data('is.debug', 'assign');
+                                dd($selection);
+                            }
+
                             $run[] = $this->indent() . Method::create_capture($this, $selection, $storage) . ';';
+
+                            if($is_debug == 'menu'){
+//                                 dd($run);
+                            }
+
 
                             foreach($selection as $skip_nr => $item){
                                 //need skip_nr
@@ -545,12 +583,14 @@ class Build {
 //                         d($select);
 //                         dd($selection);
                     default:
-                        d($selection);
-                        dd($record);
-//                         d($is_tag);
-//                         die;
-                        throw new Exception('type (' . $type . ') undefined');
-
+                        if($type !== null){
+                            d($selection);
+                            d($type);
+                            dd($record);
+                            //                         d($is_tag);
+                            //                         die;
+                            throw new Exception('type (' . $type . ') undefined');
+                        }
                 }
                 $is_tag = false;
                 $selection = [];
@@ -572,6 +612,11 @@ class Build {
 //                 $select = $record;
             }
         }
+        /*
+        if($is_debug == 'assign'){
+            dd($run);
+        }
+        */
         $storage->data('run', $run);
         return $document;
     }
