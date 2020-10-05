@@ -17,7 +17,7 @@ class Method {
     const WHERE_BEFORE = 'before';
     const WHERE_AFTER = 'after';
 
-    public static function get($build, $record=[], Data $storage, $is_debug = false){
+    public static function get(Build $build, Data $storage, $record=[]){
         if($record['type'] != Token::TYPE_METHOD){
             return $record;
         }
@@ -129,20 +129,13 @@ class Method {
                 if($storage->data('is.debug')){
 //                     d($token);
                 }
-
-
-
-                if($is_debug){
-//                     d($token);
-                }
-
                 if($record['method']['php_name'] == Token::TYPE_FOREACH){
 //                     $is_debug = 'foreach';
                 }
                 if($storage->data('is.debug')){
 //                     d($record['method']['attribute']);
                 }
-                $value = Variable::getValue($build, $token, $storage, $is_debug);
+                $value = Variable::getValue($build, $storage, $token);
                 if($storage->data('is.debug') == 'assign'){
                     d($value);
                 }
@@ -338,9 +331,9 @@ class Method {
         return $data;
     }
 
-    public static function create_control($build, $token=[], Data $storage){
+    public static function create_control(Build $build, Data $storage, $token=[]){
         $method = array_shift($token);
-        $record = Method::get($build, $method, $storage);
+        $record = Method::get($build, $storage, $method);
 //         d($record);
         if($record['type'] === Token::TYPE_CODE){
             return $record['value'];
@@ -349,9 +342,9 @@ class Method {
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
-    public static function create($build, $token=[], Data $storage){
+    public static function create(Build $build, Data $storage, $token=[]){
         $method = array_shift($token);
-        $record = Method::get($build, $method, $storage);
+        $record = Method::get($build, $storage, $method);
         if($record['type'] === Token::TYPE_CODE){
             return $record['value'];
         }
@@ -359,7 +352,7 @@ class Method {
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
-    public static function create_capture($build, $token=[], Data $storage){
+    public static function create_capture(Build $build, Data $storage, $token=[]){
         $method = array_shift($token);
 
         foreach($token as $nr => $item){
@@ -372,14 +365,14 @@ class Method {
                     ]
                 )
             ){
-                $token[$nr]['value'] = str_replace('\'', '\\\'', $item['value']);
+//                 $token[$nr]['value'] = str_replace('\'', '\\\'', $item['value']);
             }
         }
 
         //storage->data('is.debug') === true
         $method['method']['attribute'][] = $token;
 //         d($method['method']['attribute']);
-        $record = Method::get($build, $method, $storage, true);
+        $record = Method::get($build, $storage, $method);
         if($storage->data('is.debug')){
 //             d($record);
         }
@@ -393,7 +386,7 @@ class Method {
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
-    public static function capture_selection($build, $tree=[], $selection=[], Data $storage){
+    public static function capture_selection(Build $build, Data $storage, $tree=[], $selection=[]){
         $key = key($selection);
         $is_collect = false;
         foreach($tree as $nr => $record){

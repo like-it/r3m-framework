@@ -445,7 +445,7 @@ class Build {
                         }
 //                         d($is_debug);
 //                         dd($selection);
-                        $run[] = $this->indent() . Variable::assign($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                         if($is_debug == 'assign'){
                             d($run);
                         }
@@ -458,14 +458,14 @@ class Build {
                         */
 
 //                         d($selection);
-                        $run[] = $this->indent() . '$variable = ' . Variable::define($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . '$variable = ' . Variable::define($this,$storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'else { echo $variable; } ';
                     break;
                     case Build::METHOD :
 //                         d($select);
-                        $run[] = $this->indent() . '$method = ' . Method::create($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . '$method = ' . Method::create($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($method)){ return $method; }';
                         $run[] = $this->indent() . 'elseif (is_array($method)){ return $method; }';
                         $run[] = $this->indent() . 'else { echo $method; }';
@@ -489,7 +489,7 @@ class Build {
                             }
 
 
-                            $selection = Method::capture_selection($this, $tree, $selection, $storage);
+                            $selection = Method::capture_selection($this, $storage, $tree, $selection);
 
                             if($storage->data('is.debug') == 'menu'){
 //                                 dd($selection);
@@ -501,7 +501,7 @@ class Build {
                                 dd($selection);
                             }
 
-                            $run[] = $this->indent() . Method::create_capture($this, $selection, $storage) . ';';
+                            $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
 
                             if($is_debug == 'menu'){
 //                                 dd($run);
@@ -513,7 +513,7 @@ class Build {
                             }
 
                         } else {
-                            $control = Method::create_control($this, $selection, $storage);
+                            $control = Method::create_control($this, $storage, $selection);
                             $explode = explode(' ', $control, 2);
                             if(
                                 in_array(
@@ -622,7 +622,7 @@ class Build {
         return $document;
     }
 
-    private static function getType($object='', $record=[]){
+    public static function getType($object='', $record=[]){
         switch($record['type']){
             case Token::TYPE_VARIABLE :
                 if(

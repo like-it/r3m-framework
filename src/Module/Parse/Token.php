@@ -1300,14 +1300,17 @@ class Token {
                     $quote_single['value'] .= $record['value'] . $token[$next]['value'];
                     $skip += 1;
                     $previous_nr = $nr;
+                    /*
                     if(
                         !empty($quote_single) &&
                         array_key_exists('value', $quote_single)
                     ){
                         $quote_single['value'] .= '\\\'';
                     }
+                    */
                     continue;
                 } else {
+//                     d($quote_single);
                     $quote_single['value'] .= $record['value'];
                     $previous_nr = $nr;
                     /*

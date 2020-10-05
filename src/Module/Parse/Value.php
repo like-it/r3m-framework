@@ -52,8 +52,10 @@ class Value {
 //                     d($record);
                     return $record['value'];
                 }
+                /*
                 $record['value'] = str_replace('\\\'', '\'', $record['value']);
                 $record['value'] = str_replace('\'', '\\\'', $record['value']);
+                */
                 if($record['depth'] > 0){
 //                     $write = File::read($storage->data('debug.url'));
 //                     $string = Core::object($record, 'json');
