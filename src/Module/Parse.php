@@ -198,6 +198,7 @@ class Parse {
             $document = $build->create('run', $tree, $document);
             $document = $build->create('require', $tree, $document);
             $document = $build->create('use', $tree, $document);
+            //add lock
             $write = $build->write($url, $document);
 
             if($mtime !== null){

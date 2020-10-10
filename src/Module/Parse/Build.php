@@ -333,6 +333,9 @@ class Build {
 }',
                 '}
 
+}',
+'}
+
 }'
             ],
             '}',
@@ -447,7 +450,7 @@ class Build {
 //                         dd($selection);
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                         if($is_debug == 'assign'){
-                            d($run);
+//                             d($run);
                         }
                     break;
                     case Build::VARIABLE_DEFINE :
@@ -495,11 +498,12 @@ class Build {
 //                                 dd($selection);
                             }
 
-
+                            /*
                             if($is_debug == 'assign'){
                                 $storage->data('is.debug', 'assign');
                                 dd($selection);
                             }
+                            */
 
                             $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
 

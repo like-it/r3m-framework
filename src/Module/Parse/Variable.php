@@ -20,9 +20,6 @@ class Variable {
         if(!array_key_exists('variable', $variable)){
             return '';
         }
-        if($storage->data('is.debug') === true){
-            dd($token);
-        }
         if($storage->data('is.debug')){
         }
         $token = Variable::addAssign($token);
@@ -33,14 +30,8 @@ class Variable {
                 $value = Variable::getValue($build, $storage, $token, $is_result);
                 if(stristr($value, '"') && stristr($value, '\'') !== false){
 //                     d($value);
-                }
-//                 d($value);
-                if(empty($value)){
-                    dd($assign);
-                } else {
-                    $assign .= $value . ')';
-                }
-
+                }//
+                $assign .= $value . ')';
                 return $assign;
             break;
             case '+=' :
@@ -223,6 +214,8 @@ class Variable {
         $in_array = false;
         $is_collect = false;
         $type = null;
+//         d($operator);
+        $count = 0;
         while(count($operator) >= 1){
             $record = array_shift($operator);
             if(
@@ -245,6 +238,7 @@ class Variable {
 //                 dd($result);
 
                 $result .= ' . ';
+//                 dd($result);
                 $is_collect = false;
                 $type = null;
                 $selection = [];
@@ -254,6 +248,7 @@ class Variable {
             }
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
                 $in_array = false;
+//                 d($result);
             }
             elseif($is_collect === false){
                 if($record['type'] == 'code'){
@@ -261,21 +256,23 @@ class Variable {
                 }
 
                 $record = Method::get($build, $storage, $record);
-//                 d($record);
                 $result .= Value::get($storage, $record);
-
-//                 d($result);
 
                 if(
                     !in_array(
                         $record['type'],
                         [
-                            Token::TYPE_EXCLAMATION
+                            Token::TYPE_EXCLAMATION,
+                            Token::TYPE_CAST
                         ]
-                    ) &&
-                    $in_array === false
+                    )
                 ){
-                    $result .= ' . ';
+                    if(
+                        $in_array === false &&
+                        empty($record['is_foreach'])
+                    ){
+                        $result .= ' . ';
+                    }
                 }
 
                 /*
@@ -305,7 +302,7 @@ class Variable {
             }
             //this too see below breaks a lot, foreach, but also route.get so disabled
 
-            /*
+/*
             if(
                 in_array(
                     $record['type'],
@@ -324,17 +321,15 @@ class Variable {
                 }
                 $result = substr($result,0, -3);
             }
-            */
-            if($storage->data('is.debug') == 'string'){
-                //             d($result);
-            }
-                    //         d($result);
-
-
-                    // d($result)
-
+*/
         }
-        $result = substr($result,0, -3);
+        if(substr($result, -3) == ' . '){
+            $result = substr($result,0, -3);
+            //                 $count++;
+        }
+//         d($count);
+//         d($result);
+
         return $result;
     }
 

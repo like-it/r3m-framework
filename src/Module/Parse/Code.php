@@ -20,11 +20,11 @@ class Code {
         switch($type){
             case Build::VARIABLE_ASSIGN :
                 $result = Variable::assign($build, $storage, $selection, true);
+//                 d($selection);
             break;
             default:
                 throw new Exception('type not defined, (' . $type .')');
         }
-        dd($result);
         return $result;
     }
 }

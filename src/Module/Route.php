@@ -93,16 +93,18 @@ class Route extends Data{
             return;
         }
         $path = $get->path;
-        foreach($option as $key => $value){
-            if(is_numeric($key)){
-                $explode = explode('}', $get->path, 2);
-                $temp = explode('{$', $explode[0], 2);
-                if(array_key_exists(1, $temp)){
-                    $variable = $temp[1];
-                    $path = str_replace('{$' . $variable . '}', $value, $path);
+        if(is_array($option)){
+            foreach($option as $key => $value){
+                if(is_numeric($key)){
+                    $explode = explode('}', $get->path, 2);
+                    $temp = explode('{$', $explode[0], 2);
+                    if(array_key_exists(1, $temp)){
+                        $variable = $temp[1];
+                        $path = str_replace('{$' . $variable . '}', $value, $path);
+                    }
+                } else {
+                    $path = str_replace('{$' . $key . '}', $value, $path);
                 }
-            } else {
-                $path = str_replace('{$' . $key . '}', $value, $path);
             }
         }
         if($path == '/'){
@@ -166,9 +168,9 @@ class Route extends Data{
             $select->method = Handler::method();
             $select->host = [];
             $request = Route::select_cli($object, $select);
-                                    
-            if($request === false){            	
-                $select = Route::select_info($object, $select);                                
+
+            if($request === false){
+                $select = Route::select_info($object, $select);
                 $request = Route::select_cli($object, $select);
             }
             if($request === false){
