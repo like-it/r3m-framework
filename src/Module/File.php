@@ -29,6 +29,10 @@ class File {
         return @filemtime($url); //added @ async deletes & reads can cause triggers otherways
     }
 
+    public static function atime($url=''){
+        return @fileatime($url); //added @ async deletes & reads can cause triggers otherways
+    }
+
     public static function link($source, $destination){
         system('ln -s ' . $source . ' ' . $destination);
     }
@@ -53,8 +57,12 @@ class File {
     }
 
     public static function exist($url){ //File::exist means File has exist and not exist
-        $url = rtrim($url, '/');
-        return file_exists($url);
+        if($url == '/'){
+            return file_exists($url);
+        } else {
+            $url = rtrim($url, '/');
+            return file_exists($url);
+        }
     }
 
     public static function touch($url='', $time=null, $atime=null){
@@ -277,6 +285,6 @@ class File {
     }
 
     public static function size($url=''){
-        return filesize($url);
+        return @filesize($url); //pagefile error
     }
 }

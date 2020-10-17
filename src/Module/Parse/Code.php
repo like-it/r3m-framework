@@ -22,7 +22,14 @@ class Code {
                 $result = Variable::assign($build, $storage, $selection, true);
 //                 d($selection);
             break;
+            case '' :
+                if(empty($selection)){
+                    return;
+                } else {
+                    dd($selection);
+                }
             default:
+                d($selection);
                 throw new Exception('type not defined, (' . $type .')');
         }
         return $result;

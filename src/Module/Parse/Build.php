@@ -323,9 +323,7 @@ class Build {
         $this->storage()->data('time.duration', $this->storage()->data('time.end') - $this->storage()->data('time.start'));
         $write = str_replace($this->storage()->data('placeholder.generation.time'), round($this->storage()->data('time.duration') * 1000, 2). ' msec', $write);
         /*
-        bugfix, sometimes }
-
-    } happens
+        bugfix, sometimes }} happens
         */
         $write = str_replace(
             [
@@ -336,6 +334,8 @@ class Build {
 }',
 '}
 
+}',
+'}
 }'
             ],
             '}',
