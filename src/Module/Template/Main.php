@@ -20,6 +20,7 @@ class Main {
 	private $storage;
 
 	public function __construct(Parse $parse, Data $storage){
+	    set_time_limit(600);
 		$this->parse($parse);
 		$this->storage($storage);
 	}
@@ -61,9 +62,9 @@ class Main {
 	}
 
 	protected function assign_plus_equal($variable1=null, $variable2=null){
-           $variable1 += 0;
-           $variable2 += 0;
-           return $variable1 + $variable2;
+       $variable1 += 0;
+       $variable2 += 0;
+       return $variable1 + $variable2;
 	}
 
 	protected function assign_dot_equal($variable1=null, $variable2=null){
@@ -87,7 +88,6 @@ class Main {
 	protected function value_plus($variable1=null, $variable2=null){
         $type1 = getType($variable1);
         $type2 = getType($variable2);
-
         if(
             $type1 == Token::TYPE_STRING ||
             $type2 == Token::TYPE_STRING
@@ -177,6 +177,4 @@ class Main {
 	        opcache_invalidate($url, true);
 	    }
 	}
-
-
 }

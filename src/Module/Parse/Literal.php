@@ -16,7 +16,6 @@ class Literal {
 
     public static function apply($string='', Data $data){
         $explode = explode('{literal}', $string, 2);
-
         $key = $data->data('r3m.parse.literal.key');
         if(empty($key)){
             $uuid = Core::uuid();
@@ -61,6 +60,4 @@ class Literal {
         }
         return $string;
     }
-
-
 }

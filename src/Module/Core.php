@@ -154,6 +154,16 @@ class Core {
         exit;
     }
 
+    public static function is_array_nested($array=array()){
+        $array = (array) $array;
+        foreach($array as $value){
+            if(is_array($value)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static function array_object($array=array()){
         $object = new stdClass();
         foreach ($array as $key => $value){

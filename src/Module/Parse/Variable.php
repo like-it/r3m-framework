@@ -15,27 +15,23 @@ use R3m\Io\Module\Core;
 
 class Variable {
 
-    public static function assign($build, $token=[], Data $storage){
+    public static function assign($build, Data $storage, $token=[], $is_result=false){
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
             return '';
+        }
+        if($storage->data('is.debug')){
         }
         $token = Variable::addAssign($token);
         switch($variable['variable']['operator']){
             case '=' :
                 $assign = '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
-                $value = Variable::getValue($build, $token, $storage);
+                $value = Variable::getValue($build, $storage, $token, $is_result);
                 if(stristr($value, '"') && stristr($value, '\'') !== false){
 //                     d($value);
-                }
-//                 d($value);
-                if(empty($value)){
-                    dd($assign);
-                } else {
-                    $assign .= $value . ')';
-                }
-
+                }//
+                $assign .= $value . ')';
                 return $assign;
             break;
             case '+=' :
@@ -46,7 +42,7 @@ class Variable {
                 $assign .= '$this->assign_plus_equal(' ;
                 $assign .= '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\'), ';
-                $value = Variable::getValue($build, $token, $storage, true);
+                $value = Variable::getValue($build, $storage, $token, $is_result);
                 $assign .= $value . '))';
                 return $assign;
             break;
@@ -58,7 +54,7 @@ class Variable {
                 $assign .= '$this->assign_min_equal(' ;
                 $assign .= '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\'), ';
-                $value = Variable::getValue($build, $token, $storage, true);
+                $value = Variable::getValue($build, $storage, $token, $is_result);
                 $assign .= $value . '))';
                 return $assign;
             break;
@@ -70,7 +66,7 @@ class Variable {
                 $assign .= '$this->assign_dot_equal(' ;
                 $assign .= '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\'), ';
-                $value = Variable::getValue($build, $token, $storage, true);
+                $value = Variable::getValue($build, $storage, $token, $is_result);
                 $assign .= $value . '))';
                 return $assign;
             break;
@@ -109,12 +105,16 @@ class Variable {
         return $token;
     }
 
-    public static function define($build, $token=[], Data $storage){
+    public static function define($build, Data $storage, $token=[]){
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
             return '';
         }
 
+        if($storage->data('is.debug') === true){
+            d($storage->data('is.debug'));
+            dd($token);
+        }
 
         $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         $define_modifier = '';
@@ -137,10 +137,10 @@ class Variable {
                                 case TOKEN::TYPE_VARIABLE:
                                     $temp = [];
                                     $temp[] = $attribute;
-                                    $define_modifier .= Variable::define($build, $temp, $storage) . ', ';
+                                    $define_modifier .= Variable::define($build, $storage, $temp) . ', ';
                                 break;
                                 default :
-                                    $define_modifier .= Value::get($attribute) . ', ';
+                                    $define_modifier .= Value::get($storage, $attribute) . ', ';
                             }
                         }
                     }
@@ -153,7 +153,7 @@ class Variable {
         return $define;
     }
 
-    public static function getValue($build, $token=[], Data $storage){
+    public static function getValue($build, Data $storage, $token=[], $is_result=false){
         $set_max = 1024;
         $set_counter = 0;
         $operator_max = 1024;
@@ -166,7 +166,7 @@ class Variable {
             while(Operator::has($set)){
                 $statement = Operator::get($set);
                 $set = Operator::remove($set, $statement);
-                $statement = Operator::create($statement);
+                $statement = Operator::create($storage, $statement);
                 $key = key($statement);
                 $set[$key]['value'] = $statement[$key];
                 $set[$key]['type'] = Token::TYPE_CODE;
@@ -193,7 +193,7 @@ class Variable {
 //             $debug = debug_backtrace(true);
 //             d($debug[0]);
             $operator = Operator::remove($operator, $statement);
-            $statement = Operator::create($statement);
+            $statement = Operator::create($storage, $statement);
 
             if(empty($statement)){
                 throw new Exception('Operator error');
@@ -211,57 +211,125 @@ class Variable {
         }
         $operator_counter = 0;
         $result = '';
+        $in_array = false;
+        $is_collect = false;
+        $type = null;
+//         d($operator);
+        $count = 0;
         while(count($operator) >= 1){
-//             d($operator);
             $record = array_shift($operator);
-            $record = Method::get($build, $record, $storage);
-//             d($record);
-//             d($record['method']['attribute']);
-//             $record['is_attribute'] = false;
-            $result .= Value::get($record);
-//             d($record);
-//             d($result);
-            /**
-             * below breaks a lot, foreach, but also route.get so disabled
-             */
-//             d($record);
+            if(
+                $is_collect === true &&
+                $record['type'] != Token::TYPE_CURLY_CLOSE
+            ){
+                if($type === null){
+                    $type = Build::getType($build->object(), $record);
+                }
+                $selection[] = $record;
+            }
+            if($record['type'] == Token::TYPE_CURLY_OPEN){
+                $selection = [];
+                $is_collect = true;
+                continue;
+            }
+            elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
+                $result .= Code::result($build, $storage, $type, $selection);
+
+//                 dd($result);
+
+                $result .= ' . ';
+//                 dd($result);
+                $is_collect = false;
+                $type = null;
+                $selection = [];
+            }
+            elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
+                $in_array = true;
+            }
+            elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
+                $in_array = false;
+//                 d($result);
+            }
+            elseif($is_collect === false){
+                if($record['type'] == 'code'){
+//                     dd($record);
+                }
+
+                $record = Method::get($build, $storage, $record);
+                $result .= Value::get($storage, $record);
+
+                if(
+                    !in_array(
+                        $record['type'],
+                        [
+                            Token::TYPE_EXCLAMATION,
+                            Token::TYPE_CAST
+                        ]
+                    )
+                ){
+                    if(
+                        $in_array === false &&
+                        empty($record['is_foreach'])
+                    ){
+                        $result .= ' . ';
+                    }
+                }
+
+                /*
+                if(
+                    in_array(
+                        $record['type'],
+                        [
+                            Token::TYPE_STRING ,
+                            Token::TYPE_QUOTE_SINGLE_STRING,
+                            Token::TYPE_QUOTE_DOUBLE_STRING,
+                            //                         Token::TYPE_VARIABLE
+
+                        ]
+                    ) &&
+                    empty($record['is_foreach']) &&
+                    $in_array === false
+                ){
+
+                    $result .= ' . ';
+                }
+                */
+
+                $operator_counter++;
+                if($operator_counter > $operator_max){
+                    break;
+                }
+            }
+            //this too see below breaks a lot, foreach, but also route.get so disabled
+
+/*
             if(
                 in_array(
                     $record['type'],
                     [
                         Token::TYPE_STRING ,
+                        Token::TYPE_QUOTE_SINGLE_STRING,
                         Token::TYPE_QUOTE_DOUBLE_STRING,
-//                         Token::TYPE_VARIABLE
+                        //                     Token::TYPE_VARIABLE
 
                     ]
-                ) &&
-                empty($record['is_foreach'])
+                    ) &&
+                $in_array === false
             ){
-
-                $result .= ' . ';
-            }
-
-            $operator_counter++;
-            if($operator_counter > $operator_max){
-                break;
-            }
-        }
-        //this too see below breaks a lot, foreach, but also route.get so disabled
-
-        if(
-            in_array(
-                $record['type'],
-                [
-                    Token::TYPE_STRING ,
-                    Token::TYPE_QUOTE_DOUBLE_STRING,
-//                     Token::TYPE_VARIABLE
-
-                ]
-                )
-            ){
+                if($storage->data('is.debug') == 'select'){
+                    d($result);
+                }
                 $result = substr($result,0, -3);
+            }
+*/
         }
-// d($result);
+        if(substr($result, -3) == ' . '){
+            $result = substr($result,0, -3);
+            //                 $count++;
+        }
+//         d($count);
+//         d($result);
+
         return $result;
     }
 

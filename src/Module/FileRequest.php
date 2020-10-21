@@ -33,6 +33,18 @@ class FileRequest {
 
         $location = [];
 
+
+        $explode = explode('/', $dir);
+        $controller = array_shift($explode);
+        $view = $explode;
+        array_unshift($explode, 'Public');
+        array_unshift($explode, $controller);
+        array_unshift($view, 'Public');
+        array_unshift($view, 'View');
+        array_unshift($view, $controller);
+
+        $location[] = $config->data('host.dir.root') . implode('/', $view) . $file;
+        $location[] = $config->data('host.dir.root') . implode('/', $explode) . $file;
         $location[] = $config->data('host.dir.root') . $dir . 'Public' . $config->data('ds') . $file;
         $location[] = $config->data('host.dir.public') . $dir . $file;
         $location[] = $config->data('project.dir.public') . $dir . $file;

@@ -35,8 +35,10 @@ class Build {
     private $object;
     private $storage;
     private $cache_dir;
+    private $is_debug;
 
-    public function __construct($object=null){
+    public function __construct($object=null, $is_debug=false){
+        $this->is_debug = $is_debug;
         $this->object($object);
 
         $config = $this->object()->data(App::CONFIG);
@@ -68,7 +70,8 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Data', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
-
+        $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
+        $this->storage()->data('debug.url', $debug_url);
         $dir_plugin = $config->data('parse.dir.plugin');
 
         if(empty($dir_plugin)){
@@ -78,20 +81,16 @@ class Build {
             $dir_plugin[] = $config->data('project.dir.plugin');
             $dir_plugin[] = $config->data('framework.dir.plugin');
         }
-        else {
-//             $dir_plugin[] = $config->data('controller.dir.plugin');
-        }
-//         d($dir_plugin);
         $this->storage()->data('plugin', $dir_plugin);
     }
 
-    public function create($type='', $document=[]){
+    public function create($type='', $tree=[], $document=[], $options=[]){
         switch($type){
             case 'header' :
                 return $this->createHeader($document);
             break;
             case 'require' :
-                return $this->createRequire($document);
+                return $this->createRequire($document, $tree);
             break;
             case 'use' :
                 return $this->createUse($document);
@@ -120,20 +119,7 @@ class Build {
         $storage = $this->storage();
         $key = $storage->data('key');
         $class = $config->data('dictionary.template') . '_' . $key;
-//         $storage->data('class', $class);
-
-//         $document[] = '';
         $document[] = $this->indent(0) . 'class ' . $class . ' extends Main {';
-        /*
-        $document[] = $this->indent(1) . 'private $parse;';
-        $document[] = $this->indent(1) . 'private $storage;';
-        $document[] = '';
-        $document[] = $this->indent(1) . 'public function __construct(Parse $parse, Data $storage){';
-        $document[] = $this->indent(2) . '$this->parse($parse);';
-        $document[] = $this->indent(2) . '$this->storage($storage);';
-        $document[] = $this->indent(1) . '}';
-        $document[] = '';
-        */
         $document[] = '';
         $document[] = $this->indent(1) . 'public function run(){';
         $document[] = $this->indent(2) . 'ob_start();';
@@ -142,41 +128,6 @@ class Build {
         $document[] = $this->indent(1) . '}';
         $document[] = '';
         $document[] = $this->indent(0) . $storage->data('placeholder.function');
-        $this->indent(2);
-
-        /*
-        $document[] = $this->indent(1) . 'public function parse($parse=null){';
-        $document[] = $this->indent(2) . 'if($parse !== null){';
-        $document[] = $this->indent(3) . '$this->setParse($parse);';
-        $document[] = $this->indent(2) . '}';
-        $document[] = $this->indent(2) . 'return $this->getParse();';
-        $document[] = $this->indent(1) . '}';
-        $document[] = '';
-        $document[] = $this->indent(1) . 'private function setParse($parse=null){';
-        $document[] = $this->indent(2) . '$this->parse = $parse;';
-        $document[] = $this->indent(1) . '}';
-        $document[] = '';
-        $document[] = $this->indent(1) . 'private function getParse(){';
-        $document[] = $this->indent(2) . 'return $this->parse;';
-        $document[] = $this->indent(1) . '}';
-        $document[] = '';
-        $document[] = $this->indent(1) . 'public function storage($storage=null){';
-        $document[] = $this->indent(2) . 'if($storage !== null){';
-        $document[] = $this->indent(3) . '$this->setStorage($storage);';
-        $document[] = $this->indent(2) . '}';
-        $document[] = $this->indent(2) . 'return $this->getStorage();';
-        $document[] = $this->indent(1) . '}';
-        $document[] = '';
-        $document[] = $this->indent(1) . 'private function setStorage($storage=null){';
-        $document[] = $this->indent(2) . '$this->storage = $storage;';
-        $document[] = $this->indent(1) . '}';
-        $document[] = '';
-        $document[] = $this->indent(1) . 'private function getStorage(){';
-        $document[] = $this->indent(2) . 'return $this->storage;';
-        $document[] = $this->indent(1) . '}';
-        $document[] = $this->indent(0) . '}';
-        $document[] = '';
-        */
         $document[] = $this->indent(0) . '}';
         $document[] = '';
         return $document;
@@ -184,7 +135,6 @@ class Build {
 
     private function createUse($document=[]){
         $storage = $this->storage();
-
         $use = [];
         foreach($storage->data('use') as $name => $record){
             $use[] = 'use ' . $name . ';';
@@ -207,10 +157,12 @@ class Build {
         $run = $storage->data('run');
         $content = implode("\n", $run);
         $count = 0;
-        foreach($document as $nr => $row){
-            $document[$nr] = str_replace($storage->data('placeholder.run'), $content, $row, $count);
-            if($count > 0){
-                break;
+        if(is_array($document)){
+            foreach($document as $nr => $row){
+                $document[$nr] = str_replace($storage->data('placeholder.run'), $content, $row, $count);
+                if($count > 0){
+                    break;
+                }
             }
         }
         return $document;
@@ -222,9 +174,6 @@ class Build {
 
         $dir_plugin = $storage->data('plugin');
         $data = $storage->data($type);
-
-//         dd($storage->data());
-
         if(empty($data)){
             return $document;
         }
@@ -253,22 +202,14 @@ class Build {
 
                     $exist = true;
                     break;
-//                     $document[] = 'if(!function_exists(\'R3m\\Io\\Module\\Compile\\' . $name . '\')){';
-//                     $document[] = $read;
-//                     $document[] = '}';
                 }
             }
             if($exist === false){
-                d($url);
-                d($dir_plugin);
-                throw new Exception('Function not found: ' . $name);
+                $value = $record['value'];
+                $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
+                throw new Exception('Function not found: ' . $text);
             }
         }
-//
-//         $document = str_replace('function function_', 'private function function_', $document);
-//         $storage->data('use.stdClass', new stdClass());
-//         $storage->data('use.Exception', new stdClass());
-//         $storage->data('use.R3m\\Io\\Module\\File', new stdClass());
         return $document;
     }
 
@@ -319,13 +260,23 @@ class Build {
         return File::write($url, $write);
     }
 
+    public static function getPluginMultiline($object=''){
+        $config = $object->data(App::CONFIG);
+        $array = $config->data('parse.plugin.multi_line');
+        return $array;
+    }
+
     public function document($tree=[], $document=[], Data $data){
         $is_tag = false;
         $tag = null;
         $this->indent(2);
         $counter = 0;
         $storage = $this->storage();
-
+        $is_debug = '';
+        if(!empty($data->data('is.debug'))){
+            $is_debug = $data->data('is.debug');
+            $storage->data('is.debug', $data->data('is.debug'));
+        }
         $run = $storage->data('run');
         if(empty($run)){
             $run = [];
@@ -336,7 +287,6 @@ class Build {
 
         $skip_nr = null;
         $is_control = false;
-//         dd($tree);
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -357,31 +307,15 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING
             ){
-//                 d($record['value']);
-
-                /*
-                if(
-                    in_array(
-                        substr($record['value'], 0, 1),
-                        [
-                            '\'',
-                            '"'
-                    ]))
-                */
-
-//                 $counter++;
                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
                 $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage());';
                 $run[] =  $this->indent() .  'echo \'"\' . $string . \'"\';';
             }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
                 $is_tag = true;
-//                 $selection[$nr] = $record;
                 continue;
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
-//                 $selection[$nr] = $record;
-
                 switch($type){
                     case Token::TYPE_STRING :
                         dd($selection);
@@ -390,32 +324,36 @@ class Build {
                         dd($selection);
                     break;
                     case Build::VARIABLE_ASSIGN :
-//                         dd($selection);
-                        $run[] = $this->indent() . Variable::assign($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                     break;
                     case Build::VARIABLE_DEFINE :
-//                         d($selection);
-                        $run[] = $this->indent() . '$variable = ' . Variable::define($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . '$variable = ' . Variable::define($this,$storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'else { echo $variable; } ';
                     break;
                     case Build::METHOD :
-//                         d($select);
-                        $run[] = $this->indent() . '$method = ' . Method::create($this, $selection, $storage) . ';';
+                        $run[] = $this->indent() . '$method = ' . Method::create($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($method)){ return $method; }';
                         $run[] = $this->indent() . 'elseif (is_array($method)){ return $method; }';
                         $run[] = $this->indent() . 'else { echo $method; }';
                     break;
                     case Build::METHOD_CONTROL :
-                        if($select['method']['name'] == 'capture.append'){
-                            $selection = Method::capture_selection($this, $tree, $selection, $storage);
-                            $run[] = $this->indent() . Method::create_capture($this, $selection, $storage) . ';';
+                        $multi_line = Build::getPluginMultiline($this->object());
+                        if(
+                            in_array(
+                                $select['method']['name'],
+                                $multi_line
+                                //capture.append
+                            )
+                        ){
+                            $selection = Method::capture_selection($this, $storage, $tree, $selection);
+                            $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
                             foreach($selection as $skip_nr => $item){
-
+                                //need skip_nr
                             }
                         } else {
-                            $control = Method::create_control($this, $selection, $storage);
+                            $control = Method::create_control($this, $storage, $selection);
                             $explode = explode(' ', $control, 2);
                             if(
                                 in_array(
@@ -436,7 +374,6 @@ class Build {
                                     $this->indent($this->indent+1);
                             }
                             else {
-//                                 d($control);
                                 $run[] = $this->indent() . $control . ' {';
                                 $this->indent($this->indent+1);
                                 $is_control = true;
@@ -450,32 +387,33 @@ class Build {
                         $this->indent($this->indent+1);
                     break;
                     case Build::TAG_CLOSE :
-                        if($select['tag']['name'] != '/capture.append'){
+                        $multi_line = Build::getPluginMultiline($this->object());
+                        foreach($multi_line as $nr => $plugin){
+                            $multi_line[$nr] = '/' . $plugin;
+                        }
+                        if(
+                            !in_array(
+                                $select['tag']['name'],
+                                $multi_line
+                                //'/capture.append'
+                            )
+                        ){
                             $this->indent($this->indent-1);
                             $run[] = $this->indent() . '}';
                         }
                     break;
                     case Build::CODE :
-//                         dd($selection);
+                        dd($selection);
                     break;
                     case Token::TYPE_QUOTE_DOUBLE_STRING :
                         d($selection);
-
-
-
-//                         $parse = new Parse($this->object());
-
-
-//                         d($run);
-//                         d($select);
-//                         dd($selection);
                     default:
-                        d($selection);
-                        dd($record);
-//                         d($is_tag);
-//                         die;
-                        throw new Exception('type (' . $type . ') undefined');
-
+                        if($type !== null){
+                            d($selection);
+                            d($type);
+                            dd($record);
+                            throw new Exception('type (' . $type . ') undefined');
+                        }
                 }
                 $is_tag = false;
                 $selection = [];
@@ -483,24 +421,17 @@ class Build {
             }
             if($is_tag !== false){
                 if($type === null){
-//                     d($tree);
-                    $type = Build::getType($record);
+                    $type = Build::getType($this->object(), $record);
                     $select = $record;
                 }
                 $selection[$nr] = $record;
-            } else {
-//                 echo $record['value'];
-
-//                 d($record);
-//                 $type = Build::getType($record);
-//                 $select = $record;
             }
         }
         $storage->data('run', $run);
         return $document;
     }
 
-    private static function getType($record=[]){
+    public static function getType($object='', $record=[]){
         switch($record['type']){
             case Token::TYPE_VARIABLE :
                 if(
@@ -513,21 +444,26 @@ class Build {
                 }
             break;
             case Token::TYPE_METHOD :
+                $multi_line = Build::getPluginMultiline($object);
+//                 'capture_append'
+                foreach($multi_line as $nr => $plugin){
+                    $multi_line[$nr] = 'function_' . str_replace('.', '_', $plugin);
+                }
+                $method = [
+                    'if',
+                    'elseif',
+                    'for',
+                    'foreach',
+                    'while',
+                    'switch',
+                    'break',
+                    'continue',
+                ];
+                $method = array_merge($method, $multi_line);
                 if(
                     in_array(
                         $record['method']['php_name'],
-                        [
-                            'if',
-                            'elseif',
-                            'for',
-                            'foreach',
-                            'while',
-                            'switch',
-                            'break',
-                            'continue',
-                            'capture',
-                            'capture_append'
-                        ]
+                        $method
                     )
                 ){
                     return Build::METHOD_CONTROL;
@@ -550,18 +486,17 @@ class Build {
                     return Build::ELSE;
                 }
                 return Token::TYPE_STRING;
-                break;
+            break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
                 return Token::TYPE_QUOTE_DOUBLE_STRING;
+            break;
             case Token::TYPE_CURLY_CLOSE :
                 return Token::TYPE_CURLY_CLOSE;
+            break;
             case Token::TYPE_AMPERSAND :
                 return Token::TYPE_AMPERSAND;
-
-
+            break;
             default:
-                $debug = debug_backtrace(true);
-//                 d($debug);
                 d($record);
                 throw new Exception('Undefined type (' . $record['type'] . ')');
 
@@ -571,15 +506,10 @@ class Build {
     private function createRequire($document=[]){
         $document = $this->createRequireContent('modifier', $document);
         $document = $this->createRequireContent('function', $document);
-
         $document = str_replace('function ' . 'capture', 'private function ' . 'capture', $document);
         $document = str_replace('function ' . 'modifier', 'private function ' . 'modifier', $document);
         $document = str_replace('function ' . 'function', 'private function ' . 'function', $document);
-
-
-
         $this->storage()->data('document', $document);
-
         return $document;
     }
 
@@ -599,34 +529,31 @@ class Build {
         $document[] = ' * @note                     Auto generated file, do not modify!';
         $document[] = ' * @author                   R3m\Io\Module\Parse\Build';
         $document[] = ' * @author                   Remco van der Velde';
-        $document[] = ' * @genration-date           ' . date('Y-m-d H:i:s');
+        if($this->storage()->data('parent')){
+            $document[] = ' * @parent                   ' . $this->storage()->data('parent');
+        }
+        $document[] = ' * @source                   ' . $this->storage()->data('source');
+        $document[] = ' * @generation-date          ' . date('Y-m-d H:i:s');
         $document[] = ' * @generation-time          ' . $this->storage()->data('placeholder.generation.time');
         $document[] = ' */';
         $document[] = '';
         $document[] = $this->storage()->data('placeholder.use');
-
         $this->storage()->data('document', $document);
-
         return $document;
     }
 
     public function meta(){
         $config = $this->object()->data(App::CONFIG);
         $this->storage()->data('placeholder.use', '// R3M-IO-' . Core::uuid());
-
         $namespace = 'R3m\\Io\\Module\\' .  $config->data('dictionary.compile');
-
         $this->storage()->data('namespace', $namespace);
-
         $key = $this->storage()->data('key');
         $class = $config->data('dictionary.template') . '_' . $key;
         $this->storage()->data('class', $class);
-
         $meta = [
             'namespace' => $namespace,
             'class' => $class
         ];
-
         return $meta;
     }
 
@@ -667,7 +594,7 @@ class Build {
         return $this->cache_dir;
     }
 
-    public function url($string=null){
+    public function url($string=null, $options=[]){
         $storage = $this->storage();
         $url = $storage->data('url');
         if($string !== null && $url === null){
@@ -683,7 +610,6 @@ class Build {
             $autoload->unregister();
             $autoload->addPrefix($config->data('dictionary.compile'),  $dir);
             $autoload->register();
-
             $url =
                 $dir .
                 $config->data('dictionary.template') .
@@ -693,6 +619,12 @@ class Build {
             ;
             $storage->data('url', $url);
             $storage->data('key', $key);
+            if(!empty($options['parent'])){
+                $storage->data('parent', $options['parent']);
+            }
+            if(!empty($options['source'])){
+                $storage->data('source', $options['source']);
+            }
             $this->meta();
         }
         return $url;
@@ -728,11 +660,9 @@ class Build {
                         ){
                             $name = 'modifier_' . str_replace('.', '_', $modifier['value']);
                             $tree[$nr]['variable']['modifier'][$modifier_list_nr][$modifier_nr]['php_name'] = $name;
-                            $storage->data('modifier.' . $name, new stdClass());
+                            $storage->data('modifier.' . $name, $record);
                         }
-
                     }
-
                 }
             }
         }
@@ -743,47 +673,48 @@ class Build {
         $storage = $this->storage();
         foreach($tree as $nr => $record){
             if($record['type'] == Token::TYPE_METHOD){
+                $multi_line = Build::getPluginMultiline($this->object());
+//              'capture.append'
+                $method = [
+                    'if',
+                    'else.if',
+                    'elseif',
+                    'for',
+                    'for.each',
+                    'foreach',
+                    'while',
+                    'switch',
+                    'break',
+                    'continue',
+                ];
+                $method = array_merge($method, $multi_line);
                 if(
                     !in_array(
                         $record['method']['name'],
-                        [
-                            'if',
-                            'else.if',
-                            'elseif',
-                            'for',
-                            'for.each',
-                            'foreach',
-                            'while',
-                            'switch',
-                            'break',
-                            'continue',
-                            'capture',
-                            'capture.append'
-                        ]
+                        $method
                     )
                 ){
                     $name = 'function_' . str_replace('.', '_', $record['method']['name']);
-                    $storage->data('function.' . $name, new stdClass());
+                    $storage->data('function.' . $name, $record);
                 } else {
+                    $multi_line = Build::getPluginMultiline($this->object());
+                    //                                 'capture.prepend',
+                    //                                 'capture.append'
                     if(
                         in_array(
                             $record['method']['name'],
-                            [
-                                'capture.append'
-                            ]
+                            $multi_line
                         )
                     ){
-                        $name = str_replace('.', '_', $record['method']['name']);
-                        $storage->data('function.' . $name, new stdClass());
+                        $name = 'function_' . str_replace('.', '_', $record['method']['name']);
+                        $storage->data('function.' . $name, $record);
                     } else {
                         $name = str_replace('.', '', $record['method']['name']);
                     }
-
                 }
                 $tree[$nr]['method']['php_name'] = $name;
             }
         }
         return $tree;
     }
-
 }

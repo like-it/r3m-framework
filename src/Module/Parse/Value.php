@@ -9,7 +9,10 @@
 
 namespace R3m\Io\Module\Parse;
 
+use R3m\Io\Module\Core;
+
 use R3m\Io\Module\Data;
+use R3m\io\Module\File;
 use Exception;
 
 class Value {
@@ -18,7 +21,7 @@ class Value {
     const TYPE_CAST_FLOAT = 'float';
     const TYPE_CAST_STRING = 'string';
 
-    public static function get($record=[]){
+    public static function get(Data $storage, $record=[]){
         switch($record['type']){
             case Token::TYPE_INT :
             case Token::TYPE_FLOAT :
@@ -44,75 +47,38 @@ class Value {
             break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
                 if(stristr($record['value'], '{') === false){
+//                     d($record);
                     return $record['value'];
                 }
-                if($record['depth'] == 0){
-                    if(!empty($record['is_assign'])){
-                        return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-                    } else {
-                        return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
-                    }
-                }
-                else {
+
+                $record['value'] = str_replace('\\\'', '\'', $record['value']);
+                $record['value'] = str_replace('\'', '\\\'', $record['value']);
+
+                if($record['depth'] > 0){
+//                     $write = File::read($storage->data('debug.url'));
+//                     $string = Core::object($record, 'json');
+//                     $write .= $string . "\n";
+//                     File::write($storage->data('debug.url'), $write);
                     return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-
                 }
-
-
-
-//                 $record['value'] = str_replace('{$', '{\$', $record['value']);
-//                 return '$this->parse()->compile(' . $record['value'] . ', [], $this->storage())';
-                /*
-                $record['value'] = '\'' . substr($record['value'], 1, -1) . '\''; // variables in " strings arent possible
-
-                if($record['depth'] == 0){
-//                     return '"' . '$this->parse()->compile(' . $record['value'] . ', [], $this->storage())' . '"';
-                    return '$this->parse()->compile(' . $record['value'] . ', [], $this->storage())';
+                elseif(!empty($record['is_assign'])){
+                    return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
                 } else {
-                    return '$this->parse()->compile(' . $record['value'] . ', [], $this->storage())';
+                    return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
                 }
-                */
-
-
-                /*
-                d($record['value']);
-//                 $record['value'] = str_replace('\\\'', '\'', $record['value']);
-//                 $record['value'] = str_replace('\'', '\\\'', $record['value']);
-//                 $debug = debug_backtrace(true);
-//                 dd($debug);
-//                                 d($record);
-//                 return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-                if($record['depth'] == 0){
-                    if($is_assign === true){
-                        return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-                    } else {
-                        return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
-                    }
-
-                }
-                else {
-
-//                     return '$this->parse()->compile(\'' . str_replace('\'', '\\\'' ,substr($record['value'], 1, -1)) . '\', [], $this->storage())';
-
-                    return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-
-                }
-//                 return '"\' . ' . 'str_replace([\'\n\', \'\t\'], ["\n", "\t"], $this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage()))' . ' . "\'';
-//                 return '\'"\' . ' . 'str_replace([\'\n\', \'\t\'], ["\n", "\t"], $this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage()))' . ' . \'"\'';
- *              */
-
             break;
             case Token::TYPE_CAST :
                 return Value::getCast($record);
             break;
             case Token::TYPE_VARIABLE :
-                //missing storage from document
                 return '$this->storage()->data(\'' . $record['variable']['attribute'] .'\')';
             break;
             case Token::TYPE_METHOD :
                 return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
             break;
             case Token::TYPE_WHITESPACE :
+            case Token::TYPE_CURLY_CLOSE :
+            case Token::TYPE_CURLY_OPEN :
                 return;
             break;
             default:
@@ -146,6 +112,4 @@ class Value {
         }
         return '(' . $result . ')';
     }
-
-
 }

@@ -27,16 +27,22 @@ class Parse {
     private $storage;
     private $cache_dir;
 
-    public function __construct($object){
+    public function __construct($object, $storage=null){
         $this->object($object);
-        $this->storage(new Data());
-        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        $this->configure();
+        if($storage === null){
+            $this->storage(new Data());
+        } else {
+            $this->storage($storage);
+        }
+    }
 
+    private function configure(){
+        $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
         $dir_plugin = $config->data('project.dir.plugin');
         if(empty($dir_plugin)){
             $config->data('project.dir.plugin', $config->data('project.dir.root') . Parse::PLUGIN . $config->data('ds'));
         }
-
         $dir_plugin = $config->data('host.dir.plugin');
         if(empty($dir_plugin)){
             $config->data('host.dir.plugin', $config->data('host.dir.root') . Parse::PLUGIN . $config->data('ds'));
@@ -60,6 +66,7 @@ class Parse {
         $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
         $this->cache_dir($cache_dir);
     }
+
 
     public function object($object=null){
         if($object !== null){
@@ -102,39 +109,48 @@ class Parse {
         if($storage === null){
             $storage = $this->storage(new Data());
         }
-        $storage->data(Core::object_merge($storage->data(), $data));
-
+        if(is_object($data)){
+            $storage->data(Core::object_merge($storage->data(), $data));
+        } else {
+            $storage->data($data);
+        }
         if(is_array($string)){
             foreach($string as $key => $value){
-//                 $value = str_replace('{$compatibility {&', '{$', $value); //bugfix php
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
             }
         }
         elseif(is_object($string)){
-//             d($string);
             foreach($string as $key => $value){
-//                 $value = str_replace('{$compatibility {&', '{$', $value); //bugfix php
-//                 d($value);
                 $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                 $string->$key = $value;
             }
         }
         elseif(stristr($string, '{') === false){
-            /*
-            d($string);
-            if(substr($string, 0, 1) == '"' && substr($string, -1, 1) == '"'){
-                return str_replace(['\n', '\t'],["\n", "\t"], substr($string, 1, -1));
-            }
-            */
             return $string;
         }
         else {
-            $build = new Build($this->object());
-            $build->cache_dir($this->cache_dir());
-            $url = $build->url($string);
+            if(stristr($string, '{$is.debug = true}') !== false){
+                $storage->data('is.debug', true);
+            }
 
-            $storage->data('r3m.parse.compile.url', $url);
-            $mtime = $storage->data('r3m.parse.view.mtime');
+
+            $build = new Build($this->object(), $is_debug);
+            $build->cache_dir($this->cache_dir());
+
+            $source = $storage->data('r3m.io.parse.view.source');
+
+            if(empty($source)){
+                $url = $build->url($string, [
+                    'source' => $storage->data('r3m.io.parse.view.url')
+                ]);
+            } else {
+                $url = $build->url($string, [
+                    'source' => $storage->data('r3m.io.parse.view.source.url'),
+                    'parent' => $storage->data('r3m.io.parse.view.url')
+                ]);
+            }
+            $storage->data('r3m.io.parse.compile.url', $url);
+            $mtime = $storage->data('r3m.io.parse.view.mtime');
 
 //             opcache_invalidate($url, true);
             if(File::exist($url) && File::mtime($url) == $mtime){
@@ -157,30 +173,32 @@ class Parse {
             */
 
             $string = literal::apply($string, $storage);
-            $is_debug = 1;
             $tree = Token::tree($string, $is_debug);
-//             dd($tree);
+
+            if($storage->data('is.debug') == 'select'){
+                /*
+                d($string);
+                dd($tree);
+                */
+            }
+
+
 
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
-
-//             d($tree);
-
             $build_storage = $build->storage();
             $document = $build_storage->data('document');
             if(empty($document)){
                 $document = [];
             }
-            $document = $build->create('header', $document);
-            $document = $build->create('class', $document);
-
+            $document = $build->create('header', $tree, $document);
+            $document = $build->create('class', $tree, $document);
             $build->indent(2);
-
             $document = $build->document($tree, $document, $storage);
-            $document = $build->create('run', $document);
-            $document = $build->create('require', $document);
-            $document = $build->create('use', $document);
-
+            $document = $build->create('run', $tree, $document);
+            $document = $build->create('require', $tree, $document);
+            $document = $build->create('use', $tree, $document);
+            //add lock
             $write = $build->write($url, $document);
 
             if($mtime !== null){

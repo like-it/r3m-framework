@@ -129,7 +129,9 @@ class Data {
                 } else {
                     Core::object_delete($attribute, $this->data()); //for sorting an object
                     Core::object_set($attribute, $value, $this->data());
-                    return Core::object_get($attribute, $this->data());
+                    return;
+//                     return Core::object_get($attribute, $this->data()) //commented out @ 2020-10-05;
+
                 }
             } else {
                 if(is_string($attribute)){
