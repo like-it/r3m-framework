@@ -2,9 +2,9 @@
     "framework": {
         "major": "0",
         "minor": "0",
-        "patch": "14",
-        "version": "0.0.14",
-        "built": "2019-12-24 02:31:58",
+        "patch": "16",
+        "version": "0.0.16",
+        "built": "2020-10-22 01:07:58",
         "default" : {
             "route" : [
                 "info",
