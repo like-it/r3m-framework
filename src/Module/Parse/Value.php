@@ -22,8 +22,6 @@ class Value {
     const TYPE_CAST_STRING = 'string';
 
     public static function get(Data $storage, $record=[]){
-//         $debug = debug_backtrace(true);
-//         dd($debug);
         switch($record['type']){
             case Token::TYPE_INT :
             case Token::TYPE_FLOAT :
@@ -66,76 +64,13 @@ class Value {
                 elseif(!empty($record['is_assign'])){
                     return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
                 } else {
-//                     d($record['value']);
                     return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
                 }
-                /*
-                if($record['depth'] == 0){
-                    if(!empty($record['is_assign'])){
-                        return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-                    } else {
-                        return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
-                    }
-                } else {
-                    return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-
-                }
-                */
-
-
-//                 $record['value'] = str_replace('{$', '{\$', $record['value']);
-//                 return '$this->parse()->compile(' . $record['value'] . ', [], $this->storage())';
-                /*
-                $record['value'] = '\'' . substr($record['value'], 1, -1) . '\''; // variables in " strings arent possible
-
-                if($record['depth'] == 0){
-//                     return '"' . '$this->parse()->compile(' . $record['value'] . ', [], $this->storage())' . '"';
-                    return '$this->parse()->compile(' . $record['value'] . ', [], $this->storage())';
-                } else {
-                    return '$this->parse()->compile(' . $record['value'] . ', [], $this->storage())';
-                }
-                */
-
-
-
-//                 d($record['value']);
-//                 $record['value'] = str_replace('\\\'', '\'', $record['value']);
-//                 $record['value'] = str_replace('\'', '\\\'', $record['value']);
-/*
-//                 $debug = debug_backtrace(true);
-//                 dd($debug);
-//                                 d($record);
-//                 return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-                if($record['depth'] == 0){
-                    if($is_assign === true){
-                        return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-                    } else {
-                        return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
-                    }
-
-                }
-                else {
-
-//                     return '$this->parse()->compile(\'' . str_replace('\'', '\\\'' ,substr($record['value'], 1, -1)) . '\', [], $this->storage())';
-
-                    return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
-
-                }
-//                 return '"\' . ' . 'str_replace([\'\n\', \'\t\'], ["\n", "\t"], $this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage()))' . ' . "\'';
-//                 return '\'"\' . ' . 'str_replace([\'\n\', \'\t\'], ["\n", "\t"], $this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage()))' . ' . \'"\'';
- *              */
-
             break;
             case Token::TYPE_CAST :
                 return Value::getCast($record);
             break;
             case Token::TYPE_VARIABLE :
-                //missing storage from document
-
-                if($record['depth'] == 0){
-//                     dd($record);
-                }
-
                 return '$this->storage()->data(\'' . $record['variable']['attribute'] .'\')';
             break;
             case Token::TYPE_METHOD :
@@ -177,6 +112,4 @@ class Value {
         }
         return '(' . $result . ')';
     }
-
-
 }

@@ -20,7 +20,6 @@ class Operator {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -99,11 +98,6 @@ class Operator {
 
     public static function remove($token=[], $statement=[]){
         $assign_key = false;
-        if($statement === false){
-            d($token);
-            $debug = debug_backtrace(true);
-            dd($debug);
-        }
         foreach($statement as $nr => $record){
             if($assign_key === false){
                 $assign_key = true;
@@ -189,5 +183,4 @@ class Operator {
         }
         return $result;
     }
-
 }

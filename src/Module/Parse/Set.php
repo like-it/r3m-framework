@@ -64,7 +64,6 @@ class Set {
         foreach($token as $nr => $record){
             if($record['depth'] == $highest && $record['value'] == '('){
                 $is_collect = true;
-//                 unset($token[$nr]);
             }
             elseif($record['depth'] == $highest && $record['value'] == ')'){
                 $is_collect = false;
@@ -89,5 +88,4 @@ class Set {
         }
         return $depth;
     }
-
 }
