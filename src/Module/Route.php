@@ -92,6 +92,20 @@ class Route extends Data{
         if(empty($get)){
             return;
         }
+        if(!property_exists($get, 'path')){
+            if(property_exists($get, 'url')){
+                if(substr($get->url, 0, 1) == '/'){
+                    $url = substr($get->url, 1);
+                } else {
+                    $url = $get->url;
+                }
+                $url = $object->data('host.url') . $url;
+                return $url;
+            } else {
+                throw new Exception('path & url are empty');
+            }
+                        
+        }
         $path = $get->path;
         if(is_array($option)){
             foreach($option as $key => $value){
@@ -111,7 +125,7 @@ class Route extends Data{
             $url = $object->data('host.url');
         } else {
             $url = $object->data('host.url') . $path;
-        }
+        }        
         return $url;
     }
 
@@ -383,6 +397,9 @@ class Route extends Data{
     }
 
     private static function is_match_by_attribute($object, $route, $select){
+        if(!property_exists($route, 'path')){
+            return false;
+        }
         $explode = explode('/', $route->path);
         array_pop($explode);
         $attribute = $select->attribute;
@@ -652,6 +669,10 @@ class Route extends Data{
     }
 
     private function item_deep($object, $item){
+        if(!property_exists($item, 'path')){
+            $item->deep = 0;
+            return $item;
+        }
         $item->deep = substr_count($item->path, '/');
         return $item;
     }

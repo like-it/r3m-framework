@@ -21,7 +21,7 @@ class Value {
     const TYPE_CAST_FLOAT = 'float';
     const TYPE_CAST_STRING = 'string';
 
-    public static function get(Data $storage, $record=[]){
+    public static function get($build, Data $storage, $record=[]){
         switch($record['type']){
             case Token::TYPE_INT :
             case Token::TYPE_FLOAT :
@@ -71,7 +71,10 @@ class Value {
                 return Value::getCast($record);
             break;
             case Token::TYPE_VARIABLE :
-                return '$this->storage()->data(\'' . $record['variable']['attribute'] .'\')';
+                //add modifiers
+                $token = [];
+                $token[] = $record;
+                return Variable::define($build, $storage, $token);
             break;
             case Token::TYPE_METHOD :
                 return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';

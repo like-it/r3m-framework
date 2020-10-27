@@ -64,6 +64,7 @@ class Build {
         $this->storage()->data('placeholder.function', '// R3M-IO-' . Core::uuid());
 
         $this->storage()->data('use.Exception', new stdClass());
+        $this->storage()->data('use.stdClass', new stdClass());
         $this->storage()->data('use.R3m\\Io\\App', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Core', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());
@@ -318,7 +319,12 @@ class Build {
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
                 switch($type){
                     case Token::TYPE_STRING :
-                        dd($selection);
+                        if($select['value'] == 'if'){
+                            throw new Exception('if must be a method, use {if()} on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
+                        } else {
+                            throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
+                        }
+
                     break;
                     case Token::TYPE_CURLY_CLOSE :
                         dd($selection);
@@ -327,7 +333,7 @@ class Build {
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                     break;
                     case Build::VARIABLE_DEFINE :
-                        $run[] = $this->indent() . '$variable = ' . Variable::define($this,$storage, $selection) . ';';
+                        $run[] = $this->indent() . '$variable = ' . Variable::define($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'else { echo $variable; } ';

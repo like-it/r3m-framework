@@ -73,7 +73,6 @@ class Config extends Data {
     const DATA_FRAMEWORK_DIR = 'framework.dir';
     const DATA_FRAMEWORK_DIR_ROOT = Config::DATA_FRAMEWORK_DIR . '.' .'root';
     const DATA_FRAMEWORK_DIR_VENDOR = Config::DATA_FRAMEWORK_DIR . '.' .'vendor';
-//     const DATA_FRAMEWORK_DIR_BINARY = Config::DATA_FRAMEWORK_DIR . '.' .'binary';
     const DATA_FRAMEWORK_DIR_SOURCE = Config::DATA_FRAMEWORK_DIR . '.' .'source';
     const DATA_FRAMEWORK_DIR_DATA = Config::DATA_FRAMEWORK_DIR . '.' .'data';
     const DATA_FRAMEWORK_DIR_CLI = Config::DATA_FRAMEWORK_DIR . '.' .'cli';

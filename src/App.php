@@ -3,15 +3,16 @@
 namespace R3m\Io;
 
 use stdClass;
+use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Database;
-use R3m\Io\Module\Handler;
-use R3m\Io\Module\Host;
-use R3m\Io\Module\Autoload;
-use R3m\Io\Module\Route;
 use R3m\Io\Module\File;
 use R3m\Io\Module\FileRequest;
+use R3m\Io\Module\Handler;
+use R3m\Io\Module\Host;
+use R3m\Io\Module\Parse;
+use R3m\Io\Module\Route;
 use R3m\Io\Module\View;
 
 use Exception;
@@ -104,6 +105,17 @@ class App extends Data {
             } else {
                 $json->target = $object->data(App::REQUEST)->data('target');
             }
+            if($object->data('append-to')){
+                if(empty($json->append)){
+                    $json->append = new stdClass();
+                }
+                $json->append->to = $object->data('append-to');
+            } else {
+                if(empty($json->append)){
+                    $json->append = new stdClass();
+                }
+                $json->append->to = $object->data(App::REQUEST)->data('append-to');
+            }
             $json->script = $object->data(App::SCRIPT);
             $json->link = $object->data(App::LINK);
             return Core::object($json, Core::OBJECT_JSON);
@@ -136,6 +148,53 @@ class App extends Data {
 
     public function cookie($attribute=null, $value=null){
         return Handler::cookie($attribute, $value);
+    }
+
+    public function read_data($url, $attribute=null){
+        if(File::exist($url)){
+            $read = File::read($url);
+            if($read){
+                $data = new Data(Core::object($read));
+            } else {
+                $data = new Data();
+            }
+            if($attribute !== null){
+                $this->data($attribute, $data);
+            }
+            return $data;
+        } else {
+            return false;
+        }        
+    }
+
+    public function read_parse($url, $attribute=null){
+        if(File::exist($url)){
+            $read = File::read($url);
+            if($read){
+                $mtime = File::mtime($url);
+                $parse = new Parse($this);
+                $parse->storage()->data('r3m.io.parse.view.url', $url);
+                $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
+                $data = clone $this->data();
+                unset($data->{APP::NAMESPACE});
+                $config = $this->data(App::CONFIG);
+                $data->r3m = new stdClass();
+                $data->r3m->io = new stdClass();
+                $data->r3m->io->config = $config->data();
+                $read = $parse->compile(Core::object($read), $data, $parse->storage());
+                $data = new Data($read);
+                Parse::readback($this, $parse, App::SCRIPT);
+                Parse::readback($this, $parse, App::LINK);
+            } else {
+                $data = new Data();
+            }
+            if($attribute !== null){
+                $this->data($attribute, $data);
+            }
+            return $data;
+        } else {
+            return false;
+        }        
     }
 
     public static function is_cli(){

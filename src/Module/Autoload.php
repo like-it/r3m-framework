@@ -97,17 +97,46 @@ class Autoload {
         $prefix = trim($prefix, '\\\/'); //.'\\';
         $directory = str_replace('\\\/', DIRECTORY_SEPARATOR, rtrim($directory,'\\\/')) . DIRECTORY_SEPARATOR; //see File::dir()
         $list = $this->getPrefixList();
+        if(empty($list)){
+            $list = [];
+        }
         if(empty($extension)){
-            $list[]  = array(
-                'prefix' => $prefix,
-                'directory' => $directory
-            );
+            $found = false;
+            foreach($list as $nr => $record){
+                if(
+                    $record['prefix'] == $prefix && 
+                    $record['directory'] == $directory
+                ){
+                    $found = true;
+                    break;
+                }
+            }
+            if(!$found){
+                $list[]  = array(
+                    'prefix' => $prefix,
+                    'directory' => $directory
+                );
+            }            
         } else {
-            $list[]  = array(
-                'prefix' => $prefix,
-                'directory' => $directory,
-                'extension' => $extension
-            );
+            $found = false;
+            foreach($list as $nr => $record){
+                if(
+                    $record['prefix'] == $prefix && 
+                    $record['directory'] == $directory &&
+                    !empty($record['extension']) &&
+                    $record['extension'] == $extension
+                ){
+                    $found = true;
+                    break;
+                }
+            }
+            if(!$found){
+                $list[]  = array(
+                    'prefix' => $prefix,
+                    'directory' => $directory,
+                    'extension' => $extension
+                );
+            }            
         }
         $this->setPrefixList($list);
     }
