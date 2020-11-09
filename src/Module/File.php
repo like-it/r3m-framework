@@ -233,7 +233,10 @@ class File {
         return @unlink($url); //added @ async deletes & reads can cause triggers otherways
     }
 
-    public static function extension($url=''){
+    public static function extension($url=''){        
+        if(substr($url, -1) == '/'){
+            return '';
+        }
         $url = basename($url);
         $ext = explode('.', $url);
         if(!isset($ext[1])){

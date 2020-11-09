@@ -137,9 +137,11 @@ class Handler {
             $request = $_REQUEST;
             $request = Handler::request_key_group($request);
             if(property_exists($request, 'request')){
+                /* cause bug...
                 if(substr($request->request, -1) != '/'){
                     $request->request .= '/';
                 }
+                */
             } else {
                 $request->request = '/';
             }

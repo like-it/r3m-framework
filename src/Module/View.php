@@ -21,7 +21,6 @@ class View {
     const CONFIG = 'Config';
     const CACHE = 'Cache';
 
-
     public static function locate($object, $template=null){
 
         $temp = $object->data('template');
@@ -38,8 +37,7 @@ class View {
             $template = $template->name;
         }
         else {
-            $called = get_called_class();
-//             d($called);
+            $called = get_called_class();            
             $dir = $called::DIR;
         }
         if($temp !== null && property_exists($temp, 'name')){
@@ -188,6 +186,13 @@ class View {
         ;
 //         $config->data($key, $value);
         $config->data($key, $value);
+
+        $config = $object->data(App::CONFIG);
+        $config->data('controller.class', get_called_class());
+        $config->data('controller.name', strtolower(File::basename($config->data('controller.class'))));
+        $object->data('controller', $config->data('controller'));
+
+
     }
 
     public function view($object, $url){

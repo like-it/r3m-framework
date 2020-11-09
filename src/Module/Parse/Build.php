@@ -70,6 +70,8 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Data', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Host', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Handler', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
@@ -321,7 +323,7 @@ class Build {
                     case Token::TYPE_STRING :
                         if($select['value'] == 'if'){
                             throw new Exception('if must be a method, use {if()} on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
-                        } else {
+                        } else {                            
                             throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
                         }
 
@@ -329,7 +331,7 @@ class Build {
                     case Token::TYPE_CURLY_CLOSE :
                         dd($selection);
                     break;
-                    case Build::VARIABLE_ASSIGN :
+                    case Build::VARIABLE_ASSIGN :                               
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                     break;
                     case Build::VARIABLE_DEFINE :

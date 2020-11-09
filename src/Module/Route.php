@@ -88,7 +88,6 @@ class Route extends Data{
         }
         $get = $route::add_localhost($object, $get);
         $get = $route::has_host($get, $object->data('host.url'));
-//         d($get);
         if(empty($get)){
             return;
         }
@@ -203,7 +202,10 @@ class Route extends Data{
             $object = Route::add_request($object, $request);
             return $route->current($request);
         } else {
-            $input = Route::input($object);
+            $input = Route::input($object);    
+            if(substr($input->data('request'), -1) != '/'){
+                $input->data('request', $input->data('request') . '/');
+            }
             $select = new stdClass();
             $select->input = $input;
             $select->deep = substr_count($input->data('request'), '/');
@@ -218,9 +220,8 @@ class Route extends Data{
             } else {
                 $select->host[] = Host::domain() . '.' . Host::extension();
             }
-            $select->host = array_unique($select->host);
-            $request = Route::select($object, $select);
-
+            $select->host = array_unique($select->host);            
+            $request = Route::select($object, $select);             
             $route =  $object->data(App::ROUTE);
             $object = Route::add_request($object, $request);
             return $route->current($request);
@@ -282,12 +283,27 @@ class Route extends Data{
             }
             if(!property_exists($record, 'deep')){
                 continue;
-            }
+            }            
             $match = Route::is_match($object, $record, $select);
             if($match === true){
                 $current = $record;
                 break;
             }
+        }        
+        if($match === false){
+            foreach($data as $record){
+                if(property_exists($record, 'resource')){
+                    continue;
+                }
+                if(!property_exists($record, 'deep')){
+                    continue;
+                }                
+                $match = Route::is_match_has_slash_in_attribute($object, $record, $select);
+                if($match === true){
+                    $current = $record;
+                    break;
+                }
+            }   
         }
         if($current !== false){
             $current = Route::prepare($object, $current, $select);
@@ -371,18 +387,31 @@ class Route extends Data{
             $route->request = new Data($route->request);
         } else {
             $route->request = new Data();
-        }
+        }        
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 $variable = Route::get_variable($part);
                 if(property_exists($route->request, $variable)){
                     continue;
                 }
-                if(array_key_exists($nr, $attribute)){
+                if(array_key_exists($nr, $attribute)){                    
                     $route->request->data($variable, $attribute[$nr]);
                 }
             }
         }
+        
+        if(
+            !empty($variable) && 
+            count($attribute) > count($explode)
+        ){
+            //for '/' in variable
+            $request = '';//$route->request->data($variable) . '/';
+            for($i = $nr; $i < count($attribute); $i++){
+                $request .= $attribute[$i] . '/';
+            }
+            $request = substr($request, 0, -1);           
+            $route->request->data($variable, $request);                        
+        }        
         foreach($object->data(App::REQUEST) as $key => $record){
             if($key == 'request'){
                 continue;
@@ -405,7 +434,7 @@ class Route extends Data{
         $attribute = $select->attribute;
         if(empty($attribute)){
             return true;
-        }
+        }        
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 continue;
@@ -488,8 +517,8 @@ class Route extends Data{
         return $is_match;
     }
 
-    private static function is_match($object, $route, $select){
-        $is_match = Route::is_match_by_deep($object, $route, $select);
+    private static function is_match($object, $route, $select){               
+        $is_match = Route::is_match_by_method($object, $route, $select);
         if($is_match === false){
             return $is_match;
         }
@@ -497,15 +526,32 @@ class Route extends Data{
         $is_match = Route::is_match_by_host($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }
-        $is_match = Route::is_match_by_attribute($object, $route, $select);
+        }        
+        $is_match = Route::is_match_by_deep($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }
+        }                
+        $is_match = Route::is_match_by_attribute($object, $route, $select);        
+        if($is_match === false){
+            return $is_match;
+        }                
+        return $is_match;
+    }
+
+    private static function is_match_has_slash_in_attribute($object, $route, $select){               
         $is_match = Route::is_match_by_method($object, $route, $select);
         if($is_match === false){
             return $is_match;
         }
+        $route = Route::add_localhost($object, $route);
+        $is_match = Route::is_match_by_host($object, $route, $select);
+        if($is_match === false){
+            return $is_match;
+        }        
+        $is_match = Route::is_match_by_attribute($object, $route, $select);                
+        if($is_match === false){
+            return $is_match;
+        }                        
         return $is_match;
     }
 
@@ -611,15 +657,7 @@ class Route extends Data{
         }
     }
 
-    private static function cache_write($object){
-        /*
-        if (posix_getuid() === 0){
-//             $route = $object->data(App::ROUTE);
-//             dd($route->data());
-            //don't write cache file as root, otherways it will be inaccessible
-            return false;
-        }
-        */
+    private static function cache_write($object){    
         $config = $object->data(App::CONFIG);
         $route = $object->data(App::ROUTE);
         $data = $route->data();

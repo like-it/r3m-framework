@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function modifier_string_truncate(Parse $parse, Data $data, $value, $length=80, $replacement='...'){
+function modifier_truncate(Parse $parse, Data $data, $value, $length=80, $replacement='...'){
     $replacement_length = strlen($replacement);
     $length = $length - $replacement_length;
     $value_length = strlen($value);

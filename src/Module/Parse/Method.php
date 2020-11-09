@@ -101,10 +101,10 @@ class Method {
             foreach($record['method']['attribute'] as $nr => $token){
                 $token = Token::define($token);
                 $token = Token::method($token);
-                $token = $build->require('function', $token);
+                $token = $build->require('function', $token);                
                 $value = Variable::getValue($build, $storage, $token);
                 $attribute .= $value . ', '; //#
-            }
+            }            
             if($record['method']['php_name'] == Token::TYPE_FOR){
                 $assign = [];
                 $assign_nr = 0;
@@ -286,8 +286,27 @@ class Method {
     public static function create_capture(Build $build, Data $storage, $token=[]){
         $method = array_shift($token);
         $method['method']['attribute'][] = $token;
-        $record = Method::get($build, $storage, $method);
-        if($record['type'] === Token::TYPE_CODE){
+        $record = Method::get($build, $storage, $method);        
+        if($record['type'] === Token::TYPE_CODE){        
+            if(
+                in_array(
+                    $record['method']['name'], 
+                    [
+                        'capture.append',
+                        'capture.prepend'
+                    ]
+                )
+            ){
+                $attribute = current($record['method']['attribute'][0]);
+                if(array_key_exists('execute', $attribute)){                    
+                    $record['value'] = '$this->storage()->data(\''. $record['method']['name'] .'\', \'' . $attribute['execute'] . '\');' . 
+                        "\n" . 
+                        $record['value'] . 
+                        ';' . "\n" . '$this->storage()->data(\'delete\',\'' . $record['method']['name'] . '\')';               }
+                
+                
+            }
+
             return $record['value'];
         }
         throw new Exception('Method type (' . $record['type'] . ') undefined');

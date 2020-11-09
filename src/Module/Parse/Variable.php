@@ -215,7 +215,7 @@ class Variable {
         $is_collect = false;
         $type = null;
 //         d($operator);
-        $count = 0;
+        $count = 0;             
         while(count($operator) >= 1){
             $record = array_shift($operator);
             if(
@@ -234,26 +234,22 @@ class Variable {
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
                 $result .= Code::result($build, $storage, $type, $selection);
-
-//                 dd($result);
-
                 $result .= ' . ';
-//                 dd($result);
                 $is_collect = false;
                 $type = null;
                 $selection = [];
             }
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
+                $result .= '[';
             }
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
                 $in_array = false;
-//                 d($result);
+                $result .= ']';
             }
-            elseif($is_collect === false){
-                $record = Method::get($build, $storage, $record);
+            elseif($is_collect === false){                
+                $record = Method::get($build, $storage, $record);                
                 $result .= Value::get($build, $storage, $record);
-
                 if(
                     !in_array(
                         $record['type'],
@@ -278,8 +274,7 @@ class Variable {
         }
         if(substr($result, -3) == ' . '){
             $result = substr($result,0, -3);
-        }
+        }        
         return $result;
     }
-
 }

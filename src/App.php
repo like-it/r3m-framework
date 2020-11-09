@@ -53,20 +53,40 @@ class App extends Data {
         Config::configure($object);
         Handler::request_configure($object);
         Host::configure($object);
-//         View::configure($object);
         Autoload::configure($object);
-        Route::configure($object);
+        Route::configure($object);    
         $file = FileRequest::get($object);
         if($file === false){
-            $route = Route::request($object);
+            $route = Route::request($object);            
             if($route === false){
                 throw new Exception('couldn\'t determine route');
             } else {
                 App::contentType($object);
-//                 $route->controller::prerun($object);
-                $route->controller::configure($object);
-                $result = $route->controller::{$route->function}($object);
+                $methods = get_class_methods($route->controller);
+                if(in_array('controller', $methods)){
+                    $route->controller::controller($object);
+                }
+                if(in_array('configure', $methods)){
+                    $route->controller::configure($object);
+                }
+                if(in_array('before_run', $methods)){
+                    $route->controller::before_run($object);
+                }
+                if(in_array($route->function, $methods)){
+                    $result = $route->controller::{$route->function}($object);
+                } else {
+                    throw new Exception('cannot call: ' . $route->function . ' in: ' . $route->controller);
+                }                
+                if(in_array('after_run', $methods)){
+                    $route->controller::after_run($object);
+                }
+                if(in_array('before_result', $methods)){
+                    $route->controller::before_result($object);
+                }
                 $result = App::result($object, $result);
+                if(in_array('after_result', $methods)){
+                    $route->controller::after_result($object);
+                }
                 return $result;
             }
         } else {
@@ -82,8 +102,7 @@ class App extends Data {
         elseif(property_exists($object->data(App::REQUEST_HEADER), 'Content-Type')){
             $contentType = $object->data(App::REQUEST_HEADER)->{'Content-Type'};
         }
-        if(empty($contentType)){
-            d($_SERVER);
+        if(empty($contentType)){            
             throw new Exception('Couldn\'t determine contentType');
         }
         return $object->data(App::CONTENT_TYPE, $contentType);
@@ -119,7 +138,7 @@ class App extends Data {
             $json->script = $object->data(App::SCRIPT);
             $json->link = $object->data(App::LINK);
             return Core::object($json, Core::OBJECT_JSON);
-        }
+        }        
         return $output;
     }
 
@@ -150,7 +169,7 @@ class App extends Data {
         return Handler::cookie($attribute, $value);
     }
 
-    public function read_data($url, $attribute=null){
+    public function data_read($url, $attribute=null){
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
@@ -164,10 +183,10 @@ class App extends Data {
             return $data;
         } else {
             return false;
-        }        
+        }
     }
 
-    public function read_parse($url, $attribute=null){
+    public function parse_read($url, $attribute=null){
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
@@ -194,7 +213,7 @@ class App extends Data {
             return $data;
         } else {
             return false;
-        }        
+        }
     }
 
     public static function is_cli(){

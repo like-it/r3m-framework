@@ -11,7 +11,10 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function modifier_string_add_quotes(Parse $parse, Data $data, $value){
-    $result = '"' . $value . '"';
+function function_target_create(Parse $parse, Data $data, $target=null, $options=[]){    
+    $result = $target;
+    foreach($options as $key => $value){
+        $result.='[' . $key . '=\'' . $value . '\']';
+    }
     return $result;
 }

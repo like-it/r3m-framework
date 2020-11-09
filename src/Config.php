@@ -56,8 +56,7 @@ class Config extends Data {
 
     const LOCALHOST_EXTENSION = 'localhost.extension';
     const VALUE_LOCALHOST_EXTENSION =  [
-        'local',
-        'develop'
+        'local'        
     ];
 
     const ROUTE = 'Route.json';

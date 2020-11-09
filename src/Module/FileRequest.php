@@ -17,15 +17,13 @@ class FileRequest {
     const REQUEST = 'Request';
 
     public static function get($object){
-        $request = $object->data(App::REQUEST);
-
+        $request = $object->data(App::REQUEST);        
         $input = $request->data('request');
-        $input = substr($input, 0, -1);
+        // $input = substr($input, 0, -1);
 
         $dir = str_replace(['../','..'], '', Dir::name($input));
         $file = str_replace($dir,'', $input);
-        $extension = File::extension($file);
-
+        $extension = File::extension($file);            
         if(empty($extension)){
             return false;
         }
