@@ -5,12 +5,6 @@ use R3m\Io\Module\Data;
 
 
 function function_autoload_restart(Parse $parse, Data $data){
-
-    $attribute = func_get_args();
-
-    array_shift($attribute);
-    array_shift($attribute);
-
     $object = $parse->object();
     $autoload = $object->data(\R3m\Io\App::AUTOLOAD_R3M);
     $cache_dir = $autoload->cache_dir();

@@ -66,12 +66,15 @@ class Build {
         $this->storage()->data('use.Exception', new stdClass());
         $this->storage()->data('use.stdClass', new stdClass());
         $this->storage()->data('use.R3m\\Io\\App', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Config', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Core', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Data', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Dir', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\File', new stdClass());        
+        $this->storage()->data('use.R3m\\Io\\Module\\Handler', new stdClass());        
         $this->storage()->data('use.R3m\\Io\\Module\\Host', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Handler', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());        
+        $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());                    
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
@@ -417,6 +420,7 @@ class Build {
                         d($selection);
                     default:
                         if($type !== null){
+                            d($run);
                             d($selection);
                             d($type);
                             dd($record);
@@ -503,6 +507,9 @@ class Build {
             break;
             case Token::TYPE_AMPERSAND :
                 return Token::TYPE_AMPERSAND;
+            break;
+            case Token::TYPE_IS_DIVIDE :
+                return Token::TYPE_IS_DIVIDE;
             break;
             default:
                 d($record);
