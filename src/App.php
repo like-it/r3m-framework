@@ -46,7 +46,7 @@ class App extends Data {
         $this->data(App::AUTOLOAD_COMPOSER, $autoload);
         $this->data(App::CONFIG, $config);
         App::is_cli();
-        require_once 'debug.php';
+        require_once 'Debug.php';
     }
 
     public static function run($object){
