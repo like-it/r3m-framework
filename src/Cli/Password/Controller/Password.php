@@ -15,7 +15,7 @@ class Password extends View {
     const NAME = 'Password';
 
     public static function run($object){
-        $url = Password::locate($object, 'Info');
+        $url = Password::locate($object, 'Hash');
         return Password::view($object, $url);
     }
 }

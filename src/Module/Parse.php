@@ -180,8 +180,9 @@ class Parse {
             }
             */
 
-            $string = literal::apply($string, $storage);
+            $string = literal::apply($string, $storage);            
             $tree = Token::tree($string, $is_debug);
+            // dd($tree);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();

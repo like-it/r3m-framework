@@ -53,15 +53,7 @@ class Route extends View{
     }
 
 
-    private static function restart($object){
-        /*
-        $route = $object->data(App::ROUTE);
-        $cache_url = $route->cache_url();
-
-        if(File::exist($cache_url)){
-            File::delete($cache_url);
-        }
-        */
+    private static function restart($object){        
         $url = Route::locate($object, ucfirst(__FUNCTION__));
         return Route::view($object, $url);
     }

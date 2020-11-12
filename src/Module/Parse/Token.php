@@ -616,9 +616,9 @@ class Token {
         foreach($token as $nr => $record){
             $prepare[] = $record;
             unset($token[$nr]);
-        }
-        $prepare = Token::prepare($prepare, $count, $is_debug);
-        $token = Token::define($prepare, $is_debug);
+        }                
+        $prepare = Token::prepare($prepare, $count, $is_debug);                  
+        $token = Token::define($prepare, $is_debug);        
         $token = Token::group($token, $is_debug);
         $token = Token::cast($token, $is_debug);
         $token = Token::method($token, $is_debug);
@@ -1339,9 +1339,11 @@ class Token {
                 }
             }
             $token[$nr]['depth'] = $depth;
-            if($record['type'] == Token::TYPE_PARENTHESE_CLOSE){
+            if($record['type'] == Token::TYPE_PARENTHESE_CLOSE){                
                 if($record['curly_count'] > 0){
                     $depth--;
+                } else {
+                    continue; //no tags means no method
                 }
 
                 $is_start_method = false;

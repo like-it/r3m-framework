@@ -15,7 +15,7 @@ class Uuid extends View {
     const NAME = 'Uuid';
 
     public static function run($object){
-        $url = Uuid::locate($object, 'Info');
+        $url = Uuid::locate($object, 'Uuid');
         return Uuid::view($object, $url);
     }
 }
