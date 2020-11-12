@@ -8,9 +8,12 @@
  * @changeLog
  *     -            all
  */
+use stdClass;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Host;
 
-function modifier_string_uppercase(Parse $parse, Data $data, $value){
-    return strtoupper($value);
+
+function function_host_domain(Parse $parse, Data $data){
+    return Host::domain();
 }

@@ -11,12 +11,6 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_file_size_text(Parse $parse, Data $data, $size=0){
-    $options = [];
-    $options['size'] = $size;
-    $object = $parse->object();
-    return \Host\Admin\R3m\Io\FileManager\Model\File::size_text(
-        $object,
-        $options
-        );
+function modifier_uppercase(Parse $parse, Data $data, $value){
+    return strtoupper($value);
 }

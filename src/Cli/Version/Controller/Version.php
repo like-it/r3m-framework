@@ -1,7 +1,7 @@
 <?php
 /**
  * @author         Remco van der Velde
- * @since         2016-10-19
+ * @since          2018-10-19
  * @version        1.0
  * @changeLog
  *     -    all
@@ -65,7 +65,6 @@ class Version extends View{
         $url = Version::locate($object, ucfirst(__FUNCTION__));
         return Version::view($object, $url);
     }
-
 
     private static function update($object){
         $config = $object->data(App::CONFIG);

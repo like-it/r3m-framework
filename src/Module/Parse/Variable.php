@@ -128,7 +128,7 @@ class Variable {
             foreach($variable['variable']['modifier'] as $nr => $modifier_list){
                 foreach($modifier_list as $modifier_nr => $modifier){
                     $define_modifier .= '$this->' . $modifier['php_name'] . '($this->parse(), $this->storage(), ' . $define . ', ';
-                    if($modifier['has_attribute']){
+                    if(!empty($modifier['has_attribute'])){
                         foreach($modifier['attribute'] as $attribute){
                             switch($attribute['type']){
                                 case Token::TYPE_METHOD :
@@ -140,7 +140,7 @@ class Variable {
                                     $define_modifier .= Variable::define($build, $storage, $temp) . ', ';
                                 break;
                                 default :
-                                    $define_modifier .= Value::get($storage, $attribute) . ', ';
+                                    $define_modifier .= Value::get($build, $storage, $attribute) . ', ';
                             }
                         }
                     }
@@ -166,7 +166,7 @@ class Variable {
             while(Operator::has($set)){
                 $statement = Operator::get($set);
                 $set = Operator::remove($set, $statement);
-                $statement = Operator::create($storage, $statement);
+                $statement = Operator::create($build, $storage, $statement);
                 $key = key($statement);
                 $set[$key]['value'] = $statement[$key];
                 $set[$key]['type'] = Token::TYPE_CODE;
@@ -193,7 +193,7 @@ class Variable {
 //             $debug = debug_backtrace(true);
 //             d($debug[0]);
             $operator = Operator::remove($operator, $statement);
-            $statement = Operator::create($storage, $statement);
+            $statement = Operator::create($build, $storage, $statement);
 
             if(empty($statement)){
                 throw new Exception('Operator error');
@@ -215,7 +215,7 @@ class Variable {
         $is_collect = false;
         $type = null;
 //         d($operator);
-        $count = 0;
+        $count = 0;             
         while(count($operator) >= 1){
             $record = array_shift($operator);
             if(
@@ -234,30 +234,22 @@ class Variable {
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
                 $result .= Code::result($build, $storage, $type, $selection);
-
-//                 dd($result);
-
                 $result .= ' . ';
-//                 dd($result);
                 $is_collect = false;
                 $type = null;
                 $selection = [];
             }
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
+                $result .= '[';
             }
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
                 $in_array = false;
-//                 d($result);
+                $result .= ']';
             }
-            elseif($is_collect === false){
-                if($record['type'] == 'code'){
-//                     dd($record);
-                }
-
-                $record = Method::get($build, $storage, $record);
-                $result .= Value::get($storage, $record);
-
+            elseif($is_collect === false){                
+                $record = Method::get($build, $storage, $record);                
+                $result .= Value::get($build, $storage, $record);
                 if(
                     !in_array(
                         $record['type'],
@@ -274,63 +266,15 @@ class Variable {
                         $result .= ' . ';
                     }
                 }
-
-                /*
-                if(
-                    in_array(
-                        $record['type'],
-                        [
-                            Token::TYPE_STRING ,
-                            Token::TYPE_QUOTE_SINGLE_STRING,
-                            Token::TYPE_QUOTE_DOUBLE_STRING,
-                            //                         Token::TYPE_VARIABLE
-
-                        ]
-                    ) &&
-                    empty($record['is_foreach']) &&
-                    $in_array === false
-                ){
-
-                    $result .= ' . ';
-                }
-                */
-
                 $operator_counter++;
                 if($operator_counter > $operator_max){
                     break;
                 }
             }
-            //this too see below breaks a lot, foreach, but also route.get so disabled
-
-/*
-            if(
-                in_array(
-                    $record['type'],
-                    [
-                        Token::TYPE_STRING ,
-                        Token::TYPE_QUOTE_SINGLE_STRING,
-                        Token::TYPE_QUOTE_DOUBLE_STRING,
-                        //                     Token::TYPE_VARIABLE
-
-                    ]
-                    ) &&
-                $in_array === false
-            ){
-                if($storage->data('is.debug') == 'select'){
-                    d($result);
-                }
-                $result = substr($result,0, -3);
-            }
-*/
         }
         if(substr($result, -3) == ' . '){
             $result = substr($result,0, -3);
-            //                 $count++;
-        }
-//         d($count);
-//         d($result);
-
+        }        
         return $result;
     }
-
 }

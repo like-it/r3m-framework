@@ -29,7 +29,7 @@ class Bin extends View {
             $name = Bin::DEFAULT_NAME;
         }
         $object->data('name', $name);
-        $url = Bin::locate($object, 'Info');
+        $url = Bin::locate($object, 'Create');
         return Bin::view($object, $url);
     }
 }

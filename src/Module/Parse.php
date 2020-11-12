@@ -26,6 +26,7 @@ class Parse {
     private $object;
     private $storage;
     private $cache_dir;
+    private $local;
 
     public function __construct($object, $storage=null){
         $this->object($object);
@@ -105,6 +106,13 @@ class Parse {
         return $this->cache_dir;
     }
 
+    public function local($local=null){
+        if($local !== null){
+            $this->local = $local;
+        }        
+        return $this->local;
+    }
+
     public function compile($string='', $data=[], $storage=null, $is_debug=false){
         if($storage === null){
             $storage = $this->storage(new Data());
@@ -119,21 +127,19 @@ class Parse {
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
             }
         }
-        elseif(is_object($string)){
-            foreach($string as $key => $value){
+        elseif(is_object($string)){                                     
+            // $storage->data('this', $string);           
+            $this->local($string);
+            foreach($string as $key => $value){                 
                 $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                 $string->$key = $value;
-            }
+            }            
+            return $string;
         }
         elseif(stristr($string, '{') === false){
             return $string;
         }
         else {
-            if(stristr($string, '{$is.debug = true}') !== false){
-                $storage->data('is.debug', true);
-            }
-
-
             $build = new Build($this->object(), $is_debug);
             $build->cache_dir($this->cache_dir());
 
@@ -150,6 +156,7 @@ class Parse {
                 ]);
             }
             $storage->data('r3m.io.parse.compile.url', $url);
+            $storage->data('this', $this->local());
             $mtime = $storage->data('r3m.io.parse.view.mtime');
 
 //             opcache_invalidate($url, true);
@@ -161,6 +168,7 @@ class Parse {
 
                 $string = $template->run();
                 $string = Literal::restore($string, $storage);
+                $storage->data('delete', 'this');
                 return $string;
             }
 
@@ -172,18 +180,9 @@ class Parse {
             }
             */
 
-            $string = literal::apply($string, $storage);
+            $string = literal::apply($string, $storage);            
             $tree = Token::tree($string, $is_debug);
-
-            if($storage->data('is.debug') == 'select'){
-                /*
-                d($string);
-                dd($tree);
-                */
-            }
-
-
-
+            // dd($tree);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();
@@ -219,6 +218,7 @@ class Parse {
                 $template = new $class(new Parse($this->object()), $storage);
                 $string = $template->run();
                 $string = Literal::restore($string, $storage);
+                $storage->data('delete', 'this');
             }
         }
         return $string;

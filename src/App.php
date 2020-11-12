@@ -3,15 +3,16 @@
 namespace R3m\Io;
 
 use stdClass;
+use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Database;
-use R3m\Io\Module\Handler;
-use R3m\Io\Module\Host;
-use R3m\Io\Module\Autoload;
-use R3m\Io\Module\Route;
 use R3m\Io\Module\File;
 use R3m\Io\Module\FileRequest;
+use R3m\Io\Module\Handler;
+use R3m\Io\Module\Host;
+use R3m\Io\Module\Parse;
+use R3m\Io\Module\Route;
 use R3m\Io\Module\View;
 
 use Exception;
@@ -52,20 +53,40 @@ class App extends Data {
         Config::configure($object);
         Handler::request_configure($object);
         Host::configure($object);
-//         View::configure($object);
         Autoload::configure($object);
-        Route::configure($object);
+        Route::configure($object);    
         $file = FileRequest::get($object);
         if($file === false){
-            $route = Route::request($object);
+            $route = Route::request($object);            
             if($route === false){
                 throw new Exception('couldn\'t determine route');
             } else {
                 App::contentType($object);
-//                 $route->controller::prerun($object);
-                $route->controller::configure($object);
-                $result = $route->controller::{$route->function}($object);
+                $methods = get_class_methods($route->controller);
+                if(in_array('controller', $methods)){
+                    $route->controller::controller($object);
+                }
+                if(in_array('configure', $methods)){
+                    $route->controller::configure($object);
+                }
+                if(in_array('before_run', $methods)){
+                    $route->controller::before_run($object);
+                }
+                if(in_array($route->function, $methods)){
+                    $result = $route->controller::{$route->function}($object);
+                } else {
+                    throw new Exception('cannot call: ' . $route->function . ' in: ' . $route->controller);
+                }                
+                if(in_array('after_run', $methods)){
+                    $route->controller::after_run($object);
+                }
+                if(in_array('before_result', $methods)){
+                    $route->controller::before_result($object);
+                }
                 $result = App::result($object, $result);
+                if(in_array('after_result', $methods)){
+                    $route->controller::after_result($object);
+                }
                 return $result;
             }
         } else {
@@ -81,8 +102,7 @@ class App extends Data {
         elseif(property_exists($object->data(App::REQUEST_HEADER), 'Content-Type')){
             $contentType = $object->data(App::REQUEST_HEADER)->{'Content-Type'};
         }
-        if(empty($contentType)){
-            d($_SERVER);
+        if(empty($contentType)){            
             throw new Exception('Couldn\'t determine contentType');
         }
         return $object->data(App::CONTENT_TYPE, $contentType);
@@ -104,10 +124,21 @@ class App extends Data {
             } else {
                 $json->target = $object->data(App::REQUEST)->data('target');
             }
+            if($object->data('append-to')){
+                if(empty($json->append)){
+                    $json->append = new stdClass();
+                }
+                $json->append->to = $object->data('append-to');
+            } else {
+                if(empty($json->append)){
+                    $json->append = new stdClass();
+                }
+                $json->append->to = $object->data(App::REQUEST)->data('append-to');
+            }
             $json->script = $object->data(App::SCRIPT);
             $json->link = $object->data(App::LINK);
             return Core::object($json, Core::OBJECT_JSON);
-        }
+        }        
         return $output;
     }
 
@@ -136,6 +167,53 @@ class App extends Data {
 
     public function cookie($attribute=null, $value=null){
         return Handler::cookie($attribute, $value);
+    }
+
+    public function data_read($url, $attribute=null){
+        if(File::exist($url)){
+            $read = File::read($url);
+            if($read){
+                $data = new Data(Core::object($read));
+            } else {
+                $data = new Data();
+            }
+            if($attribute !== null){
+                $this->data($attribute, $data);
+            }
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+    public function parse_read($url, $attribute=null){
+        if(File::exist($url)){
+            $read = File::read($url);
+            if($read){
+                $mtime = File::mtime($url);
+                $parse = new Parse($this);
+                $parse->storage()->data('r3m.io.parse.view.url', $url);
+                $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
+                $data = clone $this->data();
+                unset($data->{APP::NAMESPACE});
+                $config = $this->data(App::CONFIG);
+                $data->r3m = new stdClass();
+                $data->r3m->io = new stdClass();
+                $data->r3m->io->config = $config->data();
+                $read = $parse->compile(Core::object($read), $data, $parse->storage());
+                $data = new Data($read);
+                Parse::readback($this, $parse, App::SCRIPT);
+                Parse::readback($this, $parse, App::LINK);
+            } else {
+                $data = new Data();
+            }
+            if($attribute !== null){
+                $this->data($attribute, $data);
+            }
+            return $data;
+        } else {
+            return false;
+        }
     }
 
     public static function is_cli(){

@@ -18,12 +18,10 @@ class Info extends View {
     const NAME = 'Info';
 
     public static function run($object){
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
-        $config->data('framework.environment', Config::MODE_PRODUCTION);
+        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);        
         $command = $object::parameter($object, Info::NAME, 1);
         $url = Info::locate($object, 'Info\\' . $command);
-        if(empty($url)){
-            $config->data('framework.environment', Config::MODE_DEVELOPMENT);
+        if(empty($url)){            
             $url = Info::locate($object, 'Info');
 
         }

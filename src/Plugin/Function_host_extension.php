@@ -8,16 +8,12 @@
  * @changeLog
  *     -            all
  */
+use stdClass;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Host;
 
-function function_capture_append(Parse $parse, Data $data, $name, $value=null){
-    $list = $data->data($name);
-    if(empty($list)){
-        $list = [];
-    }    
-    $list[] = $value;
-    $data->data($name, $list);
-     
-    return '';
+
+function function_host_extension(Parse $parse, Data $data){
+    return Host::extension();
 }
