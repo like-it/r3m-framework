@@ -1,13 +1,13 @@
 <?php
 /**
- *  (c) 2019 Priya.software
- *
- *  License: MIT
- *
- *  Author: Remco van der Velde
- *  Version: 1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
  */
-
 namespace R3m\Io\Module;
 
 use stdClass;
@@ -29,7 +29,6 @@ class Autoload {
     protected $expose;
     protected $read;
     protected $fileList;
-
     protected $cache_dir;
 
     public $prefixList = array();
@@ -46,7 +45,6 @@ class Autoload {
         ;
         $autoload->cache_dir($cache_dir);
         $autoload->register();
-
         $object->data(App::AUTOLOAD_R3M, $autoload);
     }
 
@@ -213,9 +211,7 @@ class Autoload {
             $data[] = $item['directory'] . $item['baseName'] . '.' . Autoload::EXT_TRAIT_PHP;
             $data[] = $item['directory'] . $item['baseName'] . '.' . Autoload::EXT_PHP;
             $data[] = '[---]';
-
             $this->fileList[$item['baseName']][] = $data;
-
             $result = array();
             foreach($data as $nr => $file){
                 if($file === '[---]'){
@@ -227,8 +223,6 @@ class Autoload {
     }
 
     public function locate($load=null, $is_data=false){
-        // $this->environment($this->data('priya.environment'));
-//         $dir = dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . Autoload::TEMP . DIRECTORY_SEPARATOR;
         $dir = $this->cache_dir();
         $url = $dir . Autoload::FILE;
         $load = ltrim($load, '\\');
@@ -269,7 +263,7 @@ class Autoload {
                                 Autoload::EXT_PHP,
                                 Autoload::EXT_TPL
                             )
-                            ));
+                    ));
                     $item['baseName'] = explode(DIRECTORY_SEPARATOR, $item['baseName'], 2);
                     $item['baseName'] = end($item['baseName']);
                     $item['dirName'] = dirname($item['file']);
@@ -281,10 +275,7 @@ class Autoload {
                         foreach($fileList as $file){
                             if(substr($file, 0, 5) == '[---]'){
                                 continue;
-                            }
-                            if($is_data === true){
-                                //                                 d($file);
-                            }
+                            }                            
                             if(file_exists($file)){
                                 $this->cache($file, $load);
                                 return $file;
@@ -302,10 +293,8 @@ class Autoload {
         if($this->environment() == 'development' || !empty($this->expose())){
             $object = new stdClass();
             $object->load = $load;
-
             $debug = debug_backtrace(true);
             $output = [];
-
             for($i=0; $i < 5; $i++){
                 if(!isset($debug[$i])){
                     continue;
@@ -341,7 +330,7 @@ class Autoload {
 
     public function __destruct(){
         if(!empty($this->read)){
-            $dir = $this->cache_dir(); //dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . Autoload::TEMP . DIRECTORY_SEPARATOR;
+            $dir = $this->cache_dir(); 
             $url = $dir . Autoload::FILE;
             $this->write($url, $this->read);
         }
@@ -356,7 +345,7 @@ class Autoload {
 
     private function cache($file='', $class=''){
         if(empty($this->read)){
-            $dir = $this->cache_dir(); //dirname(Autoload::DIR) . DIRECTORY_SEPARATOR . Autoload::TEMP . DIRECTORY_SEPARATOR;
+            $dir = $this->cache_dir(); 
             $url = $dir . Autoload::FILE;
             $this->read = $this->read($url);
         }
@@ -437,6 +426,4 @@ class Autoload {
         }
         return $this->expose;
     }
-
-
 }

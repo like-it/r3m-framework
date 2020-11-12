@@ -1,12 +1,13 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
-
 namespace R3m\Io\Module\Parse;
 
 use Exception;
@@ -79,9 +80,9 @@ class Method {
                             $is_key_value === false &&
                             $has_key === false &&
                             $item['type'] == Token::TYPE_VARIABLE
-                            ){
-                                $record['method']['attribute'][0][$nr]['value'] = ' ' . Core::uuid_variable() . ' ';
-                                $has_key = true;
+                        ){
+                            $record['method']['attribute'][0][$nr]['value'] = ' ' . Core::uuid_variable() . ' ';
+                            $has_key = true;
                         }
                         elseif(
                             $is_key_value === true &&
@@ -239,7 +240,6 @@ class Method {
                 } else {
                     $data[0] = [];
                 }
-
                 return $data;
             break;
             case Method::WHERE_AFTER :
@@ -270,7 +270,6 @@ class Method {
         if($record['type'] === Token::TYPE_CODE){
             return $record['value'];
         }
-
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
@@ -302,11 +301,9 @@ class Method {
                     $record['value'] = '$this->storage()->data(\''. $record['method']['name'] .'\', \'' . $attribute['execute'] . '\');' . 
                         "\n" . 
                         $record['value'] . 
-                        ';' . "\n" . '$this->storage()->data(\'delete\',\'' . $record['method']['name'] . '\')';               }
-                
-                
+                        ';' . "\n" . '$this->storage()->data(\'delete\',\'' . $record['method']['name'] . '\')';
+                }                            
             }
-
             return $record['value'];
         }
         throw new Exception('Method type (' . $record['type'] . ') undefined');

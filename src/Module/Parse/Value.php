@@ -1,12 +1,13 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
-
 namespace R3m\Io\Module\Parse;
 
 use R3m\Io\Module\Core;
@@ -40,7 +41,6 @@ class Value {
             case Token::TYPE_QUOTE_SINGLE_STRING :
             case Token::TYPE_BACKSLASH :
             case Token::TYPE_QUOTE_SINGLE :
-//             case Token::TYPE_WHITESPACE :
                 return $record['value'];
             break;
             case Token::TYPE_STRING :
@@ -48,7 +48,6 @@ class Value {
             break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
                 if(stristr($record['value'], '{') === false){
-//                     d($record);
                     return $record['value'];
                 }
 
@@ -56,10 +55,10 @@ class Value {
                 $record['value'] = str_replace('\'', '\\\'', $record['value']);
 
                 if($record['depth'] > 0){
-//                     $write = File::read($storage->data('debug.url'));
-//                     $string = Core::object($record, 'json');
-//                     $write .= $string . "\n";
-//                     File::write($storage->data('debug.url'), $write);
+                    // $write = File::read($storage->data('debug.url'));
+                    // $string = Core::object($record, 'json');
+                    // $write .= $string . "\n";
+                    // File::write($storage->data('debug.url'), $write);
                     return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
                 }
                 elseif(!empty($record['is_assign'])){
@@ -72,7 +71,7 @@ class Value {
                 return Value::getCast($record);
             break;
             case Token::TYPE_VARIABLE :
-                //add modifiers
+                //adding modifiers
                 $token = [];
                 $token[] = $record;
                 return Variable::define($build, $storage, $token);
@@ -85,10 +84,7 @@ class Value {
             case Token::TYPE_CURLY_OPEN :
                 return;
             break;
-            default:
-                $debug = debug_backtrace(true);
-                d($record);
-                dd($debug);
+            default:                
                 throw new Exception('Variable value type ' .  $record['type'] . ' not defined');
             break;
         }

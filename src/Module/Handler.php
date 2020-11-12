@@ -1,13 +1,13 @@
 <?php
 /**
- *  (c) 2019 Priya.software
- *
- *  License: MIT
- *
- *  Author: Remco van der Velde
- *  Version: 1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
  */
-
 namespace R3m\Io\Module;
 
 
@@ -71,7 +71,6 @@ class Handler {
 
     private static function request_header(){
         //check if cli
-
         if(defined('IS_CLI')){
             return Core::array_object($_SERVER);
         } else {
@@ -130,18 +129,13 @@ class Handler {
             $request = $temp;
             $request = Core::array_object($request);
             foreach($request as $key => $value){
-//                 $request->{$key} = trim($value);
                 $data->data($key, trim($value));
             }
         } else {
             $request = $_REQUEST;
             $request = Handler::request_key_group($request);
             if(property_exists($request, 'request')){
-                /* cause bug...
-                if(substr($request->request, -1) != '/'){
-                    $request->request .= '/';
-                }
-                */
+                
             } else {
                 $request->request = '/';
             }
@@ -162,7 +156,6 @@ class Handler {
                 $input = json_decode($input);
             }
             if(!empty($input)){
-//                 dd($input);
                 foreach($input as $key => $record){
                     if(
                         is_object($record) &&
@@ -170,13 +163,10 @@ class Handler {
                         property_exists($record, 'value') &&
                         $record->name != 'request'
                     ){
-//                         $request->{$record->name} = $record->value;
                         if($record->value !== null){
                             $data->data($record->name, $record->value);
                         }
                     } else {
-//                         d($key);
-//                         $request->{$key} = $record;
                         if($record !== null){
                             $data->data($key, $record);
                         }
@@ -184,10 +174,7 @@ class Handler {
                 }
             }
         }
-
-//         $data->data($request);
         return $data;
-//         return $request;
     }
 
     private static function request_key_group($data){

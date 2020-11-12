@@ -1,13 +1,13 @@
 <?php
 /**
- *  (c) 2019 Priya.software
- *
- *  License: MIT
- *
- *  Author: Remco van der Velde
- *  Version: 1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
  */
-
 namespace R3m\Io\Module;
 
 use stdClass;
@@ -25,23 +25,18 @@ class Host {
         $key = 'host.url';
         $value = Host::url();
         $object->data($key, $value);
-
         $key = 'host.scheme';
         $value = Host::scheme();
         $object->data($key, $value);
-
         $key = 'host.extension';
         $value = Host::extension();
         $object->data($key, $value);
-
         $key = 'host.domain';
         $value = Host::domain();
         $object->data($key, $value);
-
         $key = 'host.subdomain';
         $subdomain = Host::subdomain();
         $object->data($key, $subdomain);
-
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $key = 'host.dir.root';
         if(empty($subdomain)){
@@ -72,28 +67,24 @@ class Host {
                 );
         }
         $config->data($key, $value);
-
         $key = 'host.dir.data';
         $value =
             $config->data('host.dir.root') .
             $config->data(Config::DICTIONARY . '.' . Config::DATA) .
             $config->data('ds');
         $config->data($key, $value);
-
         $key = 'host.dir.cache';
         $value =
             Dir::name($config->data('framework.dir.cache'), 2) .
             $config->data(Config::DICTIONARY . '.' . Config::HOST) .
             $config->data('ds');
         $config->data($key, $value);
-
         $key = 'host.dir.public';
         $value =
             $config->data('host.dir.root') .
             $config->data(Config::DICTIONARY . '.' . Config::PUBLIC) .
             $config->data('ds');
         $config->data($key, $value);
-
         $key = 'host.dir.source';
         $value =
             $config->data('host.dir.root') .
@@ -101,7 +92,6 @@ class Host {
             $config->data('ds');
 
         $config->data($key, $value);
-
         $key = 'host.dir.view';
         $value =
             $config->data('host.dir.root') .

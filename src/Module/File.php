@@ -1,8 +1,10 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
@@ -67,8 +69,8 @@ class File {
 
     public static function touch($url='', $time=null, $atime=null){
         if($atime === null){
-//             $exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
-//             echo $exec . "\n";
+            // $exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
+            // echo $exec . "\n";
             return @touch($url, $time); //wsdl not working
         } else {
             return @touch($url, $time, $atime);
@@ -156,8 +158,7 @@ class File {
         $resource = @fopen($url, 'w');
         if($resource === false){
             return $resource;
-        }
-        //change to //flock exec see lock / unlock
+        }        
         flock($resource, LOCK_EX);
         for ($written = 0; $written < strlen($data); $written += $fwrite) {
             $fwrite = fwrite($resource, substr($data, $written));
@@ -184,8 +185,7 @@ class File {
         $resource = @fopen($url, 'a');
         if($resource === false){
             return $resource;
-        }
-        //change to //flock exec see lock / unlock
+        }        
         flock($resource, LOCK_EX);
         for ($written = 0; $written < strlen($data); $written += $fwrite) {
             $fwrite = fwrite($resource, substr($data, $written));
@@ -215,8 +215,7 @@ class File {
             return implode('', $file);
         }
         if(empty($url)){
-            $debug = debug_backtrace(true);
-            dd($debug);
+            return '';
         }
         $file = @file($url);
         if(!empty($file)){

@@ -1,12 +1,13 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
-
 namespace R3m\Io\Module\Parse;
 
 class Token {
@@ -473,18 +474,18 @@ class Token {
                                     if(
                                         $check['type'] == Token::TYPE_COMMENT_CLOSE &&
                                         $operator['type'] == Token::TYPE_COMMENT
-                                        ){
-                                            $check = $record;
-                                            $check['value'] = $token[$next_next]['value'];
-                                            $check = Token::operator($check, 1);
+                                    ){
+                                        $check = $record;
+                                        $check['value'] = $token[$next_next]['value'];
+                                        $check = Token::operator($check, 1);
                                     }
                                     elseif(
                                         $check['type'] == Token::TYPE_COMMENT_CLOSE &&
                                         $operator['type'] == Token::TYPE_IS_POWER
-                                        ){
-                                            $operator = $record;
-                                            $operator['value'] = $record['value'];
-                                            $operator = Token::operator($operator, 1);
+                                    ){
+                                        $operator = $record;
+                                        $operator['value'] = $record['value'];
+                                        $operator = Token::operator($operator, 1);
                                     } else {
                                         $check = $record;
                                         $check['value'] = $token[$next_next]['value'];
@@ -612,7 +613,6 @@ class Token {
             }
         }
         $prepare = [];
-
         foreach($token as $nr => $record){
             $prepare[] = $record;
             unset($token[$nr]);
@@ -678,7 +678,6 @@ class Token {
                 $record['type'] == Token::TYPE_METHOD
             ){
                 $target = $nr;
-
                 $depth = $record['depth'];
                 $skip_unset = 1;
             }
@@ -728,7 +727,6 @@ class Token {
 
     public static function group($token=[], $is_debug=false){
         $is_outside = true;
-
         foreach($token as $nr => $record){
             if($record['type'] == Token::TYPE_CURLY_OPEN){
                 $is_outside = false;
@@ -873,8 +871,7 @@ class Token {
         return $token;
     }
 
-    private static function prepare($token=[], $count=0, $is_debug=null){
-        $bug = false;
+    private static function prepare($token=[], $count=0, $is_debug=null){        
         $hex = null;
         $start = null;
         $skip = 0;
@@ -928,21 +925,21 @@ class Token {
                 $record['type'] == Token::TYPE_COMMENT_CLOSE &&
                 $quote_single_toggle === false &&
                 $quote_double_toggle === false
-                ){
-                    if($comment_open_nr !== null){
-                        $token[$comment_open_nr]['value'] .= $record['value'];
-                        $comment_open_nr = null;
-                        unset($token[$nr]);
-                        $previous_nr = $comment_open_nr;
-                        continue;
-                    }
-                    elseif($doc_comment_open_nr !== null){
-                        $token[$doc_comment_open_nr]['value'] .= $record['value'];
-                        $doc_comment_open_nr = null;
-                        unset($token[$nr]);
-                        $previous_nr = $doc_comment_open_nr;
-                        continue;
-                    }
+            ){
+                if($comment_open_nr !== null){
+                    $token[$comment_open_nr]['value'] .= $record['value'];
+                    $comment_open_nr = null;
+                    unset($token[$nr]);
+                    $previous_nr = $comment_open_nr;
+                    continue;
+                }
+                elseif($doc_comment_open_nr !== null){
+                    $token[$doc_comment_open_nr]['value'] .= $record['value'];
+                    $doc_comment_open_nr = null;
+                    unset($token[$nr]);
+                    $previous_nr = $doc_comment_open_nr;
+                    continue;
+                }
             }
             elseif($comment_open_nr !== null){
                 $token[$comment_open_nr]['value'] .= $record['value'];
@@ -960,8 +957,8 @@ class Token {
                 if(
                     $record['type'] == Token::TYPE_WHITESPACE &&
                     stristr($record['value'], "\n") !== false
-                    ){
-                        $comment_single_line_nr = null;
+                ){
+                    $comment_single_line_nr = null;
                 } else {
                     $token[$comment_single_line_nr]['value'] .= $record['value'];
                     unset($token[$nr]);
@@ -974,17 +971,16 @@ class Token {
                     in_array(
                         $record['type'],
                         Token::TYPE_NAME_BREAK
-                        )
-                    ){
-                        $token[$is_tag_close_nr]['tag']['name'] = strtolower($tag_close);
-                        $is_tag_close_nr = null;
+                    )
+                ){
+                    $token[$is_tag_close_nr]['tag']['name'] = strtolower($tag_close);
+                    $is_tag_close_nr = null;
                 } else {
                     $tag_close .= $record['value'];
                     $token[$is_tag_close_nr]['value'] .= $record['value'];
                     unset($token[$nr]);
                     $previous_nr = $is_tag_close_nr;
                     continue;
-
                 }
             }
             elseif($variable_nr !== null){
@@ -998,9 +994,9 @@ class Token {
                             Token::TYPE_CURLY_CLOSE,
                             Token::TYPE_CURLY_OPEN
                         ]
-                        )
-                    ){
-                        $variable_nr = null;
+                    )
+                ){
+                    $variable_nr = null;
                 }
                 if(
                     $next !== null &&
@@ -1021,14 +1017,14 @@ class Token {
                             isset($token[$check_2]) &&
                             $token[$check_1]['type'] == Token::TYPE_WHITESPACE &&
                             $token[$check_2]['type'] == Token::TYPE_STRING
-                            ){
-                                $token[$variable_nr]['variable']['has_modifier'] = true;
+                        ){
+                            $token[$variable_nr]['variable']['has_modifier'] = true;
                         }
                         elseif(
                             isset($token[$check_1]) &&
                             $token[$check_1]['type'] == Token::TYPE_STRING
-                            ){
-                                $token[$variable_nr]['variable']['has_modifier'] = true;
+                        ){
+                            $token[$variable_nr]['variable']['has_modifier'] = true;
                         } else {
                             $token[$variable_nr]['variable']['has_modifier'] = false;
                         }
@@ -1078,14 +1074,14 @@ class Token {
                             isset($token[$check_2]) &&
                             $token[$check_1]['type'] == Token::TYPE_WHITESPACE &&
                             $token[$check_2]['type'] == Token::TYPE_STRING
-                            ){
-                                $token[$variable_nr]['variable']['has_modifier'] = true;
+                        ){
+                            $token[$variable_nr]['variable']['has_modifier'] = true;
                         }
                         elseif(
                             isset($token[$check_1]) &&
                             $token[$check_1]['type'] == Token::TYPE_STRING
-                            ){
-                                $token[$variable_nr]['variable']['has_modifier'] = true;
+                        ){
+                            $token[$variable_nr]['variable']['has_modifier'] = true;
                         } else {
                             $token[$variable_nr]['variable']['has_modifier'] = false;
                         }
@@ -1100,21 +1096,20 @@ class Token {
                         in_array(
                             $token[$next_next]['value'],
                             Token::TYPE_ASSIGN
-                            )
-                        ){
-                            $value .= $record['value'];
-                            $token[$variable_nr]['variable']['name'] .= $record['value'];
-                            $token[$variable_nr]['variable']['attribute'] .= $record['value'];
-                            $token[$variable_nr]['variable']['is_assign'] = true;
-                            $token[$variable_nr]['variable']['operator'] = $token[$next_next]['value'];
-                            $token[$variable_nr]['value'] = $value;
-
-                            unset($token[$variable_nr]['variable']['has_modifier']);
-                            $variable_nr = null;
-                            $skip_unset += 2; //was skip
-                            unset($token[$nr]);
-                            $previous_nr = $nr;
-                            continue;
+                        )
+                    ){
+                        $value .= $record['value'];
+                        $token[$variable_nr]['variable']['name'] .= $record['value'];
+                        $token[$variable_nr]['variable']['attribute'] .= $record['value'];
+                        $token[$variable_nr]['variable']['is_assign'] = true;
+                        $token[$variable_nr]['variable']['operator'] = $token[$next_next]['value'];
+                        $token[$variable_nr]['value'] = $value;
+                        unset($token[$variable_nr]['variable']['has_modifier']);
+                        $variable_nr = null;
+                        $skip_unset += 2; //was skip
+                        unset($token[$nr]);
+                        $previous_nr = $nr;
+                        continue;
                     } else {
                         $value .= $record['value'];
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
@@ -1194,38 +1189,37 @@ class Token {
                 $record['type'] == Token::TYPE_IS_DIVIDE &&
                 $quote_single_toggle === false &&
                 $quote_double_toggle === false
+            ){
+                $tag_close = $record['value'];
+                if(
+                    $next !== null &&
+                    $token[$next]['type'] == Token::TYPE_STRING
                 ){
-                    $tag_close = $record['value'];
-
-                    if(
-                        $next !== null &&
-                        $token[$next]['type'] == Token::TYPE_STRING
-                    ){
-                        $is_tag_close_nr = $nr;
-                        $tag_close .= $token[$next]['value'];
-                        $token[$nr]['value'] .= $token[$next]['value'];
-                        $token[$nr]['type'] = Token::TYPE_TAG_CLOSE;
-                        $token[$nr]['is_operator'] = false;
-                        $token[$nr]['tag']['name'] = strtolower($tag_close);
-                        $previous_nr = $nr;
-                        $skip_unset += 1;
-                    }
-                    elseif(
-                        $next !== null &&
-                        $token[$next]['type'] == Token::TYPE_WHITESPACE &&
-                        $token[$next_next]['type'] == Token::TYPE_STRING
-                        ){
-                            $is_tag_close_nr = $nr;
-                            $tag_close .= $token[$next_next]['value'];
-                            $token[$nr]['value'] .=
-                            $token[$next]['value'] .
-                            $token[$next_next]['value'];
-                            $token[$nr]['type'] = Token::TYPE_TAG_CLOSE;
-                            $token[$nr]['is_operator'] = false;
-                            $token[$nr]['tag']['name'] = strtolower($tag_close);
-                            $previous_nr = $nr;
-                            $skip_unset += 2;
-                    }
+                    $is_tag_close_nr = $nr;
+                    $tag_close .= $token[$next]['value'];
+                    $token[$nr]['value'] .= $token[$next]['value'];
+                    $token[$nr]['type'] = Token::TYPE_TAG_CLOSE;
+                    $token[$nr]['is_operator'] = false;
+                    $token[$nr]['tag']['name'] = strtolower($tag_close);
+                    $previous_nr = $nr;
+                    $skip_unset += 1;
+                }
+                elseif(
+                    $next !== null &&
+                    $token[$next]['type'] == Token::TYPE_WHITESPACE &&
+                    $token[$next_next]['type'] == Token::TYPE_STRING
+                ){
+                    $is_tag_close_nr = $nr;
+                    $tag_close .= $token[$next_next]['value'];
+                    $token[$nr]['value'] .=
+                    $token[$next]['value'] .
+                    $token[$next_next]['value'];
+                    $token[$nr]['type'] = Token::TYPE_TAG_CLOSE;
+                    $token[$nr]['is_operator'] = false;
+                    $token[$nr]['tag']['name'] = strtolower($tag_close);
+                    $previous_nr = $nr;
+                    $skip_unset += 2;
+                }
             }
             if(
                 $record['value'] == '\'' &&
@@ -1343,9 +1337,8 @@ class Token {
                 if($record['curly_count'] > 0){
                     $depth--;
                 } else {
-                    continue; //no tags means no method
+                    continue; //no curly tags means no method
                 }
-
                 $is_start_method = false;
                 $is_whitespace = false;
                 $before_reverse = [];
@@ -1405,8 +1398,7 @@ class Token {
                 } else {
                     $token[$start] = $hex;
                     $start = null;
-                    $hex = null;
-                    $bug = true;
+                    $hex = null;                    
                 }
             }
             if(
@@ -1415,59 +1407,59 @@ class Token {
                 $next_next !== null &&
                 $token[$next]['type'] == Token::TYPE_DOT &&
                 $token[$next_next]['type'] == Token::TYPE_NUMBER
+            ){
+                $token[$nr]['value'] .= $token[$next]['value'] . $token[$next_next]['value'];
+                $token[$nr]['type'] = Token::TYPE_FLOAT;
+                $token[$nr]['execute'] = $token[$nr]['value'] + 0;
+                $token[$nr]['is_executed'] = true;
+                if(
+                    isset($previous_nr) &&
+                    isset($token[$previous_nr]) &&
+                    $token[$previous_nr]['type'] == Token::TYPE_IS_MINUS
                 ){
-                    $token[$nr]['value'] .= $token[$next]['value'] . $token[$next_next]['value'];
-                    $token[$nr]['type'] = Token::TYPE_FLOAT;
-                    $token[$nr]['execute'] = $token[$nr]['value'] + 0;
-                    $token[$nr]['is_executed'] = true;
-                    if(
-                        isset($previous_nr) &&
-                        isset($token[$previous_nr]) &&
-                        $token[$previous_nr]['type'] == Token::TYPE_IS_MINUS
-                        ){
-                            $token[$nr]['execute'] = -$token[$nr]['execute'];
-                            $token[$nr]['value'] = '-' . $token[$nr]['value'];
-                            unset($token[$previous_nr]);
-                    }
-                    $skip_unset += 2;
-                    $previous_nr = $nr;
-                    continue;
+                    $token[$nr]['execute'] = -$token[$nr]['execute'];
+                    $token[$nr]['value'] = '-' . $token[$nr]['value'];
+                    unset($token[$previous_nr]);
+                }
+                $skip_unset += 2;
+                $previous_nr = $nr;
+                continue;
             }
             elseif(
                 $record['value'] == '0' &&
                 $next !== null &&
                 $token[$next]['type'] == Token::TYPE_STRING &&
                 strtolower(substr($token[$next]['value'], 0, 1)) == 'x'
-                ){
-                    $hex = $record;
-                    $hex['value'] .= substr($token[$next]['value'], 0, 1);
-                    $hex['execute'] = $record['value'] . 'x';
-                    $hex['is_executed'] = true;
-                    $tmp = $token[$next];
-                    $tmp['value'] = substr($token[$next]['value'], 1);
-                    if(!empty($tmp['value'])){
-                        $is_hex = Token::is_hex($tmp);
-                        if($is_hex){
-                            $hex['value'] .= $tmp['value'];
-                            $hex['execute'] .= strtoupper($tmp['value']);
-                            $hex['type'] = Token::TYPE_HEX;
-                            if(
-                                isset($previous_nr) &&
-                                isset($token[$previous_nr]) &&
-                                $token[$previous_nr]['type'] == Token::TYPE_IS_MINUS
-                                ){
-                                    $hex['execute'] = '-' . $hex['execute'];
-                                    $hex['value'] = '-' . $hex['value'];
-                                    unset($token[$previous_nr]);
-                            }
-                            $start = $nr;
-                            $skip_unset += 1;
-                            $previous_nr = $nr;
-                            continue;
-                        } else {
-                            $hex = null;
+            ){
+                $hex = $record;
+                $hex['value'] .= substr($token[$next]['value'], 0, 1);
+                $hex['execute'] = $record['value'] . 'x';
+                $hex['is_executed'] = true;
+                $tmp = $token[$next];
+                $tmp['value'] = substr($token[$next]['value'], 1);
+                if(!empty($tmp['value'])){
+                    $is_hex = Token::is_hex($tmp);
+                    if($is_hex){
+                        $hex['value'] .= $tmp['value'];
+                        $hex['execute'] .= strtoupper($tmp['value']);
+                        $hex['type'] = Token::TYPE_HEX;
+                        if(
+                            isset($previous_nr) &&
+                            isset($token[$previous_nr]) &&
+                            $token[$previous_nr]['type'] == Token::TYPE_IS_MINUS
+                        ){
+                            $hex['execute'] = '-' . $hex['execute'];
+                            $hex['value'] = '-' . $hex['value'];
+                            unset($token[$previous_nr]);
                         }
+                        $start = $nr;
+                        $skip_unset += 1;
+                        $previous_nr = $nr;
+                        continue;
+                    } else {
+                        $hex = null;
                     }
+                }
             }
             /* wrong interpertation of octal.... only in string \[0-7]{1,3} or parameter
              elseif(
@@ -1487,22 +1479,23 @@ class Token {
              $token[$nr]['value'] = '-' . $token[$nr]['value'];
              unset($token[$previous_nr]);
              }
-             }*/ elseif(
-                 $record['type'] == Token::TYPE_NUMBER
-                 ) {
-                     //int
-                     $token[$nr]['execute'] = $record['value'] + 0;
-                     $token[$nr]['is_executed'] = true;
-                     $token[$nr]['type'] = Token::TYPE_INT;
-                     if(
-                         isset($previous_nr) &&
-                         isset($token[$previous_nr]) &&
-                         $token[$previous_nr]['type'] == Token::TYPE_IS_MINUS
-                         ){
-                             $token[$nr]['execute'] = -$token[$nr]['execute'];
-                             $token[$nr]['value'] = '-' . $token[$nr]['value'];
-                             unset($token[$previous_nr]);
-                     }
+             }*/ 
+            elseif(
+                 $record['type'] == Token::TYPE_NUMBER            
+            ) {
+                //int
+                $token[$nr]['execute'] = $record['value'] + 0;
+                $token[$nr]['is_executed'] = true;
+                $token[$nr]['type'] = Token::TYPE_INT;
+                if(
+                    isset($previous_nr) &&
+                    isset($token[$previous_nr]) &&
+                    $token[$previous_nr]['type'] == Token::TYPE_IS_MINUS
+                    ){
+                        $token[$nr]['execute'] = -$token[$nr]['execute'];
+                        $token[$nr]['value'] = '-' . $token[$nr]['value'];
+                        unset($token[$previous_nr]);
+                }
             }
             $previous_nr = $nr;
         }

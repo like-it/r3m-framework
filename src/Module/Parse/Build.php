@@ -1,8 +1,10 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
@@ -40,29 +42,15 @@ class Build {
     public function __construct($object=null, $is_debug=false){
         $this->is_debug = $is_debug;
         $this->object($object);
-
         $config = $this->object()->data(App::CONFIG);
-
         if(empty($config)){
             throw new Exception('Config not found in object');
-        }
-        /*
-        $compile = $config->data('dictionary.compile');
-        if(empty($compile)){
-            $config->data('dictionary.compile', Build::COMPILE);
-        }
-        $template = $config->data('dictionary.template');
-        if(empty($template)){
-            $config->data('dictionary.template', Build::TEMPLATE);
-        }
-        */
+        }        
         $this->storage(new Data());
-
         $this->storage()->data('time.start', microtime(true));
         $this->storage()->data('placeholder.generation.time', '// R3M-IO-' . Core::uuid());
         $this->storage()->data('placeholder.run', '// R3M-IO-' . Core::uuid());
         $this->storage()->data('placeholder.function', '// R3M-IO-' . Core::uuid());
-
         $this->storage()->data('use.Exception', new stdClass());
         $this->storage()->data('use.stdClass', new stdClass());
         $this->storage()->data('use.R3m\\Io\\App', new stdClass());
@@ -79,7 +67,6 @@ class Build {
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
         $dir_plugin = $config->data('parse.dir.plugin');
-
         if(empty($dir_plugin)){
             $dir_plugin = [];
             $dir_plugin[] = $config->data('host.dir.plugin');
@@ -147,7 +134,6 @@ class Build {
         }
         $use[] = '';
         $usage = implode("\n", $use);
-
         $count = 0;
         foreach($document as $nr => $row){
             $document[$nr] = str_replace($storage->data('placeholder.use'), $usage, $row, $count);
@@ -177,13 +163,11 @@ class Build {
     private function createRequireContent($type='', $document=[]){
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
-
         $dir_plugin = $storage->data('plugin');
         $data = $storage->data($type);
         if(empty($data)){
             return $document;
         }
-
         $placeholder = $storage->data('placeholder.function');
         foreach($data as $name => $record){
             $exist = false;
@@ -196,7 +180,6 @@ class Build {
                     $explode[0] = '';
                     $read = implode('function', $explode);
                     $indent = $this->indent - 1;
-
                     $read = explode("\n", $read);
                     foreach($read as $nr => $row){
                         $read[$nr] = $this->indent($indent) . $row;
@@ -205,7 +188,6 @@ class Build {
                     $read .= "\n";
                     $this->indent = $this->indent + 1;
                     $document = str_replace($placeholder, $read . $placeholder, $document);
-
                     $exist = true;
                     break;
                 }
@@ -223,15 +205,11 @@ class Build {
     private function createRequireCategory($type='', $document=[]){
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
-
         $dir_plugin = $storage->data('plugin');
-
         $data = $storage->data($type);
-
         if(empty($data)){
             return $document;
         }
-
         foreach($data as $name => $record){
             foreach($dir_plugin as $nr => $dir){
                 if($nr < 1){
@@ -249,10 +227,7 @@ class Build {
             $document[] = '{';
             $document[] = "\t" . 'throw new Exception(\'Plugin not found: ./Plugin/' . $file . '\');';
             $document[] = '}';
-        }
-        $storage->data('use.stdClass', new stdClass());
-        $storage->data('use.Exception', new stdClass());
-        $storage->data('use.R3m\\Io\\Module\\File', new stdClass());
+        }        
         return $document;
     }
 
@@ -290,7 +265,6 @@ class Build {
         $type = null;
         $select = null;
         $selection = [];
-
         $skip_nr = null;
         $is_control = false;
         foreach($tree as $nr => $record){
@@ -329,7 +303,6 @@ class Build {
                         } else {                            
                             throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
                         }
-
                     break;
                     case Token::TYPE_CURLY_CLOSE :
                         dd($selection);
@@ -373,16 +346,16 @@ class Build {
                                         'break',
                                         'continue'
                                     ]
-                                    )
-                                ){
-                                    $run[] = $this->indent() . $control . ';';
+                                )
+                            ){
+                                $run[] = $this->indent() . $control . ';';
                             }
                             elseif(
                                 array_key_exists('method', $select) &&
                                 $select['method']['php_name'] == Token::TYPE_FOREACH
-                                ){
-                                    $run[] = $this->indent() . $control;
-                                    $this->indent($this->indent+1);
+                            ){
+                                $run[] = $this->indent() . $control;
+                                $this->indent($this->indent+1);
                             }
                             else {
                                 $run[] = $this->indent() . $control . ' {';
@@ -417,7 +390,7 @@ class Build {
                         dd($selection);
                     break;
                     case Token::TYPE_QUOTE_DOUBLE_STRING :
-                        d($selection);
+                        dd($selection);
                     default:
                         if($type !== null){
                             d($run);
@@ -457,7 +430,7 @@ class Build {
             break;
             case Token::TYPE_METHOD :
                 $multi_line = Build::getPluginMultiline($object);
-//                 'capture_append'
+                // 'capture_append'
                 foreach($multi_line as $nr => $plugin){
                     $multi_line[$nr] = 'function_' . str_replace('.', '_', $plugin);
                 }
@@ -689,7 +662,7 @@ class Build {
         foreach($tree as $nr => $record){
             if($record['type'] == Token::TYPE_METHOD){
                 $multi_line = Build::getPluginMultiline($this->object());
-//              'capture.append'
+                // 'capture.append'
                 $method = [
                     'if',
                     'else.if',
@@ -713,8 +686,7 @@ class Build {
                     $storage->data('function.' . $name, $record);
                 } else {
                     $multi_line = Build::getPluginMultiline($this->object());
-                    //                                 'capture.prepend',
-                    //                                 'capture.append'
+                    // 'capture.append'
                     if(
                         in_array(
                             $record['method']['name'],

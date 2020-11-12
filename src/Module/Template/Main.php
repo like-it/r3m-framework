@@ -1,13 +1,16 @@
 <?php
-namespace R3m\Io\Module\Template;
-
 /**
- * @copyright                (c) https://r3m.io 2019 - 2019
- * @version                  1.0
- * @note                     Auto generated file, do not modify!
- * @author                   R3m\Io\Module\Parse\Build
- * @author                   Remco van der Velde
+ * @author          Remco van der Velde
+ * @author          R3m\Io\Module\Parse\Build
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
+ * @note            Auto generated file, do not modify!
  */
+namespace R3m\Io\Module\Template;
 
 use stdClass;
 use Exception;

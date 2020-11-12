@@ -1,13 +1,13 @@
 <?php
 /**
- *  (c) 2019 Priya.software
- *
- *  License: MIT
- *
- *  Author: Remco van der Velde
- *  Version: 1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
  */
-
 namespace R3m\Io\Module;
 
 use stdClass;
@@ -22,7 +22,6 @@ class Route extends Data{
     const NAMESPACE = __NAMESPACE__;
     const NAME = 'Route';
     const SELECT = 'Route_select';
-
     const SELECT_DEFAULT = 'info';
 
     private $current;
@@ -57,7 +56,6 @@ class Route extends Data{
     private function getCurrent(){
         return $this->current;
     }
-
 
     public static function has_host($select='', $url=''){
         $url = Host::remove_scheme($url);
@@ -102,8 +100,7 @@ class Route extends Data{
                 return $url;
             } else {
                 throw new Exception('path & url are empty');
-            }
-                        
+            }                      
         }
         $path = $get->path;
         if(is_array($option)){
@@ -144,10 +141,12 @@ class Route extends Data{
         if(empty($request)){
             return $object;
         }
-        $object->data(App::REQUEST)->data(Core::object_merge(
+        $object->data(App::REQUEST)->data(
+            Core::object_merge(
                 $object->data(App::REQUEST)->data(),
                 $request->request->data()
-        ));
+            )
+        );
         return $object;
     }
 
@@ -181,7 +180,6 @@ class Route extends Data{
             $select->method = Handler::method();
             $select->host = [];
             $request = Route::select_cli($object, $select);
-
             if($request === false){
                 $select = Route::select_info($object, $select);
                 $request = Route::select_cli($object, $select);
@@ -190,14 +188,6 @@ class Route extends Data{
                 throw new Exception('Exception in request');
             }
             $request->request->data(Core::object_merge(clone $select->parameter, $request->request->data()));
-
-            /*
-            if(property_exists($request, 'request') && is_object($request->request)){
-                $request->request = Core::object_merge(clone $select->parameter, $request->request);
-            } else {
-                $request->request = $select->parameter;
-            }
-            */
             $route =  $object->data(App::ROUTE);
             $object = Route::add_request($object, $request);
             return $route->current($request);
@@ -213,7 +203,6 @@ class Route extends Data{
             array_pop($select->attribute);
             $select->method = Handler::method();
             $select->host = [];
-
             $subdomain = Host::subdomain();
             if($subdomain){
                 $select->host[] = $subdomain . '.' . Host::domain() . '.' . Host::extension();
@@ -264,7 +253,6 @@ class Route extends Data{
         }
         return false;
     }
-
 
     private static function select($object, $select){
         $route =  $object->data(App::ROUTE);
@@ -325,13 +313,10 @@ class Route extends Data{
             }
             $allowed_host[] = $host;
         }
-
         $config =  $object->data(App::CONFIG);
         $localdomain = $config->data(Config::LOCALHOST_EXTENSION);
-
         $allowed_host_new = [];
         $disallowed_host_new = [];
-
         if(is_array($localdomain)){
             foreach($allowed_host as $host){
                 $allowed_host_new[] = $host;
@@ -398,8 +383,7 @@ class Route extends Data{
                     $route->request->data($variable, $attribute[$nr]);
                 }
             }
-        }
-        
+        }        
         if(
             !empty($variable) && 
             count($attribute) > count($explode)
@@ -557,7 +541,6 @@ class Route extends Data{
 
     public static function configure($object){
         $config = $object->data(App::CONFIG);
-
         $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
         if(empty($config->data(Config::DATA_PROJECT_ROUTE_URL))){
             $config->data(Config::DATA_PROJECT_ROUTE_URL, $url);
@@ -598,7 +581,6 @@ class Route extends Data{
     private static function cache_invalidate($object, $cache){
         $has_resource = false;
         $invalidate = true;
-
         if(empty($cache)){
             return;
         }
@@ -665,12 +647,10 @@ class Route extends Data{
         $url = $route->url();
         $cache_url = $route->cache_url();
         $cache_dir = Dir::name($cache_url);
-
         $main = new stdClass();
         $main->resource = $url;
         $main->read = true;
         $main->mtime = File::mtime($url);
-
         $result->data(Core::uuid(), $main);
         foreach($data as $key => $record){
             if(property_exists($record, 'resource') === false){
@@ -798,5 +778,4 @@ class Route extends Data{
             return $resource;
         }
     }
-
 }

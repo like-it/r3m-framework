@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
+ */
 function d($data=null){
     $trace = debug_backtrace(true);
     ob_start();
@@ -44,7 +52,6 @@ function dd($data=null){
     $data = implode('', $temp);
     $explode = explode(PHP_EOL, $data);
     $shift = array_shift($explode);
-
     if(defined('IS_CLI')){
         echo $shift . PHP_EOL . PHP_EOL;
         echo implode(PHP_EOL, $explode);

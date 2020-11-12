@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
+ */
 namespace R3m\Io;
 
 use R3m\Io\Module\Core;
@@ -113,8 +121,7 @@ class Config extends Data {
         if(File::exist($url)){
             $read = Core::object(File::read($url));
             $this->data(Core::object_merge($this->data(), $read));
-        }
-        //maybe merge this too...
+        }        
         foreach($config as $attribute => $value){
             $this->data($attribute, $value);
         }

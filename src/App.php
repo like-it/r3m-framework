@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
+ */
 namespace R3m\Io;
 
 use stdClass;
@@ -22,7 +30,6 @@ class App extends Data {
     const NAME = 'App';
     const R3M = 'R3m';
 
-//     const TITLE = 'meta.title';
     const SCRIPT = 'script';
     const LINK = 'link';
 
@@ -113,7 +120,6 @@ class App extends Data {
         if($contentType == App::CONTENT_TYPE_JSON){
             $json = new stdClass();
             $json->html = $output;
-//             $json->title = $object->data(App::TITLE);
             if($object->data('method')){
                 $json->method = $object->data('method');
             } else {
