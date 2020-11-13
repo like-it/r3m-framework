@@ -197,19 +197,6 @@ class Config extends Data {
         $value = Config::VALUE_DS;
         $key = Config::DS;
         $this->data($key, $value);
-
-        $this->data('extension.php', '.php');
-        $this->data('extension.json', '.json');
-        $this->data('extension.css', '.css');
-        $this->data('extension.js', '.js');
-        $this->data('extension.jpg', '.jpg');
-        $this->data('extension.gif', '.gif');
-        $this->data('extension.png', '.png');
-        $this->data('extension.zip', '.zip');
-        $this->data('extension.rar', '.rar');
-        $this->data('extension.tpl', '.tpl');
-        $this->data('extension.conf', '.conf');
-
         $this->data(Config::LOCALHOST_EXTENSION, Config::VALUE_LOCALHOST_EXTENSION);
 
         $key = Config::DATA_PROJECT_DIR_SOURCE;
