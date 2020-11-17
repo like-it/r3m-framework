@@ -128,9 +128,9 @@ class Parse {
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
             }
         }
-        elseif(is_object($string)){                                                 
-            $this->local($string);
+        elseif(is_object($string)){                                                             
             foreach($string as $key => $value){                 
+                $this->local($string);
                 $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                 $string->$key = $value;
             }            

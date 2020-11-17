@@ -179,6 +179,7 @@ class View {
         $config->data($key, $value);        
         $config->data('controller.class', get_called_class());
         $config->data('controller.name', strtolower(File::basename($config->data('controller.class'))));
+        $config->data('controller.title', File::basename($config->data('controller.class')));
         $object->data('controller', $config->data('controller'));
     }
 
