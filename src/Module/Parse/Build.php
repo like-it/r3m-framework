@@ -303,12 +303,11 @@ class Build {
                         } else {                            
                             throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
                         }
-                    break;
-                    case Token::TYPE_CURLY_CLOSE :
-                        dd($selection);
-                    break;
-                    case Build::VARIABLE_ASSIGN :                               
+                    break;                    
+                    case Build::VARIABLE_ASSIGN : 
+                        $run[] = $this->indent() . '$this->parse()->is_assign(true);';
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
+                        $run[] = $this->indent() . '$this->parse()->is_assign(false);';
                     break;
                     case Build::VARIABLE_DEFINE :
                         $run[] = $this->indent() . '$variable = ' . Variable::define($this, $storage, $selection) . ';';
@@ -385,6 +384,9 @@ class Build {
                             $this->indent($this->indent-1);
                             $run[] = $this->indent() . '}';
                         }
+                    break;
+                    case Token::TYPE_CURLY_CLOSE :
+                        dd($selection);
                     break;
                     case Build::CODE :
                         dd($selection);

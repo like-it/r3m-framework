@@ -102,7 +102,7 @@ class Autoload {
             $found = false;
             foreach($list as $nr => $record){
                 if(
-                    $record['prefix'] == $prefix && 
+                    $record['prefix'] == $prefix &&
                     $record['directory'] == $directory
                 ){
                     $found = true;
@@ -114,12 +114,12 @@ class Autoload {
                     'prefix' => $prefix,
                     'directory' => $directory
                 );
-            }            
+            }
         } else {
             $found = false;
             foreach($list as $nr => $record){
                 if(
-                    $record['prefix'] == $prefix && 
+                    $record['prefix'] == $prefix &&
                     $record['directory'] == $directory &&
                     !empty($record['extension']) &&
                     $record['extension'] == $extension
@@ -134,7 +134,7 @@ class Autoload {
                     'directory' => $directory,
                     'extension' => $extension
                 );
-            }            
+            }
         }
         $this->setPrefixList($list);
     }
@@ -275,7 +275,7 @@ class Autoload {
                         foreach($fileList as $file){
                             if(substr($file, 0, 5) == '[---]'){
                                 continue;
-                            }                            
+                            }
                             if(file_exists($file)){
                                 $this->cache($file, $load);
                                 return $file;
@@ -330,7 +330,7 @@ class Autoload {
 
     public function __destruct(){
         if(!empty($this->read)){
-            $dir = $this->cache_dir(); 
+            $dir = $this->cache_dir();
             $url = $dir . Autoload::FILE;
             $this->write($url, $this->read);
         }
@@ -345,7 +345,7 @@ class Autoload {
 
     private function cache($file='', $class=''){
         if(empty($this->read)){
-            $dir = $this->cache_dir(); 
+            $dir = $this->cache_dir();
             $url = $dir . Autoload::FILE;
             $this->read = $this->read($url);
         }

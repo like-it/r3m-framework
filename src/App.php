@@ -148,19 +148,8 @@ class App extends Data {
         return $output;
     }
 
-    public function request($attribute=null, $value=null){
-        $object = $this;
-        if($attribute !== null && $value !== null){
-            if($attribute == 'delete'){
-                Core::object_delete($value, $object);
-            } else {
-                Core::object_set($attribute, $value, $object->data('R3m\\Io.Request.Input'));
-            }
-
-        }
-        elseif($attribute !== null){
-            return Core::object_get($attribute, $object->data('R3m\\Io.Request.Input'));
-        }
+    public function request($attribute=null, $value=null){                
+        return $this->data(App::REQUEST)->data($attribute, $value);        
     }
 
     public static function parameter($object, $parameter='', $offset=0){

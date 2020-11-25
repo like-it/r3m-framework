@@ -13,12 +13,9 @@ use R3m\Io\Module\Data;
 
 function function_request(Parse $parse, Data $data, $attribute=null, $value=null){
     $object = $parse->object();
-    if($attribute === null){
-        return $object->data('R3m\\Io.Request.Input')->data();
-    }
-    elseif($value === null){
-        return $object->data('R3m\\Io.Request.Input')->data($attribute);
+    if(!empty($parse->is_assign())){
+        return $object->request($attribute, $value);
     } else {
-        $object->data('R3m\\Io.Request.Input')->data($attribute, $value);
+        $object->request($attribute, $value);
     }
 }

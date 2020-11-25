@@ -12,6 +12,11 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_cookie(Parse $parse, Data $data, $attribute, $value=null, $duration=null){
-    $result = R3m\Io\Module\Handler::cookie($attribute, $value, $duration);
-    return $result;
+    $object = $parse->object();
+    if(!empty($parse->is_assign())){
+        $cookie = $object->cookie($attribute, $value); 
+        return Core::object($cookie);
+    } else {
+        $object->cookie($attribute, $value); 
+    }    
 }

@@ -28,6 +28,7 @@ class Parse {
     private $storage;
     private $cache_dir;
     private $local;
+    private $is_assign;
 
     public function __construct($object, $storage=null){
         $this->object($object);
@@ -68,7 +69,6 @@ class Parse {
         $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
         $this->cache_dir($cache_dir);
     }
-
 
     public function object($object=null){
         if($object !== null){
@@ -114,6 +114,13 @@ class Parse {
         return $this->local;
     }
 
+    public function is_assign($is_assign=null){
+        if($is_assign !== null){
+            $this->is_assign = $is_assign;
+        }
+        return $this->is_assign;
+    }
+
     public function compile($string='', $data=[], $storage=null, $is_debug=false){
         if($storage === null){
             $storage = $this->storage(new Data());
@@ -157,7 +164,7 @@ class Parse {
             $storage->data('this', $this->local());
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
             if(File::exist($url) && File::mtime($url) == $mtime){
-                //cache file
+                //cache file                
                 $meta = $build->meta();
                 $class = $meta['namespace'] . '\\' . $meta['class'];
                 $template = new $class(new Parse($this->object()), $storage);
@@ -173,8 +180,7 @@ class Parse {
             }
             */
             $string = literal::apply($string, $storage);            
-            $tree = Token::tree($string, $is_debug);
-            // dd($tree);
+            $tree = Token::tree($string, $is_debug);            
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();
@@ -219,7 +225,7 @@ class Parse {
             }
         }
         elseif(is_object($data)){
-            foreach($data as $key => $value){
+            foreach($data as $key => $value){                
                 $data->$key = Literal::restore($value, $parse->storage());
             }
         } else {
