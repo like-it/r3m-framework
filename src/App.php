@@ -136,16 +136,23 @@ class App extends Data {
                 }
                 $json->append->to = $object->data('append-to');
             } else {
-                if(empty($json->append)){
-                    $json->append = new stdClass();
-                }
-                $json->append->to = $object->data(App::REQUEST)->data('append-to');
+                $append_to = $object->data(App::REQUEST)->data('append-to');
+                if($append_to){
+                    if(empty($json->append)){
+                        $json->append = new stdClass();
+                    }
+                    $json->append->to = $append_to;
+                }                
             }
             $json->script = $object->data(App::SCRIPT);
             $json->link = $object->data(App::LINK);
             return Core::object($json, Core::OBJECT_JSON);
         }        
         return $output;
+    }
+
+    public function route(){
+        return $this->data(App::ROUTE);
     }
 
     public function request($attribute=null, $value=null){                

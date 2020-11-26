@@ -19,12 +19,12 @@ class Literal {
         $explode = explode('{literal}', $string, 2);
         $key = $data->data('r3m.parse.literal.key');
         if(empty($key)){
-            $uuid = Core::uuid();
+            $uuid = sha1('{literal}');
             $data->data('r3m.parse.literal.key', $uuid);
         }
         if(isset($explode[1])){
             $temp = explode('{/literal}', $explode[1], 2);
-            $uuid = Core::uuid();
+            $uuid = sha1($temp[0]);
             $data->data('r3m.parse.literal.' . $uuid, $temp[0]);
             $temp[1] = 'literal-' . $data->data('r3m.parse.literal.key') . '-' . $uuid . $temp[1];
             $explode[1] = $temp[1];
@@ -51,7 +51,7 @@ class Literal {
             $tag = 'literal-' . $data->data('r3m.parse.literal.key') . '-';
             $explode = explode($tag, $string, 2);
             if(isset($explode[1])){
-                $key = substr($explode[1], 0, 36);
+                $key = substr($explode[1], 0, 40);
                 $string =  str_replace($tag . $key, $data->data('r3m.parse.literal.' . $key), $string);
                 $explode = explode($tag, $string, 2);
                 if(isset($explode[1])){

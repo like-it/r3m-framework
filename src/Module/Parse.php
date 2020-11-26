@@ -162,13 +162,13 @@ class Parse {
             }
             $storage->data('r3m.io.parse.compile.url', $url);
             $storage->data('this', $this->local());
-            $mtime = $storage->data('r3m.io.parse.view.mtime');            
-            if(File::exist($url) && File::mtime($url) == $mtime){
+            $mtime = $storage->data('r3m.io.parse.view.mtime');              
+            if(File::exist($url) && File::mtime($url) + 60 >= $mtime){
                 //cache file                
                 $meta = $build->meta();
                 $class = $meta['namespace'] . '\\' . $meta['class'];
-                $template = new $class(new Parse($this->object()), $storage);
-
+                $template = new $class(new Parse($this->object()), $storage);                
+                $string = Literal::apply($string, $storage);
                 $string = $template->run();
                 $string = Literal::restore($string, $storage);
                 $storage->data('delete', 'this');

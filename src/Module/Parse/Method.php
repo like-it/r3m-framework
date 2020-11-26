@@ -300,8 +300,8 @@ class Method {
                 if(array_key_exists('execute', $attribute)){                    
                     $record['value'] = '$this->storage()->data(\''. $record['method']['name'] .'\', \'' . $attribute['execute'] . '\');' . 
                         "\n" . 
-                        $record['value'] . 
-                        ';' . "\n" . '$this->storage()->data(\'delete\',\'' . $record['method']['name'] . '\')';
+                        $build->indent() . $record['value'] . 
+                        ';' . "\n" . $build->indent() . '$this->storage()->data(\'delete\',\'' . $record['method']['name'] . '\')';
                 }                            
             }
             return $record['value'];

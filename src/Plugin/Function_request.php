@@ -16,6 +16,14 @@ function function_request(Parse $parse, Data $data, $attribute=null, $value=null
     if(!empty($parse->is_assign())){
         return $object->request($attribute, $value);
     } else {
-        $object->request($attribute, $value);
+        if($attribute !== null){
+            if($value === null){
+                return $object->request($attribute);
+            } else {
+                $object->request($attribute, $value);
+            }
+        } else {
+            return $object->request();
+        }        
     }
 }

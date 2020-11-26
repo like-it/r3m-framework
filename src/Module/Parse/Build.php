@@ -330,7 +330,7 @@ class Build {
                                 //capture.append
                             )
                         ){
-                            $selection = Method::capture_selection($this, $storage, $tree, $selection);
+                            $selection = Method::capture_selection($this, $storage, $tree, $selection);                            
                             $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
                             foreach($selection as $skip_nr => $item){
                                 //need skip_nr

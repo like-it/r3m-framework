@@ -99,13 +99,19 @@ class Operator {
 
     public static function remove($token=[], $statement=[]){
         $assign_key = false;
-        foreach($statement as $nr => $record){
-            if($assign_key === false){
-                $assign_key = true;
-                continue;
+        if(is_array($statement)){
+            foreach($statement as $nr => $record){
+                if($assign_key === false){
+                    $assign_key = true;
+                    continue;
+                }
+                unset($token[$nr]);
             }
-            unset($token[$nr]);
+        } else {
+            d($token);
+            dd($statement);
         }
+        
         return $token;
     }
 
