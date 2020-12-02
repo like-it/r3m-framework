@@ -18,9 +18,9 @@
         },
         "major": "0",
         "minor": "0",
-        "patch": "17",
-        "version": "0.0.17",
-        "built": "2020-11-12 01:35:52"
+        "patch": "18",
+        "version": "0.0.18",
+        "built": "2020-12-03 00:23:17"
     },
     "contentType": {
         "txt": "text\/plain",
@@ -44,7 +44,7 @@
         "rar": "application\/vnd.rar",
         "pdf": "application\/pdf"
     },
-    "extension" : {
+    "extension": {
         "txt": ".txt",
         "html": ".html",
         "css": ".css",
@@ -73,7 +73,7 @@
         "plugin": {
             "multi_line": [
                 "capture.prepend",
-                "capture.append",                
+                "capture.append",
                 "block.code",
                 "block.html"
             ]
