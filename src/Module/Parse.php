@@ -1,12 +1,13 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
-
 namespace R3m\Io\Module;
 
 use Exception;
@@ -27,6 +28,8 @@ class Parse {
     private $storage;
     private $cache_dir;
     private $local;
+    private $is_assign;
+    private $halt_literal;
 
     public function __construct($object, $storage=null){
         $this->object($object);
@@ -67,7 +70,6 @@ class Parse {
         $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
         $this->cache_dir($cache_dir);
     }
-
 
     public function object($object=null){
         if($object !== null){
@@ -113,11 +115,25 @@ class Parse {
         return $this->local;
     }
 
+    public function is_assign($is_assign=null){
+        if($is_assign !== null){
+            $this->is_assign = $is_assign;
+        }
+        return $this->is_assign;
+    }
+
+    public function halt_literal($halt_literal=null){
+        if($halt_literal !== null){
+            $this->halt_literal = $halt_literal;
+        }
+        return $this->halt_literal;
+    }
+
     public function compile($string='', $data=[], $storage=null, $is_debug=false){
-        if($storage === null){
+        if($storage === null){            
             $storage = $this->storage(new Data());
         }
-        if(is_object($data)){
+        if(is_object($data)){            
             $storage->data(Core::object_merge($storage->data(), $data));
         } else {
             $storage->data($data);
@@ -127,10 +143,9 @@ class Parse {
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
             }
         }
-        elseif(is_object($string)){                                     
-            // $storage->data('this', $string);           
-            $this->local($string);
+        elseif(is_object($string)){                                                             
             foreach($string as $key => $value){                 
+                $this->local($string);
                 $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                 $string->$key = $value;
             }            
@@ -140,49 +155,49 @@ class Parse {
             return $string;
         }
         else {
-            $build = new Build($this->object(), $is_debug);
+            $build = new Build($this->object(), $this, $is_debug);
             $build->cache_dir($this->cache_dir());
-
             $source = $storage->data('r3m.io.parse.view.source');
-
+            $options = [];
             if(empty($source)){
-                $url = $build->url($string, [
+                $options = [
                     'source' => $storage->data('r3m.io.parse.view.url')
-                ]);
+                ];
+                $url = $build->url($string, $options);
             } else {
-                $url = $build->url($string, [
+                $options = [
                     'source' => $storage->data('r3m.io.parse.view.source.url'),
                     'parent' => $storage->data('r3m.io.parse.view.url')
-                ]);
+                ];
+                $url = $build->url($string, $options);
             }
             $storage->data('r3m.io.parse.compile.url', $url);
             $storage->data('this', $this->local());
-            $mtime = $storage->data('r3m.io.parse.view.mtime');
-
-//             opcache_invalidate($url, true);
+            $mtime = $storage->data('r3m.io.parse.view.mtime');              
             if(File::exist($url) && File::mtime($url) == $mtime){
-                //cache file
-                $meta = $build->meta();
-                $class = $meta['namespace'] . '\\' . $meta['class'];
-                $template = new $class(new Parse($this->object()), $storage);
-
+                //cache file                
+                $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
+                $template = new $class(new Parse($this->object()), $storage);                
+                if(empty($this->halt_literal())){
+                    $string = Literal::apply($string, $storage);
+                }                
                 $string = $template->run();
-                $string = Literal::restore($string, $storage);
+                if(empty($this->halt_literal())){
+                    $string = Literal::restore($string, $storage);    
+                }
+                
                 $storage->data('delete', 'this');
                 return $string;
             }
-
-
-
             /*
             elseif(File::exist($url) && File::mtime($url) != $mtime){
                 opcache_invalidate($url, true);
             }
             */
-
-            $string = literal::apply($string, $storage);            
-            $tree = Token::tree($string, $is_debug);
-            // dd($tree);
+            if(empty($this->halt_literal())){
+                $string = literal::apply($string, $storage);            
+            }            
+            $tree = Token::tree($string, $is_debug);            
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();
@@ -196,28 +211,25 @@ class Parse {
             $document = $build->document($tree, $document, $storage);
             $document = $build->create('run', $tree, $document);
             $document = $build->create('require', $tree, $document);
-            $document = $build->create('use', $tree, $document);
-            //add lock
+            $document = $build->create('use', $tree, $document);            
             $write = $build->write($url, $document);
-
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
                 /*
                 opcache_invalidate($url, true);
-
                 if(opcache_is_script_cached($url) === false){
                     opcache_compile_file($url);
                 }
                 */
-            }
+            }            
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
-
             $exists = class_exists($class);
-
             if($exists){
                 $template = new $class(new Parse($this->object()), $storage);
                 $string = $template->run();
-                $string = Literal::restore($string, $storage);
+                if(empty($this->halt_literal())){
+                    $string = Literal::restore($string, $storage);
+                }
                 $storage->data('delete', 'this');
             }
         }
@@ -232,7 +244,7 @@ class Parse {
             }
         }
         elseif(is_object($data)){
-            foreach($data as $key => $value){
+            foreach($data as $key => $value){                
                 $data->$key = Literal::restore($value, $parse->storage());
             }
         } else {

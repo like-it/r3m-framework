@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
+ */
 namespace R3m\Io;
 
 use stdClass;
@@ -22,7 +30,6 @@ class App extends Data {
     const NAME = 'App';
     const R3M = 'R3m';
 
-//     const TITLE = 'meta.title';
     const SCRIPT = 'script';
     const LINK = 'link';
 
@@ -46,7 +53,7 @@ class App extends Data {
         $this->data(App::AUTOLOAD_COMPOSER, $autoload);
         $this->data(App::CONFIG, $config);
         App::is_cli();
-        require_once 'debug.php';
+        require_once 'Debug.php';
     }
 
     public static function run($object){
@@ -113,7 +120,6 @@ class App extends Data {
         if($contentType == App::CONTENT_TYPE_JSON){
             $json = new stdClass();
             $json->html = $output;
-//             $json->title = $object->data(App::TITLE);
             if($object->data('method')){
                 $json->method = $object->data('method');
             } else {
@@ -130,10 +136,13 @@ class App extends Data {
                 }
                 $json->append->to = $object->data('append-to');
             } else {
-                if(empty($json->append)){
-                    $json->append = new stdClass();
-                }
-                $json->append->to = $object->data(App::REQUEST)->data('append-to');
+                $append_to = $object->data(App::REQUEST)->data('append-to');
+                if($append_to){
+                    if(empty($json->append)){
+                        $json->append = new stdClass();
+                    }
+                    $json->append->to = $append_to;
+                }                
             }
             $json->script = $object->data(App::SCRIPT);
             $json->link = $object->data(App::LINK);
@@ -142,19 +151,16 @@ class App extends Data {
         return $output;
     }
 
-    public function request($attribute=null, $value=null){
-        $object = $this;
-        if($attribute !== null && $value !== null){
-            if($attribute == 'delete'){
-                Core::object_delete($value, $object);
-            } else {
-                Core::object_set($attribute, $value, $object->data('R3m\\Io.Request.Input'));
-            }
+    public function route(){
+        return $this->data(App::ROUTE);
+    }
 
-        }
-        elseif($attribute !== null){
-            return Core::object_get($attribute, $object->data('R3m\\Io.Request.Input'));
-        }
+    public function config($attribute=null, $value=null){
+        return $this->data(App::CONFIG)->data($attribute, $value);
+    }
+
+    public function request($attribute=null, $value=null){                
+        return $this->data(App::REQUEST)->data($attribute, $value);        
     }
 
     public static function parameter($object, $parameter='', $offset=0){
@@ -186,7 +192,7 @@ class App extends Data {
         }
     }
 
-    public function parse_read($url, $attribute=null){
+    public function parse_read($url, $attribute=null){        
         if(File::exist($url)){
             $read = File::read($url);
             if($read){

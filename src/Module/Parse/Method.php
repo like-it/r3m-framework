@@ -1,23 +1,27 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
-
 namespace R3m\Io\Module\Parse;
 
+use stdClass;
 use Exception;
+use R3m\Io\App;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Core;
+use R3m\Io\Module\Parse;
 
 class Method {
     const WHERE_BEFORE = 'before';
     const WHERE_AFTER = 'after';
 
-    public static function get(Build $build, Data $storage, $record=[]){
+    public static function get(Build $build, Data $storage, $record=[], $is_debug=false){        
         if($record['type'] != Token::TYPE_METHOD){
             return $record;
         }
@@ -79,9 +83,9 @@ class Method {
                             $is_key_value === false &&
                             $has_key === false &&
                             $item['type'] == Token::TYPE_VARIABLE
-                            ){
-                                $record['method']['attribute'][0][$nr]['value'] = ' ' . Core::uuid_variable() . ' ';
-                                $has_key = true;
+                        ){
+                            $record['method']['attribute'][0][$nr]['value'] = ' ' . Core::uuid_variable() . ' ';
+                            $has_key = true;
                         }
                         elseif(
                             $is_key_value === true &&
@@ -98,13 +102,57 @@ class Method {
                     }
                 }
             }
-            foreach($record['method']['attribute'] as $nr => $token){
-                $token = Token::define($token);
-                $token = Token::method($token);
-                $token = $build->require('function', $token);                
-                $value = Variable::getValue($build, $storage, $token);
-                $attribute .= $value . ', '; //#
-            }            
+            if(
+                in_array(
+                    $record['method']['php_name'],
+                    [
+                        'function_block_html',
+                        'function_block_code',
+                    ]
+                )
+            ){
+                $list = [];
+                foreach($record['method']['attribute'] as $nr => $token){
+                    if(!array_key_exists($nr, $list)){
+                        $list[$nr] = '';
+                    }
+                    foreach($token as $token_key => $token_value){
+                        if(array_key_exists('parse', $token_value)){
+                            $list[$nr] .= $token_value['parse'];
+                        } else {
+                            $list[$nr] .= $token_value['value'];
+                        }                        
+                    }
+                    $list[$nr] = str_replace(
+                        [
+                            '{{',
+                            '}}',
+                            '\'',
+                        ],
+                        [
+                            '{',
+                            '}',
+                            '\\\''
+                        ],
+                        $list[$nr]
+                    );
+                }
+                foreach($list as $nr => $value){
+                    if(substr($value, 0, 2) == '\\\'' && substr($value, -2, 2) == '\\\''){
+                        $value = substr($value, 2, -2);
+                    }
+                    if(is_string($value)){
+                        $value = '$this->parse()->compile(\'' . $value .'\', [], $this->storage())';
+                    }
+                    $attribute .= $value . ', ';
+                }
+            } else {                
+                foreach($record['method']['attribute'] as $nr => $token){                                        
+                    $token = $build->require('function', $token);                    
+                    $value = Variable::getValue($build, $storage, $token);
+                    $attribute .= $value . ', ';
+                }                
+            }
             if($record['method']['php_name'] == Token::TYPE_FOR){
                 $assign = [];
                 $assign_nr = 0;
@@ -119,7 +167,7 @@ class Method {
                 }
                 $assign_before = '';
                 foreach($assign as $nr => $selection){
-                    $assign_before .= Variable::Assign($build, $selection, $storage) . ', ';
+                    $assign_before .= Variable::Assign($build, $storage, $selection) . ', ';
                 }
                 $assign = [];
                 $assign_nr = 0;
@@ -134,7 +182,7 @@ class Method {
                 }
                 $assign_after = '';
                 foreach($assign as $nr => $selection){
-                    $assign_after .= Variable::Assign($build, $selection, $storage) . ', ';
+                    $assign_after .= Variable::Assign($build, $storage, $selection) . ', ';
                 }
                 $attribute =
                     substr($assign_before, 0, -2) .
@@ -142,6 +190,7 @@ class Method {
                     substr($attribute, 0, -2) .
                     ';' .
                     substr($assign_after, 0, -2);
+                $assign = '';
             }
             elseif($record['method']['php_name'] == Token::TYPE_FOREACH){
                 $attribute = substr($attribute, 0, -2);
@@ -215,7 +264,7 @@ class Method {
                     }
                 }
             } else {
-                if(empty($attribute)){
+                if(empty($attribute)){                    
                     $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
                 } else {
                     $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
@@ -239,7 +288,6 @@ class Method {
                 } else {
                     $data[0] = [];
                 }
-
                 return $data;
             break;
             case Method::WHERE_AFTER :
@@ -270,7 +318,6 @@ class Method {
         if($record['type'] === Token::TYPE_CODE){
             return $record['value'];
         }
-
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
@@ -283,14 +330,14 @@ class Method {
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
-    public static function create_capture(Build $build, Data $storage, $token=[]){
+    public static function create_capture(Build $build, Data $storage, $token=[], $is_debug=false){
         $method = array_shift($token);
         $method['method']['attribute'][] = $token;
-        $record = Method::get($build, $storage, $method);        
-        if($record['type'] === Token::TYPE_CODE){        
+        $record = Method::get($build, $storage, $method, $is_debug);
+        if($record['type'] === Token::TYPE_CODE){
             if(
                 in_array(
-                    $record['method']['name'], 
+                    $record['method']['name'],
                     [
                         'capture.append',
                         'capture.prepend'
@@ -298,15 +345,13 @@ class Method {
                 )
             ){
                 $attribute = current($record['method']['attribute'][0]);
-                if(array_key_exists('execute', $attribute)){                    
-                    $record['value'] = '$this->storage()->data(\''. $record['method']['name'] .'\', \'' . $attribute['execute'] . '\');' . 
-                        "\n" . 
-                        $record['value'] . 
-                        ';' . "\n" . '$this->storage()->data(\'delete\',\'' . $record['method']['name'] . '\')';               }
-                
-                
+                if(array_key_exists('execute', $attribute)){
+                    $record['value'] = '$this->storage()->data(\''. $record['method']['name'] .'\', \'' . $attribute['execute'] . '\');' .
+                        "\n" .
+                        $build->indent() . $record['value'] .
+                        ';' . "\n" . $build->indent() . '$this->storage()->data(\'delete\',\'' . $record['method']['name'] . '\')';
+                }
             }
-
             return $record['value'];
         }
         throw new Exception('Method type (' . $record['type'] . ') undefined');
@@ -315,26 +360,47 @@ class Method {
     public static function capture_selection(Build $build, Data $storage, $tree=[], $selection=[]){
         $key = key($selection);
         $is_collect = false;
+        $break = '';
+        $tag = '';
+        $depth = 0;
         foreach($tree as $nr => $record){
             if($nr == $key){
                 $is_collect = true;
+                $tag = $record['value'];
+                $break = '/' . $tag;
                 $is_curly_close = false;
+                $depth = 1;
             }
             if($is_collect === true){
                 if(
+                    $record['type'] == Token::TYPE_METHOD &&
+                    $record['value'] == $tag &&
+                    $nr <> $key
+                ){
+                    $depth++;
+                }
+                elseif(
                     $record['type'] == Token::TYPE_CURLY_CLOSE &&
                     $is_curly_close === false
                 ){
                     $is_curly_close = true;
                     continue;
                 }
-                if(
+                elseif(
                     $record['type'] == Token::TYPE_TAG_CLOSE &&
-                    $record['tag']['name'] == '/capture.append'
+                    $record['tag']['name'] == $break &&
+                    $depth == 1
                 ){
                     $is_collect = false;
                     array_pop($selection);
                     break;
+                }
+                elseif(
+                    $record['type'] == Token::TYPE_TAG_CLOSE &&
+                    $record['tag']['name'] == $break &&
+                    $depth > 1
+                ){
+                    $depth--;
                 }
                 $selection[$nr] = $record;
             }

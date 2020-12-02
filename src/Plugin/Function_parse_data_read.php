@@ -13,12 +13,13 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
 
-function function_parse_read(Parse $parse, Data $data, $url=''){
+function function_parse_data_read(Parse $parse, Data $data, $url=''){
     if(File::exist($url)){
         $read = File::read($url);
-        $read = Core::object($read);        
-        $read = $parse->compile($read, [], $data);
+        $read = Core::object($read);           
         $data->data(Core::object_merge($data->data(), $read));
+        $parse->compile($data->data(), [], $data);
+        $read = $parse->compile($read, [], $data);
         return $read;
     } else {
         throw new Exception('Error: url=' . $url . ' not found');

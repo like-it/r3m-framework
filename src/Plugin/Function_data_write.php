@@ -11,8 +11,8 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_route_get(Parse $parse, Data $data, $name=null, $options=[]){
-    $object = $parse->object();
-    $url = $object->route()::get($object, $name, $options);
-    return $url;
+function function_data_write(Parse $parse, Data $data, $url='', $write){
+    $write = Core::object($write, 'json');
+    $bytes = File::write($url, $write);    
+    return '';
 }

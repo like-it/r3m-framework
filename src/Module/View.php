@@ -1,8 +1,10 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
@@ -22,7 +24,6 @@ class View {
     const CACHE = 'Cache';
 
     public static function locate($object, $template=null){
-
         $temp = $object->data('template');
         $called = '';
         if($template === null && $temp !== null && property_exists($temp, 'dir')){
@@ -69,7 +70,6 @@ class View {
             $explode[] = $config->data('dictionary.view');
         }
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
-//         dd($config->data('framework.environment'));
         $url = false;
         foreach($list as $file){
             if(File::exist($file)){
@@ -88,25 +88,20 @@ class View {
     }
 
     public static function configure($object){
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
-
+        $config = $object->data(App::CONFIG);
         $key = 'parse.dir.template';
         $value = $config->data('host.dir.cache') . View::PARSE . $config->data('ds') . View::TEMPLATE . $config->data('ds');
         $config->data($key, $value);
-
         $key = 'parse.dir.compile';
         $value = $config->data('host.dir.cache') . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
         $value = $config->data('host.dir.data') . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
         $config->data($key, $value);
-
         $key = 'parse.dir.cache';
         $value = $config->data('host.dir.cache') . View::PARSE . $config->data('ds') . View::CACHE . $config->data('ds');
         $value = $config->data('host.dir.data') . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
         $config->data($key, $value);
-
         $key = 'parse.dir.plugin';
         $value = [];
-
         $dir = rtrim(get_called_class()::DIR,$config->data(Config::DS)) . $config->data(Config::DS);
         $config->data(Config::DATA_CONTROLLER_DIR_SOURCE, $dir);
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT, Dir::name($dir));
@@ -128,7 +123,6 @@ class View {
                 ) .
             $config->data(Config::DS)
         );
-
         $config->data(Config::DATA_CONTROLLER_DIR_MODEL,
             $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
             $config->data(
@@ -138,7 +132,6 @@ class View {
                 ) .
             $config->data(Config::DS)
         );
-
         $config->data(Config::DATA_CONTROLLER_DIR_VIEW,
             $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
             $config->data(
@@ -148,7 +141,6 @@ class View {
                 ) .
             $config->data(Config::DS)
         );
-
         $value[] =
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
         $config->data(
@@ -184,21 +176,15 @@ class View {
                 ) .
                 $config->data(Config::DS)
         ;
-//         $config->data($key, $value);
-        $config->data($key, $value);
-
-        $config = $object->data(App::CONFIG);
+        $config->data($key, $value);        
         $config->data('controller.class', get_called_class());
         $config->data('controller.name', strtolower(File::basename($config->data('controller.class'))));
+        $config->data('controller.title', File::basename($config->data('controller.class')));
         $object->data('controller', $config->data('controller'));
-
-
     }
 
     public function view($object, $url){
-        if(empty($url)){
-            $debug = debug_backtrace(true);
-            d($debug);
+        if(empty($url)){            
             throw new Exception('Url is empty');
         }
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
@@ -209,32 +195,22 @@ class View {
         $dir_config = $dir_base . $config->data(Config::DICTIONARY . '.' . Config::DATA) . $config->data('ds');
         $dir_compile = $config->data('parse.dir.compile');
         $dir_cache = $config->data('parse.dir.cache');
-
         if(File::exist($url) === false){
             throw new Exception('Url (' . $url .')doesn\'t exist');
         }
         $read = File::read($url);
         $mtime = File::mtime($url);
-
         $parse = new Parse($object);
         $parse->storage()->data('r3m.io.parse.view.url', $url);
         $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
-
         $data = clone $object->data();
-        unset($data->{APP::NAMESPACE});
+        unset($data->{App::NAMESPACE});
         $data->r3m = new stdClass();
-//         $data->r3m->config = $config->data();
         $data->r3m->io = new stdClass();
         $data->r3m->io->config = $config->data();
         $read = $parse->compile($read, $data, $parse->storage());
-
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
-//         Parse::readback($object, $parse, App::TITLE);
-
-//         $object->data('r3m.io.parse.storage', $parse->storage());
         return $read;
     }
-
-
 }

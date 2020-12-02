@@ -12,6 +12,17 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_dd(Parse $parse, Data $data, $debug=null){
+    if(
+        in_array(
+            $debug, 
+            [
+                '$this',
+                '{$this}'
+            ]
+        )
+    ){
+        $debug= $data->data();
+    }
     $trace = debug_backtrace(true);
     ob_start();
     if(!defined('IS_CLI')){

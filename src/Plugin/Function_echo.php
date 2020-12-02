@@ -1,7 +1,7 @@
 <?php
 /**
  * @author          Remco van der Velde
- * @since           2020-09-13
+ * @since           2020-09-14
  * @copyright       Remco van der Velde
  * @license         MIT
  * @version         1.0
@@ -11,8 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_route_get(Parse $parse, Data $data, $name=null, $options=[]){
-    $object = $parse->object();
-    $url = $object->route()::get($object, $name, $options);
-    return $url;
+function function_echo(Parse $parse, Data $data, $string=''){
+    $string = (string) $string;
+    return $string;   
 }

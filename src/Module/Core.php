@@ -1,13 +1,13 @@
 <?php
 /**
- *  (c) 2019 Priya.software
- *
- *  License: MIT
- *
- *  Author: Remco van der Velde
- *  Version: 1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
  */
-
 namespace R3m\Io\Module;
 
 use stdClass;
@@ -27,8 +27,6 @@ class Core {
 
     const OBJECT_TYPE_ROOT = 'root';
     const OBJECT_TYPE_CHILD = 'child';
-
-
 
     const SHELL_DETACHED = 'detached';
     const SHELL_PROCESS = 'process';
@@ -69,7 +67,7 @@ class Core {
             $output = [];
         }
         $result = [
-                'pid' => getmypid()
+            'pid' => getmypid()
         ];
         if(
             in_array(
@@ -90,7 +88,7 @@ class Core {
                     //create a seperate process to execute another process (async);
                     exec($command, $output);
                     if($type != Core::SHELL_PROCESS){
-                                //                         echo implode(PHP_EOL, $output) . PHP_EOL;
+                        // echo implode(PHP_EOL, $output) . PHP_EOL;
                     }
                     $output = [];
                     exit();
@@ -129,10 +127,6 @@ class Core {
         switch($mode){
             case  Core::MODE_INTERACTIVE :
                 ob_implicit_flush(true);
-                @ob_end_flush();
-                break;
-            case  Core::MODE_INTERACTIVE :
-                ob_implicit_flush(false);
                 @ob_end_flush();
                 break;
             default :
@@ -250,19 +244,6 @@ class Core {
             $input = trim($input);
             if($output == Core::OBJECT_OBJECT){
                 if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
-                    /* why replace newlines ?
-                     $input = str_replace(
-                     array(
-                     "\r",
-                     "\n"
-                     ),
-                     array(
-                     '',
-                     ''
-                     ),
-                     $input
-                     );
-                     */
                     $json = json_decode($input);
                     if(json_last_error()){
                         new Exception(json_last_error_msg());
@@ -270,17 +251,6 @@ class Core {
                     return $json;
                 }
                 elseif(substr($input,0,1)=='[' && substr($input,-1,1)==']'){
-                    $input = str_replace(
-                        array(
-                            "\r",
-                            "\n"
-                        ),
-                        array(
-                            '',
-                            ''
-                        ),
-                        $input
-                        );
                     $json = json_decode($input);
                     if(json_last_error()){
                         throw new Exception(json_last_error_msg());
@@ -329,7 +299,7 @@ class Core {
 
     public static function object_delete($attributeList=array(), $object='', $parent='', $key=null){
         if(is_string($attributeList)){
-            $attributeList = Core::explode_multi(array('.', ':', '->'), $attributeList);
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, $attributeList);
         }
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
@@ -480,7 +450,7 @@ class Core {
                     if(empty($attribute) && is_object($value)){
                         foreach($value as $value_key => $value_value){
                             if(isset($object->$key->$value_key)){
-                                //                                 unset($object->$key->$value_key);   //so sort will happen, request will tak forever and apache2 crashes needs reboot apache2
+                                // unset($object->$key->$value_key);   //so sort will happen, @bug request will take forever and apache2 crashes needs reboot apache2
                             }
                             $object->{$key}->{$value_key} = $value_value;
                         }
@@ -589,7 +559,6 @@ class Core {
 
     public static function uuid_variable(){
         $uuid = Core::uuid();
-
         $search = [];
         $search[] = 0;
         $search[] = 1;
@@ -602,7 +571,6 @@ class Core {
         $search[] = 8;
         $search[] = 9;
         $search[] = '-';
-
         $replace = [];
         $replace[] = 'g';
         $replace[] = 'h';
@@ -612,12 +580,18 @@ class Core {
         $replace[] = 'l';
         $replace[] = 'm';
         $replace[] = 'n';
+        $replace[] = 'o';
         $replace[] = 'p';
-        $replace[] = 'q';
         $replace[] = '_';
-
         $variable = '$' . str_replace($search, $replace, $uuid);
-
         return $variable;
+    }
+
+    public static function ucfirst_sentence($string='', $delimiter='.'){
+        $explode = explode($delimiter, $string);
+        foreach($explode as $nr => $part){
+            $explode[$nr] = ucfirst(trim($part));
+        }
+        return implode($delimiter, $explode);
     }
 }

@@ -1,13 +1,16 @@
 <?php
-namespace R3m\Io\Module\Template;
-
 /**
- * @copyright                (c) https://r3m.io 2019 - 2019
- * @version                  1.0
- * @note                     Auto generated file, do not modify!
- * @author                   R3m\Io\Module\Parse\Build
- * @author                   Remco van der Velde
+ * @author          Remco van der Velde
+ * @author          R3m\Io\Module\Parse\Build
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
+ * @note            Auto generated file, do not modify!
  */
+namespace R3m\Io\Module\Template;
 
 use stdClass;
 use Exception;
@@ -83,6 +86,50 @@ class Main {
 	    $variable += 0;
 	    $variable--;
 	    return $variable;
+	}
+
+	protected function value_plus_plus($variable=0){
+	    $variable += 0;
+	    $variable++;
+	    return $variable;
+	}
+
+	protected function value_min_min($variable=0){
+	    $variable += 0;
+	    $variable--;
+	    return $variable;
+	}
+
+	protected function plus_plus_assign($variable=0){
+	    $variable += 0;
+	    ++$variable;
+	    return $variable;
+	}
+
+	protected function min_min_assign($variable=0){
+	    $variable += 0;
+	    --$variable;
+	    return $variable;
+	}
+
+	protected function plus_plus_value($variable=0){
+	    $variable += 0;
+	    ++$variable;
+	    return $variable;
+	}
+
+	protected function min_min_value($variable=0){
+	    $variable += 0;
+	    --$variable;
+	    return $variable;
+	}
+
+	protected function value_boolean_and($variable1=null, $variable2=null){        
+        return $variable1 && $variable2;
+	}
+
+	protected function value_boolean_or($variable1=null, $variable2=null){        
+        return $variable1 || $variable2;
 	}
 
 	protected function value_plus($variable1=null, $variable2=null){

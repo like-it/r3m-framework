@@ -18,9 +18,9 @@
         },
         "major": "0",
         "minor": "0",
-        "patch": "17",
-        "version": "0.0.17",
-        "built": "2020-11-12 01:35:52"
+        "patch": "18",
+        "version": "0.0.18",
+        "built": "2020-12-03 00:23:17"
     },
     "contentType": {
         "txt": "text\/plain",
@@ -31,19 +31,51 @@
         "ico": "image\/x-icon",
         "png": "image\/png",
         "jpg": "image\/jpeg",
+        "bmp": "image\/bmp",
         "gif": "image\/gif",
         "svg": "image\/svg+xml",
         "woff": "application\/font-woff",
         "woff2": "application\/font-woff2",
         "ttf": "font\/ttf",
         "wav": "audio\/wav",
-        "mp3": "audio\/mp3"
+        "mp3": "audio\/mp3",
+        "ogg": "audio\/ogg",
+        "zip": "application\/zip",
+        "rar": "application\/vnd.rar",
+        "pdf": "application\/pdf"
+    },
+    "extension": {
+        "txt": ".txt",
+        "html": ".html",
+        "css": ".css",
+        "js": ".js",
+        "json": ".json",
+        "ico": ".ico",
+        "png": ".png",
+        "jpg": ".jpg",
+        "bmp": ".bmp",
+        "gif": ".gif",
+        "svg": ".svg",
+        "woff": ".woff",
+        "woff2": ".woff2",
+        "ttf": ".ttf",
+        "wav": ".wav",
+        "mp3": ".mp3",
+        "ogg": ".ogg",
+        "zip": ".zip",
+        "rar": ".rar",
+        "tpl": ".tpl",
+        "conf": ".conf",
+        "pdf": ".pdf",
+        "php": ".php"
     },
     "parse": {
         "plugin": {
             "multi_line": [
                 "capture.prepend",
-                "capture.append"
+                "capture.append",
+                "block.code",
+                "block.html"
             ]
         }
     }

@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
+ */
 namespace R3m\Io;
 
 use R3m\Io\Module\Core;
@@ -56,7 +64,7 @@ class Config extends Data {
 
     const LOCALHOST_EXTENSION = 'localhost.extension';
     const VALUE_LOCALHOST_EXTENSION =  [
-        'local'        
+        'local'
     ];
 
     const ROUTE = 'Route.json';
@@ -114,7 +122,6 @@ class Config extends Data {
             $read = Core::object(File::read($url));
             $this->data(Core::object_merge($this->data(), $read));
         }
-        //maybe merge this too...
         foreach($config as $attribute => $value){
             $this->data($attribute, $value);
         }
@@ -190,19 +197,6 @@ class Config extends Data {
         $value = Config::VALUE_DS;
         $key = Config::DS;
         $this->data($key, $value);
-
-        $this->data('extension.php', '.php');
-        $this->data('extension.json', '.json');
-        $this->data('extension.css', '.css');
-        $this->data('extension.js', '.js');
-        $this->data('extension.jpg', '.jpg');
-        $this->data('extension.gif', '.gif');
-        $this->data('extension.png', '.png');
-        $this->data('extension.zip', '.zip');
-        $this->data('extension.rar', '.rar');
-        $this->data('extension.tpl', '.tpl');
-        $this->data('extension.conf', '.conf');
-
         $this->data(Config::LOCALHOST_EXTENSION, Config::VALUE_LOCALHOST_EXTENSION);
 
         $key = Config::DATA_PROJECT_DIR_SOURCE;
@@ -298,13 +292,5 @@ class Config extends Data {
         $key = Config::DATA_FRAMEWORK_ENVIRONMENT;
         $value = $this->data(Config::DICTIONARY . '.' . Config::ENVIRONMENT);
         $this->data($key, $value);
-    }
-
-    public static function ucfirst_sentence($string='', $delimiter='.'){
-        $explode = explode($delimiter, $string);
-        foreach($explode as $nr => $part){
-            $explode[$nr] = ucfirst(trim($part));
-        }
-        return implode($delimiter, $explode);
     }
 }

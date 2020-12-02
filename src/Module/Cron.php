@@ -1,17 +1,17 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
-
 namespace R3m\Io\Module;
 
 use stdClass;
 use R3m\Io\App;
-
 
 class Cron extends View {
     const DIR = __DIR__;
@@ -27,9 +27,6 @@ class Cron extends View {
         $parse = new Parse($object);
         $data = new Data();
         $object->data('r3m.config', $config->data());
-
-//         dd($object->data('r3m.config'));
-
         $object->data($parse->compile($read, $object->data()));
         $url = Cron::locate($object, 'Cron/Info');
         return Cron::view($object, $url);
@@ -45,9 +42,7 @@ class Cron extends View {
         $object->data($parse->compile($read, $object->data()));
 
         if(Cron::lock($object, 'has') === false){
-//             d('yep1');
             Cron::service($object);
-//             d('yepo2');
         } else {
             $class = __CLASS__;
             $object->data('command', ucfirst(__FUNCTION__));
@@ -93,18 +88,14 @@ class Cron extends View {
     public static function task(App $object){
         $list = [];
         $read = '';
-
         if(is_array($object->data('cron.dir'))){
             foreach($object->data('cron.dir') as $file){
                 $read .= File::read($file->url);
             }
         }
         $parse = new Parse($object);
-//         $data = new Data();
         $read = $parse->compile($read, $object->data());
-
         $explode = explode(PHP_EOL, $read);
-
         foreach($explode as $nr => $line){
             $line = trim($line);
             if(empty($line)){
@@ -132,20 +123,20 @@ class Cron extends View {
         if(
             isset($record->$attribute) &&
             isset($date->$attribute)
+        ){
+            if(
+                !in_array(
+                    $record->$attribute,
+                    [
+                        '*',
+                        $date->$attribute
+                    ]
+                )
             ){
-                if(
-                    !in_array(
-                        $record->$attribute,
-                        [
-                            '*',
-                            $date->$attribute
-                        ]
-                        )
-                    ){
-                        return false;
-                } else {
-                    return true;
-                }
+                return false;
+            } else {
+                return true;
+            }
         }
         return false;
     }
@@ -202,22 +193,20 @@ class Cron extends View {
             if(
                 $task !== null &&
                 is_array($task)
-                ){
-                    foreach($task as $record){
-                        if(Cron::now($record, $current) === false){
-                            continue;
-                        }
-                        $active++;
-                        Core::async($record->binary);
-//                         $output = [];
-//                         Core::execute($record->binary, $output);
+            ){
+                foreach($task as $record){
+                    if(Cron::now($record, $current) === false){
+                        continue;
                     }
-                    if($active > 0){
-                        $object->data('cron.active', $active);
-                        //use template Active.tpl
-                        //active to variable cron.active
-                        echo 'Cron jobs tasks activated (' . $active .') at: '. $date . PHP_EOL;
-                    }
+                    $active++;
+                    Core::async($record->binary);
+                }
+                if($active > 0){
+                    $object->data('cron.active', $active);
+                    //use template Active.tpl
+                    //active to variable cron.active
+                    echo 'Cron jobs tasks activated (' . $active .') at: '. $date . PHP_EOL;
+                }
             }
         }
     }

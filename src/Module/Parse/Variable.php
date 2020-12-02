@@ -1,12 +1,13 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
-
 namespace R3m\Io\Module\Parse;
 
 use Exception;
@@ -15,28 +16,46 @@ use R3m\Io\Module\Core;
 
 class Variable {
 
+    public static function count_assign($build, Data $storage, $token=[], $is_result=false){
+        $count = array_shift($token);
+        $variable = array_shift($token);
+        switch($count['type']){
+            case Token::TYPE_IS_MINUS_MINUS :
+                $assign = '$this->storage()->data(\'';
+                $assign .= $variable['variable']['attribute'] . '\', ';
+                $assign .= '$this->min_min_assign(' ;
+                $assign .= '$this->storage()->data(\'';
+                $assign .= $variable['variable']['attribute'] . '\')';
+                $assign .= '))';
+                return $assign;
+            break;  
+            case Token::TYPE_IS_PLUS_PLUS :
+                $assign = '$this->storage()->data(\'';
+                $assign .= $variable['variable']['attribute'] . '\', ';
+                $assign .= '$this->plus_plus_assign(' ;
+                $assign .= '$this->storage()->data(\'';
+                $assign .= $variable['variable']['attribute'] . '\')';
+                $assign .= '))';
+                return $assign;
+            break;  
+        }        
+    }
+
     public static function assign($build, Data $storage, $token=[], $is_result=false){
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
             return '';
-        }
-        if($storage->data('is.debug')){
-        }
+        }        
         $token = Variable::addAssign($token);
         switch($variable['variable']['operator']){
             case '=' :
                 $assign = '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
-                $value = Variable::getValue($build, $storage, $token, $is_result);
-                if(stristr($value, '"') && stristr($value, '\'') !== false){
-//                     d($value);
-                }//
+                $value = Variable::getValue($build, $storage, $token, $is_result);                
                 $assign .= $value . ')';
                 return $assign;
             break;
-            case '+=' :
-                // use $this->assign_plus_equal()
-
+            case '+=' :                
                 $assign = '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_plus_equal(' ;
@@ -46,9 +65,7 @@ class Variable {
                 $assign .= $value . '))';
                 return $assign;
             break;
-            case '-=' :
-                // use $this->assign_plus_equal()
-
+            case '-=' :                
                 $assign = '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_min_equal(' ;
@@ -58,9 +75,7 @@ class Variable {
                 $assign .= $value . '))';
                 return $assign;
             break;
-            case '.=' :
-                // use $this->assign_plus_equal()
-
+            case '.=' :                
                 $assign = '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_dot_equal(' ;
@@ -71,8 +86,6 @@ class Variable {
                 return $assign;
             break;
             case '++' :
-                // use $this->assign_plus_equal()
-
                 $assign = '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_plus_plus(' ;
@@ -81,9 +94,7 @@ class Variable {
                 $assign .= '))';
                 return $assign;
             break;
-            case '--' :
-                // use $this->assign_plus_equal()
-
+            case '--' :                
                 $assign = '$this->storage()->data(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_min_min(' ;
@@ -105,22 +116,28 @@ class Variable {
         return $token;
     }
 
+    public static function is_count($build, Data $storage, $token=[]){
+        $count = null;
+        foreach($token as $nr => $record){
+            if($count === null){
+                $count = $record;
+            } else {
+                if(array_key_exists('variable', $record)){
+                   $token[$nr]['variable'] ['is_assign'] = true;
+                   unset($token[$nr]['parse']);
+                }                
+            }
+        }
+        return $token;
+    }
+
     public static function define($build, Data $storage, $token=[]){
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
             return '';
         }
-
-        if($storage->data('is.debug') === true){
-            d($storage->data('is.debug'));
-            dd($token);
-        }
-
         $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         $define_modifier = '';
-
-//         $define_placeholder = 'R3M-IO-' . Core::uuid();
-
         if(
             array_key_exists('has_modifier', $variable['variable']) &&
             $variable['variable']['has_modifier'] === true
@@ -159,8 +176,6 @@ class Variable {
         $operator_max = 1024;
         $operator_counter = 0;
         $set = null;
-//         d($token);
-        //create new token for token + sets;
         while(Set::has($token)){
             $set = Set::get($token);
             while(Operator::has($set)){
@@ -187,23 +202,19 @@ class Variable {
             }
         }
         $operator = $token;
-        while(Operator::has($operator)){
-            $statement = Operator::get($operator);
-//             d($operator);
-//             $debug = debug_backtrace(true);
-//             d($debug[0]);
+        while(Operator::has($operator)){            
+            $statement = Operator::get($operator);            
             $operator = Operator::remove($operator, $statement);
             $statement = Operator::create($build, $storage, $statement);
-
             if(empty($statement)){
                 throw new Exception('Operator error');
             }
-
             $key = key($statement);
             $operator[$key]['value'] = $statement[$key];
             $operator[$key]['type'] = Token::TYPE_CODE;
             unset($operator[$key]['execute']);
             unset($operator[$key]['is_executed']);
+            unset($operator[$key]['is_operator']);
             $operator_counter++;
             if($operator_counter > $operator_max){
                 break;
@@ -214,7 +225,6 @@ class Variable {
         $in_array = false;
         $is_collect = false;
         $type = null;
-//         d($operator);
         $count = 0;             
         while(count($operator) >= 1){
             $record = array_shift($operator);
@@ -247,8 +257,8 @@ class Variable {
                 $in_array = false;
                 $result .= ']';
             }
-            elseif($is_collect === false){                
-                $record = Method::get($build, $storage, $record);                
+            elseif($is_collect === false){                                
+                $record = Method::get($build, $storage, $record);            
                 $result .= Value::get($build, $storage, $record);
                 if(
                     !in_array(

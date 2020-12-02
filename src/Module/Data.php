@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
+ * @changeLog
+ *  -    all
+ */
 namespace R3m\Io\Module;
 
 use stdClass;
@@ -25,7 +33,6 @@ class Data {
      * @return NULL|boolean|string|
      */
     public static function parameter($data, $parameter, $offset=0){
-//         $data = $this->data($attribute);
         $result = null;
         $value = null;
         if(is_string($parameter) && stristr($parameter, '\\')){
@@ -43,57 +50,55 @@ class Data {
             if(
                 is_array($data) ||
                 is_object($data)
-                ){
-                    foreach($data as $key => $param){
-                        if(is_numeric($key)){
-                            $param = ltrim($param, '-');
-                            $param = rtrim($param);
-                            $tmp = explode('=', $param);
-                            if(count($tmp) > 1){
-                                $param = array_shift($tmp);
-                                $value = implode('=', $tmp);
-                            }
-                            if(strtolower($param) == strtolower($parameter)){
-                                if($offset !== 0){
-                                    if(property_exists($data, ($key + $offset))){
-                                        $value = rtrim(ltrim($data->{($key + $offset)}, '-'));
-                                    } else {
-                                        $result = null;
-                                        break;
-                                    }
-                                }
-                                if(isset($value) && $value !== null){
-                                    $result = $value;
+            ){
+                foreach($data as $key => $param){
+                    if(is_numeric($key)){
+                        $param = ltrim($param, '-');
+                        $param = rtrim($param);
+                        $tmp = explode('=', $param);
+                        if(count($tmp) > 1){
+                            $param = array_shift($tmp);
+                            $value = implode('=', $tmp);
+                        }
+                        if(strtolower($param) == strtolower($parameter)){
+                            if($offset !== 0){
+                                if(property_exists($data, ($key + $offset))){
+                                    $value = rtrim(ltrim($data->{($key + $offset)}, '-'));
                                 } else {
-                                    $result = true;
-                                    return $result;
+                                    $result = null;
+                                    break;
                                 }
-                                break;
                             }
-                            $value = null;
-                        }
-                        elseif($key == $parameter){
-                            if($offset < 0){
-                                while($offset < 0){
-                                    $param = prev($data);
-                                    $offset++;
-                                }
-                                return $param;
-                            }
-                            elseif($offset == 0){
-                                return $param;
+                            if(isset($value) && $value !== null){
+                                $result = $value;
                             } else {
-                                while($offset > 0){
-                                    $param = next($data);
-                                    $offset--;
-                                }
-                                return $param;
+                                $result = true;
+                                return $result;
                             }
-
+                            break;
                         }
-                        $pointer = next($data);
-
+                        $value = null;
                     }
+                    elseif($key == $parameter){
+                        if($offset < 0){
+                            while($offset < 0){
+                                $param = prev($data);
+                                $offset++;
+                            }
+                            return $param;
+                        }
+                        elseif($offset == 0){
+                            return $param;
+                        } else {
+                            while($offset > 0){
+                                $param = next($data);
+                                $offset--;
+                            }
+                            return $param;
+                        }
+                    }
+                    $pointer = next($data);
+                }
             }
         }
         if($result === null || is_bool($result)){
@@ -123,15 +128,13 @@ class Data {
                             'delete',
                             'remove'
                         ]
-                        )
-                    ){
-                        return $this->deleteData($value);
+                    )
+                ){
+                    return $this->deleteData($value);
                 } else {
                     Core::object_delete($attribute, $this->data()); //for sorting an object
                     Core::object_set($attribute, $value, $this->data());
                     return;
-//                     return Core::object_get($attribute, $this->data()) //commented out @ 2020-10-05;
-
                 }
             } else {
                 if(is_string($attribute)){
@@ -185,5 +188,4 @@ class Data {
     private function deleteData($attribute=null){
         return Core::object_delete($attribute, $this->data());
     }
-
 }

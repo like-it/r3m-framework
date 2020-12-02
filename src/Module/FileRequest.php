@@ -1,8 +1,10 @@
 <?php
 /**
- * @author         Remco van der Velde
- * @since         19-07-2015
- * @version        1.0
+ * @author          Remco van der Velde
+ * @since           04-01-2019
+ * @copyright       (c) Remco van der Velde
+ * @license         MIT
+ * @version         1.0
  * @changeLog
  *  -    all
  */
@@ -19,8 +21,6 @@ class FileRequest {
     public static function get($object){
         $request = $object->data(App::REQUEST);        
         $input = $request->data('request');
-        // $input = substr($input, 0, -1);
-
         $dir = str_replace(['../','..'], '', Dir::name($input));
         $file = str_replace($dir,'', $input);
         $extension = File::extension($file);            
@@ -28,10 +28,7 @@ class FileRequest {
             return false;
         }
         $config = $object->data(App::CONFIG);
-
         $location = [];
-
-
         $explode = explode('/', $dir);
         $controller = array_shift($explode);
         $view = $explode;
@@ -40,14 +37,11 @@ class FileRequest {
         array_unshift($view, 'Public');
         array_unshift($view, 'View');
         array_unshift($view, $controller);
-
         $location[] = $config->data('host.dir.root') . implode('/', $view) . $file;
         $location[] = $config->data('host.dir.root') . implode('/', $explode) . $file;
         $location[] = $config->data('host.dir.root') . $dir . 'Public' . $config->data('ds') . $file;
         $location[] = $config->data('host.dir.public') . $dir . $file;
         $location[] = $config->data('project.dir.public') . $dir . $file;
-//         $location[] = '/' . $dir . $file;
-
         foreach($location as $url){
             if(File::exist($url)){
                 $host = $object->data('host.url');
