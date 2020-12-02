@@ -23,8 +23,21 @@ function modifier_json_encode(Parse $parse, Data $data, $value, $options=0, $dep
     if(
         $data->data('capture.append') == 'script' || 
         $data->data('capture.prepend') == 'script'        
-    ){        
-        return str_replace('"', '\"', json_encode($value, $options, $depth));
+    ){                
+        $json = str_replace(
+            [       
+                '\\',         
+                '/',                
+                '"',
+            ], 
+            [   
+                '\\\\',             
+                '\/',                
+                '\"',
+            ], 
+            json_encode($value, $options, $depth)
+        );
+        return $json;
     } else {
         return json_encode($value, $options, $depth);
     }

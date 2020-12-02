@@ -22,7 +22,7 @@ class Value {
     const TYPE_CAST_FLOAT = 'float';
     const TYPE_CAST_STRING = 'string';
 
-    public static function get($build, Data $storage, $record=[]){
+    public static function get($build, Data $storage, $record=[]){        
         switch($record['type']){
             case Token::TYPE_INT :
             case Token::TYPE_FLOAT :
@@ -77,14 +77,19 @@ class Value {
                 return Variable::define($build, $storage, $token);
             break;
             case Token::TYPE_METHOD :
-                return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                $method = Method::get($build, $storage, $record);
+                if($method['type'] == Token::TYPE_CODE){
+                    return $method['value'];
+                } else {
+                    return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                }                                                
             break;
             case Token::TYPE_WHITESPACE :
             case Token::TYPE_CURLY_CLOSE :
             case Token::TYPE_CURLY_OPEN :
                 return;
             break;
-            default:                
+            default:                              
                 throw new Exception('Variable value type ' .  $record['type'] . ' not defined');
             break;
         }

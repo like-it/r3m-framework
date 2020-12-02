@@ -73,7 +73,9 @@
         "plugin": {
             "multi_line": [
                 "capture.prepend",
-                "capture.append"
+                "capture.append",                
+                "block.code",
+                "block.html"
             ]
         }
     }

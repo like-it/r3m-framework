@@ -29,6 +29,7 @@ class Parse {
     private $cache_dir;
     private $local;
     private $is_assign;
+    private $halt_literal;
 
     public function __construct($object, $storage=null){
         $this->object($object);
@@ -121,11 +122,18 @@ class Parse {
         return $this->is_assign;
     }
 
+    public function halt_literal($halt_literal=null){
+        if($halt_literal !== null){
+            $this->halt_literal = $halt_literal;
+        }
+        return $this->halt_literal;
+    }
+
     public function compile($string='', $data=[], $storage=null, $is_debug=false){
-        if($storage === null){
+        if($storage === null){            
             $storage = $this->storage(new Data());
         }
-        if(is_object($data)){
+        if(is_object($data)){            
             $storage->data(Core::object_merge($storage->data(), $data));
         } else {
             $storage->data($data);
@@ -147,30 +155,37 @@ class Parse {
             return $string;
         }
         else {
-            $build = new Build($this->object(), $is_debug);
+            $build = new Build($this->object(), $this, $is_debug);
             $build->cache_dir($this->cache_dir());
             $source = $storage->data('r3m.io.parse.view.source');
+            $options = [];
             if(empty($source)){
-                $url = $build->url($string, [
+                $options = [
                     'source' => $storage->data('r3m.io.parse.view.url')
-                ]);
+                ];
+                $url = $build->url($string, $options);
             } else {
-                $url = $build->url($string, [
+                $options = [
                     'source' => $storage->data('r3m.io.parse.view.source.url'),
                     'parent' => $storage->data('r3m.io.parse.view.url')
-                ]);
+                ];
+                $url = $build->url($string, $options);
             }
             $storage->data('r3m.io.parse.compile.url', $url);
             $storage->data('this', $this->local());
             $mtime = $storage->data('r3m.io.parse.view.mtime');              
-            if(File::exist($url) && File::mtime($url) + 60 >= $mtime){
+            if(File::exist($url) && File::mtime($url) == $mtime){
                 //cache file                
-                $meta = $build->meta();
-                $class = $meta['namespace'] . '\\' . $meta['class'];
+                $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
                 $template = new $class(new Parse($this->object()), $storage);                
-                $string = Literal::apply($string, $storage);
+                if(empty($this->halt_literal())){
+                    $string = Literal::apply($string, $storage);
+                }                
                 $string = $template->run();
-                $string = Literal::restore($string, $storage);
+                if(empty($this->halt_literal())){
+                    $string = Literal::restore($string, $storage);    
+                }
+                
                 $storage->data('delete', 'this');
                 return $string;
             }
@@ -179,7 +194,9 @@ class Parse {
                 opcache_invalidate($url, true);
             }
             */
-            $string = literal::apply($string, $storage);            
+            if(empty($this->halt_literal())){
+                $string = literal::apply($string, $storage);            
+            }            
             $tree = Token::tree($string, $is_debug);            
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
@@ -204,13 +221,15 @@ class Parse {
                     opcache_compile_file($url);
                 }
                 */
-            }
+            }            
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
             $exists = class_exists($class);
             if($exists){
                 $template = new $class(new Parse($this->object()), $storage);
                 $string = $template->run();
-                $string = Literal::restore($string, $storage);
+                if(empty($this->halt_literal())){
+                    $string = Literal::restore($string, $storage);
+                }
                 $storage->data('delete', 'this');
             }
         }

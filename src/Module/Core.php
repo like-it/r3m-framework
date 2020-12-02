@@ -243,14 +243,14 @@ class Core {
         if(is_string($input)){
             $input = trim($input);
             if($output == Core::OBJECT_OBJECT){
-                if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){                    
+                if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
                     $json = json_decode($input);
                     if(json_last_error()){
                         new Exception(json_last_error_msg());
                     }
                     return $json;
                 }
-                elseif(substr($input,0,1)=='[' && substr($input,-1,1)==']'){                    
+                elseif(substr($input,0,1)=='[' && substr($input,-1,1)==']'){
                     $json = json_decode($input);
                     if(json_last_error()){
                         throw new Exception(json_last_error_msg());
@@ -585,5 +585,13 @@ class Core {
         $replace[] = '_';
         $variable = '$' . str_replace($search, $replace, $uuid);
         return $variable;
+    }
+
+    public static function ucfirst_sentence($string='', $delimiter='.'){
+        $explode = explode($delimiter, $string);
+        foreach($explode as $nr => $part){
+            $explode[$nr] = ucfirst(trim($part));
+        }
+        return implode($delimiter, $explode);
     }
 }

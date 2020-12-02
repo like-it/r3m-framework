@@ -64,7 +64,7 @@ class Config extends Data {
 
     const LOCALHOST_EXTENSION = 'localhost.extension';
     const VALUE_LOCALHOST_EXTENSION =  [
-        'local'        
+        'local'
     ];
 
     const ROUTE = 'Route.json';
@@ -121,7 +121,7 @@ class Config extends Data {
         if(File::exist($url)){
             $read = Core::object(File::read($url));
             $this->data(Core::object_merge($this->data(), $read));
-        }        
+        }
         foreach($config as $attribute => $value){
             $this->data($attribute, $value);
         }
@@ -292,13 +292,5 @@ class Config extends Data {
         $key = Config::DATA_FRAMEWORK_ENVIRONMENT;
         $value = $this->data(Config::DICTIONARY . '.' . Config::ENVIRONMENT);
         $this->data($key, $value);
-    }
-
-    public static function ucfirst_sentence($string='', $delimiter='.'){
-        $explode = explode($delimiter, $string);
-        foreach($explode as $nr => $part){
-            $explode[$nr] = ucfirst(trim($part));
-        }
-        return implode($delimiter, $explode);
     }
 }

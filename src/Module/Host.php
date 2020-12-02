@@ -13,6 +13,7 @@ namespace R3m\Io\Module;
 use stdClass;
 use R3m\Io\App;
 use R3m\Io\Config;
+use R3m\Io\Module\Core;
 
 class Host {
     const SCHEME_HTTP = 'http';
@@ -44,7 +45,7 @@ class Host {
                 $config->data('project.dir.root') .
                 $config->data(Config::DICTIONARY . '.' . Config::HOST) .
                 $config->data('ds') .
-                Config::ucfirst_sentence(
+                Core::ucfirst_sentence(
                     $object->data('host.domain') .
                     $config->data('ds') .
                     $object->data('host.extension') .
@@ -56,7 +57,7 @@ class Host {
                 $config->data('project.dir.root') .
                 $config->data(Config::DICTIONARY . '.' . Config::HOST) .
                 $config->data('ds') .
-                Config::ucfirst_sentence(
+                Core::ucfirst_sentence(
                     $object->data('host.subdomain') .
                     $config->data('ds') .
                     $object->data('host.domain') .

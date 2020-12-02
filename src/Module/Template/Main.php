@@ -88,6 +88,50 @@ class Main {
 	    return $variable;
 	}
 
+	protected function value_plus_plus($variable=0){
+	    $variable += 0;
+	    $variable++;
+	    return $variable;
+	}
+
+	protected function value_min_min($variable=0){
+	    $variable += 0;
+	    $variable--;
+	    return $variable;
+	}
+
+	protected function plus_plus_assign($variable=0){
+	    $variable += 0;
+	    ++$variable;
+	    return $variable;
+	}
+
+	protected function min_min_assign($variable=0){
+	    $variable += 0;
+	    --$variable;
+	    return $variable;
+	}
+
+	protected function plus_plus_value($variable=0){
+	    $variable += 0;
+	    ++$variable;
+	    return $variable;
+	}
+
+	protected function min_min_value($variable=0){
+	    $variable += 0;
+	    --$variable;
+	    return $variable;
+	}
+
+	protected function value_boolean_and($variable1=null, $variable2=null){        
+        return $variable1 && $variable2;
+	}
+
+	protected function value_boolean_or($variable1=null, $variable2=null){        
+        return $variable1 || $variable2;
+	}
+
 	protected function value_plus($variable1=null, $variable2=null){
         $type1 = getType($variable1);
         $type2 = getType($variable2);

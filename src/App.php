@@ -155,6 +155,10 @@ class App extends Data {
         return $this->data(App::ROUTE);
     }
 
+    public function config($attribute=null, $value=null){
+        return $this->data(App::CONFIG)->data($attribute, $value);
+    }
+
     public function request($attribute=null, $value=null){                
         return $this->data(App::REQUEST)->data($attribute, $value);        
     }
@@ -188,7 +192,7 @@ class App extends Data {
         }
     }
 
-    public function parse_read($url, $attribute=null){
+    public function parse_read($url, $attribute=null){        
         if(File::exist($url)){
             $read = File::read($url);
             if($read){

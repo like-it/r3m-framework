@@ -35,13 +35,15 @@ class Build {
 
     public $indent;
     private $object;
+    private $parse;
     private $storage;
     private $cache_dir;
     private $is_debug;
 
-    public function __construct($object=null, $is_debug=false){
+    public function __construct($object=null, $parse=null, $is_debug=false){
         $this->is_debug = $is_debug;
         $this->object($object);
+        $this->parse($parse);
         $config = $this->object()->data(App::CONFIG);
         if(empty($config)){
             throw new Exception('Config not found in object');
@@ -111,7 +113,8 @@ class Build {
 
         $storage = $this->storage();
         $key = $storage->data('key');
-        $class = $config->data('dictionary.template') . '_' . $key;
+        //$class = $config->data('dictionary.template') . '_' . $key;
+        $class = $this->storage()->data('class');        
         $document[] = $this->indent(0) . 'class ' . $class . ' extends Main {';
         $document[] = '';
         $document[] = $this->indent(1) . 'public function run(){';
@@ -195,6 +198,7 @@ class Build {
             if($exist === false){
                 $value = $record['value'];
                 $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
+                d($dir_plugin);
                 throw new Exception('Function not found: ' . $text);
             }
         }
@@ -303,7 +307,14 @@ class Build {
                         } else {                            
                             throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
                         }
-                    break;                    
+                    break;       
+                    case Token::TYPE_IS_MINUS_MINUS :
+                    case Token::TYPE_IS_PLUS_PLUS :
+                        $selection = Variable::is_count($this, $storage, $selection);
+                        $run[] = $this->indent() . '$this->parse()->is_assign(true);';
+                        $run[] = $this->indent() . Variable::count_assign($this, $storage, $selection, false) . ';';
+                        $run[] = $this->indent() . '$this->parse()->is_assign(false);';                        
+                    break;
                     case Build::VARIABLE_ASSIGN : 
                         $run[] = $this->indent() . '$this->parse()->is_assign(true);';
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
@@ -329,9 +340,9 @@ class Build {
                                 $multi_line
                                 //capture.append
                             )
-                        ){
-                            $selection = Method::capture_selection($this, $storage, $tree, $selection);                            
-                            $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
+                        ){                                                        
+                            $selection = Method::capture_selection($this, $storage, $tree, $selection);                             
+                            $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';                    
                             foreach($selection as $skip_nr => $item){
                                 //need skip_nr
                             }
@@ -486,6 +497,12 @@ class Build {
             case Token::TYPE_IS_DIVIDE :
                 return Token::TYPE_IS_DIVIDE;
             break;
+            case Token::TYPE_IS_PLUS_PLUS :
+                return Token::TYPE_IS_PLUS_PLUS;
+            break;
+            case Token::TYPE_IS_MINUS_MINUS :
+                return Token::TYPE_IS_MINUS_MINUS;
+            break;
             default:
                 d($record);
                 throw new Exception('Undefined type (' . $record['type'] . ')');
@@ -532,13 +549,29 @@ class Build {
         return $document;
     }
 
-    public function meta(){
+    public function meta($options=[]){        
         $config = $this->object()->data(App::CONFIG);
         $this->storage()->data('placeholder.use', '// R3M-IO-' . Core::uuid());
         $namespace = 'R3m\\Io\\Module\\' .  $config->data('dictionary.compile');
         $this->storage()->data('namespace', $namespace);
         $key = $this->storage()->data('key');
-        $class = $config->data('dictionary.template') . '_' . $key;
+        $name = '';
+        if(isset($options['parent'])){            
+            $name .= str_replace(
+                [                    
+                    '.'
+                ], 
+                [                    
+                    '_'
+                ], 
+                basename($options['parent'])
+            ) . '_';            
+        }
+        if(isset($options['source'])){            
+            $name .= str_replace('.', '_', basename($options['source'])) . '_';            
+        }
+        $name = str_replace('_tpl', '', $name);
+        $class = $config->data('dictionary.template') . '_' . $name . $key;
         $this->storage()->data('class', $class);
         $meta = [
             'namespace' => $namespace,
@@ -560,6 +593,21 @@ class Build {
 
     private function getObject(){
         return $this->object;
+    }
+
+    public function parse($parse=null){
+        if($parse !== null){
+            $this->setParse($parse);
+        }
+        return $this->getParse();
+    }
+
+    private function setParse($parse=null){
+        $this->parse = $parse;
+    }
+
+    private function getParse(){
+        return $this->parse;
     }
 
     public function storage($object=null){
@@ -600,13 +648,30 @@ class Build {
             $autoload->unregister();
             $autoload->addPrefix($config->data('dictionary.compile'),  $dir);
             $autoload->register();
+            $name = '';
+            if(isset($options['parent'])){            
+                $name .= str_replace(
+                    [                        
+                        '.'
+                    ], 
+                    [                        
+                        '_'
+                    ], 
+                    basename($options['parent'])
+                ) . '_';   
+            }
+            if(isset($options['source'])){
+                $name .= str_replace('.', '_', basename($options['source'])) . '_';
+            }        
+            $name = str_replace('_tpl', '', $name);    
             $url =
                 $dir .
                 $config->data('dictionary.template') .
                 '_' .
+                $name .
                 $key .
                 $config->data('extension.php')
-            ;
+            ;            
             $storage->data('url', $url);
             $storage->data('key', $key);
             if(!empty($options['parent'])){
@@ -615,7 +680,7 @@ class Build {
             if(!empty($options['source'])){
                 $storage->data('source', $options['source']);
             }
-            $this->meta();
+            $this->meta($options);
         }
         return $url;
     }

@@ -16,6 +16,31 @@ use R3m\Io\Module\Core;
 
 class Variable {
 
+    public static function count_assign($build, Data $storage, $token=[], $is_result=false){
+        $count = array_shift($token);
+        $variable = array_shift($token);
+        switch($count['type']){
+            case Token::TYPE_IS_MINUS_MINUS :
+                $assign = '$this->storage()->data(\'';
+                $assign .= $variable['variable']['attribute'] . '\', ';
+                $assign .= '$this->min_min_assign(' ;
+                $assign .= '$this->storage()->data(\'';
+                $assign .= $variable['variable']['attribute'] . '\')';
+                $assign .= '))';
+                return $assign;
+            break;  
+            case Token::TYPE_IS_PLUS_PLUS :
+                $assign = '$this->storage()->data(\'';
+                $assign .= $variable['variable']['attribute'] . '\', ';
+                $assign .= '$this->plus_plus_assign(' ;
+                $assign .= '$this->storage()->data(\'';
+                $assign .= $variable['variable']['attribute'] . '\')';
+                $assign .= '))';
+                return $assign;
+            break;  
+        }        
+    }
+
     public static function assign($build, Data $storage, $token=[], $is_result=false){
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
@@ -91,6 +116,21 @@ class Variable {
         return $token;
     }
 
+    public static function is_count($build, Data $storage, $token=[]){
+        $count = null;
+        foreach($token as $nr => $record){
+            if($count === null){
+                $count = $record;
+            } else {
+                if(array_key_exists('variable', $record)){
+                   $token[$nr]['variable'] ['is_assign'] = true;
+                   unset($token[$nr]['parse']);
+                }                
+            }
+        }
+        return $token;
+    }
+
     public static function define($build, Data $storage, $token=[]){
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
@@ -162,11 +202,10 @@ class Variable {
             }
         }
         $operator = $token;
-        while(Operator::has($operator)){
-            $statement = Operator::get($operator);
+        while(Operator::has($operator)){            
+            $statement = Operator::get($operator);            
             $operator = Operator::remove($operator, $statement);
             $statement = Operator::create($build, $storage, $statement);
-
             if(empty($statement)){
                 throw new Exception('Operator error');
             }
@@ -175,6 +214,7 @@ class Variable {
             $operator[$key]['type'] = Token::TYPE_CODE;
             unset($operator[$key]['execute']);
             unset($operator[$key]['is_executed']);
+            unset($operator[$key]['is_operator']);
             $operator_counter++;
             if($operator_counter > $operator_max){
                 break;
@@ -217,8 +257,8 @@ class Variable {
                 $in_array = false;
                 $result .= ']';
             }
-            elseif($is_collect === false){                
-                $record = Method::get($build, $storage, $record);                
+            elseif($is_collect === false){                                
+                $record = Method::get($build, $storage, $record);            
                 $result .= Value::get($build, $storage, $record);
                 if(
                     !in_array(
