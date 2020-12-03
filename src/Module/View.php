@@ -183,7 +183,7 @@ class View {
         $object->data('controller', $config->data('controller'));
     }
 
-    public function view($object, $url){
+    public static function view($object, $url){
         if(empty($url)){            
             throw new Exception('Url is empty');
         }

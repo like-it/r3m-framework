@@ -476,7 +476,7 @@ class Route extends Data{
         return false;
     }
 
-    private function is_match_by_deep($object, $route, $select){
+    private static function is_match_by_deep($object, $route, $select){
         if(!property_exists($route, 'deep')){
             return false;
         }
