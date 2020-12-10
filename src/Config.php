@@ -53,6 +53,9 @@ class Config extends Data {
     const PLUGIN = 'plugin';
     const VALUE_PLUGIN = 'Plugin';
 
+    const VALIDATE = 'validate';
+    const VALUE_VALIDATE = 'Validate';
+
     const DS = 'ds';
     const VALUE_DS = DIRECTORY_SEPARATOR;
 
@@ -86,6 +89,7 @@ class Config extends Data {
     const DATA_FRAMEWORK_DIR_CACHE = Config::DATA_FRAMEWORK_DIR . '.' .'cache';
     const DATA_FRAMEWORK_DIR_MODULE = Config::DATA_FRAMEWORK_DIR . '.' .'module';
     const DATA_FRAMEWORK_DIR_PLUGIN =  Config::DATA_FRAMEWORK_DIR . '.' . 'plugin';
+    const DATA_FRAMEWORK_DIR_VALIDATE =  Config::DATA_FRAMEWORK_DIR . '.' . 'validate';
 
     const DATA_FRAMEWORK_ENVIRONMENT = 'framework.environment';
 
@@ -190,6 +194,10 @@ class Config extends Data {
         $value = Config::VALUE_PLUGIN;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::VALIDATE;
+        $value = Config::VALUE_VALIDATE;
+        $this->data($key, $value);
+
         $key = Config::DICTIONARY . '.' . Config::DS;
         $value = Config::VALUE_DS;
         $this->data($key, $value);
@@ -288,6 +296,13 @@ class Config extends Data {
             $this->data(Config::DICTIONARY . '.' . Config::CLI) .
             $this->data(Config::DS);
         $this->data($key, $value);
+        $key = Config::DATA_FRAMEWORK_DIR_VALIDATE;
+        $value =
+            $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
+            $this->data(Config::DICTIONARY . '.' . Config::VALIDATE) .
+            $this->data(Config::DS);
+        $this->data($key, $value);
+
 
         $key = Config::DATA_FRAMEWORK_ENVIRONMENT;
         $value = $this->data(Config::DICTIONARY . '.' . Config::ENVIRONMENT);

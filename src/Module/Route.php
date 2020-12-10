@@ -672,7 +672,7 @@ class Route extends Data{
         return $byte;
     }
 
-    private function item_path($object, $item){
+    private static function item_path($object, $item){
         if(!property_exists($item, 'path')){
             return $item;
         }
@@ -686,7 +686,7 @@ class Route extends Data{
 
     }
 
-    private function item_deep($object, $item){
+    private static function item_deep($object, $item){
         if(!property_exists($item, 'path')){
             $item->deep = 0;
             return $item;
