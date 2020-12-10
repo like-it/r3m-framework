@@ -23,23 +23,14 @@ function function_dd(Parse $parse, Data $data, $debug=null){
     ){
         $debug= $data->data();
     }
-    $trace = debug_backtrace(true);
-    ob_start();
+    $trace = debug_backtrace(true);    
     if(!defined('IS_CLI')){
         echo '<pre class="priya-debug">';
     }
-    echo $trace[0]['file'] . ':' . $trace[0]['line'] . PHP_EOL;
-    ob_flush();
+    echo $trace[0]['file'] . ':' . $trace[0]['line'] . PHP_EOL;    
     var_dump($debug);
-    $debug = ob_get_contents();
-    ob_end_clean();
-    $explode = explode(PHP_EOL, $debug);
-    array_shift($explode);
-    if(defined('IS_CLI')){
-        echo implode(PHP_EOL, $explode);
-    } else {
-        echo implode('<br>' . PHP_EOL, $explode);
+    if(!defined('IS_CLI')){
         echo '</pre>';
     }
-    exit;
+    exit;    
 }

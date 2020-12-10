@@ -45,7 +45,7 @@ class View {
             $template = $temp->name;
 
         }
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+        $config = $object->data(App::CONFIG);
         if(substr($dir, -1) != $config->data('ds')){
             $dir .= $config->data('ds');
         }
@@ -68,8 +68,7 @@ class View {
             array_pop($explode);
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
-        }
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+        }        
         $url = false;
         foreach($list as $file){
             if(File::exist($file)){
@@ -79,7 +78,7 @@ class View {
         }
         if(empty($url)){
             if($config->data('framework.environment') == Config::MODE_DEVELOPMENT){
-                d($list);
+                d($list);                
                 throw new Exception('Cannot find view file');
             }
             return;
@@ -187,7 +186,7 @@ class View {
         if(empty($url)){            
             throw new Exception('Url is empty');
         }
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+        $config = $object->data(App::CONFIG);
         $dir = Dir::name($url);
         $file = str_replace($dir, '', $url);
         $dir_template = $dir;
