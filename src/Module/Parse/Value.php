@@ -40,14 +40,14 @@ class Value {
             case Token::TYPE_PARENTHESE_CLOSE :
             case Token::TYPE_QUOTE_SINGLE_STRING :
             case Token::TYPE_BACKSLASH :
-            case Token::TYPE_QUOTE_SINGLE :
+            case Token::TYPE_QUOTE_SINGLE :            
                 return $record['value'];
             break;
             case Token::TYPE_STRING :
                 return '\'' . $record['value'] . '\''; //might need str_replace on quote_single (') to (\')
             break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
-                if(stristr($record['value'], '{') === false){
+                if(stristr($record['value'], '{') === false){                                        
                     return $record['value'];
                 }
 
@@ -83,6 +83,10 @@ class Value {
                 } else {
                     return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
                 }                                                
+            break;
+            case Token::TYPE_COMMENT :
+            case Token::TYPE_DOC_COMMENT :
+                return '\'\'';
             break;
             case Token::TYPE_WHITESPACE :
             case Token::TYPE_CURLY_CLOSE :
