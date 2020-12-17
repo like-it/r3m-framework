@@ -21,6 +21,8 @@ class Code {
             case Build::VARIABLE_ASSIGN :
                 $result = Variable::assign($build, $storage, $selection, true);
             break;
+            case Build::METHOD_CONTROL :
+                $result = Method::create_control($build, $storage, $selection);                
             case '' :
                 if(empty($selection)){
                     return;

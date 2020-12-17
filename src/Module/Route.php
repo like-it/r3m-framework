@@ -104,6 +104,12 @@ class Route extends Data{
         }
         $path = $get->path;
         if(is_array($option)){
+            if(
+                empty($option) && 
+                stristr($path, '{$') !== false
+            ){
+                throw new Exception('path has variable & option is empty');
+            }
             foreach($option as $key => $value){
                 if(is_numeric($key)){
                     $explode = explode('}', $get->path, 2);
@@ -116,12 +122,12 @@ class Route extends Data{
                     $path = str_replace('{$' . $key . '}', $value, $path);
                 }
             }
-        }
+        }        
         if($path == '/'){
             $url = $object->data('host.url');
         } else {
             $url = $object->data('host.url') . $path;
-        }        
+        }               
         return $url;
     }
 
@@ -433,6 +439,49 @@ class Route extends Data{
         return true;
     }
 
+    private static function is_match_by_condition($object, $route, $select){        
+        if(!property_exists($route, 'path')){
+            return false;
+        }
+        $explode = explode('/', $route->path);
+        array_pop($explode);
+        $attribute = $select->attribute;        
+        if(empty($attribute)){
+            return true;
+        }                
+        foreach($explode as $nr => $part){
+            if(Route::is_variable($part)){
+                if(
+                    property_exists($route, 'condition') && 
+                    is_array($route->condition)
+                ){
+                    foreach($route->condition as $condition_nr => $value){                    
+                        if(substr($value, 0, 1) == '!'){
+                            //invalid conditions
+                            if(strtolower(substr($value, 1)) == strtolower($attribute[$nr])){
+                                return false;
+                            }
+                        } else {
+                            //valid conditions
+                            if(strtolower($value) == strtolower($attribute[$nr])){
+                                return true;
+                            }                        
+                        }
+                    }   
+                }                             
+                continue;
+            }
+            if(array_key_exists($nr, $attribute) === false){
+                return false;
+            }
+            if(strtolower($part) != strtolower($attribute[$nr])){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     private static function is_match_by_method($object, $route, $select){
         if(!property_exists($route, 'method')){
             return false;
@@ -518,6 +567,10 @@ class Route extends Data{
         $is_match = Route::is_match_by_attribute($object, $route, $select);        
         if($is_match === false){
             return $is_match;
+        }
+        $is_match = Route::is_match_by_condition($object, $route, $select);        
+        if($is_match === false){
+            return $is_match;
         }                
         return $is_match;
     }
@@ -533,6 +586,10 @@ class Route extends Data{
             return $is_match;
         }        
         $is_match = Route::is_match_by_attribute($object, $route, $select);                
+        if($is_match === false){
+            return $is_match;
+        }                
+        $is_match = Route::is_match_by_condition($object, $route, $select);        
         if($is_match === false){
             return $is_match;
         }                        

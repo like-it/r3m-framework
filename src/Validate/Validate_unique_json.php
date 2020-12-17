@@ -13,6 +13,7 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 
 function validate_unique_json(R3m\Io\App $object, $field='', $argument=''){    
+    $original_uuid = $object->request('node.uuid');    
     $string = strtolower($object->request('node.' . $field));
     if(property_exists($argument, 'url')){
         $url = $argument->url;
@@ -28,6 +29,12 @@ function validate_unique_json(R3m\Io\App $object, $field='', $argument=''){
     $is_unique = true;
     if($data){
         foreach($data->data($list) as $uuid => $record){        
+            if(
+                !empty($original_uuid) && 
+                $original_uuid == $uuid
+            ){
+                continue;
+            }
             $match = strtolower($data->data($list . '.' . $uuid . '.' . $field));
             if($match == $string){
                 $is_unique = false;

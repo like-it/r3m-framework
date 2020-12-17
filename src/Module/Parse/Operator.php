@@ -250,10 +250,10 @@ class Operator {
                 $right_value = Value::get($build, $storage, $right);                
                 switch($operator['value']){
                     case '&&' :
-                        $result[$assign_key] = '$this->value_boolean_and(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = $left_value . ' && ' . $right_value;
                     break;
                     case '||' :
-                        $result[$assign_key] = '$this->value_boolean_or(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = $left_value . ' || ' . $right_value;
                     break;
                     case '*' :
                         $result[$assign_key] = '$this->value_multiply(' . $left_value . ', ' . $right_value . ')';

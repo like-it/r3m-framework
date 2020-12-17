@@ -714,7 +714,7 @@ class Token {
                     }                    
                 }                
                 $value .= $record['value'];
-                $token[$target]['parse'] = '{' . $value . '}';                
+                $token[$target]['parse'] =  $value;                                
                 $target = null;
                 $depth = null;
                 $attribute_nr = 0;
@@ -915,8 +915,7 @@ class Token {
                         foreach($modifier_list as $modifier_key => $modifier){
                             $token[$is_variable]['parse'] .= $modifier['parse'];
                         }                        
-                    }
-                    $token[$is_variable]['parse'] = '{' . $token[$is_variable]['parse'] . '}';                    
+                    }                                
                     $is_variable = null;
                     $variable_nr = 0;
                     $variable = [];                    
@@ -1120,8 +1119,7 @@ class Token {
                         $value .= $record['value'];
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
-                        $token[$variable_nr]['value'] = $value;
-                        $token[$variable_nr]['parse'] = '{' . $value . '}';
+                        $token[$variable_nr]['value'] = $value;                        
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
                         $skip += 1;
@@ -1191,8 +1189,7 @@ class Token {
                         $value .= $record['value'];
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
-                        $token[$variable_nr]['value'] = $value;
-                        $token[$variable_nr]['parse'] = '{' . $value . '}';
+                        $token[$variable_nr]['value'] = $value;                        
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
                         $skip += 2;
@@ -1218,8 +1215,7 @@ class Token {
                     $token[$variable_nr]['variable']['name'] .= $record['value'];
                     $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                     $value .= $record['value'];                    
-                    $token[$variable_nr]['value'] = $value;
-                    $token[$variable_nr]['parse'] = '{' . $value . '}';
+                    $token[$variable_nr]['value'] = $value;                    
                     unset($token[$nr]);
                     $previous_nr = $nr;
                     continue;
