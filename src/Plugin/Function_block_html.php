@@ -12,6 +12,10 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_block_html(Parse $parse, Data $data, $name='', $value=null){    
+    if($value === null){
+        $value = $name;
+        $name = null;
+    }        
     $search = [" ", "\t", "\n", "\r", "\r\n"];
     $replace = ['','','','',''];
     $content = trim($value, "\r\n\s\t");
@@ -30,8 +34,9 @@ function function_block_html(Parse $parse, Data $data, $name='', $value=null){
     }
     $value = implode('<', $content);    
     if(empty($name)){
-        return $value;
-    }
-    $data->data($name, $value);     
+        echo $value;
+    } else {
+        $data->data($name, $value);     
+    }    
     return '';
 }

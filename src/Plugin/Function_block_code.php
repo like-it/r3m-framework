@@ -14,7 +14,7 @@ use R3m\Io\Module\Data;
 function function_block_code(Parse $parse, Data $data, $name='', $value=null){    
     if($value === null){
         $value = $name;
-        $name = '';        
+        $name = null;        
     }
     $explode = explode("\n", $value);
     foreach($explode as $nr => $value){
@@ -30,12 +30,13 @@ function function_block_code(Parse $parse, Data $data, $name='', $value=null){
             [],
             $data            
         );          
-        return $compile;
-    }    
-    $data->data($name, $parse->compile(
-        $value,
-        [],
-        $data            
-    ));     
+        echo $compile;
+    } else {
+        $data->data($name, $parse->compile(
+            $value,
+            [],
+            $data            
+        )); 
+    }        
     return '';
 }
