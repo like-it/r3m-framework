@@ -101,17 +101,15 @@ class Method {
                         $record['method']['attribute'][0][$nr]['is_key_value'] = $is_key_value;
                     }
                 }
-            }
+            }   
+            $multi_line = Build::getPluginMultiline($build->object());                     
             if(
                 in_array(
-                    $record['method']['php_name'],
-                    [
-                        'function_block_html',
-                        'function_block_code',
-                    ]
+                    $record['method']['name'],
+                    $multi_line                    
                 )
-            ){
-                $list = [];
+            ){                
+                $list = [];                
                 foreach($record['method']['attribute'] as $nr => $token){
                     if(!array_key_exists($nr, $list)){
                         $list[$nr] = '';
@@ -145,7 +143,7 @@ class Method {
                         $value = '$this->parse()->compile(\'' . $value .'\', [], $this->storage())';
                     }
                     $attribute .= $value . ', ';
-                }
+                }                
             } else {                
                 foreach($record['method']['attribute'] as $nr => $token){                                        
                     $token = $build->require('function', $token);                    
@@ -153,6 +151,7 @@ class Method {
                     $attribute .= $value . ', ';
                 }                
             }
+            
             if($record['method']['php_name'] == Token::TYPE_FOR){
                 $assign = [];
                 $assign_nr = 0;

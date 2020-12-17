@@ -26,7 +26,7 @@ class Validate {
             }
             $test[$field] = [];
             if(is_object($list)){
-                $validate->{$field} = Label::validate($object, $list);
+                $validate->{$field} = Validate::validate($object, $list);
                 if(property_exists($validate->{$field}, 'test')){
                     $validate->test[$field] = $validate->{$field}->test;                    
                 }

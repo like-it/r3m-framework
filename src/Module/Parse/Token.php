@@ -916,7 +916,7 @@ class Token {
                             $token[$is_variable]['parse'] .= $modifier['parse'];
                         }                        
                     }
-                    $token[$is_variable]['parse'] = '{' . $token[$is_variable]['parse'] . '}';                    
+                    //$token[$is_variable]['parse'] = '{' . $token[$is_variable]['parse'] . '}';                    
                     $is_variable = null;
                     $variable_nr = 0;
                     $variable = [];                    
@@ -1121,7 +1121,7 @@ class Token {
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         $token[$variable_nr]['value'] = $value;
-                        $token[$variable_nr]['parse'] = '{' . $value . '}';
+                        //$token[$variable_nr]['parse'] = '{' . $value . '}';
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
                         $skip += 1;
@@ -1192,7 +1192,7 @@ class Token {
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         $token[$variable_nr]['value'] = $value;
-                        $token[$variable_nr]['parse'] = '{' . $value . '}';
+                        // $token[$variable_nr]['parse'] = '{' . $value . '}';
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
                         $skip += 2;
@@ -1219,7 +1219,7 @@ class Token {
                     $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                     $value .= $record['value'];                    
                     $token[$variable_nr]['value'] = $value;
-                    $token[$variable_nr]['parse'] = '{' . $value . '}';
+                    // $token[$variable_nr]['parse'] = '{' . $value . '}';
                     unset($token[$nr]);
                     $previous_nr = $nr;
                     continue;
