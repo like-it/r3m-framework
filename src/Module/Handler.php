@@ -132,8 +132,8 @@ class Handler {
                 $data->data($key, trim($value));
             }
         } else {
-            $request = $_REQUEST;
-            $request = Handler::request_key_group($request);
+            $request = $_REQUEST;  
+            $request = Handler::request_key_group($request);          
             if(property_exists($request, 'request')){
                 
             } else {
@@ -164,10 +164,12 @@ class Handler {
                         $record->name != 'request'
                     ){
                         if($record->value !== null){
+                            $record->name = str_replace('-', '.', $record->name);
                             $data->data($record->name, $record->value);
                         }
                     } else {
                         if($record !== null){
+                            $key = str_replace('-', '.', $key);
                             $data->data($key, $record);
                         }
                     }
