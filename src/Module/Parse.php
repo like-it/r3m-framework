@@ -26,6 +26,7 @@ class Parse {
 
     private $object;
     private $storage;
+    private $build;
     private $cache_dir;
     private $local;
     private $is_assign;
@@ -101,6 +102,21 @@ class Parse {
         return $this->storage;
     }
 
+    public function build($build=null){
+        if($build !== null){
+            $this->setBuild($build);
+        }
+        return $this->getBuild();
+    }
+
+    private function setBuild($build=null){
+        $this->build= $build;
+    }
+
+    private function getBuild(){
+        return $this->build;
+    }
+
     public function cache_dir($cache_dir=null){
         if($cache_dir !== null){
             $this->cache_dir = $cache_dir;
@@ -155,7 +171,7 @@ class Parse {
             return $string;
         }
         else {
-            $build = new Build($this->object(), $this, $is_debug);
+            $build = $this->build(new Build($this->object(), $this, $is_debug));
             $build->cache_dir($this->cache_dir());
             $source = $storage->data('r3m.io.parse.view.source');
             $options = [];

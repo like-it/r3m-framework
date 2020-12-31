@@ -142,7 +142,14 @@ class App extends Data {
                         $json->append = new stdClass();
                     }
                     $json->append->to = $append_to;
-                }                
+                }
+                $append_to = $object->data(App::REQUEST)->data('append.to');
+                if($append_to){
+                    if(empty($json->append)){
+                        $json->append = new stdClass();
+                    }
+                    $json->append->to = $append_to;
+                }
             }
             $json->script = $object->data(App::SCRIPT);
             $json->link = $object->data(App::LINK);

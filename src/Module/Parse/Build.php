@@ -68,14 +68,14 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
-        $dir_plugin = $config->data('parse.dir.plugin');
+        $dir_plugin = $config->data('parse.dir.plugin');                
         if(empty($dir_plugin)){
             $dir_plugin = [];
-            $dir_plugin[] = $config->data('host.dir.plugin');
             $dir_plugin[] = $config->data('controller.dir.plugin');
+            $dir_plugin[] = $config->data('host.dir.plugin');            
             $dir_plugin[] = $config->data('project.dir.plugin');
             $dir_plugin[] = $config->data('framework.dir.plugin');
-        }
+        }        
         $this->storage()->data('plugin', $dir_plugin);
     }
 
