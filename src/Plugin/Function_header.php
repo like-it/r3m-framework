@@ -8,9 +8,12 @@
  * @changeLog
  *     -            all
  */
+use stdClass;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Host;
 
-function function_file_size(Parse $parse, Data $data, $url=''){
-    return File::size($url);
+
+function function_header(Parse $parse, Data $data, $string='', $http_response_code=null, $replace=true){
+	Handler::header($string, $http_response_code, $replace);
 }
