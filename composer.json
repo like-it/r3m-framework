@@ -2,7 +2,8 @@
 	"name" : "r3m/framework",
 	"description" : "r3m framework",
 	"type" : "framework",
-	"require" : {		
+	"require" : {
+		"monolog/monolog" : "^2.2"
 	},
 	"license" : "MIT",
 	"authors" : [{

@@ -123,33 +123,28 @@ class App extends Data {
             if($object->data('method')){
                 $json->method = $object->data('method');
             } else {
-                $json->method = $object->data(App::REQUEST)->data('method');
+                $json->method = $object->request('method');
             }
             if($object->data('target')){
                 $json->target = $object->data('target');
             } else {
-                $json->target = $object->data(App::REQUEST)->data('target');
+                $json->target = $object->request('target');
             }
-            if($object->data('append-to')){
+            $append_to = $object->data('append-to');
+            if(empty($append_to)){
+                $append_to = $object->data('append.to');
+            }
+            if(empty($append_to)){
+                $append_to = $object->request('append-to');
+            }
+            if(empty($append_to)){
+                $append_to = $object->request('append.to');
+            }
+            if($append_to){
                 if(empty($json->append)){
                     $json->append = new stdClass();
                 }
-                $json->append->to = $object->data('append-to');
-            } else {
-                $append_to = $object->data(App::REQUEST)->data('append-to');
-                if($append_to){
-                    if(empty($json->append)){
-                        $json->append = new stdClass();
-                    }
-                    $json->append->to = $append_to;
-                }
-                $append_to = $object->data(App::REQUEST)->data('append.to');
-                if($append_to){
-                    if(empty($json->append)){
-                        $json->append = new stdClass();
-                    }
-                    $json->append->to = $append_to;
-                }
+                $json->append->to = $append_to;
             }
             $json->script = $object->data(App::SCRIPT);
             $json->link = $object->data(App::LINK);

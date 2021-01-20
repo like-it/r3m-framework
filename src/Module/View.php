@@ -49,7 +49,7 @@ class View {
         if(substr($dir, -1) != $config->data('ds')){
             $dir .= $config->data('ds');
         }
-        $root = $config->data('project.dir.root');
+        $root = $config->data(Config::DATA_PROJECT_DIR_ROOT);
         $explode = explode($config->data('ds'), $root);
         array_pop($explode);
         $minimum = count($explode);
@@ -77,7 +77,7 @@ class View {
             }
         }
         if(empty($url)){
-            if($config->data('framework.environment') == Config::MODE_DEVELOPMENT){
+            if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT){
                 d($list);                
                 throw new Exception('Cannot find view file');
             }
@@ -88,24 +88,24 @@ class View {
 
     public static function configure($object){
         $config = $object->data(App::CONFIG);
-        $key = 'parse.dir.template';
-        $value = $config->data('host.dir.cache') . View::PARSE . $config->data('ds') . View::TEMPLATE . $config->data('ds');
+        $key = Config::DATA_PARSE_DIR_TEMPLATE;
+        $value = $config->data(Config::DATA_HOST_DIR_CACHE) . View::PARSE . $config->data('ds') . View::TEMPLATE . $config->data('ds');
         $config->data($key, $value);
-        $key = 'parse.dir.compile';
-        $value = $config->data('host.dir.cache') . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
-        $value = $config->data('host.dir.data') . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
+        $key = Config::DATA_PARSE_DIR_COMPILE;
+        $value = $config->data(Config::DATA_HOST_DIR_CACHE) . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
+        $value = $config->data(Config::DATA_HOST_DIR_DATA) . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
         $config->data($key, $value);
-        $key = 'parse.dir.cache';
-        $value = $config->data('host.dir.cache') . View::PARSE . $config->data('ds') . View::CACHE . $config->data('ds');
-        $value = $config->data('host.dir.data') . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
+        $key = Config::DATA_PARSE_DIR_CACHE;
+        $value = $config->data(Config::DATA_HOST_DIR_CACHE) . View::PARSE . $config->data('ds') . View::CACHE . $config->data('ds');
+        $value = $config->data(Config::DATA_HOST_DIR_DATA) . View::PARSE . $config->data('ds') . View::COMPILE . $config->data('ds');
         $config->data($key, $value);
-        $key = 'parse.dir.plugin';
+        $key = Config::DATA_PARSE_DIR_PLUGIN;
         $value = [];
         $dir = rtrim(get_called_class()::DIR,$config->data(Config::DS)) . $config->data(Config::DS);
         $config->data(Config::DATA_CONTROLLER_DIR_SOURCE, $dir);
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT, Dir::name($dir));
         $config->data(Config::DATA_CONTROLLER_DIR_DATA,
-            $config->data('controller.dir.root') .
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
             $config->data(
                 Config::DICTIONARY .
                 '.' .
@@ -149,7 +149,7 @@ class View {
             ) .
             $config->data(Config::DS)
         ;
-        $host_dir_root = $config->data('host.dir.root');
+        $host_dir_root = $config->data(Config::DATA_HOST_DIR_ROOT);
         if(!empty($host_dir_root)){
             $value[] =
             $host_dir_root .
@@ -175,11 +175,12 @@ class View {
                 ) .
                 $config->data(Config::DS)
         ;
-        $config->data($key, $value);        
-        $config->data('controller.class', get_called_class());
-        $config->data('controller.name', strtolower(File::basename($config->data('controller.class'))));
-        $config->data('controller.title', File::basename($config->data('controller.class')));
-        $object->data('controller', $config->data('controller'));
+        $config->data($key, $value);  
+
+        $config->data(CONFIG::DATA_CONTROLLER_CLASS, get_called_class());
+        $config->data(CONFIG::DATA_CONTROLLER_NAME, strtolower(File::basename($config->data(CONFIG::DATA_CONTROLLER_CLASS))));
+        $config->data(CONFIG::DATA_CONTROLLER_TITLE, File::basename($config->data(CONFIG::DATA_CONTROLLER_CLASS)));
+        $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
     }
 
     public static function view($object, $url){

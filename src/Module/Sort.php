@@ -18,8 +18,8 @@ use R3m\Io\Config;
 class Sort extends data{
 
     public static function list($list){
-        $filter = new Sort($list);
-        return $filter;
+        $sort = new Sort($list);
+        return $sort;
     }
 
     public function with($sort=[]){
@@ -29,6 +29,7 @@ class Sort extends data{
             is_object($list)
         ){
             $result = [];  
+            $no_attribute = [];
             $count = count($sort);
             if($count == 1){
                 foreach($list as $uuid => $node){
@@ -36,7 +37,7 @@ class Sort extends data{
                         if(property_exists($node, $attribute)){
                             $result[$node->$attribute][] = $node;
                         } else {
-                            dd($node);
+                            $result[''][] = $node;                            
                         }
                         $sortable_1 = $sort[$attribute];                    
                         break;
@@ -51,10 +52,20 @@ class Sort extends data{
                 $list = [];                
                 foreach($result as $attribute => $subList){
                     foreach($subList as $nr => $record){
-                        $list[$record->uuid] = $record;
+                        if(property_exists($record, 'uuid')){
+                            $list[$record->uuid] = $record;
+                        } else {
+                            while(true){
+                                $uuid = Core::uuid();
+                                if(!array_key_exists($uuid, $list)){
+                                    $record->uuid = $uuid;
+                                    break;
+                                }
+                            }
+                            $list[$uuid] = $record;
+                        }                        
                     }
-                }  
-                return $list;
+                }                                
             }
             elseif($count == 2){
                 if(Core::object_is_empty($list)){
@@ -64,18 +75,14 @@ class Sort extends data{
                     foreach($sort as $attribute => $record){                    
                         if(property_exists($node, $attribute)){
                             $result[$node->$attribute][] = $node;
-                        } else {}
+                        } else {
+                            $result[''][] = $node;                            
+                        }
                         $sortable_1 = $sort[$attribute];                    
                         break;
                     }                
-                }    
-                if(!empty($attribute)){
-                    unset($sort[$attribute]);
-                } else {
-                    d($list);
-                    dd($sort);
-
-                }                
+                }                    
+                unset($sort[$attribute]);                                
                 if(!empty($sort) && is_array($result)){                
                     $list = [];                
                     foreach($result as $key => $subList){
@@ -83,7 +90,9 @@ class Sort extends data{
                             foreach($sort as $attribute => $record){                            
                                 if(property_exists($node, $attribute)){
                                     $list[$key][$node->$attribute][] = $node;
-                                } 
+                                } else {
+                                    $list[$key][''][] = $node;                                    
+                                }
                                 $sortable_2 = $sort[$attribute];                            
                                 break;
                             }
@@ -96,24 +105,36 @@ class Sort extends data{
                     } else {
                         krsort($result, SORT_NATURAL);
                     }                
-                    foreach($result as $key => $subList){
-                        foreach($subList as $attribute => $list){
-                            if(strtolower($sortable_2) == 'asc'){
-                                sort($list, SORT_NATURAL);
-                            } else {
-                                rsort($list, SORT_NATURAL);
-                            }
-                            $result[$key][$attribute] = $list;                         
+                    foreach($result as $key => $list){
+                        if(strtolower($sortable_2) == 'asc'){
+                            ksort($list, SORT_NATURAL);                            
+                        } else {
+                            krsort($list, SORT_NATURAL);
                         }
-                    }
-                    $list = [];                
+                        $result[$key] = $list;                                                
+                    }                                        
+                    $list = [];          
+                    $has_uuid = false;      
                     foreach($result as $key => $subList){
                         foreach($subList as $attribute => $subSubList){
                             foreach($subSubList as $nr => $node){
-                                $list[$node->uuid] = $node;
+                                if(property_exists($node, 'uuid')){
+                                    $has_uuid = true;
+                                    $list[$node->uuid] = $node;
+                                } else {
+                                    while(true){
+                                        $uuid = Core::uuid();
+                                        if(!array_key_exists($uuid, $list)){
+                                            $node->uuid = $uuid;
+                                            break;
+                                        }
+                                    }
+                                    $list[$uuid] = $node;
+                                }
+                                
                             }
                         }
-                    }
+                    }                                      
                 }  
             }                   
         }

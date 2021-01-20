@@ -129,16 +129,16 @@ class Handler {
             $request = $temp;
             $request = Core::array_object($request);
             foreach($request as $key => $value){
+                $key = str_replace(['-', '_'], ['.', '.'], $key);
                 $data->data($key, trim($value));
             }
         } else {
-            $request = $_REQUEST;  
-            $request = Handler::request_key_group($request);          
-            if(property_exists($request, 'request')){
-                
+            $request = new stdClass();
+            if(array_key_exists('request', $_REQUEST)){
+                $request->request = $_REQUEST['request'];  
             } else {
                 $request->request = '/';
-            }
+            }                                            
             $data->data('request', $request->request);
             $input =
                 htmlspecialchars(
@@ -164,12 +164,12 @@ class Handler {
                         $record->name != 'request'
                     ){
                         if($record->value !== null){
-                            $record->name = str_replace('-', '.', $record->name);
+                            $record->name = str_replace(['-', '_'], ['.', '.'], $record->name);
                             $data->data($record->name, $record->value);
                         }
                     } else {
                         if($record !== null){
-                            $key = str_replace('-', '.', $key);
+                            $key = str_replace(['-', '_'],  ['.', '.'], $key);
                             $data->data($key, $record);
                         }
                     }
@@ -177,20 +177,6 @@ class Handler {
             }
         }
         return $data;
-    }
-
-    private static function request_key_group($data){
-        $result = new stdClass();
-        foreach($data as $key => $value){
-            $explode = explode('_', $key, 4);
-            if(!isset($explode[1])){
-                $result->{$key} = $value;
-                continue;
-            }
-            $temp = Core::object_horizontal($explode, $value);
-            $result = Core::object_merge($result, $temp);
-        }
-        return $result;
     }
 
     public static function method(){
