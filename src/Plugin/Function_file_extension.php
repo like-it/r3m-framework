@@ -12,5 +12,5 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_file_extension(Parse $parse, Data $data, $url=''){
-    return \R3m\Io\Module\File::extension($url);
+    return File::extension($url);
 }
