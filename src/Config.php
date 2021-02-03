@@ -98,6 +98,13 @@ class Config extends Data {
     const DATA_HOST_DIR_CACHE = CONFIG::DATA_HOST_DIR . '.' . 'cache';
     const DATA_HOST_DIR_DATA = CONFIG::DATA_HOST_DIR . '.' . 'data';
 
+    /*
+    const DATA_SOURCE_DIR = 'source.dir';
+    const DATA_SOURCE_DIR_ROOT = CONFIG::DATA_HOST_DIR . '.' . 'root';
+    const DATA_SOURCE_DIR_CACHE = CONFIG::DATA_HOST_DIR . '.' . 'cache';
+    const DATA_SOURCE_DIR_DATA = CONFIG::DATA_HOST_DIR . '.' . 'data';
+    */
+
     const DATA_PARSE_DIR = 'parse.dir';
     const DATA_PARSE_DIR_TEMPLATE = Config::DATA_PARSE_DIR . '.' . 'template';
     const DATA_PARSE_DIR_COMPILE = Config::DATA_PARSE_DIR . '.' . 'compile';

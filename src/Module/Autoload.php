@@ -37,7 +37,8 @@ class Autoload {
     public static function configure($object){
         $config = $object->data(App::CONFIG);
         $autoload = new Autoload();
-        $autoload->addPrefix('Host',  $config->data(Config::DATA_PROJECT_DIR_HOST));
+        $autoload->addPrefix('Host',  $config->data(Config::DATA_PROJECT_DIR_HOST));        
+        $autoload->addPrefix('Source',  $config->data(Config::DATA_PROJECT_DIR_SOURCE));
         $cache_dir =
             $config->data(Config::DATA_FRAMEWORK_DIR_CACHE) .
             Autoload::NAME .
@@ -45,7 +46,8 @@ class Autoload {
         ;
         $autoload->cache_dir($cache_dir);
         $autoload->register();
-        $object->data(App::AUTOLOAD_R3M, $autoload);
+        $autoload->environment($config->data('framework.environment'));
+        $object->data(App::AUTOLOAD_R3M, $autoload);        
     }
 
     public function register($method='load', $prepend=false){
@@ -150,7 +152,7 @@ class Autoload {
     public function load($load){
         $file = $this->locate($load);
         if (!empty($file)) {
-            require $file;
+            require_once $file;
             return true;
         }
         return false;
@@ -289,7 +291,7 @@ class Autoload {
             d($fileList);
             throw new Exception('Could not find data file');
         }
-        $this->environment('development'); //needed, should be gone @ home
+        //$this->environment('development'); //needed, should be gone @ home
         if($this->environment() == 'development' || !empty($this->expose())){
             $object = new stdClass();
             $object->load = $load;

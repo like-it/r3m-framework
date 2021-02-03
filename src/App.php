@@ -11,6 +11,7 @@
 namespace R3m\Io;
 
 use stdClass;
+use Exception;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
@@ -22,8 +23,6 @@ use R3m\Io\Module\Host;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Route;
 use R3m\Io\Module\View;
-
-use Exception;
 
 class App extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -68,8 +67,13 @@ class App extends Data {
             if($route === false){
                 throw new Exception('couldn\'t determine route');
             } else {
-                App::contentType($object);
+                App::contentType($object);                
+                App::controller($object, $route);
                 $methods = get_class_methods($route->controller);
+                if(empty($methods)){
+                    throw new Exception('couldn\'t determine controller');
+                    $methods = [];
+                }
                 if(in_array('controller', $methods)){
                     $route->controller::controller($object);
                 }
@@ -82,7 +86,7 @@ class App extends Data {
                 if(in_array($route->function, $methods)){
                     $result = $route->controller::{$route->function}($object);
                 } else {
-                    throw new Exception('cannot call: ' . $route->function . ' in: ' . $route->controller);
+                    throw new Exception('Cannot call: ' . $route->function . ' in: ' . $route->controller);
                 }                
                 if(in_array('after_run', $methods)){
                     $route->controller::after_run($object);
@@ -99,6 +103,13 @@ class App extends Data {
         } else {
             return $file;
         }
+    }    
+
+    public static function controller(\R3m\Io\App $object, $route){
+        $check = @class_exists($route->controller);
+        if(empty($check)){
+            throw new Exception('Cannot call controller (' . $route->controller .')');
+        }        
     }
 
     public static function contentType($object){

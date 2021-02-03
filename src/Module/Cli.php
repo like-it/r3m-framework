@@ -15,6 +15,41 @@ use Exception;
 
 class Cli {
 
+    public static function read($url='', $text=''){
+        $is_flush = false;
+        if(ob_get_level() > 0){
+            $is_flush =true;
+        }
+        if($is_flush){
+            ob_flush();
+        }
+        $input = null;
+        if($url=='input'){
+            echo $text;
+            if($is_flush){
+                ob_flush();
+            }
+//             system('stty -echo');
+            $input = trim(fgets(STDIN));
+//             system('stty echo');
+//             echo PHP_EOL;
+
+//             readline_completion_function(array($this, 'complete'));
+//             $input = rtrim(readline($text), ' ');
+        }
+        elseif($url=='input-hidden'){
+            echo $text;
+            if($is_flush){
+                ob_flush();
+            }
+            system('stty -echo');
+            $input = trim(fgets(STDIN));
+            system('stty echo');
+            echo PHP_EOL;
+        } 
+        return $input;
+    }
+
     public static function tput($tput='', $arguments=array()){
         if(!is_array($arguments)){
             $arguments = (array) $arguments;

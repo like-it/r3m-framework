@@ -64,7 +64,17 @@ class View {
         }
         for($i = $max; $i > $minimum; $i--){
             $url = implode($config->data('ds'), $explode) . $config->data('ds');
-            $list[] = $url . $template . $config->data('extension.tpl');
+            $list[] = str_replace(
+                [
+                    '\\', 
+                    ':'
+                ],
+                [
+                    '/', 
+                    '.'
+                ],
+                $url . $template . $config->data('extension.tpl')
+            );
             array_pop($explode);
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
@@ -186,7 +196,7 @@ class View {
     public static function view($object, $url){
         if(empty($url)){            
             throw new Exception('Url is empty');
-        }
+        }        
         $config = $object->data(App::CONFIG);
         $dir = Dir::name($url);
         $file = str_replace($dir, '', $url);
