@@ -11,10 +11,11 @@
 namespace R3m\Io\Module;
 
 use stdClass;
-use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
-use R3m\Io\Module\Parse\Literal;
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\UrlNotExistException;
 
 class View {
     const PARSE = 'Parse';
@@ -22,6 +23,10 @@ class View {
     const COMPILE = 'Compile';
     const CONFIG = 'Config';
     const CACHE = 'Cache';
+
+    public static function view($object, $url){
+        return View::response($object, $url);
+    }
 
     public static function locate($object, $template=null){
         $temp = $object->data('template');
@@ -89,7 +94,7 @@ class View {
         if(empty($url)){
             if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT){
                 d($list);                
-                throw new Exception('Cannot find view file');
+                throw new LocateException('Cannot find view file');
             }
             return;
         }
@@ -150,6 +155,15 @@ class View {
                 ) .
             $config->data(Config::DS)
         );
+        $config->data(Config::DATA_CONTROLLER_DIR_PUBLIC,
+        	$config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+        	$config->data(
+        		Config::DICTIONARY .
+        		'.' .
+        		Config::PUBLIC
+        	) .
+        	$config->data(Config::DS)
+        );
         $value[] =
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
         $config->data(
@@ -193,9 +207,9 @@ class View {
         $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
     }
 
-    public static function view($object, $url){
+    public static function response($object, $url){
         if(empty($url)){            
-            throw new Exception('Url is empty');
+            throw new UrlEmptyException('Url is empty');
         }        
         $config = $object->data(App::CONFIG);
         $dir = Dir::name($url);
@@ -206,7 +220,7 @@ class View {
         $dir_compile = $config->data('parse.dir.compile');
         $dir_cache = $config->data('parse.dir.cache');
         if(File::exist($url) === false){
-            throw new Exception('Url (' . $url .')doesn\'t exist');
+            throw new UrlNotExistException('Url (' . $url .')doesn\'t exist');
         }
         $read = File::read($url);
         $mtime = File::mtime($url);

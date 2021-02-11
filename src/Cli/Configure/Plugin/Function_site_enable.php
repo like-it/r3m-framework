@@ -26,6 +26,7 @@ function function_site_enable(Parse $parse, Data $data){
                 $exec = 'ln -s ' . $file->url . ' '  . $url2 . $file->name;
                 $output = [];
                 \R3m\Io\Module\Core::execute($exec, $output);
+                echo 'Site: ' . $server->name . ' enabled.' . "\n";
             }
         }
     } else {

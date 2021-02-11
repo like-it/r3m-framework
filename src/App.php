@@ -53,6 +53,7 @@ class App extends Data {
         $this->data(App::CONFIG, $config);
         App::is_cli();
         require_once 'Debug.php';
+        require_once 'Error.php';
     }
 
     public static function run($object){

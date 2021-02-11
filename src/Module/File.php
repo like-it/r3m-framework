@@ -11,7 +11,9 @@
 namespace R3m\Io\Module;
 
 use stdClass;
-use Exception;
+use R3m\Io\Exception\FileAppendException;
+use R3m\Io\Exception\FileMoveException;
+use R3m\Io\Exception\FileWriteException;
 
 class File {
     const CHMOD = 0640;
@@ -117,25 +119,25 @@ class File {
     public static function move($source='', $destination='', $overwrite=false){
         $exist = file_exists($source);
         if($exist === false){
-            throw new Exception('Source file not exists');
+            throw new FileMoveException('Source file not exists');
         }
         $exist = file_exists($destination);
         if(
             $overwrite === false &&
             file_exists($destination)
         ){
-            throw new Exception('Destination file exists');
+            throw new FileMoveException('Destination file exists');
         }
         if(is_dir($source)){
             if(
                 $exist &&
                 $overwrite === false
             ){
-                throw new Exception('Destination directory exists');
+                throw new FileMoveException('Destination directory exists');
             }
             elseif($exist){
                 if(is_dir($destination)){
-                    throw new Exception('Destination directory exists and needs to be deleted first');
+                    throw new FileMoveException('Destination directory exists and needs to be deleted first');
                 } else {
                     File::delete($destination);
                     return rename($source, $destination);
@@ -171,7 +173,7 @@ class File {
             fclose($resource);
         }
         if($written != strlen($data)){
-            throw new Exception('File.write failed, written != strlen data....');
+            throw new FileWriteException('File.write failed, written != strlen data....');
             return false;
         } else {
             return $written;
@@ -198,7 +200,7 @@ class File {
             fclose($resource);
         }
         if($written != strlen($data)){
-            throw new Exception('File.append failed, written != strlen data....');
+            throw new FileAppendException('File.append failed, written != strlen data....');
             return false;
         } else {
             return $written;

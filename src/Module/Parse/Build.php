@@ -198,7 +198,9 @@ class Build {
             if($exist === false){
                 $value = $record['value'];
                 $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
-                d($dir_plugin);
+                if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
+                    d($dir_plugin);
+                }
                 throw new Exception('Function not found: ' . $text);
             }
         }

@@ -17,5 +17,6 @@ function function_host_add(Parse $parse, Data $data){
     $url = '/etc/hosts';
     $data = $ip . "\t" . $host . "\n";
     $append = \R3m\Io\Module\File::append($url, $data);
+    return 'ip: ' . $ip  .' host: ' . $host . ' added.' . "\n";
 }
 

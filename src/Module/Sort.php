@@ -15,7 +15,7 @@ use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 
-class Sort extends data{
+class Sort extends Data{
 
     public static function list($list){
         $sort = new Sort($list);

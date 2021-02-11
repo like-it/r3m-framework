@@ -15,7 +15,7 @@ use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 
-class Filter extends data{
+class Filter extends Data{
 
     public static function list($list){
         $filter = new Filter($list);

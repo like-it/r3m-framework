@@ -11,7 +11,7 @@
 namespace R3m\Io\Module;
 
 use stdClass;
-use Exception;
+use ObjectException;
 
 class Core {
 
@@ -223,7 +223,7 @@ class Core {
             elseif($output == Core::OBJECT_ARRAY) {
                 return array($input);
             } else {
-                throw new Exception(Core::EXCEPTION_OBJECT_OUTPUT);
+                throw new ObjectException(Core::EXCEPTION_OBJECT_OUTPUT);
             }
         }
         if(is_null($input)){
@@ -246,14 +246,14 @@ class Core {
                 if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
                     $json = json_decode($input);
                     if(json_last_error()){
-                        new Exception(json_last_error_msg());
+                        new ObjectException(json_last_error_msg());
                     }
                     return $json;
                 }
                 elseif(substr($input,0,1)=='[' && substr($input,-1,1)==']'){
                     $json = json_decode($input);
                     if(json_last_error()){
-                        throw new Exception(json_last_error_msg());
+                        throw new ObjectException(json_last_error_msg());
                     }
                     return $json;
                 }
@@ -293,7 +293,7 @@ class Core {
         elseif($output == Core::OBJECT_ARRAY){
             return json_decode($data,true);
         } else {
-            throw new Exception(Core::EXCEPTION_OBJECT_OUTPUT);
+            throw new ObjectException(Core::EXCEPTION_OBJECT_OUTPUT);
         }
     }
 
@@ -356,10 +356,20 @@ class Core {
     }
 
     public static function object_get($attributeList=array(), $object=''){
-        if(Core::object_is_empty($object)){
+        if(Core::object_is_empty($object)){        	
             if(empty($attributeList)){
                 return $object;
             }
+            if(is_array($object)){
+            	foreach($attributeList as $key => $attribute){
+            		if(empty($key) && $key != 0){
+            			continue;
+            		}
+            		if(array_key_exists($key, $object)){
+            			return Core::object_get($attributeList->{$key}, $object[$key]);
+            		}
+            	}            	
+            }            
             return null;
         }
         if(is_string($attributeList)){
@@ -372,7 +382,7 @@ class Core {
         }
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
-        }
+        }        
         if(empty($attributeList)){
             return $object;
         }
@@ -382,7 +392,7 @@ class Core {
             }
             if(isset($object->{$key})){
                 return Core::object_get($attributeList->{$key}, $object->{$key});
-            }
+            }                       
         }
         return null;
     }
@@ -397,7 +407,7 @@ class Core {
             if(is_array($object)){
                 foreach($object as $key => $value){
                     if(is_object($main)){
-                        throw new Exception(Core::EXCEPTION_MERGE_ARRAY_OBJECT);
+                        throw new ObjectException(Core::EXCEPTION_MERGE_ARRAY_OBJECT);
                     }
                     if(!isset($main[$key])){
                         $main[$key] = $value;
