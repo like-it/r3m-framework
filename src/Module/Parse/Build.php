@@ -66,6 +66,14 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());        
         $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());                    
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\FileAppendException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\FileMoveException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\FileWriteException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\LocateException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\ObjectException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\UrlEmptyException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\UrlNotExistException', new stdClass());
+
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
         $dir_plugin = $config->data('parse.dir.plugin');                
@@ -287,7 +295,20 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
-                $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
+                $run[] = $this->indent() .
+                    'echo \'' .
+                    str_replace(
+                        [
+                            '\'',
+                            '\\'
+                        ],
+                        [
+                            '\\\'',
+                            '\\\\'
+                        ],
+                        $record['value']
+                    ) .
+                    '\';';
             }
             elseif(
                 $is_tag === false &&

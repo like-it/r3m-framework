@@ -53,6 +53,9 @@ class Config extends Data {
     const PLUGIN = 'plugin';
     const VALUE_PLUGIN = 'Plugin';
 
+    const CONTROLLER = 'controller';
+    const VALUE_CONTROLLER = 'Controller';
+
     const VALIDATE = 'validate';
     const VALUE_VALIDATE = 'Validate';
 
@@ -204,6 +207,9 @@ class Config extends Data {
         $value = Config::VALUE_MODEL;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::CONTROLLER;
+        $value = Config::VALUE_CONTROLLER;
+        $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::FRAMEWORK;
         $value = Config::VALUE_FRAMEWORK;

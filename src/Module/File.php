@@ -71,11 +71,17 @@ class File {
 
     public static function touch($url='', $time=null, $atime=null){
         if($atime === null){
-            // $exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
-            // echo $exec . "\n";
-            return @touch($url, $time); //wsdl not working
+            $exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
+            $output = [];
+            Core::execute($exec, $output);
+            //return @touch($url, $time); //wsdl not working
+            return true;
         } else {
-            return @touch($url, $time, $atime);
+            $exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
+            $output = [];
+            Core::execute($exec, $output);
+            //return @touch($url, $time, $atime);
+            return true;
         }
     }
 

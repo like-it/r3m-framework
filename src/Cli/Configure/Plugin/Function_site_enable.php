@@ -1,7 +1,10 @@
 <?php
 
-use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Dir;
+use R3m\Io\Module\File;
+use R3m\Io\Module\Parse;
+
 
 
 function function_site_enable(Parse $parse, Data $data){
@@ -16,10 +19,13 @@ function function_site_enable(Parse $parse, Data $data){
     if(!empty($server) && is_object($server)){
         $url = '/etc/apache2/sites-available/';
         $url2 = '/etc/apache2/sites-enabled/';
-        $dir = new \R3m\Io\Module\Dir();
+        $dir = new Dir();
         $read = $dir->read($url);
         foreach($read as $file){
-            if($file->type != \R3m\Io\Module\File::TYPE){
+            if($file->type != File::TYPE){
+                continue;
+            }
+            if(File::exist($url2 . $file->name)){
                 continue;
             }
             if(stristr($file->name, str_replace('.', '-', $server->name)) !== false){
