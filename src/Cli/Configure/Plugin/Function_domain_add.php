@@ -46,6 +46,16 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         Dir::create($host_dir_data);
         Dir::create($host_dir_controller);
         Dir::create($host_dir_view);
+
+        $dir = $object->config('project.dir.host') .
+            ucfirst($domain) .
+            $object->config('ds');
+        $cwd = Dir::change($dir);
+        $exec = 'ln -s ' . $extension . ' Local';
+        $output = [];
+        Core::execute($exec, $output);
+        Dir::change($cwd);
+
         $route = new Data();
         $route->data($domain . '-' . $extension . '-index.path', '/');
         $route->data($domain . '-' . $extension . '-index.host', [ $domain . '.' .  $extension]);
@@ -134,6 +144,18 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         Dir::create($host_dir_data);
         Dir::create($host_dir_controller);
         Dir::create($host_dir_view);
+
+        $dir = $object->config('project.dir.host') .
+            ucfirst($subdomain) .
+            $object->config('ds') .
+            ucfirst($domain) .
+            $object->config('ds');
+        $cwd = Dir::change($dir);
+        $exec = 'ln -s ' . $extension . ' Local';
+        $output = [];
+        Core::execute($exec, $output);
+        Dir::change($cwd);
+
         $route = new Data();
         $route->data($subdomain . '-' . $domain . '-' . $extension . '-index.path', '/');
         $route->data($subdomain . '-' . $domain . '-' . $extension . '-index.host', [ $subdomain . '.' . $domain . '.' .  $extension]);

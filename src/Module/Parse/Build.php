@@ -12,7 +12,6 @@
 namespace R3m\Io\Module\Parse;
 
 use stdClass;
-use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Core;
@@ -21,6 +20,10 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Parse;
+
+use Exception;
+use R3m\Io\Exception\PluginNotFoundException;
+
 
 class Build {
     const NAME = 'Build';
@@ -209,7 +212,7 @@ class Build {
                 if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
                     d($dir_plugin);
                 }
-                throw new Exception('Function not found: ' . $text);
+                throw new PluginNotFoundException('Function not found: ' . $text);
             }
         }
         return $document;

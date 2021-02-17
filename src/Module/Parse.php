@@ -266,6 +266,7 @@ class Parse {
         } else {
             $data = Literal::restore($data, $parse->storage());
         }
-        return $object->data($type, $data);
+        $object->data($type, $data);
+        return $data;
     }
 }

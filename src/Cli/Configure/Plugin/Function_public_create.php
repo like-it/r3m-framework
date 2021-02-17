@@ -25,8 +25,6 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
     if(strstr($public_html, '/') === false){
         $public_html = $object->config('project.dir.root') . $public_html . $object->config('ds');
     }
-    d($source);
-    d($public_html);
     if(!empty($source)){
         try {
             $destination = $public_html;

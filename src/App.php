@@ -68,38 +68,42 @@ class App extends Data {
             if($route === false){
                 throw new Exception('couldn\'t determine route');
             } else {
-                App::contentType($object);                
-                App::controller($object, $route);
-                $methods = get_class_methods($route->controller);
-                if(empty($methods)){
-                    throw new Exception('couldn\'t determine controller');
-                    $methods = [];
-                }
-                if(in_array('controller', $methods)){
-                    $route->controller::controller($object);
-                }
-                if(in_array('configure', $methods)){
-                    $route->controller::configure($object);
-                }
-                if(in_array('before_run', $methods)){
-                    $route->controller::before_run($object);
-                }
-                if(in_array($route->function, $methods)){
-                    $result = $route->controller::{$route->function}($object);
+                if(property_exists($route, 'redirect')){
+                    Core::redirect($route->redirect);
                 } else {
-                    throw new Exception('Cannot call: ' . $route->function . ' in: ' . $route->controller);
-                }                
-                if(in_array('after_run', $methods)){
-                    $route->controller::after_run($object);
+                    App::contentType($object);
+                    App::controller($object, $route);
+                    $methods = get_class_methods($route->controller);
+                    if(empty($methods)){
+                        throw new Exception('couldn\'t determine controller');
+                        $methods = [];
+                    }
+                    if(in_array('controller', $methods)){
+                        $route->controller::controller($object);
+                    }
+                    if(in_array('configure', $methods)){
+                        $route->controller::configure($object);
+                    }
+                    if(in_array('before_run', $methods)){
+                        $route->controller::before_run($object);
+                    }
+                    if(in_array($route->function, $methods)){
+                        $result = $route->controller::{$route->function}($object);
+                    } else {
+                        throw new Exception('Cannot call: ' . $route->function . ' in: ' . $route->controller);
+                    }
+                    if(in_array('after_run', $methods)){
+                        $route->controller::after_run($object);
+                    }
+                    if(in_array('before_result', $methods)){
+                        $route->controller::before_result($object);
+                    }
+                    $result = App::result($object, $result);
+                    if(in_array('after_result', $methods)){
+                        $route->controller::after_result($object);
+                    }
+                    return $result;
                 }
-                if(in_array('before_result', $methods)){
-                    $route->controller::before_result($object);
-                }
-                $result = App::result($object, $result);
-                if(in_array('after_result', $methods)){
-                    $route->controller::after_result($object);
-                }
-                return $result;
             }
         } else {
             return $file;
@@ -206,8 +210,14 @@ class App extends Data {
         }
     }
 
-    public function parse_read($url, $attribute=null){        
+    public function parse_read($url, $attribute=null){
         if(File::exist($url)){
+            if($attribute !== null){
+                $data =  $this->data($attribute);
+                if(!empty($data)){
+                    return $data;
+                }
+            }
             $read = File::read($url);
             if($read){
                 $mtime = File::mtime($url);
@@ -222,8 +232,24 @@ class App extends Data {
                 $data->r3m->io->config = $config->data();
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
                 $data = new Data($read);
-                Parse::readback($this, $parse, App::SCRIPT);
-                Parse::readback($this, $parse, App::LINK);
+                $script = Parse::readback($this, $parse, App::SCRIPT);
+                if(!empty($script)){
+                    $script_old = $data->data('script');
+                    if(empty($script_old)){
+                        $script_old = [];
+                    }
+                    $script = array_merge($script_old, $script);
+                    $data->data('script', $script);
+                }
+                $link = Parse::readback($this, $parse, App::LINK);
+                if(!empty($link)){
+                    $link_old = $data->data('link');
+                    if(empty($link_old)){
+                        $link_old = [];
+                    }
+                    $link = array_merge($link_old, $link);
+                    $data->data('link', $link);
+                }
             } else {
                 $data = new Data();
             }

@@ -15,11 +15,10 @@ use R3m\Io\Module\Core;
 
 function function_parse_read(Parse $parse, Data $data, $url=''){
     if(File::exist($url)){
-        $read = File::read($url);
-        $read = Core::object($read);        
-        $read = $parse->compile($read, [], $data);
-        $data->data(Core::object_merge($data->data(), $read));
-        return $read;
+        $object = $parse->object();
+        $read = $object->parse_read($url, sha1($url));
+        $data->data(Core::object_merge($data->data(), $read->data()));
+        return $read->data();
     } else {
         throw new Exception('Error: url=' . $url . ' not found');
     }

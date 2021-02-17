@@ -78,7 +78,7 @@ class Route extends Data{
         return false;
     }
 
-    public static function get($object, $name='', $option=[]){
+    public static function route_get($object, $name='', $option=[]){
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
         if(empty($get)){
@@ -283,7 +283,7 @@ class Route extends Data{
                 $current = $record;
                 break;
             }
-        }        
+        }
         if($match === false){
             foreach($data as $record){
                 if(property_exists($record, 'resource')){
@@ -408,10 +408,12 @@ class Route extends Data{
             }
             $route->request->data($key, $record);
         }
-        $controller = explode('.', $route->controller);
-        $function = array_pop($controller);
-        $route->controller = implode('\\', $controller);
-        $route->function = $function;
+        if(property_exists($route, 'controller')){
+            $controller = explode('.', $route->controller);
+            $function = array_pop($controller);
+            $route->controller = implode('\\', $controller);
+            $route->function = $function;
+        }
         return $route;
     }
 
@@ -484,7 +486,7 @@ class Route extends Data{
 
     private static function is_match_by_method($object, $route, $select){
         if(!property_exists($route, 'method')){
-            return false;
+            return true;
         }
         if(!is_array($route->method)){
             return false;
@@ -559,11 +561,12 @@ class Route extends Data{
         $is_match = Route::is_match_by_host($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }        
+        }
         $is_match = Route::is_match_by_deep($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }                
+        }
+
         $is_match = Route::is_match_by_attribute($object, $route, $select);        
         if($is_match === false){
             return $is_match;

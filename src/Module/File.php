@@ -11,6 +11,8 @@
 namespace R3m\Io\Module;
 
 use stdClass;
+
+use Exception;
 use R3m\Io\Exception\FileAppendException;
 use R3m\Io\Exception\FileMoveException;
 use R3m\Io\Exception\FileWriteException;
@@ -71,17 +73,27 @@ class File {
 
     public static function touch($url='', $time=null, $atime=null){
         if($atime === null){
-            $exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
-            $output = [];
-            Core::execute($exec, $output);
-            //return @touch($url, $time); //wsdl not working
-            return true;
+            //$exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
+            //$output = [];
+            //Core::execute($exec, $output);
+            try {
+                return @touch($url, $time); //wsdl not working
+            } catch (Exception $exception){
+                return false;
+            }
+
+            //return true;
         } else {
-            $exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
-            $output = [];
-            Core::execute($exec, $output);
-            //return @touch($url, $time, $atime);
-            return true;
+            //$exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
+            //$output = [];
+            //Core::execute($exec, $output);
+            try {
+                return @touch($url, $time, $atime);
+            } catch (Exception $exception){
+                return false;
+            }
+
+            //return true;
         }
     }
 
@@ -237,7 +249,12 @@ class File {
     }
 
     public static function delete($url=''){
-        return @unlink($url); //added @ async deletes & reads can cause triggers otherways
+        try {
+            return @unlink($url); //added @ async deletes & reads can cause triggers otherways
+        } catch (Exception $exception){
+            return false;
+        }
+
     }
 
     public static function extension($url=''){        

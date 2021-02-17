@@ -12,8 +12,7 @@
                 "password",
                 "route",
                 "bin",
-                "configure",
-                "service"
+                "configure"
             ]
         },
         "major": "0",

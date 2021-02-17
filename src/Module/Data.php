@@ -107,6 +107,18 @@ class Data {
         return trim($result);
     }
 
+    public function get($attribute=''){
+        return $this->data('get', $attribute);
+    }
+
+    public function set($attribute='', $value=null){
+        return $this->data('set', $attribute, $value);
+    }
+
+    public function delete($attribute=''){
+        return $this->data('delete', $attribute);
+    }
+
     public function data($attribute=null, $value=null, $type=null){
         if($attribute !== null){
             if($attribute == 'set'){

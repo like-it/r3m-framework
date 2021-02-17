@@ -17,10 +17,10 @@ class Index extends View {
         try {
             $url = Index::locate($object, $name);
             $view = Index::response($object, $url);
-        } catch (Exception | LocateException |  UrlEmptyException | UrlNotExistException $exception){
+            return $view;
+        } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return $exception->getMessage() . "\n";
         }
-        return $view;
     }
 }
 {/literal}

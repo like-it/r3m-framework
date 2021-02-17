@@ -36,9 +36,6 @@ class Configure extends View {
             }
             return Configure::response($object, $url);
         } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
-            d($module);
-            d($action);
-            d($exception);
             return 'Action undefined.' . "\n";
         }
 

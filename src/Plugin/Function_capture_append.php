@@ -18,6 +18,5 @@ function function_capture_append(Parse $parse, Data $data, $name, $value=null){
     }    
     $list[] = $value;
     $data->data($name, $list);
-     
     return '';
 }
