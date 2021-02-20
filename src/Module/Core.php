@@ -21,15 +21,18 @@ class Core {
         '.'
     ];
 
-    const OBJECT_JSON = 'json';
     const OBJECT_ARRAY = 'array';
     const OBJECT_OBJECT = 'object';
+    const OBJECT_JSON = 'json';
+    const OBJECT_JSON_DATA = 'json-data';
+    const OBJECT_JSON_LINE = 'json-line';
 
     const OBJECT_TYPE_ROOT = 'root';
     const OBJECT_TYPE_CHILD = 'child';
 
     const SHELL_DETACHED = 'detached';
     const SHELL_PROCESS = 'process';
+    const SHELL_NORMAL = 'normal';
 
     const OUTPUT_MODE_IMPLICIT = 'implicit';
     const OUTPUT_MODE_EXPLICIT = 'explicit';
@@ -148,7 +151,7 @@ class Core {
         exit;
     }
 
-    public static function is_array_nested($array=array()){
+    public static function is_array_nested($array=[]){
         $array = (array) $array;
         foreach($array as $value){
             if(is_array($value)){
@@ -158,7 +161,7 @@ class Core {
         return false;
     }
 
-    public static function array_object($array=array()){
+    public static function array_object($array=[]){
         $object = new stdClass();
         foreach ($array as $key => $value){
             if(is_array($value)){
@@ -170,7 +173,7 @@ class Core {
         return $object;
     }
 
-    public static function explode_multi($delimiter=array(), $string='', $limit=array()){
+    public static function explode_multi($delimiter=[], $string='', $limit=[]){
         $result = array();
         if(!is_array($limit)){
             $limit = explode(',', $limit);
@@ -297,7 +300,7 @@ class Core {
         }
     }
 
-    public static function object_delete($attributeList=array(), $object='', $parent='', $key=null){
+    public static function object_delete($attributeList=[], $object='', $parent='', $key=null){
         if(is_string($attributeList)){
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, $attributeList);
         }
@@ -319,7 +322,7 @@ class Core {
         }
     }
 
-    public static function object_has($attributeList=array(), $object=''){
+    public static function object_has($attributeList=[], $object=''){
         if(Core::object_is_empty($object)){
             if(empty($attributeList)){
                 return true;
@@ -355,7 +358,7 @@ class Core {
         return false;
     }
 
-    public static function object_get($attributeList=array(), $object=''){
+    public static function object_get($attributeList=[], $object=''){
         if(Core::object_is_empty($object)){        	
             if(empty($attributeList)){
                 return $object;
@@ -437,7 +440,7 @@ class Core {
         return $main;
     }
 
-    public static function object_set($attributeList=array(), $value=null, $object='', $return='child'){
+    public static function object_set($attributeList=[], $value=null, $object='', $return='child'){
         if(empty($object)){
             return;
         }
@@ -513,7 +516,7 @@ class Core {
         }
     }
 
-    public static function object_horizontal($verticalArray=array(), $value=null, $return='object'){
+    public static function object_horizontal($verticalArray=[], $value=null, $return='object'){
         if(empty($verticalArray)){
             return false;
         }

@@ -18,7 +18,7 @@ use R3m\Io\Config;
 class FileRequest {
     const REQUEST = 'Request';
 
-    public static function get($object){
+    public static function get(App $object){
         $request = $object->data(App::REQUEST);        
         $input = $request->data('request');
         $dir = str_replace(['../','..'], '', Dir::name($input));

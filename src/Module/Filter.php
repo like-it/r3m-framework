@@ -31,7 +31,7 @@ class Filter extends Data{
             foreach($list as $uuid => $node){
                 foreach($where as $attribute => $record){
                     if(array_key_exists('exist', $record)){
-                        if(!empty($record['exists'])){
+                        if(!empty($record['exist'])){
                             if(!property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
                                 unset($list->$uuid);

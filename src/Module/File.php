@@ -32,11 +32,20 @@ class File {
     }
 
     public static function mtime($url=''){
-        return @filemtime($url); //added @ async deletes & reads can cause triggers otherways
+        try {
+            return @filemtime($url); //added @ async deletes & reads can cause triggers otherways
+        } catch(Exception $exception){
+            return '';
+        }
+
     }
 
     public static function atime($url=''){
-        return @fileatime($url); //added @ async deletes & reads can cause triggers otherways
+        try {
+            return @fileatime($url); //added @ async deletes & reads can cause triggers otherways
+        } catch (Exception $exception){
+            return '';
+        }
     }
 
     public static function link($source, $destination){
@@ -228,20 +237,28 @@ class File {
     public static function read($url=''){
         if(strpos($url, File::SCHEME_HTTP) !== false){
             //check network connection first (@) added for that              //error
-            $file = @file($url);
-            if(!is_array($file)){
-                return false;
+            try {
+                $file = @file($url);
+                if(!empty($file)){
+                    return '';
+                }
+                return implode('', $file);
+            } catch (Exception $exception){
+                return '';
             }
-            return implode('', $file);
+
         }
         if(empty($url)){
             return '';
         }
-        $file = @file($url);
-        if(!empty($file)){
-            return implode('', $file);
+        try {
+            $file = @file($url);
+            if(!empty($file)){
+                return implode('', $file);
+            }
+        } catch (Exception $exception){
+            return '';
         }
-        return '';
     }
 
     public static function copy($source='', $destination=''){
@@ -282,7 +299,7 @@ class File {
         return $filename;
     }
 
-    public static function removeExtension($filename='', $extension=array()){
+    public static function removeExtension($filename='', $extension=[]){
         if(!is_array($extension)){
             $extension = array($extension);
         }
@@ -297,8 +314,8 @@ class File {
         return $filename;
     }
 
-    public static function ucfirst($dir=''){
-        $explode = explode('.', $dir);
+    public static function ucfirst($url=''){
+        $explode = explode('.', $url);
         $extension = array_pop($explode);
         $result = '';
         foreach($explode as $part){
@@ -312,6 +329,10 @@ class File {
     }
 
     public static function size($url=''){
-        return @filesize($url); //pagefile error
+        try {
+            return @filesize($url); //pagefile error
+        } catch(Exception $exception){
+            return 0;
+        }
     }
 }

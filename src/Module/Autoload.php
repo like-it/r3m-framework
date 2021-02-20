@@ -34,7 +34,7 @@ class Autoload {
     public $prefixList = array();
     public $environment = 'production';
 
-    public static function configure($object){
+    public static function configure(App $object){
         $config = $object->data(App::CONFIG);
         $autoload = new Autoload();
         $autoload->addPrefix('Host',  $config->data(Config::DATA_PROJECT_DIR_HOST));        

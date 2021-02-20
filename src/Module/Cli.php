@@ -50,7 +50,7 @@ class Cli {
         return $input;
     }
 
-    public static function tput($tput='', $arguments=array()){
+    public static function tput($tput='', $arguments=[]){
         if(!is_array($arguments)){
             $arguments = (array) $arguments;
         }
@@ -84,7 +84,7 @@ class Cli {
                 $tput = 'setaf ' . $color;
                 break;
             case 'background' :
-                $color = isset($arguments[0]) ? (int) $arguments[0] : 0; //9 = default
+                $color = isset($arguments[0]) ? (int) $arguments[0] : 0; //0 = default
                 $tput = 'setab ' . $color;
                 break;
             case 'cursor.up' :

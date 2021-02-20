@@ -56,7 +56,7 @@ class App extends Data {
         require_once 'Error.php';
     }
 
-    public static function run($object){
+    public static function run(App $object){
         Config::configure($object);
         Handler::request_configure($object);
         Host::configure($object);
@@ -64,7 +64,7 @@ class App extends Data {
         Route::configure($object);    
         $file = FileRequest::get($object);
         if($file === false){
-            $route = Route::request($object);            
+            $route = Route::request($object);
             if($route === false){
                 throw new Exception('couldn\'t determine route');
             } else {
@@ -110,14 +110,14 @@ class App extends Data {
         }
     }    
 
-    public static function controller(\R3m\Io\App $object, $route){
+    public static function controller(App $object, $route){
         $check = @class_exists($route->controller);
         if(empty($check)){
             throw new Exception('Cannot call controller (' . $route->controller .')');
         }        
     }
 
-    public static function contentType($object){
+    public static function contentType(App $object){
         $contentType = App::CONTENT_TYPE_HTML;
         if(property_exists($object->data(App::REQUEST_HEADER), '_')){
             $contentType = App::CONTENT_TYPE_CLI;
@@ -131,7 +131,7 @@ class App extends Data {
         return $object->data(App::CONTENT_TYPE, $contentType);
     }
 
-    private static function result($object, $output){
+    private static function result(App $object, $output){
         $contentType = $object->data(App::CONTENT_TYPE);
         if($contentType == App::CONTENT_TYPE_JSON){
             $json = new stdClass();
@@ -194,6 +194,12 @@ class App extends Data {
     }
 
     public function data_read($url, $attribute=null){
+        if($attribute !== null){
+            $data =  $this->data($attribute);
+            if(!empty($data)){
+                return $data;
+            }
+        }
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
@@ -211,13 +217,13 @@ class App extends Data {
     }
 
     public function parse_read($url, $attribute=null){
-        if(File::exist($url)){
-            if($attribute !== null){
-                $data =  $this->data($attribute);
-                if(!empty($data)){
-                    return $data;
-                }
+        if($attribute !== null){
+            $data =  $this->data($attribute);
+            if(!empty($data)){
+                return $data;
             }
+        }
+        if(File::exist($url)){
             $read = File::read($url);
             if($read){
                 $mtime = File::mtime($url);

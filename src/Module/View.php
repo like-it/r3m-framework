@@ -28,7 +28,7 @@ class View {
         return View::response($object, $url);
     }
 
-    public static function locate($object, $template=null){
+    public static function locate(App $object, $template=null){
         $temp = $object->data('template');
         $called = '';
         if($template === null && $temp !== null && property_exists($temp, 'dir')){
@@ -101,7 +101,7 @@ class View {
         return $url;
     }
 
-    public static function configure($object){
+    public static function configure(App $object){
         $config = $object->data(App::CONFIG);
         $key = Config::DATA_PARSE_DIR_TEMPLATE;
         $value = $config->data(Config::DATA_HOST_DIR_CACHE) . View::PARSE . $config->data('ds') . View::TEMPLATE . $config->data('ds');
@@ -207,7 +207,7 @@ class View {
         $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
     }
 
-    public static function response($object, $url){
+    public static function response(App $object, $url){
         if(empty($url)){            
             throw new UrlEmptyException('Url is empty');
         }        

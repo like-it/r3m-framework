@@ -78,7 +78,7 @@ class Route extends Data{
         return false;
     }
 
-    public static function route_get($object, $name='', $option=[]){
+    public static function find($object, $name='', $option=[]){
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
         if(empty($get)){
@@ -171,7 +171,7 @@ class Route extends Data{
         return $select;
     }
 
-    public static function request($object){
+    public static function request(App $object){
         if(defined('IS_CLI')){
             $input = Route::input($object);
             $select = new stdClass();
@@ -599,7 +599,7 @@ class Route extends Data{
         return $is_match;
     }
 
-    public static function configure($object){
+    public static function configure(App $object){
         $config = $object->data(App::CONFIG);
         $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
         if(empty($config->data(Config::DATA_PROJECT_ROUTE_URL))){

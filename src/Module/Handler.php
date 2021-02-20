@@ -48,7 +48,7 @@ class Handler {
     const POST = 'POST';
     const PUT = 'PUT';
 
-    public static function request_configure($object){
+    public static function request_configure(App $object){
         $object->data(
             App::NAMESPACE . '.' .
             Handler::NAME_REQUEST . '.' .
