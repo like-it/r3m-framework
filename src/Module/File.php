@@ -11,7 +11,11 @@
 namespace R3m\Io\Module;
 
 use stdClass;
+
 use Exception;
+use R3m\Io\Exception\FileAppendException;
+use R3m\Io\Exception\FileMoveException;
+use R3m\Io\Exception\FileWriteException;
 
 class File {
     const CHMOD = 0640;
@@ -28,11 +32,20 @@ class File {
     }
 
     public static function mtime($url=''){
-        return @filemtime($url); //added @ async deletes & reads can cause triggers otherways
+        try {
+            return @filemtime($url); //added @ async deletes & reads can cause triggers otherways
+        } catch(Exception $exception){
+            return '';
+        }
+
     }
 
     public static function atime($url=''){
-        return @fileatime($url); //added @ async deletes & reads can cause triggers otherways
+        try {
+            return @fileatime($url); //added @ async deletes & reads can cause triggers otherways
+        } catch (Exception $exception){
+            return '';
+        }
     }
 
     public static function link($source, $destination){
@@ -69,11 +82,27 @@ class File {
 
     public static function touch($url='', $time=null, $atime=null){
         if($atime === null){
-            // $exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
-            // echo $exec . "\n";
-            return @touch($url, $time); //wsdl not working
+            //$exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
+            //$output = [];
+            //Core::execute($exec, $output);
+            try {
+                return @touch($url, $time); //wsdl not working
+            } catch (Exception $exception){
+                return false;
+            }
+
+            //return true;
         } else {
-            return @touch($url, $time, $atime);
+            //$exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
+            //$output = [];
+            //Core::execute($exec, $output);
+            try {
+                return @touch($url, $time, $atime);
+            } catch (Exception $exception){
+                return false;
+            }
+
+            //return true;
         }
     }
 
@@ -117,25 +146,25 @@ class File {
     public static function move($source='', $destination='', $overwrite=false){
         $exist = file_exists($source);
         if($exist === false){
-            throw new Exception('Source file not exists');
+            throw new FileMoveException('Source file not exists');
         }
         $exist = file_exists($destination);
         if(
             $overwrite === false &&
             file_exists($destination)
         ){
-            throw new Exception('Destination file exists');
+            throw new FileMoveException('Destination file exists');
         }
         if(is_dir($source)){
             if(
                 $exist &&
                 $overwrite === false
             ){
-                throw new Exception('Destination directory exists');
+                throw new FileMoveException('Destination directory exists');
             }
             elseif($exist){
                 if(is_dir($destination)){
-                    throw new Exception('Destination directory exists and needs to be deleted first');
+                    throw new FileMoveException('Destination directory exists and needs to be deleted first');
                 } else {
                     File::delete($destination);
                     return rename($source, $destination);
@@ -171,7 +200,7 @@ class File {
             fclose($resource);
         }
         if($written != strlen($data)){
-            throw new Exception('File.write failed, written != strlen data....');
+            throw new FileWriteException('File.write failed, written != strlen data....');
             return false;
         } else {
             return $written;
@@ -198,7 +227,7 @@ class File {
             fclose($resource);
         }
         if($written != strlen($data)){
-            throw new Exception('File.append failed, written != strlen data....');
+            throw new FileAppendException('File.append failed, written != strlen data....');
             return false;
         } else {
             return $written;
@@ -208,20 +237,28 @@ class File {
     public static function read($url=''){
         if(strpos($url, File::SCHEME_HTTP) !== false){
             //check network connection first (@) added for that              //error
-            $file = @file($url);
-            if(!is_array($file)){
-                return false;
+            try {
+                $file = @file($url);
+                if(!empty($file)){
+                    return '';
+                }
+                return implode('', $file);
+            } catch (Exception $exception){
+                return '';
             }
-            return implode('', $file);
+
         }
         if(empty($url)){
             return '';
         }
-        $file = @file($url);
-        if(!empty($file)){
-            return implode('', $file);
+        try {
+            $file = @file($url);
+            if(!empty($file)){
+                return implode('', $file);
+            }
+        } catch (Exception $exception){
+            return '';
         }
-        return '';
     }
 
     public static function copy($source='', $destination=''){
@@ -229,7 +266,12 @@ class File {
     }
 
     public static function delete($url=''){
-        return @unlink($url); //added @ async deletes & reads can cause triggers otherways
+        try {
+            return @unlink($url); //added @ async deletes & reads can cause triggers otherways
+        } catch (Exception $exception){
+            return false;
+        }
+
     }
 
     public static function extension($url=''){        
@@ -257,7 +299,7 @@ class File {
         return $filename;
     }
 
-    public static function removeExtension($filename='', $extension=array()){
+    public static function removeExtension($filename='', $extension=[]){
         if(!is_array($extension)){
             $extension = array($extension);
         }
@@ -272,8 +314,8 @@ class File {
         return $filename;
     }
 
-    public static function ucfirst($dir=''){
-        $explode = explode('.', $dir);
+    public static function ucfirst($url=''){
+        $explode = explode('.', $url);
         $extension = array_pop($explode);
         $result = '';
         foreach($explode as $part){
@@ -287,6 +329,10 @@ class File {
     }
 
     public static function size($url=''){
-        return @filesize($url); //pagefile error
+        try {
+            return @filesize($url); //pagefile error
+        } catch(Exception $exception){
+            return 0;
+        }
     }
 }

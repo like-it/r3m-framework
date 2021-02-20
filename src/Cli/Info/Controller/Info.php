@@ -13,6 +13,9 @@ namespace R3m\Io\Cli\Info\Controller;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\UrlNotExistException;
 use R3m\Io\Module\View;
 
 class Info extends View {
@@ -20,13 +23,19 @@ class Info extends View {
     const NAME = 'Info';
 
     public static function run($object){
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);        
+//        $url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
+//        $read = $object->data_read($url);
+//        $object->config(Config::DATA_FRAMEWORK_ENVIRONMENT , $read->)
         $command = $object::parameter($object, Info::NAME, 1);
-        $url = Info::locate($object, 'Info\\' . $command);
-        if(empty($url)){            
-            $url = Info::locate($object, 'Info');
+        try {
+            $url = Info::locate($object, 'Info.' . $command);
+            if(empty($url)){
+                $url = Info::locate($object, 'Info');
 
+            }
+            return Info::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . "\n";
         }
-        return Info::view($object, $url);
     }
 }

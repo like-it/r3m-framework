@@ -12,5 +12,5 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_file_size(Parse $parse, Data $data, $url=''){
-    return \R3m\Io\Module\File::size($url);
+    return File::size($url);
 }

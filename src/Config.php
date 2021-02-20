@@ -53,6 +53,9 @@ class Config extends Data {
     const PLUGIN = 'plugin';
     const VALUE_PLUGIN = 'Plugin';
 
+    const CONTROLLER = 'controller';
+    const VALUE_CONTROLLER = 'Controller';
+
     const VALIDATE = 'validate';
     const VALUE_VALIDATE = 'Validate';
 
@@ -93,6 +96,24 @@ class Config extends Data {
 
     const DATA_FRAMEWORK_ENVIRONMENT = 'framework.environment';
 
+    const DATA_HOST_DIR = 'host.dir';
+    const DATA_HOST_DIR_ROOT = CONFIG::DATA_HOST_DIR . '.' . 'root';
+    const DATA_HOST_DIR_CACHE = CONFIG::DATA_HOST_DIR . '.' . 'cache';
+    const DATA_HOST_DIR_DATA = CONFIG::DATA_HOST_DIR . '.' . 'data';
+
+    /*
+    const DATA_SOURCE_DIR = 'source.dir';
+    const DATA_SOURCE_DIR_ROOT = CONFIG::DATA_HOST_DIR . '.' . 'root';
+    const DATA_SOURCE_DIR_CACHE = CONFIG::DATA_HOST_DIR . '.' . 'cache';
+    const DATA_SOURCE_DIR_DATA = CONFIG::DATA_HOST_DIR . '.' . 'data';
+    */
+
+    const DATA_PARSE_DIR = 'parse.dir';
+    const DATA_PARSE_DIR_TEMPLATE = Config::DATA_PARSE_DIR . '.' . 'template';
+    const DATA_PARSE_DIR_COMPILE = Config::DATA_PARSE_DIR . '.' . 'compile';
+    const DATA_PARSE_DIR_CACHE = Config::DATA_PARSE_DIR . '.' . 'cache';
+    const DATA_PARSE_DIR_PLUGIN = Config::DATA_PARSE_DIR . '.' . 'plugin';
+
     const DATA_PROJECT_ROUTE_FILENAME = 'project.route.filename';
     const DATA_PROJECT_ROUTE_URL = 'project.route.url';
     const DATA_PROJECT_DIR = 'project.dir';
@@ -106,6 +127,10 @@ class Config extends Data {
     const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
     const DATA_PROJECT_DIR_PLUGIN =  Config::DATA_PROJECT_DIR . '.' . 'plugin';
 
+    const DATA_CONTROLLER = 'controller';
+    const DATA_CONTROLLER_CLASS = 'controller.class';
+    const DATA_CONTROLLER_NAME = 'controller.name';
+    const DATA_CONTROLLER_TITLE = 'controller.title';
     const DATA_CONTROLLER_DIR = 'controller.dir';
     const DATA_CONTROLLER_DIR_ROOT = Config::DATA_CONTROLLER_DIR . '.' .'root';
     const DATA_CONTROLLER_DIR_SOURCE = Config::DATA_CONTROLLER_DIR . '.' .'source';
@@ -113,6 +138,7 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_PLUGIN = Config::DATA_CONTROLLER_DIR . '.' .'plugin';
     const DATA_CONTROLLER_DIR_MODEL = Config::DATA_CONTROLLER_DIR . '.' .'model';
     const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
+    const DATA_CONTROLLER_DIR_PUBLIC = Config::DATA_CONTROLLER_DIR . '.' .'public';
 
     public function __construct($config=[]){
         if(array_key_exists(Config::DATA_DIR_VENDOR, $config)){
@@ -131,7 +157,7 @@ class Config extends Data {
         }
     }
 
-    public static function configure($object){
+    public static function configure(App $object){
         $config = $object->data(App::CONFIG);
         $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . Config::CONFIG;
         if(File::exist($url)){
@@ -181,6 +207,9 @@ class Config extends Data {
         $value = Config::VALUE_MODEL;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::CONTROLLER;
+        $value = Config::VALUE_CONTROLLER;
+        $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::FRAMEWORK;
         $value = Config::VALUE_FRAMEWORK;

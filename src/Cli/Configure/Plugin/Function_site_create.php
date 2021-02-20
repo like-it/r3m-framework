@@ -2,7 +2,7 @@
 
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-
+use Exception;
 
 function function_site_create(Parse $parse, Data $data){
 
@@ -15,20 +15,27 @@ function function_site_create(Parse $parse, Data $data){
 
     if(!empty($server) && is_object($server)){
         $dir = '/etc/apache2/sites-available/';
-        $config = $parse->object()->data(\R3m\Io\App::CONFIG);
+        $config = $parse->object()->data(App::CONFIG);
         $server->admin = $config->data('server.admin');
-        $server->root = substr($config->data(\R3m\Io\Config::DATA_PROJECT_DIR_PUBLIC), 0, -1);
-        $server->number = sprintf("%'.03d", \R3m\Io\Module\File::count($dir));
+        if(empty($server->root)){
+            $server->root = substr($config->data(Config::DATA_PROJECT_DIR_PUBLIC), 0, -1);
+        } else {
+            if(substr($server->root, -1, 1) == '/'){
+                $server->root = substr($server->root, 0, -1);
+            }
+        }
+        $server->number = sprintf("%'.03d", File::count($dir));
         $server->url = $dir . $server->number . '-' . str_replace('.', '-', $server->name) . $config->data('extension.conf');
 
-        $url = $config->data(\R3m\Io\Config::DATA_CONTROLLER_DIR_DATA) . '001-site.conf';
-        $read = \R3m\Io\Module\File::read($url);
-        $data = new \stdClass();
+        $url = $config->data(Config::DATA_CONTROLLER_DIR_DATA) . '001-site.conf';
+        $read = File::read($url);
+        $data = new stdClass();
         $data->server = $server;
         $write = $parse->compile($read, $data, $parse->storage());
-        \R3m\Io\Module\File::write($server->url, $write);
+        File::write($server->url, $write);
+        return $server->url . ' created.' . "\n";
     } else {
-        throw new \Exception('Server variable needs to be an object');
+        throw new Exception('Server variable needs to be an object');
     }
 }
 

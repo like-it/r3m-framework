@@ -15,7 +15,7 @@ use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 
-class Filter extends data{
+class Filter extends Data{
 
     public static function list($list){
         $filter = new Filter($list);
@@ -31,7 +31,7 @@ class Filter extends data{
             foreach($list as $uuid => $node){
                 foreach($where as $attribute => $record){
                     if(array_key_exists('exist', $record)){
-                        if(!empty($record['exists'])){
+                        if(!empty($record['exist'])){
                             if(!property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
                                 unset($list->$uuid);

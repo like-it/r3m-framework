@@ -11,7 +11,7 @@
 namespace R3m\Io\Module;
 
 use stdClass;
-use Exception;
+use ObjectException;
 
 class Core {
 
@@ -21,15 +21,18 @@ class Core {
         '.'
     ];
 
-    const OBJECT_JSON = 'json';
     const OBJECT_ARRAY = 'array';
     const OBJECT_OBJECT = 'object';
+    const OBJECT_JSON = 'json';
+    const OBJECT_JSON_DATA = 'json-data';
+    const OBJECT_JSON_LINE = 'json-line';
 
     const OBJECT_TYPE_ROOT = 'root';
     const OBJECT_TYPE_CHILD = 'child';
 
     const SHELL_DETACHED = 'detached';
     const SHELL_PROCESS = 'process';
+    const SHELL_NORMAL = 'normal';
 
     const OUTPUT_MODE_IMPLICIT = 'implicit';
     const OUTPUT_MODE_EXPLICIT = 'explicit';
@@ -148,7 +151,7 @@ class Core {
         exit;
     }
 
-    public static function is_array_nested($array=array()){
+    public static function is_array_nested($array=[]){
         $array = (array) $array;
         foreach($array as $value){
             if(is_array($value)){
@@ -158,7 +161,7 @@ class Core {
         return false;
     }
 
-    public static function array_object($array=array()){
+    public static function array_object($array=[]){
         $object = new stdClass();
         foreach ($array as $key => $value){
             if(is_array($value)){
@@ -170,7 +173,7 @@ class Core {
         return $object;
     }
 
-    public static function explode_multi($delimiter=array(), $string='', $limit=array()){
+    public static function explode_multi($delimiter=[], $string='', $limit=[]){
         $result = array();
         if(!is_array($limit)){
             $limit = explode(',', $limit);
@@ -223,7 +226,7 @@ class Core {
             elseif($output == Core::OBJECT_ARRAY) {
                 return array($input);
             } else {
-                throw new Exception(Core::EXCEPTION_OBJECT_OUTPUT);
+                throw new ObjectException(Core::EXCEPTION_OBJECT_OUTPUT);
             }
         }
         if(is_null($input)){
@@ -246,14 +249,14 @@ class Core {
                 if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
                     $json = json_decode($input);
                     if(json_last_error()){
-                        new Exception(json_last_error_msg());
+                        new ObjectException(json_last_error_msg());
                     }
                     return $json;
                 }
                 elseif(substr($input,0,1)=='[' && substr($input,-1,1)==']'){
                     $json = json_decode($input);
                     if(json_last_error()){
-                        throw new Exception(json_last_error_msg());
+                        throw new ObjectException(json_last_error_msg());
                     }
                     return $json;
                 }
@@ -293,11 +296,11 @@ class Core {
         elseif($output == Core::OBJECT_ARRAY){
             return json_decode($data,true);
         } else {
-            throw new Exception(Core::EXCEPTION_OBJECT_OUTPUT);
+            throw new ObjectException(Core::EXCEPTION_OBJECT_OUTPUT);
         }
     }
 
-    public static function object_delete($attributeList=array(), $object='', $parent='', $key=null){
+    public static function object_delete($attributeList=[], $object='', $parent='', $key=null){
         if(is_string($attributeList)){
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, $attributeList);
         }
@@ -319,7 +322,7 @@ class Core {
         }
     }
 
-    public static function object_has($attributeList=array(), $object=''){
+    public static function object_has($attributeList=[], $object=''){
         if(Core::object_is_empty($object)){
             if(empty($attributeList)){
                 return true;
@@ -355,11 +358,21 @@ class Core {
         return false;
     }
 
-    public static function object_get($attributeList=array(), $object=''){
-        if(Core::object_is_empty($object)){
+    public static function object_get($attributeList=[], $object=''){
+        if(Core::object_is_empty($object)){        	
             if(empty($attributeList)){
                 return $object;
             }
+            if(is_array($object)){
+            	foreach($attributeList as $key => $attribute){
+            		if(empty($key) && $key != 0){
+            			continue;
+            		}
+            		if(array_key_exists($key, $object)){
+            			return Core::object_get($attributeList->{$key}, $object[$key]);
+            		}
+            	}            	
+            }            
             return null;
         }
         if(is_string($attributeList)){
@@ -372,7 +385,7 @@ class Core {
         }
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
-        }
+        }        
         if(empty($attributeList)){
             return $object;
         }
@@ -382,7 +395,7 @@ class Core {
             }
             if(isset($object->{$key})){
                 return Core::object_get($attributeList->{$key}, $object->{$key});
-            }
+            }                       
         }
         return null;
     }
@@ -397,7 +410,7 @@ class Core {
             if(is_array($object)){
                 foreach($object as $key => $value){
                     if(is_object($main)){
-                        throw new Exception(Core::EXCEPTION_MERGE_ARRAY_OBJECT);
+                        throw new ObjectException(Core::EXCEPTION_MERGE_ARRAY_OBJECT);
                     }
                     if(!isset($main[$key])){
                         $main[$key] = $value;
@@ -427,7 +440,7 @@ class Core {
         return $main;
     }
 
-    public static function object_set($attributeList=array(), $value=null, $object='', $return='child'){
+    public static function object_set($attributeList=[], $value=null, $object='', $return='child'){
         if(empty($object)){
             return;
         }
@@ -503,7 +516,7 @@ class Core {
         }
     }
 
-    public static function object_horizontal($verticalArray=array(), $value=null, $return='object'){
+    public static function object_horizontal($verticalArray=[], $value=null, $return='object'){
         if(empty($verticalArray)){
             return false;
         }

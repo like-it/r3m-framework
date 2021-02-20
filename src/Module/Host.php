@@ -19,7 +19,7 @@ class Host {
     const SCHEME_HTTP = 'http';
     const SCHEME_HTTPS = 'https';
 
-    public static function configure($object){
+    public static function configure(App $object){
         if(defined('IS_CLI')){
             return $object;
         }

@@ -12,7 +12,6 @@
 namespace R3m\Io\Module\Parse;
 
 use stdClass;
-use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Core;
@@ -21,6 +20,10 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Parse;
+
+use Exception;
+use R3m\Io\Exception\PluginNotFoundException;
+
 
 class Build {
     const NAME = 'Build';
@@ -66,6 +69,14 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());        
         $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());                    
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\FileAppendException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\FileMoveException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\FileWriteException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\LocateException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\ObjectException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\UrlEmptyException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\UrlNotExistException', new stdClass());
+
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
         $dir_plugin = $config->data('parse.dir.plugin');                
@@ -198,8 +209,10 @@ class Build {
             if($exist === false){
                 $value = $record['value'];
                 $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
-                d($dir_plugin);
-                throw new Exception('Function not found: ' . $text);
+                if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
+                    d($dir_plugin);
+                }
+                throw new PluginNotFoundException('Function not found: ' . $text);
             }
         }
         return $document;
@@ -285,7 +298,20 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
-                $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
+                $run[] = $this->indent() .
+                    'echo \'' .
+                    str_replace(
+                        [
+                            '\'',
+                            '\\'
+                        ],
+                        [
+                            '\\\'',
+                            '\\\\'
+                        ],
+                        $record['value']
+                    ) .
+                    '\';';
             }
             elseif(
                 $is_tag === false &&

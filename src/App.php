@@ -11,6 +11,7 @@
 namespace R3m\Io;
 
 use stdClass;
+use Exception;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
@@ -22,8 +23,6 @@ use R3m\Io\Module\Host;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Route;
 use R3m\Io\Module\View;
-
-use Exception;
 
 class App extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -54,9 +53,10 @@ class App extends Data {
         $this->data(App::CONFIG, $config);
         App::is_cli();
         require_once 'Debug.php';
+        require_once 'Error.php';
     }
 
-    public static function run($object){
+    public static function run(App $object){
         Config::configure($object);
         Handler::request_configure($object);
         Host::configure($object);
@@ -64,44 +64,60 @@ class App extends Data {
         Route::configure($object);    
         $file = FileRequest::get($object);
         if($file === false){
-            $route = Route::request($object);            
+            $route = Route::request($object);
             if($route === false){
                 throw new Exception('couldn\'t determine route');
             } else {
-                App::contentType($object);
-                $methods = get_class_methods($route->controller);
-                if(in_array('controller', $methods)){
-                    $route->controller::controller($object);
-                }
-                if(in_array('configure', $methods)){
-                    $route->controller::configure($object);
-                }
-                if(in_array('before_run', $methods)){
-                    $route->controller::before_run($object);
-                }
-                if(in_array($route->function, $methods)){
-                    $result = $route->controller::{$route->function}($object);
+                if(property_exists($route, 'redirect')){
+                    Core::redirect($route->redirect);
                 } else {
-                    throw new Exception('cannot call: ' . $route->function . ' in: ' . $route->controller);
-                }                
-                if(in_array('after_run', $methods)){
-                    $route->controller::after_run($object);
+                    App::contentType($object);
+                    App::controller($object, $route);
+                    $methods = get_class_methods($route->controller);
+                    if(empty($methods)){
+                        throw new Exception('couldn\'t determine controller');
+                        $methods = [];
+                    }
+                    if(in_array('controller', $methods)){
+                        $route->controller::controller($object);
+                    }
+                    if(in_array('configure', $methods)){
+                        $route->controller::configure($object);
+                    }
+                    if(in_array('before_run', $methods)){
+                        $route->controller::before_run($object);
+                    }
+                    if(in_array($route->function, $methods)){
+                        $result = $route->controller::{$route->function}($object);
+                    } else {
+                        throw new Exception('Cannot call: ' . $route->function . ' in: ' . $route->controller);
+                    }
+                    if(in_array('after_run', $methods)){
+                        $route->controller::after_run($object);
+                    }
+                    if(in_array('before_result', $methods)){
+                        $route->controller::before_result($object);
+                    }
+                    $result = App::result($object, $result);
+                    if(in_array('after_result', $methods)){
+                        $route->controller::after_result($object);
+                    }
+                    return $result;
                 }
-                if(in_array('before_result', $methods)){
-                    $route->controller::before_result($object);
-                }
-                $result = App::result($object, $result);
-                if(in_array('after_result', $methods)){
-                    $route->controller::after_result($object);
-                }
-                return $result;
             }
         } else {
             return $file;
         }
+    }    
+
+    public static function controller(App $object, $route){
+        $check = @class_exists($route->controller);
+        if(empty($check)){
+            throw new Exception('Cannot call controller (' . $route->controller .')');
+        }        
     }
 
-    public static function contentType($object){
+    public static function contentType(App $object){
         $contentType = App::CONTENT_TYPE_HTML;
         if(property_exists($object->data(App::REQUEST_HEADER), '_')){
             $contentType = App::CONTENT_TYPE_CLI;
@@ -115,7 +131,7 @@ class App extends Data {
         return $object->data(App::CONTENT_TYPE, $contentType);
     }
 
-    private static function result($object, $output){
+    private static function result(App $object, $output){
         $contentType = $object->data(App::CONTENT_TYPE);
         if($contentType == App::CONTENT_TYPE_JSON){
             $json = new stdClass();
@@ -123,33 +139,28 @@ class App extends Data {
             if($object->data('method')){
                 $json->method = $object->data('method');
             } else {
-                $json->method = $object->data(App::REQUEST)->data('method');
+                $json->method = $object->request('method');
             }
             if($object->data('target')){
                 $json->target = $object->data('target');
             } else {
-                $json->target = $object->data(App::REQUEST)->data('target');
+                $json->target = $object->request('target');
             }
-            if($object->data('append-to')){
+            $append_to = $object->data('append-to');
+            if(empty($append_to)){
+                $append_to = $object->data('append.to');
+            }
+            if(empty($append_to)){
+                $append_to = $object->request('append-to');
+            }
+            if(empty($append_to)){
+                $append_to = $object->request('append.to');
+            }
+            if($append_to){
                 if(empty($json->append)){
                     $json->append = new stdClass();
                 }
-                $json->append->to = $object->data('append-to');
-            } else {
-                $append_to = $object->data(App::REQUEST)->data('append-to');
-                if($append_to){
-                    if(empty($json->append)){
-                        $json->append = new stdClass();
-                    }
-                    $json->append->to = $append_to;
-                }
-                $append_to = $object->data(App::REQUEST)->data('append.to');
-                if($append_to){
-                    if(empty($json->append)){
-                        $json->append = new stdClass();
-                    }
-                    $json->append->to = $append_to;
-                }
+                $json->append->to = $append_to;
             }
             $json->script = $object->data(App::SCRIPT);
             $json->link = $object->data(App::LINK);
@@ -183,6 +194,12 @@ class App extends Data {
     }
 
     public function data_read($url, $attribute=null){
+        if($attribute !== null){
+            $data =  $this->data($attribute);
+            if(!empty($data)){
+                return $data;
+            }
+        }
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
@@ -199,7 +216,13 @@ class App extends Data {
         }
     }
 
-    public function parse_read($url, $attribute=null){        
+    public function parse_read($url, $attribute=null){
+        if($attribute !== null){
+            $data =  $this->data($attribute);
+            if(!empty($data)){
+                return $data;
+            }
+        }
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
@@ -215,8 +238,24 @@ class App extends Data {
                 $data->r3m->io->config = $config->data();
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
                 $data = new Data($read);
-                Parse::readback($this, $parse, App::SCRIPT);
-                Parse::readback($this, $parse, App::LINK);
+                $script = Parse::readback($this, $parse, App::SCRIPT);
+                if(!empty($script)){
+                    $script_old = $data->data('script');
+                    if(empty($script_old)){
+                        $script_old = [];
+                    }
+                    $script = array_merge($script_old, $script);
+                    $data->data('script', $script);
+                }
+                $link = Parse::readback($this, $parse, App::LINK);
+                if(!empty($link)){
+                    $link_old = $data->data('link');
+                    if(empty($link_old)){
+                        $link_old = [];
+                    }
+                    $link = array_merge($link_old, $link);
+                    $data->data('link', $link);
+                }
             } else {
                 $data = new Data();
             }
