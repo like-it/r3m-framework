@@ -31,7 +31,8 @@ class Value {
             case Token::TYPE_BOOLEAN :
             case Token::TYPE_NULL :
             case Token::TYPE_COMMA  :
-            case Token::TYPE_DOT  :
+            case Token::TYPE_DOT :
+            case Token::TYPE_SEMI_COLON :
             case Token::TYPE_EXCLAMATION :
             case Token::TYPE_BRACKET_SQUARE_OPEN :
             case Token::TYPE_BRACKET_SQUARE_CLOSE :

@@ -284,6 +284,7 @@ class Build {
         $selection = [];
         $skip_nr = null;
         $is_control = false;
+        $remove_newline = false;
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -298,6 +299,16 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
+                if($remove_newline){
+                    $explode = explode("\n", $record['value'], 2);
+                    if(count($explode) == 2){
+                        $temp = trim($explode[0]);
+                        if(empty($temp)){
+                            $record['value'] = $explode[1];
+                        }
+                    }
+                    $remove_newline = false;
+                }
                 $run[] = $this->indent() .
                     'echo \'' .
                     str_replace(
@@ -339,24 +350,28 @@ class Build {
                         $selection = Variable::is_count($this, $storage, $selection);
                         $run[] = $this->indent() . '$this->parse()->is_assign(true);';
                         $run[] = $this->indent() . Variable::count_assign($this, $storage, $selection, false) . ';';
-                        $run[] = $this->indent() . '$this->parse()->is_assign(false);';                        
+                        $run[] = $this->indent() . '$this->parse()->is_assign(false);';
+                        $remove_newline = true;
                     break;
                     case Build::VARIABLE_ASSIGN : 
                         $run[] = $this->indent() . '$this->parse()->is_assign(true);';
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                         $run[] = $this->indent() . '$this->parse()->is_assign(false);';
+                        $remove_newline = true;
                     break;
                     case Build::VARIABLE_DEFINE :
                         $run[] = $this->indent() . '$variable = ' . Variable::define($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'else { echo $variable; } ';
+                        $remove_newline = true;
                     break;
                     case Build::METHOD :
                         $run[] = $this->indent() . '$method = ' . Method::create($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($method)){ return $method; }';
                         $run[] = $this->indent() . 'elseif (is_array($method)){ return $method; }';
                         $run[] = $this->indent() . 'else { echo $method; }';
+                        $remove_newline = true;
                     break;
                     case Build::METHOD_CONTROL :
                         $multi_line = Build::getPluginMultiline($this->object());
@@ -372,6 +387,7 @@ class Build {
                             foreach($selection as $skip_nr => $item){
                                 //need skip_nr
                             }
+                            $remove_newline = true;
                         } else {
                             $control = Method::create_control($this, $storage, $selection);
                             $explode = explode(' ', $control, 2);
@@ -399,6 +415,7 @@ class Build {
                                 $is_control = true;
                             }
                             $control = null;
+                            $remove_newline = true;
                         }
                     break;
                     case Build::ELSE :

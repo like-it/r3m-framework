@@ -13,6 +13,7 @@ namespace R3m\Io\Module;
 use stdClass;
 use R3m\Io\App;
 use R3m\Io\Config;
+use R3m\Io\Module\File;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
@@ -23,6 +24,21 @@ class View {
     const COMPILE = 'Compile';
     const CONFIG = 'Config';
     const CACHE = 'Cache';
+
+    public static function name($name='', $before=null, $delimiter='.'){
+        if(
+            $before !== null &&
+            is_string($before)
+        ){
+            $before = File::basename($before);
+        }
+        $name = Core::ucfirst_sentence(str_replace('_','.', $name));
+        if($before !== null){
+            return $before . $delimiter . $name;
+        } else {
+            return $name;
+        }
+    }
 
     public static function view($object, $url){
         return View::response($object, $url);

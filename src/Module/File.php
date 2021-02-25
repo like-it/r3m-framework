@@ -335,4 +335,8 @@ class File {
             return 0;
         }
     }
+
+    public static function upload(Data $upload, $target){
+        return move_uploaded_file($upload->data('tmp_name'), $target . $upload->data('name'));
+    }
 }

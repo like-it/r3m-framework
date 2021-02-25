@@ -193,6 +193,23 @@ class App extends Data {
         return Handler::cookie($attribute, $value);
     }
 
+    public function upload($number=null){
+        if($number === null){
+            return new Data($this->data(
+                App::NAMESPACE . '.' .
+                Handler::NAME_REQUEST . '.' .
+                Handler::NAME_FILE
+            ));
+        } else {
+            return new Data($this->data(
+                App::NAMESPACE . '.' .
+                Handler::NAME_REQUEST . '.' .
+                Handler::NAME_FILE . '.' .
+                $number
+            ));
+        }
+    }
+
     public function data_read($url, $attribute=null){
         if($attribute !== null){
             $data =  $this->data($attribute);
