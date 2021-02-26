@@ -88,11 +88,13 @@ class View {
             $list[] = str_replace(
                 [
                     '\\', 
-                    ':'
+                    ':',
+                    '='
                 ],
                 [
                     '/', 
-                    '.'
+                    '.',
+                    '-'
                 ],
                 $url . $template . $config->data('extension.tpl')
             );
