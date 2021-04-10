@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_time(Parse $parse, Data $data, $string='', $time=null){
+function function_string_to_time(Parse $parse, Data $data, $string='', $time=null){
     if($time === null){
         $time = time();
     }
