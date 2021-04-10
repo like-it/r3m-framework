@@ -6,9 +6,14 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
+use R3m\Io\Module\Core;
 
-function function_import_parse(Parse $parse, Data $data, $url=null, $controller=null){
+function function_import(Parse $parse, Data $data, $url=null, $controller=null, $collection=null){
     $object = $parse->object();
+    if(is_array($controller)){
+        $collection = $controller;
+        $controller = null;
+    }
     $extension = strtolower(File::extension($url));
     $name = '';
     $value = null;
@@ -16,6 +21,14 @@ function function_import_parse(Parse $parse, Data $data, $url=null, $controller=
         case 'js' :
             if($controller !== null){
                 $location = [];
+                $location[] = $object->config('host.dir.root') .
+                    $object->config('dictionary.public') .
+                    $object->config('ds') .
+                    ucfirst($controller) .
+                    $object->config('ds') .
+                    ucfirst($extension) .
+                    $object->config('ds') .
+                    $url;
                 $location[] = $object->config('host.dir.root') .
                     ucfirst($controller) .
                     $object->config('ds') .
@@ -57,7 +70,20 @@ function function_import_parse(Parse $parse, Data $data, $url=null, $controller=
             $name = 'script';
             $value = [];
             $value[] = '<script type="text/javascript">';
-            $value[] = $parse->compile(File::read($file), $object->data());
+            if(is_array($collection)){
+                $value[] = 'ready(function(){';
+                foreach($collection as $key => $val) {
+                    if (is_string($val)) {
+                        $val = '\'' . $val . '\'';
+                    } elseif (is_array($val) || is_object($val)) {
+                        $val = Core::OBJECT($val, Core::OBJECT_JSON);
+                    }
+                    $key = '\'' . $key . '\'';
+                    $value[] = 'priya.collection(' . $key . ', ' . $val . ');';
+                }
+                $value[] = '});';
+            }
+            $value[] = File::read($file);
             $value[] = "\t\t\t" . '</script>';
             $value = implode("\n", $value);
         break;
@@ -72,7 +98,7 @@ function function_import_parse(Parse $parse, Data $data, $url=null, $controller=
                     $object->config('ds') .
                     $url;
                 if(!File::exist($location)){
-                    return;
+                    //return;
                 }
                 $href = $data->data('host.url') .
                     ucfirst($controller) .
@@ -86,7 +112,7 @@ function function_import_parse(Parse $parse, Data $data, $url=null, $controller=
                     $object->config('ds') .
                     $url;
                 if(!File::exist($location)){
-                    return;
+                    //return;
                 }
                 $href = $data->data('host.url') .
                     $object->config('controller.title') .
@@ -100,6 +126,7 @@ function function_import_parse(Parse $parse, Data $data, $url=null, $controller=
         break;
     }
     $list = $data->data($name);
+//    dd($list);
     if(empty($list)){
         $list = [];
     }

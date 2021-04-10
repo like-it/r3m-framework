@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_config(Parse $parse, Data $data, $attribute, $value=null){
+function function_config(Parse $parse, Data $data, $attribute=null, $value=null){
     $object = $parse->object();
     if($value !== null){
         $object->config($attribute, $value);

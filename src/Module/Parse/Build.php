@@ -207,7 +207,6 @@ class Build {
                 }
             }
             if($exist === false){
-                $value = $record['value'];
                 $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
                 if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
                     d($dir_plugin);
@@ -314,11 +313,11 @@ class Build {
                     str_replace(
                         [
                             '\'',
-                            '\\'
+                            //'\\'
                         ],
                         [
                             '\\\'',
-                            '\\\\'
+                            //'\\\\'
                         ],
                         $record['value']
                     ) .

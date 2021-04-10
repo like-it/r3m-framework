@@ -59,8 +59,12 @@ class View {
             $template = $template->name;
         }
         else {
-            $called = get_called_class();            
-            $dir = $called::DIR;
+            $called = get_called_class();
+            if(defined($called .'::DIR')){
+                $dir = $called::DIR;    
+            } else {
+                $dir = '/';
+            }
         }
         if($temp !== null && property_exists($temp, 'name')){
             $template = $temp->name;
@@ -219,9 +223,53 @@ class View {
         ;
         $config->data($key, $value);  
 
-        $config->data(CONFIG::DATA_CONTROLLER_CLASS, get_called_class());
-        $config->data(CONFIG::DATA_CONTROLLER_NAME, strtolower(File::basename($config->data(CONFIG::DATA_CONTROLLER_CLASS))));
-        $config->data(CONFIG::DATA_CONTROLLER_TITLE, File::basename($config->data(CONFIG::DATA_CONTROLLER_CLASS)));
+        $config->data(Config::DATA_CONTROLLER_CLASS, get_called_class());
+        $config->data(Config::DATA_CONTROLLER_NAME, strtolower(File::basename($config->data(Config::DATA_CONTROLLER_CLASS))));
+        $config->data(Config::DATA_CONTROLLER_TITLE, File::basename($config->data(Config::DATA_CONTROLLER_CLASS)));
+
+        $host_dir_public = $config->data(Config::DATA_HOST_DIR_PUBLIC);
+        $explode = explode($config->data('ds'), $host_dir_public);
+        $slash = array_pop($explode);
+        $public = array_pop($explode);
+        $extension = array_pop($explode);
+        $explode[] = $public;
+        $explode[] = $slash;
+        $host_dir_public = implode($config->data('ds'), $explode);
+        $controller_dir_public = $config->data(Config::DATA_CONTROLLER_DIR_PUBLIC);
+        $explode = explode($config->data('ds'), $controller_dir_public);
+        $slash = array_pop($explode);
+        $public = array_pop($explode);
+        $extension = array_pop($explode);
+        $explode[] = $public;
+        $explode[] = $slash;
+        $controller_dir_public = implode($config->data('ds'), $explode);
+        if($host_dir_public == $controller_dir_public){
+            $controller_dir_public = $config->data(Config::DATA_CONTROLLER_DIR_PUBLIC);
+            $controller_dir_public .= $config->data(Config::DATA_CONTROLLER_TITLE) . $config->data('ds');
+            $config->data(Config::DATA_CONTROLLER_DIR_PUBLIC, $controller_dir_public);
+        }
+        $root = $config->data(Config::DATA_CONTROLLER_DIR_ROOT);
+        $host = $config->data(Config::DATA_HOST_DIR_ROOT);
+        $explode = explode($config->data('ds'), $host);
+        array_pop($explode);
+        array_pop($explode);
+        $host = implode($config->data('ds'), $explode);
+        if($host){
+            $explode = explode($host, $root, 2);
+            if(array_key_exists(1, $explode)){
+                $explode = explode($config->data('ds'), $explode[1]);
+                if(array_key_exists(1, $explode)){
+                    $extension = strtolower($explode[1]);
+                    $domain = Host::domain();
+                    $subdomain = Host::subdomain();
+                    if($subdomain){
+                        $config->data(Config::DATA_ROUTE_PREFIX, $subdomain . '-' . $domain . '-' . $extension);
+                    } else {
+                        $config->data(Config::DATA_ROUTE_PREFIX, $domain . '-' . $extension);
+                    }
+                }
+            }
+        }
         $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
     }
 
@@ -253,6 +301,15 @@ class View {
         $read = $parse->compile($read, $data, $parse->storage());
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
+        /*
+        $response = $object->config('response.output');
+        if(
+            $response == App::RESPONSE_JSON &&
+            is_string($read)
+        ){
+            return trim($read);
+        }
+        */
         return $read;
     }
 }

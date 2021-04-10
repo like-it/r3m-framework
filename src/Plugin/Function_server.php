@@ -11,12 +11,12 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_session(Parse $parse, Data $data, $attribute=null, $value=null){
-    $object = $parse->object();
-    if(!empty($parse->is_assign())){
-        $session = $object->session($attribute, $value); 
-        return Core::object($session);
+function function_server(Parse $parse, Data $data, $attribute=null){
+    if($attribute === null){
+        return $_SERVER;
     } else {
-        return $object->session($attribute, $value); 
-    }    
+        if(array_key_exists($attribute, $_SERVER)){
+            return $_SERVER[$attribute];
+        }
+    }
 }

@@ -72,9 +72,9 @@ class Handler {
     private static function request_header(){
         //check if cli
         if(defined('IS_CLI')){
+            //In Cli mode apache functions aren't defined
             return Core::array_object($_SERVER);
         } else {
-            //In Cli mode apache functions aren't defined
             return Core::array_object(apache_request_headers());
         }
     }
@@ -583,36 +583,47 @@ class Handler {
     }
 
     public static function cookie($attribute=null, $value=null, $duration=null){
-        if($attribute !== null){
-            if($value !== null){
-                if($attribute == Handler::COOKIE_DELETE){
+        $cookie = [];
+        if($attribute !== null) {
+            if ($value !== null) {
+                if ($attribute == Handler::COOKIE_DELETE) {
                     $result = @setcookie($value, null, 0, "/"); //ends at session
-                    if(!empty($result) && defined('IS_CLI')){
+                    if (!empty($result) && defined('IS_CLI')) {
                         unset($_COOKIE[$value]);
                     }
-                    return $result;
+                    return;
                 } else {
-                    if($duration === null){
-                        $duration = 60*60*24*365*2; // 2 years
+                    if ($duration === null) {
+                        $duration = 60 * 60 * 24 * 365 * 2; // 2 years
                     }
-                    $result = @setcookie($attribute, $value, time() + $duration, "/");
-                    if(!empty($result) && defined('IS_CLI')){
-                        $_COOKIE[$attribute] = $value;
+                    if(is_array($duration)){
+                        $result = @setcookie($attribute, $value, $duration);
+                    } else {
+                        $result = @setcookie($attribute, $value, time() + $duration, "/");
                     }
-                }
-                if(isset($_COOKIE[$attribute])){
-                    return $_COOKIE[$attribute];
-                } else {
-                    return null;
-                }
-            } else {
-                if(isset($_COOKIE[$attribute])){
-                    return $_COOKIE[$attribute];
-                } else {
-                    return null;
+                    if (!empty($result) && defined('IS_CLI')) {
+                        $cookie[$attribute] = $value;
+                    }
                 }
             }
+            if($value === null && is_array($duration)){
+                $result = @setcookie($attribute, $value, $duration);
+            }
         }
-        return $_COOKIE;
+        if(array_key_exists('HTTP_COOKIE', $_SERVER)){
+            $explode = explode(';', $_SERVER['HTTP_COOKIE']);
+            foreach($explode as $nr => $raw){
+                $temp = explode('=', $raw, 2);
+                $cookie[trim($temp[0], ' ')] = $temp[1];
+            }
+        }
+        if($attribute === null){
+            return $cookie;
+        }
+        if(array_key_exists($attribute, $cookie)){
+            if($value === null){
+                return $cookie[$attribute];
+            }
+        }
     }
 }

@@ -74,7 +74,8 @@
                 "capture.prepend",
                 "capture.append",
                 "block.code",
-                "block.html"
+                "block.html",
+                "block.json"
             ]
         }
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author          Remco van der Velde
- * @since           2020-09-16
+ * @since           2020-09-13
  * @copyright       Remco van der Velde
  * @license         MIT
  * @version         1.0
@@ -10,8 +10,7 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-
-function function_password_verify(Parse $parse, Data $data, $password='', $hash=''){
-        $result = password_verify($password, $hash);
-    return $result;
+use R3m\Io\Module\Handler;
+function function_request_method(Parse $parse, Data $data){
+    return Handler::method();
 }

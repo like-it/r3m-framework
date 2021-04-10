@@ -61,31 +61,28 @@ class Route extends Data{
         $url = Host::remove_scheme($url);
         $allowed_host = [];
         $disallowed_host = [];
-        foreach($select->host as $host){
-            $host = strtolower($host);
-            if(substr($host, 0, 1) == '!'){
-                $disallowed_host[] = substr($host, 1);
-                continue;
+        if(property_exists($select, 'host')){
+            foreach($select->host as $host){
+                $host = strtolower($host);
+                if(substr($host, 0, 1) == '!'){
+                    $disallowed_host[] = substr($host, 1);
+                    continue;
+                }
+                $allowed_host[] = $host;
             }
-            $allowed_host[] = $host;
-        }
-        if(in_array($url, $disallowed_host)){
+            if(in_array($url, $disallowed_host)){
+                return false;
+            }
+            if(in_array($url, $allowed_host)){
+                return $select;
+            }
             return false;
         }
-        if(in_array($url, $allowed_host)){
-            return $select;
-        }
-        return false;
     }
 
     public static function find($object, $name='', $option=[]){
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
-        if(empty($get)){
-            return;
-        }
-        $get = $route::add_localhost($object, $get);
-        $get = $route::has_host($get, $object->data('host.url'));
         if(empty($get)){
             return;
         }
@@ -96,12 +93,18 @@ class Route extends Data{
                 } else {
                     $url = $get->url;
                 }
-                $url = $object->data('host.url') . $url;
+                //$url = $object->data('host.url') . $url;
                 return $url;
             } else {
                 throw new Exception('path & url are empty');
-            }                      
+            }
         }
+        $get = $route::add_localhost($object, $get);
+        $get = $route::has_host($get, $object->data('host.url'));
+        if(empty($get)){
+            return;
+        }
+
         $path = $get->path;
         if(is_array($option)){
             if(

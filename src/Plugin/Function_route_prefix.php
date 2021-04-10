@@ -11,18 +11,10 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_route_name(Parse $parse, Data $data, $name=null){
-    $options=[];
-    $result = strtolower(str_replace(
-        [
-            '.',
-            ' '
-        ],
-        [
-            '-',
-            '-'
-        ],
-        $name
-    ));
-    return $result;
+function function_route_prefix(Parse $parse, Data $data, $prefix=null){
+    $object = $parse->object();
+    if($prefix !== null){
+        $object->config('route.prefix', $prefix);
+    }
+    return $object->config('route.prefix');
 }

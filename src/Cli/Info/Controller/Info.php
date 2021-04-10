@@ -23,9 +23,6 @@ class Info extends View {
     const NAME = 'Info';
 
     public static function run($object){
-//        $url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
-//        $read = $object->data_read($url);
-//        $object->config(Config::DATA_FRAMEWORK_ENVIRONMENT , $read->)
         $command = $object::parameter($object, Info::NAME, 1);
         try {
             $url = Info::locate($object, 'Info.' . $command);
