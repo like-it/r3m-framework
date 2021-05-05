@@ -9,22 +9,68 @@
  *  -    all
  */
 function exceptions_error_handler($severity, $message, $filename, $lineNumber) {
+    if(
+        in_array(
+            $severity,
+            [
+                E_DEPRECATED,
+                E_USER_DEPRECATED
+            ]
+        )
+    ){
+        return;
+    }
     throw new ErrorException($message, 0, $severity, $filename, $lineNumber);
 }
 
 function exception_handler($exception) {
+    $is_cli = false;
+    if(defined('IS_CLI')){
+       $is_cli = true;
+    }
     $class = basename(str_replace('\\','/', get_class($exception)));
-    echo $class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' on line ' . $exception->getLine() . "\n";
-    echo 'Trace: ' . "\n";
-    $trace = $exception->getTrace();
-    if(
-        !empty($trace) &&
-        is_array($trace)
-    ){
-        foreach($trace as $record){
-            echo "  " . $record['class'] . $record['type'] . $record['function'] . ' in ' .  $record['file'] . ' on line ' . $record['line'] . "\n";
+    if($is_cli){
+        echo $class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' on line ' . $exception->getLine() . "\n";
+        echo 'Trace: ' . "\n";
+        $trace = $exception->getTrace();
+        if(
+            !empty($trace) &&
+            is_array($trace)
+        ){
+            foreach($trace as $record){
+                if(empty($record['class'])){
+                    echo ' ' . $record['function'];
+                    continue;
+                }
+                if(empty($record['file'])){
+                    echo  ' ' . $record['class'] . $record['type'] . $record['function'];
+                    continue;
+                }
+                echo '  ' . $record['class'] . $record['type'] . $record['function'] . ' in ' .  $record['file'] . ' on line ' . $record['line'] . "\n";
+            }
+        }
+    } else {
+        echo $class . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' on line ' . $exception->getLine() . '<br>';
+        echo 'Trace: ' . '<br>';
+        $trace = $exception->getTrace();
+        if(
+            !empty($trace) &&
+            is_array($trace)
+        ){
+            foreach($trace as $record){
+                if(empty($record['class'])){
+                    echo ' ' . $record['function'];
+                    continue;
+                }
+                if(empty($record['file'])){
+                    echo  ' ' . $record['class'] . $record['type'] . $record['function'];
+                    continue;
+                }
+                echo  ' ' . $record['class'] . $record['type'] . $record['function'] . ' in ' .  $record['file'] . ' on line ' . $record['line'] . '<br>';
+            }
         }
     }
+
 }
 set_error_handler('exceptions_error_handler');
 set_exception_handler('exception_handler');

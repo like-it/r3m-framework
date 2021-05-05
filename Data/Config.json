@@ -16,10 +16,10 @@
             ]
         },
         "major": "0",
-        "minor": "0",
-        "patch": 24,
-        "version": "0.0.24",
-        "built": "2021-02-21 00:47:29"
+        "minor": "1",
+        "patch": "0",
+        "version": "0.1.0",
+        "built": "2021-05-05 13:42:03"
     },
     "contentType": {
         "txt": "text\/plain",
@@ -74,7 +74,8 @@
                 "capture.prepend",
                 "capture.append",
                 "block.code",
-                "block.html"
+                "block.html",
+                "block.json"
             ]
         }
     }

@@ -3,7 +3,6 @@
 
 use R3m\Io\App;
 use R3m\Io\Module\View;
-use R3m\Io\Module\Core;
 
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
@@ -13,11 +12,10 @@ class Index extends View {
     const DIR = __DIR__ . DIRECTORY_SEPARATOR;    
 
     public static function overview(App $object){
-        $name = Core::ucfirst_sentence(str_replace('_','.', __FUNCTION__)); 
+        $name = Index::name(__FUNCTION__);
         try {
             $url = Index::locate($object, $name);
-            $view = Index::response($object, $url);
-            return $view;
+            return Index::response($object, $url);
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return $exception->getMessage() . "\n";
         }

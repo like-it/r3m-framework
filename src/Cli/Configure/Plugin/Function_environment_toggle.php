@@ -21,9 +21,14 @@ function function_environment_toggle(Parse $parse, Data $data, $public_html=''){
     }
     $is_development = $read->data('framework.environment');
     if($is_development == Config::MODE_DEVELOPMENT){
+        $read->data('framework.environment', Config::MODE_STAGING);
+        $status = Config::MODE_STAGING;
+    }
+    elseif($is_development == Config::MODE_STAGING){
         $read->data('framework.environment', Config::MODE_PRODUCTION);
         $status = Config::MODE_PRODUCTION;
-    } else {
+    }
+    else {
         $read->data('framework.environment', Config::MODE_DEVELOPMENT);
         $status = Config::MODE_DEVELOPMENT;
     }
@@ -34,7 +39,11 @@ function function_environment_toggle(Parse $parse, Data $data, $public_html=''){
     }
     if($status == Config::MODE_PRODUCTION){
         return 'Production mode enabled.' . "\n";
-    } else {
+    }
+    elseif($status == Config::MODE_STAGING){
+        return 'Staging mode enabled.' . "\n";
+    }
+    else {
         return 'Development mode enabled.' . "\n";
     }
 }

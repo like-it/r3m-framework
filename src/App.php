@@ -39,6 +39,9 @@ class App extends Data {
     const CONTENT_TYPE_CLI = 'text/cli';
     const CONTENT_TYPE_FORM = 'application/x-www-form-urlencoded';
 
+    const RESPONSE_JSON = 'json';
+    const RESPONSE_HTML = 'html';
+
     const ROUTE = App::NAMESPACE . '.' . Route::NAME;
     const CONFIG = App::NAMESPACE . '.' . Config::NAME;
     const REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
@@ -118,54 +121,89 @@ class App extends Data {
     }
 
     public static function contentType(App $object){
-        $contentType = App::CONTENT_TYPE_HTML;
-        if(property_exists($object->data(App::REQUEST_HEADER), '_')){
-            $contentType = App::CONTENT_TYPE_CLI;
+        $contentType = $object->data(App::CONTENT_TYPE);
+        if(empty($contentType)){
+            $contentType = App::CONTENT_TYPE_HTML;
+            if(property_exists($object->data(App::REQUEST_HEADER), '_')){
+                $contentType = App::CONTENT_TYPE_CLI;
+            }
+            elseif(property_exists($object->data(App::REQUEST_HEADER), 'Content-Type')){
+                $contentType = $object->data(App::REQUEST_HEADER)->{'Content-Type'};
+            }
+            if(empty($contentType)){
+                throw new Exception('Couldn\'t determine contentType');
+            }
+            return $object->data(App::CONTENT_TYPE, $contentType);
+        } else {
+            return $contentType;
         }
-        elseif(property_exists($object->data(App::REQUEST_HEADER), 'Content-Type')){
-            $contentType = $object->data(App::REQUEST_HEADER)->{'Content-Type'};
+    }
+
+    private static function exception_to_json(Exception $exception){
+        $class = get_class($exception);
+        $array = [];
+        $array['class'] = $class;
+        $array['message'] = $exception->getMessage();
+        $array['line'] = $exception->getLine();
+        $array['file'] = $exception->getFile();
+        $array['code'] = $exception->getCode();
+        $array['previous'] = $exception->getPrevious();
+        $array['trace'] = $exception->getTrace();
+        $array['trace_as_string'] = $exception->getTraceAsString();
+        try {
+            return Core::object($array, Core::OBJECT_JSON);
+        } catch (Exception\ObjectException $exception) {
+            return $exception->getMessage();
         }
-        if(empty($contentType)){            
-            throw new Exception('Couldn\'t determine contentType');
-        }
-        return $object->data(App::CONTENT_TYPE, $contentType);
     }
 
     private static function result(App $object, $output){
+        if($output instanceof Exception){
+            header('Content-Type: application/json');
+            return App::exception_to_json($output);
+        }
         $contentType = $object->data(App::CONTENT_TYPE);
         if($contentType == App::CONTENT_TYPE_JSON){
+            header('Content-Type: application/json');
             $json = new stdClass();
-            $json->html = $output;
-            if($object->data('method')){
-                $json->method = $object->data('method');
-            } else {
-                $json->method = $object->request('method');
+            $response = $object->config('response.output');
+            switch($response){
+                case App::RESPONSE_JSON :
+                    $json = $output;
+                    break;
+                default:
+                    $json->html = $output;
+                    if($object->data('method')){
+                        $json->method = $object->data('method');
+                    } else {
+                        $json->method = $object->request('method');
+                    }
+                    if($object->data('target')){
+                        $json->target = $object->data('target');
+                    } else {
+                        $json->target = $object->request('target');
+                    }
+                    $append_to = $object->data('append-to');
+                    if(empty($append_to)){
+                        $append_to = $object->data('append.to');
+                    }
+                    if(empty($append_to)){
+                        $append_to = $object->request('append-to');
+                    }
+                    if(empty($append_to)){
+                        $append_to = $object->request('append.to');
+                    }
+                    if($append_to){
+                        if(empty($json->append)){
+                            $json->append = new stdClass();
+                        }
+                        $json->append->to = $append_to;
+                    }
+                    $json->script = $object->data(App::SCRIPT);
+                    $json->link = $object->data(App::LINK);
             }
-            if($object->data('target')){
-                $json->target = $object->data('target');
-            } else {
-                $json->target = $object->request('target');
-            }
-            $append_to = $object->data('append-to');
-            if(empty($append_to)){
-                $append_to = $object->data('append.to');
-            }
-            if(empty($append_to)){
-                $append_to = $object->request('append-to');
-            }
-            if(empty($append_to)){
-                $append_to = $object->request('append.to');
-            }
-            if($append_to){
-                if(empty($json->append)){
-                    $json->append = new stdClass();
-                }
-                $json->append->to = $append_to;
-            }
-            $json->script = $object->data(App::SCRIPT);
-            $json->link = $object->data(App::LINK);
             return Core::object($json, Core::OBJECT_JSON);
-        }        
+        }
         return $output;
     }
 
@@ -189,8 +227,25 @@ class App extends Data {
         return Handler::session($attribute, $value);
     }
 
-    public function cookie($attribute=null, $value=null){
-        return Handler::cookie($attribute, $value);
+    public function cookie($attribute=null, $value=null, $duration=null){
+        return Handler::cookie($attribute, $value, $duration);
+    }
+
+    public function upload($number=null){
+        if($number === null){
+            return new Data($this->data(
+                App::NAMESPACE . '.' .
+                Handler::NAME_REQUEST . '.' .
+                Handler::NAME_FILE
+            ));
+        } else {
+            return new Data($this->data(
+                App::NAMESPACE . '.' .
+                Handler::NAME_REQUEST . '.' .
+                Handler::NAME_FILE . '.' .
+                $number
+            ));
+        }
     }
 
     public function data_read($url, $attribute=null){

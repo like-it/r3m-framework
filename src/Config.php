@@ -17,8 +17,9 @@ use R3m\Io\Module\File;
 class Config extends Data {
     const NAME = 'Config';
 
-    const MODE_PRODUCTION = 'production';
     const MODE_DEVELOPMENT = 'development';
+    const MODE_PRODUCTION = 'production';
+    const MODE_STAGING = 'staging';
 
     const DATA = 'data';
     const VALUE_DATA = 'Data';
@@ -97,9 +98,10 @@ class Config extends Data {
     const DATA_FRAMEWORK_ENVIRONMENT = 'framework.environment';
 
     const DATA_HOST_DIR = 'host.dir';
-    const DATA_HOST_DIR_ROOT = CONFIG::DATA_HOST_DIR . '.' . 'root';
-    const DATA_HOST_DIR_CACHE = CONFIG::DATA_HOST_DIR . '.' . 'cache';
-    const DATA_HOST_DIR_DATA = CONFIG::DATA_HOST_DIR . '.' . 'data';
+    const DATA_HOST_DIR_ROOT = Config::DATA_HOST_DIR . '.' . 'root';
+    const DATA_HOST_DIR_CACHE = Config::DATA_HOST_DIR . '.' . 'cache';
+    const DATA_HOST_DIR_DATA = Config::DATA_HOST_DIR . '.' . 'data';
+    const DATA_HOST_DIR_PUBLIC = Config::DATA_HOST_DIR . '.' . 'public';
 
     /*
     const DATA_SOURCE_DIR = 'source.dir';
@@ -139,6 +141,9 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_MODEL = Config::DATA_CONTROLLER_DIR . '.' .'model';
     const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
     const DATA_CONTROLLER_DIR_PUBLIC = Config::DATA_CONTROLLER_DIR . '.' .'public';
+
+    const DATA_ROUTE = 'route';
+    const DATA_ROUTE_PREFIX = Config::DATA_ROUTE . '.' . 'prefix';
 
     public function __construct($config=[]){
         if(array_key_exists(Config::DATA_DIR_VENDOR, $config)){

@@ -10,8 +10,9 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\UrlEmptyException;
 use stdClass;
-use ObjectException;
+use R3m\Io\Exception\ObjectException;
 
 class Core {
 
@@ -31,8 +32,8 @@ class Core {
     const OBJECT_TYPE_CHILD = 'child';
 
     const SHELL_DETACHED = 'detached';
-    const SHELL_PROCESS = 'process';
     const SHELL_NORMAL = 'normal';
+    const SHELL_PROCESS = 'process';
 
     const OUTPUT_MODE_IMPLICIT = 'implicit';
     const OUTPUT_MODE_EXPLICIT = 'explicit';
@@ -147,6 +148,9 @@ class Core {
     }
 
     public static function redirect($url=''){
+        if(empty($url)){
+            throw new UrlEmptyException('url is empty...');
+        }
         header('Location: ' . $url);
         exit;
     }

@@ -3,7 +3,7 @@ Welcome to R3m.io                             (c) Remco van der Velde
 {binary()} cache clear                    | Clears the app cache
 {binary()} configure                      | App configuration commands
 {binary()} configure domain add           | Adds a domain to /project_dir/Host
-{binary()} configure environment toggle   | Toggle environment between production & development
+{binary()} configure environment toggle   | Toggle environment between development, staging & production
 {binary()} configure host add             | Adds a host to /etc/host
 {binary()} configure host create          | Create and setup an apache2 site
 {binary()} configure host delete          | Delete a host from /etc/host
