@@ -11,6 +11,8 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_file_atime(Parse $parse, Data $data, $url=''){
-    return File::atime($url);
+function function_http_response_code(Parse $parse, Data $data, $code=200) {
+    $string = 'Status: ' . $code;
+    $replace = true;
+    Handler::header($string, $code, $replace);
 }
