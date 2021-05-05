@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\ErrorException;
 use stdClass;
 
 use Exception;
@@ -35,7 +36,7 @@ class File {
         try {
             return @filemtime($url); //added @ async deletes & reads can cause triggers otherways
         } catch(Exception $exception){
-            return '';
+            return;
         }
 
     }
@@ -44,7 +45,7 @@ class File {
         try {
             return @fileatime($url); //added @ async deletes & reads can cause triggers otherways
         } catch (Exception $exception){
-            return '';
+            return;
         }
     }
 
@@ -117,8 +118,8 @@ class File {
             $node->extension = '';
             $node->filetype = File::TYPE;
         }
-        $node->mtime = filemtime($node->url);
-        $node->size = filesize($node->url);
+        $node->mtime = File::mtime($node->url);
+        $node->size = File::size($node->url);
         return $node;
     }
 
@@ -146,29 +147,44 @@ class File {
     public static function move($source='', $destination='', $overwrite=false){
         $exist = file_exists($source);
         if($exist === false){
-            throw new FileMoveException('Source file not exists');
+            return new FileMoveException('Source file doesn\'t exist');
         }
         $exist = file_exists($destination);
         if(
             $overwrite === false &&
             file_exists($destination)
         ){
-            throw new FileMoveException('Destination file exists');
+            return new FileMoveException('Destination file exists');
         }
         if(is_dir($source)){
             if(
                 $exist &&
                 $overwrite === false
             ){
-                throw new FileMoveException('Destination directory exists');
+                return new FileMoveException('Destination directory exists');
             }
             elseif($exist){
                 if(is_dir($destination)){
-                    throw new FileMoveException('Destination directory exists and needs to be deleted first');
+                    return new FileMoveException('Destination directory exists and needs to be deleted first');
                 } else {
-                    File::delete($destination);
-                    return rename($source, $destination);
+                    try {
+                        File::delete($destination);
+                        return rename($source, $destination);
+                    } catch (Exception  | ErrorException $exception){
+                        return $exception;
+                    }
+
                 }
+            } elseif(
+                !$exist &&
+                $overwrite === false
+            ){
+                try {
+                    return @rename($source, $destination);
+                } catch (Exception | ErrorException $exception){
+                    return $exception;
+                }
+
             }
         }
         elseif(is_file($source)){
@@ -235,11 +251,11 @@ class File {
     }
 
     public static function read($url=''){
-        if(strpos($url, File::SCHEME_HTTP) !== false){
+        if(strpos($url, File::SCHEME_HTTP) === 0){
             //check network connection first (@) added for that              //error
             try {
                 $file = @file($url);
-                if(!empty($file)){
+                if(empty($file)){
                     return '';
                 }
                 return implode('', $file);
@@ -269,7 +285,7 @@ class File {
         try {
             return @unlink($url); //added @ async deletes & reads can cause triggers otherways
         } catch (Exception $exception){
-            return false;
+            return $exception;
         }
 
     }

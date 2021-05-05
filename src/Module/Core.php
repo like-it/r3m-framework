@@ -13,6 +13,7 @@ namespace R3m\Io\Module;
 use R3m\Io\Exception\UrlEmptyException;
 use stdClass;
 use R3m\Io\Exception\ObjectException;
+use R3m\Io\App;
 
 class Core {
 
@@ -610,5 +611,23 @@ class Core {
             $explode[$nr] = ucfirst(trim($part));
         }
         return implode($delimiter, $explode);
+    }
+
+    public static function cors(App $object){
+        header("HTTP/1.1 200 OK");
+        header("Access-Control-Allow-Origin: *");
+        if (isset($_SERVER['HTTP_ORIGIN'])) {
+            header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+            //header("HTTP/1.1 200 OK");
+//        header("Access-Control-Allow-Origin: *");
+//        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+            header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
+            header('Access-Control-Max-Age: 86400');    // cache for 1 day
+            exit(0);
+        }
     }
 }

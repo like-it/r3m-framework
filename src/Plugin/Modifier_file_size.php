@@ -11,7 +11,22 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function modifier_nbsp(Parse $parse, Data $data, $value){
-    $value = str_replace(' ', '&nbsp;', $value);
+function modifier_file_size(Parse $parse, Data $data, $value){
+    $bytes = 1024;
+    $value += 0;
+    if($value > $bytes * $bytes * $bytes * $bytes){
+        $value = round($value / ($bytes * $bytes * $bytes * $bytes), 2) . ' TB';
+    }
+    if($value > $bytes * $bytes * $bytes){
+        $value = round($value / ($bytes * $bytes * $bytes), 2) . ' GB';
+    }
+    elseif($value > $bytes * $bytes){
+        $value = round($value / ($bytes * $bytes), 2) . ' MB';
+    }
+    elseif($value > $bytes){
+        $value = round($value / $bytes, 2) . ' KB';
+    } else {
+        $value .= ' B';
+    }
     return $value;
 }

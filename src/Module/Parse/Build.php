@@ -183,11 +183,13 @@ class Build {
             return $document;
         }
         $placeholder = $storage->data('placeholder.function');
+        $url_list = [];
         foreach($data as $name => $record){
             $exist = false;
             foreach($dir_plugin as $nr => $dir){
                 $file = ucfirst($name) . $config->data('extension.php');
                 $url = $dir . $file;
+                $url_list[] = $url;
                 if(File::exist($url)){
                     $read = File::read($url);
                     $explode = explode('function', $read);
@@ -209,7 +211,9 @@ class Build {
             if($exist === false){
                 $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
                 if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
+                    Core::cors();
                     d($dir_plugin);
+                    d($url_list);
                 }
                 throw new PluginNotFoundException('Function not found: ' . $text);
             }

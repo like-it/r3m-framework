@@ -170,7 +170,9 @@ class App extends Data {
             switch($response){
                 case App::RESPONSE_JSON :
                     $json = $output;
-                    break;
+                    if(is_string($json)){
+                        return trim($json, " \t\r\n");
+                    }
                 default:
                     $json->html = $output;
                     if($object->data('method')){

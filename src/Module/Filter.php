@@ -32,10 +32,15 @@ class Filter extends Data{
                 foreach($where as $attribute => $record){
                     if(array_key_exists('exist', $record)){
                         if(!empty($record['exist'])){
-                            if(!property_exists($node, $attribute)){
+                            if(is_object($node) && !property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
                                 unset($list->$uuid);
                             }
+                            /*
+                            elseif(is_array($node) && !array_key_exists($attribute, $node)){
+
+                            }
+                            */
                         } else {
                             if(property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
@@ -68,7 +73,8 @@ class Filter extends Data{
                                     $node->$attribute == $record['value']
                                 ){
                                     $skip = true;
-                                }                                
+                                }
+
                             break;
                             case '!=' :
                                 if(
@@ -113,7 +119,11 @@ class Filter extends Data{
                         }
                         if($skip === false){
                             $this->data('delete', $uuid);
-                            unset($list->$uuid);
+                            if(is_array($list)){
+                                unset($list[$uuid]);
+                            } else {
+                                unset($list->$uuid);
+                            }
                         }
                     }
                 }

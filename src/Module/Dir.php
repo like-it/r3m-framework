@@ -11,6 +11,8 @@
 namespace R3m\Io\Module;
 
 use stdClass;
+use Exception;
+use R3m\Io\Exception\ErrorException;
 
 class Dir {
     const CHMOD = 0740;
@@ -150,46 +152,54 @@ class Dir {
         if(is_dir($url) === false){
             return false;
         }
-        @chdir($url);
-        if ($handle = @opendir($url)) {
-            while (false !== ($entry = readdir($handle))) {
-                $recursiveList = array();
-                if($entry == '.' || $entry == '..'){
-                    continue;
-                }
-                $file = new stdClass();
-                $file->url = $url . $entry;
-                if(is_dir($file->url)){
-                    $file->url .= Dir::SEPARATOR;
-                    $file->type = Dir::TYPE;
-                }
-                if($this->ignore('find', $file->url)){
-                    continue;
-                }
-                $file->name = $entry;
-                if(isset($file->type)){
-                    if(!empty($recursive)){
-                        $directory = new Dir();
-                        $directory->ignore('list', $this->ignore());
-                        $recursiveList = $directory->read($file->url, $recursive, $format);
-                        if($format !== 'flat'){
-                            $file->list = $recursiveList;
-                            unset($recursiveList);
-                        }
+        try {
+            @chdir($url);
+        } catch (Exception | ErrorException $exception){
+            return false;
+        }
+        try {
+            if ($handle = @opendir($url)) {
+                while (false !== ($entry = readdir($handle))) {
+                    $recursiveList = array();
+                    if($entry == '.' || $entry == '..'){
+                        continue;
                     }
-                } else {
-                    $file->type = File::TYPE;
-                }
-                if(is_link($entry)){
-                    $file->link = true;
-                }
-                $list[] = $file;
-                if(!empty($recursiveList)){
-                    foreach ($recursiveList as $recursive_file){
-                        $list[] = $recursive_file;
+                    $file = new stdClass();
+                    $file->url = $url . $entry;
+                    if(is_dir($file->url)){
+                        $file->url .= Dir::SEPARATOR;
+                        $file->type = Dir::TYPE;
+                    }
+                    if($this->ignore('find', $file->url)){
+                        continue;
+                    }
+                    $file->name = $entry;
+                    if(isset($file->type)){
+                        if(!empty($recursive)){
+                            $directory = new Dir();
+                            $directory->ignore('list', $this->ignore());
+                            $recursiveList = $directory->read($file->url, $recursive, $format);
+                            if($format !== 'flat'){
+                                $file->list = $recursiveList;
+                                unset($recursiveList);
+                            }
+                        }
+                    } else {
+                        $file->type = File::TYPE;
+                    }
+                    if(is_link($entry)){
+                        $file->link = true;
+                    }
+                    $list[] = $file;
+                    if(!empty($recursiveList)){
+                        foreach ($recursiveList as $recursive_file){
+                            $list[] = $recursive_file;
+                        }
                     }
                 }
             }
+        } catch (Exception | ErrorException $exception){
+             return $exception;
         }
         if(is_resource($handle)){
             closedir($handle);
@@ -203,7 +213,12 @@ class Dir {
     }
 
     public static function move($source='', $destination='', $overwrite=false){
-        return File::move($source, $destination, $overwrite);
+        try {
+            return File::move($source, $destination, $overwrite);
+        } catch (Exception | FileMoveException $exception){
+            return $exception;
+        }
+
     }
 
     public static function remove($dir=''){
