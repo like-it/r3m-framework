@@ -61,31 +61,28 @@ class Route extends Data{
         $url = Host::remove_scheme($url);
         $allowed_host = [];
         $disallowed_host = [];
-        foreach($select->host as $host){
-            $host = strtolower($host);
-            if(substr($host, 0, 1) == '!'){
-                $disallowed_host[] = substr($host, 1);
-                continue;
+        if(property_exists($select, 'host')){
+            foreach($select->host as $host){
+                $host = strtolower($host);
+                if(substr($host, 0, 1) == '!'){
+                    $disallowed_host[] = substr($host, 1);
+                    continue;
+                }
+                $allowed_host[] = $host;
             }
-            $allowed_host[] = $host;
-        }
-        if(in_array($url, $disallowed_host)){
+            if(in_array($url, $disallowed_host)){
+                return false;
+            }
+            if(in_array($url, $allowed_host)){
+                return $select;
+            }
             return false;
         }
-        if(in_array($url, $allowed_host)){
-            return $select;
-        }
-        return false;
     }
 
-    public static function get($object, $name='', $option=[]){
+    public static function find($object, $name='', $option=[]){
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
-        if(empty($get)){
-            return;
-        }
-        $get = $route::add_localhost($object, $get);
-        $get = $route::has_host($get, $object->data('host.url'));
         if(empty($get)){
             return;
         }
@@ -96,12 +93,18 @@ class Route extends Data{
                 } else {
                     $url = $get->url;
                 }
-                $url = $object->data('host.url') . $url;
+                //$url = $object->data('host.url') . $url;
                 return $url;
             } else {
                 throw new Exception('path & url are empty');
-            }                      
+            }
         }
+        $get = $route::add_localhost($object, $get);
+        $get = $route::has_host($get, $object->data('host.url'));
+        if(empty($get)){
+            return;
+        }
+
         $path = $get->path;
         if(is_array($option)){
             if(
@@ -171,7 +174,7 @@ class Route extends Data{
         return $select;
     }
 
-    public static function request($object){
+    public static function request(App $object){
         if(defined('IS_CLI')){
             $input = Route::input($object);
             $select = new stdClass();
@@ -283,7 +286,7 @@ class Route extends Data{
                 $current = $record;
                 break;
             }
-        }        
+        }
         if($match === false){
             foreach($data as $record){
                 if(property_exists($record, 'resource')){
@@ -408,10 +411,12 @@ class Route extends Data{
             }
             $route->request->data($key, $record);
         }
-        $controller = explode('.', $route->controller);
-        $function = array_pop($controller);
-        $route->controller = implode('\\', $controller);
-        $route->function = $function;
+        if(property_exists($route, 'controller')){
+            $controller = explode('.', $route->controller);
+            $function = array_pop($controller);
+            $route->controller = implode('\\', $controller);
+            $route->function = $function;
+        }
         return $route;
     }
 
@@ -484,7 +489,7 @@ class Route extends Data{
 
     private static function is_match_by_method($object, $route, $select){
         if(!property_exists($route, 'method')){
-            return false;
+            return true;
         }
         if(!is_array($route->method)){
             return false;
@@ -559,11 +564,12 @@ class Route extends Data{
         $is_match = Route::is_match_by_host($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }        
+        }
         $is_match = Route::is_match_by_deep($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }                
+        }
+
         $is_match = Route::is_match_by_attribute($object, $route, $select);        
         if($is_match === false){
             return $is_match;
@@ -596,7 +602,7 @@ class Route extends Data{
         return $is_match;
     }
 
-    public static function configure($object){
+    public static function configure(App $object){
         $config = $object->data(App::CONFIG);
         $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
         if(empty($config->data(Config::DATA_PROJECT_ROUTE_URL))){

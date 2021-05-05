@@ -12,15 +12,14 @@
                 "password",
                 "route",
                 "bin",
-                "configure",
-                "service"
+                "configure"
             ]
         },
         "major": "0",
-        "minor": "0",
-        "patch": "22",
-        "version": "0.0.22",
-        "built": "2020-12-31 14:43:18"
+        "minor": "1",
+        "patch": 1,
+        "version": "0.1.1",
+        "built": "2021-05-05 13:48:05"
     },
     "contentType": {
         "txt": "text\/plain",
@@ -75,7 +74,8 @@
                 "capture.prepend",
                 "capture.append",
                 "block.code",
-                "block.html"
+                "block.html",
+                "block.json"
             ]
         }
     }

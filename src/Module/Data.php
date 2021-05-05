@@ -15,6 +15,8 @@ use Exception;
 
 class Data {
     private $data;
+    private $do_not_nest_key;
+
 
     public function __construct($data=null){
         $this->data($data);
@@ -107,12 +109,31 @@ class Data {
         return trim($result);
     }
 
+    public function get($attribute=''){
+        return $this->data('get', $attribute);
+    }
+
+    public function set($attribute='', $value=null){
+        return $this->data('set', $attribute, $value);
+    }
+
+    public function delete($attribute=''){
+        return $this->data('delete', $attribute);
+    }
+
     public function data($attribute=null, $value=null, $type=null){
         if($attribute !== null){
             if($attribute == 'set'){
-                Core::object_delete($value, $this->data()); //for sorting an object
-                Core::object_set($value, $type, $this->data());
-                return Core::object_get($value, $this->data());
+                $do_not_nest_key = $this->do_not_nest_key();
+                if($do_not_nest_key){
+                    $this->data->{$value} = $type;
+                    return $this->data->{$value};
+                } else {
+                    Core::object_delete($value, $this->data()); //for sorting an object
+                    Core::object_set($value, $type, $this->data());
+                    return Core::object_get($value, $this->data());
+                }
+
             }
             elseif($attribute == 'get'){
                 return Core::object_get($value, $this->data());
@@ -187,5 +208,24 @@ class Data {
 
     private function deleteData($attribute=null){
         return Core::object_delete($attribute, $this->data());
+    }
+
+    public function is_empty(){
+        $data = $this->data();
+        if(Core::object_is_empty($data)){
+            return true;
+        }
+        return false;
+    }
+
+    public function do_not_nest_key($do_not_nest_key=null){
+        if($do_not_nest_key !== null){
+            $this->do_not_nest_key = $do_not_nest_key;
+        }
+        return $this->do_not_nest_key;
+    }
+
+    public function write($url=''){
+        File::write($url, Core::object($this->data(), Core::OBJECT_JSON));
     }
 }

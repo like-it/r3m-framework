@@ -124,14 +124,6 @@ class Main {
 	    return $variable;
 	}
 
-	protected function value_boolean_and($variable1=null, $variable2=null){        
-        return $variable1 && $variable2;
-	}
-
-	protected function value_boolean_or($variable1=null, $variable2=null){        
-        return $variable1 || $variable2;
-	}
-
 	protected function value_plus($variable1=null, $variable2=null){
         $type1 = getType($variable1);
         $type2 = getType($variable2);
@@ -162,7 +154,7 @@ class Main {
 	protected function value_divide($variable1=null, $variable2=null){
 	    $variable1 += 0;
 	    $variable2 += 0;
-	    if($variable2 > 0){
+	    if($variable2 != 0){
 	        return $variable1 / $variable2;
 	    } else {
 	        return INF;
@@ -220,7 +212,7 @@ class Main {
 	}
 
 	protected function cache_invalidate($url){
-	    if(opcache_is_script_cached($url) === false){
+	    if(opcache_is_script_cached($url) === true){
 	        opcache_invalidate($url, true);
 	    }
 	}

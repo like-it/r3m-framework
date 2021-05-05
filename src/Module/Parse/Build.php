@@ -12,7 +12,6 @@
 namespace R3m\Io\Module\Parse;
 
 use stdClass;
-use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Core;
@@ -21,6 +20,10 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Parse;
+
+use Exception;
+use R3m\Io\Exception\PluginNotFoundException;
+
 
 class Build {
     const NAME = 'Build';
@@ -66,6 +69,14 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());        
         $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());                    
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\FileAppendException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\FileMoveException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\FileWriteException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\LocateException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\ObjectException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\UrlEmptyException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\UrlNotExistException', new stdClass());
+
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
         $dir_plugin = $config->data('parse.dir.plugin');                
@@ -196,10 +207,11 @@ class Build {
                 }
             }
             if($exist === false){
-                $value = $record['value'];
                 $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
-                d($dir_plugin);
-                throw new Exception('Function not found: ' . $text);
+                if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
+                    d($dir_plugin);
+                }
+                throw new PluginNotFoundException('Function not found: ' . $text);
             }
         }
         return $document;
@@ -271,6 +283,7 @@ class Build {
         $selection = [];
         $skip_nr = null;
         $is_control = false;
+        $remove_newline = false;
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -285,7 +298,30 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
-                $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
+                if($remove_newline){
+                    $explode = explode("\n", $record['value'], 2);
+                    if(count($explode) == 2){
+                        $temp = trim($explode[0]);
+                        if(empty($temp)){
+                            $record['value'] = $explode[1];
+                        }
+                    }
+                    $remove_newline = false;
+                }
+                $run[] = $this->indent() .
+                    'echo \'' .
+                    str_replace(
+                        [
+                            '\'',
+                            //'\\'
+                        ],
+                        [
+                            '\\\'',
+                            //'\\\\'
+                        ],
+                        $record['value']
+                    ) .
+                    '\';';
             }
             elseif(
                 $is_tag === false &&
@@ -313,24 +349,28 @@ class Build {
                         $selection = Variable::is_count($this, $storage, $selection);
                         $run[] = $this->indent() . '$this->parse()->is_assign(true);';
                         $run[] = $this->indent() . Variable::count_assign($this, $storage, $selection, false) . ';';
-                        $run[] = $this->indent() . '$this->parse()->is_assign(false);';                        
+                        $run[] = $this->indent() . '$this->parse()->is_assign(false);';
+                        $remove_newline = true;
                     break;
                     case Build::VARIABLE_ASSIGN : 
                         $run[] = $this->indent() . '$this->parse()->is_assign(true);';
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                         $run[] = $this->indent() . '$this->parse()->is_assign(false);';
+                        $remove_newline = true;
                     break;
                     case Build::VARIABLE_DEFINE :
                         $run[] = $this->indent() . '$variable = ' . Variable::define($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'else { echo $variable; } ';
+                        $remove_newline = true;
                     break;
                     case Build::METHOD :
                         $run[] = $this->indent() . '$method = ' . Method::create($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($method)){ return $method; }';
                         $run[] = $this->indent() . 'elseif (is_array($method)){ return $method; }';
                         $run[] = $this->indent() . 'else { echo $method; }';
+                        $remove_newline = true;
                     break;
                     case Build::METHOD_CONTROL :
                         $multi_line = Build::getPluginMultiline($this->object());
@@ -346,6 +386,7 @@ class Build {
                             foreach($selection as $skip_nr => $item){
                                 //need skip_nr
                             }
+                            $remove_newline = true;
                         } else {
                             $control = Method::create_control($this, $storage, $selection);
                             $explode = explode(' ', $control, 2);
@@ -373,6 +414,7 @@ class Build {
                                 $is_control = true;
                             }
                             $control = null;
+                            $remove_newline = true;
                         }
                     break;
                     case Build::ELSE :

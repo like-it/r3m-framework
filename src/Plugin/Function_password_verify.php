@@ -12,6 +12,6 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_password_verify(Parse $parse, Data $data, $password='', $hash=''){
-    $result = password_verify($password, $hash);
+        $result = password_verify($password, $hash);
     return $result;
 }

@@ -12,5 +12,5 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_file_atime(Parse $parse, Data $data, $url=''){
-    return \R3m\Io\Module\File::atime($url);
+    return File::atime($url);
 }

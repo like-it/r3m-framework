@@ -11,11 +11,11 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_substring_replace(Parse $parse, Data $data, $string='', $replacement='', $start=0, $length=null){
+function function_string_substring(Parse $parse, Data $data, $string='', $offset=0, $length=null){
     if(empty($length)){
-        $result = substr_replace($string, $replacement, $start);
+        $result = substr($string, $offset);
     } else {
-        $result = substr_replace($string, $replacement, $start, $length);
+        $result = substr($string, $offset, $length);
     }
     return $result;
 }
