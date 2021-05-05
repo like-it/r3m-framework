@@ -16,10 +16,10 @@
             ]
         },
         "major": "0",
-        "minor": "0",
-        "patch": 25,
-        "version": "0.0.25",
-        "built": "2021-05-05 13:26:52"
+        "minor": "1",
+        "patch": "0",
+        "version": "0.1.0",
+        "built": "2021-05-05 13:42:03"
     },
     "contentType": {
         "txt": "text\/plain",
