@@ -17,9 +17,9 @@
         },
         "major": "0",
         "minor": "1",
-        "patch": "0",
-        "version": "0.1.0",
-        "built": "2021-05-05 13:42:03"
+        "patch": 1,
+        "version": "0.1.1",
+        "built": "2021-05-05 13:48:05"
     },
     "contentType": {
         "txt": "text\/plain",
