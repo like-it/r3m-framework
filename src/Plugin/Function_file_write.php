@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_file_read(Parse $parse, Data $data, $url=''){
-    return File::read($url);
+function function_file_write(Parse $parse, Data $data, $url='', $content=''){
+    return File::write($url, $content);
 
 }
