@@ -8,7 +8,7 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
 
-function function_import(Parse $parse, Data $data, $url=null, $controller=null, $collection=null){
+function function_import(Parse $parse, Data $data, $url=null, $controller=null, $collection=null, $locate=false){
     $object = $parse->object();
     if(is_array($controller)){
         $collection = $controller;
@@ -65,6 +65,9 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
                 }
             }
             if($file === false){
+                if($locate === 'locate'){
+                    d($location);
+                }
                 return;
             }
             $name = 'script';
