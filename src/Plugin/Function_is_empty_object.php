@@ -10,8 +10,9 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\File;
+use R3m\Io\Module\Core;
 
-function function_is_upload(Parse $parse, Data $data, $url=null){
-    return File::is_upload($url);
+function function_is_empty_object(Parse $parse, Data $data, $object=''){
+    $result = Core::object_is_empty($object);
+    return $result;    
 }

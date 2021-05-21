@@ -10,8 +10,12 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Dir;
 
-function modifier_add_quotes(Parse $parse, Data $data, $value){
-    $result = '"' . $value . '"';
-    return $result;
+function function_dir_name(Parse $parse, Data $data, $url='', $levels=null){
+    try {
+        return Dir::name($url, $levels);
+    } catch (Exception $e){
+        return false;
+    }
 }

@@ -10,8 +10,7 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\File;
 
-function function_is_upload(Parse $parse, Data $data, $url=null){
-    return File::is_upload($url);
+function function_explode(Parse $parse, Data $data, $seperator='', $string='', $limit=PHP_INT_MAX){
+    return explode($seperator, $string, $limit);
 }

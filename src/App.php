@@ -67,46 +67,61 @@ class App extends Data {
         Route::configure($object);    
         $file = FileRequest::get($object);
         if($file === false){
-            $route = Route::request($object);
-            if($route === false){
-                throw new Exception('couldn\'t determine route');
-            } else {
-                if(property_exists($route, 'redirect')){
-                    Core::redirect($route->redirect);
+            try {
+                $route = Route::request($object);
+                if($route === false){
+                    $code = 404;
+                    $string = 'Status: ' . $code;
+                    $replace = true;
+                    Handler::header($string, $code, $replace);
+                    throw new Exception('couldn\'t determine route');
                 } else {
-                    App::contentType($object);
-                    App::controller($object, $route);
-                    $methods = get_class_methods($route->controller);
-                    if(empty($methods)){
-                        throw new Exception('couldn\'t determine controller');
-                        $methods = [];
-                    }
-                    if(in_array('controller', $methods)){
-                        $route->controller::controller($object);
-                    }
-                    if(in_array('configure', $methods)){
-                        $route->controller::configure($object);
-                    }
-                    if(in_array('before_run', $methods)){
-                        $route->controller::before_run($object);
-                    }
-                    if(in_array($route->function, $methods)){
-                        $result = $route->controller::{$route->function}($object);
+                    if(
+                        property_exists($route, 'redirect') &&
+                        property_exists($route, 'method') &&
+                        in_array(
+                            Handler::method(),
+                            $route->method
+                        )
+                    ){
+                        Core::redirect($route->redirect);
                     } else {
-                        throw new Exception('Cannot call: ' . $route->function . ' in: ' . $route->controller);
+                        App::contentType($object);
+                        App::controller($object, $route);
+                        $methods = get_class_methods($route->controller);
+                        if(empty($methods)){
+                            throw new Exception('couldn\'t determine controller');
+                            $methods = [];
+                        }
+                        if(in_array('controller', $methods)){
+                            $route->controller::controller($object);
+                        }
+                        if(in_array('configure', $methods)){
+                            $route->controller::configure($object);
+                        }
+                        if(in_array('before_run', $methods)){
+                            $route->controller::before_run($object);
+                        }
+                        if(in_array($route->function, $methods)){
+                            $result = $route->controller::{$route->function}($object);
+                        } else {
+                            throw new Exception('Cannot call: ' . $route->function . ' in: ' . $route->controller);
+                        }
+                        if(in_array('after_run', $methods)){
+                            $route->controller::after_run($object);
+                        }
+                        if(in_array('before_result', $methods)){
+                            $route->controller::before_result($object);
+                        }
+                        $result = App::result($object, $result);
+                        if(in_array('after_result', $methods)){
+                            $route->controller::after_result($object);
+                        }
+                        return $result;
                     }
-                    if(in_array('after_run', $methods)){
-                        $route->controller::after_run($object);
-                    }
-                    if(in_array('before_result', $methods)){
-                        $route->controller::before_result($object);
-                    }
-                    $result = App::result($object, $result);
-                    if(in_array('after_result', $methods)){
-                        $route->controller::after_result($object);
-                    }
-                    return $result;
                 }
+            } catch (Exception $e) {
+                echo $e->getMessage();
             }
         } else {
             return $file;

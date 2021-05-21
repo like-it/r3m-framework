@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\FileMoveException;
 use stdClass;
 use Exception;
 use R3m\Io\Exception\ErrorException;
@@ -64,7 +65,7 @@ class Dir {
         return is_dir($url);
     }
 
-    public static function size($url, $recursive=true){
+    public static function size($url, $recursive=false){
         if(!Dir::is($url)){
             return false;
         }
@@ -208,8 +209,14 @@ class Dir {
         return $list;
     }
     public static function copy($source='', $target=''){
-        exec('cp ' . $source . ' ' . $target . ' -R');
-        return true;
+        if(is_dir($source)){
+            $source = escapeshellarg($source);
+            $target = escapeshellarg($target);
+            exec('cp ' . $source . ' ' . $target . ' -R');
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function move($source='', $destination='', $overwrite=false){
@@ -218,13 +225,13 @@ class Dir {
         } catch (Exception | FileMoveException $exception){
             return $exception;
         }
-
     }
 
     public static function remove($dir=''){
         if(is_dir($dir) === false){
             return true;
         }
+        $dir = escapeshellarg($dir);
         exec('rm -rf ' . $dir);
         return true;
     }

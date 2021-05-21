@@ -15,6 +15,5 @@ function function_array_unique(Parse $parse, Data $data, $array=[], $sort=SORT_S
     if(is_string($sort)){
         $sort = constant($sort);
     }
-    $result = array_unique($array, $sort);
-    return $result;
+    return array_unique($array, $sort);
 }

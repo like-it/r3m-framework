@@ -10,7 +10,8 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\File;
 
 function function_is_link(Parse $parse, Data $data, $link=null){
-    return is_link($link);
+    return File::is_link($link);
 }

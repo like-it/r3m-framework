@@ -10,13 +10,8 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 
-function function_dir_read(Parse $parse, Data $data, $url='', $recursive=false, $format='flat'){
-    if(File::exist($url)){
-        $dir = new Dir();
-        return $dir->read($url, $recursive, $format);
-    }
-    return [];
+function function_file_count(Parse $parse, Data $data, $directory='', $include_directory=false){
+	return File::count($directory, $include_directory);
 }

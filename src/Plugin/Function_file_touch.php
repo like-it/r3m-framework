@@ -10,9 +10,8 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Core;
+use R3m\Io\Module\File;
 
-function function_object_is_empty(Parse $parse, Data $data, $object=''){
-    $result = Core::object_is_empty($object);
-    return $result;    
+function function_file_touch(Parse $parse, Data $data, $url='', $time=null, $atime=null){
+    return File::touch($url, $time, $atime);
 }

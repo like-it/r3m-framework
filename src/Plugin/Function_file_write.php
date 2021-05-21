@@ -10,8 +10,12 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\File;
 
 function function_file_write(Parse $parse, Data $data, $url='', $content=''){
-    return File::write($url, $content);
-
+    try {
+        return File::write($url, $content);
+    } catch (Exception $e){
+        return false;
+    }
 }

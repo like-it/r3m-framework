@@ -28,6 +28,26 @@ class File {
         return is_file($url);
     }
 
+    public static function is_link($url=''){
+        return is_link($url);
+    }
+
+    public static function is_readable($url=''){
+        return is_readable($url);
+    }
+
+    public static function is_writeable($url=''){
+        return is_writeable($url);
+    }
+
+    public static function is_resource($resource=''){
+        return is_resource($resource);
+    }
+
+    public static function is_upload($url=''){
+        return is_uploaded_file($url);
+    }
+
     public static function dir($directory=''){
         return str_replace('\\\/', '/', rtrim($directory,'\\\/')) . '/';
     }
@@ -50,7 +70,10 @@ class File {
     }
 
     public static function link($source, $destination){
+        $source = escapeshellarg($source);
+        $destination = escapeshellarg($destination);
         system('ln -s ' . $source . ' ' . $destination);
+        return true;
     }
 
     public static function count($directory='', $include_directory=false){
@@ -137,11 +160,15 @@ class File {
             }
         }
         $output = [];
+        $owner = escapeshellarg($owner);
+        $group = escapeshellarg($group);
+        $url = escapeshellarg($url);
         if($recursive){
             exec('chown ' . $owner . ':' . $group . ' -R ' . $url, $output);
         } else {
             exec('chown ' . $owner . ':' . $group . ' ' . $url, $output);
         }
+        return true;
     }
 
     public static function move($source='', $destination='', $overwrite=false){
@@ -315,7 +342,7 @@ class File {
         return $filename;
     }
 
-    public static function removeExtension($filename='', $extension=[]){
+    public static function extension_remove($filename='', $extension=[]){
         if(!is_array($extension)){
             $extension = array($extension);
         }

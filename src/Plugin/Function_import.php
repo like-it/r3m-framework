@@ -64,10 +64,10 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
                     break;
                 }
             }
+            if($locate !== false){
+                d($location);
+            }
             if($file === false){
-                if($locate === 'locate'){
-                    d($location);
-                }
                 return;
             }
             $name = 'script';

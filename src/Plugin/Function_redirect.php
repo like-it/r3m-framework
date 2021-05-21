@@ -9,6 +9,7 @@
  *     -            all
  */
 
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
@@ -16,7 +17,7 @@ use R3m\Io\Exception\UrlEmptyException;
 
 function function_redirect(Parse $parse, Data $data, $url=null){
     try {
-        return \R3m\Io\Module\Core::redirect($url);
+        return Core::redirect($url);
     } catch(Exception | UrlEmptyException $exception){
         return $exception->getMessage();
     }

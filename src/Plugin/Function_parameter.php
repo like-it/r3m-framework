@@ -13,6 +13,5 @@ use R3m\Io\Module\Data;
 
 function function_parameter(Parse $parse, Data $data, $name=null, $offset=null){
     $object = $parse->object();
-    $parameter = $object->parameter($object, $name, $offset);
-    return $parameter;
+    return $object->parameter($object, $name, $offset);
 }

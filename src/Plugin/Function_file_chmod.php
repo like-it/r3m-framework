@@ -10,13 +10,8 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 
-function function_dir_read(Parse $parse, Data $data, $url='', $recursive=false, $format='flat'){
-    if(File::exist($url)){
-        $dir = new Dir();
-        return $dir->read($url, $recursive, $format);
-    }
-    return [];
+function function_file_chmod(Parse $parse, Data $data, $url='', $mode=0640){
+	return File::chmod($url, $mode);
 }

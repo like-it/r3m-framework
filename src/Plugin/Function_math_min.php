@@ -11,10 +11,9 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_math_min(Parse $parse, Data $data, $array=[]){
+function function_math_min(Parse $parse, Data $data, ...$array){
     if(empty($array)){
         return;
     }
-    $result = min($array);
-    return $result;
+    return min(...$array);
 }

@@ -11,12 +11,11 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
-use R3m\Io\Module\File;
 
-function function_dir_read(Parse $parse, Data $data, $url='', $recursive=false, $format='flat'){
-    if(File::exist($url)){
-        $dir = new Dir();
-        return $dir->read($url, $recursive, $format);
+function function_dir_move(Parse $parse, Data $data, $source='', $destination='', $overwrite=false){
+    try {
+        return Dir::move($source, $destination, $overwrite);
+    } catch (Exception $e){
+        return false;
     }
-    return [];
 }

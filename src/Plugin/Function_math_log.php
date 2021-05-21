@@ -12,6 +12,9 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_math_log(Parse $parse, Data $data, $float=null, $base=M_E){
+    if(is_string($base)){
+        $base = constant($base);
+    }
     $result = log($float, $base);
     return $result;
 }
