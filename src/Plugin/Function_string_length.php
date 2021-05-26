@@ -12,7 +12,5 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_string_length(Parse $parse, Data $data, $string=''){
-    $result = strlen($string);
-
-    return $result;
+    return strlen($string);
 }

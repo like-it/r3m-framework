@@ -15,6 +15,7 @@ function function_string_compare_version(Parse $parse, Data $data, $version1='',
     if($operator === null){
         $result = version_compare($version1, $version2);
     } else {
+        $operator = strtolower($operator);
         $result = version_compare($version1, $version2, $operator);
     }
     return $result;
