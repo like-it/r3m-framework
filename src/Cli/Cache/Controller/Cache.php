@@ -16,6 +16,9 @@ use R3m\Io\Module\Core;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\View;
 use R3m\Io\Module\Parse;
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\UrlNotExistException;
 
 class Cache extends View{
     const NAME = 'Cache';
@@ -31,7 +34,7 @@ class Cache extends View{
     const DEFAULT_COMMAND = Cache::COMMAND_INFO;
 
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';
-    const EXCEPTION_COMMAND = 'invalid command (' . Cache::EXCEPTION_COMMAND_PARAMETER . ')';
+    const EXCEPTION_COMMAND = 'invalid command (' . Cache::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
     const CLEAR_COMMAND = [
         '{binary()} autoload restart',
@@ -57,12 +60,23 @@ class Cache extends View{
     }
 
     private static function info($object){
-        $url = Cache::locate($object, ucfirst(__FUNCTION__));
-        return Cache::view($object, $url);
+        try {
+            $name = Cache::name(__FUNCTION__, Cache::NAME);
+            $url = Cache::locate($object, $name);
+            return Cache::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . PHP_EOL;
+        }
+
     }
 
     private static function clear($object){
-        $url = Cache::locate($object, ucfirst(__FUNCTION__));
-        return Cache::view($object, $url);
+        try {
+            $name = Cache::name(__FUNCTION__, Cache::NAME);
+            $url = Cache::locate($object, $name);
+            return Cache::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . PHP_EOL;
+        }
     }
 }

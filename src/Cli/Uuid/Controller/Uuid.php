@@ -11,13 +11,22 @@
 namespace R3m\Io\Cli\Uuid\Controller;
 
 use R3m\Io\Module\View;
+use Exception;
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\UrlNotExistException;
 
 class Uuid extends View {
     const DIR = __DIR__;
     const NAME = 'Uuid';
 
     public static function run($object){
-        $url = Uuid::locate($object, 'Uuid');
-        return Uuid::view($object, $url);
+        try {
+            $name = Uuid::name(__FUNCTION__    , Uuid::NAME);
+            $url = Uuid::locate($object, $name);
+            return Uuid::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . PHP_EOL;;
+        }
     }
 }

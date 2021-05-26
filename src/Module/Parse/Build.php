@@ -425,6 +425,7 @@ class Build {
                         $this->indent($this->indent-1);
                         $run[] = $this->indent() . '} else {';
                         $this->indent($this->indent+1);
+                        $remove_newline = true;
                     break;
                     case Build::TAG_CLOSE :
                         $multi_line = Build::getPluginMultiline($this->object());
@@ -441,21 +442,10 @@ class Build {
                             $this->indent($this->indent-1);
                             $run[] = $this->indent() . '}';
                         }
+                        $remove_newline = true;
                     break;
-                    case Token::TYPE_CURLY_CLOSE :
-                        dd($selection);
-                    break;
-                    case Build::CODE :
-                        dd($selection);
-                    break;
-                    case Token::TYPE_QUOTE_DOUBLE_STRING :
-                        dd($selection);
                     default:
                         if($type !== null){
-                            d($run);
-                            d($selection);
-                            d($type);
-                            dd($record);
                             throw new Exception('type (' . $type . ') undefined');
                         }
                 }

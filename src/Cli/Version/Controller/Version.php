@@ -44,14 +44,14 @@ class Version extends View{
     const DATA_FRAMEWORK_PATCH = 'framework.patch';
 
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';
-    const EXCEPTION_COMMAND = 'invalid command (' . Version::EXCEPTION_COMMAND_PARAMETER . ')';
+    const EXCEPTION_COMMAND = 'invalid command (' . Version::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
     public static function run($object){
         $command = $object->parameter($object, Version::NAME, 1);
-
         if($command === null){
             $command = Version::DEFAULT_COMMAND;
         }
+
         if(!in_array($command, Version::COMMAND)){
             $exception = str_replace(
                 Version::EXCEPTION_COMMAND_PARAMETER,
@@ -64,8 +64,14 @@ class Version extends View{
     }
 
     private static function info($object){
-        $url = Version::locate($object, ucfirst(__FUNCTION__));
-        return Version::view($object, $url);
+        try {
+            $name = Version::name(__FUNCTION__    , Version::NAME);
+            $url = Version::locate($object, $name);
+            return Version::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            d($exception);
+            return 'Command undefined.' . PHP_EOL;;
+        }
     }
 
     private static function update($object){
@@ -94,9 +100,13 @@ class Version extends View{
             $write = Core::object($data->data(), 'json');
             File::write($config_url, $write);
         }
-        $url = Version::locate($object, ucfirst(__FUNCTION__));
-        echo Version::view($object, $url);
-
+        try {
+            $name = Version::name(__FUNCTION__    , Version::NAME);
+            $url = Version::locate($object, $name);
+            echo Version::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            echo 'Command undefined.' . PHP_EOL;;
+        }
         $parse = new Parse($object);
         $command = VERSION::UPDATE_COMMAND;
 
