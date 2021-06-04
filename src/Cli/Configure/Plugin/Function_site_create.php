@@ -33,7 +33,7 @@ function function_site_create(Parse $parse, Data $data){
         $data->server = $server;
         $write = $parse->compile($read, $data, $parse->storage());
         File::write($server->url, $write);
-        return $server->url . ' created.' . "\n";
+        return $server->url . ' created.' . PHP_EOL;
     } else {
         throw new Exception('Server variable needs to be an object');
     }

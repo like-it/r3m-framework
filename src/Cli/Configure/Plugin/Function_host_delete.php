@@ -2,6 +2,7 @@
 
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\File;
 
 
 function function_host_delete(Parse $parse, Data $data){
@@ -10,13 +11,13 @@ function function_host_delete(Parse $parse, Data $data){
     array_shift($attribute);
     $host = array_shift($attribute);
     $url = '/etc/hosts';
-    $data = explode("\n", \R3m\Io\Module\File::read($url));
+    $data = explode("\n", File::read($url));
     foreach($data as $nr => $row){
         if(stristr($row, $host) !== false){
             unset($data[$nr]);
         }
     }
     $data = implode("\n", $data);
-    \R3m\Io\Module\File::write($url, $data);
+    File::write($url, $data);
 }
 

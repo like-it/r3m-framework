@@ -35,6 +35,7 @@ class Build {
     const CODE = 'code';
     const ELSE = 'else';
     const TAG_CLOSE = 'tag-close';
+    const DOC_COMMENT = 'doc-comment';
 
     public $indent;
     private $object;
@@ -211,7 +212,7 @@ class Build {
             if($exist === false){
                 $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
                 if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
-                    Core::cors();
+                    Core::cors($this->object());
                     d($dir_plugin);
                     d($url_list);
                 }
@@ -317,11 +318,11 @@ class Build {
                     str_replace(
                         [
                             '\'',
-                            //'\\'
+                            '\\',
                         ],
                         [
                             '\\\'',
-                            //'\\\\'
+                            '\\\\'
                         ],
                         $record['value']
                     ) .
@@ -338,6 +339,10 @@ class Build {
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
                 $is_tag = true;
                 continue;
+            }
+            elseif($record['type'] == Token::TYPE_DOC_COMMENT){
+                $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
+                $run[] = '';
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
                 switch($type){
@@ -444,6 +449,14 @@ class Build {
                         }
                         $remove_newline = true;
                     break;
+                    case Build::DOC_COMMENT :
+//                      $run[] = $this->indent() .
+                        /*
+                        if($type !== null){
+                            throw new Exception('type (' . $type . ') undefined');
+                        }
+                        */
+                    break;
                     default:
                         if($type !== null){
                             throw new Exception('type (' . $type . ') undefined');
@@ -539,6 +552,8 @@ class Build {
             case Token::TYPE_IS_MINUS_MINUS :
                 return Token::TYPE_IS_MINUS_MINUS;
             break;
+            case Token::TYPE_DOC_COMMENT :
+                return Token::TYPE_DOC_COMMENT;
             default:
                 d($record);
                 throw new Exception('Undefined type (' . $record['type'] . ')');

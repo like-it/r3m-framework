@@ -69,6 +69,9 @@ class Config extends Data {
     const MODEL = 'model';
     const VALUE_MODEL = 'Model';
 
+    const ENTITY = 'entity';
+    const VALUE_ENTITY = 'Entity';
+
     const LOCALHOST_EXTENSION = 'localhost.extension';
     const VALUE_LOCALHOST_EXTENSION =  [
         'local'
@@ -132,6 +135,7 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_DATA = Config::DATA_CONTROLLER_DIR . '.' .'data';
     const DATA_CONTROLLER_DIR_PLUGIN = Config::DATA_CONTROLLER_DIR . '.' .'plugin';
     const DATA_CONTROLLER_DIR_MODEL = Config::DATA_CONTROLLER_DIR . '.' .'model';
+    const DATA_CONTROLLER_DIR_ENTITY = Config::DATA_CONTROLLER_DIR . '.' .'entity';
     const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
     const DATA_CONTROLLER_DIR_PUBLIC = Config::DATA_CONTROLLER_DIR . '.' .'public';
 
