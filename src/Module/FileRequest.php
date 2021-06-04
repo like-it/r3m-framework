@@ -64,7 +64,9 @@ class FileRequest {
             }
         }
         Handler::header('HTTP/1.0 404 Not Found', 404);
-        d($location);
+        if($config->data('environment') === Config::MODE_DEVELOPMENT){
+            d($location);
+        }
         exit();
     }
 
