@@ -1,3 +1,9 @@
-# r3m-framework
+# R3m/framework
 
-See http://universeorange.com for more information.
+R3m/framework is a PHP framework for web and console applications.  
+
+It has a powerful scripting language which syntax looks like Smarty.  
+It enables to script in `.json` files.  
+It has a MVC pattern.  
+
+See http://universeorange.com for more information (documentation).
