@@ -18,8 +18,7 @@ use R3m\Io\Config;
 class Filter extends Data{
 
     public static function list($list){
-        $filter = new Filter($list);
-        return $filter;
+        return new Filter($list);
     }
 
     public function where($where=[]){
@@ -36,11 +35,6 @@ class Filter extends Data{
                                 $this->data('delete', $uuid);
                                 unset($list->$uuid);
                             }
-                            /*
-                            elseif(is_array($node) && !array_key_exists($attribute, $node)){
-
-                            }
-                            */
                         } else {
                             if(property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
@@ -67,6 +61,22 @@ class Filter extends Data{
                     ){
                         $skip = false;
                         switch($record['operator']){
+                            case '===' :
+                                if(
+                                    property_exists($node, $attribute) &&
+                                    $node->$attribute === $record['value']
+                                ){
+                                    $skip = true;
+                                }
+                            break;
+                            case '!==' :
+                                if(
+                                    property_exists($node, $attribute) &&
+                                    $node->$attribute !== $record['value']
+                                ){
+                                    $skip = true;
+                                }
+                            break;
                             case '==' :
                                 if(
                                     property_exists($node, $attribute) && 
@@ -74,7 +84,6 @@ class Filter extends Data{
                                 ){
                                     $skip = true;
                                 }
-
                             break;
                             case '!=' :
                                 if(

@@ -56,7 +56,6 @@ class Validate {
         } else {
             $validate->test = $test;
         }
-        
         if(
             property_exists($validate, 'success') &&
             $validate->success===false

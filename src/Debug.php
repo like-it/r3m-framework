@@ -15,7 +15,6 @@ function d($data=null){
     }
     echo $trace[0]['file'] . ':' . $trace[0]['line'] . PHP_EOL;    
     var_dump($data);
-
     if(!defined('IS_CLI')){
         echo '</pre>';
     }

@@ -68,7 +68,6 @@ class View {
         }
         if($temp !== null && property_exists($temp, 'name')){
             $template = $temp->name;
-
         }
         $config = $object->data(App::CONFIG);
         if(substr($dir, -1) != $config->data('ds')){
@@ -301,15 +300,6 @@ class View {
         $read = $parse->compile($read, $data, $parse->storage());
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
-        /*
-        $response = $object->config('response.output');
-        if(
-            $response == App::RESPONSE_JSON &&
-            is_string($read)
-        ){
-            return trim($read);
-        }
-        */
         return $read;
     }
 }

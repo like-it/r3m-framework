@@ -103,13 +103,6 @@ class Config extends Data {
     const DATA_HOST_DIR_DATA = Config::DATA_HOST_DIR . '.' . 'data';
     const DATA_HOST_DIR_PUBLIC = Config::DATA_HOST_DIR . '.' . 'public';
 
-    /*
-    const DATA_SOURCE_DIR = 'source.dir';
-    const DATA_SOURCE_DIR_ROOT = CONFIG::DATA_HOST_DIR . '.' . 'root';
-    const DATA_SOURCE_DIR_CACHE = CONFIG::DATA_HOST_DIR . '.' . 'cache';
-    const DATA_SOURCE_DIR_DATA = CONFIG::DATA_HOST_DIR . '.' . 'data';
-    */
-
     const DATA_PARSE_DIR = 'parse.dir';
     const DATA_PARSE_DIR_TEMPLATE = Config::DATA_PARSE_DIR . '.' . 'template';
     const DATA_PARSE_DIR_COMPILE = Config::DATA_PARSE_DIR . '.' . 'compile';
@@ -330,13 +323,13 @@ class Config extends Data {
             $this->data(Config::DICTIONARY . '.' . Config::CLI) .
             $this->data(Config::DS);
         $this->data($key, $value);
+
         $key = Config::DATA_FRAMEWORK_DIR_VALIDATE;
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $this->data(Config::DICTIONARY . '.' . Config::VALIDATE) .
             $this->data(Config::DS);
         $this->data($key, $value);
-
 
         $key = Config::DATA_FRAMEWORK_ENVIRONMENT;
         $value = $this->data(Config::DICTIONARY . '.' . Config::ENVIRONMENT);

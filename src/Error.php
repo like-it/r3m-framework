@@ -70,7 +70,6 @@ function exception_handler($exception) {
             }
         }
     }
-
 }
 set_error_handler('exceptions_error_handler');
 set_exception_handler('exception_handler');

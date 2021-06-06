@@ -25,7 +25,6 @@ class Dir {
 
     public static function change($dir=''){
         $tmp = getcwd() . DIRECTORY_SEPARATOR;
-
         if(is_dir($dir) === false){
             Dir::create($dir, Dir::CHMOD);
         }
@@ -103,6 +102,7 @@ class Dir {
         }
         return $name;
     }
+
     public function ignore($ignore=null, $attribute=null){
         $node = $this->node();
         if(!isset($node)){
@@ -141,6 +141,7 @@ class Dir {
         $node = $this->node($node);
         return $node->ignore;
     }
+
     public function read($url='', $recursive=false, $format='flat'){
         if(substr($url,-1) !== Dir::SEPARATOR){
             $url .= Dir::SEPARATOR;
@@ -200,7 +201,7 @@ class Dir {
                 }
             }
         } catch (Exception | ErrorException $exception){
-             return $exception;
+            return false;
         }
         if(is_resource($handle)){
             closedir($handle);
@@ -208,6 +209,7 @@ class Dir {
         @chdir($cwd);
         return $list;
     }
+
     public static function copy($source='', $target=''){
         if(is_dir($source)){
             $source = escapeshellarg($source);
@@ -223,7 +225,7 @@ class Dir {
         try {
             return File::move($source, $destination, $overwrite);
         } catch (Exception | FileMoveException $exception){
-            return $exception;
+            return false;
         }
     }
 

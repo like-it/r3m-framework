@@ -49,6 +49,12 @@ function validate_string_length(R3m\Io\App $object, $field='', $argument=''){
         case '!=' :
             $result = $length != $right;
         break;
+        case '===' :
+            $result = $length === $right;
+            break;
+        case '!==' :
+            $result = $length !== $right;
+            break;
         default:
             throw new Exception('Unknown equation');
     }

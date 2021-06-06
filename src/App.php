@@ -168,7 +168,7 @@ class App extends Data {
         try {
             return Core::object($array, Core::OBJECT_JSON);
         } catch (Exception\ObjectException $exception) {
-            return $exception->getMessage();
+            return $exception;
         }
     }
 
@@ -267,7 +267,7 @@ class App extends Data {
 
     public function data_read($url, $attribute=null){
         if($attribute !== null){
-            $data =  $this->data($attribute);
+            $data = $this->data($attribute);
             if(!empty($data)){
                 return $data;
             }
@@ -290,7 +290,7 @@ class App extends Data {
 
     public function parse_read($url, $attribute=null){
         if($attribute !== null){
-            $data =  $this->data($attribute);
+            $data = $this->data($attribute);
             if(!empty($data)){
                 return $data;
             }

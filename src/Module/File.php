@@ -106,27 +106,17 @@ class File {
 
     public static function touch($url='', $time=null, $atime=null){
         if($atime === null){
-            //$exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
-            //$output = [];
-            //Core::execute($exec, $output);
             try {
                 return @touch($url, $time); //wsdl not working
             } catch (Exception $exception){
                 return false;
             }
-
-            //return true;
         } else {
-            //$exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
-            //$output = [];
-            //Core::execute($exec, $output);
             try {
                 return @touch($url, $time, $atime);
             } catch (Exception $exception){
                 return false;
             }
-
-            //return true;
         }
     }
 
@@ -174,31 +164,31 @@ class File {
     public static function move($source='', $destination='', $overwrite=false){
         $exist = file_exists($source);
         if($exist === false){
-            return new FileMoveException('Source file doesn\'t exist');
+            throw new FileMoveException('Source file doesn\'t exist');
         }
         $exist = file_exists($destination);
         if(
             $overwrite === false &&
             file_exists($destination)
         ){
-            return new FileMoveException('Destination file exists');
+            throw new FileMoveException('Destination file exists');
         }
         if(is_dir($source)){
             if(
                 $exist &&
                 $overwrite === false
             ){
-                return new FileMoveException('Destination directory exists');
+                throw new FileMoveException('Destination directory exists');
             }
             elseif($exist){
                 if(is_dir($destination)){
-                    return new FileMoveException('Destination directory exists and needs to be deleted first');
+                    throw new FileMoveException('Destination directory exists and needs to be deleted first');
                 } else {
                     try {
                         File::delete($destination);
                         return rename($source, $destination);
                     } catch (Exception  | ErrorException $exception){
-                        return $exception;
+                        return false;
                     }
 
                 }
@@ -209,7 +199,7 @@ class File {
                 try {
                     return @rename($source, $destination);
                 } catch (Exception | ErrorException $exception){
-                    return $exception;
+                    return false;
                 }
 
             }
@@ -244,7 +234,6 @@ class File {
         }
         if($written != strlen($data)){
             throw new FileWriteException('File.write failed, written != strlen data....');
-            return false;
         } else {
             return $written;
         }
@@ -271,7 +260,6 @@ class File {
         }
         if($written != strlen($data)){
             throw new FileAppendException('File.append failed, written != strlen data....');
-            return false;
         } else {
             return $written;
         }
@@ -289,7 +277,6 @@ class File {
             } catch (Exception $exception){
                 return '';
             }
-
         }
         if(empty($url)){
             return '';
@@ -312,7 +299,7 @@ class File {
         try {
             return @unlink($url); //added @ async deletes & reads can cause triggers otherways
         } catch (Exception $exception){
-            return $exception;
+            return false;
         }
 
     }
