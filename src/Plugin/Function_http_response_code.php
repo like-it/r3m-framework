@@ -10,6 +10,7 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Handler;
 
 function function_http_response_code(Parse $parse, Data $data, $code=200) {
     $string = 'Status: ' . $code;

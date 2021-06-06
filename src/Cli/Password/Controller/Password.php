@@ -11,13 +11,22 @@
 namespace R3m\Io\Cli\Password\Controller;
 
 use R3m\Io\Module\View;
+use Exception;
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\UrlNotExistException;
 
 class Password extends View {
     const DIR = __DIR__;
     const NAME = 'Password';
 
     public static function run($object){
-        $url = Password::locate($object, 'Hash');
-        return Password::view($object, $url);
+        try {
+            $name = Password::name('hash', Password::NAME);
+            $url = Password::locate($object, $name);
+            return Password::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . "\n";
+        }
     }
 }

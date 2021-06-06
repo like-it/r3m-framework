@@ -22,7 +22,6 @@ class Data {
         $this->data($data);
     }
 
-
     /**
      * @example
      *
@@ -119,6 +118,10 @@ class Data {
 
     public function delete($attribute=''){
         return $this->data('delete', $attribute);
+    }
+
+    public function has($attribute=''){
+        return Core::object_has($attribute, $this->data());
     }
 
     public function data($attribute=null, $value=null, $type=null){

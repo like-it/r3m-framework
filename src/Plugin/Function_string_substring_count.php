@@ -12,7 +12,7 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_string_substring_count(Parse $parse, Data $data, $haystack='', $needle='', $offset=0, $length=null){
-    if(empty($length)){
+    if($length === null){
         $result = substr_count($haystack, $needle, $offset);
     } else {
         $result = substr_count($haystack, $needle, $offset, $length);

@@ -1,2 +1,0 @@
-Route restarted.
-{route.restart()}

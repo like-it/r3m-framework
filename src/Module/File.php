@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\ErrorException;
 use stdClass;
 
 use Exception;
@@ -27,6 +28,26 @@ class File {
         return is_file($url);
     }
 
+    public static function is_link($url=''){
+        return is_link($url);
+    }
+
+    public static function is_readable($url=''){
+        return is_readable($url);
+    }
+
+    public static function is_writeable($url=''){
+        return is_writeable($url);
+    }
+
+    public static function is_resource($resource=''){
+        return is_resource($resource);
+    }
+
+    public static function is_upload($url=''){
+        return is_uploaded_file($url);
+    }
+
     public static function dir($directory=''){
         return str_replace('\\\/', '/', rtrim($directory,'\\\/')) . '/';
     }
@@ -35,7 +56,7 @@ class File {
         try {
             return @filemtime($url); //added @ async deletes & reads can cause triggers otherways
         } catch(Exception $exception){
-            return '';
+            return;
         }
 
     }
@@ -44,12 +65,15 @@ class File {
         try {
             return @fileatime($url); //added @ async deletes & reads can cause triggers otherways
         } catch (Exception $exception){
-            return '';
+            return;
         }
     }
 
     public static function link($source, $destination){
+        $source = escapeshellarg($source);
+        $destination = escapeshellarg($destination);
         system('ln -s ' . $source . ' ' . $destination);
+        return true;
     }
 
     public static function count($directory='', $include_directory=false){
@@ -82,27 +106,17 @@ class File {
 
     public static function touch($url='', $time=null, $atime=null){
         if($atime === null){
-            //$exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
-            //$output = [];
-            //Core::execute($exec, $output);
             try {
                 return @touch($url, $time); //wsdl not working
             } catch (Exception $exception){
                 return false;
             }
-
-            //return true;
         } else {
-            //$exec = 'touch -t' . date('YmdHi.s', $time) . ' ' . $url;
-            //$output = [];
-            //Core::execute($exec, $output);
             try {
                 return @touch($url, $time, $atime);
             } catch (Exception $exception){
                 return false;
             }
-
-            //return true;
         }
     }
 
@@ -117,8 +131,8 @@ class File {
             $node->extension = '';
             $node->filetype = File::TYPE;
         }
-        $node->mtime = filemtime($node->url);
-        $node->size = filesize($node->url);
+        $node->mtime = File::mtime($node->url);
+        $node->size = File::size($node->url);
         return $node;
     }
 
@@ -136,17 +150,21 @@ class File {
             }
         }
         $output = [];
+        $owner = escapeshellarg($owner);
+        $group = escapeshellarg($group);
+        $url = escapeshellarg($url);
         if($recursive){
             exec('chown ' . $owner . ':' . $group . ' -R ' . $url, $output);
         } else {
             exec('chown ' . $owner . ':' . $group . ' ' . $url, $output);
         }
+        return true;
     }
 
     public static function move($source='', $destination='', $overwrite=false){
         $exist = file_exists($source);
         if($exist === false){
-            throw new FileMoveException('Source file not exists');
+            throw new FileMoveException('Source file doesn\'t exist');
         }
         $exist = file_exists($destination);
         if(
@@ -166,9 +184,24 @@ class File {
                 if(is_dir($destination)){
                     throw new FileMoveException('Destination directory exists and needs to be deleted first');
                 } else {
-                    File::delete($destination);
-                    return rename($source, $destination);
+                    try {
+                        File::delete($destination);
+                        return rename($source, $destination);
+                    } catch (Exception  | ErrorException $exception){
+                        return false;
+                    }
+
                 }
+            } elseif(
+                !$exist &&
+                $overwrite === false
+            ){
+                try {
+                    return @rename($source, $destination);
+                } catch (Exception | ErrorException $exception){
+                    return false;
+                }
+
             }
         }
         elseif(is_file($source)){
@@ -201,7 +234,6 @@ class File {
         }
         if($written != strlen($data)){
             throw new FileWriteException('File.write failed, written != strlen data....');
-            return false;
         } else {
             return $written;
         }
@@ -228,25 +260,23 @@ class File {
         }
         if($written != strlen($data)){
             throw new FileAppendException('File.append failed, written != strlen data....');
-            return false;
         } else {
             return $written;
         }
     }
 
     public static function read($url=''){
-        if(strpos($url, File::SCHEME_HTTP) !== false){
+        if(strpos($url, File::SCHEME_HTTP) === 0){
             //check network connection first (@) added for that              //error
             try {
                 $file = @file($url);
-                if(!empty($file)){
+                if(empty($file)){
                     return '';
                 }
                 return implode('', $file);
             } catch (Exception $exception){
                 return '';
             }
-
         }
         if(empty($url)){
             return '';
@@ -299,7 +329,7 @@ class File {
         return $filename;
     }
 
-    public static function removeExtension($filename='', $extension=[]){
+    public static function extension_remove($filename='', $extension=[]){
         if(!is_array($extension)){
             $extension = array($extension);
         }

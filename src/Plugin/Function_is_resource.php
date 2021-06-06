@@ -10,7 +10,8 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\File;
 
 function function_is_resource(Parse $parse, Data $data, $resource=null){
-    return is_resource($resource);
+    return File::is_resource($resource);
 }

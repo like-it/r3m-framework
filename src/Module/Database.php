@@ -80,6 +80,9 @@ class Database {
         $config  = $object->parse_read($url, sha1($url));
         if($config){
             $environment = $config->get('framework.environment');
+            if(empty($environment)){
+                $environment = Config::MODE_DEVELOPMENT;
+            }
             $connection = (array) $config->get('doctrine.' . $environment);
             $is_development = false;
             if($environment == Config::MODE_DEVELOPMENT){

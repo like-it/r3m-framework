@@ -14,14 +14,25 @@ use R3m\Io\Module\Data;
 use Exception;
 use R3m\Io\Exception\ErrorException;
 
-function function_password_hash(Parse $parse, Data $data, $password='', $cost=13){
-    try {
-        $result = password_hash($password, PASSWORD_BCRYPT, [
-            'cost' => $cost
-        ]);
-    } catch (Exception | ErrorException $exception){
-        return $exception->getMessage() . "\n";
+function function_password_hash(Parse $parse, Data $data, $password='', $cost=13, $options=null){
+    $result = '';
+    if(is_int($cost)){
+        try {
+            $result = password_hash($password, PASSWORD_BCRYPT, [
+                'cost' => $cost
+            ]);
+        } catch (Exception | ErrorException $exception){
+            return $exception->getMessage() . "\n";
+        }
+    } else {
+        if(is_string($cost)){
+            $algorithm = constant($cost);
+            if(is_array($options)){
+                $result = password_hash($password, $algorithm, $options);
+            } else {
+                $result = password_hash($password, $algorithm);
+            }
+        }
     }
-
     return $result;
 }

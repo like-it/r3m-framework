@@ -11,12 +11,12 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_array_unshift(Parse $parse, Data $data, $selector='', $value=''){
+function function_array_unshift(Parse $parse, Data $data, $selector='', ...$value){
     if(substr($selector, 0, 1) == '$'){
         $selector = substr($selector, 1);
     }
     $array = $data->data($selector);
-    $result = array_unshift($array, $value);
+    $result = array_unshift($array, ...$value);
     $data->data($selector, $array);
     return $result;
 }

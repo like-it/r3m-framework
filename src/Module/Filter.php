@@ -18,8 +18,7 @@ use R3m\Io\Config;
 class Filter extends Data{
 
     public static function list($list){
-        $filter = new Filter($list);
-        return $filter;
+        return new Filter($list);
     }
 
     public function where($where=[]){
@@ -32,7 +31,7 @@ class Filter extends Data{
                 foreach($where as $attribute => $record){
                     if(array_key_exists('exist', $record)){
                         if(!empty($record['exist'])){
-                            if(!property_exists($node, $attribute)){
+                            if(is_object($node) && !property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
                                 unset($list->$uuid);
                             }
@@ -62,13 +61,29 @@ class Filter extends Data{
                     ){
                         $skip = false;
                         switch($record['operator']){
+                            case '===' :
+                                if(
+                                    property_exists($node, $attribute) &&
+                                    $node->$attribute === $record['value']
+                                ){
+                                    $skip = true;
+                                }
+                            break;
+                            case '!==' :
+                                if(
+                                    property_exists($node, $attribute) &&
+                                    $node->$attribute !== $record['value']
+                                ){
+                                    $skip = true;
+                                }
+                            break;
                             case '==' :
                                 if(
                                     property_exists($node, $attribute) && 
                                     $node->$attribute == $record['value']
                                 ){
                                     $skip = true;
-                                }                                
+                                }
                             break;
                             case '!=' :
                                 if(
@@ -113,7 +128,11 @@ class Filter extends Data{
                         }
                         if($skip === false){
                             $this->data('delete', $uuid);
-                            unset($list->$uuid);
+                            if(is_array($list)){
+                                unset($list[$uuid]);
+                            } else {
+                                unset($list->$uuid);
+                            }
                         }
                     }
                 }

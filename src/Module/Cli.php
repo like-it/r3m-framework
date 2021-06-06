@@ -29,13 +29,7 @@ class Cli {
             if($is_flush){
                 ob_flush();
             }
-//             system('stty -echo');
             $input = trim(fgets(STDIN));
-//             system('stty echo');
-//             echo PHP_EOL;
-
-//             readline_completion_function(array($this, 'complete'));
-//             $input = rtrim(readline($text), ' ');
         }
         elseif($url=='input-hidden'){
             echo $text;
@@ -57,9 +51,11 @@ class Cli {
         switch(strtolower($tput)){
             case 'screen.save' :
             case 'screen.write' :
+            case ' smcup' :
                 $tput = 'smcup';
                 break;
             case 'screen.restore' :
+            case 'rmcup' :
                 $tput = 'rmcup';
                 break;
             case 'home' :
@@ -67,38 +63,47 @@ class Cli {
                 $tput = 'home';
                 break;
             case 'cursor.invisible' :
+            case 'civis' :
                 $tput = 'civis';
                 break;
             case 'cursor.normal' :
+            case 'cnorm' :
                 $tput = 'cnorm';
                 break;
             case 'cursor.save' :
             case 'cursor.write' :
+            case 'sc' :
                 $tput = 'sc';
                 break;
             case 'cursor.restore' :
+            case 'rc' :
                 $tput = 'rc';
                 break;
             case 'color' :
+            case 'setaf' :
                 $color = isset($arguments[0]) ? (int) $arguments[0] : 9; //9 = default
                 $tput = 'setaf ' . $color;
                 break;
             case 'background' :
+            case 'setab' :
                 $color = isset($arguments[0]) ? (int) $arguments[0] : 0; //0 = default
                 $tput = 'setab ' . $color;
                 break;
             case 'cursor.up' :
             case 'up' :
+            case 'cuu' :
                 $amount = isset($arguments[0]) ? (int) $arguments[0] : 1;
                 $tput = 'cuu' . $amount;
                 break;
             case 'cursor.down' :
             case 'down' :
+            case 'cud' :
                 $amount = isset($arguments[0]) ? (int) $arguments[0] : 1;
                 $tput = 'cud' . $amount;
                 break;
             case 'cursor.position' :
             case 'position' :
+            case 'cup' :
                 $cols = isset($arguments[0]) ? (int) $arguments[0] : 0; //x
                 $rows = isset($arguments[1]) ? (int) $arguments[1] : 0; //y
                 $tput = 'cup ' . $rows . ' ' . $cols;
@@ -106,15 +111,18 @@ class Cli {
             case 'rows':
             case 'row':
             case 'height':
+            case 'lines' :
                 $tput = 'lines';
                 break;
             case 'width':
             case 'columns':
             case 'column' :
+            case 'cols' :
                 $tput = 'cols';
                 break;
             case 'default':
             case 'reset':
+            case 'sgr0' :
                 $tput  = 'sgr0';
                 break;
         }

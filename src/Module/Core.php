@@ -13,6 +13,7 @@ namespace R3m\Io\Module;
 use R3m\Io\Exception\UrlEmptyException;
 use stdClass;
 use R3m\Io\Exception\ObjectException;
+use R3m\Io\App;
 
 class Core {
 
@@ -49,7 +50,7 @@ class Core {
 
     public static function binary(){
         if(array_key_exists('_', $_SERVER)){
-            $dirname = \R3m\Io\Module\Dir::name($_SERVER['_']);
+            $dirname = Dir::name($_SERVER['_']);
             return str_replace($dirname, '', $_SERVER['_']);
         }
     }
@@ -466,9 +467,11 @@ class Core {
                 if(isset($object->{$key}) && is_object($object->{$key})){
                     if(empty($attribute) && is_object($value)){
                         foreach($value as $value_key => $value_value){
+                            /*
                             if(isset($object->$key->$value_key)){
                                 // unset($object->$key->$value_key);   //so sort will happen, @bug request will take forever and apache2 crashes needs reboot apache2
                             }
+                            */
                             $object->{$key}->{$value_key} = $value_value;
                         }
                         return $object->{$key};
@@ -610,5 +613,20 @@ class Core {
             $explode[$nr] = ucfirst(trim($part));
         }
         return implode($delimiter, $explode);
+    }
+
+    public static function cors(App $object){
+        header("HTTP/1.1 200 OK");
+        header("Access-Control-Allow-Origin: *");
+        if (isset($_SERVER['HTTP_ORIGIN'])) {
+            header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+            header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
+            header('Access-Control-Max-Age: 86400');    // cache for 1 day
+            exit(0);
+        }
     }
 }

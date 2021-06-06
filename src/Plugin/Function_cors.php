@@ -15,6 +15,9 @@ use R3m\Io\Module\Host;
 
 
 function function_cors(Parse $parse, Data $data){
+    $object = $parse->object();
+    Core::cors($object);
+    /*
     header("HTTP/1.1 200 OK");
     header("Access-Control-Allow-Origin: *");
     if (isset($_SERVER['HTTP_ORIGIN'])) {
@@ -30,4 +33,5 @@ function function_cors(Parse $parse, Data $data){
         header('Access-Control-Max-Age: 86400');    // cache for 1 day
         exit(0);
     }
+    */
 }

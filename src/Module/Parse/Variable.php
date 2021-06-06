@@ -273,7 +273,19 @@ class Variable {
                         $in_array === false &&
                         empty($record['is_foreach'])
                     ){
-                        $result .= ' . ';
+                        if(
+                            in_array(
+                                $record['type'],
+                                [
+                                    Token::TYPE_CODE
+                                ]
+                            ) &&
+                            substr($record['value'], -1, 1) == '!'
+                        ){
+
+                        } else {
+                            $result .= ' . ';
+                        }
                     }
                 }
                 $operator_counter++;

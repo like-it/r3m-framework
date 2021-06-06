@@ -11,38 +11,40 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_input(Parse $parse, Data $data, $options=[]){
-    if(array_key_exists('type', $options)){
-        switch($options['type']){
-            case 'text' :
-                $label = '';
-                $input = '';
-                if(
-                    array_key_exists('name', $options) &&
-                    array_key_exists('label', $options)
-                ){
-                    $label = '<label for="' . $options['name'] .'">' . $options['label'] . '</label>';
-                }
-                if(array_key_exists('placeholder', $options)){
-                    $placeholder = ' placeholder="' . $options['placeholder'] .'"';
-                } else {
-                    $placeholder = '';
-                }
-                if(
-                    array_key_exists('name', $options) &&
-                    array_key_exists('value', $options)
-                ){
-                    $input = '<input type="text" id="' . $options['name'] .'" name="' . $options['name'] .'" value="' . $options['value'] . '"' . $placeholder . '/>';
-                }
-                elseif(array_key_exists('name', $options)) {
-                    $input = '<input type="text" id="' . $options['name'] .'" name="' . $options['name'] .'" value=""'. $placeholder . '/>';
-                }
-                return $label . $input;
-            break;
+function function_textarea(Parse $parse, Data $data, $options=[]){
+    $label = '';
+    $textarea = '';
+    $class = '';
+    if(array_key_exists('class', $options)){
+        $class=' class="'. $options['class'] . '"';
+    }
+    if(
+        array_key_exists('name', $options) &&
+        array_key_exists('label', $options)
+    ) {
+        $label = '<label for="' . $options['name'] . '"'. $class . '>' . $options['label'] . '</label><br>';
+    }
+    if(
+        array_key_exists('name', $options) &&
+        array_key_exists('value', $options)
+    ){
+        $rows = '';
+        if(array_key_exists('rows', $options)){
+            $rows = ' rows="' . $options['rows']. '"';
+        }
+        $cols = '';
+        if(array_key_exists('cols', $options)){
+            $cols = ' cols="' . $options['cols']. '"';
+        }
+
+        if(is_array($options['value'])){
+            $textarea = '<textarea id="' . $options['name'] . '"'. $class . $rows . $cols .   ' name="' . $options['name'] . '">' . implode(",\n", $options['value']) . '</textarea>';
+        } elseif(is_string($options['value'])) {
+            $textarea = '<textarea id="' . $options['name'] . '"'. $class . $rows . $cols . ' name="' . $options['name'] . '">' . $options['value'] . '</textarea>';
         }
     }
-
-
-
-    dd($options);
+    elseif(array_key_exists('name', $options)) {
+        $textarea = '<textarea id="' . $options['name'] . '"'. $class . $rows . $cols . ' name="' . $options['name'] .'"></textarea>';
+    }
+    return $label . $textarea;
 }

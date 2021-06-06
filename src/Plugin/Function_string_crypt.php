@@ -15,7 +15,7 @@ function function_string_crypt(Parse $parse, Data $data, $string='', $salt=null)
     if(!empty($salt)){
         $result = crypt($string, $salt);
     } else {
-        $result = crypt($string);
+        $result = '';
     }
     return $result;
 }

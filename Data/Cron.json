@@ -1,6 +1,0 @@
-{
-	"cron" : {
-    	"lock" : "{$controller.dir.data}Cron/.Lock",
-    	"dir" : "{dir.read(\"{$controller.dir.data}Cron/.Task/\")}"
-    }
-}

@@ -15,6 +15,5 @@ function function_math_round(Parse $parse, Data $data, $float=null, $precision=0
     if(is_string($mode)){
         $mode = constant($mode);
     }
-    $result = round($float, $precision, $mode);
-    return $result;
+    return round($float, $precision, $mode);
 }

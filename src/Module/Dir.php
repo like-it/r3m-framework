@@ -10,7 +10,10 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\FileMoveException;
 use stdClass;
+use Exception;
+use R3m\Io\Exception\ErrorException;
 
 class Dir {
     const CHMOD = 0740;
@@ -22,7 +25,6 @@ class Dir {
 
     public static function change($dir=''){
         $tmp = getcwd() . DIRECTORY_SEPARATOR;
-
         if(is_dir($dir) === false){
             Dir::create($dir, Dir::CHMOD);
         }
@@ -62,7 +64,7 @@ class Dir {
         return is_dir($url);
     }
 
-    public static function size($url, $recursive=true){
+    public static function size($url, $recursive=false){
         if(!Dir::is($url)){
             return false;
         }
@@ -100,6 +102,7 @@ class Dir {
         }
         return $name;
     }
+
     public function ignore($ignore=null, $attribute=null){
         $node = $this->node();
         if(!isset($node)){
@@ -138,6 +141,7 @@ class Dir {
         $node = $this->node($node);
         return $node->ignore;
     }
+
     public function read($url='', $recursive=false, $format='flat'){
         if(substr($url,-1) !== Dir::SEPARATOR){
             $url .= Dir::SEPARATOR;
@@ -150,46 +154,54 @@ class Dir {
         if(is_dir($url) === false){
             return false;
         }
-        @chdir($url);
-        if ($handle = @opendir($url)) {
-            while (false !== ($entry = readdir($handle))) {
-                $recursiveList = array();
-                if($entry == '.' || $entry == '..'){
-                    continue;
-                }
-                $file = new stdClass();
-                $file->url = $url . $entry;
-                if(is_dir($file->url)){
-                    $file->url .= Dir::SEPARATOR;
-                    $file->type = Dir::TYPE;
-                }
-                if($this->ignore('find', $file->url)){
-                    continue;
-                }
-                $file->name = $entry;
-                if(isset($file->type)){
-                    if(!empty($recursive)){
-                        $directory = new Dir();
-                        $directory->ignore('list', $this->ignore());
-                        $recursiveList = $directory->read($file->url, $recursive, $format);
-                        if($format !== 'flat'){
-                            $file->list = $recursiveList;
-                            unset($recursiveList);
-                        }
+        try {
+            @chdir($url);
+        } catch (Exception | ErrorException $exception){
+            return false;
+        }
+        try {
+            if ($handle = @opendir($url)) {
+                while (false !== ($entry = readdir($handle))) {
+                    $recursiveList = array();
+                    if($entry == '.' || $entry == '..'){
+                        continue;
                     }
-                } else {
-                    $file->type = File::TYPE;
-                }
-                if(is_link($entry)){
-                    $file->link = true;
-                }
-                $list[] = $file;
-                if(!empty($recursiveList)){
-                    foreach ($recursiveList as $recursive_file){
-                        $list[] = $recursive_file;
+                    $file = new stdClass();
+                    $file->url = $url . $entry;
+                    if(is_dir($file->url)){
+                        $file->url .= Dir::SEPARATOR;
+                        $file->type = Dir::TYPE;
+                    }
+                    if($this->ignore('find', $file->url)){
+                        continue;
+                    }
+                    $file->name = $entry;
+                    if(isset($file->type)){
+                        if(!empty($recursive)){
+                            $directory = new Dir();
+                            $directory->ignore('list', $this->ignore());
+                            $recursiveList = $directory->read($file->url, $recursive, $format);
+                            if($format !== 'flat'){
+                                $file->list = $recursiveList;
+                                unset($recursiveList);
+                            }
+                        }
+                    } else {
+                        $file->type = File::TYPE;
+                    }
+                    if(is_link($entry)){
+                        $file->link = true;
+                    }
+                    $list[] = $file;
+                    if(!empty($recursiveList)){
+                        foreach ($recursiveList as $recursive_file){
+                            $list[] = $recursive_file;
+                        }
                     }
                 }
             }
+        } catch (Exception | ErrorException $exception){
+            return false;
         }
         if(is_resource($handle)){
             closedir($handle);
@@ -197,19 +209,31 @@ class Dir {
         @chdir($cwd);
         return $list;
     }
+
     public static function copy($source='', $target=''){
-        exec('cp ' . $source . ' ' . $target . ' -R');
-        return true;
+        if(is_dir($source)){
+            $source = escapeshellarg($source);
+            $target = escapeshellarg($target);
+            exec('cp ' . $source . ' ' . $target . ' -R');
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function move($source='', $destination='', $overwrite=false){
-        return File::move($source, $destination, $overwrite);
+        try {
+            return File::move($source, $destination, $overwrite);
+        } catch (Exception | FileMoveException $exception){
+            return false;
+        }
     }
 
     public static function remove($dir=''){
         if(is_dir($dir) === false){
             return true;
         }
+        $dir = escapeshellarg($dir);
         exec('rm -rf ' . $dir);
         return true;
     }

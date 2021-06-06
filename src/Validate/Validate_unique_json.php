@@ -15,32 +15,35 @@ use R3m\Io\Module\File;
 function validate_unique_json(R3m\Io\App $object, $field='', $argument=''){    
     $original_uuid = $object->request('node.uuid');    
     $string = strtolower($object->request('node.' . $field));
+    $url = false;
+    $list = false;
     if(property_exists($argument, 'url')){
         $url = $argument->url;
     }
     if(property_exists($argument, 'list')){
         $list = $argument->list;
     }
-    $data = $object->data(sha1($url));
-    $data = false;
-    if(empty($data)){
-        $data = $object->parse_read($url, sha1($url));
-    }
     $is_unique = true;
-    if($data){
-        foreach($data->data($list) as $uuid => $record){        
-            if(
-                !empty($original_uuid) && 
-                $original_uuid == $uuid
-            ){
-                continue;
+    if(
+        $url &&
+        $list
+    ){
+        $data = $object->parse_read($url, sha1($url));
+        if($data){
+            foreach($data->data($list) as $uuid => $record){
+                if(
+                    !empty($original_uuid) &&
+                    $original_uuid == $uuid
+                ){
+                    continue;
+                }
+                $match = strtolower($data->data($list . '.' . $uuid . '.' . $field));
+                if($match == $string){
+                    $is_unique = false;
+                    break;
+                }
             }
-            $match = strtolower($data->data($list . '.' . $uuid . '.' . $field));
-            if($match == $string){
-                $is_unique = false;
-                break;
-            }        
         }
-    }    
-    return $is_unique;    
+        return $is_unique;
+    }
 }

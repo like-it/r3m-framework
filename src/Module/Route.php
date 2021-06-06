@@ -93,7 +93,6 @@ class Route extends Data{
                 } else {
                     $url = $get->url;
                 }
-                //$url = $object->data('host.url') . $url;
                 return $url;
             } else {
                 throw new Exception('path & url are empty');
@@ -104,7 +103,6 @@ class Route extends Data{
         if(empty($get)){
             return;
         }
-
         $path = $get->path;
         if(is_array($option)){
             if(
@@ -376,7 +374,7 @@ class Route extends Data{
         $explode = explode('/', $route->path);
         array_pop($explode);
         $attribute = $select->attribute;
-
+        $nr = 0;
         if(property_exists($route, 'request')){
             $route->request = new Data($route->request);
         } else {
@@ -397,8 +395,7 @@ class Route extends Data{
             !empty($variable) && 
             count($attribute) > count($explode)
         ){
-            //for '/' in variable
-            $request = '';//$route->request->data($variable) . '/';
+            $request = '';
             for($i = $nr; $i < count($attribute); $i++){
                 $request .= $attribute[$i] . '/';
             }
@@ -746,7 +743,6 @@ class Route extends Data{
             $item->path .= '/';
         }
         return $item;
-
     }
 
     private static function item_deep($object, $item){

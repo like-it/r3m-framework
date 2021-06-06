@@ -12,7 +12,7 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_string_substring(Parse $parse, Data $data, $string='', $offset=0, $length=null){
-    if(empty($length)){
+    if($length === null){
         $result = substr($string, $offset);
     } else {
         $result = substr($string, $offset, $length);

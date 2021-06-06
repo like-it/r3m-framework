@@ -229,6 +229,7 @@ class Autoload {
         $url = $dir . Autoload::FILE;
         $load = ltrim($load, '\\');
         $prefixList = $this->getPrefixList();
+        $fileList = [];
         if(!empty($prefixList)){
             foreach($prefixList as $item){
                 if(empty($item['prefix'])){
@@ -288,7 +289,9 @@ class Autoload {
             }
         }
         if($is_data === true){
-            d($fileList);
+            if($this->environment() == 'development'){
+                d($fileList);
+            }
             throw new Exception('Could not find data file');
         }
         //$this->environment('development'); //needed, should be gone @ home

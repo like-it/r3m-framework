@@ -15,6 +15,9 @@ use R3m\Io\App;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\View;
 use R3m\Io\Module\Parse as Parser;
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\UrlNotExistException;
 
 class Parse extends View{
     const NAME = 'Parse';
@@ -30,7 +33,7 @@ class Parse extends View{
     const DEFAULT_COMMAND = Parse::COMMAND_INFO;
 
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';
-    const EXCEPTION_COMMAND = 'invalid command (' . Parse::EXCEPTION_COMMAND_PARAMETER . ')';
+    const EXCEPTION_COMMAND = 'invalid command (' . Parse::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
     public static function run($object){
         $command = $object->parameter($object, Parse::NAME, 1);
@@ -50,13 +53,22 @@ class Parse extends View{
     }
 
     private static function info($object){
-        $url = Parse::locate($object, ucfirst(__FUNCTION__));
-        return Parse::view($object, $url);
+        try {
+            $name = Parse::name(__FUNCTION__, Parse::NAME);
+            $url = Parse::locate($object, $name);
+            return Parse::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . PHP_EOL;
+        }
     }
 
-
-    private static function restart($object){        
-        $url = Parse::locate($object, ucfirst(__FUNCTION__));
-        return Parse::view($object, $url);
+    private static function restart($object){
+        try {
+            $name = Parse::name(__FUNCTION__, Parse::NAME);
+            $url = Parse::locate($object, $name);
+            return Parse::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . PHP_EOL;
+        }
     }
 }
