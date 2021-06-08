@@ -19,3 +19,5 @@ Welcome to R3m.io                             (c) Remco van der Velde
 {binary()} password                       | Password hash generation
 {binary()} uuid                           | Uuid generation
 {binary()} version                        | Version information
+
+vendor/bin/doctrine orm:schema-tool:update --dump-sql --force

@@ -213,7 +213,7 @@ class Parse {
             if(empty($this->halt_literal())){
                 $string = literal::apply($string, $storage);            
             }            
-            $tree = Token::tree($string, $is_debug);            
+            $tree = Token::tree($string, $is_debug);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();

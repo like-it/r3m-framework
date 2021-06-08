@@ -19,7 +19,10 @@ function function___(Parse $parse, Data $data, $attribute=null){
     }
     $test = $object->data('translation');
     if(empty($test)){
-        return '{import.translation()} missing...';
+        $debug = debug_backtrace(true);
+        dd($debug);
+
+        return '{import.translation()} missing...' . PHP_EOL;
     }
     return $object->data('translation.' . $attribute . '.' . $language);
 }

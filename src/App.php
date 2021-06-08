@@ -120,8 +120,8 @@ class App extends Data {
                         return $result;
                     }
                 }
-            } catch (Exception $e) {
-                echo $e->getMessage();
+            } catch (Exception $exception) {
+                return $exception;
             }
         } else {
             return $file;

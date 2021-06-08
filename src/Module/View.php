@@ -294,9 +294,6 @@ class View {
         $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
         $data = clone $object->data();
         unset($data->{App::NAMESPACE});
-        $data->r3m = new stdClass();
-        $data->r3m->io = new stdClass();
-        $data->r3m->io->config = $config->data();
         $read = $parse->compile($read, $data, $parse->storage());
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);

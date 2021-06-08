@@ -622,11 +622,11 @@ class Token {
 
     public static function tree($string='', $is_debug=false){
         $prepare = Token::tree_prepare($string, $count);
-        $prepare = Token::prepare($prepare, $count, $is_debug);                                          
-        $token = Token::define($prepare, $is_debug);                                        
-        $token = Token::group($token, $is_debug);                                
+        $prepare = Token::prepare($prepare, $count, $is_debug);
+        $token = Token::define($prepare, $is_debug);
+        $token = Token::group($token, $is_debug);
         $token = Token::cast($token, $is_debug);
-        $token = Token::method($token, $is_debug);        
+        $token = Token::method($token, $is_debug);
         return $token;
     }
 
@@ -658,11 +658,12 @@ class Token {
         return $token;
     }
 
-    public static function method($token=[]){        
+    public static function method($token=[], $is_debug=false){
         $selection = [];
         $collect = false;
         $depth = null;
         $square_depth = 0;
+        $curly_depth = 0;
         $target = null;
         $skip = 0;
         $skip_unset = 0;
@@ -690,17 +691,22 @@ class Token {
                 $skip_unset = 1;
                 $value = $record['value'];
                 $attribute = [];
-                // d($record);
             }
             elseif(
                 array_key_exists($target, $token) &&
-                $record['value'] == ')' &&
+                strpos($record['value'], ')') !== false &&
                 $depth == $record['depth'] - 1
             ){
-                if(!empty($attribute)){                    
+                if(!empty($attribute)){
                     $attribute = Token::method($attribute);                    
                     foreach($attribute as $attribute_key => $attribute_value){
-                        if($attribute_value['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
+                        if($attribute_value['type'] === Token::TYPE_CURLY_OPEN){
+                            $curly_depth++;
+                        }
+                        elseif($attribute_value['type'] == Token::TYPE_CURLY_CLOSE){
+                            $curly_depth--;
+                        }
+                        elseif($attribute_value['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
                             $square_depth++;
                             //possible array
                         }
@@ -710,6 +716,7 @@ class Token {
                         }
                         elseif(
                             $square_depth == 0 &&
+                            $curly_depth == 0 &&
                             $attribute_value['type'] == Token::TYPE_COMMA
                         ){
                             $attribute_nr++;                            
@@ -768,20 +775,34 @@ class Token {
 
     public static function group($token=[], $is_debug=false){
         $is_outside = true;
+        $curly_depth = 0;
         foreach($token as $nr => $record){
             if($record['type'] == Token::TYPE_CURLY_OPEN){
+                $curly_depth++;
                 $is_outside = false;
                 continue;
             }
-            elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
-                $is_outside = true;
+            elseif(
+                $record['type'] === Token::TYPE_CURLY_CLOSE &&
+                $curly_depth > 0
+            ){
+                $curly_depth--;
+                if($curly_depth === 0){
+                    $is_outside = true;
+                }
                 continue;
             }
-            elseif($record['type'] == Token::TYPE_COMMENT){
-                $is_outside = true;
-                continue;
-            }
-            elseif($record['type'] == Token::TYPE_DOC_COMMENT){
+            elseif(
+                in_array(
+                    $record['type'],
+                    [
+                        Token::TYPE_CURLY_CLOSE,
+                        Token::TYPE_COMMENT,
+                        Token::TYPE_DOC_COMMENT,
+                        Token::TYPE_COMMENT_CLOSE,
+                    ]
+                )
+            ){
                 $is_outside = true;
                 continue;
             }

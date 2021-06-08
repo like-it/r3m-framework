@@ -25,12 +25,17 @@ class Info extends View {
     public static function run($object){
         $command = $object::parameter($object, Info::NAME, 1);
         try {
-            $url = Info::locate($object, Info::NAME . '.' . $command);
-            if(empty($url)){
+            if(empty($command)){
                 $url = Info::locate($object, Info::NAME);
+            } else {
+                $url = Info::locate($object, Info::NAME . '.' . $command);
+                if (empty($url)) {
+                    $url = Info::locate($object, Info::NAME);
+                }
             }
             return Info::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            dd($exception);
             return 'Command undefined.' . PHP_EOL;;
         }
     }
