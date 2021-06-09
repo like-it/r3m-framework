@@ -174,8 +174,12 @@ class App extends Data {
 
     private static function result(App $object, $output){
         if($output instanceof Exception){
-            header('Content-Type: application/json');
-            return App::exception_to_json($output);
+            if(App::is_cli()){
+                return App::exception_to_json($output);
+            } else {
+                header('Content-Type: application/json');
+                return App::exception_to_json($output);
+            }
         }
         $contentType = $object->data(App::CONTENT_TYPE);
         if($contentType == App::CONTENT_TYPE_JSON){

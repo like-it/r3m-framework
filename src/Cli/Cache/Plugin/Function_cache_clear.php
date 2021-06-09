@@ -16,5 +16,9 @@ function function_cache_clear(Parse $parse, Data $data){
       $output[] = '';
       echo implode("\n", $output);
       ob_flush();
+      if(class_exists('\Doctrine\Common\Cache\ArrayCache')){
+          $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
+          $cacheDriver->deleteAll();
+      }
    }
 }
