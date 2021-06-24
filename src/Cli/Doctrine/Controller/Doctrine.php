@@ -26,7 +26,6 @@ class Doctrine extends View {
             $command = App::parameter($object, 'doctrine', 1);
             $name = Doctrine::name($command, Doctrine::NAME);
             $url = Doctrine::locate($object, $name);
-            d($url);
             return Doctrine::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return 'Command undefined.' . PHP_EOL;;
