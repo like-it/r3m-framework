@@ -33,6 +33,7 @@ class Info extends View {
                     $url = Info::locate($object, Info::NAME);
                 }
             }
+            dd($url);
             return Info::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return 'Command undefined.' . PHP_EOL;;
