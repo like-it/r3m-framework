@@ -45,6 +45,7 @@ class View {
     }
 
     public static function locate(App $object, $template=null){
+        d($template);
         $temp = $object->data('template');
         $called = '';
         if($template === null && $temp !== null && property_exists($temp, 'dir')){
