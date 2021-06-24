@@ -10,7 +10,7 @@
  */
 use R3m\Io\Module\Parse\Token;
 
-function validate_is_number(R3m\Io\App $object, $field='', $argument=''){
+function validate_string_has_number(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request($field);
     $split = str_split($string);
     $test = [];
@@ -89,6 +89,5 @@ function validate_is_number(R3m\Io\App $object, $field='', $argument=''){
         default:
             throw new Exception('Unknown equation');
     }
-    dd($result);
     return $result;    
 }

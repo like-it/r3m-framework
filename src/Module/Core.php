@@ -618,10 +618,13 @@ class Core {
     public static function cors(App $object){
         header("HTTP/1.1 200 OK");
         header("Access-Control-Allow-Origin: *");
-        if (isset($_SERVER['HTTP_ORIGIN'])) {
+        if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
             header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
         }
-        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+        if (
+            array_key_exists('REQUEST_METHOD', $_SERVER) &&
+            $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
+        ) {
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
             header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');

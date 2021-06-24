@@ -70,24 +70,30 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());        
         $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());                    
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\AuthenticationException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\AuthorizationException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\ErrorException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\FileAppendException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\FileMoveException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\FileWriteException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\LocateException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\ObjectException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\PluginNotFoundException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\UrlEmptyException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\UrlNotExistException', new stdClass());
 
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
-        $dir_plugin = $config->data('parse.dir.plugin');                
+        $dir_plugin = $config->data(Config::DATA_PARSE_DIR_PLUGIN);
+        $dir_plugin = [];
         if(empty($dir_plugin)){
             $dir_plugin = [];
             $dir_plugin[] = $config->data('controller.dir.plugin');
-            $dir_plugin[] = $config->data('host.dir.plugin');            
+            $dir_plugin[] = $config->data('host.dir.plugin');
+            $dir_plugin[] = $config->data('host.dir.plugin-2');
             $dir_plugin[] = $config->data('project.dir.plugin');
             $dir_plugin[] = $config->data('framework.dir.plugin');
-        }        
+        }
         $this->storage()->data('plugin', $dir_plugin);
     }
 
@@ -610,16 +616,28 @@ class Build {
         if(isset($options['parent'])){            
             $name .= str_replace(
                 [                    
-                    '.'
+                    '.',
+                    '-',
                 ], 
                 [                    
+                    '_',
                     '_'
                 ], 
                 basename($options['parent'])
             ) . '_';            
         }
         if(isset($options['source'])){            
-            $name .= str_replace('.', '_', basename($options['source'])) . '_';            
+            $name .= str_replace(
+                [
+                    '.',
+                    '-'
+                ],
+                [
+                    '_',
+                    '_'
+                ],
+                basename($options['source'])
+            ) . '_';
         }
         $name = str_replace('_tpl', '', $name);
         $class = $config->data('dictionary.template') . '_' . $name . $key;
@@ -703,16 +721,27 @@ class Build {
             if(isset($options['parent'])){            
                 $name .= str_replace(
                     [                        
-                        '.'
+                        '.',
+                        '-'
                     ], 
                     [                        
+                        '_',
                         '_'
                     ], 
                     basename($options['parent'])
                 ) . '_';   
             }
             if(isset($options['source'])){
-                $name .= str_replace('.', '_', basename($options['source'])) . '_';
+                $name .= str_replace(
+                    [
+                        '.',
+                        '-'
+                    ],
+                    [
+                        '_',
+                        '_'
+                    ],
+                    basename($options['source'])) . '_';
             }        
             $name = str_replace('_tpl', '', $name);    
             $url =

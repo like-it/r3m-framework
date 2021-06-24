@@ -8,23 +8,25 @@
  * @changeLog
  *  -    all
  */
-namespace R3m\Io\Cli\Uuid\Controller;
+namespace R3m\Io\Cli\Doctrine\Controller;
 
+use R3m\Io\App;
 use R3m\Io\Module\View;
 use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Uuid extends View {
+class Doctrine extends View {
     const DIR = __DIR__;
-    const NAME = 'Uuid';
+    const NAME = 'Doctrine';
 
     public static function run($object){
         try {
-            $name = Uuid::name(__FUNCTION__    , Uuid::NAME);
-            $url = Uuid::locate($object, $name);
-            return Uuid::response($object, $url);
+            $command = App::parameter($object, 'doctrine', 1);
+            $name = Doctrine::name($command, Doctrine::NAME);
+            $url = Doctrine::locate($object, $name);
+            return Doctrine::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return 'Command undefined.' . PHP_EOL;;
         }

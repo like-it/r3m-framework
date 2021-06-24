@@ -26,7 +26,8 @@ class Data {
      * @example
      *
      * cli: r3m test test2 test.csv
-     * $object->parameter($object->data('request.input'), 'test2', -1)
+     * Data::parameter($object->data('request.input'), 'test2', -1)
+     * App::parameter(App $object, 'test2', -1)
      *
      * @param object $data
      * @param string $parameter

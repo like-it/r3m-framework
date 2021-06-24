@@ -10,7 +10,7 @@
  */
 use R3m\Io\Module\Parse\Token;
 
-function validate_string_has_uppercase(R3m\Io\App $object, $field='', $argument=''){
+function validate_string_has_lowercase(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request($field);
     $split = str_split($string);
     $test = [];
@@ -34,7 +34,7 @@ function validate_string_has_uppercase(R3m\Io\App $object, $field='', $argument=
         ){
             continue;
         }
-        if(ctype_upper($char)){
+        if(ctype_lower($char)){
             $test[] = $char;
         }
     }

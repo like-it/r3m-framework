@@ -20,7 +20,7 @@ use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Clear extends View{
+class Cache extends View{
     const NAME = 'Cache';
     const DIR = __DIR__;
 

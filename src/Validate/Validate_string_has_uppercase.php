@@ -10,7 +10,7 @@
  */
 use R3m\Io\Module\Parse\Token;
 
-function validate_is_uppercase(R3m\Io\App $object, $field='', $argument=''){
+function validate_string_has_uppercase(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request($field);
     $split = str_split($string);
     $test = [];
@@ -19,29 +19,26 @@ function validate_is_uppercase(R3m\Io\App $object, $field='', $argument=''){
             in_array(
                 $char,
                 [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8,
-                    9
+                    '0',
+                    '1',
+                    '2',
+                    '3',
+                    '4',
+                    '5',
+                    '6',
+                    '7',
+                    '8',
+                    '9'
                 ]
             )
         ){
             continue;
         }
-        $test[] = $char;
+        if(ctype_upper($char)){
+            $test[] = $char;
+        }
     }
-
-
-
-
-
-    $length = strlen($string);
+    $length = count($test);
     $argument = Token::tree('{if($argument ' . $argument . ')}{/if}');
     $left = null;
     $equation = null;

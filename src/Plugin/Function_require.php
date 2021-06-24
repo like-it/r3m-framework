@@ -28,7 +28,6 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             return $parse->compile($read, [], $data);
         }
     } else {
-        //below disabled, first time wrong, second time right problem
         $text = 'Require: file not found: ' . $url . ' in template: ' . $data->data('r3m.io.parse.view.source.url');
         throw new Exception($text);
     }    

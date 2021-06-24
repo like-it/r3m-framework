@@ -11,8 +11,8 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_parse_string(Parse $parse, Data $data, $variable=null){
+function function_parse_url(Parse $parse, Data $data, $string=null){
     $result = [];
-    strval($variable, $result);
+    parse_str($string, $result);
     return $result;
 }

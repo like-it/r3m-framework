@@ -12,6 +12,6 @@ namespace R3m\Io\Exception;
 
 use Exception;
 
-class AuthenticationException extends Exception {
+class AuthorizationException extends Exception {
 
 }

@@ -81,8 +81,12 @@ class Route extends Data{
     }
 
     public static function find($object, $name='', $option=[]){
+        if($name === null){
+            return;
+        }
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
+
         if(empty($get)){
             return;
         }
@@ -807,7 +811,8 @@ class Route extends Data{
         $default_route = $config->data('framework.default.route');
         foreach($default_route as $record){
             $path = strtolower($record);
-            $control = ucfirst($path);
+            $control = File::ucfirst(str_replace(':', '.', $record) . '.control');
+            $control = substr($control, 0, -8);
             $attribute = 'r3m-io-cli-' . $path;
             $item = new stdClass();
             $item->path = $path . '/';

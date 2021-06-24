@@ -35,7 +35,6 @@ class Info extends View {
             }
             return Info::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            dd($exception);
             return 'Command undefined.' . PHP_EOL;;
         }
     }

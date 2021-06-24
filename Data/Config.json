@@ -1,18 +1,21 @@
 {
     "framework": {
         "default": {
+            "language" : "en",
             "route": [
                 "info",
                 "autoload",
                 "parse",
                 "cache",
+                "cache:Clear",
                 "license",
                 "version",
                 "uuid",
                 "password",
                 "route",
                 "bin",
-                "configure"
+                "configure",
+                "doctrine"
             ]
         },
         "major": "0",

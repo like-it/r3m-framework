@@ -346,15 +346,22 @@ class File {
 
     public static function ucfirst($url=''){
         $explode = explode('.', $url);
-        $extension = array_pop($explode);
-        $result = '';
-        foreach($explode as $part){
-            if(empty($part)){
-                continue;
+        $extension = null;
+        if(array_key_exists(1, $explode)){
+            $extension = array_pop($explode);
+            $result = '';
+            foreach($explode as $part){
+                if(empty($part)){
+                    continue;
+                }
+                $result .= ucfirst($part) . '.';
             }
-            $result .= ucfirst($part) . '.';
+        } else {
+            $result = $explode[0];
         }
-        $result .= '.' . $extension;
+        if($extension){
+            $result .= $extension;
+        }
         return $result;
     }
 

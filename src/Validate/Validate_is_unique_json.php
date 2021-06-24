@@ -12,7 +12,7 @@ use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 
-function validate_unique_json(R3m\Io\App $object, $field='', $argument=''){    
+function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
     $original_uuid = $object->request('uuid');
     $string = strtolower($object->request($field));
     $url = false;

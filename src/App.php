@@ -129,7 +129,7 @@ class App extends Data {
     }    
 
     public static function controller(App $object, $route){
-        $check = @class_exists($route->controller);
+        $check = class_exists($route->controller);
         if(empty($check)){
             throw new Exception('Cannot call controller (' . $route->controller .')');
         }        
@@ -170,6 +170,10 @@ class App extends Data {
         } catch (Exception\ObjectException $exception) {
             return $exception;
         }
+    }
+
+    public static function response_output(App $object, $output=App::CONTENT_TYPE_HTML){
+        $object->config('response.output', $output);
     }
 
     private static function result(App $object, $output){
@@ -269,7 +273,7 @@ class App extends Data {
         }
     }
 
-    public function data_read($url, $attribute=null){
+    public function data_read($url, $attribute=null, $do_not_nest_key=false){
         if($attribute !== null){
             $data = $this->data($attribute);
             if(!empty($data)){
@@ -279,9 +283,12 @@ class App extends Data {
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
-                $data = new Data(Core::object($read));
+                $data = new Data();
+                $data->do_not_nest_key($do_not_nest_key);
+                $data->data(Core::object($read, Core::OBJECT_OBJECT))   ;
             } else {
                 $data = new Data();
+                $data->do_not_nest_key($do_not_nest_key);
             }
             if($attribute !== null){
                 $this->data($attribute, $data);

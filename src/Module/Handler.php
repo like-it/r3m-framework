@@ -157,8 +157,10 @@ class Handler {
                 if(empty($request->request)){
                     $request->request = '/';
                 }                
-            }                  
-            $data->data('request', $request->request);            
+            }
+            foreach($request as $attribute => $value){
+                $data->data($attribute, $value);
+            }
             $input =
                 htmlspecialchars(
                     htmlspecialchars_decode(

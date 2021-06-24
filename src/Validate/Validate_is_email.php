@@ -10,27 +10,22 @@
  */
 use R3m\Io\Module\Parse\Token;
 
-function validate_is_uuid(R3m\Io\App $object, $field='', $argument=''){
+function validate_is_email(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request($field);
-    //format: %s%s-%s-%s-%s-%s%s%s
-    $explode = explode('-', $string);
-    if(count($explode) !== 5){
-        return false;
+    if(filter_var($string, FILTER_VALIDATE_EMAIL)) {
+        // valid address
+        if($argument === false){
+            return false;
+        } else {
+            return true;
+        }
     }
-    if(strlen($explode[0]) !== 8){
-        return false;
+    else {
+        // invalid address
+        if($argument === false){
+            return true;
+        } else {
+            return false;
+        }
     }
-    if(strlen($explode[1]) !== 4){
-        return false;
-    }
-    if(strlen($explode[2]) !== 4){
-        return false;
-    }
-    if(strlen($explode[3]) !== 4){
-        return false;
-    }
-    if(strlen($explode[4]) !== 12){
-        return false;
-    }
-    return true;
 }

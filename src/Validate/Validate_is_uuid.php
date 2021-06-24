@@ -10,53 +10,35 @@
  */
 use R3m\Io\Module\Parse\Token;
 
-function validate_string_length(R3m\Io\App $object, $field='', $argument=''){
+function validate_is_uuid(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request($field);
-    $length = strlen($string);
-    $argument = Token::tree('{if($argument ' . $argument . ')}{/if}');
-    $left = null;
-    $equation = null;
-    $right = null;
-    foreach($argument[1]['method']['attribute'][0] as $nr => $record){
-        if(empty($left)){
-            $left = $record;
-        }
-        elseif(empty($equation)){
-            $equation = $record['value'];            
-        }
-        elseif(empty($right)){
-            $right = $record['execute'];
-            break;
-        }
-    }
+    //format: %s%s-%s-%s-%s-%s%s%s
+    $explode = explode('-', $string);
     $result = false;
-    switch($equation){
-        case '>' :
-            $result = $length > $right;
-        break;
-        case '<' :
-            $result = $length < $right;
-        break;
-        case '>=' :
-            $result = $length >= $right;
-        break;
-        case '<=' :
-            $result = $length <= $right;
-        break;                
-        case '==' :
-            $result = $length == $right;
-        break;
-        case '!=' :
-            $result = $length != $right;
-        break;
-        case '===' :
-            $result = $length === $right;
-            break;
-        case '!==' :
-            $result = $length !== $right;
-            break;
-        default:
-            throw new Exception('Unknown equation');
+    if($argument === false){
+        $result = true;
     }
-    return $result;    
+    if(count($explode) !== 5){
+        return $result;
+    }
+    if(strlen($explode[0]) !== 8){
+        return $result;
+    }
+    if(strlen($explode[1]) !== 4){
+        return $result;
+    }
+    if(strlen($explode[2]) !== 4){
+        return $result;
+    }
+    if(strlen($explode[3]) !== 4){
+        return $result;
+    }
+    if(strlen($explode[4]) !== 12){
+        return $result;
+    }
+    if($argument === false){
+        return $argument;
+    }
+    $result = true;
+    return $result;
 }

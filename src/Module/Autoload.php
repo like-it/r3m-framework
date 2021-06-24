@@ -365,8 +365,7 @@ class Autoload {
     }
 
     protected function write($url='', $data=''){
-        if (posix_getuid() === 0){
-            //don't write cache file as root, otherways it will be inaccessible
+        if(posix_geteuid() === 0){
             return false;
         }
         $data = (string) json_encode($data, JSON_PRETTY_PRINT);

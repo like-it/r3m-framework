@@ -21,3 +21,4 @@ Welcome to R3m.io                             (c) Remco van der Velde
 {binary()} version                        | Version information
 
 vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
+vendor/bin/doctrine orm:generate-proxies

@@ -694,7 +694,7 @@ class Token {
             }
             elseif(
                 array_key_exists($target, $token) &&
-                strpos($record['value'], ')') !== false &&
+                $record['value'] === ')' &&
                 $depth == $record['depth'] - 1
             ){
                 if(!empty($attribute)){

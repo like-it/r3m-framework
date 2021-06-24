@@ -72,6 +72,9 @@ class Config extends Data {
     const ENTITY = 'entity';
     const VALUE_ENTITY = 'Entity';
 
+    const TRANSLATION = 'translation';
+    const VALUE_TRANSLATION = 'Translation';
+
     const LOCALHOST_EXTENSION = 'localhost.extension';
     const VALUE_LOCALHOST_EXTENSION =  [
         'local'
@@ -105,6 +108,8 @@ class Config extends Data {
     const DATA_HOST_DIR_CACHE = Config::DATA_HOST_DIR . '.' . 'cache';
     const DATA_HOST_DIR_DATA = Config::DATA_HOST_DIR . '.' . 'data';
     const DATA_HOST_DIR_PUBLIC = Config::DATA_HOST_DIR . '.' . 'public';
+    const DATA_HOST_DIR_PLUGIN = Config::DATA_HOST_DIR . '.' . 'plugin';
+    const DATA_HOST_DIR_PLUGIN_2 = Config::DATA_HOST_DIR . '.' . 'plugin-2';
 
     const DATA_PARSE_DIR = 'parse.dir';
     const DATA_PARSE_DIR_TEMPLATE = Config::DATA_PARSE_DIR . '.' . 'template';
@@ -231,6 +236,10 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::DS;
         $value = Config::VALUE_DS;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::TRANSLATION;
+        $value = Config::VALUE_TRANSLATION;
         $this->data($key, $value);
 
         $value = Config::VALUE_DS;

@@ -8,42 +8,38 @@
  * @changeLog
  *     -            all
  */
+
+//use Host\Backend\Universeorange\Com\User\Entity\User;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
+use R3m\Io\Module\Database;
 
-function validate_unique_json(R3m\Io\App $object, $field='', $argument=''){    
-    $original_uuid = $object->request('uuid');
+function validate_is_unique_mysql(R3m\Io\App $object, $field='', $argument=''){
     $string = strtolower($object->request($field));
-    $url = false;
-    $list = false;
-    if(property_exists($argument, 'url')){
-        $url = $argument->url;
+    $table = false;
+    $field = false;
+    if(property_exists($argument, 'table')){
+        $table = $argument->table;
     }
-    if(property_exists($argument, 'list')){
-        $list = $argument->list;
+    if(property_exists($argument, 'field')){
+        $field = $argument->field;
     }
-    $is_unique = true;
     if(
-        $url &&
-        $list
+        $table &&
+        $field
     ){
-        $data = $object->parse_read($url, sha1($url));
-        if($data){
-            foreach($data->data($list) as $uuid => $record){
-                if(
-                    !empty($original_uuid) &&
-                    $original_uuid == $uuid
-                ){
-                    continue;
-                }
-                $match = strtolower($data->data($list . '.' . $uuid . '.' . $field));
-                if($match == $string){
-                    $is_unique = false;
-                    break;
-                }
-            }
+        $entityManager = Database::entityManager($object, []);
+        $repository = $entityManager->getRepository($table);
+        $criteria[$field] = $string;
+        $record = $repository->findOneBy($criteria);
+        if($record === null){
+            return true;
+        } else {
+            return false;
         }
-        return $is_unique;
+    } else {
+        return false;
     }
+
 }

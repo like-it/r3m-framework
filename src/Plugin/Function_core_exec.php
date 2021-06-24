@@ -14,24 +14,14 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\Host;
 
 
-function function_cors(Parse $parse, Data $data){
+function function_core_exec(Parse $parse, Data $data, $command, $attribute=null, $type=null){
     $object = $parse->object();
-    Core::cors($object);
-    /*
-    header("HTTP/1.1 200 OK");
-    header("Access-Control-Allow-Origin: *");
-    if (isset($_SERVER['HTTP_ORIGIN'])) {
-        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    $output = [];
+    Core::execute($command, $output, $type);
+    if($attribute) {
+        if (substr($attribute, 0, 1) === '$') {
+            $attribute = substr($attribute, 1);
+        }
+        $data->data($attribute, $output);
     }
-    if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-        //header("HTTP/1.1 200 OK");
-//        header("Access-Control-Allow-Origin: *");
-//        header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-        header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
-        header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
-        header('Access-Control-Max-Age: 86400');    // cache for 1 day
-        exit(0);
-    }
-    */
 }

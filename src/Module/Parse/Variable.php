@@ -228,6 +228,12 @@ class Variable {
         $count = 0;             
         while(count($operator) >= 1){
             $record = array_shift($operator);
+            if(is_bool($record) && $record === false){
+                if(substr($result, -3) == ' . '){
+                    $result = substr($result,0, -3);
+                }
+                return $result;
+            }
             if(
                 $is_collect === true &&
                 $record['type'] != Token::TYPE_CURLY_CLOSE
