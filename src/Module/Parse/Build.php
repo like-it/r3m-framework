@@ -323,12 +323,12 @@ class Build {
                     'echo \'' .
                     str_replace(
                         [
-                            '\'',
                             '\\',
+                            '\'',
                         ],
                         [
+                            '\\\\',
                             '\\\'',
-                            '\\\\'
                         ],
                         $record['value']
                     ) .
@@ -465,7 +465,8 @@ class Build {
                     break;
                     default:
                         if($type !== null){
-                            throw new Exception('type (' . $type . ') undefined');
+//                            d($selection);
+                            throw new Exception('type (' . $type . ') undefined in source: ' . $this->storage()->data('source'));
                         }
                 }
                 $is_tag = false;

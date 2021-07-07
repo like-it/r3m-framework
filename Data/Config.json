@@ -78,7 +78,8 @@
                 "capture.append",
                 "block.code",
                 "block.html",
-                "block.json"
+                "block.json",
+                "script"
             ]
         }
     }

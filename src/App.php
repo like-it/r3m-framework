@@ -196,6 +196,7 @@ class App extends Data {
                     if(is_string($json)){
                         return trim($json, " \t\r\n");
                     }
+                    return $json;
                 default:
                     $json->html = $output;
                     if($object->data('method')){

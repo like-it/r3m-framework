@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use ParseError;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
@@ -160,10 +161,15 @@ class Parse {
             }
         }
         elseif(is_object($string)){                                                             
-            foreach($string as $key => $value){                 
-                $this->local($string);
-                $value = $this->compile($value, $storage->data(), $storage, $is_debug);
-                $string->$key = $value;
+            foreach($string as $key => $value){
+                try {
+                    $this->local($string);
+                    $value = $this->compile($value, $storage->data(), $storage, $is_debug);
+                    $string->$key = $value;
+                } catch (Exception | ParseError $exception){
+                    dd($exception);
+                }
+
             }            
             return $string;
         }

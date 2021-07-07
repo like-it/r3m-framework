@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse\Token;
 
 function validate_string_length(R3m\Io\App $object, $field='', $argument=''){
-    $string = $object->request($field);
+    $string = $object->request('node.' . $field);
     $length = strlen($string);
     $argument = Token::tree('{if($argument ' . $argument . ')}{/if}');
     $left = null;

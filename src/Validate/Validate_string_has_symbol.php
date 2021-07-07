@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse\Token;
 
 function validate_string_has_symbol(R3m\Io\App $object, $field='', $argument=''){
-    $string = $object->request($field);
+    $string = $object->request('node.' . $field);
     $split = str_split($string);
     $test = [];
     foreach($split as $nr => $char){

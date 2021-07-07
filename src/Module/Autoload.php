@@ -102,7 +102,7 @@ class Autoload {
         }
         if(empty($extension)){
             $found = false;
-            foreach($list as $nr => $record){
+            foreach($list as $record){
                 if(
                     $record['prefix'] == $prefix &&
                     $record['directory'] == $directory
@@ -119,7 +119,7 @@ class Autoload {
             }
         } else {
             $found = false;
-            foreach($list as $nr => $record){
+            foreach($list as $record){
                 if(
                     $record['prefix'] == $prefix &&
                     $record['directory'] == $directory &&
@@ -375,7 +375,15 @@ class Autoload {
         $fwrite = 0;
         $dir = dirname($url);
         if(is_dir($dir) === false){
-            mkdir($dir, 0777, true);
+            try {
+                @mkdir($dir, 0777, true);
+            } catch(Exception $exception){
+                return false;
+            }
+
+        }
+        if(is_dir($dir) === false){
+            return false;
         }
         $resource = fopen($url, 'w');
         if($resource === false){

@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse\Token;
 
 function validate_array_length(R3m\Io\App $object, $field='', $argument=''){    
-    $array = $object->request($field);
+    $array = $object->request('node.' . $field);
     if(empty($array)){
         return false;
     }

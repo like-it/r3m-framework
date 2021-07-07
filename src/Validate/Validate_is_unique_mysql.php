@@ -16,7 +16,7 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Database;
 
 function validate_is_unique_mysql(R3m\Io\App $object, $field='', $argument=''){
-    $string = strtolower($object->request($field));
+    $string = strtolower($object->request('node.' . $field));
     $table = false;
     $field = false;
     if(property_exists($argument, 'table')){
