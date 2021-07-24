@@ -92,11 +92,7 @@ class Route extends Data{
         }
         if(!property_exists($get, 'path')){
             if(property_exists($get, 'url')){
-                if(substr($get->url, 0, 1) == '/'){
-                    $url = substr($get->url, 1);
-                } else {
-                    $url = $get->url;
-                }
+                $url = $get->url;
                 return $url;
             } else {
                 throw new Exception('path & url are empty');

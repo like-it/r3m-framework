@@ -305,6 +305,8 @@ class View {
         $parse = new Parse($object);
         $parse->storage()->data('r3m.io.parse.view.url', $url);
         $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
+        $object->data('ldelim', '{');
+        $object->data('rdelim', '}');
         $data = clone $object->data();
         unset($data->{App::NAMESPACE});
         $read = $parse->compile($read, $data, $parse->storage());

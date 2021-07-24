@@ -10,6 +10,7 @@
  */
 namespace R3m\Io;
 
+use R3m\Io\Module\Response;
 use stdClass;
 use Exception;
 use R3m\Io\Module\Autoload;
@@ -41,6 +42,8 @@ class App extends Data {
 
     const RESPONSE_JSON = 'json';
     const RESPONSE_HTML = 'html';
+    const RESPONSE_FILE = 'file';
+    const RESPONSE_OBJECT = 'object';
 
     const ROUTE = App::NAMESPACE . '.' . Route::NAME;
     const CONFIG = App::NAMESPACE . '.' . Config::NAME;
@@ -185,6 +188,27 @@ class App extends Data {
                 return App::exception_to_json($output);
             }
         }
+        elseif($output instanceof Response){
+            return Response::output($object, $output);
+        } else {
+            $response = new Response($output, $object->config('response.output'));
+            return Response::output($object, $response);
+        }
+
+        /*
+        $response_output = $object->config('response.output');
+        switch ($response_output){
+            case App::RESPONSE_JSON :
+            break;
+            case App::RESPONSE_HTML :
+            break;
+            case App::RESPONSE_FILE :
+            break;
+            case App::RESPONSE_OBJECT :
+            break;
+        }
+
+
         $contentType = $object->data(App::CONTENT_TYPE);
         if($contentType == App::CONTENT_TYPE_JSON){
             header('Content-Type: application/json');
@@ -231,6 +255,7 @@ class App extends Data {
             return Core::object($json, Core::OBJECT_JSON);
         }
         return $output;
+        */
     }
 
     public function route(){

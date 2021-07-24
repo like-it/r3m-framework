@@ -15,6 +15,7 @@ use stdClass;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Module\Core;
+use DateTimeImmutable;
 
 class Handler {
     const NAMESPACE = __NAMESPACE__;
@@ -91,9 +92,13 @@ class Handler {
             header_remove($http_response_code);
         }
         elseif($http_response_code !== null){
-            header($string, $replace, $http_response_code);
+            if(!headers_sent()){
+                header($string, $replace, $http_response_code);
+            }
         } else {
-            header($string, $replace);
+            if(!headers_sent()) {
+                header($string, $replace);
+            }
         }
     }
 
@@ -177,21 +182,23 @@ class Handler {
                 $input = json_decode($input);
             }
             if(!empty($input)){
-                foreach($input as $key => $record){
-                    if(
-                        is_object($record) &&
-                        property_exists($record, 'name') &&
-                        property_exists($record, 'value') &&
-                        $record->name != 'request'
-                    ){
-                        if($record->value !== null){
-                            $record->name = str_replace(['-', '_'], ['.', '.'], $record->name);
-                            $data->data($record->name, $record->value);
-                        }
-                    } else {
-                        if($record !== null){
-                            $key = str_replace(['-', '_'],  ['.', '.'], $key);
-                            $data->data($key, $record);
+                if(is_object($input) || is_array($input)){
+                    foreach($input as $key => $record){
+                        if(
+                            is_object($record) &&
+                            property_exists($record, 'name') &&
+                            property_exists($record, 'value') &&
+                            $record->name != 'request'
+                        ){
+                            if($record->value !== null){
+                                $record->name = str_replace(['-', '_'], ['.', '.'], $record->name);
+                                $data->data($record->name, $record->value);
+                            }
+                        } else {
+                            if($record !== null){
+                                $key = str_replace(['-', '_'],  ['.', '.'], $key);
+                                $data->data($key, $record);
+                            }
                         }
                     }
                 }
@@ -600,6 +607,9 @@ class Handler {
                     }
                     if(is_array($duration)){
                         $result = @setcookie($attribute, $value, $duration);
+                    }
+                    elseif(is_object($duration) && $duration instanceof DateTimeImmutable){
+                        $result = @setcookie($attribute, $value, $duration->getTimestamp(), "/");
                     } else {
                         $result = @setcookie($attribute, $value, time() + $duration, "/");
                     }

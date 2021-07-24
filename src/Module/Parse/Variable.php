@@ -194,8 +194,9 @@ class Variable {
                 }
             }
             $target = Set::target($token);
-            $token = Set::remove($token);
+            $token = Set::pre_remove($token);
             $token = Set::replace($token, $set, $target);
+            $token = Set::remove($token);
             $set_counter++;
             if($set_counter > $set_max){
                 break;

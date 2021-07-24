@@ -17,8 +17,8 @@ function function_cache_clear(Parse $parse, Data $data){
         echo implode("\n", $output);
         ob_flush();
     }
-    if(class_exists('\Doctrine\Common\Cache\ArrayCache')){
+    if(File::exist($object->config('project.dir.vendor') . 'Doctrine')){
         $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
         $cacheDriver->deleteAll();
-   }
+    }
 }

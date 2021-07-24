@@ -20,5 +20,7 @@ Welcome to R3m.io                             (c) Remco van der Velde
 {binary()} uuid                           | Uuid generation
 {binary()} version                        | Version information
 
+{binary()} doctrine orm:generate-proxies  | Genereate proxies & adjust owner
+
 vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
 vendor/bin/doctrine orm:generate-proxies

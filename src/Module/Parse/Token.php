@@ -642,6 +642,7 @@ class Token {
                 $token[$previous_nr]['type'] == Token::TYPE_STRING
             ){
                 $token[$previous_nr]['type'] = Token::TYPE_CAST;
+                --$token[$previous_nr]['depth'];
                 unset($token[$nr]);
                 unset($token[$previous_previous_nr]);
             }

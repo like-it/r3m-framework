@@ -30,7 +30,6 @@ class Cache extends View{
         Cache::COMMAND_INFO,
         Cache::COMMAND_CLEAR
     ];
-
     const DEFAULT_COMMAND = Cache::COMMAND_INFO;
 
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';

@@ -12,6 +12,6 @@ namespace R3m\Io\Exception;
 
 use Exception;
 
-class UrlNotExistException extends Exception {
+class FileNotExistException extends Exception {
 
 }
