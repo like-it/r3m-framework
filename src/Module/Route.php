@@ -86,7 +86,6 @@ class Route extends Data{
         }
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
-
         if(empty($get)){
             return;
         }
@@ -99,7 +98,9 @@ class Route extends Data{
             }
         }
         $get = $route::add_localhost($object, $get);
-        $get = $route::has_host($get, $object->data('host.url'));
+        if(!empty($object->data('host.url'))){
+            $get = $route::has_host($get, $object->data('host.url'));
+        }
         if(empty($get)){
             return;
         }
@@ -111,6 +112,7 @@ class Route extends Data{
             ){
                 throw new Exception('path has variable & option is empty');
             }
+            $old_path = $get->path;
             foreach($option as $key => $value){
                 if(is_numeric($key)){
                     $explode = explode('}', $get->path, 2);
@@ -118,11 +120,14 @@ class Route extends Data{
                     if(array_key_exists(1, $temp)){
                         $variable = $temp[1];
                         $path = str_replace('{$' . $variable . '}', $value, $path);
+                        $get->path = str_replace('{$' . $variable . '}', '', $get->path);
                     }
                 } else {
                     $path = str_replace('{$' . $key . '}', $value, $path);
+                    $get->path = str_replace('{$' . $key . '}', '', $get->path);
                 }
             }
+            $get->path = $old_path;
         }        
         if($path == '/'){
             $url = $object->data('host.url');
