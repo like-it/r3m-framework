@@ -875,7 +875,7 @@ class Token {
                 }
             }            
             $token[$token_nr][$modifier]['parse'] = $parse;            
-        }        
+        }
         return $token;
     }
 
@@ -936,13 +936,12 @@ class Token {
                 elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
                     $variable = Token::modifier($variable);                    
                     $token[$is_variable]['variable']['modifier'] = $variable;
-                    $token[$is_variable]['parse'] = $token[$is_variable]['value'] . 
-                        $token[$is_variable]['variable']['operator'];
+                    $token[$is_variable]['parse'] = $token[$is_variable]['value'];
                     foreach($token[$is_variable]['variable']['modifier'] as $modifier_nr => $modifier_list){
                         foreach($modifier_list as $modifier_key => $modifier){
-                            $token[$is_variable]['parse'] .= $modifier['parse'];
+                            $token[$is_variable]['parse'] .= $token[$is_variable]['variable']['operator'] . $modifier['parse'];
                         }                        
-                    }                                
+                    }
                     $is_variable = null;
                     $variable_nr = 0;
                     $variable = [];                    
