@@ -19,7 +19,6 @@ class Response {
     const TYPE_OBJECT = 'object';
     const TYPE_FILE = 'file';
 
-
     private $data;
     private $type;
     private $status;
