@@ -227,6 +227,9 @@ class Handler {
             return;
         }
         if(!isset($_SESSION)){
+            if(headers_sent()){
+               return;
+            }
             session_start();
             $_SESSION['id'] = session_id();
             if(empty($_SESSION['csrf'])){
