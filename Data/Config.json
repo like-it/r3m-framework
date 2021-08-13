@@ -1,7 +1,7 @@
 {
     "framework": {
         "default": {
-            "language" : "en",
+            "language": "en",
             "route": [
                 "info",
                 "autoload",
@@ -20,9 +20,9 @@
         },
         "major": "0",
         "minor": "1",
-        "patch": 8,
-        "version": "0.1.8",
-        "built": "2021-06-06 23:00:44"
+        "patch": 9,
+        "version": "0.1.9",
+        "built": "2021-08-13 17:27:20"
     },
     "contentType": {
         "txt": "text\/plain",

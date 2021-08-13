@@ -184,7 +184,9 @@ class App extends Data {
             if(App::is_cli()){
                 return App::exception_to_json($output);
             } else {
-                header('Content-Type: application/json');
+                if(!headers_sent()){
+                    header('Content-Type: application/json');
+                }
                 return App::exception_to_json($output);
             }
         }
