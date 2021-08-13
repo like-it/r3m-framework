@@ -1,1 +1,1 @@
-{environment.set('staging')}
+{environment.set('production')}

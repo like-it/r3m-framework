@@ -282,12 +282,25 @@ class File {
             return '';
         }
         try {
-            $file = @file($url);
+            $file = file($url);
             if(!empty($file)){
                 return implode('', $file);
             }
         } catch (Exception $exception){
             return '';
+        }
+    }
+
+    public static function tail($url, $include_return=false){
+        if(File::exist($url)){
+            $read = File::read($url);
+            $data = explode("\r", $read);
+            if($include_return === true){
+                return end($data) . "\r";
+            } else {
+                return end($data);
+            }
+
         }
     }
 

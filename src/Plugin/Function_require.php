@@ -8,6 +8,7 @@
  * @changeLog
  *     -            all
  */
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
@@ -20,8 +21,27 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             $data_data = new Data();
             $data_data->data($storage);
             $data_data->data('r3m.io.parse.view.source.url', $url);
+            $data_data->data('ldelim', '{');
+            $data_data->data('rdelim', '}');
             $parse->storage()->data('r3m.io.parse.view.source.mtime', $mtime);
-            return $parse->compile($read, [], $data_data);
+            $compile =  $parse->compile($read, [], $data_data);
+            $data_script = $data_data->data('script');
+            $script = $data->data('script');
+            if(!empty($data_script) && empty($script)){
+                $data->data('script', $data_script);
+            }
+            elseif(!empty($data_script && !empty($script))){
+                $data->data('script', array_merge($script, $data_script));
+            }
+            $data_link = $data_data->data('link');
+            $link = $data->data('link');
+            if(!empty($data_link) && empty($link)){
+                $data->data('link', $data_link);
+            }
+            elseif(!empty($data_link && !empty($link))){
+                $data->data('link', array_merge($link, $data_link));
+            }
+            return $compile;
         } else {
             $data->data('r3m.io.parse.view.source.url', $url);
             $parse->storage()->data('r3m.io.parse.view.source.mtime', $mtime);

@@ -91,6 +91,42 @@ class Handler {
         ){
             header_remove($http_response_code);
         }
+        elseif(
+            $string == 'has' &&
+            $http_response_code !== null &&
+            is_string($http_response_code)
+        ){
+          $list = headers_list();
+          $header_list = [];
+          foreach($list as $nr => $record){
+              $tmp = explode(':', $record, 2);
+              $key = rtrim($tmp[0], ' ');
+              $value = ltrim($tmp[1], ' ');
+              $header_list[$key] = $value;
+          }
+          if(array_key_exists($http_response_code, $header_list)){
+              return true;
+          }
+          return false;
+        }
+        elseif(
+            $string == 'get' &&
+            $http_response_code !== null &&
+            is_string($http_response_code)
+        ){
+            $list = headers_list();
+            $header_list = [];
+            foreach($list as $nr => $record){
+                $tmp = explode(':', $record, 2);
+                $key = rtrim($tmp[0], ' ');
+                $value = ltrim($tmp[1], ' ');
+                $header_list[$key] = $value;
+            }
+            if(array_key_exists($http_response_code, $header_list)){
+                return $header_list[$http_response_code];
+            }
+            return;
+        }
         elseif($http_response_code !== null){
             if(!headers_sent()){
                 header($string, $replace, $http_response_code);

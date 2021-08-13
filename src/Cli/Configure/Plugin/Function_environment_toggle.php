@@ -12,7 +12,7 @@ use R3m\Io\Exception\FileMoveException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\ObjectException;
 
-function function_environment_toggle(Parse $parse, Data $data, $public_html=''){
+function function_environment_toggle(Parse $parse, Data $data){
     $object = $parse->object();
     $url = $object->config('project.dir.data') . 'Config.json';
     $read = $object->data_read($url);

@@ -16,6 +16,7 @@ use Exception;
 
 class Response {
     const TYPE_JSON = 'json';
+    const TYPE_HTML = 'html';
     const TYPE_OBJECT = 'object';
     const TYPE_FILE = 'file';
 
@@ -33,7 +34,9 @@ class Response {
 
     public static function output(App $object, Response $response){
         $status = $response->status();
-        Handler::header('Status: ' . $status, $status, true);
+        if(!Handler::header('has', 'Status')){
+            Handler::header('Status: ' . $status, $status, true);
+        }
         $type = $response->type();
         if($type === null &&  $object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
             $type = Response::TYPE_OBJECT;
@@ -41,15 +44,18 @@ class Response {
         elseif($type === null){
             $type = Response::TYPE_FILE;
         }
-        switch($type){
-            case Response::TYPE_JSON :
-                Handler::header('Content-Type: application/json', null, true);
-            break;
-            case Response::TYPE_OBJECT :
-                Handler::header('Content-Type: application/json', null, true);
-            break;
-            case Response::TYPE_FILE :
-            break;
+        if(!Handler::header('has', 'Content-Type')){
+            switch($type){
+                case Response::TYPE_OBJECT :
+                case Response::TYPE_JSON :
+                    Handler::header('Content-Type: application/json', null, true);
+                    break;
+                case Response::TYPE_HTML :
+                    Handler::header('Content-Type: text/html', null, true);
+                    break;
+                case Response::TYPE_FILE :
+                    break;
+            }
         }
         $header = $response->header();
         if(is_array($header)){
@@ -102,6 +108,7 @@ class Response {
                 $json->link = $object->data(App::LINK);
                 return Core::object($json, Core::OBJECT_JSON);
             case Response::TYPE_FILE :
+            case Response::TYPE_HTML :
                 return $response->data();
         }
     }
