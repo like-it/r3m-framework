@@ -15,7 +15,7 @@ use R3m\Io\Module\Core;
 
 class Literal {
 
-    public static function apply($string='', Data $data){
+    public static function apply($string, Data $data){
         $explode = explode('{literal}', $string, 2);
         $key = $data->data('r3m.io.parse.literal.key');
         if(empty($key)){
@@ -37,7 +37,7 @@ class Literal {
         return $string;
     }
 
-    public static function restore($string='', Data $data){
+    public static function restore($string, Data $data){
         if(is_object($string)){
             foreach($string as $key => $value){
                 $string->{$key} = Literal::restore($value, $data);
