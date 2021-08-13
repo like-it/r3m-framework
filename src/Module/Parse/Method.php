@@ -148,10 +148,10 @@ class Method {
                 }                
             } else {                
                 foreach($record['method']['attribute'] as $nr => $token){                                        
-                    $token = $build->require('function', $token);                    
+                    $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
                     $attribute .= $value . ', ';
-                }                
+                }
             }
             
             if($record['method']['php_name'] == Token::TYPE_FOR){

@@ -10,8 +10,10 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\UrlEmptyException;
 use stdClass;
-use ObjectException;
+use R3m\Io\Exception\ObjectException;
+use R3m\Io\App;
 
 class Core {
 
@@ -31,8 +33,8 @@ class Core {
     const OBJECT_TYPE_CHILD = 'child';
 
     const SHELL_DETACHED = 'detached';
-    const SHELL_PROCESS = 'process';
     const SHELL_NORMAL = 'normal';
+    const SHELL_PROCESS = 'process';
 
     const OUTPUT_MODE_IMPLICIT = 'implicit';
     const OUTPUT_MODE_EXPLICIT = 'explicit';
@@ -48,7 +50,7 @@ class Core {
 
     public static function binary(){
         if(array_key_exists('_', $_SERVER)){
-            $dirname = \R3m\Io\Module\Dir::name($_SERVER['_']);
+            $dirname = Dir::name($_SERVER['_']);
             return str_replace($dirname, '', $_SERVER['_']);
         }
     }
@@ -147,6 +149,9 @@ class Core {
     }
 
     public static function redirect($url=''){
+        if(empty($url)){
+            throw new UrlEmptyException('url is empty...');
+        }
         header('Location: ' . $url);
         exit;
     }
@@ -462,9 +467,11 @@ class Core {
                 if(isset($object->{$key}) && is_object($object->{$key})){
                     if(empty($attribute) && is_object($value)){
                         foreach($value as $value_key => $value_value){
+                            /*
                             if(isset($object->$key->$value_key)){
                                 // unset($object->$key->$value_key);   //so sort will happen, @bug request will take forever and apache2 crashes needs reboot apache2
                             }
+                            */
                             $object->{$key}->{$value_key} = $value_value;
                         }
                         return $object->{$key};
@@ -606,5 +613,24 @@ class Core {
             $explode[$nr] = ucfirst(trim($part));
         }
         return implode($delimiter, $explode);
+    }
+
+    public static function cors(App $object){
+        header("HTTP/1.1 200 OK");
+        header("Access-Control-Allow-Origin: *");
+        if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
+            header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+        }
+        if (
+            array_key_exists('REQUEST_METHOD', $_SERVER) &&
+            $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
+        ) {
+            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+            //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
+            header('Access-Control-Allow-Headers: Origin, Cache-Control, Content-Type, Authorization, X-Requested-With');
+            header('Access-Control-Max-Age: 86400');    // cache for 1 day
+            exit(0);
+        }
     }
 }

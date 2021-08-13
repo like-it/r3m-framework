@@ -10,11 +10,16 @@
  */
 namespace R3m\Io\Cli\Autoload\Controller;
 
-use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\View;
+use Exception;
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\UrlNotExistException;
+
+
 
 class Autoload extends View{
     const NAME = 'Autoload';
@@ -30,7 +35,7 @@ class Autoload extends View{
     const DEFAULT_COMMAND = Autoload::COMMAND_RESTART;
 
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';
-    const EXCEPTION_COMMAND = 'invalid command (' . Autoload::EXCEPTION_COMMAND_PARAMETER . ')';
+    const EXCEPTION_COMMAND = 'invalid command (' . Autoload::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
     public static function run($object){
         $command = $object->parameter($object, Autoload::NAME, 1);
@@ -50,13 +55,23 @@ class Autoload extends View{
     }
 
     private static function info($object){
-        $url = Autoload::locate($object, ucfirst(__FUNCTION__));
-        return Autoload::view($object, $url);
+        try {
+            $name = Autoload::name(__FUNCTION__, Autoload::NAME);
+            $url = Autoload::locate($object, $name);
+            return Autoload::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . PHP_EOL;
+        }
     }
 
 
     private static function restart($object){
-        $url = Autoload::locate($object, ucfirst(__FUNCTION__));
-        return Autoload::view($object, $url);
+        try {
+            $name = Autoload::name(__FUNCTION__, Autoload::NAME);
+            $url = Autoload::locate($object, $name);
+            return Autoload::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . PHP_EOL;
+        }
     }
 }

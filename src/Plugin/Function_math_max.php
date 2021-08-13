@@ -11,10 +11,9 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_math_max(Parse $parse, Data $data, $array=[]){
+function function_math_max(Parse $parse, Data $data, ...$array){
     if(empty($array)){
         return;
     }
-    $result = max($array);
-    return $result;
+    return max(...$array);
 }

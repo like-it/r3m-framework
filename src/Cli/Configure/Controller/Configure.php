@@ -11,7 +11,7 @@
 namespace R3m\Io\Cli\Configure\Controller;
 
 use Exception;
-use R3m\io\App;
+use R3m\Io\App;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
@@ -36,7 +36,7 @@ class Configure extends View {
             }
             return Configure::response($object, $url);
         } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
-            return 'Action undefined.' . "\n";
+            return 'Action undefined.' . PHP_EOL;
         }
 
     }

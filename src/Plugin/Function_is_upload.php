@@ -10,7 +10,8 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\File;
 
 function function_is_upload(Parse $parse, Data $data, $url=null){
-    return is_uploaded_file($url);
+    return File::is_upload($url);
 }

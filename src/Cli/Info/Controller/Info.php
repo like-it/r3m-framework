@@ -23,19 +23,19 @@ class Info extends View {
     const NAME = 'Info';
 
     public static function run($object){
-//        $url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
-//        $read = $object->data_read($url);
-//        $object->config(Config::DATA_FRAMEWORK_ENVIRONMENT , $read->)
         $command = $object::parameter($object, Info::NAME, 1);
         try {
-            $url = Info::locate($object, 'Info.' . $command);
-            if(empty($url)){
-                $url = Info::locate($object, 'Info');
-
+            if(empty($command)){
+                $url = Info::locate($object, Info::NAME);
+            } else {
+                $url = Info::locate($object, Info::NAME . '.' . $command);
+                if (empty($url)) {
+                    $url = Info::locate($object, Info::NAME);
+                }
             }
             return Info::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . "\n";
+            return 'Command undefined.' . PHP_EOL;;
         }
     }
 }

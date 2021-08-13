@@ -11,7 +11,6 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_parse_string(Parse $parse, Data $data, $variable=null){
-    $result = strval($variable);
-    return $result;
+function function_parse_string(Parse $parse, Data $data, $string=null){
+    return $parse->compile($string, [], $parse->storage());
 }

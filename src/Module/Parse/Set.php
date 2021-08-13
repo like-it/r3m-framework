@@ -29,10 +29,16 @@ class Set {
         $set = [];
         $is_collect = false;
         foreach($token as $nr => $record){
-            if($record['depth'] == $highest && $record['value'] == '('){
+            if(
+                $record['depth'] === $highest &&
+                $record['value'] === '('
+            ){
                 $is_collect = true;
             }
-            elseif($record['depth'] == $highest && $record['value'] == ')'){
+            elseif(
+                $record['depth'] === $highest &&
+                $record['value'] === ')'
+            ){
                 $is_collect = false;
             }
             elseif($is_collect){
@@ -45,21 +51,29 @@ class Set {
     public static function target($token=[]){
         $highest = Set::highest($token);
         foreach($token as $nr => $record){
-            if($record['depth'] == $highest && $record['value'] == '('){
+            if(
+                $record['depth'] == $highest &&
+                (
+                    $record['value'] === '(' ||
+                    $record['type'] === Token::TYPE_CAST
+                )
+            ){
                 return $nr;
             }
         }
-        return $token;
     }
 
     public static function replace($token=[], $set=[], $target=0){
         $target += 0;
-        $record = reset($set);
-        $token[$target] = $record;
+        $nr = 0;
+        foreach($set as $record){
+            $token[$target + $nr] = $record;
+            $nr++;
+        }
         return $token;
     }
 
-    public static function remove($token=[]){
+    public static function pre_remove($token=[]){
         $highest = Set::highest($token);
         $is_collect = false;
         foreach($token as $nr => $record){
@@ -71,6 +85,15 @@ class Set {
                 unset($token[$nr]);
             }
             elseif($is_collect){
+                $token[$nr] = null;
+            }
+        }
+        return $token;
+    }
+
+    public static function remove($token=[]){
+        foreach($token as $nr => $record){
+            if($record === null){
                 unset($token[$nr]);
             }
         }

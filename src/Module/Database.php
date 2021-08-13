@@ -10,6 +10,8 @@
  */
 namespace R3m\Io\Module;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 use stdClass;
 use R3m\Io\App;
 use R3m\Io\Config;
@@ -31,10 +33,19 @@ class Database {
         if(empty($data)){
             throw new Exception('Config data missing for environment (' . $environment .')');
         }
-        $dsn = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'dsn');
-        $username = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'username');
+        $username = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'user');
         $password = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'password');
         $options = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'options');
+        $driver = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'driver');
+        $dbname = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'dbname');
+        $host = $config->data(Config::DATA_PDO . '.' . $environment . '.' . 'host');
+        switch($driver){
+            case 'pdo_mysql' :
+                    $dsn = 'mysql:dbname=' . $dbname . ';host=' . $host;
+            break;
+            default:
+                throw new Exception('driver undefined');
+        }
         $pdo = null;
         if(empty($username) && empty($password) && empty($options)){
             //sqlite
@@ -62,5 +73,32 @@ class Database {
         // fix LIMIT 0, 1000
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
         return $pdo;
+    }
+
+    public static function entityManager(App $object, $options=[]){
+        $url = $object->config('project.dir.data') . 'Config.json';
+        $config  = $object->parse_read($url, sha1($url));
+        if($config){
+            $environment = $config->get('framework.environment');
+            if(empty($environment)){
+                $environment = Config::MODE_DEVELOPMENT;
+            }
+            $connection = (array) $config->get('doctrine.' . $environment);
+            $is_development = false;
+            /*
+            if($environment == Config::MODE_DEVELOPMENT){
+                $is_development = true;
+            }
+            */
+            $paths = $config->get('doctrine.paths');
+            $proxyDir = $config->get('doctrine.proxy.dir');
+            $cache = null;
+            $useSimpleAnnotationReader = false;
+            $config = Setup::createAnnotationMetadataConfiguration($paths, $is_development, $proxyDir, $cache, $useSimpleAnnotationReader);
+            /*
+            $config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml"), $is_development);
+            */
+            return EntityManager::create($connection, $config);
+        }
     }
 }

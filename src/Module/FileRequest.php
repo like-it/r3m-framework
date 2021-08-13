@@ -40,6 +40,12 @@ class FileRequest {
         $location[] = $config->data('host.dir.root') . implode('/', $view) . $file;
         $location[] = $config->data('host.dir.root') . implode('/', $explode) . $file;
         $location[] = $config->data('host.dir.root') . $dir . 'Public' . $config->data('ds') . $file;
+        $explode = explode('/', $dir);
+        array_pop($explode);
+        $type = array_pop($explode);
+        array_push($explode, '');
+        $dir_type = implode('/', $explode);
+        $location[] = $config->data('host.dir.root') . $dir_type . 'Public' . $config->data('ds') . $type .$config->data('ds') . $file;
         $location[] = $config->data('host.dir.public') . $dir . $file;
         $location[] = $config->data('project.dir.public') . $dir . $file;
         foreach($location as $url){
@@ -64,7 +70,9 @@ class FileRequest {
             }
         }
         Handler::header('HTTP/1.0 404 Not Found', 404);
-        d($location);
+        if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
+            d($location);
+        }
         exit();
     }
 

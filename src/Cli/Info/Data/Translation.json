@@ -1,0 +1,7 @@
+{
+  "response" : {
+    "info" : {
+      "en" : "{require(\"{config('controller.dir.view')}Info.tpl\")}"
+    }
+  }
+}

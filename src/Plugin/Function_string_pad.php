@@ -15,8 +15,9 @@ function function_string_pad(Parse $parse, Data $data, $input='',  $pad_length=0
     if(empty($pad_type)){
         $pad_type= STR_PAD_RIGHT;
     } else {
-        $pad_type = constant(strtoupper($pad_type));
+        if(is_string($pad_type)){
+            $pad_type = constant(strtoupper($pad_type));
+        }
     }
-    $result = str_pad($input, $pad_length, $pad_string, $pad_type);
-    return $result;
+    return str_pad($input, $pad_length, $pad_string, $pad_type);
 }

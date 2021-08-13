@@ -17,8 +17,9 @@ use R3m\Io\Module\File;
 class Config extends Data {
     const NAME = 'Config';
 
-    const MODE_PRODUCTION = 'production';
     const MODE_DEVELOPMENT = 'development';
+    const MODE_PRODUCTION = 'production';
+    const MODE_STAGING = 'staging';
 
     const DATA = 'data';
     const VALUE_DATA = 'Data';
@@ -68,6 +69,12 @@ class Config extends Data {
     const MODEL = 'model';
     const VALUE_MODEL = 'Model';
 
+    const ENTITY = 'entity';
+    const VALUE_ENTITY = 'Entity';
+
+    const TRANSLATION = 'translation';
+    const VALUE_TRANSLATION = 'Translation';
+
     const LOCALHOST_EXTENSION = 'localhost.extension';
     const VALUE_LOCALHOST_EXTENSION =  [
         'local'
@@ -97,16 +104,12 @@ class Config extends Data {
     const DATA_FRAMEWORK_ENVIRONMENT = 'framework.environment';
 
     const DATA_HOST_DIR = 'host.dir';
-    const DATA_HOST_DIR_ROOT = CONFIG::DATA_HOST_DIR . '.' . 'root';
-    const DATA_HOST_DIR_CACHE = CONFIG::DATA_HOST_DIR . '.' . 'cache';
-    const DATA_HOST_DIR_DATA = CONFIG::DATA_HOST_DIR . '.' . 'data';
-
-    /*
-    const DATA_SOURCE_DIR = 'source.dir';
-    const DATA_SOURCE_DIR_ROOT = CONFIG::DATA_HOST_DIR . '.' . 'root';
-    const DATA_SOURCE_DIR_CACHE = CONFIG::DATA_HOST_DIR . '.' . 'cache';
-    const DATA_SOURCE_DIR_DATA = CONFIG::DATA_HOST_DIR . '.' . 'data';
-    */
+    const DATA_HOST_DIR_ROOT = Config::DATA_HOST_DIR . '.' . 'root';
+    const DATA_HOST_DIR_CACHE = Config::DATA_HOST_DIR . '.' . 'cache';
+    const DATA_HOST_DIR_DATA = Config::DATA_HOST_DIR . '.' . 'data';
+    const DATA_HOST_DIR_PUBLIC = Config::DATA_HOST_DIR . '.' . 'public';
+    const DATA_HOST_DIR_PLUGIN = Config::DATA_HOST_DIR . '.' . 'plugin';
+    const DATA_HOST_DIR_PLUGIN_2 = Config::DATA_HOST_DIR . '.' . 'plugin-2';
 
     const DATA_PARSE_DIR = 'parse.dir';
     const DATA_PARSE_DIR_TEMPLATE = Config::DATA_PARSE_DIR . '.' . 'template';
@@ -137,8 +140,12 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_DATA = Config::DATA_CONTROLLER_DIR . '.' .'data';
     const DATA_CONTROLLER_DIR_PLUGIN = Config::DATA_CONTROLLER_DIR . '.' .'plugin';
     const DATA_CONTROLLER_DIR_MODEL = Config::DATA_CONTROLLER_DIR . '.' .'model';
+    const DATA_CONTROLLER_DIR_ENTITY = Config::DATA_CONTROLLER_DIR . '.' .'entity';
     const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
     const DATA_CONTROLLER_DIR_PUBLIC = Config::DATA_CONTROLLER_DIR . '.' .'public';
+
+    const DATA_ROUTE = 'route';
+    const DATA_ROUTE_PREFIX = Config::DATA_ROUTE . '.' . 'prefix';
 
     public function __construct($config=[]){
         if(array_key_exists(Config::DATA_DIR_VENDOR, $config)){
@@ -229,6 +236,10 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::DS;
         $value = Config::VALUE_DS;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::TRANSLATION;
+        $value = Config::VALUE_TRANSLATION;
         $this->data($key, $value);
 
         $value = Config::VALUE_DS;
@@ -325,13 +336,13 @@ class Config extends Data {
             $this->data(Config::DICTIONARY . '.' . Config::CLI) .
             $this->data(Config::DS);
         $this->data($key, $value);
+
         $key = Config::DATA_FRAMEWORK_DIR_VALIDATE;
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $this->data(Config::DICTIONARY . '.' . Config::VALIDATE) .
             $this->data(Config::DS);
         $this->data($key, $value);
-
 
         $key = Config::DATA_FRAMEWORK_ENVIRONMENT;
         $value = $this->data(Config::DICTIONARY . '.' . Config::ENVIRONMENT);

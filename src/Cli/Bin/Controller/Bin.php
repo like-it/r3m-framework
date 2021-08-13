@@ -16,6 +16,9 @@ use R3m\Io\Config;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\View;
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\UrlNotExistException;
 
 class Bin extends View {
     const DIR = __DIR__;
@@ -31,7 +34,12 @@ class Bin extends View {
             $name = Bin::DEFAULT_NAME;
         }
         $object->data('name', $name);
-        $url = Bin::locate($object, 'Create');
-        return Bin::view($object, $url);
+        try {
+            $name = Bin::name('create', Bin::NAME);
+            $url = Bin::locate($object, $name);
+            return Bin::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . PHP_EOL;
+        }
     }
 }

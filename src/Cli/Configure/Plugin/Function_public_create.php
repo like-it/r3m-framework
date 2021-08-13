@@ -49,7 +49,7 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
                 File::copy($source, $destination);
             }
         } catch (Exception | FileMoveException $exception){
-            return $exception->getMessage() . "\n";
+            return $exception->getMessage() . PHP_EOL;
         }
     } else {
         Dir::create($public_html);
@@ -65,8 +65,8 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
     try {
         $write = File::write($url, Core::object($read->data(), Core::OBJECT_JSON));
     } catch (Exception | FileWriteException | ObjectException $exception){
-        return $exception->getMessage() . "\n";
+        return $exception->getMessage() . PHP_EOL;
     }
-    return 'Bytes written: ' . $write . "\n";
+    return 'Bytes written: ' . $write . PHP_EOL;
 }
 

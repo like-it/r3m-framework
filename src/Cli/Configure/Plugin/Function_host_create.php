@@ -19,6 +19,10 @@ function function_host_create(Parse $parse, Data $data, $host='', $public_html='
             $public_html = $object->config(Config::DATA_PROJECT_DIR_ROOT) . $public_html . $object->config('ds');
         }
     }
+    $host = escapeshellarg($host);
+    $public_html = escapeshellarg($public_html);
+    $ip = escapeshellarg($ip);
+    $email = escapeshellarg($email);
     $output = [];
     Core::execute(Core::binary() . ' configure site create ' . $host . ' ' . $public_html, $output);
     $output = [];

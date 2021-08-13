@@ -17,6 +17,26 @@ use R3m\Io\Config;
 
 class Validate {
 
+    public static function check($validate, $attribute=''){
+        $is_valid = true;
+        if(
+            !empty($validate) &&
+            is_object($validate) &&
+            property_exists($validate, 'test') &&
+            array_key_exists($attribute, $validate->test)
+        ){
+            foreach($validate->test[$attribute] as $type => $status_list){
+                foreach ($status_list as $nr => $status){
+                    if($status === false){
+                        $is_valid = false;
+                        break 2;
+                    }
+                }
+            }
+        }
+        return $is_valid;
+    }
+
     public static function validate(App $object, $validate){
         $extension = $object->config('extension.php');  
         $test = [];
@@ -56,7 +76,15 @@ class Validate {
         } else {
             $validate->test = $test;
         }
-        
+        foreach($validate as $field => $value) {
+            if (
+                is_object($value) &&
+                property_exists($value, 'success') &&
+                $value->success === false
+            ) {
+                $validate->success = $value->success;
+            }
+        }
         if(
             property_exists($validate, 'success') &&
             $validate->success===false
