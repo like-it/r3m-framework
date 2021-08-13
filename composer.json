@@ -8,6 +8,7 @@
 		"php": ">=7.1",
 		"ext-mbstring": "*",
 		"ext-json": "*",
+		"ext-posix": "*",
 		"monolog/monolog" : "^2.2"
 	},
 	"license" : "MIT",

@@ -24,19 +24,18 @@ function function_textarea(Parse $parse, Data $data, $options=[]){
     ) {
         $label = '<label for="' . $options['name'] . '"'. $class . '>' . $options['label'] . '</label><br>';
     }
+    $rows = '';
+    if(array_key_exists('rows', $options)){
+        $rows = ' rows="' . $options['rows']. '"';
+    }
+    $cols = '';
+    if(array_key_exists('cols', $options)){
+        $cols = ' cols="' . $options['cols']. '"';
+    }
     if(
         array_key_exists('name', $options) &&
         array_key_exists('value', $options)
     ){
-        $rows = '';
-        if(array_key_exists('rows', $options)){
-            $rows = ' rows="' . $options['rows']. '"';
-        }
-        $cols = '';
-        if(array_key_exists('cols', $options)){
-            $cols = ' cols="' . $options['cols']. '"';
-        }
-
         if(is_array($options['value'])){
             $textarea = '<textarea id="' . $options['name'] . '"'. $class . $rows . $cols .   ' name="' . $options['name'] . '">' . implode(",\n", $options['value']) . '</textarea>';
         } elseif(is_string($options['value'])) {

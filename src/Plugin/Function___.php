@@ -15,11 +15,21 @@ function function___(Parse $parse, Data $data, $attribute=null){
     $object = $parse->object();
     $language = $object->session('language');
     if($language === null){
-        $language = $object->session('language', 'en');
+        $language = $object->session('language', $object->config('framework.default.language'));
     }
     $test = $object->data('translation');
     if(empty($test)){
-        return '{import.translation()} missing...';
+        return '{import.translation()} missing or corrupted translation file...' . PHP_EOL;
     }
-    return $object->data('translation.' . $attribute . '.' . $language);
+    $translation = $object->data('translation.' . $language);
+    if(property_exists($translation, $attribute)){
+        return $translation->{$attribute};
+    } else {
+        $translation = $object->data('translation.' . $object->config('framework.default.language'));
+        if(property_exists($translation, $attribute)){
+            return $translation->{$attribute};
+        } else {
+            return $attribute;
+        }
+    }
 }

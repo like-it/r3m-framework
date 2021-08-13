@@ -282,12 +282,25 @@ class File {
             return '';
         }
         try {
-            $file = @file($url);
+            $file = file($url);
             if(!empty($file)){
                 return implode('', $file);
             }
         } catch (Exception $exception){
             return '';
+        }
+    }
+
+    public static function tail($url, $include_return=false){
+        if(File::exist($url)){
+            $read = File::read($url);
+            $data = explode("\r", $read);
+            if($include_return === true){
+                return end($data) . "\r";
+            } else {
+                return end($data);
+            }
+
         }
     }
 
@@ -346,15 +359,22 @@ class File {
 
     public static function ucfirst($url=''){
         $explode = explode('.', $url);
-        $extension = array_pop($explode);
-        $result = '';
-        foreach($explode as $part){
-            if(empty($part)){
-                continue;
+        $extension = null;
+        if(array_key_exists(1, $explode)){
+            $extension = array_pop($explode);
+            $result = '';
+            foreach($explode as $part){
+                if(empty($part)){
+                    continue;
+                }
+                $result .= ucfirst($part) . '.';
             }
-            $result .= ucfirst($part) . '.';
+        } else {
+            $result = $explode[0];
         }
-        $result .= '.' . $extension;
+        if($extension){
+            $result .= $extension;
+        }
         return $result;
     }
 

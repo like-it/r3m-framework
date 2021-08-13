@@ -81,6 +81,9 @@ class Route extends Data{
     }
 
     public static function find($object, $name='', $option=[]){
+        if($name === null){
+            return;
+        }
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
         if(empty($get)){
@@ -88,18 +91,16 @@ class Route extends Data{
         }
         if(!property_exists($get, 'path')){
             if(property_exists($get, 'url')){
-                if(substr($get->url, 0, 1) == '/'){
-                    $url = substr($get->url, 1);
-                } else {
-                    $url = $get->url;
-                }
+                $url = $get->url;
                 return $url;
             } else {
                 throw new Exception('path & url are empty');
             }
         }
         $get = $route::add_localhost($object, $get);
-        $get = $route::has_host($get, $object->data('host.url'));
+        if(!empty($object->data('host.url'))){
+            $get = $route::has_host($get, $object->data('host.url'));
+        }
         if(empty($get)){
             return;
         }
@@ -111,6 +112,7 @@ class Route extends Data{
             ){
                 throw new Exception('path has variable & option is empty');
             }
+            $old_path = $get->path;
             foreach($option as $key => $value){
                 if(is_numeric($key)){
                     $explode = explode('}', $get->path, 2);
@@ -118,11 +120,14 @@ class Route extends Data{
                     if(array_key_exists(1, $temp)){
                         $variable = $temp[1];
                         $path = str_replace('{$' . $variable . '}', $value, $path);
+                        $get->path = str_replace('{$' . $variable . '}', '', $get->path);
                     }
                 } else {
                     $path = str_replace('{$' . $key . '}', $value, $path);
+                    $get->path = str_replace('{$' . $key . '}', '', $get->path);
                 }
             }
+            $get->path = $old_path;
         }        
         if($path == '/'){
             $url = $object->data('host.url');
@@ -807,7 +812,8 @@ class Route extends Data{
         $default_route = $config->data('framework.default.route');
         foreach($default_route as $record){
             $path = strtolower($record);
-            $control = ucfirst($path);
+            $control = File::ucfirst(str_replace(':', '.', $record) . '.control');
+            $control = substr($control, 0, -8);
             $attribute = 'r3m-io-cli-' . $path;
             $item = new stdClass();
             $item->path = $path . '/';

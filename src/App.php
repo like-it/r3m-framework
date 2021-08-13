@@ -10,6 +10,7 @@
  */
 namespace R3m\Io;
 
+use R3m\Io\Module\Response;
 use stdClass;
 use Exception;
 use R3m\Io\Module\Autoload;
@@ -41,6 +42,8 @@ class App extends Data {
 
     const RESPONSE_JSON = 'json';
     const RESPONSE_HTML = 'html';
+    const RESPONSE_FILE = 'file';
+    const RESPONSE_OBJECT = 'object';
 
     const ROUTE = App::NAMESPACE . '.' . Route::NAME;
     const CONFIG = App::NAMESPACE . '.' . Config::NAME;
@@ -120,8 +123,8 @@ class App extends Data {
                         return $result;
                     }
                 }
-            } catch (Exception $e) {
-                echo $e->getMessage();
+            } catch (Exception $exception) {
+                return $exception;
             }
         } else {
             return $file;
@@ -129,7 +132,7 @@ class App extends Data {
     }    
 
     public static function controller(App $object, $route){
-        $check = @class_exists($route->controller);
+        $check = class_exists($route->controller);
         if(empty($check)){
             throw new Exception('Cannot call controller (' . $route->controller .')');
         }        
@@ -172,11 +175,40 @@ class App extends Data {
         }
     }
 
+    public static function response_output(App $object, $output=App::CONTENT_TYPE_HTML){
+        $object->config('response.output', $output);
+    }
+
     private static function result(App $object, $output){
         if($output instanceof Exception){
-            header('Content-Type: application/json');
-            return App::exception_to_json($output);
+            if(App::is_cli()){
+                return App::exception_to_json($output);
+            } else {
+                header('Content-Type: application/json');
+                return App::exception_to_json($output);
+            }
         }
+        elseif($output instanceof Response){
+            return Response::output($object, $output);
+        } else {
+            $response = new Response($output, $object->config('response.output'));
+            return Response::output($object, $response);
+        }
+
+        /*
+        $response_output = $object->config('response.output');
+        switch ($response_output){
+            case App::RESPONSE_JSON :
+            break;
+            case App::RESPONSE_HTML :
+            break;
+            case App::RESPONSE_FILE :
+            break;
+            case App::RESPONSE_OBJECT :
+            break;
+        }
+
+
         $contentType = $object->data(App::CONTENT_TYPE);
         if($contentType == App::CONTENT_TYPE_JSON){
             header('Content-Type: application/json');
@@ -188,6 +220,7 @@ class App extends Data {
                     if(is_string($json)){
                         return trim($json, " \t\r\n");
                     }
+                    return $json;
                 default:
                     $json->html = $output;
                     if($object->data('method')){
@@ -222,6 +255,7 @@ class App extends Data {
             return Core::object($json, Core::OBJECT_JSON);
         }
         return $output;
+        */
     }
 
     public function route(){
@@ -265,7 +299,7 @@ class App extends Data {
         }
     }
 
-    public function data_read($url, $attribute=null){
+    public function data_read($url, $attribute=null, $do_not_nest_key=false){
         if($attribute !== null){
             $data = $this->data($attribute);
             if(!empty($data)){
@@ -275,9 +309,12 @@ class App extends Data {
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
-                $data = new Data(Core::object($read));
+                $data = new Data();
+                $data->do_not_nest_key($do_not_nest_key);
+                $data->data(Core::object($read, Core::OBJECT_OBJECT))   ;
             } else {
                 $data = new Data();
+                $data->do_not_nest_key($do_not_nest_key);
             }
             if($attribute !== null){
                 $this->data($attribute, $data);

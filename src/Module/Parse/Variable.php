@@ -194,8 +194,9 @@ class Variable {
                 }
             }
             $target = Set::target($token);
-            $token = Set::remove($token);
+            $token = Set::pre_remove($token);
             $token = Set::replace($token, $set, $target);
+            $token = Set::remove($token);
             $set_counter++;
             if($set_counter > $set_max){
                 break;
@@ -228,6 +229,12 @@ class Variable {
         $count = 0;             
         while(count($operator) >= 1){
             $record = array_shift($operator);
+            if(is_bool($record) && $record === false){
+                if(substr($result, -3) == ' . '){
+                    $result = substr($result,0, -3);
+                }
+                return $result;
+            }
             if(
                 $is_collect === true &&
                 $record['type'] != Token::TYPE_CURLY_CLOSE

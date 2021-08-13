@@ -1,31 +1,35 @@
 {
     "framework": {
         "default": {
+            "language": "en",
             "route": [
                 "info",
                 "autoload",
                 "parse",
                 "cache",
+                "cache:Clear",
                 "license",
                 "version",
                 "uuid",
                 "password",
                 "route",
                 "bin",
-                "configure"
+                "configure",
+                "doctrine"
             ]
         },
         "major": "0",
         "minor": "1",
-        "patch": 8,
-        "version": "0.1.8",
-        "built": "2021-06-06 23:00:44"
+        "patch": 9,
+        "version": "0.1.9",
+        "built": "2021-08-13 17:27:20"
     },
     "contentType": {
         "txt": "text\/plain",
         "html": "text\/html",
         "css": "text\/css",
         "js": "application\/javascript",
+        "map": "application\/json",
         "json": "application\/json",
         "ico": "image\/x-icon",
         "png": "image\/png",
@@ -75,7 +79,8 @@
                 "capture.append",
                 "block.code",
                 "block.html",
-                "block.json"
+                "block.json",
+                "script"
             ]
         }
     }

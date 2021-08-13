@@ -35,6 +35,7 @@ class Build {
     const CODE = 'code';
     const ELSE = 'else';
     const TAG_CLOSE = 'tag-close';
+    const DOC_COMMENT = 'doc-comment';
 
     public $indent;
     private $object;
@@ -69,24 +70,30 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());        
         $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());                    
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\AuthenticationException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\AuthorizationException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\ErrorException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\FileAppendException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\FileMoveException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\FileWriteException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\LocateException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\ObjectException', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Exception\\PluginNotFoundException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\UrlEmptyException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\UrlNotExistException', new stdClass());
 
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
-        $dir_plugin = $config->data('parse.dir.plugin');                
+        $dir_plugin = $config->data(Config::DATA_PARSE_DIR_PLUGIN);
+        $dir_plugin = [];
         if(empty($dir_plugin)){
             $dir_plugin = [];
             $dir_plugin[] = $config->data('controller.dir.plugin');
-            $dir_plugin[] = $config->data('host.dir.plugin');            
+            $dir_plugin[] = $config->data('host.dir.plugin');
+            $dir_plugin[] = $config->data('host.dir.plugin-2');
             $dir_plugin[] = $config->data('project.dir.plugin');
             $dir_plugin[] = $config->data('framework.dir.plugin');
-        }        
+        }
         $this->storage()->data('plugin', $dir_plugin);
     }
 
@@ -211,7 +218,7 @@ class Build {
             if($exist === false){
                 $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
                 if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
-                    Core::cors();
+                    Core::cors($this->object());
                     d($dir_plugin);
                     d($url_list);
                 }
@@ -316,12 +323,12 @@ class Build {
                     'echo \'' .
                     str_replace(
                         [
+                            '\\',
                             '\'',
-                            //'\\'
                         ],
                         [
+                            '\\\\',
                             '\\\'',
-                            //'\\\\'
                         ],
                         $record['value']
                     ) .
@@ -338,6 +345,10 @@ class Build {
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
                 $is_tag = true;
                 continue;
+            }
+            elseif($record['type'] == Token::TYPE_DOC_COMMENT){
+                $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
+                $run[] = '';
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
                 switch($type){
@@ -444,9 +455,18 @@ class Build {
                         }
                         $remove_newline = true;
                     break;
-                    default:
+                    case Build::DOC_COMMENT :
+//                      $run[] = $this->indent() .
+                        /*
                         if($type !== null){
                             throw new Exception('type (' . $type . ') undefined');
+                        }
+                        */
+                    break;
+                    default:
+                        if($type !== null){
+//                            d($selection);
+                            throw new Exception('type (' . $type . ') undefined in source: ' . $this->storage()->data('source'));
                         }
                 }
                 $is_tag = false;
@@ -539,6 +559,8 @@ class Build {
             case Token::TYPE_IS_MINUS_MINUS :
                 return Token::TYPE_IS_MINUS_MINUS;
             break;
+            case Token::TYPE_DOC_COMMENT :
+                return Token::TYPE_DOC_COMMENT;
             default:
                 d($record);
                 throw new Exception('Undefined type (' . $record['type'] . ')');
@@ -595,16 +617,28 @@ class Build {
         if(isset($options['parent'])){            
             $name .= str_replace(
                 [                    
-                    '.'
+                    '.',
+                    '-',
                 ], 
                 [                    
+                    '_',
                     '_'
                 ], 
                 basename($options['parent'])
             ) . '_';            
         }
         if(isset($options['source'])){            
-            $name .= str_replace('.', '_', basename($options['source'])) . '_';            
+            $name .= str_replace(
+                [
+                    '.',
+                    '-'
+                ],
+                [
+                    '_',
+                    '_'
+                ],
+                basename($options['source'])
+            ) . '_';
         }
         $name = str_replace('_tpl', '', $name);
         $class = $config->data('dictionary.template') . '_' . $name . $key;
@@ -688,16 +722,27 @@ class Build {
             if(isset($options['parent'])){            
                 $name .= str_replace(
                     [                        
-                        '.'
+                        '.',
+                        '-'
                     ], 
                     [                        
+                        '_',
                         '_'
                     ], 
                     basename($options['parent'])
                 ) . '_';   
             }
             if(isset($options['source'])){
-                $name .= str_replace('.', '_', basename($options['source'])) . '_';
+                $name .= str_replace(
+                    [
+                        '.',
+                        '-'
+                    ],
+                    [
+                        '_',
+                        '_'
+                    ],
+                    basename($options['source'])) . '_';
             }        
             $name = str_replace('_tpl', '', $name);    
             $url =

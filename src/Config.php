@@ -69,6 +69,12 @@ class Config extends Data {
     const MODEL = 'model';
     const VALUE_MODEL = 'Model';
 
+    const ENTITY = 'entity';
+    const VALUE_ENTITY = 'Entity';
+
+    const TRANSLATION = 'translation';
+    const VALUE_TRANSLATION = 'Translation';
+
     const LOCALHOST_EXTENSION = 'localhost.extension';
     const VALUE_LOCALHOST_EXTENSION =  [
         'local'
@@ -102,6 +108,8 @@ class Config extends Data {
     const DATA_HOST_DIR_CACHE = Config::DATA_HOST_DIR . '.' . 'cache';
     const DATA_HOST_DIR_DATA = Config::DATA_HOST_DIR . '.' . 'data';
     const DATA_HOST_DIR_PUBLIC = Config::DATA_HOST_DIR . '.' . 'public';
+    const DATA_HOST_DIR_PLUGIN = Config::DATA_HOST_DIR . '.' . 'plugin';
+    const DATA_HOST_DIR_PLUGIN_2 = Config::DATA_HOST_DIR . '.' . 'plugin-2';
 
     const DATA_PARSE_DIR = 'parse.dir';
     const DATA_PARSE_DIR_TEMPLATE = Config::DATA_PARSE_DIR . '.' . 'template';
@@ -132,6 +140,7 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_DATA = Config::DATA_CONTROLLER_DIR . '.' .'data';
     const DATA_CONTROLLER_DIR_PLUGIN = Config::DATA_CONTROLLER_DIR . '.' .'plugin';
     const DATA_CONTROLLER_DIR_MODEL = Config::DATA_CONTROLLER_DIR . '.' .'model';
+    const DATA_CONTROLLER_DIR_ENTITY = Config::DATA_CONTROLLER_DIR . '.' .'entity';
     const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
     const DATA_CONTROLLER_DIR_PUBLIC = Config::DATA_CONTROLLER_DIR . '.' .'public';
 
@@ -227,6 +236,10 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::DS;
         $value = Config::VALUE_DS;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::TRANSLATION;
+        $value = Config::VALUE_TRANSLATION;
         $this->data($key, $value);
 
         $value = Config::VALUE_DS;

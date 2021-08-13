@@ -158,6 +158,24 @@ class View {
                 ) .
             $config->data(Config::DS)
         );
+        $config->data(Config::DATA_HOST_DIR_PLUGIN,
+            Dir::name($config->data(Config::DATA_CONTROLLER_DIR_ROOT)) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::PLUGIN
+            ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_HOST_DIR_PLUGIN_2,
+            Dir::name($config->data(Config::DATA_CONTROLLER_DIR_ROOT), 2) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::PLUGIN
+            ) .
+            $config->data(Config::DS)
+        );
         $config->data(Config::DATA_CONTROLLER_DIR_MODEL,
             $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
             $config->data(
@@ -194,14 +212,8 @@ class View {
             ) .
             $config->data(Config::DS)
         ;
-        $host_dir_root = $config->data(Config::DATA_HOST_DIR_ROOT);
-        if(!empty($host_dir_root)){
-            $value[] =
-            $host_dir_root .
-            $config->data(Config::DICTIONARY . '.' . Config::PLUGIN) .
-            $config->data('ds')
-            ;
-        }
+        $value[] = $config->data(Config::DATA_HOST_DIR_PLUGIN);
+        $value[] = $config->data(Config::DATA_HOST_DIR_PLUGIN_2);
         $value[] =
             $config->data(Config::DATA_PROJECT_DIR_SOURCE) .
             $config->data(
@@ -275,7 +287,8 @@ class View {
     public static function response(App $object, $url){
         if(empty($url)){            
             throw new UrlEmptyException('Url is empty');
-        }        
+        }
+
         $config = $object->data(App::CONFIG);
         $dir = Dir::name($url);
         $file = str_replace($dir, '', $url);
@@ -292,12 +305,12 @@ class View {
         $parse = new Parse($object);
         $parse->storage()->data('r3m.io.parse.view.url', $url);
         $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
+        $object->data('ldelim', '{');
+        $object->data('rdelim', '}');
         $data = clone $object->data();
         unset($data->{App::NAMESPACE});
-        $data->r3m = new stdClass();
-        $data->r3m->io = new stdClass();
-        $data->r3m->io->config = $config->data();
         $read = $parse->compile($read, $data, $parse->storage());
+
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
         return $read;

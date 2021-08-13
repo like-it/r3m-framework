@@ -85,15 +85,19 @@ class Database {
             }
             $connection = (array) $config->get('doctrine.' . $environment);
             $is_development = false;
+            /*
             if($environment == Config::MODE_DEVELOPMENT){
                 $is_development = true;
             }
+            */
             $paths = $config->get('doctrine.paths');
-            $proxyDir = null;
+            $proxyDir = $config->get('doctrine.proxy.dir');
             $cache = null;
             $useSimpleAnnotationReader = false;
             $config = Setup::createAnnotationMetadataConfiguration($paths, $is_development, $proxyDir, $cache, $useSimpleAnnotationReader);
-//        $config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml"), $is_development);
+            /*
+            $config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml"), $is_development);
+            */
             return EntityManager::create($connection, $config);
         }
     }
