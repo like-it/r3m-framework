@@ -15,7 +15,7 @@ use R3m\Io\Module\Core;
 
 class Literal {
 
-    public static function apply($string='', Data $data){
+    public static function apply(Data $data, $string=''){
         $explode = explode('{literal}', $string, 2);
         $key = $data->data('r3m.io.parse.literal.key');
         if(empty($key)){
@@ -31,21 +31,21 @@ class Literal {
             $string = implode('', $explode);
             $explode = explode('{literal}', $string, 2);
             if(isset($explode[1])){
-                return Literal::apply($string, $data);
+                return Literal::apply($data, $string);
             }
         }
         return $string;
     }
 
-    public static function restore($string='', Data $data){
+    public static function restore(Data $data, $string=''){
         if(is_object($string)){
             foreach($string as $key => $value){
-                $string->{$key} = Literal::restore($value, $data);
+                $string->{$key} = Literal::restore($data, $value);
             }
         }
         elseif(is_array($string)){
             foreach($string as $key => $value){
-                $string[$key] = Literal::restore($value, $data);
+                $string[$key] = Literal::restore($data, $value);
             }
         } else {
             $tag = 'literal-' . $data->data('r3m.io.parse.literal.key') . '-';
@@ -55,7 +55,7 @@ class Literal {
                 $string =  str_replace($tag . $key, $data->data('r3m.io.parse.literal.' . $key), $string);
                 $explode = explode($tag, $string, 2);
                 if(isset($explode[1])){
-                    return Literal::restore($string, $data);
+                    return Literal::restore($data, $string);
                 }
             }
         }

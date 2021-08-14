@@ -201,23 +201,22 @@ class Parse {
                 $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
                 $template = new $class(new Parse($this->object()), $storage);                
                 if(empty($this->halt_literal())){
-                    $string = Literal::apply($string, $storage);
+                    $string = Literal::apply($storage, $string);
                 }                
                 $string = $template->run();
                 if(empty($this->halt_literal())){
-                    $string = Literal::restore($string, $storage);    
+                    $string = Literal::restore($storage, $string);
                 }
                 
                 $storage->data('delete', 'this');
                 return $string;
             }
-            /*
             elseif(File::exist($url) && File::mtime($url) != $mtime){
                 opcache_invalidate($url, true);
             }
-            */
+
             if(empty($this->halt_literal())){
-                $string = literal::apply($string, $storage);            
+                $string = literal::apply($storage, $string);
             }            
             $tree = Token::tree($string, $is_debug);
             $tree = $build->require('function', $tree);
@@ -230,19 +229,17 @@ class Parse {
             $document = $build->create('header', $tree, $document);
             $document = $build->create('class', $tree, $document);
             $build->indent(2);
-            $document = $build->document($tree, $document, $storage);
+            $document = $build->document($storage, $tree, $document);
             $document = $build->create('run', $tree, $document);
             $document = $build->create('require', $tree, $document);
             $document = $build->create('use', $tree, $document);            
             $write = $build->write($url, $document);
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
-                /*
                 opcache_invalidate($url, true);
                 if(opcache_is_script_cached($url) === false){
                     opcache_compile_file($url);
                 }
-                */
             }            
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
             $exists = class_exists($class);
@@ -250,7 +247,7 @@ class Parse {
                 $template = new $class(new Parse($this->object()), $storage);
                 $string = $template->run();
                 if(empty($this->halt_literal())){
-                    $string = Literal::restore($string, $storage);
+                    $string = Literal::restore($storage, $string);
                 }
                 $storage->data('delete', 'this');
             }
@@ -262,15 +259,15 @@ class Parse {
         $data = $parse->storage()->data($type);
         if(is_array($data)){
             foreach($data as $key => $value){
-                $data[$key] = Literal::restore($value, $parse->storage());
+                $data[$key] = Literal::restore($parse->storage(), $value);
             }
         }
         elseif(is_object($data)){
             foreach($data as $key => $value){                
-                $data->$key = Literal::restore($value, $parse->storage());
+                $data->$key = Literal::restore($parse->storage(), $value);
             }
         } else {
-            $data = Literal::restore($data, $parse->storage());
+            $data = Literal::restore($parse->storage(), $data);
         }
         $object->data($type, $data);
         return $data;

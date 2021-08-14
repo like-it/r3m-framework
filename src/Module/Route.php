@@ -627,6 +627,8 @@ class Route extends Data{
                 Route::cache_write($object);
             } else {
             	$data = new Route();
+                $data->url($url);
+                $data->cache_url($cache_url);
             	$object->data(App::ROUTE, $data);
             	Route::load($object);
             	Route::framework($object);
