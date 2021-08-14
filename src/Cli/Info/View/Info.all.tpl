@@ -1,3 +1,4 @@
+{$route = route.load()}
 Welcome to R3m.io                             (c) Remco van der Velde
 {binary()} bin                            | Creates binary
 {binary()} cache clear                    | Clears the app cache
