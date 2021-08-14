@@ -1,4 +1,4 @@
-{$route = route.get()}
+{$route = route.export()}
 {$route = filter($route, [
 'method' => 'CLI'
 ])}
