@@ -1,4 +1,8 @@
-{$route = route.load()}
+{$route = route.get()}
+{$route = filter($route, [
+'method' => 'CLI'
+])}
+{dd($route)}
 Welcome to R3m.io                             (c) Remco van der Velde
 {binary()} bin                            | Creates binary
 {binary()} cache clear                    | Clears the app cache

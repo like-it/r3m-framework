@@ -6,8 +6,8 @@ use R3m\Io\Module\Config;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 
-function function_route_load(Parse $parse, Data $data){
+function function_route_get(Parse $parse, Data $data){
     $object = $parse->object();
     $route = $object->data(App::ROUTE);
-    dd($route);
+    return $route;
 }
