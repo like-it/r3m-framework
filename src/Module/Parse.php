@@ -239,8 +239,9 @@ class Parse {
                 opcache_invalidate($url, true);
                 if(opcache_is_script_cached($url) === false){
                     $status = opcache_get_status(true);
-                    d($status);
-                    opcache_compile_file($url);
+                    if($status !== false){
+                        opcache_compile_file($url);
+                    }
                 }
             }            
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
