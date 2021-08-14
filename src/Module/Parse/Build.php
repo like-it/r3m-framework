@@ -64,11 +64,13 @@ class Build {
         $this->storage()->data('use.R3m\\Io\\Module\\Core', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Data', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Dir', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\File', new stdClass());        
+        $this->storage()->data('use.R3m\\Io\\Module\\File', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Filter', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Handler', new stdClass());        
         $this->storage()->data('use.R3m\\Io\\Module\\Host', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());        
-        $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());                    
+        $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());
+        $this->storage()->data('use.R3m\\Io\\Module\\Sort', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\AuthenticationException', new stdClass());
         $this->storage()->data('use.R3m\\Io\\Exception\\AuthorizationException', new stdClass());

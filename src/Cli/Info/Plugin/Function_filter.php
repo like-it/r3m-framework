@@ -7,7 +7,16 @@ use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 
 function function_filter(Parse $parse, Data $data, $list, $options){
-    d($list);
-    d($options);
-    return $list;
+    $result = [];
+    foreach($options as $key => $value){
+        foreach($list as $nr => $record){
+            if(
+                property_exists($record, $key) &&
+                in_array($value, $record->{$key})
+            ){
+                $result[] = $record;
+            }
+        }
+    }
+    return $result;
 }
