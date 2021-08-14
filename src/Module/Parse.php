@@ -238,6 +238,8 @@ class Parse {
                 $touch = File::touch($url, $mtime);
                 opcache_invalidate($url, true);
                 if(opcache_is_script_cached($url) === false){
+                    $status = opcache_get_status(true);
+                    d($status);
                     opcache_compile_file($url);
                 }
             }            
