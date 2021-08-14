@@ -274,7 +274,7 @@ class Build {
         return $array;
     }
 
-    public function document($tree=[], $document=[], Data $data){
+    public function document(Data $data, $tree=[], $document=[]){
         $is_tag = false;
         $tag = null;
         $this->indent(2);
