@@ -41,7 +41,7 @@ class Sort extends Data{
                                 $result[$node->$attribute][] = $node;
                             } else if (is_array($node->$attribute)){
                                 foreach($node->$attribute as $node_attribute){
-                                    if(is_scalar($no_attribute)){
+                                    if(is_scalar($node_attribute)){
                                         $result[$node_attribute][] = $node;
                                     }
                                 }
@@ -91,7 +91,7 @@ class Sort extends Data{
                                 $result[$node->$attribute][] = $node;
                             } else if (is_array($node->$attribute)){
                                 foreach($node->$attribute as $node_attribute){
-                                    if(is_scalar($no_attribute)){
+                                    if(is_scalar($node_attribute)){
                                         $result[$node_attribute][] = $node;
                                     }
                                 }
