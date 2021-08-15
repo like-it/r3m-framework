@@ -20,9 +20,9 @@ use R3m\Io\Exception\UrlNotExistException;
 class Doctrine extends View {
     const DIR = __DIR__;
     const NAME = 'Doctrine';
-    const INFO = '{binary()} doctrine orm:generate-proxies  | Genereate proxies & adjust owner';
+    const INFO = '{binary()} doctrine orm:generate-proxies  | Generate proxies & adjust owner';
     const INFO_RUN = [
-        '{binary()} doctrine orm:generate-proxies  | Genereate proxies & adjust owner'
+        '{binary()} doctrine orm:generate-proxies  | Generate proxies & adjust owner'
     ];
 
 
