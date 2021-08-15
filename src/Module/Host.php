@@ -174,6 +174,15 @@ class Host {
         return false;
     }
 
+    public static function remove_port($url=''){
+        $explode = explode(':', $url, 3);
+        if(isset($explode[2])){
+            array_pop($explode);
+            return implode(':', $explode);
+        }
+        return '';
+    }
+
     public static function remove_scheme($url=''){
         $explode = explode('://', $url, 2);
         if(isset($explode[1])){
