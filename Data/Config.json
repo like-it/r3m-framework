@@ -52,6 +52,7 @@
         "html": ".html",
         "css": ".css",
         "js": ".js",
+        "map": ".map",
         "json": ".json",
         "ico": ".ico",
         "png": ".png",
