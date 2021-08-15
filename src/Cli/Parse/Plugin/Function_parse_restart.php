@@ -9,5 +9,7 @@ function function_parse_restart(Parse $parse, Data $data){
     $cache_dir = $parse->cache_dir();
     if(File::exist($cache_dir)){
        Dir::remove($cache_dir);
+       Dir::create($cache_dir, Dir::CHMOD);
+       File::chown($cache_dir, 'www-data', 'www-data', true);
     }
 }
