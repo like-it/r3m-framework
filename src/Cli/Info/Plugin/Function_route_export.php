@@ -15,5 +15,5 @@ function function_route_export(Parse $parse, Data $data){
     foreach($list as $nr => $record){
         $result[$nr] = Route::controller($record);
     }
-    return $route;
+    return $result;
 }

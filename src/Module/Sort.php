@@ -32,6 +32,8 @@ class Sort extends Data{
             $no_attribute = [];
             $count = count($sort);
             if($count == 1){
+                $attribute = false;
+                $sortable_1 = 'ASC';
                 foreach($list as $uuid => $node){
                     foreach($sort as $attribute => $record){                    
                         if(property_exists($node, $attribute)){
@@ -59,7 +61,7 @@ class Sort extends Data{
                                 $uuid = Core::uuid();
                                 if(!array_key_exists($uuid, $list)){
                                     $record->uuid = $uuid;
-                                    break;  
+                                    break;
                                 }
                             }
                             $list[$uuid] = $record;
@@ -71,6 +73,9 @@ class Sort extends Data{
                 if(Core::object_is_empty($list)){
                     return $list;
                 }
+                $attribute = false;
+                $sortable_1 = 'ASC';
+                $sortable_2 = 'ASC';
                 foreach($list as $uuid => $node){
                     foreach($sort as $attribute => $record){                    
                         if(property_exists($node, $attribute)){
