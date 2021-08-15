@@ -37,7 +37,15 @@ class Sort extends Data{
                 foreach($list as $uuid => $node){
                     foreach($sort as $attribute => $record){                    
                         if(property_exists($node, $attribute)){
-                            $result[$node->$attribute][] = $node;
+                            if(is_scalar($node->$attribute)){
+                                $result[$node->$attribute][] = $node;
+                            } else if (is_array($node->$attribute)){
+                                foreach($node->$attribute as $node_attribute){
+                                    if(is_scalar($no_attribute)){
+                                        $result[$node_attribute][] = $node;
+                                    }
+                                }
+                            }
                         } else {
                             $result[''][] = $node;                            
                         }
@@ -79,7 +87,15 @@ class Sort extends Data{
                 foreach($list as $uuid => $node){
                     foreach($sort as $attribute => $record){                    
                         if(property_exists($node, $attribute)){
-                            $result[$node->$attribute][] = $node;
+                            if(is_scalar($node->$attribute)){
+                                $result[$node->$attribute][] = $node;
+                            } else if (is_array($node->$attribute)){
+                                foreach($node->$attribute as $node_attribute){
+                                    if(is_scalar($no_attribute)){
+                                        $result[$node_attribute][] = $node;
+                                    }
+                                }
+                            }
                         } else {
                             $result[''][] = $node;                            
                         }
