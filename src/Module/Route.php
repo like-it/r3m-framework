@@ -107,7 +107,7 @@ class Route extends Data{
         $path = $get->path;
         if(is_array($option)){
             if(
-                empty($option) && 
+                empty($option) &&
                 stristr($path, '{$') !== false
             ){
                 throw new Exception('path has variable & option is empty');
@@ -128,12 +128,12 @@ class Route extends Data{
                 }
             }
             $get->path = $old_path;
-        }        
+        }
         if($path == '/'){
             $url = $object->data('host.url');
         } else {
             $url = $object->data('host.url') . $path;
-        }               
+        }
         return $url;
     }
 
@@ -204,7 +204,7 @@ class Route extends Data{
             $object = Route::add_request($object, $request);
             return $route->current($request);
         } else {
-            $input = Route::input($object);    
+            $input = Route::input($object);
             if(substr($input->data('request'), -1) != '/'){
                 $input->data('request', $input->data('request') . '/');
             }
@@ -221,8 +221,8 @@ class Route extends Data{
             } else {
                 $select->host[] = Host::domain() . '.' . Host::extension();
             }
-            $select->host = array_unique($select->host);            
-            $request = Route::select($object, $select);             
+            $select->host = array_unique($select->host);
+            $request = Route::select($object, $select);
             $route =  $object->data(App::ROUTE);
             $object = Route::add_request($object, $request);
             return $route->current($request);
@@ -283,7 +283,7 @@ class Route extends Data{
             }
             if(!property_exists($record, 'deep')){
                 continue;
-            }            
+            }
             $match = Route::is_match($object, $record, $select);
             if($match === true){
                 $current = $record;
@@ -297,13 +297,13 @@ class Route extends Data{
                 }
                 if(!property_exists($record, 'deep')){
                     continue;
-                }                
+                }
                 $match = Route::is_match_has_slash_in_attribute($object, $record, $select);
                 if($match === true){
                     $current = $record;
                     break;
                 }
-            }   
+            }
         }
         if($current !== false){
             $current = Route::prepare($object, $current, $select);
@@ -384,29 +384,29 @@ class Route extends Data{
             $route->request = new Data($route->request);
         } else {
             $route->request = new Data();
-        }        
+        }
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 $variable = Route::get_variable($part);
                 if(property_exists($route->request, $variable)){
                     continue;
                 }
-                if(array_key_exists($nr, $attribute)){                    
+                if(array_key_exists($nr, $attribute)){
                     $route->request->data($variable, $attribute[$nr]);
                 }
             }
-        }        
+        }
         if(
-            !empty($variable) && 
+            !empty($variable) &&
             count($attribute) > count($explode)
         ){
             $request = '';
             for($i = $nr; $i < count($attribute); $i++){
                 $request .= $attribute[$i] . '/';
             }
-            $request = substr($request, 0, -1);           
-            $route->request->data($variable, $request);                        
-        }        
+            $request = substr($request, 0, -1);
+            $route->request->data($variable, $request);
+        }
         foreach($object->data(App::REQUEST) as $key => $record){
             if($key == 'request'){
                 continue;
@@ -414,10 +414,19 @@ class Route extends Data{
             $route->request->data($key, $record);
         }
         if(property_exists($route, 'controller')){
+            $route = Route::controller($route);
+        }
+        return $route;
+    }
+
+    public static function controller($route){
+        if(property_exists($route, 'controller')){
             $controller = explode('.', $route->controller);
-            $function = array_pop($controller);
-            $route->controller = implode('\\', $controller);
-            $route->function = $function;
+            if(array_key_exists(1, $controller)) {
+                $function = array_pop($controller);
+                $route->controller = implode('\\', $controller);
+                $route->function = $function;
+            }
         }
         return $route;
     }
@@ -431,7 +440,7 @@ class Route extends Data{
         $attribute = $select->attribute;
         if(empty($attribute)){
             return true;
-        }        
+        }
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 continue;
@@ -446,23 +455,23 @@ class Route extends Data{
         return true;
     }
 
-    private static function is_match_by_condition($object, $route, $select){        
+    private static function is_match_by_condition($object, $route, $select){
         if(!property_exists($route, 'path')){
             return false;
         }
         $explode = explode('/', $route->path);
         array_pop($explode);
-        $attribute = $select->attribute;        
+        $attribute = $select->attribute;
         if(empty($attribute)){
             return true;
-        }                
+        }
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 if(
-                    property_exists($route, 'condition') && 
+                    property_exists($route, 'condition') &&
                     is_array($route->condition)
                 ){
-                    foreach($route->condition as $condition_nr => $value){                    
+                    foreach($route->condition as $condition_nr => $value){
                         if(substr($value, 0, 1) == '!'){
                             //invalid conditions
                             if(strtolower(substr($value, 1)) == strtolower($attribute[$nr])){
@@ -472,10 +481,10 @@ class Route extends Data{
                             //valid conditions
                             if(strtolower($value) == strtolower($attribute[$nr])){
                                 return true;
-                            }                        
+                            }
                         }
-                    }   
-                }                             
+                    }
+                }
                 continue;
             }
             if(array_key_exists($nr, $attribute) === false){
@@ -557,7 +566,7 @@ class Route extends Data{
         return $is_match;
     }
 
-    private static function is_match($object, $route, $select){               
+    private static function is_match($object, $route, $select){
         $is_match = Route::is_match_by_method($object, $route, $select);
         if($is_match === false){
             return $is_match;
@@ -572,18 +581,18 @@ class Route extends Data{
             return $is_match;
         }
 
-        $is_match = Route::is_match_by_attribute($object, $route, $select);        
+        $is_match = Route::is_match_by_attribute($object, $route, $select);
         if($is_match === false){
             return $is_match;
         }
-        $is_match = Route::is_match_by_condition($object, $route, $select);        
+        $is_match = Route::is_match_by_condition($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }                
+        }
         return $is_match;
     }
 
-    private static function is_match_has_slash_in_attribute($object, $route, $select){               
+    private static function is_match_has_slash_in_attribute($object, $route, $select){
         $is_match = Route::is_match_by_method($object, $route, $select);
         if($is_match === false){
             return $is_match;
@@ -592,15 +601,15 @@ class Route extends Data{
         $is_match = Route::is_match_by_host($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }        
-        $is_match = Route::is_match_by_attribute($object, $route, $select);                
+        }
+        $is_match = Route::is_match_by_attribute($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }                
-        $is_match = Route::is_match_by_condition($object, $route, $select);        
+        }
+        $is_match = Route::is_match_by_condition($object, $route, $select);
         if($is_match === false){
             return $is_match;
-        }                        
+        }
         return $is_match;
     }
 
@@ -626,12 +635,12 @@ class Route extends Data{
                 Route::framework($object);
                 Route::cache_write($object);
             } else {
-            	$data = new Route();
+                $data = new Route();
                 $data->url($url);
                 $data->cache_url($cache_url);
-            	$object->data(App::ROUTE, $data);
-            	Route::load($object);
-            	Route::framework($object);
+                $object->data(App::ROUTE, $data);
+                Route::load($object);
+                Route::framework($object);
             }
         } else {
             $object->data(App::ROUTE, $cache);
@@ -706,7 +715,7 @@ class Route extends Data{
         }
     }
 
-    private static function cache_write($object){    
+    private static function cache_write($object){
         $config = $object->data(App::CONFIG);
         $route = $object->data(App::ROUTE);
         $data = $route->data();

@@ -59,7 +59,7 @@ class Sort extends Data{
                                 $uuid = Core::uuid();
                                 if(!array_key_exists($uuid, $list)){
                                     $record->uuid = $uuid;
-                                    break;
+                                    break;  
                                 }
                             }
                             $list[$uuid] = $record;

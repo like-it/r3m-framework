@@ -42,6 +42,7 @@ class Cache extends View{
         '{binary()} route restart'
     ];
 
+    const INFO = '{binary()} cache clear                    | Clears the app cache';
 
     public static function run($object){
         $command = $object->parameter($object, Cache::NAME, 1);

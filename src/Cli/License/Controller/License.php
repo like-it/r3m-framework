@@ -33,6 +33,8 @@ class License extends View{
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';
     const EXCEPTION_COMMAND = 'invalid command (' . License::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
+    const INFO = '{binary()} license                        | R3m/framework license';
+
     public static function run($object){
         $command = $object->parameter($object, License::NAME, 1);
 

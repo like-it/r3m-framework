@@ -37,6 +37,14 @@ class Version extends View{
         '{binary()} version info',
     ];
 
+    const INFO = '{binary()} version                        | Version information';
+    const INFO_RUN = [
+        '{binary()} version                        | Version information'
+    ];
+    const INFO_UPDATE = [
+        '{binary()} version update                 | Version update, optional parameters'
+    ];
+
     const DATA_FRAMEWORK_VERSION = 'framework.version';
     const DATA_FRAMEWORK_BUILT = 'framework.built';
     const DATA_FRAMEWORK_MAJOR = 'framework.major';
