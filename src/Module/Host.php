@@ -167,6 +167,11 @@ class Host {
         if(empty($host)){
             return false;
         }
+        $host = explode(':', $host, 2);
+        if(array_key_exists(1, $host)){
+            array_pop($host);
+        }
+        $host = implode(':', $host);
         $explode = explode('.', $host);
         if(count($explode) > 1){
             return array_pop($explode);

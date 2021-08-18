@@ -59,7 +59,6 @@ class Route extends Data{
 
     public static function has_host($select='', $url=''){
         $url = Host::remove_scheme($url);
-        $url = Host::remove_port($url);
         $allowed_host = [];
         $disallowed_host = [];
         if(property_exists($select, 'host')){
@@ -100,7 +99,12 @@ class Route extends Data{
         }
         $get = $route::add_localhost($object, $get);
         if(!empty($object->data('host.url'))){
-            $get = $route::has_host($get, $object->data('host.url'));
+            $host = explode(':', $object->data('host.url'), 3);
+            if(array_key_exists(2, $host)){
+                array_pop($host);
+            }
+            $host = implode(':', $host);
+            $get = $route::has_host($get, $host);
         }
         if(empty($get)){
             return;
