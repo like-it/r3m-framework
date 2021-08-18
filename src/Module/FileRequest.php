@@ -14,16 +14,24 @@ use stdClass;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
+use R3m\Io\Module\Core;
+use R3m\Io\Module\Parse;
 
 class FileRequest {
     const REQUEST = 'Request';
 
     public static function get(App $object){
-        $request = $object->data(App::REQUEST);        
+        if (
+            array_key_exists('REQUEST_METHOD', $_SERVER) &&
+            $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
+        ) {
+            Core::cors();
+        }
+        $request = $object->data(App::REQUEST);
         $input = $request->data('request');
         $dir = str_replace(['../','..'], '', Dir::name($input));
         $file = str_replace($dir,'', $input);
-        $extension = File::extension($file);            
+        $extension = File::extension($file);
         if(empty($extension)){
             return false;
         }
@@ -48,9 +56,9 @@ class FileRequest {
         $location[] = $config->data('host.dir.root') . $dir_type . 'Public' . $config->data('ds') . $type .$config->data('ds') . $file;
         $location[] = $config->data('host.dir.public') . $dir . $file;
         $location[] = $config->data('project.dir.public') . $dir . $file;
+
         foreach($location as $url){
             if(File::exist($url)){
-                $host = $object->data('host.url');
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
                 $contentType = $config->data('contentType.' . $extension);
@@ -64,7 +72,12 @@ class FileRequest {
                     Handler::header('Content-Type: ' . $contentType);
                     Handler::header('ETag: ' . $etag . '-' . $gm);
                     Handler::header('Cache-Control: public');
-                    Handler::header('Access-Control-Allow-Origin: http://' . $host);
+                    $allow = $object->config('server.origin.allow');
+                    $parse = new Parse($object);
+                    $allow = $parse->compile($allow, $object->data());
+                    if($allow){
+                        Handler::header('Access-Control-Allow-Origin: ' . $allow);
+                    }
                 }
                 return File::read($url);
             }
