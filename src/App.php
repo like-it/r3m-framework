@@ -341,6 +341,8 @@ class App extends Data {
                 $parse = new Parse($this);
                 $parse->storage()->data('r3m.io.parse.view.url', $url);
                 $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
+                $this->data('ldelim', '{');
+                $this->data('rdelim', '}');
                 $data = clone $this->data();
                 unset($data->{APP::NAMESPACE});
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
