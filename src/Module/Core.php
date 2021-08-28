@@ -615,7 +615,7 @@ class Core {
         return implode($delimiter, $explode);
     }
 
-    public static function cors(App $object){
+    public static function cors(){
         header("HTTP/1.1 200 OK");
         header("Access-Control-Allow-Origin: *");
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {

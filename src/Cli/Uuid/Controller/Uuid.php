@@ -19,7 +19,8 @@ use R3m\Io\Exception\UrlNotExistException;
 class Uuid extends View {
     const DIR = __DIR__;
     const NAME = 'Uuid';
-
+    const INFO = '{binary()} uuid                           | Uuid generation';
+    
     public static function run($object){
         try {
             $name = Uuid::name(__FUNCTION__    , Uuid::NAME);

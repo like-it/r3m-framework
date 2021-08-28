@@ -196,68 +196,6 @@ class App extends Data {
             $response = new Response($output, $object->config('response.output'));
             return Response::output($object, $response);
         }
-
-        /*
-        $response_output = $object->config('response.output');
-        switch ($response_output){
-            case App::RESPONSE_JSON :
-            break;
-            case App::RESPONSE_HTML :
-            break;
-            case App::RESPONSE_FILE :
-            break;
-            case App::RESPONSE_OBJECT :
-            break;
-        }
-
-
-        $contentType = $object->data(App::CONTENT_TYPE);
-        if($contentType == App::CONTENT_TYPE_JSON){
-            header('Content-Type: application/json');
-            $json = new stdClass();
-            $response = $object->config('response.output');
-            switch($response){
-                case App::RESPONSE_JSON :
-                    $json = $output;
-                    if(is_string($json)){
-                        return trim($json, " \t\r\n");
-                    }
-                    return $json;
-                default:
-                    $json->html = $output;
-                    if($object->data('method')){
-                        $json->method = $object->data('method');
-                    } else {
-                        $json->method = $object->request('method');
-                    }
-                    if($object->data('target')){
-                        $json->target = $object->data('target');
-                    } else {
-                        $json->target = $object->request('target');
-                    }
-                    $append_to = $object->data('append-to');
-                    if(empty($append_to)){
-                        $append_to = $object->data('append.to');
-                    }
-                    if(empty($append_to)){
-                        $append_to = $object->request('append-to');
-                    }
-                    if(empty($append_to)){
-                        $append_to = $object->request('append.to');
-                    }
-                    if($append_to){
-                        if(empty($json->append)){
-                            $json->append = new stdClass();
-                        }
-                        $json->append->to = $append_to;
-                    }
-                    $json->script = $object->data(App::SCRIPT);
-                    $json->link = $object->data(App::LINK);
-            }
-            return Core::object($json, Core::OBJECT_JSON);
-        }
-        return $output;
-        */
     }
 
     public function route(){
@@ -341,12 +279,10 @@ class App extends Data {
                 $parse = new Parse($this);
                 $parse->storage()->data('r3m.io.parse.view.url', $url);
                 $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
+                $this->data('ldelim', '{');
+                $this->data('rdelim', '}');
                 $data = clone $this->data();
                 unset($data->{APP::NAMESPACE});
-                $config = $this->data(App::CONFIG);
-                $data->r3m = new stdClass();
-                $data->r3m->io = new stdClass();
-                $data->r3m->io->config = $config->data();
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
                 $data = new Data($read);
                 $script = Parse::readback($this, $parse, App::SCRIPT);

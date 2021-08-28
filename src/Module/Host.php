@@ -167,11 +167,25 @@ class Host {
         if(empty($host)){
             return false;
         }
+        $host = explode(':', $host, 2);
+        if(array_key_exists(1, $host)){
+            array_pop($host);
+        }
+        $host = implode(':', $host);
         $explode = explode('.', $host);
         if(count($explode) > 1){
             return array_pop($explode);
         }
         return false;
+    }
+
+    public static function remove_port($url=''){
+        $explode = explode(':', $url, 3);
+        if(isset($explode[2])){
+            array_pop($explode);
+            return implode(':', $explode);
+        }
+        return '';
     }
 
     public static function remove_scheme($url=''){
