@@ -343,10 +343,6 @@ class App extends Data {
                 $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
                 $data = clone $this->data();
                 unset($data->{APP::NAMESPACE});
-                $config = $this->data(App::CONFIG);
-                $data->r3m = new stdClass();
-                $data->r3m->io = new stdClass();
-                $data->r3m->io->config = $config->data();
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
                 $data = new Data($read);
                 $script = Parse::readback($this, $parse, App::SCRIPT);
