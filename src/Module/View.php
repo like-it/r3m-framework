@@ -45,8 +45,6 @@ class View {
     }
 
     public static function locate(App $object, $template=null){
-        $debug = debug_backtrace(true);
-        d($debug);
         $temp = $object->data('template');
         $called = '';
         if($template === null && $temp !== null && property_exists($temp, 'dir')){
