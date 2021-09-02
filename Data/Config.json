@@ -9,6 +9,7 @@
                 "cache",
                 "cache:Clear",
                 "license",
+                "ln",
                 "version",
                 "uuid",
                 "password",
