@@ -439,7 +439,6 @@ class Route extends Data{
     }
 
     private static function is_match_by_attribute($object, $route, $select){
-        d($route);
         if(!property_exists($route, 'path')){
             return false;
         }
@@ -460,6 +459,7 @@ class Route extends Data{
                 return false;
             }
         }
+        d($route);
         return true;
     }
 
