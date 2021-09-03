@@ -18,7 +18,7 @@ use R3m\Io\Exception\UrlNotExistException;
 
 class Ln extends View {
     const DIR = __DIR__;
-    const NAME = 'ln';
+    const NAME = 'Ln';
     const INFO = '{binary()} ln                             | ln  creates a symlink if not exist';
     
     public static function run($object){
