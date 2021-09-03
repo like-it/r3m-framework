@@ -9,6 +9,12 @@ use R3m\Io\Module\Route;
 
 function function_ln(Parse $parse, Data $data){
     $object = $parse->object();
-    dd($object->request());
-    return $result;
+
+    $source = App::parameter($object, 'ln', 1);
+    $target = App::parameter($object, 'ln', 1);
+
+    d($source);
+    d($target);
+
+
 }
