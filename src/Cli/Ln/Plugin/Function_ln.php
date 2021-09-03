@@ -11,7 +11,7 @@ function function_ln(Parse $parse, Data $data){
     $object = $parse->object();
 
     $source = App::parameter($object, 'ln', 1);
-    $target = App::parameter($object, 'ln', 1);
+    $target = App::parameter($object, 'ln', 2);
 
     d($source);
     d($target);
