@@ -2,10 +2,9 @@
 
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Config;
-use R3m\Io\Module\Dir;
+use R3m\Io\Module\Core;
 use R3m\Io\Module\File;
-use R3m\Io\Module\Route;
+use R3m\Io\App;
 
 function function_ln(Parse $parse, Data $data){
     $object = $parse->object();
@@ -13,8 +12,8 @@ function function_ln(Parse $parse, Data $data){
     $source = App::parameter($object, 'ln', 1);
     $target = App::parameter($object, 'ln', 2);
 
-    d($source);
-    d($target);
-
-
+    if(File::exist($target)){
+        return;
+    }
+    Core::exec('ln -s ' . $source . ' ' . $target);
 }

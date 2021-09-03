@@ -2,9 +2,6 @@
 
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Config;
-use R3m\Io\Module\Dir;
-use R3m\Io\Module\File;
 use R3m\Io\Module\Route;
 
 function function_route_export(Parse $parse, Data $data){
