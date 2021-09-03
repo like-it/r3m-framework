@@ -7,7 +7,7 @@
                 "autoload",
                 "parse",
                 "cache",
-                "cache:Clear",
+                "cache:clear",
                 "license",
                 "ln",
                 "version",
