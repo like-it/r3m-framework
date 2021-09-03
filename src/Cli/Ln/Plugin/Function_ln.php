@@ -15,5 +15,5 @@ function function_ln(Parse $parse, Data $data){
     if(File::exist($target)){
         return;
     }
-    Core::exec('ln -s ' . $source . ' ' . $target);
+    Core::execute('ln -s ' . $source . ' ' . $target);
 }
