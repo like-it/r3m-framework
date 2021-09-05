@@ -19,26 +19,6 @@ function modifier_json_encode(Parse $parse, Data $data, $value, $options=0, $dep
         $options += 0;
     } else {
         $options = 0;
-    }    
-    if(
-        $data->data('capture.append') == 'script' || 
-        $data->data('capture.prepend') == 'script'        
-    ){                
-        $json = str_replace(
-            [       
-                '\\',         
-                '/',                
-                '"',
-            ], 
-            [   
-                '\\\\',             
-                '\/',                
-                '\"',
-            ], 
-            json_encode($value, $options, $depth)
-        );
-        return $json;
-    } else {
-        return json_encode($value, $options, $depth);
     }
+    return json_encode($value, $options, $depth);
 }
