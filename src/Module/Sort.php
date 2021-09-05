@@ -154,7 +154,6 @@ class Sort extends Data{
                                     }
                                     $list[$uuid] = $node;
                                 }
-                                
                             }
                         }
                     }                                      
