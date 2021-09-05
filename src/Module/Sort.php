@@ -78,7 +78,9 @@ class Sort extends Data{
                 }                                
             }
             elseif($count == 2){
-                if(Core::object_is_empty($list)){
+                if(
+                    is_object($list) &&
+                    Core::object_is_empty($list)){
                     return $list;
                 }
                 $attribute = false;
