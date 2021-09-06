@@ -138,10 +138,8 @@ class App extends Data {
                 throw new Exception('Cannot call controller (' . $route->controller .')');
             }
         } else {
-            d($route);
-            throw new Exception('');
+            throw new Exception('Missing controller in route');
         }
-
     }
 
     public static function contentType(App $object){
