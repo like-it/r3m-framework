@@ -16,7 +16,8 @@
                 "route",
                 "bin",
                 "configure",
-                "doctrine"
+                "doctrine",
+                "openssl"
             ]
         },
         "major": "0",
