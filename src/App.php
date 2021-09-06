@@ -132,10 +132,16 @@ class App extends Data {
     }    
 
     public static function controller(App $object, $route){
-        $check = class_exists($route->controller);
-        if(empty($check)){
-            throw new Exception('Cannot call controller (' . $route->controller .')');
-        }        
+        if(property_exists($route, 'controller')){
+            $check = class_exists($route->controller);
+            if(empty($check)){
+                throw new Exception('Cannot call controller (' . $route->controller .')');
+            }
+        } else {
+            d($route);
+            throw new Exception('');
+        }
+
     }
 
     public static function contentType(App $object){
