@@ -8,7 +8,7 @@
  * @changeLog
  *  -    all
  */
-namespace R3m\Io\Cli\OpenSsl\Controller;
+namespace R3m\Io\Cli\Openssl\Controller;
 
 use Exception;
 use R3m\Io\App;
@@ -20,46 +20,46 @@ use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class OpenSsl extends View{
+class Openssl extends View{
     const NAME = 'OpenSsl';
     const DIR = __DIR__;
 
     const COMMAND_INFO = 'info';
     const COMMAND_REQ = 'req';
     const COMMAND = [
-        OpenSsl::COMMAND_INFO,
-        OpenSsl::COMMAND_REQ
+        Openssl::COMMAND_INFO,
+        Openssl::COMMAND_REQ
     ];
-    const DEFAULT_COMMAND = OpenSsl::COMMAND_INFO;
+    const DEFAULT_COMMAND = Openssl::COMMAND_INFO;
 
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';
-    const EXCEPTION_COMMAND = 'invalid command (' . OpenSsl::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
+    const EXCEPTION_COMMAND = 'invalid command (' . Openssl::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
     const INFO = '{binary()} openssl                        | Open SSL Self-signed Certificate creation';
 
     public static function run($object){
-        $command = $object->parameter($object, OpenSsl::NAME, 1);
+        $command = $object->parameter($object, Openssl::NAME, 1);
 
         if($command === null){
-            $command = OpenSsl::DEFAULT_COMMAND;
+            $command = Openssl::DEFAULT_COMMAND;
         }
-        if(!in_array($command, OpenSsl::COMMAND)){
+        if(!in_array($command, Openssl::COMMAND)){
             $exception = str_replace(
-                OpenSsl::EXCEPTION_COMMAND_PARAMETER,
+                Openssl::EXCEPTION_COMMAND_PARAMETER,
                 $command,
-                OpenSsl::EXCEPTION_COMMAND
+                Openssl::EXCEPTION_COMMAND
             );
             throw new Exception($exception);
         }
-        return OpenSsl::{$command}($object);
+        return Openssl::{$command}($object);
     }
 
     private static function info($object)
     {
         try {
-            $name = OpenSsl::name(__FUNCTION__, OpenSsl::NAME);
-            $url = OpenSsl::locate($object, $name);
-            return OpenSsl::response($object, $url);
+            $name = Openssl::name(__FUNCTION__, Openssl::NAME);
+            $url = Openssl::locate($object, $name);
+            return Openssl::response($object, $url);
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
             return 'Command undefined.' . PHP_EOL;
         }
@@ -67,9 +67,9 @@ class OpenSsl extends View{
 
     private static function req($object){
         try {
-            $name = OpenSsl::name(__FUNCTION__, OpenSsl::NAME);
-            $url = OpenSsl::locate($object, $name);
-            return OpenSsl::response($object, $url);
+            $name = Openssl::name(__FUNCTION__, Openssl::NAME);
+            $url = Openssl::locate($object, $name);
+            return Openssl::response($object, $url);
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
             return 'Command undefined.' . PHP_EOL;
         }
