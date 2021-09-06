@@ -86,6 +86,12 @@ class App extends Data {
                             Handler::method(),
                             $route->method
                         )
+                    ) {
+                        Core::redirect($route->redirect);
+                    }
+                    elseif(
+                        property_exists($route, 'redirect') &&
+                        !property_exists($route, 'method')
                     ){
                         Core::redirect($route->redirect);
                     } else {
