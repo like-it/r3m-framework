@@ -24,7 +24,8 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             $data_data->data('ldelim', '{');
             $data_data->data('rdelim', '}');
             $parse->storage()->data('r3m.io.parse.view.source.mtime', $mtime);
-            $compile =  $parse->compile($read, [], $data_data);
+            $parser = new Parse($parse->object());
+            $compile =  $parser->compile($read, [], $data_data);
             $data_script = $data_data->data('script');
             $script = $data->data('script');
             if(!empty($data_script) && empty($script)){
@@ -45,7 +46,8 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
         } else {
             $data->data('r3m.io.parse.view.source.url', $url);
             $parse->storage()->data('r3m.io.parse.view.source.mtime', $mtime);
-            return $parse->compile($read, [], $data);
+            $parser = new Parse($parse->object());
+            return $parser->compile($read, [], $data);
         }
     } else {
         $text = 'Require: file not found: ' . $url . ' in template: ' . $data->data('r3m.io.parse.view.source.url');
