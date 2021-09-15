@@ -49,7 +49,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             if(stristr($compile, '{$ldelim}') !== false){
                 d($compile);
                 $parser = new Parse($parse->object());
-                $compile = $parser->compile($compile, [], $data_data);
+                $compile = $parser->compile($compile, $data_data->data());
                 d($compile);
                 die;
                 dd($compile);
