@@ -42,7 +42,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             elseif(!empty($data_link && !empty($link))){
                 $data->data('link', array_merge($link, $data_link));
             }
-            if(stristr($compile, '{$ldelim}') !== false{
+            if(stristr($compile, '{$ldelim}') !== false){
                 dd($parser);
             }
             return $compile;
