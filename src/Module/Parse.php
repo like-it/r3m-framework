@@ -261,6 +261,8 @@ class Parse {
                     sleep(1);
                     $write = implode("\n", $document);
                     $written = File::write($url, $write);
+                    d($written);
+                    require $url;
                     //$write = $build->write($url, $document);
                     //dd($write);
                     $exists = class_exists($class);
