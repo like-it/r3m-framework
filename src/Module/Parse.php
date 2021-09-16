@@ -259,6 +259,7 @@ class Parse {
             } else {
                 if(File::exist($url)){
                     require_once $url;
+                    d(File::read($url));
                     $template = new $class(new Parse($this->object()), $storage);
                     $string = $template->run();
                     if($is_debug){
