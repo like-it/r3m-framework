@@ -257,6 +257,9 @@ class Parse {
                 }
                 $storage->data('delete', 'this');
             } else {
+                if(File::exist($url)){
+                    dd('yes file exists');
+                }
                 sleep(1);
                 $exists = class_exists($class);
                 if($exists){
