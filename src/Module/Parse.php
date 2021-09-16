@@ -265,9 +265,6 @@ class Parse {
                         $write .= $record . "\n";
                     }
                     $written = File::write($url, $write);
-                    d($document);
-                    d($write);
-                    d($written);
                     require $url;
                     //$write = $build->write($url, $document);
                     //dd($write);
