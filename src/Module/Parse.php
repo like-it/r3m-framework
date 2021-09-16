@@ -257,7 +257,7 @@ class Parse {
                 }
                 $storage->data('delete', 'this');
             } else {
-                sleep|(1);
+                sleep(1);
                 $exists = class_exists($class);
                 if($exists){
                     $template = new $class(new Parse($this->object()), $storage);
