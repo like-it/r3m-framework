@@ -14,10 +14,14 @@ function function_admin_taskrunner(Parse $parse, Data $data){
     $read = $dir->read($object->config('project.dir.data') . 'Input' . $object->config('ds'), true);
     foreach($read as $nr => $file){
         if($file->type == File::TYPE){
+            ob_start();
             $task = File::read($file->url);
             $output = [];
             Core::execute($task, $output);
-            dd($output);
+            echo implode(PHP_EOL, $output);
+            $content = ob_get_contents();
+            ob_end_clean();
+            dd($content);
         }
     }
     dd($read);
