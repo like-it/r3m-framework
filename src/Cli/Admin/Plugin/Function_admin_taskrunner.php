@@ -9,22 +9,26 @@ use R3m\Io\Module\Parse;
 
 function function_admin_taskrunner(Parse $parse, Data $data){
     $object = $parse->object();
-    $dir = new Dir();
-    $read = $dir->read($object->config('project.dir.data') . 'Input' . $object->config('ds'), true);
-    foreach($read as $nr => $file){
-        if($file->type == File::TYPE){
-            ob_start();
-            $task = File::read($file->url);
-            $output = [];
-            Core::execute($task, $output);
-            echo implode(PHP_EOL, $output);
-            $content = ob_get_contents();
-            ob_end_clean();
-            $basename = File::basename($file->url);
-            $dir = $object->config('project.dir.data') . 'Output' . $object->config('ds');
-            Dir::create($dir);
-            File::write($dir . $basename, $content);
-            File::delete($file->url);
+    while(true){
+        $dir = new Dir();
+        $read = $dir->read($object->config('project.dir.data') . 'Input' . $object->config('ds'), true);
+        foreach($read as $nr => $file){
+            if($file->type == File::TYPE){
+                ob_start();
+                $task = File::read($file->url);
+                $output = [];
+                Core::execute($task, $output);
+                echo implode(PHP_EOL, $output);
+                $content = ob_get_contents();
+                ob_end_clean();
+                $basename = File::basename($file->url);
+                $dir = $object->config('project.dir.data') . 'Output' . $object->config('ds');
+                Dir::create($dir);
+                File::write($dir . $basename, $content);
+                File::delete($file->url);
+            }
         }
+        sleep(1);
     }
+
 }
