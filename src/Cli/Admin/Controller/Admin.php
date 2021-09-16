@@ -37,7 +37,10 @@ class Admin extends View{
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';
     const EXCEPTION_COMMAND = 'invalid command (' . Admin::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
-    const INFO = '{binary()} admin                          | Create admin task';
+    const INFO = [
+        '{binary()} admin task "<task>"            | Create admin task',
+        '{binary()} admin taskrunner               | Execute admin tasks'
+    ];
 
     public static function run($object){
         $command = $object->parameter($object, Admin::NAME, 1);
