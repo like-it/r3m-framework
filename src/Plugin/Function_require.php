@@ -50,7 +50,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
                 d($compile);
                 $parser = new Parse($parse->object());
                 d($data->data());
-                $compile = $parser->compile($compile, $data_data->data());
+                $compile = $parser->compile($compile, [], $data_data, true);
                 d($compile);
                 die;
                 dd($compile);
