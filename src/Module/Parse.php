@@ -261,6 +261,7 @@ class Parse {
                     sleep(1);
                     $write = implode("\n", $document);
                     $written = File::write($url, $write);
+                    d($document);
                     d($write);
                     d($written);
                     require $url;
