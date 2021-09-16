@@ -259,7 +259,11 @@ class Parse {
             } else {
                 if(File::exist($url)){
                     sleep(1);
-                    $write = implode("\n", $document);
+//                    $write = implode("\n", $document);
+                    $write = '';
+                    foreach($document as $nr => $record){
+                        $write .= $record . "\n";
+                    }
                     $written = File::write($url, $write);
                     d($document);
                     d($write);
