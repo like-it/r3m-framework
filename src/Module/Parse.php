@@ -258,9 +258,10 @@ class Parse {
                 $storage->data('delete', 'this');
             } else {
                 if(File::exist($url)){
-                    sleep(2);
+                    sleep(1);
                     require_once $url;
                     d($write);
+                    d($document);
                     d(File::read($url));
                     $template = new $class(new Parse($this->object()), $storage);
                     $string = $template->run();
