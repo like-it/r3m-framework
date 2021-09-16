@@ -258,7 +258,7 @@ class Parse {
                 $storage->data('delete', 'this');
             } else {
                 if(File::exist($url)){
-                    sleep(1);
+                    sleep(2);
                     require_once $url;
                     d($write);
                     d(File::read($url));
