@@ -234,9 +234,6 @@ class Parse {
             $document = $build->create('require', $tree, $document);
             $document = $build->create('use', $tree, $document);            
             $write = $build->write($url, $document);
-            if($is_debug){
-                dd($write);
-            }
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
                 opcache_invalidate($url, true);
@@ -262,6 +259,7 @@ class Parse {
             } else {
                 if(File::exist($url)){
                     require_once $url;
+                    d($write);
                     d(File::read($url));
                     $template = new $class(new Parse($this->object()), $storage);
                     $string = $template->run();
