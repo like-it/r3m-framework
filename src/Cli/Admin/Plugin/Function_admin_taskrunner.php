@@ -24,6 +24,7 @@ function function_admin_taskrunner(Parse $parse, Data $data){
             $dir = $object->config('project.dir.data') . 'Output' . $object->config('ds');
             Dir::create($dir);
             File::write($dir . $basename, $content);
+            File::delete($file->url);
         }
     }
 }
