@@ -235,7 +235,7 @@ class Parse {
             $document = $build->create('use', $tree, $document);            
             $write = $build->write($url, $document);
             if($is_debug){
-                d($write);
+                dd($write);
             }
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
