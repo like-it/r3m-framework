@@ -256,6 +256,8 @@ class Parse {
                     $string = Literal::restore($storage, $string);
                 }
                 $storage->data('delete', 'this');
+            } else {
+                throw new Exception('Class ('. $class .') doesn\'t exist');
             }
         }
         return $string;
