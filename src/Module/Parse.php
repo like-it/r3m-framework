@@ -260,6 +260,7 @@ class Parse {
                 if(File::exist($url)){
                     sleep(1);
                     $write = $build->write($url, $document);
+                    dd($write);
                     $exists = class_exists($class);
                     if($exists){
                         $template = new $class(new Parse($this->object()), $storage);
