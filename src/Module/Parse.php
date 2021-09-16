@@ -219,9 +219,6 @@ class Parse {
                 $string = literal::apply($storage, $string);
             }            
             $tree = Token::tree($string, $is_debug);
-            if($is_debug === true){
-                dd($tree);
-            }
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();
@@ -237,6 +234,9 @@ class Parse {
             $document = $build->create('require', $tree, $document);
             $document = $build->create('use', $tree, $document);            
             $write = $build->write($url, $document);
+            if($is_debug){
+                dd(File::read($url));
+            }
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
                 opcache_invalidate($url, true);
