@@ -259,6 +259,22 @@ class Parse {
             } else {
                 if(File::exist($url)){
                     sleep(1);
+                    $write = $build->write($url, $document);
+                    $exists = class_exists($class);
+                    if($exists){
+                        $template = new $class(new Parse($this->object()), $storage);
+                        $string = $template->run();
+                        if($is_debug){
+                            dd($string);
+                        }
+                        if(empty($this->halt_literal())){
+                            $string = Literal::restore($storage, $string);
+                        }
+                        $storage->data('delete', 'this');
+                    } else {
+                        throw new Exception('Class ('. $class .') doesn\'t exist');
+                    }
+                    /*
                     require_once $url;
                     d($write);
                     d($document);
@@ -273,6 +289,7 @@ class Parse {
                     }
                     $storage->data('delete', 'this');
                     dd('yes file exists');
+                    */
                 }
                 sleep(1);
                 $exists = class_exists($class);
