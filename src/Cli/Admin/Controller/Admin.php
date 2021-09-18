@@ -72,6 +72,7 @@ class Admin extends View{
     }
 
     private static function task($object){
+        d($_SERVER);
         try {
             $name = Admin::name(__FUNCTION__, Admin::NAME);
             $url = Admin::locate($object, $name);
