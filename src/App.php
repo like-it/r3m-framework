@@ -72,6 +72,7 @@ class App extends Data {
         if($file === false){
             try {
                 $route = Route::request($object);
+                d($route);
                 if($route === false){
                     $code = 404;
                     $string = 'Status: ' . $code;
