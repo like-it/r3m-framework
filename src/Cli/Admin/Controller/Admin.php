@@ -44,8 +44,6 @@ class Admin extends View{
 
     public static function run($object){
         $command = $object->parameter($object, Admin::NAME, 1);
-        d($_SERVER);
-        d($command);
         if($command === null){
             $command = Admin::DEFAULT_COMMAND;
         }

@@ -28,7 +28,9 @@ class Info extends View {
     ];
 
     public static function run($object){
+        d($_SERVER);
         $command = $object::parameter($object, Info::NAME, 1);
+        d($command);
         try {
             if(empty($command)){
                 $url = Info::locate($object, Info::NAME);
