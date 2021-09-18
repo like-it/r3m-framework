@@ -103,6 +103,7 @@ class App extends Data {
                                 $route->method
                             )
                         ){
+                            d($_SERVER);
                             d($object->request());
                             d($route);
                         }
