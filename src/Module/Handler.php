@@ -74,7 +74,6 @@ class Handler {
         //check if cli
         if(defined('IS_CLI')){
             //In Cli mode apache functions aren't defined
-            dd($_SERVER);
             return Core::array_object($_SERVER);
         } else {
             return Core::array_object(apache_request_headers());
