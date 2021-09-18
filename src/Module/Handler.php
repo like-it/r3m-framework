@@ -180,10 +180,10 @@ class Handler {
         if(defined('IS_CLI')){
             global $argc, $argv;
             $temp = $argv;
-            d($temp);
             array_shift($temp);
             $request = $temp;
             $request = Core::array_object($request);
+            dd($request);
             foreach($request as $key => $value){
                 $key = str_replace(['-', '_'], ['.', '.'], $key);
                 $data->data($key, trim($value));
