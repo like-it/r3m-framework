@@ -44,7 +44,8 @@ class Admin extends View{
 
     public static function run($object){
         $command = $object->parameter($object, Admin::NAME, 1);
-
+        d($_SERVER);
+        d($command);
         if($command === null){
             $command = Admin::DEFAULT_COMMAND;
         }
@@ -72,7 +73,6 @@ class Admin extends View{
     }
 
     private static function task($object){
-        d($_SERVER);
         try {
             $name = Admin::name(__FUNCTION__, Admin::NAME);
             $url = Admin::locate($object, $name);
