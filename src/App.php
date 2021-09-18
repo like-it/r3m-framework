@@ -67,7 +67,8 @@ class App extends Data {
         Handler::request_configure($object);
         Host::configure($object);
         Autoload::configure($object);
-        Route::configure($object);    
+        Route::configure($object);
+        Core::cors();
         $file = FileRequest::get($object);
         if($file === false){
             try {
