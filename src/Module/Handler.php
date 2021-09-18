@@ -180,6 +180,7 @@ class Handler {
         if(defined('IS_CLI')){
             global $argc, $argv;
             $temp = $argv;
+            d($temp);
             array_shift($temp);
             $request = $temp;
             $request = Core::array_object($request);

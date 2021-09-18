@@ -103,10 +103,7 @@ class App extends Data {
                                 $route->method
                             )
                         ){
-                            d($_SERVER);
-                            d($_REQUEST);
-                            d($object->request());
-                            d($route);
+
                         }
                         App::contentType($object);
                         App::controller($object, $route);
