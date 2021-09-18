@@ -68,6 +68,7 @@ class Handler {
             Handler::NAME_FILE,
             Handler::request_file()
         );
+        dd($object->data());
     }
 
     private static function request_header(){
@@ -183,7 +184,6 @@ class Handler {
             array_shift($temp);
             $request = $temp;
             $request = Core::array_object($request);
-            dd($request);
             foreach($request as $key => $value){
                 $key = str_replace(['-', '_'], ['.', '.'], $key);
                 $data->data($key, trim($value));
