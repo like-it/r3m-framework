@@ -63,12 +63,12 @@ class App extends Data {
     }
 
     public static function run(App $object){
+        Core::cors();
         Config::configure($object);
         Handler::request_configure($object);
         Host::configure($object);
         Autoload::configure($object);
         Route::configure($object);
-        Core::cors();
         $file = FileRequest::get($object);
         if($file === false){
             try {
