@@ -29,7 +29,7 @@ function function_binary_create(Parse $parse, Data $data, $name=null){
     $content = [];
     $content[] = '#!/bin/sh';
     # added $name as this was a bug in updating the cms
-    $content[] = '_= ' . $name . ' php ' . $execute . ' "$@"';
+    $content[] = '_=' . $name . ' php ' . $execute . ' "$@"';
     $content = implode(PHP_EOL, $content);
     File::write($url, $content);
     shell_exec('chmod +x ' . $url);
