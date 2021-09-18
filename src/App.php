@@ -104,6 +104,7 @@ class App extends Data {
                             )
                         ){
                             d($_SERVER);
+                            d($_REQUEST);
                             d($object->request());
                             d($route);
                         }
