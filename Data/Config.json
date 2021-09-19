@@ -17,8 +17,7 @@
                 "bin",
                 "configure",
                 "doctrine",
-                "openssl",
-                "admin"
+                "openssl"
             ]
         },
         "major": "0",
