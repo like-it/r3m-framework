@@ -18,6 +18,6 @@ function function_admin_task(Parse $parse, Data $data){
     $url_part = $dir_part . $uuid . '.task';
     $url = $dir . $url_part;
     File::write($url, $task);
-    return $url_part . PHP_EOL;
+    return $dir . $url_part . PHP_EOL;
 
 }
