@@ -15,6 +15,10 @@ function function_admin_taskrunner(Parse $parse, Data $data){
         foreach($read as $nr => $file){
             if($file->type == File::TYPE){
                 ob_start();
+
+                dd(File::extension($file->url));
+
+
                 $task = File::read($file->url);
                 $output = [];
                 Core::execute($task, $output);
