@@ -42,19 +42,6 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             elseif(!empty($data_link && !empty($link))){
                 $data->data('link', array_merge($link, $data_link));
             }
-            if(stristr($compile, '$this->function_script($this->parse(), $this->storage(), $this->parse()->compile(\'module\'')){
-                $compile = $parser->compile($compile, [], $data_data);
-                dd($compile);
-            }
-            if(stristr($compile, '{$ldelim}') !== false){
-                d($compile);
-                $parser = new Parse($parse->object());
-                d($data->data());
-                $compile = $parser->compile($compile, [], $data_data, true);
-                d($compile);
-                die;
-                dd($compile);
-            }
             return $compile;
         } else {
             $data->data('r3m.io.parse.view.source.url', $url);
