@@ -282,10 +282,7 @@ class File {
             return '';
         }
         try {
-            $file = file($url);
-            if(!empty($file)){
-                return implode('', $file);
-            }
+            return implode('', file($url));
         } catch (Exception $exception){
             return '';
         }

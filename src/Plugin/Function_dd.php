@@ -13,6 +13,7 @@ use R3m\Io\Module\Data;
 
 function function_dd(Parse $parse, Data $data, $debug=null){
     if(
+        $debug !== true &&
         in_array(
             $debug, 
             [
@@ -21,7 +22,7 @@ function function_dd(Parse $parse, Data $data, $debug=null){
             ]
         )
     ){
-        $debug= $data->data();
+        $debug = $data->data();
     }
     $trace = debug_backtrace(true);    
     if(!defined('IS_CLI')){

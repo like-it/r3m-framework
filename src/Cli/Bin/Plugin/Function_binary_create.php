@@ -28,7 +28,8 @@ function function_binary_create(Parse $parse, Data $data, $name=null){
     $url = \R3m\Io\Cli\Bin\Controller\Bin::TARGET . $name;
     $content = [];
     $content[] = '#!/bin/sh';
-    $content[] = 'php ' . $execute . ' "$@"';
+    # added $name as this was a bug in updating the cms
+    $content[] = '_=' . $name . ' php ' . $execute . ' "$@"';
     $content = implode(PHP_EOL, $content);
     File::write($url, $content);
     shell_exec('chmod +x ' . $url);

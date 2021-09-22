@@ -253,6 +253,39 @@ class Parse {
                     $string = Literal::restore($storage, $string);
                 }
                 $storage->data('delete', 'this');
+            } else {
+                if(File::exist($url)){
+                    //not ready yet
+                    sleep(1);
+                    $write = implode("\n", $document);
+                    $written = File::write($url, $write);
+                    require $url;;
+                    $exists = class_exists($class);
+                    if($exists){
+                        $template = new $class(new Parse($this->object()), $storage);
+                        $string = $template->run();
+                        if(empty($this->halt_literal())){
+                            $string = Literal::restore($storage, $string);
+                        }
+                        $storage->data('delete', 'this');
+                        return $string;
+                    } else {
+                        throw new Exception('Class ('. $class .') doesn\'t exist');
+                    }
+                }
+                //not ready yet
+                sleep(1);
+                $exists = class_exists($class);
+                if($exists){
+                    $template = new $class(new Parse($this->object()), $storage);
+                    $string = $template->run();
+                    if(empty($this->halt_literal())){
+                        $string = Literal::restore($storage, $string);
+                    }
+                    $storage->data('delete', 'this');
+                } else {
+                    throw new Exception('Class ('. $class .') doesn\'t exist');
+                }
             }
         }
         return $string;

@@ -63,15 +63,17 @@ class App extends Data {
     }
 
     public static function run(App $object){
+        Core::cors();
         Config::configure($object);
         Handler::request_configure($object);
         Host::configure($object);
         Autoload::configure($object);
-        Route::configure($object);    
+        Route::configure($object);
         $file = FileRequest::get($object);
         if($file === false){
             try {
                 $route = Route::request($object);
+//                d($route);
                 if($route === false){
                     $code = 404;
                     $string = 'Status: ' . $code;
@@ -86,6 +88,12 @@ class App extends Data {
                             Handler::method(),
                             $route->method
                         )
+                    ) {
+                        Core::redirect($route->redirect);
+                    }
+                    elseif(
+                        property_exists($route, 'redirect') &&
+                        !property_exists($route, 'method')
                     ){
                         Core::redirect($route->redirect);
                     } else {
@@ -132,10 +140,14 @@ class App extends Data {
     }    
 
     public static function controller(App $object, $route){
-        $check = class_exists($route->controller);
-        if(empty($check)){
-            throw new Exception('Cannot call controller (' . $route->controller .')');
-        }        
+        if(property_exists($route, 'controller')){
+            $check = class_exists($route->controller);
+            if(empty($check)){
+                throw new Exception('Cannot call controller (' . $route->controller .')');
+            }
+        } else {
+            throw new Exception('Missing controller in route');
+        }
     }
 
     public static function contentType(App $object){
