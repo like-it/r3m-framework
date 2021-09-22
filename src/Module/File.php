@@ -282,7 +282,7 @@ class File {
             return '';
         }
         try {
-            return implode('', file($url));
+            return file_get_contents($url);
         } catch (Exception $exception){
             return '';
         }
