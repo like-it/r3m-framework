@@ -21,4 +21,5 @@ function function_cache_clear(Parse $parse, Data $data){
         $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
         $cacheDriver->deleteAll();
     }
+    opcache_reset();
 }
