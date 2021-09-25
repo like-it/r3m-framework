@@ -10,7 +10,7 @@
 		"ext-json": "*",
 		"ext-posix": "*",
 		"ext-zend-opcache": "*",
-		"monolog/monolog" : "^2.2",
+		"monolog/monolog" : "^2.2"
     },
 	"license" : "MIT",
 	"authors" : [{
