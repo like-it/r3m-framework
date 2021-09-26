@@ -202,6 +202,7 @@ class Handler {
             foreach($request as $attribute => $value){
                 $data->data($attribute, $value);
             }
+            /* --backend-disabled
             $input =
                 htmlspecialchars(
                     htmlspecialchars_decode(
@@ -214,6 +215,8 @@ class Handler {
                     ENT_NOQUOTES,
                     'UTF-8'
                 );
+            */
+            $input = implode('', file('php://input'));
             if(!empty($input)){
                 $input = json_decode($input);
             }
