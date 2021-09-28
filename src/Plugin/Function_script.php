@@ -15,15 +15,25 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
         $value = [];
         $value[] = '<script type="text/javascript">';
         $value[] = 'ready(() => {';
-        $value[] = $script;
-        $value[] = '});';
-        $value[] = "\t\t\t" . '</script>';
-    }
-    elseif($name === 'module-ready'){
-        $name = 'script';
-        $value = [];
-        $value[] = '<script type="module">';
-        $value[] = 'ready(() => {';
+        $script = str_replace([
+            '{$ldelim}',
+            '{$rdelim}',
+            '$ldelim',
+            '$rdelim',
+            '{',
+            '}',
+            '$_ldelim',
+            '$_rdelim',
+        ],[
+            '$_ldelim',
+            '$_rdelim',
+            '$_ldelim',
+            '$_rdelim',
+            '{$ldelim}',
+            '{$rdelim}',
+            '{$ldelim}',
+            '{$rdelim}',
+        ], $script);
         $value[] = $script;
         $value[] = '});';
         $value[] = "\t\t\t" . '</script>';
@@ -32,6 +42,25 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
         $name = 'script';
         $value = [];
         $value[] = '<script type="module">';
+        $script = str_replace([
+            '{$ldelim}',
+            '{$rdelim}',
+            '$ldelim',
+            '$rdelim',
+            '{',
+            '}',
+            '$_ldelim',
+            '$_rdelim',
+        ],[
+            '$_ldelim',
+            '$_rdelim',
+            '$_ldelim',
+            '$_rdelim',
+            '{$ldelim}',
+            '{$rdelim}',
+            '{$ldelim}',
+            '{$rdelim}',
+        ], $script);
         $value[] = $script;
         $value[] = "\t\t\t" . '</script>';
     }
