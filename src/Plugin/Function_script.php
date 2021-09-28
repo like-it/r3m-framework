@@ -34,6 +34,13 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
             '{$ldelim}',
             '{$rdelim}',
         ], $script);
+        $script = str_replace([
+            '$_ldelim',
+            '$_rdelim',
+        ],[
+            '{$ldelim}',
+            '{$rdelim}',
+        ], $script);
         $value[] = $script;
         $value[] = '});';
         $value[] = "\t\t\t" . '</script>';
@@ -58,6 +65,13 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
             '$_rdelim',
             '{$ldelim}',
             '{$rdelim}',
+            '{$ldelim}',
+            '{$rdelim}',
+        ], $script);
+        $script = str_replace([
+            '$_ldelim',
+            '$_rdelim',
+        ],[
             '{$ldelim}',
             '{$rdelim}',
         ], $script);
