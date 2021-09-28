@@ -30,6 +30,7 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
             '$_ldelim',
             '$_rdelim',
         ], $script);
+        d($script);
         $script = str_replace([
             '$ldelim',
             '$rdelim',
