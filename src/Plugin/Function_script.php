@@ -19,15 +19,6 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
         $value[] = '});';
         $value[] = "\t\t\t" . '</script>';
     }
-    elseif($name === 'module-ready'){
-        $name = 'script';
-        $value = [];
-        $value[] = '<script type="module">';
-        $value[] = 'ready(() => {';
-        $value[] = $script;
-        $value[] = '});';
-        $value[] = "\t\t\t" . '</script>';
-    }
     elseif($name === 'module'){
         $name = 'script';
         $value = [];

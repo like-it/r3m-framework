@@ -226,7 +226,12 @@ class Route extends Data{
             if($subdomain){
                 $select->host[] = $subdomain . '.' . Host::domain() . '.' . Host::extension();
             } else {
-                $select->host[] = Host::domain() . '.' . Host::extension();
+                $domain = Host::domain();
+                if($domain){
+                    $select->host[] = Host::domain() . '.' . Host::extension();
+                } else {
+                    $select->host[] = 'localhost';
+                }
             }
             $select->host = array_unique($select->host);
             $request = Route::select($object, $select);
