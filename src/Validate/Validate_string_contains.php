@@ -12,6 +12,7 @@ use R3m\Io\Module\Parse\Token;
 
 function validate_string_contains(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request('node.' . $field);
+    dd($argument);
     $argument = $object->request('node.' . $argument);
     if(stristr($string, $argument) !== false){
         return true;
