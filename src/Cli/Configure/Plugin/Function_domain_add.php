@@ -154,7 +154,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             ucfirst($domain) .
             $object->config('ds');
         $cwd = Dir::change($dir);
-        $exec = 'ln -s ' . $extension . ' Local';
+        $exec = 'ln -s ' . ucfirst($extension) . ' Local';
         $output = [];
         Core::execute($exec, $output);
         Dir::change($cwd);
