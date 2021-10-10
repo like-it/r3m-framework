@@ -13,7 +13,7 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
         foreach($read->data() as $key => $route){
             if(
                 property_exists($route, 'resource') &&
-                $resource === $route->resource
+                stristr($route->resource, $resource) !== false
             ){
                 $read->data('delete', $key);
             }
