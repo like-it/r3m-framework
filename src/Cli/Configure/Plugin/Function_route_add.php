@@ -10,9 +10,7 @@ function function_route_add(Parse $parse, Data $data, $add=''){
 //    $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
 //    $read = $object->parse_read($url);
     $read = $object->data(App::ROUTE);
-    dd($read);
     $has_route = false;
-    d($add);
     if($read){
         foreach($read->data() as $key => $route){
             if(
