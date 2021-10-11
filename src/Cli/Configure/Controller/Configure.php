@@ -52,6 +52,7 @@ class Configure extends View {
             }
             return Configure::response($object, $url);
         } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
+            d($exception);
             return 'Action undefined.' . PHP_EOL;
         }
 
