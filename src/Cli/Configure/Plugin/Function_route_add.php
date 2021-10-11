@@ -23,6 +23,7 @@ function function_route_add(Parse $parse, Data $data, $add=''){
             }
         }
         if($has_route){
+            d($has_route);
             $read = $object->data_read($has_route->resource);
             d($has_route->resource);
             d($add);
