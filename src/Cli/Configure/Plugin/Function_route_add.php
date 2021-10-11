@@ -7,8 +7,10 @@ use R3m\Io\Module\File;
 
 function function_route_add(Parse $parse, Data $data, $add=''){
     $object = $parse->object();
-    $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
-    $read = $object->parse_read($url);
+//    $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
+//    $read = $object->parse_read($url);
+    $read = $object->data(App::route);
+    dd($read);
     $has_route = false;
     d($add);
     if($read){
