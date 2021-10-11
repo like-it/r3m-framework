@@ -28,7 +28,8 @@ function function_route_add(Parse $parse, Data $data, $add=''){
             unset($add->resource);
             unset($add->name);
             $read->data($key, $add);
-            dd($read);
+            $read->write($has_route->resource);
+            return 'Route: ' . $key . ' added' . PHP_EOL;
         } else {
             $error[] = 'Resource not found, available resources:';
             $is_resource = false;
