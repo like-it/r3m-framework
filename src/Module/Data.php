@@ -230,6 +230,6 @@ class Data {
     }
 
     public function write($url=''){
-        File::write($url, Core::object($this->data(), Core::OBJECT_JSON));
+        return File::write($url, Core::object($this->data(), Core::OBJECT_JSON));
     }
 }
