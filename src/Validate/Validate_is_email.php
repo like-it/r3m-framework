@@ -12,6 +12,9 @@ use R3m\Io\Module\Parse\Token;
 
 function validate_is_email(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request('node.' . $field);
+    if(empty($string)){
+        $string = $object->request($field);
+    }
     if(filter_var($string, FILTER_VALIDATE_EMAIL)) {
         // valid address
         if($argument === false){

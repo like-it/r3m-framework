@@ -12,6 +12,9 @@ use R3m\Io\Module\Parse\Token;
 
 function validate_is_uuid(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request('node.' . $field);
+    if(empty($string)){
+        $string = $object->request($field);
+    }
     //format: %s%s-%s-%s-%s-%s%s%s
     $explode = explode('-', $string);
     $result = false;

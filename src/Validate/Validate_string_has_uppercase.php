@@ -12,6 +12,9 @@ use R3m\Io\Module\Parse\Token;
 
 function validate_string_has_uppercase(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request('node.' . $field);
+    if(empty($string)){
+        $string = $object->request($field);
+    }
     $split = str_split($string);
     $test = [];
     foreach($split as $nr => $char){
