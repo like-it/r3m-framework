@@ -12,7 +12,13 @@ use R3m\Io\Module\Parse\Token;
 
 function validate_string_equals(R3m\Io\App $object, $field='', $argument=''){
     $string = $object->request('node.' . $field);
+    if(empty($string)){
+        $string = $object->request($field);
+    }
     $argument = $object->request('node.' . $argument);
+    if(empty($argument)){
+        $argument = $object->request($argument);
+    }
     if($string === $argument){
         return true;
     }

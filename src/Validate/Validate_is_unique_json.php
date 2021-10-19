@@ -14,6 +14,9 @@ use R3m\Io\Module\File;
 
 function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
     $original_uuid = $object->request('node.' . 'uuid');
+    if(empty($original_uuid)){
+        $original_uuid = $object->request('uuid');
+    }
     $string = strtolower($object->request($field));
     $url = false;
     $list = false;
