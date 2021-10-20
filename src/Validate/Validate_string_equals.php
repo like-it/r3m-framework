@@ -15,11 +15,11 @@ function validate_string_equals(R3m\Io\App $object, $field='', $argument=''){
     if(empty($string)){
         $string = $object->request($field);
     }
-    $argument = $object->request('node.' . $argument);
-    if(empty($argument)){
-        $argument = $object->request($argument);
+    $compare = $object->request('node.' . $argument);
+    if(empty($compare)){
+        $compare = $object->request($argument);
     }
-    if($string === $argument){
+    if($string === $compare){
         return true;
     }
     return false;
