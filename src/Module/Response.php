@@ -49,16 +49,12 @@ class Response {
                 case Response::TYPE_OBJECT :
                 case Response::TYPE_JSON :
                     Handler::header('Content-Type: application/json', null, true);
-                break;
+                    break;
                 case Response::TYPE_HTML :
                     Handler::header('Content-Type: text/html', null, true);
-                break;
+                    break;
                 case Response::TYPE_FILE :
-                break;
-                default:
-                    $type = Response::TYPE_HTML;
-                    Handler::header('Content-Type: text/html', null, true);
-                break;
+                    break;
             }
         }
         $header = $response->header();
