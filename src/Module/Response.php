@@ -20,12 +20,15 @@ class Response {
     const TYPE_OBJECT = 'object';
     const TYPE_FILE = 'file';
 
+    const STATUS_OK = 200;
+    const STATUS_ERROR = 400;
+
     private $data;
     private $type;
     private $status;
     private $header;
 
-    public function __construct($data='', $type='', $status=200, $headers=[]){
+    public function __construct($data='', $type='', $status=Response::STATUS_OK, $headers=[]){
         $this->data($data);
         $this->type($type);
         $this->status($status);
