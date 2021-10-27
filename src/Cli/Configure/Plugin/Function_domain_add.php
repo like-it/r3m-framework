@@ -157,6 +157,17 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $exec = 'ln -s ' . ucfirst($extension) . ' Local';
         $output = [];
         Core::execute($exec, $output);
+        $dir = $object->config('project.dir.host') .
+            ucfirst($subdomain) .
+            $object->config('ds') .
+            ucfirst($domain) .
+            $object->config('ds') .
+            ucfirst($extension) .
+            $object->config('ds');
+        Dir::change($dir);
+        $exec = 'rm ' . ucfirst($extension);
+        $output = [];
+        Core::execute($exec, $output);
         Dir::change($cwd);
 
         $route = new Data();
