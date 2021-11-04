@@ -41,31 +41,31 @@ class Host {
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $key = 'host.dir.root';
         if(empty($subdomain)){
+            $sentence = Core::ucfirst_sentence(
+                $object->data('host.domain') .
+                $config->data('ds') .
+                $object->data('host.extension') .
+                $config->data('ds'));
+            $sentence = ltrim($sentence, $object->config('ds'));
             $value =
                 $config->data('project.dir.root') .
                 $config->data(Config::DICTIONARY . '.' . Config::HOST) .
                 $config->data('ds') .
-                Core::ucfirst_sentence(
-                    $object->data('host.domain') .
-                    $config->data('ds') .
-                    $object->data('host.extension') .
-                    $config->data('ds'),
-                    $config->data('ds')
-                );
+                $sentence;
         } else {
+            $sentence = Core::ucfirst_sentence(
+                $object->data('host.subdomain') .
+                $config->data('ds') .
+                $object->data('host.domain') .
+                $config->data('ds') .
+                $object->data('host.extension') .
+                $config->data('ds'));
+            $sentence = ltrim($sentence, $object->config('ds'));
             $value =
                 $config->data('project.dir.root') .
                 $config->data(Config::DICTIONARY . '.' . Config::HOST) .
                 $config->data('ds') .
-                Core::ucfirst_sentence(
-                    $object->data('host.subdomain') .
-                    $config->data('ds') .
-                    $object->data('host.domain') .
-                    $config->data('ds') .
-                    $object->data('host.extension') .
-                    $config->data('ds'),
-                $config->data('ds')
-                );
+                $sentence;
         }
         $config->data($key, $value);
         $key = 'host.dir.data';
