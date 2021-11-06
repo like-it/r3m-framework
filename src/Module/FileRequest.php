@@ -45,17 +45,17 @@ class FileRequest {
         array_unshift($view, 'Public');
         array_unshift($view, 'View');
         array_unshift($view, $controller);
-        $location[] = $config->data('host.dir.root') . implode('/', $view) . $file;
-        $location[] = $config->data('host.dir.root') . implode('/', $explode) . $file;
-        $location[] = $config->data('host.dir.root') . $dir . 'Public' . $config->data('ds') . $file;
+        $location[] = Core::ucfirst_sentence($config->data('host.dir.root') . implode('/', $view), '/') . $file;
+        $location[] = Core::ucfirst_sentence($config->data('host.dir.root') . implode('/', $explode), '/') . $file;
+        $location[] = Core::ucfirst_sentence($config->data('host.dir.root') . $dir . 'Public' . $config->data('ds'), '/') . $file;
         $explode = explode('/', $dir);
         array_pop($explode);
         $type = array_pop($explode);
         array_push($explode, '');
         $dir_type = implode('/', $explode);
-        $location[] = $config->data('host.dir.root') . $dir_type . 'Public' . $config->data('ds') . $type .$config->data('ds') . $file;
-        $location[] = $config->data('host.dir.public') . $dir . $file;
-        $location[] = $config->data('project.dir.public') . $dir . $file;
+        $location[] = Core::ucfirst_sentence($config->data('host.dir.root') . $dir_type . 'Public' . $config->data('ds'), '/') . $type .$config->data('ds') . $file;
+        $location[] = Core::ucfirst_sentence($config->data('host.dir.public') . $dir, '/') . $file;
+        $location[] = Core::ucfirst_sentence($config->data('project.dir.public') . $dir, '/') . $file;
 
         foreach($location as $url){
             if(File::exist($url)){
