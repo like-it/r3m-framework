@@ -249,9 +249,7 @@ class Parse {
                     ],
                     $string
                 );
-        dd($string);
                 $string = ltrim($string, " \t\n\r\0\x0B");
-                dd($string);
             }
             if(empty($this->halt_literal())){
                 $string = literal::apply($storage, $string);
