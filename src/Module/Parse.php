@@ -238,14 +238,19 @@ class Parse {
                     ],
                     $string
                 );
+                $string = str_replace(
+                    [
+                        '{$ldelim}{$ldelim}',
+                        '{$rdelim}{$rdelim}',
+                    ],
+                    [
+                        '{',
+                        '}',
+                    ],
+                    $string
+                );
         dd($string);
-
-
                 $string = ltrim($string, " \t\n\r\0\x0B");
-
-
-                //'{$ldelim}{$ldelim}',
-                //                        '{$rdelim}{rldelim}',
                 dd($string);
             }
             if(empty($this->halt_literal())){
