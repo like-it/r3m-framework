@@ -222,10 +222,21 @@ class Parse {
                         '}',
                     ],
                     [
+                        '[$ldelim]',
+                        '[$rdelim]',
+                    ],
+                    $explode[1]
+                );
+                $string = str_replace(
+                    [
+                        '[$ldelim]',
+                        '[$rdelim]',
+                    ],
+                    [
                         '{$ldelim}',
                         '{$rdelim}',
                     ],
-                    $explode[1]
+                    $string
                 );
         dd($string);
 
