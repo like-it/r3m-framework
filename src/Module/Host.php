@@ -45,7 +45,9 @@ class Host {
                 $object->data('host.domain') .
                 $config->data('ds') .
                 $object->data('host.extension') .
-                $config->data('ds'));
+                $config->data('ds'),
+                $config->data('ds')
+            );
             $sentence = ltrim($sentence, $object->config('ds'));
             $value =
                 $config->data('project.dir.root') .
@@ -59,7 +61,9 @@ class Host {
                 $object->data('host.domain') .
                 $config->data('ds') .
                 $object->data('host.extension') .
-                $config->data('ds'));
+                $config->data('ds'),
+                $config->data('ds')
+            );
             $sentence = ltrim($sentence, $object->config('ds'));
             $value =
                 $config->data('project.dir.root') .
