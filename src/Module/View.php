@@ -123,6 +123,7 @@ class View {
     }
 
     public static function configure(App $object){
+        dd($object->config());
         $config = $object->data(App::CONFIG);
         $key = Config::DATA_PARSE_DIR_TEMPLATE;
         $value = $config->data(Config::DATA_HOST_DIR_CACHE) . View::PARSE . $config->data('ds') . View::TEMPLATE . $config->data('ds');
