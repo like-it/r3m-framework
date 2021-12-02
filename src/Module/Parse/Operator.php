@@ -98,6 +98,9 @@ class Operator {
         return $get;
     }
 
+    /**
+     * @throws Exception
+     */
     private static function get_by_type_3($token=[], $type=''){
         if(empty($type)){
             throw new Exception('Type cannot be empty');
@@ -117,6 +120,9 @@ class Operator {
         return false;        
     }
 
+    /**
+     * @throws Exception
+     */
     private static function get_by_type_2($token=[], $type=''){
         if(empty($type)){
             throw new Exception('Type cannot be empty');
@@ -145,6 +151,9 @@ class Operator {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private static function get_by_type($token=[], $type=''){
         if(empty($type)){
             throw new Exception('Type cannot be empty');
@@ -189,6 +198,9 @@ class Operator {
         return $token;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function create($build, Data $storage, $statement=[]){
         $assign_key = null;
         $left = null;

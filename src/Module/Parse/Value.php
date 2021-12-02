@@ -22,7 +22,10 @@ class Value {
     const TYPE_CAST_FLOAT = 'float';
     const TYPE_CAST_STRING = 'string';
 
-    public static function get($build, Data $storage, $record=[]){        
+    /**
+     * @throws Exception
+     */
+    public static function get($build, Data $storage, $record=[]){
         switch($record['type']){
             case Token::TYPE_INT :
             case Token::TYPE_FLOAT :
@@ -101,6 +104,9 @@ class Value {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private static function getCast($record=[]){
         switch(strtolower($record['value'])){
             case 'bool':
