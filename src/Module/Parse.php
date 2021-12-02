@@ -216,6 +216,7 @@ class Parse {
             }
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){
+                $storage->data('r3m.io.parse.compile.remove_newline', false);
                 $string = str_replace(
                     [
                         '{',

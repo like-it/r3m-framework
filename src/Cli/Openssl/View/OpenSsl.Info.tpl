@@ -1,6 +1,2 @@
-{$url = "{config('framework.dir.root')}LICENSE"}
-{if (file.exist($url))}
-{file.read($url)}
-{else}
-License file doesn{literal}'{/literal}t exist.
-{/if}
+{binary()} openssl req -new -x509 -nodes -out /Application/Data/Pem/token_cert.pem -keyout /Application/Data/Pem/token_key.pem -days 36500
+{binary()} openssl req -new -x509 -nodes -out /Application/Data/Pem/refresh_token_cert.pem -keyout /Application/Data/Pem/refresh_token_key.pem -days 36500

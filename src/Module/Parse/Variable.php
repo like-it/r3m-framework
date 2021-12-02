@@ -170,6 +170,9 @@ class Variable {
         return $define;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getValue($build, Data $storage, $token=[], $is_result=false){
         $set_max = 1024;
         $set_counter = 0;

@@ -313,6 +313,9 @@ class Method {
         return $data;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function create_control(Build $build, Data $storage, $token=[]){
         $method = array_shift($token);
         $record = Method::get($build, $storage, $method);
@@ -322,6 +325,9 @@ class Method {
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
+    /**
+     * @throws Exception
+     */
     public static function create(Build $build, Data $storage, $token=[]){
         $method = array_shift($token);
         $record = Method::get($build, $storage, $method);
@@ -331,6 +337,9 @@ class Method {
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
+    /**
+     * @throws Exception
+     */
     public static function create_capture(Build $build, Data $storage, $token=[], $is_debug=false){
         $method = array_shift($token);
         $method['method']['attribute'][] = $token;

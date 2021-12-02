@@ -44,6 +44,9 @@ class Build {
     private $cache_dir;
     private $is_debug;
 
+    /**
+     * @throws Exception
+     */
     public function __construct($object=null, $parse=null, $is_debug=false){
         $this->is_debug = $is_debug;
         $this->object($object);
@@ -99,6 +102,9 @@ class Build {
         $this->storage()->data('plugin', $dir_plugin);
     }
 
+    /**
+     * @throws Exception
+     */
     public function create($type='', $tree=[], $document=[], $options=[]){
         switch($type){
             case 'header' :
@@ -183,6 +189,9 @@ class Build {
         return $document;
     }
 
+    /**
+     * @throws PluginNotFoundException
+     */
     private function createRequireContent($type='', $document=[]){
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
@@ -276,6 +285,9 @@ class Build {
         return $array;
     }
 
+    /**
+     * @throws Exception
+     */
     public function document(Data $data, $tree=[], $document=[]){
         $is_tag = false;
         $tag = null;
@@ -311,7 +323,7 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
-                if($remove_newline){
+                if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
                     $explode = explode("\n", $record['value'], 2);
                     if(count($explode) == 2){
                         $temp = trim($explode[0]);
@@ -487,6 +499,9 @@ class Build {
         return $document;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getType($object='', $record=[]){
         switch($record['type']){
             case Token::TYPE_VARIABLE :
@@ -566,7 +581,6 @@ class Build {
             default:
                 d($record);
                 throw new Exception('Undefined type (' . $record['type'] . ')');
-
         }
     }
 
@@ -704,6 +718,9 @@ class Build {
         return $this->cache_dir;
     }
 
+    /**
+     * @throws Exception
+     */
     public function url($string=null, $options=[]){
         $storage = $this->storage();
         $url = $storage->data('url');
@@ -768,6 +785,9 @@ class Build {
         return $url;
     }
 
+    /**
+     * @throws Exception
+     */
     public function require($type='', $tree=[]){
         switch($type){
             case 'function':

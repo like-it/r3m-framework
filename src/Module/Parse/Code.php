@@ -15,6 +15,9 @@ use R3m\Io\Module\Data;
 
 class Code {
 
+    /**
+     * @throws Exception
+     */
     public static function result(Build $build, Data $storage, $type='', $selection=[]){
         $result = '';
         switch($type){
