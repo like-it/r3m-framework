@@ -85,6 +85,13 @@ class View {
         $temp = explode('\\', $called);
         if(empty($template)){
             $template = array_pop($temp);
+        } else {
+            $template = explode('.', $template);
+            if(count($template) > 2){
+                $dotted_last = array_pop($template);
+                $dotted_first = array_pop($template);
+                $template = implode($config->data('ds'), $template) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
+            }
         }
         for($i = $max; $i > $minimum; $i--){
             $url = implode($config->data('ds'), $explode) . $config->data('ds');
