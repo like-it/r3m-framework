@@ -86,11 +86,11 @@ class View {
         if(empty($template)){
             $template = array_pop($temp);
         } else {
-            $template = explode('.', $template);
-            if(count($template) > 2){
-                $dotted_last = array_pop($template);
-                $dotted_first = array_pop($template);
-                $template = implode($config->data('ds'), $template) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
+            $template_explode = explode('.', $template);
+            if(count($template_explode) > 2){
+                $dotted_last = array_pop($template_explode);
+                $dotted_first = array_pop($template_explode);
+                $template = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
             }
         }
         for($i = $max; $i > $minimum; $i--){
