@@ -214,6 +214,9 @@ class Parse {
             elseif(File::exist($url) && File::mtime($url) != $mtime){
                 opcache_invalidate($url, true);
             }
+            if(empty($this->halt_literal())){
+                $string = literal::apply($storage, $string);
+            }
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){
                 $storage->data('r3m.io.parse.compile.remove_newline', false);
@@ -252,9 +255,6 @@ class Parse {
                 );
                 $string = ltrim($string, " \t\n\r\0\x0B");
             }
-            if(empty($this->halt_literal())){
-                $string = literal::apply($storage, $string);
-            }            
             $tree = Token::tree($string, $is_debug);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
