@@ -37,6 +37,9 @@ class Validate {
         return $is_valid;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function validate(App $object, $validate){
         $extension = $object->config('extension.php');  
         $test = [];
@@ -65,7 +68,6 @@ class Validate {
                             $test[$field][$function][] = $function($object, $field, $value);
                         } else {                            
                             throw new Exception('validator (' . $url . ') not found');
-                            $validate->success = false;
                         }                                                                        
                     }                    
                 }                
