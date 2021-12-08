@@ -16,7 +16,7 @@ function validate_is_email(R3m\Io\App $object, $field='', $argument=''){
         $string = $object->request($field);
     }
     d($field);
-    dd($string);
+    d($string);
     if(filter_var($string, FILTER_VALIDATE_EMAIL)) {
         // valid address
         if($argument === false){
