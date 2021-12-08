@@ -164,7 +164,7 @@ class Handler {
     private static function request_key_group($data){
         $result = new stdClass();
         foreach($data as $key => $value){
-            $explode = explode('_', $key, 4);
+            $explode = explode('.', $key, 4);
             if(!isset($explode[1])){
                 $result->{$key} = $value;
                 continue;
@@ -230,12 +230,12 @@ class Handler {
                             $record->name != 'request'
                         ){
                             if($record->value !== null){
-                                $record->name = str_replace(['-', '_'], ['.', '.'], $record->name);
+                                //$record->name = str_replace(['-', '_'], ['.', '.'], $record->name);
                                 $data->data($record->name, $record->value);
                             }
                         } else {
                             if($record !== null){
-                                $key = str_replace(['-', '_'],  ['.', '.'], $key);
+                                //$key = str_replace(['-', '_'],  ['.', '.'], $key);
                                 $data->data($key, $record);
                             }
                         }
