@@ -208,6 +208,9 @@ class Core {
         return $result;
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function object($input='', $output=null, $type=null){
         if($output === null){
             $output = Core::OBJECT_OBJECT;
@@ -254,7 +257,7 @@ class Core {
                 if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
                     $json = json_decode($input);
                     if(json_last_error()){
-                        new ObjectException(json_last_error_msg());
+                        throw new ObjectException(json_last_error_msg());
                     }
                     return $json;
                 }

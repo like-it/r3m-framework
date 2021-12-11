@@ -10,9 +10,7 @@
  */
 namespace R3m\Io;
 
-use R3m\Io\Module\Response;
 use stdClass;
-use Exception;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
@@ -22,8 +20,12 @@ use R3m\Io\Module\FileRequest;
 use R3m\Io\Module\Handler;
 use R3m\Io\Module\Host;
 use R3m\Io\Module\Parse;
+use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
 use R3m\Io\Module\View;
+
+use Exception;
+use R3m\Io\Exception\ObjectException;
 
 class App extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -132,7 +134,16 @@ class App extends Data {
                     }
                 }
             } catch (Exception $exception) {
-                return $exception;
+                try {
+                    if($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
+                        if(!headers_sent()){
+                            header('Content-Type: application/json');
+                        }
+                        return App::exception_to_json($exception);
+                    }
+                } catch (ObjectException $exception){
+                    return $exception;
+                }
             }
         } else {
             return $file;
