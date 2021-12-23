@@ -185,6 +185,9 @@ class App extends Data {
         $array = [];
         $array['class'] = $class;
         $array['message'] = $exception->getMessage();
+        if(stristr($class, 'locateException') !== false){
+            $array['location'] = $exception->getLocation();
+        }
         $array['line'] = $exception->getLine();
         $array['file'] = $exception->getFile();
         $array['code'] = $exception->getCode();
