@@ -124,7 +124,7 @@ class View {
         }
         if(empty($url)){
             if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT){
-                throw new LocateException('Cannot find view file', $list);
+                throw new LocateException('Cannot find view file', $list, 1);
             } else {
                 throw new LocateException('Cannot find view file');
             }
