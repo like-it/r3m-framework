@@ -44,6 +44,9 @@ class View {
         return View::response($object, $url);
     }
 
+    /**
+     * @throws LocateException
+     */
     public static function locate(App $object, $template=null){
         $temp = $object->data('template');
         $called = '';
@@ -121,10 +124,12 @@ class View {
         }
         if(empty($url)){
             if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT){
-                d($list);                
+                $exception = new LocateException('Cannot find view file');
+                $exception->location = $list;
+                throw $exception;
+            } else {
                 throw new LocateException('Cannot find view file');
             }
-            return;
         }
         return $url;
     }

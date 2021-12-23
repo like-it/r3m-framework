@@ -20,11 +20,11 @@
                 "openssl"
             ]
         },
-        "major": "0",
-        "minor": "1",
-        "patch": 45,
-        "version": "0.1.45",
-        "built": "2021-09-22 21:02:00"
+        "major": 0,
+        "minor": 2,
+        "patch": 1,
+        "version": "0.2.1",
+        "built": "2021-12-23 15:49:00"
     },
     "contentType": {
         "txt": "text\/plain",
