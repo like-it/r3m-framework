@@ -128,10 +128,6 @@ class View {
         }
         if(empty($url)){
             if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT){
-                $dir = $config->data('project.dir.data') . 'Exception' . $config->data('ds');
-                Dir::create($dir);
-                $exception = $dir . 'Locate' . $config->data('extension.json');
-                File::write($exception, Core::object($list, Core::OBJECT_JSON));
                 throw new LocateException('Cannot find view file', $list, 1);
             } else {
                 throw new LocateException('Cannot find view file');
