@@ -14,5 +14,19 @@ use Exception;
 
 class LocateException extends Exception {
 
-    public $location;
+    protected $location;
+
+    public function __construct($message = "", $location=[], $code = 0, Throwable $previous = null) {
+        $this->setLocation($location);
+        parent::__construct($message, $code, $previous);
+    }
+
+
+    public function getLocation(){
+        return $this->location;
+    }
+
+    public function setLocation($location=[]){
+        $this->location = $location;
+    }
 }
