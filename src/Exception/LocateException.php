@@ -32,5 +32,6 @@ class LocateException extends Exception {
 
     public function toArray($default=[]){
         $default['location'] = $this->getLocation();
+        return $default;
     }
 }
