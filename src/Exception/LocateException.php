@@ -14,4 +14,5 @@ use Exception;
 
 class LocateException extends Exception {
 
+    public $location;
 }

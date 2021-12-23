@@ -11,12 +11,14 @@
 namespace R3m\Io\Module;
 
 use stdClass;
-use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Handler;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
+
+use Exception;
+use R3m\Io\Exception\ObjectException;
 
 class Route extends Data{
     const NAMESPACE = __NAMESPACE__;
@@ -625,6 +627,9 @@ class Route extends Data{
         return $is_match;
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function configure(App $object){
         $config = $object->data(App::CONFIG);
         $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
