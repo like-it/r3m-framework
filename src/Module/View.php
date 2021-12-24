@@ -129,8 +129,9 @@ class View {
         if(empty($url)){
             $result = [];
             foreach($list as $nr => $file){
+                $record = [];
                 $record['file'] = $file;
-                $record['exist'] . File::exist($file);
+                $record['exist'] = File::exist($file);
                 $result[] = $record;
             }
             if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT){
