@@ -129,10 +129,7 @@ class View {
         if(empty($url)){
             $result = [];
             foreach($list as $nr => $file){
-                $record = [];
-                $record['file'] = $file;
-                $record['exist'] = File::exist($file);
-                $result[] = $record;
+                $result[] = $file;
             }
             if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT){
                 throw new LocateException('Cannot find view file', $result, 1);
