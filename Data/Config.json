@@ -28,6 +28,7 @@
     },
     "contentType": {
         "txt": "text\/plain",
+        "log": "text\/plain",
         "html": "text\/html",
         "css": "text\/css",
         "js": "application\/javascript",
@@ -51,6 +52,7 @@
     },
     "extension": {
         "txt": ".txt",
+        "log": ".log",
         "html": ".html",
         "css": ".css",
         "js": ".js",
