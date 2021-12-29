@@ -254,6 +254,44 @@ class Parse {
                     $string
                 );
                 $string = ltrim($string, " \t\n\r\0\x0B");
+            } else {
+                $explode = explode('{R3m}', $string, 2);
+                if(array_key_exists(1, $explode)){
+                    $storage->data('r3m.io.parse.compile.remove_newline', false);
+                    $string = str_replace(
+                        [
+                            '{',
+                            '}',
+                        ],
+                        [
+                            '[$ldelim]',
+                            '[$rdelim]',
+                        ],
+                        $explode[1]
+                    );
+                    $string = str_replace(
+                        [
+                            '[$ldelim]',
+                            '[$rdelim]',
+                        ],
+                        [
+                            '{$ldelim}',
+                            '{$rdelim}',
+                        ],
+                        $string
+                    );
+                    $string = str_replace(
+                        [
+                            '{$ldelim}{$ldelim}',
+                            '{$rdelim}{$rdelim}',
+                        ],
+                        [
+                            '{',
+                            '}',
+                        ],
+                        $string
+                    );
+                    $string = ltrim($string, " \t\n\r\0\x0B");
             }
             $tree = Token::tree($string, $is_debug);
             $tree = $build->require('function', $tree);
