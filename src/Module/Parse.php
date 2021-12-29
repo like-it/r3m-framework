@@ -217,6 +217,11 @@ class Parse {
             if(empty($this->halt_literal())){
                 $string = literal::apply($storage, $string);
             }
+            $explode = explode('{R3m}', $string, 2);
+            if(array_key_exists(1, $explode)){
+                d($url);
+                dd($string);
+            }
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){
                 $storage->data('r3m.io.parse.compile.remove_newline', false);
