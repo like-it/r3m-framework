@@ -21,7 +21,7 @@ class Variable {
         $variable = array_shift($token);
         switch($count['type']){
             case Token::TYPE_IS_MINUS_MINUS :
-                $assign = '$this->storage()->data(\'';
+                $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->min_min_assign(' ;
                 $assign .= '$this->storage()->data(\'';
@@ -30,7 +30,7 @@ class Variable {
                 return $assign;
             break;  
             case Token::TYPE_IS_PLUS_PLUS :
-                $assign = '$this->storage()->data(\'';
+                $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->plus_plus_assign(' ;
                 $assign .= '$this->storage()->data(\'';
@@ -49,14 +49,14 @@ class Variable {
         $token = Variable::addAssign($token);
         switch($variable['variable']['operator']){
             case '=' :
-                $assign = '$this->storage()->data(\'';
+                $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $value = Variable::getValue($build, $storage, $token, $is_result);                
                 $assign .= $value . ')';
                 return $assign;
             break;
             case '+=' :                
-                $assign = '$this->storage()->data(\'';
+                $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_plus_equal(' ;
                 $assign .= '$this->storage()->data(\'';
@@ -66,7 +66,7 @@ class Variable {
                 return $assign;
             break;
             case '-=' :                
-                $assign = '$this->storage()->data(\'';
+                $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_min_equal(' ;
                 $assign .= '$this->storage()->data(\'';
@@ -76,7 +76,7 @@ class Variable {
                 return $assign;
             break;
             case '.=' :                
-                $assign = '$this->storage()->data(\'';
+                $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_dot_equal(' ;
                 $assign .= '$this->storage()->data(\'';
@@ -86,7 +86,7 @@ class Variable {
                 return $assign;
             break;
             case '++' :
-                $assign = '$this->storage()->data(\'';
+                $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_plus_plus(' ;
                 $assign .= '$this->storage()->data(\'';
@@ -95,7 +95,7 @@ class Variable {
                 return $assign;
             break;
             case '--' :                
-                $assign = '$this->storage()->data(\'';
+                $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
                 $assign .= '$this->assign_min_min(' ;
                 $assign .= '$this->storage()->data(\'';
