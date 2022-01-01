@@ -118,7 +118,7 @@ class FileRequest {
         }
         Handler::header('HTTP/1.0 404 Not Found', 404);
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
-            throw new LocateException('Cannot find location for file:' . "\n" . implode("\n", $location), $location);
+            throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
         }
         exit();
     }
