@@ -10,16 +10,16 @@
  */
 namespace R3m\Io\Module;
 
-use stdClass;
-use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
-use R3m\Io\Module\Core;
-use R3m\Io\Module\Parse;
+use R3m\Io\Exception\LocateException;
 
 class FileRequest {
     const REQUEST = 'Request';
 
+    /**
+     * @throws LocateException
+     */
     public static function get(App $object){
         if (
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
@@ -45,17 +45,51 @@ class FileRequest {
         array_unshift($view, 'Public');
         array_unshift($view, 'View');
         array_unshift($view, $controller);
-        $location[] = $config->data('host.dir.root') . implode('/', $view) . $file;
-        $location[] = $config->data('host.dir.root') . implode('/', $explode) . $file;
-        $location[] = $config->data('host.dir.root') . $dir . 'Public' . $config->data('ds') . $file;
+        $location[] = $config->data('host.dir.root') .
+            implode('/', $view) .
+            $file;
+        $location[] = $config->data('host.dir.root') .
+            implode('/', $explode) .
+            $file;
+        $location[] = $config->data('host.dir.root') .
+            $dir .
+            'Public' .
+            $config->data('ds') .
+            $file;
         $explode = explode('/', $dir);
         array_pop($explode);
         $type = array_pop($explode);
         array_push($explode, '');
         $dir_type = implode('/', $explode);
-        $location[] = $config->data('host.dir.root') . $dir_type . 'Public' . $config->data('ds') . $type .$config->data('ds') . $file;
-        $location[] = $config->data('host.dir.public') . $dir . $file;
-        $location[] = $config->data('project.dir.public') . $dir . $file;
+        $location[] = $config->data('host.dir.root') .
+            $dir_type .
+            'Public' .
+            $config->data('ds') .
+            $type .
+            $config->data('ds') .
+            $file;
+        $location[] = $config->data('host.dir.root') .
+            'View' .
+            $config->data('ds') .
+            $dir .
+            'Public' .
+            $config->data('ds') .
+            $file;
+        $location[] = $config->data('host.dir.root') .
+            'View' .
+            $config->data('ds') .
+            $dir_type .
+            'Public' .
+            $config->data('ds') .
+            $type .
+            $config->data('ds') .
+            $file;
+        $location[] = $config->data('host.dir.public') .
+            $dir .
+            $file;
+        $location[] = $config->data('project.dir.public') .
+            $dir .
+            $file;
 
         foreach($location as $url){
             if(File::exist($url)){
@@ -84,7 +118,7 @@ class FileRequest {
         }
         Handler::header('HTTP/1.0 404 Not Found', 404);
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
-            d($location);
+            throw new LocateException('Cannot find location for file.', $location);
         }
         exit();
     }
