@@ -44,10 +44,13 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             }
             return $compile;
         } else {
+            $source = $data->data('r3m.io.parse.view.source.url');
             $data->data('r3m.io.parse.view.source.url', $url);
             $parse->storage()->data('r3m.io.parse.view.source.mtime', $mtime);
             $parser = new Parse($parse->object());
-            return $parser->compile($read, [], $data);
+            $result = $parser->compile($read, [], $data);
+            $data->data('r3m.io.parse.view.source.url', $source);
+            return $result;
         }
     } else {
         $text = 'Require: file not found: ' . $url . ' in template: ' . $data->data('r3m.io.parse.view.source.url');
