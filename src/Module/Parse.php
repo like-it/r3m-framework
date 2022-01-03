@@ -214,13 +214,11 @@ class Parse {
             elseif(File::exist($url) && File::mtime($url) != $mtime){
                 opcache_invalidate($url, true);
             }
+            $string = str_replace('{{literal}}', '{literal}', $string);
+            $string = str_replace('{{/literal}}', '{/literal}', $string);
+            $string = str_replace('{{R3M}}', '{R3M}', $string);
             if(empty($this->halt_literal())){
                 $string = literal::apply($storage, $string);
-            }
-            $explode = explode('{R3m}', $string, 2);
-            if(array_key_exists(1, $explode)){
-                d($url);
-                dd($string);
             }
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){
