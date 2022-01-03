@@ -41,10 +41,12 @@ class Dir {
             return true;
         } else {
             $mkdir = false;
-            if(empty($chmod)){
-                $mkdir = @mkdir($url, Dir::CHMOD, true);
-            } else {
-                $mkdir = @mkdir($url, $chmod, true);
+            if(!File::exist($url)){
+                if(empty($chmod)){
+                    $mkdir = @mkdir($url, Dir::CHMOD, true);
+                } else {
+                    $mkdir = @mkdir($url, $chmod, true);
+                }
             }
             return $mkdir;
         }
