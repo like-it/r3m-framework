@@ -18,21 +18,5 @@ function validate_in_array(R3m\Io\App $object, $field='', $array=''){
     if(empty($in)){
         return false;
     }
-    d($in);
-    dd($array);
-    /*
-    foreach($argument[1]['method']['attribute'][0] as $nr => $record){
-        if(empty($left)){
-            $left = $record;
-        }
-        elseif(empty($equation)){
-            $equation = $record['value'];            
-        }
-        elseif(empty($right)){
-            $right = $record['execute'];
-            break;
-        }
-    }
-    */
     return in_array($in, $array);
 }
