@@ -37,7 +37,11 @@ function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
                 ){
                     continue;
                 }
-                $match = strtolower($data->data($list . '.' . $uuid . '.' . $field));
+                if($list === null){
+                    $match = strtolower($data->data($uuid . '.' . $field));
+                } else {
+                    $match = strtolower($data->data($list . '.' . $uuid . '.' . $field));
+                }
                 if(empty($match)){
                     continue;
                 }
