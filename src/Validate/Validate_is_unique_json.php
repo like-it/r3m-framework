@@ -17,7 +17,10 @@ function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
     if(empty($original_uuid)){
         $original_uuid = $object->request('uuid');
     }
-    $string = strtolower($object->request($field));
+    $string = strtolower($object->request('node.' . $field));
+    if(empty($string)){
+        $string = strtolower($object->request($field));
+    }
     $url = false;
     $list = false;
     if(property_exists($argument, 'url')){
