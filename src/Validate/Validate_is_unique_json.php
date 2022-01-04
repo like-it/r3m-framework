@@ -27,10 +27,10 @@ function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
         $list = $argument->list;
     }
     $is_unique = true;
-    d($url);
-    dd($list);
     if($url){
         $data = $object->parse_read($url, sha1($url));
+        d($data);
+        dd($data->data(null));
         if($data){
             foreach($data->data($list) as $uuid => $record){
                 if(
