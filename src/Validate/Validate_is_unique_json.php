@@ -27,9 +27,7 @@ function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
         $list = $argument->list;
     }
     $is_unique = true;
-    if(
-        $url
-    ){
+    if($url){
         $data = $object->parse_read($url, sha1($url));
         if($data){
             foreach($data->data($list) as $uuid => $record){
