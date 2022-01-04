@@ -29,8 +29,6 @@ function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
     $is_unique = true;
     if($url){
         $data = $object->parse_read($url, sha1($url));
-        d($data);
-        dd($data->data(null));
         if($data){
             foreach($data->data($list) as $uuid => $record){
                 if(
@@ -40,6 +38,9 @@ function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
                     continue;
                 }
                 $match = strtolower($data->data($list . '.' . $uuid . '.' . $field));
+                if(empty($match)){
+                    continue;
+                }
                 if($match == $string){
                     $is_unique = false;
                     break;
