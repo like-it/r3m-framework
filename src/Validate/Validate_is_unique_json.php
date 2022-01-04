@@ -28,8 +28,7 @@ function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
     }
     $is_unique = true;
     if(
-        $url &&
-        $list
+        $url
     ){
         $data = $object->parse_read($url, sha1($url));
         if($data){
