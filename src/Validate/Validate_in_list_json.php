@@ -21,7 +21,6 @@ function validate_in_list_json(R3m\Io\App $object, $field='', $argument=''){
     if(empty($string)){
         $string = strtolower($object->request($field));
     }
-    dd($string);
     $url = false;
     $list = false;
     if(property_exists($argument, 'url')){
