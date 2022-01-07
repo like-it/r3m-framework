@@ -24,10 +24,13 @@ function validate_string_contains(R3m\Io\App $object, $field='', $argument=''){
             preg_match(
                 $argument->regex,
                 $string,
-            $matches,
+            $matches
             );
-            dd($matches);
-            if(empty($matches)){
+            if(array_key_exists(0, $matches)){
+                if($string !== $matches[0]){
+                    return false;
+                }
+            } else {
                 return false;
             }
         }
