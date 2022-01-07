@@ -22,7 +22,7 @@ function validate_string_contains(R3m\Io\App $object, $field='', $argument=''){
         if(property_exists($argument, 'regex')){
             $matches = [];
             preg_match(
-                $$argument->regex,
+                $argument->regex,
                 $string,
             $matches,
             );
