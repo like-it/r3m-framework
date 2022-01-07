@@ -18,6 +18,21 @@ function validate_string_contains(R3m\Io\App $object, $field='', $argument=''){
     if(empty($string)){
         return false;
     }
+    if(is_object($argument)){
+        if(property_exists($argument, 'regex')){
+            $matches = [];
+            preg_match(
+                $$argument->regex,
+                $string,
+            $matches,
+            );
+            dd($matches);
+            if(empty($matches)){
+                return false;
+            }
+        }
+    }
+
     if(is_string($argument)){
         if(stristr($string, $argument) !== false){
             return true;
