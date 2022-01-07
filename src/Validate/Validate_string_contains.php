@@ -26,14 +26,11 @@ function validate_string_contains(R3m\Io\App $object, $field='', $argument=''){
                 $string,
             $matches
             );
-            if(property_exists($argument, 'debug') && $argument->debug === true){
-                d($string);
-                dd($matches);
-            }
             if(array_key_exists(0, $matches)){
-                if($string !== $matches[0]){
+                if($string != $matches[0]){
                     return false;
                 }
+                return true;
             } else {
                 return false;
             }
