@@ -165,9 +165,9 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             ucfirst($extension) .
             $object->config('ds');
         Dir::change($dir);
-        $exec = 'rm ' . ucfirst($extension);
-        $output = [];
-        Core::execute($exec, $output);
+        //$exec = 'rm ' . ucfirst($extension);
+        //$output = [];
+        //Core::execute($exec, $output);
         Dir::change($cwd);
 
         $route = new Data();
