@@ -30,6 +30,7 @@ class Configure extends View {
         '{binary()} configure host create          | Create and setup an apache2 site',
         '{binary()} configure host delete          | Delete a host from /etc/host',
         '{binary()} configure public create        | Creates the public html directory',
+        '{binary()} configure route resource       | Add a main route based on resource',
         '{binary()} configure route delete         | Delete a main route based on resource',
         '{binary()} configure server admin         | Set the server admin',
         '{binary()} configure site create          | Create an apache2 site file',
