@@ -2,34 +2,31 @@
 
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\File;
+use R3m\Io\Module\Core;
 
 
 function function_route_resource(Parse $parse, Data $data, $resource=''){
     $object = $parse->object();
-    $read = $object->data(App::ROUTE);
+    $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
+    $read = $object->data_read($url);
     $has_route = false;
-    if($read){
-        foreach($read->data() as $key => $route){
-            if(
-                property_exists($route, 'resource') &&
-                stristr($route->resource, $resource) !== false
-            ){
-                $has_route = $route;
-                break;
-            }
-        }
-        if(!$has_route){
-            dd(App::ROUTE);
-
-            $read = $object->data_read($has_route->resource);
-            $key = $add->name;
-            unset($add->resource);
-            unset($add->name);
-            $read->data($key, $add);
-            $read->write($has_route->resource);
-            return 'Route: ' . $key . ' added' . PHP_EOL;
+    if(!$read){
+        $read = new Data();
+    }
+    foreach($read->data() as $key => $route){
+        if(
+            property_exists($route, 'resource') &&
+            stristr($route->resource, $resource) !== false
+        ){
+            $has_route = $route;
+            break;
         }
     }
+    if(!$has_route){
+        $read->data(Core::uuid() . '.resource', $resource);
+        $read->write($url);
+        return 'Route resource: ' . $resource . ' added' . PHP_EOL;
+    }
+
 }
 
