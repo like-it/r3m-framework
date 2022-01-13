@@ -16,7 +16,7 @@ function validate_string_contains(R3m\Io\App $object, $field='', $argument=''){
         $string = $object->request($field);
     }
     if(empty($string)){
-        return false;
+        return true;
     }
     if(is_object($argument)){
         if(property_exists($argument, 'regex')){
