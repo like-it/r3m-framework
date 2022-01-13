@@ -1,0 +1,31 @@
+{
+    "method" : [
+        {
+            "name" : "CONNECT"
+        },
+        {
+            "name" : "DELETE"
+        },
+        {
+            "name" : "GET"
+        },
+        {
+            "name" : "HEAD"
+        },
+        {
+            "name" : "OPTIONS"
+        },
+        {
+            "name" : "PATCH"
+        },
+        {
+            "name" : "POST"
+        },
+        {
+            "name" : "PUT"
+        },
+        {
+            "name" : "TRACE"
+        }
+    ]
+}
