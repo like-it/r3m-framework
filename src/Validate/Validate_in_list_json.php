@@ -17,7 +17,7 @@ function validate_in_list_json(R3m\Io\App $object, $field='', $argument=''){
     if(empty($original_uuid)){
         $original_uuid = $object->request('uuid');
     }
-    dd($field);
+    $field = str_replace('[]', '', $field);
     $string = strtolower($object->request('node.' . $field));
     if(empty($string)){
         $string = strtolower($object->request($field));
