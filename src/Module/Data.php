@@ -230,6 +230,8 @@ class Data {
     }
 
     public function write($url=''){
+        $dir = Dir::name($url);
+        Dir::create($dir);
         return File::write($url, Core::object($this->data(), Core::OBJECT_JSON));
     }
 }
