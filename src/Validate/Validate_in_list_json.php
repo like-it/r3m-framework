@@ -18,30 +18,66 @@ function validate_in_list_json(R3m\Io\App $object, $field='', $argument=''){
         $original_uuid = $object->request('uuid');
     }
     $field = str_replace('[]', '', $field);
-    $string = strtolower($object->request('node.' . $field));
-    if(empty($string)){
-        $string = strtolower($object->request($field));
-    }
-    $url = false;
-    $list = false;
-    if(property_exists($argument, 'url')){
-        $url = $argument->url;
-    }
-    if(property_exists($argument, 'list')){
-        $list = $argument->list;
-    }
-    if($url){
-        $data = $object->parse_read($url, sha1($url));
-        if($data){
-            foreach($data->data($list) as $uuid => $record){
-                if(
-                    !empty($string) &&
-                    $string == $uuid
-                ){
-                    return true;
+    $request = $object->request('node.' . $field);
+    if(is_array($request)){
+        $url = false;
+        $list = false;
+        $attribute = 'name';
+        if(property_exists($argument, 'url')){
+            $url = $argument->url;
+        }
+        if(property_exists($argument, 'list')){
+            $list = $argument->list;
+        }
+        if(property_exists($argument, 'attribute')){
+            $attribute = $argument->attribute;
+        }
+        if($url){
+            $data = $object->parse_read($url, sha1($url));
+            if($data){
+                $result = [];
+                foreach($data->data($list) as $nr => $record) {
+                    if(is_object(($record) && property_exists($record, $attribute))) {
+                        $result[] = $record->{$attribute};
+                    } else {
+                        $result[] = $record;
+                    }
+                }
+                foreach($request as $post){
+                    if(!in_array($post, $result)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+    } else {
+        $string = strtolower($request);
+        if(empty($string)){
+            $string = strtolower($object->request($field));
+        }
+        $url = false;
+        $list = false;
+        if(property_exists($argument, 'url')){
+            $url = $argument->url;
+        }
+        if(property_exists($argument, 'list')){
+            $list = $argument->list;
+        }
+        if($url){
+            $data = $object->parse_read($url, sha1($url));
+            if($data){
+                foreach($data->data($list) as $uuid => $record){
+                    if(
+                        !empty($string) &&
+                        $string == $uuid
+                    ){
+                        return true;
+                    }
                 }
             }
+            return false;
         }
-        return false;
     }
 }
