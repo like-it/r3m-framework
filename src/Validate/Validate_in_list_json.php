@@ -37,7 +37,7 @@ function validate_in_list_json(R3m\Io\App $object, $field='', $argument=''){
             if($data){
                 $result = [];
                 foreach($data->data($list) as $nr => $record) {
-                    if(is_object(($record) && property_exists($record, $attribute))) {
+                    if(is_object($record) && property_exists($record, $attribute)) {
                         $result[] = $record->{$attribute};
                     } else {
                         $result[] = $record;
@@ -45,7 +45,7 @@ function validate_in_list_json(R3m\Io\App $object, $field='', $argument=''){
                 }
                 d($result);
                 dd($request);
-                    
+
                 foreach($request as $post){
                     if(!in_array($post, $result)) {
                         return false;
