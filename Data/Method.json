@@ -1,6 +1,9 @@
 {
     "method" : [
         {
+            "name" : "CLI"
+        },
+        {
             "name" : "CONNECT"
         },
         {
