@@ -33,6 +33,10 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
         $value[] = "\t\t\t" . '</script>';
     }
     $list = $data->data($name);
+    if(is_string($list)){
+        d($list);
+        dd($name);
+    }
     if(empty($list)){
         $list = [];
     }
