@@ -39,13 +39,13 @@ class Value {
             case Token::TYPE_EXCLAMATION :
             case Token::TYPE_BRACKET_SQUARE_OPEN :
             case Token::TYPE_BRACKET_SQUARE_CLOSE :
-            case Token::TYPE_CODE :
             case Token::TYPE_PARENTHESE_OPEN :
             case Token::TYPE_PARENTHESE_CLOSE :
             case Token::TYPE_QUOTE_SINGLE_STRING :
             case Token::TYPE_BACKSLASH :
                 return $record['value'];
             break;
+            case Token::TYPE_CODE :
             case Token::TYPE_QUOTE_SINGLE :
                 $record['value'] = str_replace([
                     '{$ldelim}',
