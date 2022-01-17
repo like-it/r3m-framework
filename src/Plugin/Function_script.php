@@ -35,6 +35,7 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
     $list = $data->data($name);
     if(is_string($list)){
         d($list);
+        d($data->data());
         dd($name);
     }
     if(empty($list)){
