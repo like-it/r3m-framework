@@ -44,7 +44,14 @@ class Value {
             case Token::TYPE_PARENTHESE_CLOSE :
             case Token::TYPE_QUOTE_SINGLE_STRING :
             case Token::TYPE_BACKSLASH :
-            case Token::TYPE_QUOTE_SINGLE :            
+            case Token::TYPE_QUOTE_SINGLE :
+                $record['value'] = str_replace([
+                    '{$ldelim}',
+                    '{$rdelim}'
+                ],[
+                    '{',
+                    '}'
+                ], $record['value']);
                 return $record['value'];
             break;
             case Token::TYPE_STRING :
