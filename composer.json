@@ -1,6 +1,6 @@
 {
 	"name" : "r3m/framework",
-	"description" : "r3m framework",
+	"description" : "r3m framework see https://universeorange.com for detailed usage",
 	"type" : "library",
 	"keywords" : ["framework", "r3m", "library"],
 	"homepage": "https://universeorange.com",

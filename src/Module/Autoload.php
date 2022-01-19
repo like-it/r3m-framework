@@ -304,9 +304,7 @@ class Autoload {
         //$this->environment('development'); //needed, should be gone @ home
         if($this->environment() == 'development' || !empty($this->expose())){
             if(empty($this->expose())){
-                if(defined('IS_CLI')){
-                    throw new Exception('Autoload error, cannot load (' . $load .') class.');
-                }
+                throw new Exception('Autoload error, cannot load (' . $load .') class.');
             }
             $object = new stdClass();
             $object->load = $load;
