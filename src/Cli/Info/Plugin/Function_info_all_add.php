@@ -27,7 +27,9 @@ function function_info_all_add(Parse $parse, Data $data, $list){
 
                 Core::execute('tput init');
                 for($i=0; $i < 16; $i++){
-                    Core::execute('tput setab ' . $i);
+                    $output = [];
+                    Core::execute('tput setab ' . $i, $output);
+                    d($output);
                     echo 'test' . PHP_EOL;
                     Core::execute('tput sgr0');
                 }
