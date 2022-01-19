@@ -24,11 +24,11 @@ function function_info_all_add(Parse $parse, Data $data, $list){
                 $record->info = $info;
                 $result[] = $record;
             } catch (Exception $exception){
-                Cli::tput('init');
+                Core::execute('tput init');
                 for($i=0; $i < 16; $i++){
-                    Cli::tput('background', $i);
+                    Core::execute('tput setab', $i);
                     echo 'test' . PHP_EOL;
-                    Cli::tput('reset');
+                    Core::execute('tput sgr0');
                 }
                 continue;
             }
