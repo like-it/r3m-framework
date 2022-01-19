@@ -66,6 +66,7 @@ function function_info_all_add(Parse $parse, Data $data, $list){
                 Cli::tput('background', 15);
                 Cli::tput('color', 0);
                 echo 'test' . PHP_EOL;
+                continue;
             }
         }
     }
