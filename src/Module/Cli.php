@@ -124,8 +124,11 @@ class Cli {
                 break;
             case 'default':
             case 'reset':
-            case 'sgr0' :
+            case 'sgr0':
                 $tput  = 'sgr0';
+                break;
+            case 'init':
+                $tput = 'init';
                 break;
         }
         ob_start();
