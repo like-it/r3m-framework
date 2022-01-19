@@ -87,6 +87,39 @@
                 "block.json",
                 "script"
             ]
-        }
+        },
+        "use" : [
+            "stdClass",
+            "R3m\\Io\\App",
+            "R3m\\Io\\Config",
+            "R3m\\Io\\Module\\Cli",
+            "R3m\\Io\\Module\\Core",
+            "R3m\\Io\\Module\\Data",
+            "R3m\\Io\\Module\\Dir",
+            "R3m\\Io\\Module\\File",
+            "R3m\\Io\\Module\\Filter",
+            "R3m\\Io\\Module\\Handler",
+            "R3m\\Io\\Module\\Host",
+            "R3m\\Io\\Module\\Parse",
+            "R3m\\Io\\Module\\Response",
+            "R3m\\Io\\Module\\Route",
+            "R3m\\Io\\Module\\Sort",
+            "R3m\\Io\\Module\\Validate",
+            "R3m\\Io\\Module\\View",
+            "R3m\\Io\\Module\\Template\\Main",
+            "Exception",
+            "R3m\\Io\\Exception\\AuthenticationException",
+            "R3m\\Io\\Exception\\AuthorizationException",
+            "R3m\\Io\\Exception\\ErrorException",
+            "R3m\\Io\\Exception\\FileAppendException",
+            "R3m\\Io\\Exception\\FileMoveException",
+            "R3m\\Io\\Exception\\FileNotExistException",
+            "R3m\\Io\\Exception\\FileWriteException",
+            "R3m\\Io\\Exception\\LocateException",
+            "R3m\\Io\\Exception\\ObjectException",
+            "R3m\\Io\\Exception\\PluginNotFoundException",
+            "R3m\\Io\\Exception\\UrlEmptyException",
+            "R3m\\Io\\Exception\\UrlNotExistException"
+        ]
     }
 }
