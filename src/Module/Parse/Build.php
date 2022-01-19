@@ -69,38 +69,6 @@ class Build {
                 $this->storage()->data('use.' . $usage, new stdClass());
             }
         }
-        /*
-        $this->storage()->data('use.stdClass', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\App', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Config', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Cli', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Core', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Data', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Dir', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\File', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Filter', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Handler', new stdClass());        
-        $this->storage()->data('use.R3m\\Io\\Module\\Host', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Parse', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Response', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Route', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Sort', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Validate', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\View', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Module\\Template\\Main', new stdClass());
-        $this->storage()->data('use.Exception', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\AuthenticationException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\AuthorizationException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\ErrorException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\FileAppendException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\FileMoveException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\FileWriteException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\LocateException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\ObjectException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\PluginNotFoundException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\UrlEmptyException', new stdClass());
-        $this->storage()->data('use.R3m\\Io\\Exception\\UrlNotExistException', new stdClass());
-        */
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
         $dir_plugin = $config->data(Config::DATA_PARSE_DIR_PLUGIN);
