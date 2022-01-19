@@ -14,8 +14,14 @@ use stdClass;
 use Exception;
 
 class Cli {
-
-
+    const BACKGROUND_COLOR_BLACK = 0;
+    const BACKGROUND_COLOR_RED = 1;
+    const BACKGROUND_COLOR_GREEN = 2;
+    const BACKGROUND_COLOR_YELLOW = 3;
+    const BACKGROUND_COLOR_BLUE = 4;
+    const BACKGROUND_COLOR_PURPLE = 5;
+    const BACKGROUND_COLOR_LIGHTBLUE = 6;
+    const BACKGROUND_COLOR_WHITE = 7;
 
     public static function read($url='', $text=''){
         $is_flush = false;
