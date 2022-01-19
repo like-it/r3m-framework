@@ -28,7 +28,7 @@ function function_info_all_add(Parse $parse, Data $data, $list){
                 Cli::tput('init');
                 for($i=0; $i < 16; $i++){
                     $output = [];
-                    echo Cli::tput('background', $i);
+                    echo Cli::tput('color', $i);
                     echo 'test' . PHP_EOL;
                     echo Cli::tput('reset');
                 }
