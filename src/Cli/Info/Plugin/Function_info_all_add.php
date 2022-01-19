@@ -31,7 +31,7 @@ function function_info_all_add(Parse $parse, Data $data, $list){
                 echo $exception->getMessage() . PHP_EOL;
                 echo PHP_EOL;
                 echo Cli::tput('reset');
-
+                echo PHP_EOL;
                 continue;
             }
         }
