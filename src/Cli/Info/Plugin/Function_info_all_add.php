@@ -2,7 +2,7 @@
 
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Core;
+use R3m\Io\Module\Cli;
 
 function function_info_all_add(Parse $parse, Data $data, $list){
     $result = [];
@@ -25,13 +25,12 @@ function function_info_all_add(Parse $parse, Data $data, $list){
                 $result[] = $record;
             } catch (Exception $exception){
 
-                Core::execute('tput init');
+                Cli::tput('init');
                 for($i=0; $i < 16; $i++){
                     $output = [];
-                    Core::execute('tput setab ' . $i, $output);
-                    d($output);
+                    echo Cli::tput('backround', $i);
                     echo 'test' . PHP_EOL;
-                    Core::execute('tput sgr0');
+                    echo Cli::tput('reset');
                 }
                 continue;
             }
