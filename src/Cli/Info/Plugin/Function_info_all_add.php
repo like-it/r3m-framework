@@ -10,17 +10,21 @@ function function_info_all_add(Parse $parse, Data $data, $list){
             property_exists($record, 'controller') &&
             property_exists($record, 'function')
         ){
-            $class = $record->controller;
-            $constant =  $class . '::INFO_' . strtoupper($record->function);
-            $info = false;
-            if(defined($constant)) {
-                $info = constant($constant);
+            try {
+                $class = $record->controller;
+                $constant =  $class . '::INFO_' . strtoupper($record->function);
+                $info = false;
+                if(defined($constant)) {
+                    $info = constant($constant);
+                }
+                elseif(defined($class . '::INFO')){
+                    $info = constant($class . '::INFO');
+                }
+                $record->info = $info;
+                $result[] = $record;
+            } catch (Exception $exception){
+
             }
-            elseif(defined($class . '::INFO')){
-                $info = constant($class . '::INFO');
-            }
-            $record->info = $info;
-            $result[] = $record;
         }
     }
     return $result;
