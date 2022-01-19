@@ -23,7 +23,7 @@ function function_info_all_add(Parse $parse, Data $data, $list){
                 $record->info = $info;
                 $result[] = $record;
             } catch (Exception $exception){
-
+                d($exception);
             }
         }
     }

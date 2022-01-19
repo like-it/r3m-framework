@@ -149,7 +149,11 @@ class Autoload {
         return $this->prefixList;
     }
 
-    public function load($load){
+    /**
+     * @throws Exception
+     */
+    public function load($load): bool
+    {
         $file = $this->locate($load);
         if (!empty($file)) {
             require_once $file;
@@ -224,6 +228,9 @@ class Autoload {
             return $result;
     }
 
+    /**
+     * @throws Exception
+     */
     public function locate($load=null, $is_data=false){
         $dir = $this->cache_dir();
         $url = $dir . Autoload::FILE;
@@ -296,6 +303,11 @@ class Autoload {
         }
         //$this->environment('development'); //needed, should be gone @ home
         if($this->environment() == 'development' || !empty($this->expose())){
+            if(empty($this->expose())){
+                if(defined('IS_CLI')){
+                    throw new Exception('Autoload error, cannot load (' . $load .') class.');
+                }
+            }
             $object = new stdClass();
             $object->load = $load;
             $debug = debug_backtrace(true);
@@ -306,7 +318,7 @@ class Autoload {
                 }
                 $output[$i] = $debug[$i];
             }
-            $attribute = 'R3m\Io\Module\Exception\Error';
+            $attribute = 'R3m\Io\Exception\LocateException';
             if(!empty($this->expose())){
                 $attribute = $load;
             }
@@ -326,6 +338,7 @@ class Autoload {
                 echo json_encode($object, JSON_PRETTY_PRINT);
                 echo '</pre>';
                 die;
+
             } else {
                 echo json_encode($object, JSON_PRETTY_PRINT);
             }
