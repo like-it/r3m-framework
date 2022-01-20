@@ -128,16 +128,22 @@ class Data {
     public function data($attribute=null, $value=null, $type=null){
         if($attribute !== null){
             if($attribute == 'set'){
-                $do_not_nest_key = $this->do_not_nest_key();
-                if($do_not_nest_key){
-                    $this->data->{$value} = $type;
-                    return $this->data->{$value};
+                if(
+                    $value === null &&
+                    $type === null
+                ){
+                    $this->data = null;
                 } else {
-                    Core::object_delete($value, $this->data()); //for sorting an object
-                    Core::object_set($value, $type, $this->data());
-                    return Core::object_get($value, $this->data());
+                    $do_not_nest_key = $this->do_not_nest_key();
+                    if($do_not_nest_key){
+                        $this->data->{$value} = $type;
+                        return $this->data->{$value};
+                    } else {
+                        Core::object_delete($value, $this->data()); //for sorting an object
+                        Core::object_set($value, $type, $this->data());
+                        return Core::object_get($value, $this->data());
+                    }
                 }
-
             }
             elseif($attribute == 'get'){
                 return Core::object_get($value, $this->data());
