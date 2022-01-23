@@ -17,9 +17,9 @@ use R3m\Io\Config;
 
 class Sort extends Data{
 
-    public static function list($list){
-        $sort = new Sort($list);
-        return $sort;
+    public static function list($list): Sort
+    {
+        return new Sort($list);
     }
 
     public function with($sort=[]){
