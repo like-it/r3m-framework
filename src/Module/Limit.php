@@ -17,6 +17,7 @@ use R3m\Io\Config;
 
 class Limit extends Data{
     const LIMIT = 2;
+    const MAX = 1000;
 
     public static function list($list): Limit
     {
