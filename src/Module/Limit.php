@@ -38,10 +38,8 @@ class Limit extends Data{
         if(array_key_exists('page', $limit)){
             $start =  ((int) $limit['page'] * $the_limit) - $the_limit;
         }
-        d($start);
         $nr = 0;
         $end = $start + $the_limit;
-        d($end);
         $result = [];
         if(
             is_array($list) || 
@@ -52,7 +50,7 @@ class Limit extends Data{
                 if($nr === $start){
                     $is_collect = true;
                 }
-                if($nr <= $end && $is_collect){
+                if($nr < $end && $is_collect){
                     $result[] = $record;
                 }
                 elseif($is_collect) {
