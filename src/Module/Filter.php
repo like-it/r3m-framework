@@ -17,7 +17,8 @@ use R3m\Io\Config;
 
 class Filter extends Data{
 
-    public static function list($list){
+    public static function list($list): Filter
+    {
         return new Filter($list);
     }
 
