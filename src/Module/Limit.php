@@ -50,7 +50,7 @@ class Limit extends Data{
                 if($nr === $start){
                     $is_collect = true;
                 }
-                if($nr > $end && $is_collect){
+                if($nr <= $end && $is_collect){
                     $result[] = $record;
                 } else {
                     break;
