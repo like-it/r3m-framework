@@ -1,4 +1,5 @@
+{{R3M}}
 Parse CLI:
 
-{binary()} parse info                        parse information
-{binary()} parse restart                     removes cache files
+{{binary()}} parse info                        parse information
+{{binary()}} parse restart                     removes cache files

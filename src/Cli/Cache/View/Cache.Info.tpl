@@ -1,4 +1,5 @@
+{{R3M}}
 Cache CLI:
 
-{binary()} cache info                        cache information
-{binary()} cache clear                       removes cache files
+{{binary()}} cache info                        cache information
+{{binary()}} cache clear                       removes cache files
