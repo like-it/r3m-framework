@@ -32,7 +32,7 @@ class Route extends View{
 
     const DEFAULT_COMMAND = Route::COMMAND_INFO;
 
-    const EXCEPTION_COMMAND_PARAMETER = '{$command}';
+    const EXCEPTION_COMMAND_PARAMETER = '{{$command}}';
     const EXCEPTION_COMMAND = 'invalid command (' . Route::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
     public static function run($object){

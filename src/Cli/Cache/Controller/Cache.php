@@ -33,16 +33,16 @@ class Cache extends View{
 
     const DEFAULT_COMMAND = Cache::COMMAND_INFO;
 
-    const EXCEPTION_COMMAND_PARAMETER = '{$command}';
+    const EXCEPTION_COMMAND_PARAMETER = '{{$command}}';
     const EXCEPTION_COMMAND = 'invalid command (' . Cache::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
     const CLEAR_COMMAND = [
-        '{binary()} autoload restart',
-        '{binary()} parse restart',
-        '{binary()} route restart'
+        '{{binary()}} autoload restart',
+        '{{binary()}} parse restart',
+        '{{binary()}} route restart'
     ];
 
-    const INFO = '{binary()} cache clear                    | Clears the app cache';
+    const INFO = '{{binary()}} cache clear                    | Clears the app cache';
 
     public static function run($object){
         $command = $object->parameter($object, Cache::NAME, 1);

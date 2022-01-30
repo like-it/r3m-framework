@@ -19,7 +19,7 @@ use R3m\Io\Exception\UrlNotExistException;
 class Password extends View {
     const DIR = __DIR__;
     const NAME = 'Password';
-    const INFO = '{binary()} password                       | Password hash generation';
+    const INFO = '{{binary()}} password                       | Password hash generation';
     
     public static function run($object){
         try {

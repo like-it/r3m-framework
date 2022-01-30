@@ -32,7 +32,7 @@ class Parse extends View{
 
     const DEFAULT_COMMAND = Parse::COMMAND_INFO;
 
-    const EXCEPTION_COMMAND_PARAMETER = '{$command}';
+    const EXCEPTION_COMMAND_PARAMETER = '{{$command}}';
     const EXCEPTION_COMMAND = 'invalid command (' . Parse::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
     public static function run($object){
