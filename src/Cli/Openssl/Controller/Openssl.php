@@ -32,10 +32,10 @@ class Openssl extends View{
     ];
     const DEFAULT_COMMAND = Openssl::COMMAND_INFO;
 
-    const EXCEPTION_COMMAND_PARAMETER = '{$command}';
+    const EXCEPTION_COMMAND_PARAMETER = '{{$command}}';
     const EXCEPTION_COMMAND = 'invalid command (' . Openssl::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
-    const INFO = '{binary()} openssl                        | Open SSL Self-signed Certificate creation';
+    const INFO = '{{binary()}} openssl                        | Open SSL Self-signed Certificate creation';
 
     public static function run($object){
         $command = $object->parameter($object, Openssl::NAME, 1);

@@ -21,10 +21,10 @@ use R3m\Io\Module\View;
 class Info extends View {
     const DIR = __DIR__;
     const NAME = 'Info';
-    const INFO = '{binary()} info                           | Info shortlist';
+    const INFO = '{{binary()}} info                           | Info shortlist';
     const INFO_RUN = [
-        '{binary()} info                           | Info shortlist',
-        '{binary()} info all                       | This info'
+        '{{binary()}} info                           | Info shortlist',
+        '{{binary()}} info all                       | This info'
     ];
 
     public static function run($object){

@@ -28,7 +28,7 @@ class Bin extends View {
     const TARGET = '/usr/bin/';
     const EXE = 'R3m.php';
 
-    const INFO = '{binary()} bin                            | Creates binary';
+    const INFO = '{{binary()}} bin                            | Creates binary';
 
     public static function run($object){
         $name = $object->parameter($object, Bin::NAME, 1);
