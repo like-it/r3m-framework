@@ -228,7 +228,7 @@ class Parse {
                 $explode[1] = $explode[0];
             }
             if(array_key_exists(1, $explode)){
-                $storage->data('r3m.io.parse.compile.remove_newline', false);
+                $storage->data('r3m.io.parse.compile.remove_newline', true);
                 $string = str_replace(
                     [
                         '{',
