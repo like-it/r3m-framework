@@ -225,6 +225,7 @@ class Parse {
                 !array_key_exists(1, $explode) &&
                 $this->object()->config('parse.read.parser') === '{{R3M}}'
             ) {
+                dd($url);
                 $explode[1] = $explode[0];
             }
             if(array_key_exists(1, $explode)){
