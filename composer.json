@@ -5,7 +5,7 @@
 	"keywords" : ["framework", "r3m", "library"],
 	"homepage": "https://universeorange.com",
 	"require" : {
-		"php": ">=7.1",
+		"php": ">=7.4",
 		"ext-mbstring": "*",
 		"ext-json": "*",
 		"ext-posix": "*",
