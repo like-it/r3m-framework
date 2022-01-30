@@ -78,6 +78,9 @@
         "php": ".php"
     },
     "parse": {
+        "read" : {
+            "parser" : "{{R3M}}"
+        },
         "plugin": {
             "multi_line": [
                 "capture.prepend",

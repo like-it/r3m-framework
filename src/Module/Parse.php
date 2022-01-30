@@ -221,7 +221,7 @@ class Parse {
                 $string = literal::apply($storage, $string);
             }
             $explode = explode('{R3M}', $string, 2);
-            if(array_key_exists(1, $explode)){
+            if(array_key_exists(1, $explode) || $this->object()->config('parse.read.parser') === '{{R3M}}'){
                 $storage->data('r3m.io.parse.compile.remove_newline', false);
                 $string = str_replace(
                     [
