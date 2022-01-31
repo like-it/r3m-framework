@@ -43,6 +43,37 @@ class Value {
             case Token::TYPE_PARENTHESE_CLOSE :
             case Token::TYPE_QUOTE_SINGLE_STRING :
             case Token::TYPE_BACKSLASH :
+            case Token::TYPE_IS_PLUS :
+            case Token::TYPE_IS_GREATER :
+            case Token::TYPE_IS_GREATER_EQUAL :
+            case Token::TYPE_IS_GREATER_GREATER :
+            case Token::TYPE_IS_EQUAL :
+            case Token::TYPE_IS_AND_EQUAL :
+            case Token::TYPE_IS_ARRAY_OPERATOR :
+            case Token::TYPE_IS_COALESCE :
+            case Token::TYPE_IS_DIVIDE :
+            case Token::TYPE_IS_DIVIDE_EQUAL:
+            case Token::TYPE_IS_IDENTICAL :
+            case Token::TYPE_IS_MINUS :
+            case Token::TYPE_IS_MINUS_EQUAL :
+            case Token::TYPE_IS_MINUS_MINUS :
+            case Token::TYPE_IS_MODULO :
+            case Token::TYPE_IS_MODULO_EQUAL :
+            case Token::TYPE_IS_MULTIPLY :
+            case Token::TYPE_IS_MULTIPLY_EQUAL :
+            case Token::TYPE_IS_NOT_EQUAL :
+            case Token::TYPE_IS_NOT_IDENTICAL :
+            case Token::TYPE_IS_OBJECT_OPERATOR :
+            case Token::TYPE_IS_OR_EQUAL :
+            case Token::TYPE_IS_PLUS_EQUAL :
+            case Token::TYPE_IS_PLUS_PLUS :
+            case Token::TYPE_IS_POWER :
+            case Token::TYPE_IS_POWER_EQUAL :
+            case Token::TYPE_IS_SMALLER :
+            case Token::TYPE_IS_SMALLER_EQUAL:
+            case Token::TYPE_IS_SMALLER_SMALLER :
+            case Token::TYPE_IS_SPACESHIP :
+            case Token::TYPE_IS_XOR_EQUAL :
                 return $record['value'];
             break;
             case Token::TYPE_CODE :
