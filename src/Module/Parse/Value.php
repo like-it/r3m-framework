@@ -114,7 +114,8 @@ class Value {
             case Token::TYPE_CURLY_OPEN :
                 return;
             break;
-            default:                              
+            default:
+                d($record);
                 throw new Exception('Variable value type ' .  $record['type'] . ' not defined');
             break;
         }
