@@ -111,6 +111,13 @@ class Route extends Data{
         if(empty($get)){
             return;
         }
+        $get->path = str_replace([
+            '{{',
+            '}}',
+        ], [
+            '{',
+            '}'
+        ], $get->path);
         $path = $get->path;
         if(is_array($option)){
             if(
@@ -390,6 +397,13 @@ class Route extends Data{
     }
 
     private static function prepare($object, $route, $select){
+        $route->path = str_replace([
+            '{{',
+            '}}'
+        ], [
+            '{',
+            '}'
+        ], $route->path);
         $explode = explode('/', $route->path);
         array_pop($explode);
         $attribute = $select->attribute;
@@ -856,6 +870,13 @@ class Route extends Data{
     }
 
     public static function parse($object, $resource){
+        $resource = str_replace([
+            '{{',
+            '}}'
+        ], [
+            '{',
+            '}'
+        ], $resource);
         $explode = explode('}', $resource, 2);
         if(!isset($explode[1])){
             return $resource;
