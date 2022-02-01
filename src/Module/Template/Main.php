@@ -65,9 +65,13 @@ class Main {
 	}
 
 	protected function assign_plus_equal($variable1=null, $variable2=null){
-       $variable1 += 0;
-       $variable2 += 0;
-       return $variable1 + $variable2;
+        if(is_string($variable1)){
+            return $variable1 . $variable2;
+        } else {
+            $variable1 += 0;
+            $variable2 += 0;
+            return $variable1 + $variable2;
+        }
 	}
 
 	protected function assign_dot_equal($variable1=null, $variable2=null){
