@@ -377,6 +377,13 @@ class Route extends Data{
 
     private static function is_variable($string){
         $string = trim($string);
+        $string = str_replace([
+            '{{',
+            '}}'
+        ], [
+            '{',
+            '}'
+        ], $string);
         if(
             substr($string, 0, 2) == '{$' &&
             substr($string, -1) == '}'
@@ -388,6 +395,13 @@ class Route extends Data{
 
     private static function get_variable($string){
         $string = trim($string);
+        $string = str_replace([
+            '{{',
+            '}}'
+        ], [
+            '{',
+            '}'
+        ], $string);
         if(
             substr($string, 0, 2) == '{$' &&
             substr($string, -1) == '}'
