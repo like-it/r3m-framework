@@ -32,7 +32,7 @@ class Data {
      * @param object $data
      * @param string $parameter
      * @param number $offset
-     * @return NULL|boolean|string|
+     * @return NULL|boolean|string
      */
     public static function parameter($data, $parameter, $offset=0){
         $result = null;

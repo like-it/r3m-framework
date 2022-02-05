@@ -91,19 +91,14 @@ class Build {
         switch($type){
             case 'header' :
                 return $this->createHeader($document);
-            break;
             case 'require' :
-                return $this->createRequire($document, $tree);
-            break;
+                return $this->createRequire($document);
             case 'use' :
                 return $this->createUse($document);
-            break;
             case 'run' :
                 return $this->createRun($document);
-            break;
             case 'class' :
                 return $this->createClass($document);
-            break;
             default:
                 throw new Exception('Undefined create in build');
         }
@@ -211,7 +206,7 @@ class Build {
             if($exist === false){
                 $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
                 if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
-                    Core::cors($this->object());
+                    Core::cors();
                     d($dir_plugin);
                     d($url_list);
                 }
@@ -231,13 +226,13 @@ class Build {
             return $document;
         }
         foreach($data as $name => $record){
+            $file = ucfirst($name) . $config->data('extension.php');
             foreach($dir_plugin as $nr => $dir){
                 if($nr < 1){
                     $if_elseif = 'if';
                 } else {
                     $if_elseif = 'elseif';
                 }
-                $file = ucfirst($name) . $config->data('extension.php');
                 $url = $dir . $file;
                 $document[] = $if_elseif . ' (File::exist(\'' . $url . '\')){';
                 $document[] = "\t" . 'require_once \''. $url .'\';';
@@ -353,7 +348,6 @@ class Build {
                             d($select);
                             throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') . ' ' . $record['value']);
                         }
-                    break;       
                     case Token::TYPE_IS_MINUS_MINUS :
                     case Token::TYPE_IS_PLUS_PLUS :
                         $selection = Variable::is_count($this, $storage, $selection);
@@ -494,7 +488,6 @@ class Build {
                 } else {
                     return Build::VARIABLE_DEFINE;
                 }
-            break;
             case Token::TYPE_METHOD :
                 $multi_line = Build::getPluginMultiline($object);
                 // 'capture_append'
@@ -522,10 +515,8 @@ class Build {
                 } else {
                     return Build::METHOD;
                 }
-            break;
             case Token::TYPE_TAG_CLOSE :
                 return Build::TAG_CLOSE;
-            break;
             case Token::TYPE_STRING :
                 if(
                     in_array(
@@ -538,25 +529,18 @@ class Build {
                     return Build::ELSE;
                 }
                 return Token::TYPE_STRING;
-            break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
                 return Token::TYPE_QUOTE_DOUBLE_STRING;
-            break;
             case Token::TYPE_CURLY_CLOSE :
                 return Token::TYPE_CURLY_CLOSE;
-            break;
             case Token::TYPE_AMPERSAND :
                 return Token::TYPE_AMPERSAND;
-            break;
             case Token::TYPE_IS_DIVIDE :
                 return Token::TYPE_IS_DIVIDE;
-            break;
             case Token::TYPE_IS_PLUS_PLUS :
                 return Token::TYPE_IS_PLUS_PLUS;
-            break;
             case Token::TYPE_IS_MINUS_MINUS :
                 return Token::TYPE_IS_MINUS_MINUS;
-            break;
             case Token::TYPE_DOC_COMMENT :
                 return Token::TYPE_DOC_COMMENT;
             default:

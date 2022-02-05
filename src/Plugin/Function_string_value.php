@@ -12,7 +12,5 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_string_value(Parse $parse, Data $data, $variable=null){
-    $result = [];
-    strval($variable, $result);
-    return $result;
+    return strval($variable);
 }

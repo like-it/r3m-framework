@@ -408,9 +408,7 @@ class Autoload {
                 break;
             }
         }
-        if(!empty($resource)){
-            flock($resource, LOCK_UN);
-        }
+        flock($resource, LOCK_UN);
         fclose($resource);
         if($written != strlen($data)){
             return false;

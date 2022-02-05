@@ -228,10 +228,8 @@ class File {
                 break;
             }
         }
-        if(!empty($resource)){
-            flock($resource, LOCK_UN);
-            fclose($resource);
-        }
+        flock($resource, LOCK_UN);
+        fclose($resource);
         if($written != strlen($data)){
             throw new FileWriteException('File.write failed, written != strlen data....');
         } else {
@@ -254,10 +252,8 @@ class File {
                 break;
             }
         }
-        if(!empty($resource)){
-            flock($resource, LOCK_UN);
-            fclose($resource);
-        }
+        flock($resource, LOCK_UN);
+        fclose($resource);
         if($written != strlen($data)){
             throw new FileAppendException('File.append failed, written != strlen data....');
         } else {

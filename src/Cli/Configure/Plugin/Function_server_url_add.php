@@ -14,7 +14,7 @@ function function_server_url_add(Parse $parse, Data $data, stdClass $node){
     if(empty($read)){
         $read = new Data();
     }
-    $read->data('server.url.' . $node->name + '.' . $node->environment, $node->url);
+    $read->data('server.url.' . $node->name . '.' . $node->environment, $node->url);
     $write = '';
     try {
         $write = File::write($url, Core::object($read->data(), Core::OBJECT_JSON));

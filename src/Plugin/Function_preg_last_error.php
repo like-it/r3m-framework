@@ -13,6 +13,7 @@ use R3m\Io\Module\Data;
 
 function function_preg_last_error(Parse $parse, Data $data){
     $code = preg_last_error();
+    $result = null;
     switch($code){
         case PREG_NO_ERROR :
             $result = [

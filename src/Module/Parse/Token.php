@@ -623,9 +623,9 @@ class Token {
     public static function tree($string='', $is_debug=false){
         $prepare = Token::tree_prepare($string, $count);
         $prepare = Token::prepare($prepare, $count, $is_debug);
-        $token = Token::define($prepare, $is_debug);
+        $token = Token::define($prepare);
         $token = Token::group($token, $is_debug);
-        $token = Token::cast($token, $is_debug);
+        $token = Token::cast($token);
         $token = Token::method($token, $is_debug);
         return $token;
     }
@@ -1614,43 +1614,30 @@ class Token {
         switch($char){
             case '.' :
                 return Token::TYPE_DOT;
-                break;
             case ',' :
                 return Token::TYPE_COMMA;
-                break;
             case '(' :
                 return Token::TYPE_PARENTHESE_OPEN;
-                break;
             case ')' :
                 return Token::TYPE_PARENTHESE_CLOSE;
-                break;
             case '[' :
                 return Token::TYPE_BRACKET_SQUARE_OPEN;
-                break;
             case ']' :
                 return Token::TYPE_BRACKET_SQUARE_CLOSE;
-                break;
             case '{' :
                 return Token::TYPE_CURLY_OPEN;
-                break;
             case '}' :
                 return Token::TYPE_CURLY_CLOSE;
-                break;
             case '$' :
                 return Token::TYPE_VARIABLE;
-                break;
             case '\'' :
                 return Token::TYPE_QUOTE_SINGLE;
-                break;
             case '"' :
                 return Token::TYPE_QUOTE_DOUBLE;
-                break;
             case '\\' :
                 return Token::TYPE_BACKSLASH;
-                break;
             case ';' :
                 return Token::TYPE_SEMI_COLON;
-                break;
             case '0' :
             case '1' :
             case '2' :
@@ -1662,7 +1649,6 @@ class Token {
             case '8' :
             case '9' :
                 return Token::TYPE_NUMBER;
-                break;
             case '>' :
             case '<' :
             case '=' :
@@ -1678,16 +1664,13 @@ class Token {
             case '&' :
             case ':' :
                 return Token::TYPE_OPERATOR;
-                break;
             case ' ' :
             case "\t" :
             case "\n" :
             case "\r" :
                 return Token::TYPE_WHITESPACE;
-                break;
             default:
                 return Token::TYPE_STRING;
-                break;
         }
     }
 }

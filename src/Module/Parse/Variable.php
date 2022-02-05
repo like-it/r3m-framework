@@ -28,7 +28,6 @@ class Variable {
                 $assign .= $variable['variable']['attribute'] . '\')';
                 $assign .= '))';
                 return $assign;
-            break;  
             case Token::TYPE_IS_PLUS_PLUS :
                 $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
@@ -37,7 +36,6 @@ class Variable {
                 $assign .= $variable['variable']['attribute'] . '\')';
                 $assign .= '))';
                 return $assign;
-            break;  
         }        
     }
 
@@ -54,7 +52,6 @@ class Variable {
                 $value = Variable::getValue($build, $storage, $token, $is_result);                
                 $assign .= $value . ')';
                 return $assign;
-            break;
             case '+=' :                
                 $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
@@ -64,7 +61,6 @@ class Variable {
                 $value = Variable::getValue($build, $storage, $token, $is_result);
                 $assign .= $value . '))';
                 return $assign;
-            break;
             case '-=' :                
                 $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
@@ -74,7 +70,6 @@ class Variable {
                 $value = Variable::getValue($build, $storage, $token, $is_result);
                 $assign .= $value . '))';
                 return $assign;
-            break;
             case '.=' :                
                 $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
@@ -84,7 +79,6 @@ class Variable {
                 $value = Variable::getValue($build, $storage, $token, $is_result);
                 $assign .= $value . '))';
                 return $assign;
-            break;
             case '++' :
                 $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
@@ -93,7 +87,6 @@ class Variable {
                 $assign .= $variable['variable']['attribute'] . '\')';
                 $assign .= '))';
                 return $assign;
-            break;
             case '--' :                
                 $assign = '$this->storage()->set(\'';
                 $assign .= $variable['variable']['attribute'] . '\', ';
@@ -102,7 +95,6 @@ class Variable {
                 $assign .= $variable['variable']['attribute'] . '\')';
                 $assign .= '))';
                 return $assign;
-            break;
             default: throw new Exception('Variable operator not defined');
 
         }
@@ -229,7 +221,8 @@ class Variable {
         $in_array = false;
         $is_collect = false;
         $type = null;
-        $count = 0;             
+        $count = 0;
+        $selection = [];
         while(count($operator) >= 1){
             $record = array_shift($operator);
             if(is_bool($record) && $record === false){

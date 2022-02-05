@@ -18,6 +18,7 @@ function function_time(Parse $parse, Data $data){
 
     $time= array_shift($attribute);
 
+    $result = false;
     if(empty($attribute) && is_null($time)){
         $result = time();
     } else {

@@ -102,8 +102,7 @@ class App extends Data {
                         App::controller($object, $route);
                         $methods = get_class_methods($route->controller);
                         if(empty($methods)){
-                            throw new Exception('couldn\'t determine controller');
-                            $methods = [];
+                            throw new Exception('couldn\'t determine controller (' . $route->controller .')');
                         }
                         if(in_array('controller', $methods)){
                             $route->controller::controller($object);
