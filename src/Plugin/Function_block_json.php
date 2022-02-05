@@ -10,6 +10,7 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Core;
 
 function function_block_json(Parse $parse, Data $data, $name='', $value=null){
     if($value === null){

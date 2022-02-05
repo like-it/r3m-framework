@@ -1603,6 +1603,13 @@ class Token {
         return $token;
     }
 
+    private static function is_hex($hex=''){
+        if(strtolower($hex) == 'nan'){
+            $hex = NAN;
+        }
+        return ctype_xdigit($hex);
+    }
+
     private static function type($char=null){
         switch($char){
             case '.' :

@@ -5,6 +5,8 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Dir;
+use R3m\Io\Module\File;
 
 function function_import_translation(Parse $parse, Data $data){
     $object = $parse->object();

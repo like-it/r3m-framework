@@ -11,6 +11,7 @@
 namespace R3m\Io\Exception;
 
 use Exception;
+use Throwable;
 
 class LocateException extends Exception {
 

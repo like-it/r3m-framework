@@ -151,7 +151,7 @@ class Variable {
                                 case Token::TYPE_METHOD :
                                     dd($attribute);
                                 break;
-                                case TOKEN::TYPE_VARIABLE:
+                                case Token::TYPE_VARIABLE:
                                     $temp = [];
                                     $temp[] = $attribute;
                                     $define_modifier .= Variable::define($build, $storage, $temp) . ', ';

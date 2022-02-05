@@ -8,6 +8,7 @@
  * @changeLog
  *     -            all
  */
+use R3m\Io\App;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 

@@ -11,7 +11,7 @@
 use stdClass;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Host;
+use R3m\Io\Module\Core;
 
 
 function function_cors(Parse $parse, Data $data){

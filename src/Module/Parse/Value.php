@@ -13,7 +13,7 @@ namespace R3m\Io\Module\Parse;
 use R3m\Io\Module\Core;
 
 use R3m\Io\Module\Data;
-use R3m\io\Module\File;
+use R3m\Io\Module\File;
 use Exception;
 
 class Value {

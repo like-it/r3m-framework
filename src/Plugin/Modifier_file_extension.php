@@ -10,6 +10,7 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\File;
 
 function modifier_file_extension(Parse $parse, Data $data, $url){
     return File::extension($url);

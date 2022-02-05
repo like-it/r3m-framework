@@ -11,7 +11,7 @@
 use stdClass;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Host;
+use R3m\Io\Module\Handler;
 
 
 function function_header(Parse $parse, Data $data, $string='', $http_response_code=null, $replace=true){
