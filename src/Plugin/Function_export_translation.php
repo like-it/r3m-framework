@@ -5,6 +5,9 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Core;
+use R3m\Io\Module\Dir;
+use R3m\Io\Module\File;
 
 function function_export_translation(Parse $parse, Data $data, $type='object'){
     $object = $parse->object();

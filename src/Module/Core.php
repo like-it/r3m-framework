@@ -17,7 +17,8 @@ use R3m\Io\App;
 
 class Core {
 
-    const EXCEPTION_MERGE_ARRAY_OBJECT = 'cannot merge an array with an object.';
+    const EXCEPTION_MERGE_ARRAY_OBJECT = 'Cannot merge an array with an object.';
+    const EXCEPTION_OBJECT_OUTPUT = 'Unknown output in object.';
 
     const ATTRIBUTE_EXPLODE = [
         '.'
@@ -38,15 +39,15 @@ class Core {
 
     const OUTPUT_MODE_IMPLICIT = 'implicit';
     const OUTPUT_MODE_EXPLICIT = 'explicit';
-    const OUTPUT_MODE_DEFAULT = CORE::OUTPUT_MODE_EXPLICIT;
+    const OUTPUT_MODE_DEFAULT = Core::OUTPUT_MODE_EXPLICIT;
 
     const OUTPUT_MODE = [
             Core::OUTPUT_MODE_IMPLICIT,
             Core::OUTPUT_MODE_EXPLICIT,
     ];
 
-    const MODE_INTERACTIVE = CORE::OUTPUT_MODE_IMPLICIT;
-    const MODE_PASSIVE = CORE::OUTPUT_MODE_EXPLICIT;
+    const MODE_INTERACTIVE = Core::OUTPUT_MODE_IMPLICIT;
+    const MODE_PASSIVE = Core::OUTPUT_MODE_EXPLICIT;
 
     public static function binary(){
         if(array_key_exists('_', $_SERVER)){

@@ -10,6 +10,9 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Core;
+use R3m\Io\Module\File;
+
 
 function function_data_write(Parse $parse, Data $data, $url='', $write){
     $write = Core::object($write, 'json');

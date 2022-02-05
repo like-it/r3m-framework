@@ -10,6 +10,7 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\File;
 
 function modifier_file_basename(Parse $parse, Data $data, $url, $extension=null){
     return File::basename($url, $extension);

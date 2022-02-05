@@ -20,6 +20,10 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\View;
 use R3m\Io\Module\Parse;
 
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\UrlNotExistException;
+
 class Version extends View{
     const NAME = 'Version';
     const DIR = __DIR__;
@@ -116,7 +120,7 @@ class Version extends View{
             echo 'Command undefined.' . PHP_EOL;;
         }
         $parse = new Parse($object);
-        $command = VERSION::UPDATE_COMMAND;
+        $command = Version::UPDATE_COMMAND;
 
         foreach($command as $record){
             $execute = $parse->compile($record);

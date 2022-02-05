@@ -12,6 +12,6 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_string_sha1(Parse $parse, Data $data, $string='', $raw_output=false){
-    $result = str_sha1($string, $raw_output);
+    $result = sha1($string, $raw_output);
     return $result;
 }

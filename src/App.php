@@ -195,7 +195,7 @@ class App extends Data {
         $array['trace_as_string'] = $exception->getTraceAsString();
         try {
             return Core::object($array, Core::OBJECT_JSON);
-        } catch (Exception\ObjectException $exception) {
+        } catch (ObjectException $exception) {
             return $exception;
         }
     }
@@ -307,7 +307,7 @@ class App extends Data {
                 $this->data('ldelim', '{');
                 $this->data('rdelim', '}');
                 $data = clone $this->data();
-                unset($data->{APP::NAMESPACE});
+                unset($data->{App::NAMESPACE});
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
                 $data = new Data($read);
                 $script = Parse::readback($this, $parse, App::SCRIPT);

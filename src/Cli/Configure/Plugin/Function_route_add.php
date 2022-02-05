@@ -1,5 +1,6 @@
 <?php
 
+use R3m\Io\App;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
