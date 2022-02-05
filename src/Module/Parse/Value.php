@@ -30,7 +30,6 @@ class Value {
             case Token::TYPE_INT :
             case Token::TYPE_FLOAT :
                 return $record['execute'];
-            break;
             case Token::TYPE_BOOLEAN :
             case Token::TYPE_NULL :
             case Token::TYPE_COMMA  :
@@ -75,7 +74,6 @@ class Value {
             case Token::TYPE_IS_SPACESHIP :
             case Token::TYPE_IS_XOR_EQUAL :
                 return $record['value'];
-            break;
             case Token::TYPE_CODE :
             case Token::TYPE_QUOTE_SINGLE :
                 $record['value'] = str_replace([
@@ -86,7 +84,6 @@ class Value {
                     '}'
                 ], $record['value']);
                 return $record['value'];
-            break;
             case Token::TYPE_STRING :
                 $record['value'] = str_replace([
                     '{$ldelim}',
@@ -97,7 +94,6 @@ class Value {
                 ], $record['value']);
                 //$record['value'] = str_replace('\\', '\\\\', $record['value']);
                 return '\'' . $record['value'] . '\''; //might need str_replace on quote_single (') to (\')
-            break;
             case Token::TYPE_QUOTE_DOUBLE_STRING :
                 if(stristr($record['value'], '{') === false){                                        
                     return $record['value'];
@@ -118,37 +114,30 @@ class Value {
                 } else {
                     return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
                 }
-            break;
             case Token::TYPE_CAST :
                 return Value::getCast($record);
-            break;
             case Token::TYPE_VARIABLE :
                 //adding modifiers
                 $token = [];
                 $token[] = $record;
                 return Variable::define($build, $storage, $token);
-            break;
             case Token::TYPE_METHOD :
                 $method = Method::get($build, $storage, $record);
                 if($method['type'] == Token::TYPE_CODE){
                     return $method['value'];
                 } else {
                     return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
-                }                                                
-            break;
+                }
             case Token::TYPE_COMMENT :
             case Token::TYPE_DOC_COMMENT :
                 return '\'\'';
-            break;
             case Token::TYPE_WHITESPACE :
             case Token::TYPE_CURLY_CLOSE :
             case Token::TYPE_CURLY_OPEN :
                 return;
-            break;
             default:
                 d($record);
                 throw new Exception('Variable value type ' .  $record['type'] . ' not defined');
-            break;
         }
     }
 

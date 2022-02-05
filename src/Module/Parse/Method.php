@@ -290,7 +290,6 @@ class Method {
                     $data[0] = [];
                 }
                 return $data;
-            break;
             case Method::WHERE_AFTER :
                 $data = [];
                 if(isset($token[2])){
@@ -299,7 +298,6 @@ class Method {
                     $data[0] = [];
                 }
                 return $data;
-            break;
         }
     }
 

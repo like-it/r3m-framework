@@ -140,20 +140,21 @@ class Handler {
 
     private static function request_file(){
         $nodeList = array();
-        if(isset($_FILES)){
-            foreach ($_FILES as $category => $list){
-                if(is_array($list)){
-                    foreach($list as $attribute => $subList){
-                        if(is_array($subList)){
-                            foreach ($subList as $nr => $value){
-                                $nodeList[$nr][$attribute] = $value;
-                            }
-                            $nodeList[$nr]['input_name'] = $category;
-                        } else {
-                            $list['input_name'] = $category;
-                            $nodeList[] = $list;
-                            break;
+        foreach ($_FILES as $category => $list){
+            if(is_array($list)){
+                foreach($list as $attribute => $subList){
+                    if(is_array($subList)){
+                        $nr = false;
+                        foreach ($subList as $nr => $value){
+                            $nodeList[$nr][$attribute] = $value;
                         }
+                        if($nr){
+                            $nodeList[$nr]['input_name'] = $category;
+                        }
+                    } else {
+                        $list['input_name'] = $category;
+                        $nodeList[] = $list;
+                        break;
                     }
                 }
             }
@@ -500,7 +501,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
                 case 2 :
                     if(
                     isset($_SESSION[$tmp[0]]) &&
@@ -510,7 +510,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
                 case 3 :
                     if(
                     isset($_SESSION[$tmp[0]]) &&
@@ -521,7 +520,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
                 case 4 :
                     if(
                     isset($_SESSION[$tmp[0]]) &&
@@ -533,7 +531,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
                 case 5 :
                     if(
                     isset($_SESSION[$tmp[0]]) &&
@@ -546,7 +543,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
                 case 6 :
                     if(
                     isset($_SESSION[$tmp[0]]) &&
@@ -560,7 +556,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
                 case 7 :
                     if(
                     isset($_SESSION[$tmp[0]]) &&
@@ -575,7 +570,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
                 case 8 :
                     if(
                     isset($_SESSION[$tmp[0]]) &&
@@ -591,7 +585,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
                 case 9 :
                     if(
                     isset($_SESSION[$tmp[0]]) &&
@@ -608,7 +601,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
                 case 10 :
                     if(
                     isset($_SESSION[$tmp[0]]) &&
@@ -626,7 +618,6 @@ class Handler {
                     } else {
                         return null;
                     }
-                    break;
             }
         } else {
             return $_SESSION;
