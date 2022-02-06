@@ -42,7 +42,6 @@ function function_input(Parse $parse, Data $data, $options=[]){
                     $input = '<input type="text" id="' . $options['name'] .'"' . $class . ' name="' . $options['name'] .'" value=""'. $placeholder . '/>';
                 }
                 return $label . $input;
-            break;
         }
     }
 }

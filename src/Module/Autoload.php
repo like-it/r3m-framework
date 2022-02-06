@@ -73,7 +73,7 @@ class Autoload {
             $object = reset($function);
             if(is_object($object) && get_class($object) == get_class($this) && $nr > 0){
                 spl_autoload_unregister($function);
-                spl_autoload_register($function, null, true); //prepend (prioritize)
+                spl_autoload_register($function, false, true); //prepend (prioritize)
             }
         }
     }
