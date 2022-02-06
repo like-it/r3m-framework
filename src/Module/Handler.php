@@ -629,7 +629,7 @@ class Handler {
         if($attribute !== null) {
             if ($value !== null) {
                 if ($attribute == Handler::COOKIE_DELETE) {
-                    $result = @setcookie($value, null, 0, "/"); //ends at session
+                    $result = @setcookie($value, '', 0, "/"); //ends at session
                     if (!empty($result) && defined('IS_CLI')) {
                         unset($_COOKIE[$value]);
                     }
@@ -652,6 +652,7 @@ class Handler {
                 }
             }
             if($value === null && is_array($duration)){
+                $value = '';
                 $result = @setcookie($attribute, $value, $duration);
             }
         }

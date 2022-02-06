@@ -16,9 +16,9 @@ function function_preg_grep(Parse $parse, Data $data, $pattern=null, $input=[], 
         $flags = constant($flags);
     }
     if($flags != 0){
-        $result = preg_filter($pattern, $input, $flags);
+        $result = preg_grep($pattern, $input, $flags);
     } else {
-        $result = preg_filter($pattern, $input);
+        $result = preg_grep($pattern, $input);
     }
     return $result;
 }

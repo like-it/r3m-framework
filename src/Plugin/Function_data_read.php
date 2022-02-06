@@ -22,5 +22,4 @@ function function_data_read(Parse $parse, Data $data, $url=''){
     } else {
         throw new Exception('Error: url:' . $url . ' not found');
     }
-    return '';
 }
