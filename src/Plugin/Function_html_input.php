@@ -31,6 +31,7 @@ function function_html_input(Parse $parse, Data $data, $options=[]){
                         !array_key_exists('value', $options) ||
                         empty($options['value'])
                     ){
+                        dd($object->request('node.' . $options['name']));
                         $input = '<input type="hidden" id="' . $options['id'] .'" name="node.' . $options['name'] .'" value="' . $object->request('node.' . $options['name']).'"/>';
                     } else {
                         $input = '<input type="hidden" id="' . $options['id'] .'" name="node.' . $options['name'] .'" value="' . $options['value'] . '"/>';
