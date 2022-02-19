@@ -53,14 +53,55 @@ function function_html_input(Parse $parse, Data $data, $options=[]){
                 } else {
                     $placeholder = '';
                 }
+                if(array_key_exists('autocorrect', $options)){
+                    $autocorrect = ' autocorrect="' . $options['autocorrect'] .'"';
+                } else {
+                    $autocorrect = '';
+                }
+                if(array_key_exists('autocapitalize', $options)){
+                    $autocapitalize = ' autocapitalize="' . $options['autocapitalize'] .'"';
+                } else {
+                    $autocapitalize = '';
+                }
+                if(array_key_exists('spellcheck', $options)){
+                    $spellcheck = ' spellcheck="' . $options['spellcheck'] .'"';
+                } else {
+                    $spellcheck = '';
+                }
                 if(
                     array_key_exists('name', $options) &&
                     array_key_exists('value', $options)
                 ){
-                    $input = '<input type="text" id="' . $options['name'] .'"' . $class . ' name="' . $options['name'] .'" value="' . $options['value'] . '"' . $placeholder . '/>';
+                    $input =
+                        '<input type="text" id="' .
+                        $options['name'] .
+                        '"' .
+                        $class .
+                        ' name="' .
+                        $options['name'] .
+                        '" value="' .
+                        $options['value'] .
+                        '"' .
+                        $placeholder .
+                        $autocorrect .
+                        $autocapitalize .
+                        $spellcheck .
+                        '/>';
                 }
                 elseif(array_key_exists('name', $options)) {
-                    $input = '<input type="text" id="' . $options['name'] .'"' . $class . ' name="' . $options['name'] .'" value=""'. $placeholder . '/>';
+                    $input =
+                        '<input type="text" id="' .
+                        $options['name'] .
+                        '"' .
+                        $class .
+                        ' name="' .
+                        $options['name'] .
+                        '" value=""'.
+                        $placeholder .
+                        $autocorrect .
+                        $autocapitalize .
+                        $spellcheck .
+                        '/>';
                 }
                 return $label . $input;
         }
