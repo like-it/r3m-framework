@@ -54,11 +54,17 @@ function function_html_input(Parse $parse, Data $data, $options=[]){
                         $name = 'node.' . $options['name'];
                     }
                 }
+                $id = '';
+                if(array_key_exists('id', $options)){
+                    $id = $options['id'];
+                } else {
+                    $id = $name;
+                }
                 if(
-                    $name &&
+                    $id &&
                     array_key_exists('label', $options)
                 ){
-                    $label = '<label for="' . $name .'"'. $class . '>' . $options['label'] . '</label>';
+                    $label = '<label for="' . $id .'"'. $class . '>' . $options['label'] . '</label>';
                 }
                 if(array_key_exists('placeholder', $options)){
                     $placeholder = ' placeholder="' . $options['placeholder'] .'"';
@@ -81,12 +87,13 @@ function function_html_input(Parse $parse, Data $data, $options=[]){
                     $spellcheck = '';
                 }
                 if(
+                    $id &&
                     $name &&
                     array_key_exists('value', $options)
                 ){
                     $input =
                         '<input type="text" id="' .
-                        $name .
+                        $id .
                         '"' .
                         $class .
                         ' name="' .
@@ -100,10 +107,13 @@ function function_html_input(Parse $parse, Data $data, $options=[]){
                         $spellcheck .
                         '/>';
                 }
-                elseif($name) {
+                elseif(
+                    $id &&
+                    $name
+                ) {
                     $input =
                         '<input type="text" id="' .
-                        $name .
+                        $id .
                         '"' .
                         $class .
                         ' name="' .
