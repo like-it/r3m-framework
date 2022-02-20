@@ -42,11 +42,23 @@ function function_html_input(Parse $parse, Data $data, $options=[]){
             case 'text' :
                 $label = '';
                 $input = '';
+                $name = false;
+                if(array_key_exists('name', $options)){
+                    if(array_key_exists('node', $options)){
+                        if(empty($options['node'])){
+                            $name = $options['name'];
+                        } else {
+                            $name = $options['node'] . '.' . $options['name'];
+                        }
+                    } else {
+                        $name = 'node.' . $options['name'];
+                    }
+                }
                 if(
-                    array_key_exists('name', $options) &&
+                    $name &&
                     array_key_exists('label', $options)
                 ){
-                    $label = '<label for="' . $options['name'] .'"'. $class . '>' . $options['label'] . '</label>';
+                    $label = '<label for="' . $name .'"'. $class . '>' . $options['label'] . '</label>';
                 }
                 if(array_key_exists('placeholder', $options)){
                     $placeholder = ' placeholder="' . $options['placeholder'] .'"';
@@ -69,16 +81,16 @@ function function_html_input(Parse $parse, Data $data, $options=[]){
                     $spellcheck = '';
                 }
                 if(
-                    array_key_exists('name', $options) &&
+                    $name &&
                     array_key_exists('value', $options)
                 ){
                     $input =
                         '<input type="text" id="' .
-                        $options['name'] .
+                        $name .
                         '"' .
                         $class .
                         ' name="' .
-                        $options['name'] .
+                        $name .
                         '" value="' .
                         $options['value'] .
                         '"' .
@@ -88,14 +100,14 @@ function function_html_input(Parse $parse, Data $data, $options=[]){
                         $spellcheck .
                         '/>';
                 }
-                elseif(array_key_exists('name', $options)) {
+                elseif($name) {
                     $input =
                         '<input type="text" id="' .
-                        $options['name'] .
+                        $name .
                         '"' .
                         $class .
                         ' name="' .
-                        $options['name'] .
+                        $name.
                         '" value=""'.
                         $placeholder .
                         $autocorrect .
