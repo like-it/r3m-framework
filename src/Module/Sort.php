@@ -22,7 +22,7 @@ class Sort extends Data{
         return new Sort($list);
     }
 
-    public function with($sort=[]){
+    public function with($sort=[], $key_reset=false){
         $list = $this->data();
         if(
             is_array($list) || 
@@ -159,6 +159,13 @@ class Sort extends Data{
                     }                                      
                 }  
             }                   
+        }
+        if($key_reset){
+            $result = [];
+            foreach($list as $record){
+                $result[] = $record;
+            }
+            return $result;
         }
         return $list;
     }
