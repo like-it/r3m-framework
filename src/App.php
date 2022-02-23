@@ -127,6 +127,7 @@ class App extends Data {
                             ;
                             $read = File::read($url);
                             $data = new Data($object->data());
+                            $data->delete('R3m\\Io');
                             $data->set('route', $route);
                             $data->set('method', $methods);
                             $read = $parse->compile($read, $data->data());
