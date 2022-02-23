@@ -131,13 +131,7 @@ class App extends Data {
                             $data = new Data($collection);
                             $data->set('route', $route);
                             $data->set('method', $methods);
-                            $read = $parse->compile($read, $data->data());
-                            dd($read);
-
-
-
-                            dd('throw exception not working...');
-                            throw new Exception('Cannot call: ' . $route->function . ' in: ' . $route->controller);
+                            return $parse->compile($read, $data->data());
                         }
                         if(in_array('after_run', $methods)){
                             $route->controller::after_run($object);
