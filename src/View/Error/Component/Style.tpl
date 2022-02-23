@@ -4,10 +4,13 @@
 html, body {
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100%;
 }
 
 body {
     background-color: rgba(33, 33, 33, 1);
+    overflow: auto;
 }
 
 header {
@@ -30,4 +33,9 @@ header h1 {
 main {
     color: rgba(255, 255, 255, 1);
 }
+
+main ul {
+    margin: 0;
+}
+
 {{/literal}}
