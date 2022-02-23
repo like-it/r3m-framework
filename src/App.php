@@ -116,6 +116,8 @@ class App extends Data {
                         if(in_array($route->function, $methods)){
                             $result = $route->controller::{$route->function}($object);
                         } else {
+                            //load error page
+                            dd('throw exception not working...');
                             throw new Exception('Cannot call: ' . $route->function . ' in: ' . $route->controller);
                         }
                         if(in_array('after_run', $methods)){
@@ -146,8 +148,11 @@ class App extends Data {
         } else {
             return $file;
         }
-    }    
+    }
 
+    /**
+     * @throws Exception
+     */
     public static function controller(App $object, $route){
         if(property_exists($route, 'controller')){
             $check = class_exists($route->controller);
