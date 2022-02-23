@@ -127,7 +127,7 @@ class App extends Data {
                             ;
                             $read = File::read($url);
                             $collection = $object->data();
-                            unset($collection->{R3m\Io});
+                            unset($collection->{App::NAMESPACE});
                             $data = new Data($collection);
                             $data->set('route', $route);
                             $data->set('method', $methods);
