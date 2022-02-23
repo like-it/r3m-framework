@@ -12,6 +12,7 @@ namespace R3m\Io\Module;
 
 use R3m\Io\App;
 use R3m\Io\Config;
+use Exception;
 use R3m\Io\Exception\LocateException;
 
 class FileRequest {
@@ -19,6 +20,7 @@ class FileRequest {
 
     /**
      * @throws LocateException
+     * @throws Exception
      */
     public static function get(App $object){
         if (
@@ -46,10 +48,12 @@ class FileRequest {
         array_unshift($view, 'View');
         array_unshift($view, $controller);
         $location[] = $config->data('host.dir.root') .
-            implode('/', $view) .
+            implode($config->data('ds'), $view) .
+            $config->data('ds') .
             $file;
         $location[] = $config->data('host.dir.root') .
-            implode('/', $explode) .
+            implode($config->data('ds'), $explode) .
+            $config->data('ds') .
             $file;
         $location[] = $config->data('host.dir.root') .
             $dir .
@@ -61,13 +65,15 @@ class FileRequest {
         $type = array_pop($explode);
         array_push($explode, '');
         $dir_type = implode('/', $explode);
-        $location[] = $config->data('host.dir.root') .
-            $dir_type .
-            'Public' .
-            $config->data('ds') .
-            $type .
-            $config->data('ds') .
-            $file;
+        if($type){
+            $location[] = $config->data('host.dir.root') .
+                $dir_type .
+                'Public' .
+                $config->data('ds') .
+                $type .
+                $config->data('ds') .
+                $file;
+        }
         $location[] = $config->data('host.dir.root') .
             'View' .
             $config->data('ds') .
@@ -75,22 +81,23 @@ class FileRequest {
             'Public' .
             $config->data('ds') .
             $file;
-        $location[] = $config->data('host.dir.root') .
-            'View' .
-            $config->data('ds') .
-            $dir_type .
-            'Public' .
-            $config->data('ds') .
-            $type .
-            $config->data('ds') .
-            $file;
+        if($type){
+            $location[] = $config->data('host.dir.root') .
+                'View' .
+                $config->data('ds') .
+                $dir_type .
+                'Public' .
+                $config->data('ds') .
+                $type .
+                $config->data('ds') .
+                $file;
+        }
         $location[] = $config->data('host.dir.public') .
             $dir .
             $file;
         $location[] = $config->data('project.dir.public') .
             $dir .
             $file;
-
         foreach($location as $url){
             if(File::exist($url)){
                 $etag = sha1($url);
