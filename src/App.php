@@ -129,7 +129,7 @@ class App extends Data {
                             $object->data('route', $route);
                             $object->data('method', $methods);
                             $collection = $object->data();
-                            unset($collection->{App::NAMESPACE});
+                            //unset($collection->{App::NAMESPACE});
                             return $parse->compile($read, $collection);
                         }
                         if(in_array('after_run', $methods)){
