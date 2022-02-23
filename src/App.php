@@ -125,7 +125,11 @@ class App extends Data {
                                 'Controller.Function.Not.Exist' .
                                 $object->config('extension.tpl')
                             ;
-                            $read = $object->parse_read($url);
+                            $read = File::read($url);
+                            $data = new Data($object->data());
+                            $data->set('route', $route);
+                            $data->set('method', $methods);
+                            $read = $parse->compile($read, $data);
                             dd($read);
 
 
