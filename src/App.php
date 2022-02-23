@@ -126,12 +126,11 @@ class App extends Data {
                                 $object->config('extension.tpl')
                             ;
                             $read = File::read($url);
+                            $object->data('route', $route);
+                            $object->data('method', $methods);
                             $collection = $object->data();
                             unset($collection->{App::NAMESPACE});
-                            $data = new Data($collection);
-                            $data->set('route', $route);
-                            $data->set('method', $methods);
-                            return $parse->compile($read, $data->data());
+                            return $parse->compile($read, $collection);
                         }
                         if(in_array('after_run', $methods)){
                             $route->controller::after_run($object);
