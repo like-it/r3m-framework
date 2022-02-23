@@ -123,9 +123,10 @@ class App extends Data {
                                 'Error' .
                                 $object->config('ds') .
                                 'Controller.Function.Not.Exist' .
-                                $object->config('extension.json')
+                                $object->config('extension.tpl')
                             ;
-                            dd($url);
+                            $read = $object->parse_read($url);
+                            dd($read);
 
 
 
