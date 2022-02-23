@@ -1,3 +1,4 @@
+{{R3M}}
 <head>
     <meta name="author" content="{{$html.head.author|default:''}}">
     <meta http-equiv="content-type" content="{{$html.head.content.type | default:'text/html; charset=UTF-8'}}">
@@ -11,6 +12,6 @@
     <meta name="description" content="{{$html.head.description|default:''}}">
     <link rel="shortcut icon" href="{{$html.head.icon|default:''}}">
     <style>
-        {{require(config('framework.dir.view') + 'Error/Component/Style.css')}}
+        {{require(config('framework.dir.view') + 'Error/Component/Style.tpl')}}
     </style>
 </head>
