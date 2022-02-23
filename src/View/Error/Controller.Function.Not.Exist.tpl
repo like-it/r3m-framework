@@ -4,7 +4,7 @@
 {{require(config('framework.dir.view') + 'Error/Component/Head.tpl')}}
 <body>
 
-{{dd("{{$this}}")}}
+{{dd('{{$this}}')}}
 
 
 </body>
