@@ -20,6 +20,7 @@ header {
 header h1 {
     padding: 0;
     margin-top: 25px;
+    margin-bottom: 25px;
     padding-left: 25px;
     padding-right: 25px;
     text-align: center;
