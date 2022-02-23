@@ -118,7 +118,13 @@ class App extends Data {
                         } else {
                             //load error page
                             $parse = new Parse($object);
-                            $url = $object->config('framework.dir.view');
+                            $url =
+                                $object->config('framework.dir.view') .
+                                'Error' .
+                                $object->config('ds') .
+                                'Controller.Function.Not.Exist' .
+                                $object->config('extension.json')
+                            ;
                             dd($url);
 
 
