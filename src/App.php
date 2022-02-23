@@ -118,7 +118,7 @@ class App extends Data {
                         } else {
                             //load error page
                             $parse = new Parse($object);
-                            $url = $object->config();
+                            $url = $object->config('framework.dir.view');
                             dd($url);
 
 
