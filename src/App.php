@@ -126,8 +126,9 @@ class App extends Data {
                                 $object->config('extension.tpl')
                             ;
                             $read = File::read($url);
-                            $data = new Data($object->data());
-                            $data->delete('R3m\\Io');
+                            $collection = $object->data();
+                            unset($collection['R3m\\Io']);
+                            $data = new Data($collection);
                             $data->set('route', $route);
                             $data->set('method', $methods);
                             $read = $parse->compile($read, $data->data());
