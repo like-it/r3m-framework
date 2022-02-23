@@ -14,7 +14,6 @@ body {
 header {
     display: block;
     width: 100%;
-    height: 100px;
     background-color: rgba(225, 33, 0, 1);
 }
 
@@ -24,7 +23,7 @@ header h1 {
     padding-left: 25px;
     padding-right: 25px;
     text-align: center;
-    font-size: 50px;
+    font-size: 32px;
     color: rgba(255, 255, 255, 1);
 }
 
