@@ -4,8 +4,6 @@
 html, body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
 }
 
 body {
@@ -32,6 +30,9 @@ header h1 {
 
 main {
     color: rgba(255, 255, 255, 1);
+    padding-left: 25px;
+    padding-right: 25px;
+    width: calc(100% - 50px);
 }
 
 main ul {
