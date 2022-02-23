@@ -1,4 +1,5 @@
 {{R3M}}
+{{block.html()}}
 <!DOCTYPE html>
 <html lang="en">
 {{require(config('framework.dir.view') + 'Error/Component/Head.tpl')}}
@@ -18,3 +19,4 @@
 </main>
 </body>
 </html>
+{{/block.html}}
