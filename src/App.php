@@ -129,7 +129,7 @@ class App extends Data {
                             $data = new Data($object->data());
                             $data->set('route', $route);
                             $data->set('method', $methods);
-                            $read = $parse->compile($read, $data);
+                            $read = $parse->compile($read, $data->data());
                             dd($read);
 
 
