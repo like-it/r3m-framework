@@ -117,6 +117,12 @@ class App extends Data {
                             $result = $route->controller::{$route->function}($object);
                         } else {
                             //load error page
+                            $parse = new Parse($object);
+                            $url = $object->config('framework.dir.view');
+                            dd($url);
+
+
+
                             dd('throw exception not working...');
                             throw new Exception('Cannot call: ' . $route->function . ' in: ' . $route->controller);
                         }
