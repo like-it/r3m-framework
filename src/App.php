@@ -10,7 +10,6 @@
  */
 namespace R3m\Io;
 
-use stdClass;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
@@ -22,10 +21,10 @@ use R3m\Io\Module\Host;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
-use R3m\Io\Module\View;
 
 use Exception;
 use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\LocateException;
 
 class App extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -64,6 +63,10 @@ class App extends Data {
         require_once 'Error.php';
     }
 
+    /**
+     * @throws ObjectException
+     * @throws LocateException
+     */
     public static function run(App $object){
         Core::cors();
         Config::configure($object);
@@ -76,11 +79,14 @@ class App extends Data {
             try {
                 $route = Route::request($object);
                 if($route === false){
-                    $code = 404;
-                    $string = 'Status: ' . $code;
-                    $replace = true;
-                    Handler::header($string, $code, $replace);
-                    throw new Exception('couldn\'t determine route');
+                    $response = new Response(
+                        App::exception_to_json(new Exception(
+                            'Couldn\'t determine route...'
+                        )),
+                        Response::TYPE_JSON,
+                        Response::STATUS_ERROR
+                    );
+                    return Response::output($object, $response);
                 } else {
                     if(
                         property_exists($route, 'redirect') &&
@@ -102,7 +108,14 @@ class App extends Data {
                         App::controller($object, $route);
                         $methods = get_class_methods($route->controller);
                         if(empty($methods)){
-                            throw new Exception('couldn\'t determine controller (' . $route->controller .')');
+                            $response = new Response(
+                                App::exception_to_json(new Exception(
+                            'Couldn\'t determine controller (' . $route->controller .')'
+                                )),
+                                Response::TYPE_JSON,
+                                Response::STATUS_ERROR
+                            );
+                            return Response::output($object, $response);
                         }
                         if(in_array('controller', $methods)){
                             $route->controller::controller($object);
