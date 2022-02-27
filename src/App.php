@@ -117,7 +117,7 @@ class App extends Data {
                             $result = $route->controller::{$route->function}($object);
                         } else {
                             $controller = File::basename($route->controller);
-                            return new Response(
+                            $response = new Response(
                                 App::exception_to_json(new Exception(
                                     'Controller (' .
                                     $controller .
@@ -128,6 +128,7 @@ class App extends Data {
                                 Response::TYPE_JSON,
                                 Response::STATUS_ERROR
                             );
+                            return Response::output($object, $response);
                         }
                         if(in_array('after_run', $methods)){
                             $route->controller::after_run($object);
