@@ -180,9 +180,21 @@ class App extends Data {
         if(property_exists($route, 'controller')){
             $check = class_exists($route->controller);
             if(empty($check)){
+                dd('found');
+                /*
+                 * $response = new Response(
+                                App::exception_to_json(new Exception(
+                            'Couldn\'t determine controller (' . $route->controller .')'
+                                )),
+                                Response::TYPE_JSON,
+                                Response::STATUS_ERROR
+                            );
+                            return Response::output($object, $response);
+                 */
                 throw new Exception('Cannot call controller (' . $route->controller .')');
             }
         } else {
+            dd('found 2');
             throw new Exception('Missing controller in route');
         }
     }
