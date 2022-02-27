@@ -116,6 +116,9 @@ class App extends Data {
                         if(in_array($route->function, $methods)){
                             $result = $route->controller::{$route->function}($object);
                         } else {
+                            return App::exception_to_json(new Exception('Controller function (' . $route->function .') not exist.'));
+
+                            /*
                             //load error page
                             $parse = new Parse($object);
                             $url =
@@ -131,6 +134,7 @@ class App extends Data {
                             $collection = $object->data();
                             //unset($collection->{App::NAMESPACE});
                             return $parse->compile($read, $collection);
+                            */
                         }
                         if(in_array('after_run', $methods)){
                             $route->controller::after_run($object);
