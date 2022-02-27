@@ -104,6 +104,7 @@ class App extends Data {
                     ){
                         Core::redirect($route->redirect);
                     } else {
+                        d('yes');
                         App::contentType($object);
                         App::controller($object, $route);
                         $methods = get_class_methods($route->controller);
