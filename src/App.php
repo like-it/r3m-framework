@@ -117,31 +117,17 @@ class App extends Data {
                             $result = $route->controller::{$route->function}($object);
                         } else {
                             $controller = File::basename($route->controller);
-                            return App::exception_to_json(new Exception(
-                                'Controller (' .
-                                $controller .
-                                ') function (' .
-                                $route->function .
-                                ') not exist.'
-                            ));
-
-                            /*
-                            //load error page
-                            $parse = new Parse($object);
-                            $url =
-                                $object->config('framework.dir.view') .
-                                'Error' .
-                                $object->config('ds') .
-                                'Controller.Function.Not.Exist' .
-                                $object->config('extension.tpl')
-                            ;
-                            $read = File::read($url);
-                            $object->data('route', $route);
-                            $object->data('method', $methods);
-                            $collection = $object->data();
-                            //unset($collection->{App::NAMESPACE});
-                            return $parse->compile($read, $collection);
-                            */
+                            return new Response(
+                                App::exception_to_json(new Exception(
+                                    'Controller (' .
+                                    $controller .
+                                    ') function (' .
+                                    $route->function .
+                                    ') not exist.'
+                                )),
+                                Response::TYPE_JSON,
+                                Response::STATUS_ERROR
+                            );
                         }
                         if(in_array('after_run', $methods)){
                             $route->controller::after_run($object);
