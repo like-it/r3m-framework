@@ -195,6 +195,8 @@ class App extends Data {
                             return Response::output($object, $response);
                  */
                 throw new Exception('Cannot call controller (' . $route->controller .')');
+            } else {
+                dd('found 3');
             }
         } else {
             dd('found 2');
@@ -202,6 +204,9 @@ class App extends Data {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function contentType(App $object){
         $contentType = $object->data(App::CONTENT_TYPE);
         if(empty($contentType)){
