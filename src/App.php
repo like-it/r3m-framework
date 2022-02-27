@@ -200,7 +200,7 @@ class App extends Data {
                     d($route);
                 }
             } catch (Exception $exception){
-                d($exception);
+                throw $exception;
             }
         } else {
             d('found 2');
