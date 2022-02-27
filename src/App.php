@@ -105,10 +105,17 @@ class App extends Data {
                     ){
                         Core::redirect($route->redirect);
                     } else {
-                        d('yes');
                         App::contentType($object);
-                        App::controller($object, $route);
-                        d('yes2');
+                        $exception = App::controller($object, $route);
+                        if($exception){
+                            dd(get_class($exception));
+                            $response = new Response(
+                                App::exception_to_json($exception),
+                                Response::TYPE_JSON,
+                                Response::STATUS_ERROR
+                            );
+                            return Response::output($object, $response);
+                        }
                         $methods = get_class_methods($route->controller);
                         if(empty($methods)){
                             $response = new Response(
@@ -184,7 +191,6 @@ class App extends Data {
             try {
                 $check = class_exists($route->controller);
                 if(empty($check)){
-                    d('found');
                     /*
                      * $response = new Response(
                                     App::exception_to_json(new Exception(
@@ -196,14 +202,11 @@ class App extends Data {
                                 return Response::output($object, $response);
                      */
                     throw new Exception('Cannot call controller (' . $route->controller .')');
-                } else {
-                    d($route);
                 }
             } catch (Exception $exception){
-                throw $exception;
+                return $exception;
             }
         } else {
-            d('found 2');
             throw new Exception('Missing controller in route');
         }
     }
