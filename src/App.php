@@ -107,8 +107,11 @@ class App extends Data {
                     } else {
                         App::contentType($object);
                         $exception = App::controller($object, $route);
-                        if($exception){
-                            dd(get_class($exception));
+                        if(
+                            $exception &&
+                            is_object($exception) &&
+                            get_class($exception) === 'Exception'
+                        ){
                             $response = new Response(
                                 App::exception_to_json($exception),
                                 Response::TYPE_JSON,
