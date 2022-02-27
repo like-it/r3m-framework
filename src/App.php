@@ -180,24 +180,27 @@ class App extends Data {
      * @throws Exception
      */
     public static function controller(App $object, $route){
-        d($route);
         if(property_exists($route, 'controller')){
-            $check = class_exists($route->controller);
-            if(empty($check)){
-                d('found');
-                /*
-                 * $response = new Response(
-                                App::exception_to_json(new Exception(
-                            'Couldn\'t determine controller (' . $route->controller .')'
-                                )),
-                                Response::TYPE_JSON,
-                                Response::STATUS_ERROR
-                            );
-                            return Response::output($object, $response);
-                 */
-                throw new Exception('Cannot call controller (' . $route->controller .')');
-            } else {
-                d($route);
+            try {
+                $check = class_exists($route->controller);
+                if(empty($check)){
+                    d('found');
+                    /*
+                     * $response = new Response(
+                                    App::exception_to_json(new Exception(
+                                'Couldn\'t determine controller (' . $route->controller .')'
+                                    )),
+                                    Response::TYPE_JSON,
+                                    Response::STATUS_ERROR
+                                );
+                                return Response::output($object, $response);
+                     */
+                    throw new Exception('Cannot call controller (' . $route->controller .')');
+                } else {
+                    d($route);
+                }
+            } catch (Exception $exception){
+                d($exception);
             }
         } else {
             d('found 2');
