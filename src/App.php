@@ -183,7 +183,7 @@ class App extends Data {
         if(property_exists($route, 'controller')){
             $check = class_exists($route->controller);
             if(empty($check)){
-                dd('found');
+                d('found');
                 /*
                  * $response = new Response(
                                 App::exception_to_json(new Exception(
@@ -196,10 +196,10 @@ class App extends Data {
                  */
                 throw new Exception('Cannot call controller (' . $route->controller .')');
             } else {
-                dd('found 3');
+                d($route);
             }
         } else {
-            dd('found 2');
+            d('found 2');
             throw new Exception('Missing controller in route');
         }
     }
