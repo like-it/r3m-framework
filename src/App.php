@@ -142,11 +142,10 @@ class App extends Data {
                         if(in_array($route->function, $methods)){
                             $result = $route->controller::{$route->function}($object);
                         } else {
-                            $controller = File::basename($route->controller);
                             $response = new Response(
                                 App::exception_to_json(new Exception(
                                     'Controller (' .
-                                    $controller .
+                                    $route->controller .
                                     ') function (' .
                                     $route->function .
                                     ') not exist.'
