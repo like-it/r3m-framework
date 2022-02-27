@@ -180,6 +180,7 @@ class App extends Data {
      * @throws Exception
      */
     public static function controller(App $object, $route){
+        d($route);
         if(property_exists($route, 'controller')){
             $check = class_exists($route->controller);
             if(empty($check)){
