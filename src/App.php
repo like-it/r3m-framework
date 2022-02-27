@@ -64,6 +64,7 @@ class App extends Data {
     }
 
     /**
+     * @throws Exception
      * @throws ObjectException
      * @throws LocateException
      */
@@ -107,6 +108,7 @@ class App extends Data {
                         d('yes');
                         App::contentType($object);
                         App::controller($object, $route);
+                        d('yes2');
                         $methods = get_class_methods($route->controller);
                         if(empty($methods)){
                             $response = new Response(
