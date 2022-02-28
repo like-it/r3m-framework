@@ -193,7 +193,7 @@ class Handler {
             if(!property_exists($request, 'request')){
                 $request->request = '/';
             } else {
-                $uri = ltrim(urldecode($_SERVER['REQUEST_URI']), '/');
+                $uri = ltrim($_SERVER['REQUEST_URI'], '/');
                 $uri = explode('?', $uri, 2);
                 $request->request = $uri[0];
                 if(empty($request->request)){
