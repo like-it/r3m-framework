@@ -167,7 +167,8 @@ class Route extends Data{
         if(empty($request)){
             return $object;
         }
-        $request_data = $request->request->data();
+        /*
+        $request_data = $object->data(App::REQUEST)->data();
         if($request_data){
             if(is_array($request_data)){
                 foreach($request_data as $key => $value){
@@ -185,6 +186,7 @@ class Route extends Data{
                 }
             }
         }
+        */
         $object->data(App::REQUEST)->data(
             Core::object_merge(
                 $object->data(App::REQUEST)->data(),
@@ -452,7 +454,7 @@ class Route extends Data{
                     continue;
                 }
                 if(array_key_exists($nr, $attribute)){
-                    $route->request->data($variable, $attribute[$nr]);
+                    $route->request->data($variable, urldecode($attribute[$nr]));
                 }
             }
         }
@@ -465,6 +467,7 @@ class Route extends Data{
                 $request .= $attribute[$i] . '/';
             }
             $request = substr($request, 0, -1);
+            $request = urldecode($request);
             $route->request->data($variable, $request);
         }
         foreach($object->data(App::REQUEST) as $key => $record){
