@@ -167,6 +167,24 @@ class Route extends Data{
         if(empty($request)){
             return $object;
         }
+        $request_data = $request->request->data();
+        if($request_data){
+            if(is_array($request_data)){
+                foreach($request_data as $key => $value){
+                    if(is_string($value)){
+                        $request_data[$key] = urldecode($value);
+                    }
+
+                }
+            }
+            elseif(is_object($request_data)){
+                foreach($request_data as $key => $value){
+                    if(is_string($value)){
+                        $request_data->{$key} = urldecode($value);
+                    }
+                }
+            }
+        }
         $object->data(App::REQUEST)->data(
             Core::object_merge(
                 $object->data(App::REQUEST)->data(),
@@ -657,6 +675,7 @@ class Route extends Data{
 
     /**
      * @throws ObjectException
+     * @throws Exception
      */
     public static function configure(App $object){
         $config = $object->data(App::CONFIG);
