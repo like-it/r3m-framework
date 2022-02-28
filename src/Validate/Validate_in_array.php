@@ -18,5 +18,6 @@ function validate_in_array(R3m\Io\App $object, $field='', $array=''){
     if(empty($in)){
         return false;
     }
+    dd($in);
     return in_array($in, $array);
 }
