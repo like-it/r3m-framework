@@ -216,10 +216,10 @@ class Parse {
             }
             $string = str_replace('{{literal}}', '{literal}', $string);
             $string = str_replace('{{/literal}}', '{/literal}', $string);
-            $string = str_replace('{{R3M}}', '{R3M}', $string);
             if(empty($this->halt_literal())){
                 $string = literal::apply($storage, $string);
             }
+            $string = str_replace('{{R3M}}', '{R3M}', $string);
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){
                 $storage->data('r3m.io.parse.compile.remove_newline', true);
