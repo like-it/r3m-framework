@@ -80,6 +80,9 @@ class Config extends Data {
         'local'
     ];
 
+    const LOG = ' log';
+    const VALUE_LOG = 'Log';
+
     const ROUTE = 'Route.json';
     const CONFIG = 'Config.json';
 
@@ -130,6 +133,7 @@ class Config extends Data {
     const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
     const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
     const DATA_PROJECT_DIR_PLUGIN =  Config::DATA_PROJECT_DIR . '.' . 'plugin';
+    const DATA_PROJECT_DIR_LOG =  Config::DATA_PROJECT_DIR . '.' . 'log';
 
     const DATA_CONTROLLER = 'controller';
     const DATA_CONTROLLER_CLASS = 'controller.class';
@@ -205,6 +209,10 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::HOST;
         $value = Config::VALUE_HOST;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::LOG;
+        $value = Config::VALUE_LOG;
         $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::VIEW;
@@ -287,6 +295,13 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::HOST) .
+            $this->data(Config::DS);
+        $this->data($key, $value);
+
+        $key = Config::DATA_PROJECT_DIR_LOG;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::LOG) .
             $this->data(Config::DS);
         $this->data($key, $value);
 
