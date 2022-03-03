@@ -81,7 +81,7 @@ class App extends Data {
             File::chown($object->config('project.dir.log') . 'app.log', File::USER_WWW, File::USER_WWW);
         }
         $object->logger($logger);
-        $object->logger->info('Logger: App initialized and enabling cors');
+        $object->logger->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
         Core::cors();
         Config::configure($object);
         Handler::request_configure($object);
