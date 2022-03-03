@@ -111,7 +111,7 @@ class App extends Data {
                             $route->method
                         )
                     ) {
-                        $object->logger->info('Redirect: ' . $route->redirect . ' Method: ' . $route->method);
+                        $object->logger->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . $route->method);
                         Core::redirect($route->redirect);
                     }
                     elseif(
@@ -138,7 +138,7 @@ class App extends Data {
                         }
                         $methods = get_class_methods($route->controller);
                         if(empty($methods)){
-                            $object->logger()->error('Couldn\'t determine controller (' . $route->controller .')');
+                            $object->logger()->error('Couldn\'t determine controller (' . $route->controller .') with request (' . $object->request('request') .')');
                             $response = new Response(
                                 App::exception_to_json(new Exception(
                             'Couldn\'t determine controller (' . $route->controller .')'
@@ -207,6 +207,7 @@ class App extends Data {
                         if(!headers_sent()){
                             header('Content-Type: application/json');
                         }
+                        $object->logger()->error($exception->getMessage());
                         return App::exception_to_json($exception);
                     }
                 } catch (ObjectException $exception){
@@ -214,6 +215,7 @@ class App extends Data {
                 }
             }
         } else {
+            $object->logger()->info('File request: ' . $object->request('request') . ' called...');
             return $file;
         }
     }
