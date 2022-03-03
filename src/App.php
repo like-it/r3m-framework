@@ -75,7 +75,11 @@ class App extends Data {
      */
     public static function run(App $object){
         $logger = new Logger('App');
-        $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'App.log', Logger::DEBUG));
+        $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'app.log', Logger::DEBUG));
+        $uuid = posix_geteuid();
+        if(empty($uuid)){
+            File::chown($object->config('project.dir.log') . 'app.log', File::USER_WWW, File::USER_WWW);
+        }
         $object->logger($logger);
         $object->logger->info('Logger: App initialized and enabling cors');
         Core::cors();

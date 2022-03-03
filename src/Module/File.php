@@ -23,6 +23,8 @@ class File {
     const TYPE = 'File';
     const SCHEME_HTTP = 'http';
 
+    const USER_WWW = 'www-data';
+
     public static function is($url=''){
         $url = rtrim($url, '/');
         return is_file($url);
