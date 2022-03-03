@@ -152,20 +152,25 @@ class App extends Data {
                             );
                             return Response::output($object, $response);
                         }
+                        $functions = [];
                         if(in_array('controller', $methods)){
-                            $object->logger()->info('Function: ' . 'controller' . ' called in controller: ' . $route->controller);
+                            $functions[] = 'controller';
+                            //$object->logger()->info('Function: ' . 'controller' . ' called in controller: ' . $route->controller);
                             $route->controller::controller($object);
                         }
                         if(in_array('configure', $methods)){
-                            $object->logger()->info('Function: ' . 'configure' . ' called in controller: ' . $route->controller);
+                            $functions[] = 'configure';
+//                            $object->logger()->info('Function: ' . 'configure' . ' called in controller: ' . $route->controller);
                             $route->controller::configure($object);
                         }
                         if(in_array('before_run', $methods)){
-                            $object->logger()->info('Function: ' . 'before_run' . ' called in controller: ' . $route->controller);
+                            $functions[] = 'before_run';
+//                            $object->logger()->info('Function: ' . 'before_run' . ' called in controller: ' . $route->controller);
                             $route->controller::before_run($object);
                         }
                         if(in_array($route->function, $methods)){
-                            $object->logger()->info('Function: ' . $route->function . ' called in controller: ' . $route->controller);
+                            $functions[] = $route->function;
+//                            $object->logger()->info('Function: ' . $route->function . ' called in controller: ' . $route->controller);
                             $result = $route->controller::{$route->function}($object);
                         } else {
                             $object->logger()->error(
@@ -189,19 +194,23 @@ class App extends Data {
                             return Response::output($object, $response);
                         }
                         if(in_array('after_run', $methods)){
-                            $object->logger()->info('Function: ' . 'after_run' . ' called in controller: ' . $route->controller);
+                            $functions[] = 'after_run';
+//                            $object->logger()->info('Function: ' . 'after_run' . ' called in controller: ' . $route->controller);
                             $route->controller::after_run($object);
                         }
                         if(in_array('before_result', $methods)){
-                            $object->logger()->info('Function: ' . 'before_result' . ' called in controller: ' . $route->controller);
+                            $functions[] = 'before_result';
+//                            $object->logger()->info('Function: ' . 'before_result' . ' called in controller: ' . $route->controller);
                             $route->controller::before_result($object);
                         }
-                        $object->logger()->info('Function: ' . 'result' . ' called in controller: ' . $route->controller);
+                        $functions[] = 'result';
+//                        $object->logger()->info('Function: ' . 'result' . ' called in controller: ' . $route->controller);
                         $result = App::result($object, $result);
                         if(in_array('after_result', $methods)){
-                            $object->logger()->info('Function: ' . 'after_result' . ' called in controller: ' . $route->controller);
+                            $functions[] = 'after_result';
                             $route->controller::after_result($object);
                         }
+                        $object->logger()->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
                         return $result;
                     }
                 }
