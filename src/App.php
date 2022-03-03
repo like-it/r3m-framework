@@ -22,6 +22,9 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
 use Exception;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\LocateException;
@@ -55,6 +58,8 @@ class App extends Data {
     const AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
     const AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;
 
+    private Logger $logger;
+
     public function __construct($autoload, $config){
         $this->data(App::AUTOLOAD_COMPOSER, $autoload);
         $this->data(App::CONFIG, $config);
@@ -69,6 +74,10 @@ class App extends Data {
      * @throws LocateException
      */
     public static function run(App $object){
+        $logger = new Logger('App');
+        $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'App.log', Logger::DEBUG));
+        $object->logger($logger);
+        $object->logger->info('Logger: App initialized and enabling cors');
         Core::cors();
         Config::configure($object);
         Handler::request_configure($object);
@@ -80,9 +89,10 @@ class App extends Data {
             try {
                 $route = Route::request($object);
                 if($route === false){
+                    $object->logger()->error('Couldn\'t determine route (' . $object->request('request') .')...');
                     $response = new Response(
                         App::exception_to_json(new Exception(
-                            'Couldn\'t determine route...'
+                            'Couldn\'t determine route (' . $object->request('request') .')...'
                         )),
                         Response::TYPE_JSON,
                         Response::STATUS_ERROR
@@ -97,12 +107,14 @@ class App extends Data {
                             $route->method
                         )
                     ) {
+                        $object->logger->info('Redirect: ' . $route->redirect . ' Method: ' . $route->method);
                         Core::redirect($route->redirect);
                     }
                     elseif(
                         property_exists($route, 'redirect') &&
                         !property_exists($route, 'method')
                     ){
+                        $object->logger->info('Redirect: ' . $route->redirect);
                         Core::redirect($route->redirect);
                     } else {
                         App::contentType($object);
@@ -112,6 +124,7 @@ class App extends Data {
                             is_object($exception) &&
                             get_class($exception) === 'Exception'
                         ){
+                            $object->logger()->error($exception->getMessage());
                             $response = new Response(
                                 App::exception_to_json($exception),
                                 Response::TYPE_JSON,
@@ -121,6 +134,7 @@ class App extends Data {
                         }
                         $methods = get_class_methods($route->controller);
                         if(empty($methods)){
+                            $object->logger()->error('Couldn\'t determine controller (' . $route->controller .')');
                             $response = new Response(
                                 App::exception_to_json(new Exception(
                             'Couldn\'t determine controller (' . $route->controller .')'
@@ -131,20 +145,31 @@ class App extends Data {
                             return Response::output($object, $response);
                         }
                         if(in_array('controller', $methods)){
+                            $object->logger()->info('Function: ' . 'controller' . ' called in controller: ' . $route->controller);
                             $route->controller::controller($object);
                         }
                         if(in_array('configure', $methods)){
+                            $object->logger()->info('Function: ' . 'configure' . ' called in controller: ' . $route->controller);
                             $route->controller::configure($object);
                         }
                         if(in_array('before_run', $methods)){
+                            $object->logger()->info('Function: ' . 'before_run' . ' called in controller: ' . $route->controller);
                             $route->controller::before_run($object);
                         }
                         if(in_array($route->function, $methods)){
+                            $object->logger()->info('Function: ' . $route->function . ' called in controller: ' . $route->controller);
                             $result = $route->controller::{$route->function}($object);
                         } else {
+                            $object->logger()->error(
+                                'Controller (' .
+                                $route->controller .
+                                ') function (' .
+                                $route->function .
+                                ') not exist.'
+                            );
                             $response = new Response(
                                 App::exception_to_json(new Exception(
-                                    'Controller (' .
+                            'Controller (' .
                                     $route->controller .
                                     ') function (' .
                                     $route->function .
@@ -156,13 +181,17 @@ class App extends Data {
                             return Response::output($object, $response);
                         }
                         if(in_array('after_run', $methods)){
+                            $object->logger()->info('Function: ' . 'after_run' . ' called in controller: ' . $route->controller);
                             $route->controller::after_run($object);
                         }
                         if(in_array('before_result', $methods)){
+                            $object->logger()->info('Function: ' . 'before_result' . ' called in controller: ' . $route->controller);
                             $route->controller::before_result($object);
                         }
+                        $object->logger()->info('Function: ' . 'result' . ' called in controller: ' . $route->controller);
                         $result = App::result($object, $result);
                         if(in_array('after_result', $methods)){
+                            $object->logger()->info('Function: ' . 'after_result' . ' called in controller: ' . $route->controller);
                             $route->controller::after_result($object);
                         }
                         return $result;
@@ -277,6 +306,21 @@ class App extends Data {
             $response = new Response($output, $object->config('response.output'));
             return Response::output($object, $response);
         }
+    }
+
+    public function logger($logger=null){
+        if($logger !== null){
+            $this->setLogger($logger);
+        }
+        return $this->getLogger();
+    }
+
+    private function setLogger($logger=null){
+        $this->logger = $logger;
+    }
+
+    private function getLogger(){
+        return $this->logger;
     }
 
     public function route(){
