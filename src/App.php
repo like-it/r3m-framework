@@ -84,7 +84,11 @@ class App extends Data {
         Core::cors();
         Config::configure($object);
         Handler::request_configure($object);
-        $object->logger->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
+        if(empty($object->request('request'))){
+            $object->logger->info('Logger: App initialized and enabling cors' , Core::object($object->request(), Core::OBJECT_ARRAY));
+        } else {
+            $object->logger->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
+        }
         Host::configure($object);
         Autoload::configure($object);
         Route::configure($object);
