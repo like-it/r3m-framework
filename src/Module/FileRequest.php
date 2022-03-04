@@ -43,10 +43,14 @@ class FileRequest {
         $controller = array_shift($explode);
         $view = $explode;
         array_unshift($explode, 'Public');
-        array_unshift($explode, $controller);
+        if(!empty($controller)) {
+            array_unshift($explode, $controller);
+        }
         array_unshift($view, 'Public');
         array_unshift($view, 'View');
-        array_unshift($view, $controller);
+        if(!empty($controller)){
+            array_unshift($view, $controller);
+        }
         $location[] = $config->data('host.dir.root') .
             implode($config->data('ds'), $view) .
             $config->data('ds') .
