@@ -52,11 +52,11 @@ class FileRequest {
             array_unshift($view, $controller);
         }
         $location[] = $config->data('host.dir.root') .
-            implode($config->data('ds'), $view) .
+            rtrim(implode($config->data('ds'), $view), '/') .
             $config->data('ds') .
             $file;
         $location[] = $config->data('host.dir.root') .
-            implode($config->data('ds'), $explode) .
+            rtrim(implode($config->data('ds'), $explode), '/') .
             $config->data('ds') .
             $file;
         $location[] = $config->data('host.dir.root') .
