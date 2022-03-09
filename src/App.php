@@ -78,7 +78,10 @@ class App extends Data {
         $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'app.log', Logger::DEBUG));
         $uuid = posix_geteuid();
         if(empty($uuid)){
-            File::chown($object->config('project.dir.log') . 'app.log', File::USER_WWW, File::USER_WWW);
+            $url = $object->config('project.dir.log') . 'app.log';
+            if(File::exist($url)){
+                File::chown($url, File::USER_WWW, File::USER_WWW);
+            }
         }
         $object->logger($logger);
         Core::cors();
