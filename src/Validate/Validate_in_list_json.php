@@ -13,12 +13,17 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 
 function validate_in_list_json(R3m\Io\App $object, $field='', $argument=''){
-    $original_uuid = $object->request('node.' . 'uuid');
-    if(empty($original_uuid)){
+    if($object->request('has', 'node.' . 'uuid')){
+        $original_uuid = $object->request('node.' . 'uuid');
+    } else {
         $original_uuid = $object->request('uuid');
     }
     $field = str_replace('[]', '', $field);
-    $request = $object->request('node.' . $field);
+    if($object->request('has', 'node.' . $field)){
+        $request = $object->request('node.' . $field);
+    } else {
+        $request = $object->request($field);
+    }
     if(is_array($request)){
         $url = false;
         $list = false;
@@ -54,9 +59,6 @@ function validate_in_list_json(R3m\Io\App $object, $field='', $argument=''){
         }
     } else {
         $string = strtolower($request);
-        if(empty($string)){
-            $string = strtolower($object->request($field));
-        }
         $url = false;
         $list = false;
         if(property_exists($argument, 'url')){
