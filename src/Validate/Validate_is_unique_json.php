@@ -13,12 +13,14 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 
 function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
-    $original_uuid = $object->request('node.' . 'uuid');
-    if(empty($original_uuid)){
+    if($object->request('has', 'node.' . 'uuid')){
+        $original_uuid = $object->request('node.' . 'uuid');
+    } else {
         $original_uuid = $object->request('uuid');
     }
-    $string = strtolower($object->request('node.' . $field));
-    if(empty($string)){
+    if($object->request('has', 'node.' . $field)){
+        $string = strtolower($object->request('node.' . $field));
+    } else {
         $string = strtolower($object->request($field));
     }
     $url = false;
