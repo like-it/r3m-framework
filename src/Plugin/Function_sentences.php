@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_sentences(Parse $parse, Data $data, $array=[], $glue="\n<br>"){
+function function_sentences(Parse $parse, Data $data, $array=[], $glue="<br>"){
     if(is_array($array)){
         return implode($glue, $array);
     } else {
