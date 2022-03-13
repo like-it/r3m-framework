@@ -176,11 +176,11 @@ class Variable {
             while(Operator::has($set)){
                 $statement = Operator::get($set);
                 $set = Operator::remove($set, $statement);
-                $statement = Operator::create($build, $storage, $statement);
+                $statement = Operator::create($build, $storage, $statement, $depth);
                 $key = key($statement);
                 $set[$key]['value'] = $statement[$key]['value'];
                 $set[$key]['type'] = Token::TYPE_CODE;
-                $set[$key]['depth'] = $statement[$key]['depth'];
+                $set[$key]['depth'] = $depth;
                 unset($set[$key]['execute']);
                 unset($set[$key]['is_executed']);
                 $token[$key] = $set[$key];

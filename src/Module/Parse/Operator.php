@@ -201,7 +201,7 @@ class Operator {
     /**
      * @throws Exception
      */
-    public static function create($build, Data $storage, $statement=[]){
+    public static function create($build, Data $storage, $statement=[], &$depth=0){
         $assign_key = null;
         $left = null;
         $operator = null;
@@ -233,10 +233,10 @@ class Operator {
             $operator = $left;
             switch($operator['value']){
                 case '++' :
-                    $result[$assign_key]['value'] = '$this->plus_plus_value(' . $right_value . ')';
+                    $result[$assign_key] = '$this->plus_plus_value(' . $right_value . ')';
                 break;
                 case '--' :
-                    $result[$assign_key]['value'] = '$this->min_min_value(' . $right_value . ')';
+                    $result[$assign_key] = '$this->min_min_value(' . $right_value . ')';
                 break;
             }            
         } else {
@@ -252,75 +252,75 @@ class Operator {
             ){
                 switch($operator['value']){
                     case '++' :
-                        $result[$assign_key]['value']  = '$this->value_plus_plus(' . $left_value . ')';
+                        $result[$assign_key] = '$this->value_plus_plus(' . $left_value . ')';
                     break;
                     case '--' :
-                        $result[$assign_key]['value'] = '$this->value_min_min(' . $left_value . ')';
+                        $result[$assign_key] = '$this->value_min_min(' . $left_value . ')';
                     break;
                 }            
             } else {                
                 $right_value = Value::get($build, $storage, $right);                
                 switch($operator['value']){
                     case '&&' :
-                        $result[$assign_key]['value']  = $left_value . ' && ' . $right_value;
+                        $result[$assign_key] = $left_value . ' && ' . $right_value;
                     break;
                     case '||' :
-                        $result[$assign_key]['value']  = $left_value . ' || ' . $right_value;
+                        $result[$assign_key] = $left_value . ' || ' . $right_value;
                     break;
                     case '*' :
-                        $result[$assign_key]['value']  = '$this->value_multiply(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_multiply(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '/' :
-                        $result[$assign_key]['value']  = '$this->value_divide(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_divide(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '%' :
-                        $result[$assign_key]['value'] = '$this->value_modulo(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_modulo(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '+' :
-                        $result[$assign_key]['value']  = '$this->value_plus(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_plus(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '-' :
-                        $result[$assign_key]['value']  = '$this->value_minus(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_minus(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '<' :
-                        $result[$assign_key]['value']  = '$this->value_smaller(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_smaller(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '<=' :
-                        $result[$assign_key]['value']  = '$this->value_smaller_equal(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_smaller_equal(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '<<' :
-                        $result[$assign_key]['value']  = '$this->value_smaller_smaller(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_smaller_smaller(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '>' :
-                        $result[$assign_key]['value']  = '$this->value_greater(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_greater(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '>=' :
-                        $result[$assign_key]['value']  = '$this->value_greater_equal(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_greater_equal(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '>>' :
-                        $result[$assign_key]['value']  = '$this->value_greater_greater(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_greater_greater(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '!=' :
-                        $result[$assign_key]['value']  = '$this->value_not_equal(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_not_equal(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '!==' :
-                        $result[$assign_key]['value']  = '$this->value_not_identical(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_not_identical(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '==' :
-                        $result[$assign_key]['value']  = '$this->value_equal(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_equal(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '===' :
-                        $result[$assign_key]['value']  = '$this->value_identical(' . $left_value . ', ' . $right_value . ')';
+                        $result[$assign_key] = '$this->value_identical(' . $left_value . ', ' . $right_value . ')';
                     break;
                     case '=>' :
-                        $result[$assign_key]['value']  = $left_value . ' => ' . $right_value;
+                        $result[$assign_key]  = $left_value . ' => ' . $right_value;
                         break;
                     default :
                         throw new Exception('Unknown operator (' . $operator['value'] .')');
                 }
             }  
         }
-        $result[$assign_key]['depth'] = $operator['depth']-1;
+        $depth = $operator['depth']-1;
         return $result;
     }
 }
