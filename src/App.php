@@ -66,6 +66,16 @@ class App extends Data {
         App::is_cli();
         require_once 'Debug.php';
         require_once 'Error.php';
+        $logger = new Logger('App');
+        $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . 'app.log', Logger::DEBUG));
+        $uuid = posix_geteuid();
+        if(empty($uuid)){
+            $url = $this->config('project.dir.log') . 'app.log';
+            if(File::exist($url)){
+                File::chown($url, File::USER_WWW, File::USER_WWW);
+            }
+        }
+        $this->logger($logger);
     }
 
     /**
@@ -74,16 +84,6 @@ class App extends Data {
      * @throws LocateException
      */
     public static function run(App $object){
-        $logger = new Logger('App');
-        $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'app.log', Logger::DEBUG));
-        $uuid = posix_geteuid();
-        if(empty($uuid)){
-            $url = $object->config('project.dir.log') . 'app.log';
-            if(File::exist($url)){
-                File::chown($url, File::USER_WWW, File::USER_WWW);
-            }
-        }
-        $object->logger($logger);
         Core::cors();
         Config::configure($object);
         Handler::request_configure($object);
