@@ -173,7 +173,6 @@ class Variable {
         $set = null;
         while(Set::has($token)){
             $set = Set::get($token);
-            $build->object()->logger()->warning('set', [ $set ]);
             while(Operator::has($set)){
                 $statement = Operator::get($set);
                 $set = Operator::remove($set, $statement);
@@ -195,7 +194,6 @@ class Variable {
             $token = Set::replace($token, $set, $target);
             $token = Set::remove($token);
             $set_counter++;
-            $build->object()->logger()->warning('token ' . $set_counter, [ $token ]);
             if($set_counter > $set_max){
                 break;
             }
