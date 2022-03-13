@@ -20,16 +20,14 @@ class Logger {
         $object->logger()->warning($message, $context);
     }
 
-    public static function app(){
+    public static function app(): App
+    {
         $dir = __DIR__;
         $dir_vendor =
             dirname($dir, 3) .
             DIRECTORY_SEPARATOR .
             'vendor' .
             DIRECTORY_SEPARATOR;
-
-        var_dump($dir_vendor);
-        die;
 
         $autoload = $dir_vendor . 'autoload.php';
         $autoload = require $autoload;
@@ -39,9 +37,6 @@ class Logger {
             ]
         );
         return new App($autoload, $config);
-
     }
-
-
 
 }
