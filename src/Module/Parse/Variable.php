@@ -181,6 +181,7 @@ class Variable {
                 $key = key($statement);
                 $set[$key]['value'] = $statement[$key];
                 $set[$key]['type'] = Token::TYPE_CODE;
+                $set[$key]['depth']--;
                 unset($set[$key]['execute']);
                 unset($set[$key]['is_executed']);
                 $token[$key] = $set[$key];
