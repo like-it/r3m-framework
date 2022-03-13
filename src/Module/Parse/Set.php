@@ -28,7 +28,6 @@ class Set {
 
     public static function get($token=[]){
         $highest = Set::highest($token);
-        Logger::warning('highest', [ $highest ]);
         $set = [];
         $is_collect = false;
         foreach($token as $nr => $record){
