@@ -24,7 +24,7 @@ class Logger {
     {
         $dir = __DIR__;
         $dir_vendor =
-            dirname($dir, 3) .
+            dirname($dir, 5) .
             DIRECTORY_SEPARATOR .
             'vendor' .
             DIRECTORY_SEPARATOR;
