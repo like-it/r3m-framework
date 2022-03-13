@@ -194,7 +194,7 @@ class Variable {
             $token = Set::replace($token, $set, $target);
             $token = Set::remove($token);
             $set_counter++;
-            $build->object()->logger()->warning('token', [ $token ]);
+            $build->object()->logger()->warning('token ' . $set_counter, [ $token ]);
             if($set_counter > $set_max){
                 break;
             }
