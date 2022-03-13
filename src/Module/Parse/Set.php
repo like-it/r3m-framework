@@ -10,6 +10,8 @@
  */
 namespace R3m\Io\Module\Parse;
 
+use R3m\Io\Module\Logger;
+
 class Set {
 
     public static function has($token=[]){
