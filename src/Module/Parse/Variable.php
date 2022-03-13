@@ -178,9 +178,9 @@ class Variable {
                 $set = Operator::remove($set, $statement);
                 $statement = Operator::create($build, $storage, $statement);
                 $key = key($statement);
-                $set[$key]['value'] = $statement[$key];
+                $set[$key]['value'] = $statement[$key]['value'];
                 $set[$key]['type'] = Token::TYPE_CODE;
-                $set[$key]['depth']--;
+                $set[$key]['depth'] = $statement[$key]['depth'];
                 unset($set[$key]['execute']);
                 unset($set[$key]['is_executed']);
                 $token[$key] = $set[$key];
