@@ -32,7 +32,7 @@ class Restore extends View {
         $filename = $object->parameter($object, Restore::NAME, 1);
         if(empty($filename)){
             try {
-                $name = Bin::name(Restore::DEFAULT_NAME, Bin::NAME);
+                $name = Bin::name(Restore::DEFAULT_NAME, Restore::NAME);
                 $url = Bin::locate($object, $name);
                 return Bin::response($object, $url);
             } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
