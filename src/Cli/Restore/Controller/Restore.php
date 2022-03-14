@@ -33,7 +33,17 @@ class Restore extends View {
         if(empty($filename)){
             $filename = Restore::DEFAULT_NAME;
         }
-        d($object->config('framework.dir'));
+        $dir =
+            $object->config('framework.dir.cli') .
+            'Configure' .
+            $object->config('ds') .
+            $object->config('dictionary.data') .
+            $object->config('ds')
+        ;
+        $url = $dir . $filename;
+        if(File::exist($url)){
+            dd($object->config());
+        }
         dd($filename);
         $object->data('name', $name);
         try {
