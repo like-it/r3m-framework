@@ -32,9 +32,9 @@ class Restore extends View {
         $filename = $object->parameter($object, Restore::NAME, 1);
         if(empty($filename)){
             try {
-                $name = Bin::name(Restore::DEFAULT_NAME, Restore::NAME);
-                $url = Bin::locate($object, $name);
-                return Bin::response($object, $url);
+                $name = Restore::name(Restore::DEFAULT_NAME, Restore::NAME);
+                $url = Restore::locate($object, $name);
+                return Restore::response($object, $url);
             } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
                 d($exception);
                 return 'Command undefined.' . PHP_EOL;
