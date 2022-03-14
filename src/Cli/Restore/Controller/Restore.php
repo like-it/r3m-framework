@@ -8,7 +8,7 @@
  * @changeLog
  *  -    all
  */
-namespace R3m\Io\Cli\Configure\Controller;
+namespace R3m\Io\Cli\Restore\Controller;
 
 use Exception;
 use R3m\Io\App;
@@ -20,7 +20,7 @@ use R3m\Io\Module\View;
 class Restore extends View {
     const DIR = __DIR__;
     const NAME = 'Restore';
-    const DEFAULT_INFO = 'Info';
+    const RESTORE_INFO = 'Info';
     const INFO = '{{binary()}} restore                        | App restore commands';
     const INFO_RUN = [
         '{{binary()}} restore                        | App restore files',
@@ -31,7 +31,7 @@ class Restore extends View {
     public static function run(App $object){
         $file = $object->parameter($object, 'restore', 1);
         if(empty($file)){
-            $file = Restore::DEFAULT_INFO;
+            $file = Restore::RESTORE_INFO;
         }
         d($object->config('framework.dir.src'));
         dd($file);
