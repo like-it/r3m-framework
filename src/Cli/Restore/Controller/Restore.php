@@ -24,11 +24,9 @@ class Restore extends View {
     const DIR = __DIR__;
     const NAME = 'Restore';
 
-    const DEFAULT_NAME = 'r3m.io';
-    const TARGET = '/usr/bin/';
-    const EXE = 'R3m.php';
+    const DEFAULT_NAME = 'info';
 
-    const INFO = '{{binary()}} restore                        | Creates binary';
+    const INFO = '{{binary()}} restore                        | Restore system files';
 
     public static function run($object){
         $filename = $object->parameter($object, Restore::NAME, 1);
