@@ -19,7 +19,7 @@ use R3m\Io\Module\View;
 
 class Restore extends View {
     const DIR = __DIR__;
-    const NAME = 'Default';
+    const NAME = 'Restore';
     const DEFAULT_INFO = 'Info';
     const INFO = '{{binary()}} restore                        | App restore commands';
     const INFO_RUN = [
