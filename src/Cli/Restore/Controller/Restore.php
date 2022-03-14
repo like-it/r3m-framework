@@ -31,7 +31,13 @@ class Restore extends View {
     public static function run($object){
         $filename = $object->parameter($object, Restore::NAME, 1);
         if(empty($filename)){
-            $filename = Restore::DEFAULT_NAME;
+            try {
+                $name = Bin::name(Restore::DEFAULT_NAME, Bin::NAME);
+                $url = Bin::locate($object, $name);
+                return Bin::response($object, $url);
+            } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+                return 'Command undefined.' . PHP_EOL;
+            }
         }
         $dir =
             $object->config('framework.dir.cli') .
@@ -40,18 +46,11 @@ class Restore extends View {
             $object->config('dictionary.data') .
             $object->config('ds')
         ;
-        $url = $dir . $filename;
-        if(File::exist($url)){
-            dd($object->config());
-        }
-        dd($filename);
-        $object->data('name', $name);
-        try {
-            $name = Bin::name('create', Bin::NAME);
-            $url = Bin::locate($object, $name);
-            return Bin::response($object, $url);
-        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . PHP_EOL;
+        $source = $dir . $filename;
+        if(File::exist($source)){
+            $destination = $object->config('project.dir.public') . $filename;
+            File::copy($source, $destination);
+            echo $destination . ' Restored...' . PHP_EOL;
         }
     }
 }
