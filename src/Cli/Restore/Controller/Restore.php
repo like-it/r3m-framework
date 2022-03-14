@@ -33,6 +33,7 @@ class Restore extends View {
         if(empty($file)){
             $file = Restore::DEFAULT_INFO;
         }
+        d($object->config('framework.dir.src'));
         dd($file);
         $action = $object->parameter($object, 'configure', 2);
         try {
