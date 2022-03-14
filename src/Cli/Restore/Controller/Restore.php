@@ -12,41 +12,38 @@ namespace R3m\Io\Cli\Restore\Controller;
 
 use Exception;
 use R3m\Io\App;
+use R3m\Io\Config;
+use R3m\Io\Module\File;
+use R3m\Io\Module\Dir;
+use R3m\Io\Module\View;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
-use R3m\Io\Module\View;
 
 class Restore extends View {
     const DIR = __DIR__;
     const NAME = 'Restore';
-    const RESTORE_INFO = 'Info';
-    const INFO = '{{binary()}} restore                        | App restore commands';
-    const INFO_RUN = [
-        '{{binary()}} restore                        | App restore files',
-        '{{binary()}} restore index.php              | Restores /Application/Public/index.php',
-        '{{binary()}} restore .htaccess              | Restores /Application/Public/.htaccess',
-    ];
 
-    public static function run(App $object){
-        $file = $object->parameter($object, 'restore', 1);
-        if(empty($file)){
-            $file = Restore::RESTORE_INFO;
+    const DEFAULT_NAME = 'r3m.io';
+    const TARGET = '/usr/bin/';
+    const EXE = 'R3m.php';
+
+    const INFO = '{{binary()}} restore                        | Creates binary';
+
+    public static function run($object){
+        $filename = $object->parameter($object, Restore::NAME, 1);
+        if(empty($filename)){
+            $filename = Restore::DEFAULT_NAME;
         }
         d($object->config('framework.dir.src'));
-        dd($file);
-        $action = $object->parameter($object, 'configure', 2);
+        dd($filename);
+        $object->data('name', $name);
         try {
-            if(!empty($action)){
-                $url = Configure::locate($object, ucfirst(strtolower($module)) . '.' . ucfirst(strtolower($action)));
-            } else {
-                $url = Configure::locate($object, ucfirst(strtolower($module)));
-            }
-            return Configure::response($object, $url);
-        } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
-            d($exception);
-            return 'Action undefined.' . PHP_EOL;
+            $name = Bin::name('create', Bin::NAME);
+            $url = Bin::locate($object, $name);
+            return Bin::response($object, $url);
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            return 'Command undefined.' . PHP_EOL;
         }
-
     }
 }
