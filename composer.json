@@ -10,8 +10,9 @@
 		"ext-json": "*",
 		"ext-posix": "*",
 		"ext-zend-opcache": "*",
-		"monolog/monolog" : "^2.2"
-    },
+		"monolog/monolog" : "^2.2",
+		"defuse/php-encryption": "^2.3"
+	},
 	"license" : "MIT",
 	"authors" : [{
 			"name" : "Remco van der Velde",

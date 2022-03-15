@@ -18,7 +18,8 @@
                 "configure",
                 "doctrine",
                 "openssl",
-                "restore"
+                "restore",
+                "secret"
             ]
         },
         "major": 0,

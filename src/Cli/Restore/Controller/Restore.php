@@ -33,7 +33,7 @@ class Restore extends View {
         'index.php'
     ];
 
-    public static function run($object){
+    public static function run(App $object){
         $filename = $object->parameter($object, Restore::NAME, 1);
         if(empty($filename)){
             try {
