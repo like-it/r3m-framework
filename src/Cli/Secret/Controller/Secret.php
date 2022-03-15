@@ -70,6 +70,9 @@ class Secret extends View {
         ;
         if($action === Secret::ACTION_GET){
             $attribute = $object->parameter($object, $action, 1);
+            if(empty($attribute)){
+                $attribute = Cli::read('input', 'key: ');
+            }
             $data = $object->data_read($url);
             if($data){
                 $get = $data->get($attribute);
@@ -85,6 +88,9 @@ class Secret extends View {
         }
         elseif($action === Secret::ACTION_SET){
             $attribute = $object->parameter($object, $action, 1);
+            if(empty($attribute)){
+                $attribute = Cli::read('input', 'key: ');
+            }
             $value = $object->parameter($object, $action, 2);
             if(empty($value)){
                 $value = Cli::read('input', 'value:' . PHP_EOL);
@@ -116,6 +122,9 @@ class Secret extends View {
         }
         elseif($action === Secret::ACTION_HAS){
             $attribute = $object->parameter($object, $action, 1);
+            if(empty($attribute)){
+                $attribute = Cli::read('input', 'key: ');
+            }
             $data = $object->data_read($url);
             if($data && $data->has($attribute)) {
                 echo 'true' . PHP_EOL;
@@ -125,6 +134,9 @@ class Secret extends View {
         }
         elseif($action === Secret::ACTION_DELETE){
             $attribute = $object->parameter($object, $action, 1);
+            if(empty($attribute)){
+                $attribute = Cli::read('input', 'key: ');
+            }
             $data = $object->data_read($url);
             if($data) {
                 $data->delete($attribute);
