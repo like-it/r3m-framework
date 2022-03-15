@@ -95,7 +95,7 @@ class Secret extends View {
                 Dir::create($dir, Dir::CHMOD);
                 File::write($key_url, $string);
                 $command = 'chown www-data:www-data ' . $dir . ' -R';
-                Core::exec($command);
+                Core::execute($command);
             }
             $value = Crypto::encrypt($value, $key);
             $data = $object->data_read($url);
@@ -107,7 +107,7 @@ class Secret extends View {
             Dir::create($dir, Dir::CHMOD);
             $data->write($url);
             $command = 'chown www-data:www-data ' . $url;
-            Core::exec($command);
+            Core::execute($command);
             echo $attribute . PHP_EOL;
         }
         elseif($action === Secret::ACTION_HAS){
@@ -126,7 +126,7 @@ class Secret extends View {
                 $data->delete($attribute);
                 $data->write($url);
                 $command = 'chown www-data:www-data ' . $url;
-                Core::exec($command);
+                Core::execute($command);
                 echo 'Secret delete: ' . $attribute . PHP_EOL;
             }
         }
