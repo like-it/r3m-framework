@@ -17,6 +17,7 @@ use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 use R3m\Io\App;
+use R3m\Io\Module\Cli;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
@@ -85,6 +86,9 @@ class Secret extends View {
         elseif($action === Secret::ACTION_SET){
             $attribute = $object->parameter($object, $action, 1);
             $value = $object->parameter($object, $action, 2);
+            if(empty($value)){
+                $value = Cli::read('input', 'value:' . PHP_EOL);
+            }
             if(File::exist($key_url)){
                 $string = File::read($key_url);
                 $key = Key::loadFromAsciiSafeString($string);
