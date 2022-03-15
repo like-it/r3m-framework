@@ -58,6 +58,8 @@ class Restore extends View {
         ){
             $destination = $object->config('project.dir.public') . $filename;
             File::copy($source, $destination);
+            $command = 'chown www-data:www-data ' . $destination;
+            Core::exec($command);
             echo $destination . ' Restored...' . PHP_EOL;
         }
     }
