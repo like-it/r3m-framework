@@ -45,7 +45,7 @@ class Secret extends View {
      * @throws \R3m\Io\Exception\FileWriteException
      */
     public static function run(App $object){
-        $action = $object->parameter($object, Restore::NAME, 1);
+        $action = $object->parameter($object, Secret::NAME, 1);
         if(empty($action)){
             try {
                 $name = Secret::name(Secret::DEFAULT_NAME, Secret::NAME);
