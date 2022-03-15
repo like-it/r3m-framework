@@ -17,6 +17,7 @@ use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 use R3m\Io\App;
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
@@ -93,6 +94,8 @@ class Secret extends View {
                 $dir = Dir::name($key_url);
                 Dir::create($dir, Dir::CHMOD);
                 File::write($key_url, $string);
+                $command = 'chown www-data:www-data ' . $dir . ' -R';
+                Core::exec($command);
             }
             $value = Crypto::encrypt($value, $key);
             $data = $object->data_read($url);
@@ -103,13 +106,17 @@ class Secret extends View {
             $dir = Dir::name($url);
             Dir::create($dir, Dir::CHMOD);
             $data->write($url);
+            $command = 'chown www-data:www-data ' . $url;
+            Core::exec($command);
             echo $attribute . PHP_EOL;
         }
         elseif($action === Secret::ACTION_HAS){
             $attribute = $object->parameter($object, $action, 1);
             $data = $object->data_read($url);
-            if($data) {
-                echo $data->has($attribute) . PHP_EOL;
+            if($data && $data->has($attribute)) {
+                echo 'true' . PHP_EOL;
+            } else {
+                echo 'false' . PHP_EOL;
             }
         }
         elseif($action === Secret::ACTION_DELETE){
@@ -118,6 +125,8 @@ class Secret extends View {
             if($data) {
                 $data->delete($attribute);
                 $data->write($url);
+                $command = 'chown www-data:www-data ' . $url;
+                Core::exec($command);
                 echo 'Secret delete: ' . $attribute . PHP_EOL;
             }
         }
