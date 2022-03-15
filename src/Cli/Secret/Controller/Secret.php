@@ -48,9 +48,9 @@ class Secret extends View {
         $action = $object->parameter($object, Restore::NAME, 1);
         if(empty($action)){
             try {
-                $name = Restore::name(Restore::DEFAULT_NAME, Restore::NAME);
-                $url = Restore::locate($object, $name);
-                return Restore::response($object, $url);
+                $name = Secret::name(Secret::DEFAULT_NAME, Secret::NAME);
+                $url = Secret::locate($object, $name);
+                return Secret::response($object, $url);
             } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
                 return 'Command undefined.' . PHP_EOL;
             }
