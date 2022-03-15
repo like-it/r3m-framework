@@ -28,6 +28,11 @@ class Restore extends View {
 
     const INFO = '{{binary()}} restore                        | Restore system files';
 
+    const FILE = [
+        '.htaccess',
+        'index.php'
+    ];
+
     public static function run($object){
         $filename = $object->parameter($object, Restore::NAME, 1);
         if(empty($filename)){
@@ -36,7 +41,6 @@ class Restore extends View {
                 $url = Restore::locate($object, $name);
                 return Restore::response($object, $url);
             } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-                d($exception);
                 return 'Command undefined.' . PHP_EOL;
             }
         }
@@ -48,7 +52,10 @@ class Restore extends View {
             $object->config('ds')
         ;
         $source = $dir . $filename;
-        if(File::exist($source)){
+        if(
+            File::exist($source) &&
+            in_array($filename, Restore::FILE)
+        ){
             $destination = $object->config('project.dir.public') . $filename;
             File::copy($source, $destination);
             echo $destination . ' Restored...' . PHP_EOL;
