@@ -17,6 +17,7 @@ use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 use R3m\Io\App;
+use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 use R3m\Io\Module\View;
@@ -47,17 +48,26 @@ class Secret extends View {
         $action = $object->parameter($object, Restore::NAME, 1);
         if(empty($action)){
             try {
-                $name = Restore::name(Restore::DEFAULT_NAME, Restore::NAME);
-                $url = Restore::locate($object, $name);
-                return Restore::response($object, $url);
+                $name = Secret::name(Secret::DEFAULT_NAME, Secret::NAME);
+                $url = Secret::locate($object, $name);
+                return Secret::response($object, $url);
             } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
                 return 'Command undefined.' . PHP_EOL;
             }
         }
+        $url =
+            $object->config('project.dir.data') .
+            'Secret' .
+            $object->config('extension.json')
+        ;
+        $key_url =
+            $object->config('project.dir.data') .
+            'Defuse'.
+            $object->config('ds') .
+            'Secret.key'
+        ;
         if($action === Secret::ACTION_GET){
             $attribute = $object->parameter($object, $action, 1);
-            $url = $object->config('project.dir.data') . 'Secret' . $object->config('extension.json');
-            $key_url = $object->config('project.dir.data') . 'Defuse/Secret.key';
             $data = $object->data_read($url);
             if($data){
                 $get = $data->get($attribute);
@@ -74,29 +84,29 @@ class Secret extends View {
         elseif($action === Secret::ACTION_SET){
             $attribute = $object->parameter($object, $action, 1);
             $value = $object->parameter($object, $action, 2);
-            $url = $object->config('project.dir.data') . 'Secret' . $object->config('extension.json');
-            $key_url = $object->config('project.dir.data') . 'Defuse/Secret.key';
             if(File::exist($key_url)){
                 $string = File::read($key_url);
                 $key = Key::loadFromAsciiSafeString($string);
             } else {
                 $key = Key::createNewRandomKey();
                 $string = $key->saveToAsciiSafeString();
-                $dir = Dir::name($url);
+                $dir = Dir::name($key_url);
                 Dir::create($dir, Dir::CHMOD);
-                File::write($url, $string);
+                File::write($key_url, $string);
             }
             $value = Crypto::encrypt($value, $key);
             $data = $object->data_read($url);
-            if($data) {
-                $data->set($attribute, $value);
-                $data->write($url);
-                echo $attribute . PHP_EOL;
+            if(!$data) {
+                $data = new Data();
             }
+            $data->set($attribute, $value);
+            $dir = Dir::name($url);
+            Dir::create($dir, Dir::CHMOD);
+            $data->write($url);
+            echo $attribute . PHP_EOL;
         }
         elseif($action === Secret::ACTION_HAS){
             $attribute = $object->parameter($object, $action, 1);
-            $url = $object->config('project.dir.data') . 'Secret' . $object->config('extension.json');
             $data = $object->data_read($url);
             if($data) {
                 echo $data->has($attribute) . PHP_EOL;
@@ -104,7 +114,6 @@ class Secret extends View {
         }
         elseif($action === Secret::ACTION_DELETE){
             $attribute = $object->parameter($object, $action, 1);
-            $url = $object->config('project.dir.data') . 'Secret' . $object->config('extension.json');
             $data = $object->data_read($url);
             if($data) {
                 $data->delete($attribute);
