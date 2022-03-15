@@ -8,7 +8,7 @@
  * @changeLog
  *  -    all
  */
-namespace R3m\Io\Cli\Restore\Controller;
+namespace R3m\Io\Cli\Secret\Controller;
 
 use Exception;
 use Defuse\Crypto\Exception\BadFormatException;
