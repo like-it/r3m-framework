@@ -132,7 +132,7 @@ class Secret extends View {
         }
         $output = [];
         $command = 'history';
-        Core::execute($command, $output);
+        exec($command, $output);
         $line = end($output);
         dd($line);
     }
