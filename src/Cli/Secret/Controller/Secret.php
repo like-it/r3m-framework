@@ -130,10 +130,5 @@ class Secret extends View {
                 echo 'Secret delete: ' . $attribute . PHP_EOL;
             }
         }
-        $output = [];
-        $command = 'history';
-        exec($command, $output);
-        $line = end($output);
-        dd($line);
     }
 }
