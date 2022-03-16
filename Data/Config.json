@@ -50,7 +50,22 @@
         "ogg": "audio\/ogg",
         "zip": "application\/zip",
         "rar": "application\/vnd.rar",
-        "pdf": "application\/pdf"
+        "pdf": "application\/pdf",
+        "webp" : "image\/webp",
+        "mp4" : "video\/mp4",
+        "avi" : "video\/x-msvideo",
+        "wmv" : "video\/x-ms-wmv",
+        "mov" : "video\/quicktime",
+        "webm" : "video\/webm",
+        "csv" : "text\/csv",
+        "php" : "text\/html",
+        "xls" : "application\/vnd.ms-excel",
+        "doc" : "application\/msword",
+        "ppt" : "application\/vnd.ms-powerpoint",
+        "xlsx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "docx" : "application\/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "pptx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
     },
     "extension": {
         "txt": ".txt",
@@ -77,7 +92,20 @@
         "tpl": ".tpl",
         "conf": ".conf",
         "pdf": ".pdf",
-        "php": ".php"
+        "php": ".php",
+        "webp" : ".webp",
+        "mp4" : ".mp4",
+        "avi" : ".avi",
+        "webm" : ".webm",
+        "xls" : ".xls",
+        "ppt" : ".ppt",
+        "doc" : ".doc",
+        "csv" : ".csv",
+        "xlsx" : ".xlsx",
+        "docx" : ".docx",
+        "pptx" : ".pptx",
+        "mov" :  ".mov",
+        "wmv" : ".wmv"
     },
     "parse": {
         "read" : {
