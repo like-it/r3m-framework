@@ -21,4 +21,13 @@ $config = new R3m\Io\Config(
     ]
 );
 $app = new R3m\Io\App($autoload, $config);
-echo R3m\Io\App::run($app);
+try {
+    echo R3m\Io\App::run($app);
+} catch (
+    \R3m\Io\Exception\LocateException  |
+    \R3m\Io\Exception\ObjectException |
+    Exception
+    $exception
+) {
+    echo R3m\Io\App\exception_to_json($exception);
+}
