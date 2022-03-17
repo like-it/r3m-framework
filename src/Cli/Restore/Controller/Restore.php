@@ -52,6 +52,8 @@ class Restore extends View {
             $object->config('ds')
         ;
         $source = $dir . $filename;
+        d(File::exist($source));
+        d(in_array($filename, Restore::FILE));
         dd($source);
         if(
             File::exist($source) &&
