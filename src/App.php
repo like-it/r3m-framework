@@ -286,7 +286,7 @@ class App extends Data {
         }
     }
 
-    private static function exception_to_json(Exception $exception){
+    public static function exception_to_json(Exception $exception){
         $class = get_class($exception);
         $array = [];
         $array['class'] = $class;
