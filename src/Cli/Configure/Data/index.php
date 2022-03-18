@@ -29,5 +29,5 @@ try {
     Exception
     $exception
 ) {
-    echo R3m\Io\App\exception_to_json($exception);
+    echo R3m\Io\App::exception_to_json($exception);
 }
