@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_image_contentType(Parse $parse, Data $data, $extension=''){
+function function_image_content_type(Parse $parse, Data $data, $extension=''){
     $object = $parse->object();
     return $object->config('contentType.' . $extension);
 }
