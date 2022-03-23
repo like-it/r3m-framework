@@ -163,6 +163,9 @@ class File {
         return true;
     }
 
+    /**
+     * @throws FileMoveException
+     */
     public static function move($source='', $destination='', $overwrite=false){
         $exist = file_exists($source);
         if($exist === false){
