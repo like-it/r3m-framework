@@ -11,6 +11,11 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_parse_string(Parse $parse, Data $data, $string=null){
-    return $parse->compile($string, [], $parse->storage());
+function function_parse_string(Parse $parse, Data $data, $string=null, $parseData=[]){
+    if(!empty($parseData)){
+        return $parse->compile($string, $parseData);
+    } else {
+        return $parse->compile($string, [], $parse->storage());
+    }
+
 }
