@@ -78,6 +78,16 @@ class File {
         return true;
     }
 
+    public static function readlink($url, $final=false){
+        $url = escapeshellarg($url);
+        if($final){
+            $output = system('readlink -f ' . $url);
+        } else {
+            $output = system('readlink ' . $url);
+        }
+        return $output;
+    }
+
     public static function count($directory='', $include_directory=false){
         $dir = new Dir();
         $read = $dir->read($directory);
