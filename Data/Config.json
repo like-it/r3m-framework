@@ -19,7 +19,8 @@
                 "doctrine",
                 "openssl",
                 "restore",
-                "secret"
+                "secret",
+                "zip"
             ]
         },
         "major": 0,
