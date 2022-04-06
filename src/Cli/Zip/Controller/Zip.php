@@ -19,7 +19,10 @@ use R3m\Io\Exception\UrlNotExistException;
 class Zip extends View {
     const DIR = __DIR__;
     const NAME = 'Zip';
-    const INFO = '{{binary()}} zip archive <source> <dest...> | it creates a zip archive in <destination> from <source>';
+    const INFO = [
+        '{{binary()}} zip archive <source> <dest...> | it creates a zip archive in <destination> from <source>',
+        '{{binary()}} zip extract <source> <dest...> | it extracts a zip archive in <destination> from <source>',
+    ];
     
     public static function run($object){
         $command = App::parameter($object, 'zip', 1);
