@@ -9,11 +9,21 @@ use R3m\Io\App;
 function function_zip(Parse $parse, Data $data){
     $object = $parse->object();
 
-    $source = App::parameter($object, 'zip', 1);
-    $target = App::parameter($object, 'zip', 2);
+    $archive = App::parameter($object, 'zip', 1);
+    if($archive === 'archive'){
+        $source = App::parameter($object, 'archive', 1);
+        $target = App::parameter($object, 'archive', 2);
+        d($source);
+        dd($target);
+    }
 
+
+
+
+    /*
     if(File::exist($target)){
         return;
     }
     Core::execute('ln -s ' . $source . ' ' . $target);
+    */
 }
