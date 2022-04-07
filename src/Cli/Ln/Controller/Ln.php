@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Cli\Ln\Controller;
 
+use R3m\Io\App;
 use R3m\Io\Module\View;
 use Exception;
 use R3m\Io\Exception\LocateException;
@@ -21,7 +22,7 @@ class Ln extends View {
     const NAME = 'Ln';
     const INFO = '{{binary()}} ln                             | ln creates a symlink if not exist';
     
-    public static function run($object){
+    public static function run(App $object){
         try {
             $name = Ln::name(__FUNCTION__    , Ln::NAME);
             $url = Ln::locate($object, $name);
