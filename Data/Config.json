@@ -151,6 +151,7 @@
             "R3m\\Io\\Exception\\FileWriteException",
             "R3m\\Io\\Exception\\LocateException",
             "R3m\\Io\\Exception\\ObjectException",
+            "R3m\\Io\\Exception\\PluginNotAllowedException",
             "R3m\\Io\\Exception\\PluginNotFoundException",
             "R3m\\Io\\Exception\\UrlEmptyException",
             "R3m\\Io\\Exception\\UrlNotExistException"

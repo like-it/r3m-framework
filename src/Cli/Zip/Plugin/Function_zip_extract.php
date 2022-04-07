@@ -12,6 +12,19 @@ function function_zip_extract(Parse $parse, Data $data){
     $source = App::parameter($object, 'extract', 1);
     $target = App::parameter($object, 'extract', 2);
     d($source);
+
+    $limit = $parse->limit();
+    $parse->limit([
+        'function' => [
+            'date'
+        ]
+    ]);
+    try {
+        $target = $parse->compile($target, [], $data);
+        $parse->limit($limit);
+    } catch (Exception $e) {
+    }
+
     dd($target);
 
 
