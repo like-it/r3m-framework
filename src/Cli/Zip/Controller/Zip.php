@@ -25,14 +25,20 @@ class Zip extends View {
         '{{binary()}} zip archive <source> <dest...> | it creates a zip archive in <destination> from <source>',
         '{{binary()}} zip extract <source> <dest...> | it extracts a zip archive in <destination> from <source>',
     ];
-    
+    const COMMAND = [
+        'archive',
+        'extract'
+    ];
+
     public static function run(App $object){
-        Logger::error('zip');
-        $command = App::parameter($object, 'zip', 1);
         try {
-            $name = Zip::name(__FUNCTION__, Zip::NAME);
-            $url = Zip::locate($object, $name);
-            return Zip::response($object, $url);
+            $command = App::parameter($object, 'zip', 1);
+            if(in_array($command, Zip::COMMAND)) {
+                $name = Zip::name($command, Zip::NAME);
+                $url = Zip::locate($object, $name);
+                return Zip::response($object, $url);
+            }
+            throw new Exception('Command undefined.' . PHP_EOL);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return 'Command undefined.' . PHP_EOL;;
         }
