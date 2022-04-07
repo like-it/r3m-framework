@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Cli\Zip\Controller;
 
+use R3m\Io\App;
 use R3m\Io\Module\Logger;
 use R3m\Io\Module\View;
 use Exception;
@@ -25,8 +26,8 @@ class Zip extends View {
         '{{binary()}} zip extract <source> <dest...> | it extracts a zip archive in <destination> from <source>',
     ];
     
-    public static function run($object){
-        Logger::error('test');
+    public static function run(App $object){
+        Logger::error('zip');
         $command = App::parameter($object, 'zip', 1);
         try {
             $name = Zip::name(__FUNCTION__, Zip::NAME);
