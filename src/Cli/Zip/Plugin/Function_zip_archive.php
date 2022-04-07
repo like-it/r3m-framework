@@ -1,5 +1,7 @@
 <?php
 
+use Host\Subdomain\Host\Extension\Service\Export;
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Core;
@@ -25,6 +27,33 @@ function function_zip_archive(Parse $parse, Data $data){
     } catch (Exception $exception) {
         d($exception);
     }
+
+    if(Dir::is($source)){
+        $dir = new Dir();
+        $read = $dir->read($source, true);
+        $host = [];
+        foreach($read as $file){
+            $host[] = $file;
+        }
+        foreach($host as $nr => $file){
+            if($file->type === Dir::TYPE){
+                unset($host[$nr]);
+            }
+        }
+        $dir = Dir::name($target);
+        Dir::create($dir);
+        $zip = new \ZipArchive();
+        $res = $zip->open($target, \ZipArchive::CREATE);
+        foreach($host as $file){
+            $location = $file->url;
+            $zip->addFile($file->url, $location);
+        }
+        $zip->close();
+    }
+
+
+
+
     dd($target);
     /*
     if(File::exist($target)){
