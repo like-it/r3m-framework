@@ -19,11 +19,10 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\Autoload;
-use R3m\Io\Module\Parse;
 
 use Exception;
 use R3m\Io\Exception\PluginNotFoundException;
-
+use R3m\Io\Exception\PluginNotAllowedException;
 
 class Build {
     const NAME = 'Build';
