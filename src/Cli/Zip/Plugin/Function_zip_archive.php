@@ -10,11 +10,8 @@ use R3m\Io\App;
 
 function function_zip_archive(Parse $parse, Data $data){
     $object = $parse->object();
-    $object->logger()->error('test2: zip');
     $source = App::parameter($object, 'archive', 1);
     $target = App::parameter($object, 'archive', 2);
-    d($source);
-
     $limit = $parse->limit();
     $parse->limit([
         'function' => [
@@ -23,11 +20,11 @@ function function_zip_archive(Parse $parse, Data $data){
     ]);
     try {
         $target = $parse->compile($target, [], $data);
-        $parse->limit($limit);
+        $parse->setLimit($limit);
     } catch (Exception $exception) {
-        d($exception);
+        echo $exception->getMessage() . PHP_EOL;
+        return;
     }
-
     if(Dir::is($source)){
         $dir = new Dir();
         $read = $dir->read($source, true);
@@ -45,20 +42,9 @@ function function_zip_archive(Parse $parse, Data $data){
         $zip = new \ZipArchive();
         $res = $zip->open($target, \ZipArchive::CREATE);
         foreach($host as $file){
-            $location = $file->url;
+            $location = substr($file->url, 1);
             $zip->addFile($file->url, $location);
         }
         $zip->close();
     }
-
-
-
-
-    dd($target);
-    /*
-    if(File::exist($target)){
-        return;
-    }
-    Core::execute('ln -s ' . $source . ' ' . $target);
-    */
 }
