@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Cli\Zip\Controller;
 
+use R3m\Io\Module\Logger;
 use R3m\Io\Module\View;
 use Exception;
 use R3m\Io\Exception\LocateException;
@@ -25,9 +26,8 @@ class Zip extends View {
     ];
     
     public static function run($object){
+        Logger::error('test');
         $command = App::parameter($object, 'zip', 1);
-        d($command);
-        dd($object->request());
         try {
             $name = Zip::name(__FUNCTION__    , Zip::NAME);
             $url = Zip::locate($object, $name);
