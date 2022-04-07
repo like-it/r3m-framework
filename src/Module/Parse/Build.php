@@ -118,7 +118,7 @@ class Build {
         return $this->getLimit();
     }
 
-    private function setLimit($limit=null){
+    public function setLimit($limit=null){
         $this->limit= $limit;
     }
 
