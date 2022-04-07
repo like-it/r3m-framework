@@ -22,7 +22,8 @@ function function_zip_archive(Parse $parse, Data $data){
     try {
         $target = $parse->compile($target, [], $data);
         $parse->limit($limit);
-    } catch (Exception $e) {
+    } catch (Exception $exception) {
+        d($exception);
     }
     dd($target);
     /*
