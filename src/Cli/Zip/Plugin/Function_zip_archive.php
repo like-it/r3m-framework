@@ -12,11 +12,19 @@ function function_zip_archive(Parse $parse, Data $data){
     $source = App::parameter($object, 'archive', 1);
     $target = App::parameter($object, 'archive', 2);
     d($source);
+
+    $limit = $parse->limit();
+    $parse->limit([
+        'function' => [
+            'date'
+        ]
+    ]);
+    try {
+        $target = $parse->compile($target, [], $data);
+        $parse->limit($limit);
+    } catch (Exception $e) {
+    }
     dd($target);
-
-
-
-
     /*
     if(File::exist($target)){
         return;
