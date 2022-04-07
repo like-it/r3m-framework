@@ -28,6 +28,7 @@ class Parse {
     private $object;
     private $storage;
     private $build;
+    private $limit;
     private $cache_dir;
     private $local;
     private $is_assign;
@@ -86,6 +87,21 @@ class Parse {
 
     private function getObject(){
         return $this->object;
+    }
+
+    public function limit($limit=null){
+        if($limit !== null){
+            $this->setLimit($limit);
+        }
+        return $this->getLimit();
+    }
+
+    private function setLimit($limit=null){
+        $this->limit= $limit;
+    }
+
+    private function getLimit(){
+        return $this->limit;
     }
 
     public function storage($storage=null){
@@ -179,6 +195,7 @@ class Parse {
         else {
             $build = $this->build(new Build($this->object(), $this, $is_debug));
             $build->cache_dir($this->cache_dir());
+            $build->limit($this->limit());
             $source = $storage->data('r3m.io.parse.view.source');
             $options = [];
             if(empty($source)){

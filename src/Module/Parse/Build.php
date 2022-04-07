@@ -41,6 +41,7 @@ class Build {
     private $object;
     private $parse;
     private $storage;
+    private $limit;
     private $cache_dir;
     private $is_debug;
 
@@ -111,6 +112,21 @@ class Build {
         return str_repeat("\t", $this->indent);
     }
 
+    public function limit($limit=null){
+        if($limit !== null){
+            $this->setLimit($limit);
+        }
+        return $this->getLimit();
+    }
+
+    private function setLimit($limit=null){
+        $this->limit= $limit;
+    }
+
+    private function getLimit(){
+        return $this->limit;
+    }
+
     private function createClass($document=[]){
         $config = $this->object()->data(App::CONFIG);
 
@@ -179,39 +195,52 @@ class Build {
         }
         $placeholder = $storage->data('placeholder.function');
         $url_list = [];
+        $limit = $this->limit();
         foreach($data as $name => $record){
             $exist = false;
-            foreach($dir_plugin as $nr => $dir){
-                $file = ucfirst($name) . $config->data('extension.php');
-                $url = $dir . $file;
-                $url_list[] = $url;
-                if(File::exist($url)){
-                    $read = File::read($url);
-                    $explode = explode('function', $read);
-                    $explode[0] = '';
-                    $read = implode('function', $explode);
-                    $indent = $this->indent - 1;
-                    $read = explode("\n", $read);
-                    foreach($read as $nr => $row){
-                        $read[$nr] = $this->indent($indent) . $row;
+            if(
+                empty($limit) ||
+                (
+                    !empty($limit) &&
+                    array_key_exists('function', $limit) &&
+                    in_array($name, $limit['function'])
+                )
+            ){
+                foreach($dir_plugin as $nr => $dir){
+                    $file = ucfirst($name) . $config->data('extension.php');
+                    $url = $dir . $file;
+                    $url_list[] = $url;
+                    if(File::exist($url)){
+                        $read = File::read($url);
+                        $explode = explode('function', $read);
+                        $explode[0] = '';
+                        $read = implode('function', $explode);
+                        $indent = $this->indent - 1;
+                        $read = explode("\n", $read);
+                        foreach($read as $nr => $row){
+                            $read[$nr] = $this->indent($indent) . $row;
+                        }
+                        $read = implode("\n", $read);
+                        $read .= "\n";
+                        $this->indent = $this->indent + 1;
+                        $document = str_replace($placeholder, $read . $placeholder, $document);
+                        $exist = true;
+                        break;
                     }
-                    $read = implode("\n", $read);
-                    $read .= "\n";
-                    $this->indent = $this->indent + 1;
-                    $document = str_replace($placeholder, $read . $placeholder, $document);
-                    $exist = true;
-                    break;
                 }
-            }
-            if($exist === false){
-                $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
-                if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
-                    Core::cors();
-                    d($dir_plugin);
-                    d($url_list);
+                if($exist === false){
+                    $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
+                    if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
+                        Core::cors();
+                        d($dir_plugin);
+                        d($url_list);
+                    }
+                    throw new PluginNotFoundException('Function not found: ' . $text);
                 }
-                throw new PluginNotFoundException('Function not found: ' . $text);
+            } elseif(array_key_exists('function', $limit)) {
+                throw new PluginNotAllowedException('Function (' . $name . ') not allowed, allowed: ' . implode(',', $limit['function']));
             }
+
         }
         return $document;
     }
