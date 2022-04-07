@@ -8,7 +8,7 @@ use R3m\Io\App;
 
 function function_zip(Parse $parse, Data $data){
     $object = $parse->object();
-
+    $object->logger()->error('test2: zip');
     $archive = App::parameter($object, 'zip', 1);
     dd($object->request());
     if($archive === 'archive'){
