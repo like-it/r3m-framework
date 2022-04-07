@@ -29,7 +29,7 @@ class Zip extends View {
         Logger::error('test');
         $command = App::parameter($object, 'zip', 1);
         try {
-            $name = Zip::name(__FUNCTION__    , Zip::NAME);
+            $name = Zip::name(__FUNCTION__, Zip::NAME);
             $url = Zip::locate($object, $name);
             return Zip::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
