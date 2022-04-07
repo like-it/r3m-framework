@@ -10,7 +10,7 @@ function function_zip(Parse $parse, Data $data){
     $object = $parse->object();
 
     $archive = App::parameter($object, 'zip', 1);
-    d($object0>request());
+    dd($object->request());
     if($archive === 'archive'){
         $source = App::parameter($object, 'archive', 1);
         $target = App::parameter($object, 'archive', 2);
