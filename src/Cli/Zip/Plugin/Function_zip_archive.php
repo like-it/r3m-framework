@@ -46,5 +46,6 @@ function function_zip_archive(Parse $parse, Data $data){
             $zip->addFile($file->url, $location);
         }
         $zip->close();
+        echo $target . PHP_EOL;
     }
 }
