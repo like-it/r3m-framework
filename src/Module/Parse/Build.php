@@ -183,6 +183,7 @@ class Build {
 
     /**
      * @throws PluginNotFoundException
+     * @throws PluginNotAllowedException
      */
     private function createRequireContent($type='', $document=[]){
         $config = $this->object()->data(App::CONFIG);
@@ -197,12 +198,13 @@ class Build {
         $limit = $this->limit();
         foreach($data as $name => $record){
             $exist = false;
+            $function_name = str_replace('function_', '', $name);
             if(
                 empty($limit) ||
                 (
                     !empty($limit) &&
                     array_key_exists('function', $limit) &&
-                    in_array($name, $limit['function'])
+                    in_array($function_name, $limit['function'])
                 )
             ){
                 foreach($dir_plugin as $nr => $dir){
