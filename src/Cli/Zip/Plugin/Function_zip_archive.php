@@ -59,6 +59,7 @@ function function_zip_archive(Parse $parse, Data $data){
     ) {
         $dir = Dir::name($target);
         if($dir){
+            d($dir);
             Dir::create($dir);
         }
         $zip = new \ZipArchive();
