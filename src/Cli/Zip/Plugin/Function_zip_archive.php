@@ -25,7 +25,10 @@ function function_zip_archive(Parse $parse, Data $data){
         echo $exception->getMessage() . PHP_EOL;
         return;
     }
-    if(Dir::is($source)){
+    if(
+        Dir::is($source) &&
+        !File::exist($target)
+    ){
         $dir = new Dir();
         $read = $dir->read($source, true);
         $host = [];
@@ -45,6 +48,20 @@ function function_zip_archive(Parse $parse, Data $data){
             $location = substr($file->url, 1);
             $zip->addFile($file->url, $location);
         }
+        $zip->close();
+        echo $target;
+    }
+    elseif(
+        File::is($source) &&
+        !File::exist($target)
+    ) {
+        $dir = Dir::name($target);
+        dd($dir);
+        Dir::create($dir);
+        $zip = new \ZipArchive();
+        $res = $zip->open($target, \ZipArchive::CREATE);
+        $location = substr($source, 1);
+        $zip->addFile($source, $location);
         $zip->close();
         echo $target;
     }
