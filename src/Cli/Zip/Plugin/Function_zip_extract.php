@@ -1,39 +1,74 @@
 <?php
 
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Core;
 use R3m\Io\Module\File;
 use R3m\Io\App;
 
+use R3m\Io\Exception\FileWriteException;
+
 function function_zip_extract(Parse $parse, Data $data){
     $object = $parse->object();
-    $object->logger()->error('test2: zip');
     $source = App::parameter($object, 'extract', 1);
     $target = App::parameter($object, 'extract', 2);
-    d($source);
 
-    $limit = $parse->limit();
-    $parse->limit([
-        'function' => [
-            'date'
-        ]
-    ]);
-    try {
-        $target = $parse->compile($target, [], $data);
-        $parse->limit($limit);
-    } catch (Exception $e) {
+    if(!File::exist($source)){
+        return;
     }
-
-    dd($target);
-
-
-
-
-    /*
     if(File::exist($target)){
         return;
     }
-    Core::execute('ln -s ' . $source . ' ' . $target);
-    */
+    $zip = new \ZipArchive();
+    $zip->open($source);
+    $dirList = array();
+    $fileList = array();
+    for ($i = 0; $i < $zip->numFiles; $i++) {
+        $node = new stdClass();
+        $node->name = $zip->getNameIndex($i);
+        if(substr($node->name, -1) == '/'){
+            $node->type = 'dir';
+        } else {
+            $node->type = 'file';
+        }
+        $node->index = $i;
+        $node->url = $target . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $node->name);
+        if($node->type == 'dir'){
+            $dirList[] = $node;
+        } else {
+            $fileList[] = $node;
+        }
+    }
+    foreach($dirList as $dir){
+        if(Dir::is($dir->url) === false){
+            Dir::create($dir->url);
+        }
+    }
+    foreach($fileList as $node){
+        $stats = $zip->statIndex($node->index);
+        $dir = Dir::name($node->url);
+        if(File::exist($dir) && !Dir::is($dir)){
+            File::delete($dir);
+            Dir::create($dir);
+        }
+        if(File::exist($dir) === false){
+            Dir::create($dir);
+        }
+        if(File::exist($node->url)){
+            File::delete($node->url);
+        }
+        try {
+            $write = File::write($node->url, $zip->getFromIndex($node->index));
+            if($write !== false){
+                File::chmod($node->url, File::CHMOD);
+                touch($node->url, $stats['mtime']);
+            }
+        } catch (FileWriteException $exception) {
+            $zip->close();
+            echo $exception->getMessage() . PHP_EOL;
+            return;
+        }
+    }
+    $zip->close();
+    echo 'Zip archive extracted in: ' . $target;
 }
