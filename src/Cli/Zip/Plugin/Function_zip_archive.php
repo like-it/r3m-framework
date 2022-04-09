@@ -50,7 +50,7 @@ function function_zip_archive(Parse $parse, Data $data){
             Dir::create($dir);
         }
         $zip = new \ZipArchive();
-        $res = $zip->open($target, \ZipArchive::CREATE);
+        $zip->open($target, \ZipArchive::CREATE);
         foreach($host as $file){
             $location = substr($file->url, 1);
             $zip->addFile($file->url, $location);
@@ -72,7 +72,7 @@ function function_zip_archive(Parse $parse, Data $data){
             Dir::create($dir);
         }
         $zip = new \ZipArchive();
-        $res = $zip->open($target, \ZipArchive::CREATE);
+        $zip->open($target, \ZipArchive::CREATE);
         $location = substr($source, 1);
         $zip->addFile($source, $location);
         $zip->close();
