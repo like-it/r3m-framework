@@ -8,6 +8,9 @@ use R3m\Io\App;
 
 use R3m\Io\Exception\FileWriteException;
 
+/**
+ * @throws Exception
+ */
 function function_zip_extract(Parse $parse, Data $data){
     $object = $parse->object();
     $source = App::parameter($object, 'extract', 1);
@@ -20,7 +23,6 @@ function function_zip_extract(Parse $parse, Data $data){
         File::exist($target) &&
         !Dir::is($target)
     ){
-        d(Dir::is($target));
         echo 'Target exists already...';
         return;
     }
@@ -67,6 +69,8 @@ function function_zip_extract(Parse $parse, Data $data){
             if($write !== false){
                 File::chmod($node->url, File::CHMOD);
                 touch($node->url, $stats['mtime']);
+            } else {
+                throw new Exception('Cannot write file: ' . $node->url);
             }
         } catch (FileWriteException $exception) {
             $zip->close();
