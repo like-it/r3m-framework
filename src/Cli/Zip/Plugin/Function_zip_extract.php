@@ -12,11 +12,15 @@ function function_zip_extract(Parse $parse, Data $data){
     $object = $parse->object();
     $source = App::parameter($object, 'extract', 1);
     $target = App::parameter($object, 'extract', 2);
-
     if(!File::exist($source)){
+        echo 'Cannot find source file...';
         return;
     }
-    if(File::exist($target)){
+    if(
+        File::exist($target) &&
+        !Dir::is($target)
+    ){
+        echo 'Target exists already...';
         return;
     }
     $zip = new \ZipArchive();
