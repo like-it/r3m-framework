@@ -22,8 +22,8 @@ class Zip extends View {
     const DIR = __DIR__;
     const NAME = 'Zip';
     const INFO = [
-        '{{binary()}} zip archive <source> <dest...> | it creates a zip archive in <destination> from <source>',
-        '{{binary()}} zip extract <source> <dest...> | it extracts a zip archive in <destination> from <source>',
+        '{{binary()}} zip archive <source> <dest...> | Create a zip archive in <destination> from <source>',
+        '{{binary()}} zip extract <source> <dest...> | Extract a zip archive in <destination> from <source>',
     ];
     const COMMAND = [
         'archive',
