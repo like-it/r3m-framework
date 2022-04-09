@@ -199,12 +199,18 @@ class Build {
         foreach($data as $name => $record){
             $exist = false;
             $function_name = str_replace('function_', '', $name);
+            $modifier_name = str_replace('modifier_', '', $name);
             if(
                 empty($limit) ||
                 (
                     !empty($limit) &&
                     array_key_exists('function', $limit) &&
                     in_array($function_name, $limit['function'])
+                ) ||
+                (
+                    !empty($limit) &&
+                    array_key_exists('modifier', $limit) &&
+                    in_array($modifier_name, $limit['modifier'])
                 )
             ){
                 foreach($dir_plugin as $nr => $dir){
