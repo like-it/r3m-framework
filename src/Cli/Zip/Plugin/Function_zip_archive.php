@@ -41,7 +41,9 @@ function function_zip_archive(Parse $parse, Data $data){
             }
         }
         $dir = Dir::name($target);
-        Dir::create($dir);
+        if($dir){
+            Dir::create($dir);
+        }
         $zip = new \ZipArchive();
         $res = $zip->open($target, \ZipArchive::CREATE);
         foreach($host as $file){
@@ -56,8 +58,9 @@ function function_zip_archive(Parse $parse, Data $data){
         !File::exist($target)
     ) {
         $dir = Dir::name($target);
-        dd($dir);
-        Dir::create($dir);
+        if($dir){
+            Dir::create($dir);
+        }
         $zip = new \ZipArchive();
         $res = $zip->open($target, \ZipArchive::CREATE);
         $location = substr($source, 1);
