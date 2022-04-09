@@ -20,6 +20,7 @@ function function_zip_extract(Parse $parse, Data $data){
         File::exist($target) &&
         !Dir::is($target)
     ){
+        d(Dir::is($target));
         echo 'Target exists already...';
         return;
     }
