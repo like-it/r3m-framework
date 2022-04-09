@@ -33,7 +33,9 @@ class Dir {
     }
 
     public static function create($url='', $chmod=''){
-        $url = rtrim($url, '/');
+        if($url !== Dir::SEPARATOR){
+            $url = rtrim($url, Dir::SEPARATOR);
+        }
         if(File::exist($url) && !Dir::is($url)){
             unlink($url);
         }
@@ -52,7 +54,9 @@ class Dir {
         }
     }
     public static function exist($url=''){
-        $url = rtrim($url, Dir::SEPARATOR);
+        if($url !== Dir::SEPARATOR){
+            $url = rtrim($url, Dir::SEPARATOR);
+        }
         if(
             File::exist($url) === true &&
             Dir::is($url) === true
@@ -62,7 +66,9 @@ class Dir {
         return false;
     }
     public static function is($url=''){
-        $url = rtrim($url, Dir::SEPARATOR);
+        if($url !== Dir::SEPARATOR){
+            $url = rtrim($url, Dir::SEPARATOR);
+        }
         return is_dir($url);
     }
 
