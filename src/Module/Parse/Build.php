@@ -253,7 +253,7 @@ class Build {
         }
         return $document;
     }
-    
+
     private function createRequireCategory($type='', $document=[]){
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();

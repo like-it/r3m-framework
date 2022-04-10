@@ -15,6 +15,9 @@ function function_zip_extract(Parse $parse, Data $data){
     $object = $parse->object();
     $source = App::parameter($object, 'extract', 1);
     $target = App::parameter($object, 'extract', 2);
+    if(empty($target)){
+        $target = getcwd();
+    }
     if(!File::exist($source)){
         echo 'Cannot find source file...';
         return;
