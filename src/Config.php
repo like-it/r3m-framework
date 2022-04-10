@@ -51,6 +51,9 @@ class Config extends Data {
     const ENVIRONMENT = 'environment';
     const VALUE_ENVIRONMENT = Config::MODE_PRODUCTION;
 
+    const FUNCTION = 'function';
+    const VALUE_FUNCTION = 'Function';
+
     const PLUGIN = 'plugin';
     const VALUE_PLUGIN = 'Plugin';
 
@@ -102,6 +105,7 @@ class Config extends Data {
     const DATA_FRAMEWORK_DIR_CACHE = Config::DATA_FRAMEWORK_DIR . '.' .'cache';
     const DATA_FRAMEWORK_DIR_MODULE = Config::DATA_FRAMEWORK_DIR . '.' .'module';
     const DATA_FRAMEWORK_DIR_PLUGIN =  Config::DATA_FRAMEWORK_DIR . '.' . 'plugin';
+    const DATA_FRAMEWORK_DIR_FUNCTION =  Config::DATA_FRAMEWORK_DIR . '.' . 'function';
     const DATA_FRAMEWORK_DIR_VALIDATE =  Config::DATA_FRAMEWORK_DIR . '.' . 'validate';
     const DATA_FRAMEWORK_DIR_VIEW =  Config::DATA_FRAMEWORK_DIR . '.' . 'view';
 
@@ -133,6 +137,7 @@ class Config extends Data {
     const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
     const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
     const DATA_PROJECT_DIR_PLUGIN =  Config::DATA_PROJECT_DIR . '.' . 'plugin';
+    const DATA_PROJECT_DIR_FUNCTION =  Config::DATA_PROJECT_DIR . '.' . 'function';
     const DATA_PROJECT_DIR_LOG =  Config::DATA_PROJECT_DIR . '.' . 'log';
 
     const DATA_CONTROLLER = 'controller';
@@ -144,6 +149,7 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_SOURCE = Config::DATA_CONTROLLER_DIR . '.' .'source';
     const DATA_CONTROLLER_DIR_DATA = Config::DATA_CONTROLLER_DIR . '.' .'data';
     const DATA_CONTROLLER_DIR_PLUGIN = Config::DATA_CONTROLLER_DIR . '.' .'plugin';
+    const DATA_CONTROLLER_DIR_FUNCTION = Config::DATA_CONTROLLER_DIR . '.' .'function';
     const DATA_CONTROLLER_DIR_MODEL = Config::DATA_CONTROLLER_DIR . '.' .'model';
     const DATA_CONTROLLER_DIR_ENTITY = Config::DATA_CONTROLLER_DIR . '.' .'entity';
     const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
@@ -233,6 +239,10 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::ENVIRONMENT;
         $value = Config::VALUE_ENVIRONMENT;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::FUNCTION;
+        $value = Config::VALUE_FUNCTION;
         $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::PLUGIN;
