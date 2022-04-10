@@ -319,6 +319,7 @@ class File {
 
     public static function delete($url=''){
         try {
+            $url = rtrim($url, '/');
             return @unlink($url); //added @ async deletes & reads can cause triggers otherways
         } catch (Exception $exception){
             return false;
