@@ -31,6 +31,7 @@ class File {
     }
 
     public static function is_link($url=''){
+        $url = rtrim($url, '/');
         return is_link($url);
     }
 
