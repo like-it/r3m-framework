@@ -198,19 +198,21 @@ class Build {
         $limit = $this->limit();
         foreach($data as $name => $record){
             $exist = false;
-            $function_name = str_replace('function_', '', $name);
-            $modifier_name = str_replace('modifier_', '', $name);
+            $function_name = str_replace('function_', '', $name, $function_count);
+            $modifier_name = str_replace('modifier_', '', $name, $modifier_count);
             if(
                 empty($limit) ||
                 (
                     !empty($limit) &&
                     array_key_exists('function', $limit) &&
-                    in_array($function_name, $limit['function'])
+                    in_array($function_name, $limit['function']) &&
+                    $function_count >= 1
                 ) ||
                 (
                     !empty($limit) &&
                     array_key_exists('modifier', $limit) &&
-                    in_array($modifier_name, $limit['modifier'])
+                    in_array($modifier_name, $limit['modifier']) &&
+                    $modifier_count >= 1
                 )
             ){
                 foreach($dir_plugin as $nr => $dir){
@@ -251,8 +253,7 @@ class Build {
         }
         return $document;
     }
-
-
+    
     private function createRequireCategory($type='', $document=[]){
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
