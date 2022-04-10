@@ -42,6 +42,9 @@ class View {
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static function view($object, $url){
         return View::response($object, $url);
     }
@@ -174,6 +177,15 @@ class View {
                 '.' .
                 Config::PLUGIN
                 ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_CONTROLLER_DIR_FUNCTION,
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::FUNCTION
+            ) .
             $config->data(Config::DS)
         );
         $config->data(Config::DATA_HOST_DIR_PLUGIN,
