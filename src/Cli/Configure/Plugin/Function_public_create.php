@@ -33,7 +33,7 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
                 File::exist($source)
             )
             {
-                File::move($source, $destination);
+                File::rename($source, $destination);
             }
             if(!File::exist($destination)){
                 Dir::create($destination);
