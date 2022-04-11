@@ -428,7 +428,7 @@ class File {
     public static function extension_remove($filename='', $extension=[]): string
     {
         if(!is_array($extension)){
-            $extension = array($extension);
+            $extension = [($extension)];
         }
         foreach($extension as $ext){
             $ext = '.' . ltrim($ext, '.');
