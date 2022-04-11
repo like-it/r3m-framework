@@ -116,7 +116,7 @@ class Dir {
         return $name;
     }
 
-    public function ignore($ignore=null, $attribute=null): bool
+    public function ignore($ignore=null, $attribute=null)
     {
         $node = $this->node();
         if(!isset($node)){
