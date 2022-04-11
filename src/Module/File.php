@@ -25,33 +25,44 @@ class File {
 
     const USER_WWW = 'www-data';
 
-    public static function is($url=''){
+    public static function is($url=''): bool
+    {
         $url = rtrim($url, '/');
         return is_file($url);
     }
 
-    public static function is_link($url=''){
+    public static function is_link($url=''): bool
+    {
         $url = rtrim($url, '/');
         return is_link($url);
     }
 
-    public static function is_readable($url=''){
+    public static function is_readable($url=''): bool
+    {
+        $url = rtrim($url, '/');
         return is_readable($url);
     }
 
-    public static function is_writeable($url=''){
+    public static function is_writeable($url=''): bool
+    {
+        $url = rtrim($url, '/');
         return is_writeable($url);
     }
 
-    public static function is_resource($resource=''){
-        return is_resource($resource);
+    public static function is_resource($url=''): bool
+    {
+        $url = rtrim($url, '/');
+        return is_resource($url);
     }
 
-    public static function is_upload($url=''){
+    public static function is_upload($url=''): bool
+    {
+        $url = rtrim($url, '/');
         return is_uploaded_file($url);
     }
 
-    public static function dir($directory=''){
+    public static function dir($directory=''): string
+    {
         return str_replace('\\\/', '/', rtrim($directory,'\\\/')) . '/';
     }
 
@@ -59,7 +70,7 @@ class File {
         try {
             return @filemtime($url); //added @ async deletes & reads can cause triggers otherways
         } catch(Exception $exception){
-            return;
+            return null;
         }
 
     }
@@ -68,18 +79,20 @@ class File {
         try {
             return @fileatime($url); //added @ async deletes & reads can cause triggers otherways
         } catch (Exception $exception){
-            return;
+            return null;
         }
     }
 
-    public static function link($source, $destination){
+    public static function link($source, $destination): bool
+    {
         $source = escapeshellarg($source);
         $destination = escapeshellarg($destination);
         system('ln -s ' . $source . ' ' . $destination);
         return true;
     }
 
-    public static function readlink($url, $final=false){
+    public static function readlink($url, $final=false): string
+    {
         $url = escapeshellarg($url);
         if($final){
             $output = system('readlink -f ' . $url);
@@ -89,7 +102,8 @@ class File {
         return $output;
     }
 
-    public static function count($directory='', $include_directory=false){
+    public static function count($directory='', $include_directory=false): int
+    {
         $dir = new Dir();
         $read = $dir->read($directory);
         if(!empty($include_directory)){
@@ -108,7 +122,8 @@ class File {
         }
     }
 
-    public static function exist($url){ //File::exist means File has exist and not exist
+    public static function exist($url): bool
+    {
         if($url == '/'){
             return file_exists($url);
         } else {
@@ -117,7 +132,8 @@ class File {
         }
     }
 
-    public static function touch($url='', $time=null, $atime=null){
+    public static function touch($url='', $time=null, $atime=null): bool
+    {
         if($atime === null){
             try {
                 return @touch($url, $time); //wsdl not working
@@ -133,7 +149,8 @@ class File {
         }
     }
 
-    public static function info(stdClass $node){
+    public static function info(stdClass $node): stdClass
+    {
         $rev = strrev($node->name);
         $explode = explode('.', $rev, 2);
         if(count($explode) == 2){
@@ -149,7 +166,8 @@ class File {
         return $node;
     }
 
-    public static function chown($url='', $owner=null, $group=null, $recursive=false){
+    public static function chown($url='', $owner=null, $group=null, $recursive=false): bool
+    {
         if($owner === null){
             $owner = 'root:root';
         }
@@ -177,32 +195,61 @@ class File {
     /**
      * @throws FileMoveException
      */
-    public static function move($source='', $destination='', $overwrite=false){
-        $exist = file_exists($source);
-        if($exist === false){
-            throw new FileMoveException('Source file doesn\'t exist');
+    public static function move($source='', $destination='', $overwrite=false): bool
+    {
+        if($overwrite && File::exist($destination)){
+            if(File::is_link($destination)){
+                File::remove($destination);
+            }
+            elseif(Dir::is($destination)){
+                Dir::remove($destination);
+            } else {
+                File::remove($destination);
+            }
+            $source = escapeshellarg($source);
+            $destination = escapeshellarg($destination);
+            exec('mv ' . $source . ' ' . $destination);
+            return true;
+        } elseif(File::exist($destination)){
+            throw new FileMoveException('Destination file already exists...');
+        } else {
+            $source = escapeshellarg($source);
+            $destination = escapeshellarg($destination);
+            exec('mv ' . $source . ' ' . $destination);
+            return true;
         }
-        $exist = file_exists($destination);
+    }
+
+    /**
+     * @throws FileMoveException
+     */
+    public static function rename($source='', $destination='', $overwrite=false): bool
+    {
+        $exist = File::exist($source);
+        if($exist === false){
+            throw new FileMoveException('Source file doesn\'t exist...');
+        }
+        $exist = File::exist($destination);
         if(
             $overwrite === false &&
-            file_exists($destination)
+            File::exist($destination)
         ){
-            throw new FileMoveException('Destination file exists');
+            throw new FileMoveException('Destination file already exists...');
         }
-        if(is_dir($source)){
+        if(Dir::is($source)){
             if(
                 $exist &&
                 $overwrite === false
             ){
-                throw new FileMoveException('Destination directory exists');
+                throw new FileMoveException('Destination directory exists...');
             }
             elseif($exist){
-                if(is_dir($destination)){
-                    throw new FileMoveException('Destination directory exists and needs to be deleted first');
+                if(Dir::is($destination)){
+                    throw new FileMoveException('Destination directory exists and needs to be deleted first...');
                 } else {
                     try {
                         File::delete($destination);
-                        return rename($source, $destination);
+                        return @rename($source, $destination);
                     } catch (Exception  | ErrorException $exception){
                         return false;
                     }
@@ -220,19 +267,27 @@ class File {
 
             }
         }
-        elseif(is_file($source)){
-            return rename($source, $destination);
+        elseif(File::is($source)){
+            try {
+                return @rename($source, $destination);
+            } catch (Exception | ErrorException $exception){
+                return false;
+            }
         }
+        return false;
     }
 
-    public static function chmod($url, $mode=0640){
+    public static function chmod($url, $mode=0640): bool
+    {
         return chmod($url, $mode);
     }
 
+    /**
+     * @throws FileWriteException
+     */
     public static function write($url='', $data=''){
         $url = (string) $url;
         $data = (string) $data;
-        $fwrite = 0;
         $resource = @fopen($url, 'w');
         if($resource === false){
             return $resource;
@@ -251,12 +306,15 @@ class File {
         } else {
             return $written;
         }
+
     }
 
+    /**
+     * @throws FileAppendException
+     */
     public static function append($url='', $data=''){
         $url = (string) $url;
         $data = (string) $data;
-        $fwrite = 0;
         $resource = @fopen($url, 'a');
         if($resource === false){
             return $resource;
@@ -277,7 +335,8 @@ class File {
         }
     }
 
-    public static function read($url=''){
+    public static function read($url='') : string
+    {
         if(strpos($url, File::SCHEME_HTTP) === 0){
             //check network connection first (@) added for that              //error
             try {
@@ -300,7 +359,8 @@ class File {
         }
     }
 
-    public static function tail($url, $include_return=false){
+    public static function tail($url, $include_return=false) : string
+    {
         if(File::exist($url)){
             $read = File::read($url);
             $data = explode("\r", $read);
@@ -311,13 +371,24 @@ class File {
             }
 
         }
+        return '';
     }
 
-    public static function copy($source='', $destination=''){
+    public static function copy($source='', $destination=''): bool
+    {
         return copy($source, $destination);
     }
 
-    public static function delete($url=''){
+
+    public static function remove($url=''): bool
+    {
+        $url = escapeshellarg($url);
+        exec('rm  ' . $url);
+        return true;
+    }
+
+    public static function delete($url=''): bool
+    {
         try {
             $url = rtrim($url, '/');
             return @unlink($url); //added @ async deletes & reads can cause triggers otherways
@@ -327,7 +398,8 @@ class File {
 
     }
 
-    public static function extension($url=''){        
+    public static function extension($url=''): string
+    {
         if(substr($url, -1) == '/'){
             return '';
         }
@@ -341,7 +413,8 @@ class File {
         return $extension;
     }
 
-    public static function basename($url='', $extension=''){
+    public static function basename($url='', $extension=''): string
+    {
         if(strstr($url, '\\') !== false){
             $url = str_replace('\\', '/', $url);
         }
@@ -352,7 +425,8 @@ class File {
         return $filename;
     }
 
-    public static function extension_remove($filename='', $extension=[]){
+    public static function extension_remove($filename='', $extension=[]): string
+    {
         if(!is_array($extension)){
             $extension = array($extension);
         }
@@ -367,7 +441,8 @@ class File {
         return $filename;
     }
 
-    public static function ucfirst($url=''){
+    public static function ucfirst($url=''): string
+    {
         $explode = explode('.', $url);
         $extension = null;
         if(array_key_exists(1, $explode)){
@@ -388,7 +463,8 @@ class File {
         return $result;
     }
 
-    public static function size($url=''){
+    public static function size($url=''): int
+    {
         try {
             return @filesize($url); //pagefile error
         } catch(Exception $exception){
@@ -396,7 +472,8 @@ class File {
         }
     }
 
-    public static function upload(Data $upload, $target){
+    public static function upload(Data $upload, $target): bool
+    {
         return move_uploaded_file($upload->data('tmp_name'), $target . $upload->data('name'));
     }
 }

@@ -23,7 +23,8 @@ class Dir {
 
     private $node;
 
-    public static function change($dir=''){
+    public static function change($dir=''): string
+    {
         $tmp = getcwd() . DIRECTORY_SEPARATOR;
         if(is_dir($dir) === false){
             Dir::create($dir, Dir::CHMOD);
@@ -32,7 +33,8 @@ class Dir {
         return $tmp;
     }
 
-    public static function create($url='', $chmod=''){
+    public static function create($url='', $chmod=''): bool
+    {
         if($url !== Dir::SEPARATOR){
             $url = rtrim($url, Dir::SEPARATOR);
         }
@@ -53,7 +55,8 @@ class Dir {
             return $mkdir;
         }
     }
-    public static function exist($url=''){
+    public static function exist($url=''): bool
+    {
         if($url !== Dir::SEPARATOR){
             $url = rtrim($url, Dir::SEPARATOR);
         }
@@ -65,7 +68,8 @@ class Dir {
         }
         return false;
     }
-    public static function is($url=''){
+    public static function is($url=''): bool
+    {
         if($url !== Dir::SEPARATOR){
             $url = rtrim($url, Dir::SEPARATOR);
         }
@@ -87,7 +91,8 @@ class Dir {
         return $total;
     }
 
-    public static function name($url='', $levels=null){
+    public static function name($url='', $levels=null): string
+    {
         $is_backslash = false;
         if(stristr($url, '\\') !== false){
             $url = str_replace('\\', '/', $url);
@@ -111,7 +116,8 @@ class Dir {
         return $name;
     }
 
-    public function ignore($ignore=null, $attribute=null){
+    public function ignore($ignore=null, $attribute=null): bool
+    {
         $node = $this->node();
         if(!isset($node)){
             $node = new stdClass();
@@ -218,7 +224,8 @@ class Dir {
         return $list;
     }
 
-    public static function copy($source='', $target=''){
+    public static function copy($source='', $target=''): bool
+    {
         if(is_dir($source)){
             $source = escapeshellarg($source);
             $target = escapeshellarg($target);
@@ -229,7 +236,17 @@ class Dir {
         }
     }
 
-    public static function move($source='', $destination='', $overwrite=false){
+    public static function rename($source='', $destination='', $overwrite=false): bool
+    {
+        try {
+            return File::rename($source, $destination, $overwrite);
+        } catch (Exception | FileMoveException $exception){
+            return false;
+        }
+    }
+
+    public static function move($source='', $destination='', $overwrite=false): bool
+    {
         try {
             return File::move($source, $destination, $overwrite);
         } catch (Exception | FileMoveException $exception){
@@ -237,7 +254,8 @@ class Dir {
         }
     }
 
-    public static function remove($dir=''){
+    public static function remove($dir=''): bool
+    {
         if(is_dir($dir) === false){
             return true;
         }
@@ -246,7 +264,8 @@ class Dir {
         return true;
     }
 
-    public function delete($dir=''){
+    public function delete($dir=''): bool
+    {
         if(is_dir($dir) === false){
             return true;
         }
@@ -280,7 +299,8 @@ class Dir {
         return $this->node;
     }
 
-    public static function ucfirst($dir=''){
+    public static function ucfirst($dir=''): string
+    {
         $explode = explode('/', $dir);
         $result = '';
         foreach($explode as $part){
