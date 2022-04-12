@@ -205,20 +205,19 @@ class File {
                 File::remove($destination);
             }
             elseif(Dir::is($destination)){
-                Dir::remove($destination);
+//                Dir::remove($destination);
             } else {
                 File::remove($destination);
             }
             $source = escapeshellarg($source);
             $destination = escapeshellarg($destination);
-            exec('mv ' . $source . ' ' . $destination);
+            exec('mv ' . $source . ' ' . $destination, $output);
+            dd($output);
             return true;
         } elseif(
             !$overwrite &&
             File::exist($destination)
         ){
-            d($destination);
-            dd(File::exist($destination));
             throw new FileMoveException('Destination file already exists...');
         } else {
             $source = escapeshellarg($source);
