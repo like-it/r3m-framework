@@ -250,7 +250,6 @@ class Dir {
         try {
             return File::move($source, $destination, $overwrite);
         } catch (Exception | FileMoveException $exception){
-            dd($exception);
             return false;
         }
     }
