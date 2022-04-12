@@ -212,7 +212,7 @@ class File {
             $source = escapeshellarg($source);
             $destination = escapeshellarg($destination);
             exec('mv ' . $source . ' ' . $destination, $output);
-            dd($output);
+            d($output);
             return true;
         } elseif(
             !$overwrite &&
