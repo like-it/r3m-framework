@@ -123,14 +123,14 @@ class Dir {
             $node = new stdClass();
         }
         if(!isset($node->ignore)){
-            $node->ignore = array();
+            $node->ignore = [];
         }
         if($ignore !== null){
             if(is_array($ignore) && $attribute === null){
                 $node->ignore = $ignore;
             }
             elseif($ignore == 'delete' && $attribute === null){
-                $node->ignore = array();
+                $node->ignore = [];
             }
             elseif($ignore=='list' && $attribute !== null){
                 $node->ignore = $attribute;
@@ -161,9 +161,9 @@ class Dir {
             $url .= Dir::SEPARATOR;
         }
         if($this->ignore('find', $url)){
-            return array();
+            return [];
         }
-        $list = array();
+        $list = [];
         $cwd = getcwd();
         if(is_dir($url) === false){
             return false;
@@ -176,7 +176,7 @@ class Dir {
         try {
             if ($handle = @opendir($url)) {
                 while (false !== ($entry = readdir($handle))) {
-                    $recursiveList = array();
+                    $recursiveList = [];
                     if($entry == '.' || $entry == '..'){
                         continue;
                     }
@@ -250,13 +250,14 @@ class Dir {
         try {
             return File::move($source, $destination, $overwrite);
         } catch (Exception | FileMoveException $exception){
+            dd($exception);
             return false;
         }
     }
 
     public static function remove($dir=''): bool
     {
-        if(is_dir($dir) === false){
+        if(Dir::is($dir) === false){
             return true;
         }
         $dir = escapeshellarg($dir);
@@ -266,10 +267,10 @@ class Dir {
 
     public function delete($dir=''): bool
     {
-        if(is_dir($dir) === false){
+        if(Dir::is($dir) === false){
             return true;
         }
-        $files = array_diff(scandir($dir), array('.', '..'));
+        $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $nr => $file) {
             if($this->ignore('find', "$dir/$file")){
                 continue;
