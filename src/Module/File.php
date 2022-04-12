@@ -197,7 +197,10 @@ class File {
      */
     public static function move($source='', $destination='', $overwrite=false): bool
     {
-        if($overwrite && File::exist($destination)){
+        if(
+            $overwrite &&
+            File::exist($destination)
+        ){
             if(File::is_link($destination)){
                 File::remove($destination);
             }
@@ -210,7 +213,10 @@ class File {
             $destination = escapeshellarg($destination);
             exec('mv ' . $source . ' ' . $destination);
             return true;
-        } elseif(File::exist($destination)){
+        } elseif(
+            !$overwrite &&
+            File::exist($destination)
+        ){
             throw new FileMoveException('Destination file already exists...');
         } else {
             $source = escapeshellarg($source);
