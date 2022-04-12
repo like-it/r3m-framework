@@ -217,6 +217,8 @@ class File {
             !$overwrite &&
             File::exist($destination)
         ){
+            d($destination);
+            dd(File::exist($destination));
             throw new FileMoveException('Destination file already exists...');
         } else {
             $source = escapeshellarg($source);
