@@ -32,6 +32,11 @@ class Sort extends Data{
             $no_attribute = [];
             $count = count($sort);
             if($count == 1){
+                if(
+                    is_object($list) &&
+                    Core::object_is_empty($list)){
+                    return [];
+                }
                 $attribute = false;
                 $sortable_1 = 'ASC';
                 foreach($list as $uuid => $node){
