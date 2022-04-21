@@ -14,7 +14,6 @@ namespace R3m\Io\Module;
 use stdClass;
 use Exception;
 use R3m\Io\App;
-use R3m\Io\Module\Core;
 use DateTimeImmutable;
 
 class Handler {
@@ -48,6 +47,15 @@ class Handler {
     const PATCH = 'PATCH';
     const POST = 'POST';
     const PUT = 'PUT';
+
+    const UPLOAD_ERR_INI_SIZE = 'The uploaded file exceeds the upload_max_filesize directive in php.ini';
+    const UPLOAD_ERR_FORM_SIZE = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.';
+    const UPLOAD_ERR_PARTIAL = 'The uploaded file was only partially uploaded.';
+    const UPLOAD_ERR_NO_FILE = 'No file was uploaded.';
+    const UPLOAD_ERR_NO_TMP_DIR = 'Missing a temporary folder.';
+    const UPLOAD_ERR_CANT_WRITE = 'Failed to write file to disk.';
+    const UPLOAD_ERR_EXTENSION = 'A PHP extension stopped the file upload.';
+
 
     public static function request_configure(App $object){
         $object->data(
@@ -138,7 +146,41 @@ class Handler {
         }
     }
 
-    private static function request_file(){
+    private static function addErrorMessage($record): array
+    {
+        if(!array_key_exists('error', $record)){
+            return $record;
+        }
+        switch($record['error']){
+            case UPLOAD_ERR_OK :
+                return $record;
+            case UPLOAD_ERR_INI_SIZE :
+                $record['errorMessage'] = Handler::UPLOAD_ERR_INI_SIZE;
+                return $record;
+            case UPLOAD_ERR_FORM_SIZE :
+                $record['errorMessage'] = Handler::UPLOAD_ERR_FORM_SIZE;
+                return $record;
+            case UPLOAD_ERR_PARTIAL :
+                $record['errorMessage'] = Handler::UPLOAD_ERR_PARTIAL;
+                return $record;
+            case UPLOAD_ERR_NO_FILE :
+                $record['errorMessage'] = Handler::UPLOAD_ERR_NO_FILE;
+                return $record;
+            case UPLOAD_ERR_NO_TMP_DIR :
+                $record['errorMessage'] = Handler::UPLOAD_ERR_NO_TMP_DIR;
+                return $record;
+            case UPLOAD_ERR_CANT_WRITE :
+                $record['errorMessage'] = Handler::UPLOAD_ERR_CANT_WRITE;
+                return $record;
+            case UPLOAD_ERR_EXTENSION :
+                $record['errorMessage'] = Handler::UPLOAD_ERR_EXTENSION;
+                return $record;
+        }
+        return $record;
+    }
+
+    private static function request_file(): stdClass
+    {
         $nodeList = array();
         foreach ($_FILES as $category => $list){
             if(is_array($list)){
@@ -150,11 +192,11 @@ class Handler {
                         }
                         if($nr){
                             $nodeList[$nr]['input_name'] = $category;
-                            d($nodeList[$nr]);
+                            $nodelist[$nr] = Handler::addErrorMessage($nodeList[$nr]);
                         }
                     } else {
                         $list['input_name'] = $category;
-                        d($list);
+                        $list = Handler::addErrorMessage($list);
                         $nodeList[] = $list;
                         break;
                     }
