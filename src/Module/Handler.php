@@ -150,9 +150,11 @@ class Handler {
                         }
                         if($nr){
                             $nodeList[$nr]['input_name'] = $category;
+                            d($nodeList[$nr]);
                         }
                     } else {
                         $list['input_name'] = $category;
+                        d($list);
                         $nodeList[] = $list;
                         break;
                     }
