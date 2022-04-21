@@ -28,6 +28,11 @@ class Filter extends Data{
             is_array($list) || 
             is_object($list)
         ){
+            if(
+                is_object($list) &&
+                Core::object_is_empty($list)){
+                return [];
+            }
             foreach($list as $uuid => $node){
                 foreach($where as $attribute => $record){
                     if(array_key_exists('exist', $record)){

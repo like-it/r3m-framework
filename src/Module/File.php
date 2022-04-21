@@ -205,7 +205,7 @@ class File {
                 File::remove($destination);
             }
             elseif(Dir::is($destination)){
-//                Dir::remove($destination);
+//              continue overwrite
             } else {
                 File::remove($destination);
             }

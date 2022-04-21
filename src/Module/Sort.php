@@ -81,7 +81,7 @@ class Sort extends Data{
                 if(
                     is_object($list) &&
                     Core::object_is_empty($list)){
-                    return $list;
+                    return [];
                 }
                 $attribute = false;
                 $sortable_1 = 'ASC';
