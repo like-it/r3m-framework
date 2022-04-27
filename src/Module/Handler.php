@@ -151,8 +151,9 @@ class Handler {
         if(!array_key_exists('error', $record)){
             return $record;
         }
-        $errorMessage = $object->request('error.' . $record['error']);
+        $errorMessage = $object->request('error-' . $record['error']);
         if($errorMessage){
+            dd('yes');
             $record['errorMessage'] = $errorMessage;
             return $record;
         } else {
