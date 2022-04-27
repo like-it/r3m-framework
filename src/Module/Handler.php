@@ -74,7 +74,7 @@ class Handler {
             App::NAMESPACE . '.' .
             Handler::NAME_REQUEST . '.' .
             Handler::NAME_FILE,
-            Handler::request_file()
+            Handler::request_file($object)
         );
     }
 
@@ -146,40 +146,46 @@ class Handler {
         }
     }
 
-    private static function addErrorMessage($record): array
+    private static function addErrorMessage($object, $record): array
     {
         if(!array_key_exists('error', $record)){
             return $record;
         }
-        switch($record['error']){
-            case UPLOAD_ERR_OK :
-                return $record;
-            case UPLOAD_ERR_INI_SIZE :
-                $record['errorMessage'] = Handler::UPLOAD_ERR_INI_SIZE;
-                return $record;
-            case UPLOAD_ERR_FORM_SIZE :
-                $record['errorMessage'] = Handler::UPLOAD_ERR_FORM_SIZE;
-                return $record;
-            case UPLOAD_ERR_PARTIAL :
-                $record['errorMessage'] = Handler::UPLOAD_ERR_PARTIAL;
-                return $record;
-            case UPLOAD_ERR_NO_FILE :
-                $record['errorMessage'] = Handler::UPLOAD_ERR_NO_FILE;
-                return $record;
-            case UPLOAD_ERR_NO_TMP_DIR :
-                $record['errorMessage'] = Handler::UPLOAD_ERR_NO_TMP_DIR;
-                return $record;
-            case UPLOAD_ERR_CANT_WRITE :
-                $record['errorMessage'] = Handler::UPLOAD_ERR_CANT_WRITE;
-                return $record;
-            case UPLOAD_ERR_EXTENSION :
-                $record['errorMessage'] = Handler::UPLOAD_ERR_EXTENSION;
-                return $record;
+        $errorMessage = $object->request('error.' . $record['error']);
+        if($errorMessage){
+            $record['errorMessage'] = $errorMessage;
+            return $record;
+        } else {
+            switch($record['error']){
+                case UPLOAD_ERR_OK :
+                    return $record;
+                case UPLOAD_ERR_INI_SIZE :
+                    $record['errorMessage'] = Handler::UPLOAD_ERR_INI_SIZE;
+                    return $record;
+                case UPLOAD_ERR_FORM_SIZE :
+                    $record['errorMessage'] = Handler::UPLOAD_ERR_FORM_SIZE;
+                    return $record;
+                case UPLOAD_ERR_PARTIAL :
+                    $record['errorMessage'] = Handler::UPLOAD_ERR_PARTIAL;
+                    return $record;
+                case UPLOAD_ERR_NO_FILE :
+                    $record['errorMessage'] = Handler::UPLOAD_ERR_NO_FILE;
+                    return $record;
+                case UPLOAD_ERR_NO_TMP_DIR :
+                    $record['errorMessage'] = Handler::UPLOAD_ERR_NO_TMP_DIR;
+                    return $record;
+                case UPLOAD_ERR_CANT_WRITE :
+                    $record['errorMessage'] = Handler::UPLOAD_ERR_CANT_WRITE;
+                    return $record;
+                case UPLOAD_ERR_EXTENSION :
+                    $record['errorMessage'] = Handler::UPLOAD_ERR_EXTENSION;
+                    return $record;
+            }
         }
         return $record;
     }
 
-    private static function request_file(): stdClass
+    private static function request_file(App $object): stdClass
     {
         $nodeList = array();
         foreach ($_FILES as $category => $list){
@@ -192,11 +198,11 @@ class Handler {
                         }
                         if($nr){
                             $nodeList[$nr]['input_name'] = $category;
-                            $nodelist[$nr] = Handler::addErrorMessage($nodeList[$nr]);
+                            $nodelist[$nr] = Handler::addErrorMessage($object, $nodeList[$nr]);
                         }
                     } else {
                         $list['input_name'] = $category;
-                        $list = Handler::addErrorMessage($list);
+                        $list = Handler::addErrorMessage($object, $list);
                         $nodeList[] = $list;
                         break;
                     }
