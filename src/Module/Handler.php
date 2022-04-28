@@ -148,7 +148,7 @@ class Handler {
 
     private static function addErrorMessage($object, $record): array
     {
-        $record['error'] = UPLOAD_ERR_INI_SIZE;
+        $record['error'] = UPLOAD_ERR_FORM_SIZE;
         if(!array_key_exists('error', $record)){
             return $record;
         }
