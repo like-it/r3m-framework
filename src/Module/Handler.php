@@ -154,7 +154,6 @@ class Handler {
         }
         $errorMessage = $object->request('error-' . $record['error']);
         if($errorMessage){
-            dd('yes');
             $record['errorMessage'] = $errorMessage;
             return $record;
         } else {
