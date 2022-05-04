@@ -1486,7 +1486,8 @@ class Token {
                                     $token[$i]['type'],
                                     Token::TYPE_NAME_BREAK_METHOD
                                 ) ||
-                                $token[$i]['is_operator'] === true
+                                $token[$i]['is_operator'] === true &&
+                                $token[$i]['type'] !== Token::TYPE_COLON
                             ){
                                 break;
                             }
