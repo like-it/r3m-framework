@@ -142,6 +142,24 @@ class Token {
         Token::TYPE_QUOTE_DOUBLE,
         Token::TYPE_COMMA,
         Token::TYPE_SEMI_COLON,
+        Token::TYPE_COLON,
+        Token::TYPE_DOUBLE_COLON,
+        Token::TYPE_EXCLAMATION,
+        Token::TYPE_IS
+    ];
+
+    const TYPE_NAME_BREAK_METHOD = [
+        Token::TYPE_WHITESPACE,
+        Token::TYPE_PARENTHESE_OPEN,
+        Token::TYPE_PARENTHESE_CLOSE,
+        Token::TYPE_BRACKET_SQUARE_OPEN,
+        Token::TYPE_BRACKET_SQUARE_CLOSE,
+        Token::TYPE_CURLY_OPEN,
+        Token::TYPE_CURLY_CLOSE,
+        Token::TYPE_QUOTE_SINGLE,
+        Token::TYPE_QUOTE_DOUBLE,
+        Token::TYPE_COMMA,
+        Token::TYPE_SEMI_COLON,
         Token::TYPE_DOUBLE_COLON,
         Token::TYPE_EXCLAMATION,
         Token::TYPE_IS
@@ -1466,7 +1484,7 @@ class Token {
                             elseif(
                                 in_array(
                                     $token[$i]['type'],
-                                    Token::TYPE_NAME_BREAK
+                                    Token::TYPE_NAME_BREAK_METHOD
                                 ) ||
                                 $token[$i]['is_operator'] === true
                             ){
