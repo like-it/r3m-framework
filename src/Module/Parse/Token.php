@@ -1502,10 +1502,24 @@ class Token {
                     $token[$method_nr]['type'] != Token::TYPE_VARIABLE
                 ){
                     $value = implode('', array_reverse($before_reverse));
+                    $explode = explode(':', $value);
+                    $method_count = count($explode);
                     $token[$method_nr]['type'] = Token::TYPE_METHOD;
-                    $token[$method_nr]['method']['name'] = strtolower(trim($value));
-                    //add trait
-
+                    if($method_count === 1){
+                        $token[$method_nr]['method']['namespace'] = null;
+                        $token[$method_nr]['method']['trait'] = null;
+                        $token[$method_nr]['method']['name'] = strtolower(trim($value));
+                    } elseif($method_count === 2) {
+                        $token[$method_nr]['method']['namespace'] = null;
+                        $token[$method_nr]['method']['trait'] = $method_count[0];
+                        $token[$method_nr]['method']['name'] = strtolower(trim($method_count[1]));
+                    } elseif($method_count === 3){
+                        $token[$method_nr]['method']['namespace'] = $method_count[0];
+                        $token[$method_nr]['method']['trait'] = $method_count[1];
+                        $token[$method_nr]['method']['name'] = strtolower(trim($method_count[2]));
+                    } else {
+                        throw new Exception('wrong amount of ":" in traited function');
+                    }
                     //add attributes...
                 }
             }
