@@ -114,12 +114,13 @@
         },
         "plugin": {
             "multi_line": [
-                "capture.prepend",
-                "capture.append",
                 "block.code",
                 "block.html",
                 "block.json",
-                "script"
+                "capture.prepend",
+                "capture.append",
+                "script",
+                "trait"
             ]
         },
         "use" : [
