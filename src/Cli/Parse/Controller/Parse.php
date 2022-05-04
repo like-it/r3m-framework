@@ -84,21 +84,25 @@ class Parse extends View{
      */
     private static function compile($object)
     {
-        $url = $object->parameter($object, __FUNCTION__, 1);
-        if (File::exist($url)) {
-            $read = File::read($url);
-            if ($read) {
-                $mtime = File::mtime($url);
-                $parse = new \R3m\Io\Module\Parse($object);
-                $parse->storage()->data('r3m.io.parse.view.url', $url);
-                $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
-                $object->data('ldelim', '{');
-                $object->data('rdelim', '}');
-                $data = clone $object->data();
-                unset($data->{App::NAMESPACE});
-                $read = $parse->compile($read, $data, $parse->storage());
-                return $read;
+        try {
+            $url = $object->parameter($object, __FUNCTION__, 1);
+            if (File::exist($url)) {
+                $read = File::read($url);
+                if ($read) {
+                    $mtime = File::mtime($url);
+                    $parse = new \R3m\Io\Module\Parse($object);
+                    $parse->storage()->data('r3m.io.parse.view.url', $url);
+                    $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
+                    $object->data('ldelim', '{');
+                    $object->data('rdelim', '}');
+                    $data = clone $object->data();
+                    unset($data->{App::NAMESPACE});
+                    $read = $parse->compile($read, $data, $parse->storage());
+                    return $read;
+                }
             }
+        } catch (Exception $exception){
+            return $exception->getMessage() . PHP_EOL;
         }
     }
 }

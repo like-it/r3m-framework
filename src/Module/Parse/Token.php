@@ -644,7 +644,6 @@ class Token {
         $token = Token::group($token, $is_debug);
         $token = Token::cast($token);
         $token = Token::method($token, $is_debug);
-        d($token);
         return $token;
     }
 
