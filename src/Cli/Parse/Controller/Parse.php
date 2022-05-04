@@ -25,9 +25,11 @@ class Parse extends View{
 
     const COMMAND_INFO = 'info';
     const COMMAND_RESTART = 'restart';
+    const COMMAND_COMPILE = 'compile';
     const COMMAND = [
         Parse::COMMAND_INFO,
-        Parse::COMMAND_RESTART
+        Parse::COMMAND_RESTART,
+        Parse::COMMAND_COMPILE
     ];
 
     const DEFAULT_COMMAND = Parse::COMMAND_INFO;
@@ -35,6 +37,9 @@ class Parse extends View{
     const EXCEPTION_COMMAND_PARAMETER = '{{$command}}';
     const EXCEPTION_COMMAND = 'invalid command (' . Parse::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
+    /**
+     * @throws Exception
+     */
     public static function run($object){
         $command = $object->parameter($object, Parse::NAME, 1);
 
@@ -70,5 +75,10 @@ class Parse extends View{
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return 'Command undefined.' . PHP_EOL;
         }
+    }
+
+    private static function compile($object){
+        $url = $object->parameter($object, __FUNCTION__, 1);
+        dd($url);
     }
 }
