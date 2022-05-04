@@ -14,5 +14,5 @@ use R3m\Io\Module\Data;
 function function_trait(Parse $parse, Data $data, $name='', $value=null){
     d($name);
     dd($value);
-    
+
 }
