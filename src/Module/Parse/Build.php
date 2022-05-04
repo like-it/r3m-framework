@@ -813,6 +813,7 @@ class Build {
                 array_key_exists('has_modifier', $record['variable'])
             ){
                 if(!array_key_exists('modifier', $record['variable'])){
+                    d($tree);
                     dd($record);
                 }
                 foreach($record['variable']['modifier'] as $modifier_list_nr => $modifier_list){
