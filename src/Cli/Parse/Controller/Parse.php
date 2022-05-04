@@ -82,11 +82,12 @@ class Parse extends View{
     /**
      * @throws Exception
      */
-    private static function compile($object){
+    private static function compile($object)
+    {
         $url = $object->parameter($object, __FUNCTION__, 1);
-        if(File::exist($url)){
+        if (File::exist($url)) {
             $read = File::read($url);
-            if($read){
+            if ($read) {
                 $mtime = File::mtime($url);
                 $parse = new \R3m\Io\Module\Parse($object);
                 $parse->storage()->data('r3m.io.parse.view.url', $url);
@@ -97,6 +98,7 @@ class Parse extends View{
                 unset($data->{App::NAMESPACE});
                 $read = $parse->compile($read, $data, $parse->storage());
                 return $read;
+            }
         }
     }
 }
