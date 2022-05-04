@@ -142,7 +142,6 @@ class Token {
         Token::TYPE_QUOTE_DOUBLE,
         Token::TYPE_COMMA,
         Token::TYPE_SEMI_COLON,
-        Token::TYPE_COLON,
         Token::TYPE_DOUBLE_COLON,
         Token::TYPE_EXCLAMATION,
         Token::TYPE_IS
@@ -1486,6 +1485,8 @@ class Token {
                     $value = implode('', array_reverse($before_reverse));
                     $token[$method_nr]['type'] = Token::TYPE_METHOD;
                     $token[$method_nr]['method']['name'] = strtolower(trim($value));
+                    //add trait
+
                     //add attributes...
                 }
             }
