@@ -428,6 +428,9 @@ class Build {
                                 //need skip_nr
                             }
                             $remove_newline = true;
+                            if($select['method']['name'] === 'trait'){
+                                dd($storage);
+                            }
                         } else {
                             $control = Method::create_control($this, $storage, $selection);
                             $explode = explode(' ', $control, 2);
