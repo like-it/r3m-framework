@@ -13,11 +13,11 @@ use R3m\Io\Module\Data;
 
 function function_trait(Parse $parse, Data $data, $name='', $value=null){
     $explode = explode(':', $name);
+    $namespace = false;
     if(array_key_exists(1, $explode)){
         $namespace = $explode[0];
         $name = $explode[1];
     } else {
-        $namespace = '';
         $name = $explode[0];
     }
     if($namespace){
