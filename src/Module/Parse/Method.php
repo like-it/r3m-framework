@@ -348,7 +348,8 @@ class Method {
                     $record['method']['name'],
                     [
                         'capture.append',
-                        'capture.prepend'
+                        'capture.prepend',
+                        'trait'
                     ]
                 )
             ){
