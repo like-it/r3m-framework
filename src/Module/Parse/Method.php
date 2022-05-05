@@ -418,23 +418,32 @@ class Method {
                 in_array(
                     $record['method']['name'],
                     [
-                        'capture.append',
-                        'capture.prepend',
                         'trait'
                     ]
                 )
             ){
                 $attribute = current($record['method']['attribute'][0]);
-                d($attribute);
-                dd($record);
-                if(array_key_exists('execute', $attribute)){
-                    $record['value'] = '$this->storage()->data(\''. $record['method']['name'] .'\', \'' . $attribute['execute'] . '\');' .
-                        "\n" .
-                        $build->indent() . $record['value'] .
-                        ';' . "\n" . $build->indent() . '$this->storage()->data(\'delete\',\'' . $record['method']['name'] . '\')';
+                if(
+                    array_key_exists('value', $attribute) &&
+                    array_key_exists('type', $attribute) &&
+                    $attribute['type'] === Token::TYPE_QUOTE_DOUBLE_STRING
+                ){
+                    $attribute['execute'] = trim($attribute['value'], '"');
                 }
+                $explode = explode(':', $attribute['execute']);
+                $namespace = false;
+                if(array_key_exists(1, $explode)){
+                    $namespace = $explode[0];
+                    $name = $explode[1];
+                } else {
+                    $name = $explode[0];
+                }
+                $trait = [];
+                $trait['name'] = $name;
+                $trait['namespace'] = $namespace;
+                $trait['value'] = $record['value'];
+                return $trait;
             }
-            return $record['value'];
         }
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
