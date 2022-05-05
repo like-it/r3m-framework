@@ -21,8 +21,8 @@ function function_trait(Parse $parse, Data $data, $name='', $value=null){
         $name = $explode[0];
     }
     if($namespace){
-        $data->set('trait.' . $namespace . '.' . $name, $value);
+        $parse->storage()->set('trait.' . $namespace . '.' . $name, $value);
     } else {
-        $data->set('trait.' . $name, $value);
+        $parse->storage()->set('trait.' . $name, $value);
     }
 }
