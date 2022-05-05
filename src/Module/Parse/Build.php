@@ -60,7 +60,7 @@ class Build {
         $this->storage()->data('placeholder.generation.time', '// R3M-IO-' . Core::uuid());
         $this->storage()->data('placeholder.run', '// R3M-IO-' . Core::uuid());
         $this->storage()->data('placeholder.function', '// R3M-IO-' . Core::uuid());
-
+        $this->storage()->data('placeholder.traits', '// R3M-IO-' . Core::uuid());
         if(
             is_array($config->data('parse.use')) ||
             is_object($config->data('parse.use'))
@@ -425,9 +425,23 @@ class Build {
                             $selection = Method::capture_selection($this, $storage, $tree, $selection);
                             if($select['method']['name'] === 'trait'){
                                 $trait = Method::create_trait($this, $storage, $selection);
-                                dd($trait);
-                                //d($select);
-                                //dd($selection);
+                                if(
+                                    array_key_exists('namespace', $trait) &&
+                                    array_key_exists('name', $trait) &&
+                                    array_key_exists('value', $trait) &&
+                                    !empty($trait['namespace'])
+                                ){
+                                    $storage->set('trait.' . $trait['namespace'] . '.' . $trait['name'], $trait['value']);
+                                }
+                                else if(
+                                    array_key_exists('name', $trait) &&
+                                    array_key_exists('value', $trait)
+                                ){
+                                    $storage->set('trait.' . $trait['name'], $trait['value']);
+                                }
+                                d($trait);
+                                d($document);
+
                             } else {
                                 $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
                             }
@@ -626,6 +640,12 @@ class Build {
         $document[] = ' * @generation-date          ' . date('Y-m-d H:i:s');
         $document[] = ' * @generation-time          ' . $this->storage()->data('placeholder.generation.time');
         $document[] = ' */';
+        $document[] = '';
+        $document[] = '/**';
+        $document[] = ' * Traits' ;
+        $document[] = ' */';
+        $document[] = '';
+        $document[] = $this->storage()->data('placeholder.traits');
         $document[] = '';
         $document[] = $this->storage()->data('placeholder.use');
         $this->storage()->data('document', $document);
