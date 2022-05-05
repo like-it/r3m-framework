@@ -277,6 +277,82 @@ class Method {
         return $record;
     }
 
+    public static function get_trait(Build $build, Data $storage, $record=[], $is_debug=false){
+        if($record['type'] != Token::TYPE_METHOD){
+            return $record;
+        }
+        $attribute = '';
+        if(
+            !array_key_exists('attribute', $record['method'])
+        ){
+            $record['method']['attribute'] = [];
+        }
+        if(array_key_exists('attribute', $record['method'])){
+            $multi_line = Build::getPluginMultiline($build->object());
+            if(
+                in_array(
+                    $record['method']['name'],
+                    $multi_line
+                )
+            ){
+                $list = [];
+                foreach($record['method']['attribute'] as $nr => $token){
+                    if(!array_key_exists($nr, $list)){
+                        $list[$nr] = '';
+                    }
+                    foreach($token as $token_key => $token_value){
+                        if(array_key_exists('parse', $token_value)){
+                            $list[$nr] .= $token_value['parse'];
+                        } else {
+                            $list[$nr] .= $token_value['value'];
+                        }
+                    }
+                    $list[$nr] = str_replace(
+                        [
+                            '{{',
+                            '}}',
+                            '\\\'',
+                            '\'',
+                        ],
+                        [
+                            '{',
+                            '}',
+                            '\\\\\'',
+                            '\\\''
+                        ],
+                        $list[$nr]
+                    );
+                }
+                foreach($list as $nr => $value){
+                    if(substr($value, 0, 2) == '\\\'' && substr($value, -2, 2) == '\\\''){
+                        $value = substr($value, 2, -2);
+                    }
+                    /*
+                    if(is_string($value)){
+                        $value = '$this->parse()->compile(\'' . $value .'\', [], $this->storage())';
+                    }
+                    */
+                    $attribute .= $value . ', ';
+                }
+            } else {
+                foreach($record['method']['attribute'] as $nr => $token){
+                    $token = $build->require('function', $token);
+                    $value = Variable::getValue($build, $storage, $token);
+                    $attribute .= $value . ', ';
+                }
+            }
+            $attribute = substr($attribute, 0, -2);
+        }
+        if(empty($attribute)){
+            $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+        } else {
+            $result = $attribute; //'$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+        }
+        $record['value'] = $result;
+        $record['type'] = Token::TYPE_CODE;
+        return $record;
+    }
+
     private static function getAssign($token=[], $where=''){
         if(empty($where)){
             $where = Method::WHERE_BEFORE;
@@ -341,7 +417,7 @@ class Method {
     public static function create_trait(Build $build, Data $storage, $token=[], $is_debug=false){
         $method = array_shift($token);
         $method['method']['attribute'][] = $token;
-        $record = Method::get($build, $storage, $method, $is_debug);
+        $record = Method::get_trait($build, $storage, $method, $is_debug);
         if($record['type'] === Token::TYPE_CODE){
             if(
                 in_array(
