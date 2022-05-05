@@ -343,11 +343,7 @@ class Method {
             }
             $attribute = substr($attribute, 0, -2);
         }
-        if(empty($attribute)){
-            $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
-        } else {
-            $result = $attribute; //'$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
-        }
+        $result = $attribute; //'$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
         $record['value'] = $result;
         $record['type'] = Token::TYPE_CODE;
         return $record;
