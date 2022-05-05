@@ -421,17 +421,18 @@ class Build {
                                 $multi_line
                                 //capture.append
                             )
-                        ){                                                        
-                            $selection = Method::capture_selection($this, $storage, $tree, $selection);                             
-                            $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';                    
+                        ){
+                            $selection = Method::capture_selection($this, $storage, $tree, $selection);
+                            if($select['method']['name'] === 'trait'){
+                                d($select);
+                                dd($selection);
+                            } else {
+                                $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
+                            }
                             foreach($selection as $skip_nr => $item){
                                 //need skip_nr
                             }
                             $remove_newline = true;
-                            if($select['method']['name'] === 'trait'){
-                                d($this->storage());
-                                d($run);
-                            }
                         } else {
                             $control = Method::create_control($this, $storage, $selection);
                             $explode = explode(' ', $control, 2);
