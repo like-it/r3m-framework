@@ -281,7 +281,7 @@ class Method {
         if($record['type'] != Token::TYPE_METHOD){
             return $record;
         }
-        $attribute = '';
+        $attribute = [];
         if(
             !array_key_exists('attribute', $record['method'])
         ){
@@ -332,16 +332,15 @@ class Method {
                         $value = '$this->parse()->compile(\'' . $value .'\', [], $this->storage())';
                     }
                     */
-                    $attribute .= $value . ', ';
+                    $attribute[]  = $value;
                 }
             } else {
                 foreach($record['method']['attribute'] as $nr => $token){
                     $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
-                    $attribute .= $value . ', ';
+                    $attribute[] = $value;
                 }
             }
-            $attribute = substr($attribute, 0, -2);
         }
         $result = $attribute; //'$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
         $record['value'] = $result;
