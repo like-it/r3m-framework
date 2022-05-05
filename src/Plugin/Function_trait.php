@@ -14,7 +14,7 @@ use R3m\Io\Module\Data;
 function function_trait(Parse $parse, Data $data, $name='', $value=null){
     $object = $parse->object();
 
-    dd($data());
+    dd($data);
     $explode = explode(':', $name);
     if(array_key_exists(1, $explode)){
         $namespace = $explode[0];
