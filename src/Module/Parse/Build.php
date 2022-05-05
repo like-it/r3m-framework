@@ -429,8 +429,8 @@ class Build {
                             }
                             $remove_newline = true;
                             if($select['method']['name'] === 'trait'){
-                                d($this);
-                                dd($storage);
+                                d($storage);
+                                d($run);
                             }
                         } else {
                             $control = Method::create_control($this, $storage, $selection);
