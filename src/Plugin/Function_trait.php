@@ -11,8 +11,9 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_trait(Parse $parse, Data $data, $name='', $value=null){
+function function_trait(Parse $parse, Data $data, $name='', $value=null, $test=null){
     d($name);
+    d($test);
     dd($value);
 
 }
