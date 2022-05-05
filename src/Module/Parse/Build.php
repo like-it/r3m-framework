@@ -429,6 +429,7 @@ class Build {
                             }
                             $remove_newline = true;
                             if($select['method']['name'] === 'trait'){
+                                d($this);
                                 dd($storage);
                             }
                         } else {
