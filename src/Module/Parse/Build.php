@@ -424,6 +424,8 @@ class Build {
                         ){
                             $selection = Method::capture_selection($this, $storage, $tree, $selection);
                             if($select['method']['name'] === 'trait'){
+                                $trait = Method::create_trait($this, $storage, $selection);
+                                d($trait);
                                 d($select);
                                 dd($selection);
                             } else {

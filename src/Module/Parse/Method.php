@@ -338,6 +338,38 @@ class Method {
     /**
      * @throws Exception
      */
+    public static function create_trait(Build $build, Data $storage, $token=[], $is_debug=false){
+        $method = array_shift($token);
+        $method['method']['attribute'][] = $token;
+        $record = Method::get($build, $storage, $method, $is_debug);
+        if($record['type'] === Token::TYPE_CODE){
+            if(
+                in_array(
+                    $record['method']['name'],
+                    [
+                        'capture.append',
+                        'capture.prepend'
+                    ]
+                )
+            ){
+                $attribute = current($record['method']['attribute'][0]);
+                d($attribute);
+                dd($record);
+                if(array_key_exists('execute', $attribute)){
+                    $record['value'] = '$this->storage()->data(\''. $record['method']['name'] .'\', \'' . $attribute['execute'] . '\');' .
+                        "\n" .
+                        $build->indent() . $record['value'] .
+                        ';' . "\n" . $build->indent() . '$this->storage()->data(\'delete\',\'' . $record['method']['name'] . '\')';
+                }
+            }
+            return $record['value'];
+        }
+        throw new Exception('Method type (' . $record['type'] . ') undefined');
+    }
+
+    /**
+     * @throws Exception
+     */
     public static function create_capture(Build $build, Data $storage, $token=[], $is_debug=false){
         $method = array_shift($token);
         $method['method']['attribute'][] = $token;
