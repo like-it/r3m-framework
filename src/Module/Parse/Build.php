@@ -53,6 +53,7 @@ class Build {
         $this->parse($parse);
         $config = $this->object()->data(App::CONFIG);
         if(empty($config)){
+            d($this->object());
             throw new Exception('Config not found in object');
         }        
         $this->storage(new Data());
