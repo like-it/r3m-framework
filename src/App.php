@@ -352,7 +352,6 @@ class App extends Data {
     }
 
     public function config($attribute=null, $value=null){
-        d(debug_backtrace(true));
         return $this->data(App::CONFIG)->data($attribute, $value);
     }
 
