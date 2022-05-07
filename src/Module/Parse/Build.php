@@ -47,7 +47,7 @@ class Build {
     /**
      * @throws Exception
      */
-    public function __construct($object=null, $parse=null, $is_debug=false){
+    public function __construct(App $object=null, $parse=null, $is_debug=false){
         $this->is_debug = $is_debug;
         $this->object($object);
         $this->parse($parse);
