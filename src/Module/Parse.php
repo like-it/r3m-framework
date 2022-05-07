@@ -236,13 +236,9 @@ class Parse {
             if(empty($this->halt_literal())){
                 $string = literal::apply($storage, $string);
             }
-            dd($this->object()->config());
-//            if($this->object->config())
-            
-
-            $string = str_replace('{{R3M}}', '{R3M}', $string);
-            $explode = explode('{R3M}', $string, 2);
-            if(array_key_exists(1, $explode)){
+            if($this->object()->config('parse.read.parser') === '{{R3M}}'){
+                $string = str_replace('{{R3M}}', '{R3M}', $string);
+                $string = str_replace('{R3M}', '', $string);
                 $storage->data('r3m.io.parse.compile.remove_newline', true);
                 $string = str_replace(
                     [
@@ -253,7 +249,7 @@ class Parse {
                         '[$ldelim]',
                         '[$rdelim]',
                     ],
-                    $explode[1]
+                    $string
                 );
                 $string = str_replace(
                     [
