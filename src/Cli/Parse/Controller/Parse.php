@@ -108,7 +108,9 @@ class Parse extends View{
                     $object->data('ldelim', '{');
                     $object->data('rdelim', '}');
                     $data = $object->data_read($data_url);
-                    $data = Core::object_merge($object->data(), $data->data());
+                    if($data){
+                        $data = Core::object_merge($object->data(), $data->data());
+                    }
                     unset($data->{App::NAMESPACE});
                     $read = $parse->compile($read, $data, $parse->storage());
                     if($is_json){
