@@ -43,7 +43,7 @@ class Parse extends View{
     /**
      * @throws Exception
      */
-    public static function run($object){
+    public static function run(App $object){
         $command = $object->parameter($object, Parse::NAME, 1);
 
         if($command === null){
@@ -60,7 +60,7 @@ class Parse extends View{
         return Parse::{$command}($object);
     }
 
-    private static function info($object){
+    private static function info(App $object){
         try {
             $name = Parse::name(__FUNCTION__, Parse::NAME);
             $url = Parse::locate($object, $name);
@@ -70,7 +70,7 @@ class Parse extends View{
         }
     }
 
-    private static function restart($object){
+    private static function restart(App $object){
         try {
             $name = Parse::name(__FUNCTION__, Parse::NAME);
             $url = Parse::locate($object, $name);
@@ -83,7 +83,7 @@ class Parse extends View{
     /**
      * @throws Exception
      */
-    private static function compile($object)
+    private static function compile(App $object)
     {
         try {
             $template_url = $object->parameter($object, __FUNCTION__, 1);
