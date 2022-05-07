@@ -60,7 +60,8 @@ class Build {
         $this->storage()->data('placeholder.generation.time', '// R3M-IO-' . Core::uuid());
         $this->storage()->data('placeholder.run', '// R3M-IO-' . Core::uuid());
         $this->storage()->data('placeholder.function', '// R3M-IO-' . Core::uuid());
-        $this->storage()->data('placeholder.traits', '// R3M-IO-' . Core::uuid());
+        $this->storage()->data('placeholder.trait', '// R3M-IO-' . Core::uuid());
+        $this->storage()->data('placeholder.traituse', '// R3M-IO-' . Core::uuid());
         if(
             is_array($config->data('parse.use')) ||
             is_object($config->data('parse.use'))
@@ -134,6 +135,8 @@ class Build {
         //$class = $config->data('dictionary.template') . '_' . $key;
         $class = $this->storage()->data('class');        
         $document[] = $this->indent(0) . 'class ' . $class . ' extends Main {';
+        $document[] = '';
+        $document[] = $this->indent(0) . $storage->data('placeholder.traituse');
         $document[] = '';
         $document[] = $this->indent(1) . 'public function run(){';
         $document[] = $this->indent(2) . 'ob_start();';
@@ -431,13 +434,13 @@ class Build {
                                     array_key_exists('value', $trait) &&
                                     !empty($trait['namespace'])
                                 ){
-                                    $storage->set('trait.' . $trait['namespace'] . '.' . $trait['name'], $trait['value']);
+                                    $storage->set('trait.' . $trait['namespace'] . '.' . $trait['name'], $trait);
                                 }
                                 else if(
                                     array_key_exists('name', $trait) &&
                                     array_key_exists('value', $trait)
                                 ){
-                                    $storage->set('trait.' . $trait['name'], $trait['value']);
+                                    $storage->set('trait.' . $trait['name'], $trait);
                                 }
                                 d($trait);
                                 d($document);
@@ -624,6 +627,12 @@ class Build {
         $config = $this->object()->data(App::CONFIG);
         $namespace = $this->storage()->data('namespace');
         $document[] = '<?php';
+        $document[] = '/**';
+        $document[] = ' * Traits' ;
+        $document[] = ' */';
+        $document[] = '';
+        $document[] = $this->storage()->data('placeholder.trait');
+        $document[] = '';
         $document[] = 'namespace ' . $namespace . ';';
         $document[] = '';
         $document[] = '/**';
@@ -641,12 +650,7 @@ class Build {
         $document[] = ' * @generation-time          ' . $this->storage()->data('placeholder.generation.time');
         $document[] = ' */';
         $document[] = '';
-        $document[] = '/**';
-        $document[] = ' * Traits' ;
-        $document[] = ' */';
-        $document[] = '';
-        $document[] = $this->storage()->data('placeholder.traits');
-        $document[] = '';
+
         $document[] = $this->storage()->data('placeholder.use');
         $this->storage()->data('document', $document);
         return $document;
