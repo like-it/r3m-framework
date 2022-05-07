@@ -91,6 +91,8 @@ class Parse extends View{
             $is_json = false;
             if (File::exist($template_url)) {
                 $extension = File::extension($template_url);
+                d($object);
+                dd($object->config());
                 if($object->config('extension.json') === '.' . $extension) {
                     $read = $object->data_read($template_url);
                     if($read){
