@@ -442,10 +442,6 @@ class Build {
                                 ){
                                     $storage->set('trait.' . $trait['name'], $trait);
                                 }
-                                d($trait);
-                                d($document);
-                                echo $trait['value'];
-                                dd($storage);
                             } else {
                                 $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
                             }
