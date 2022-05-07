@@ -328,6 +328,7 @@ class App extends Data {
             return Response::output($object, $output);
         } else {
             d($output);
+            d(debug_backtrace(true));
             $response = new Response($output, $object->config('response.output'));
             return Response::output($object, $response);
         }

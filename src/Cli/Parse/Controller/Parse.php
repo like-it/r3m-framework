@@ -120,7 +120,7 @@ class Parse extends View{
                 }
             }
         } catch (Exception $exception){
-            return $exception->getMessage() . PHP_EOL;
+            return $exception;
         }
     }
 }
