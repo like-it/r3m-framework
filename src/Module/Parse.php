@@ -236,6 +236,10 @@ class Parse {
             if(empty($this->halt_literal())){
                 $string = literal::apply($storage, $string);
             }
+            dd($this->object()->config());
+//            if($this->object->config())
+            
+
             $string = str_replace('{{R3M}}', '{R3M}', $string);
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){

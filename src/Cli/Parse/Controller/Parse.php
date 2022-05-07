@@ -13,6 +13,7 @@ namespace R3m\Io\Cli\Parse\Controller;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Module\Core;
+use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 use R3m\Io\Module\View;
@@ -85,19 +86,34 @@ class Parse extends View{
     private static function compile($object)
     {
         try {
-            $url = $object->parameter($object, __FUNCTION__, 1);
-            if (File::exist($url)) {
-                $read = File::read($url);
+            $template_url = $object->parameter($object, __FUNCTION__, 1);
+            $data_url = $object->parameter($object, __FUNCTION__, 2);
+            $is_json = false;
+            if (File::exist($template_url)) {
+                $extension = File::extension($template_url);
+                if($object->config('extension.json') === '.' . $extension) {
+                    $read = $object->data_read($template_url);
+                    if($read){
+                        $read = $read->data();
+                        $is_json = true;
+                    }
+                } else {
+                    $read = File::read($template_url);
+                }
                 if ($read) {
-                    $mtime = File::mtime($url);
-                    $parse = new \R3m\Io\Module\Parse($object);
-                    $parse->storage()->data('r3m.io.parse.view.url', $url);
+                    $mtime = File::mtime($template_url);
+                    $parse = new Parser($object);
+                    $parse->storage()->data('r3m.io.parse.view.url', $template_url);
                     $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
                     $object->data('ldelim', '{');
                     $object->data('rdelim', '}');
-                    $data = clone $object->data();
+                    $data = $object->data_read($data_url);
+                    $data = Core::object_merge($object->data(), $data->data());
                     unset($data->{App::NAMESPACE});
                     $read = $parse->compile($read, $data, $parse->storage());
+                    if($is_json){
+                        $read = Core::object($read, Core::OBJECT_JSON);
+                    }
                     return $read;
                 }
             }
