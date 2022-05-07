@@ -444,7 +444,7 @@ class Build {
                                 }
                                 d($trait);
                                 d($document);
-
+                                dd($storage);
                             } else {
                                 $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
                             }
