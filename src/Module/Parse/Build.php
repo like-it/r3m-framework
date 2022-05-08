@@ -518,9 +518,20 @@ class Build {
                                 if(empty($list)){
                                     $list = [];
                                 }
-                                $list[] = $trait;
-                                $storage->set('trait', $list);
-
+                                $is_found = false;
+                                foreach($list as $list_nr => $list_value){
+                                    if(
+                                        $list_value['trait'] === $trait['trait'] &&
+                                        $list_value['namepace'] === $trait['namespace']
+                                    ){
+                                        $is_found = true;
+                                        break;
+                                    }
+                                }
+                                if(!$is_found){
+                                    $list[] = $trait;
+                                    $storage->set('trait', $list);
+                                }
                             } else {
                                 $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
                             }
