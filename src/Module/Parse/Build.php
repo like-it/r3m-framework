@@ -285,6 +285,7 @@ class Build {
                 array_key_exists('trait', $record['method']) &&
                 !empty($record['method']['trait'])
             ){
+                //traits goes a different path
                 continue;
             }
             $modifier_name = str_replace('modifier_', '', $name, $modifier_count);
