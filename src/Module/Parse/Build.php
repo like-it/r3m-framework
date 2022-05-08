@@ -285,10 +285,7 @@ class Build {
                 array_key_exists('trait', $record['method']) &&
                 !empty($record['method']['trait'])
             ){
-                d($data);
-                d($name);
-                d($record);
-                dd($function_name);
+                continue;
             }
             $modifier_name = str_replace('modifier_', '', $name, $modifier_count);
             if(
