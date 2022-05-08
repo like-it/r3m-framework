@@ -177,7 +177,7 @@ class Build {
                         if(substr($namespace, -1 ,1) !== '\\'){
                             $namespace .= '\\';
                         }
-                        $use[] = $this->indent(1) . 'use ' . $namespace . $name . ';';
+                        $use[] = $this->indent(1) . 'use \\' . $namespace . $name . ';';
                     }
                     $explode = explode(PHP_EOL, $record['value']);
                     foreach($explode as $nr => $line){
