@@ -163,10 +163,11 @@ class Build {
         $use= [];
         $list = $storage->data('trait');
         if(
-            is_array($list) ||
-            is_object($list)
+            is_array($list)
         ){
-            foreach($storage->data('trait') as $namespace => $list){
+            foreach($list as $nr => $record){
+                dd($record);
+                /*
                 foreach ($list as $name => $record){
                     if($namespace === '_'){
                         $trait[] = 'trait ' . $name . ' {';
@@ -185,6 +186,7 @@ class Build {
                     }
                     $trait[] = '}';
                 }
+                */
             }
             $trait[] = '';
         }
@@ -485,20 +487,13 @@ class Build {
                             $selection = Method::capture_selection($this, $storage, $tree, $selection);
                             if($select['method']['name'] === 'trait'){
                                 $trait = Method::create_trait($this, $storage, $selection);
-                                if(
-                                    array_key_exists('namespace', $trait) &&
-                                    array_key_exists('name', $trait) &&
-                                    array_key_exists('value', $trait) &&
-                                    !empty($trait['namespace'])
-                                ){
-                                    $storage->set('trait.' . $trait['namespace'] . '.' . $trait['name'], $trait);
+                                $list = $storage->get('trait');
+                                if(empty($list)){
+                                    $list = [];
                                 }
-                                else if(
-                                    array_key_exists('name', $trait) &&
-                                    array_key_exists('value', $trait)
-                                ){
-                                    $storage->set('trait._.' . $trait['name'], $trait);
-                                }
+                                $list[] = $trait;
+                                $storage->set('trait', $list);
+
                             } else {
                                 $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
                             }
