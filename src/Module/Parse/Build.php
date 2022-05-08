@@ -166,29 +166,46 @@ class Build {
             is_array($list)
         ){
             foreach($list as $nr => $record){
-                dd($record);
-                /*
-                foreach ($list as $name => $record){
-                    if($namespace === '_'){
-                        $trait[] = 'trait ' . $name . ' {';
-                        $use[] = 'use ' . $name . ';';
-                    } else {
-                        $trait[] = 'namespace ' . $namespace . ';';
-                        $trait[] = 'trait ' . $name . ' {';
-                        if(substr($namespace, -1 ,1) !== '\\'){
-                            $namespace .= '\\';
-                        }
-                        $use[] = $this->indent(1) . 'use \\' . $namespace . $name . ';';
-                    }
+                if(
+                    array_key_exists('namespace', $record) &&
+                    array_key_exists('name', $record) &&
+                    array_key_exists('value', $record) &&
+                    empty($record['namespace']) &&
+                    !empty($record['name'])
+                ){
+                    $name = str_replace('.', '_', $record['name']);
+                    $trait[] = 'trait ' . $name . ' {';
+                    $use[] = $this->indent(1) . 'use ' . $name . ';';
                     $explode = explode(PHP_EOL, $record['value']);
                     foreach($explode as $nr => $line){
                         $trait[] = $this->indent(1) . $line . PHP_EOL;
                     }
                     $trait[] = '}';
+                    $trait[] = '';
                 }
-                */
+                else if(
+                    array_key_exists('namespace', $record) &&
+                    array_key_exists('name', $record) &&
+                    array_key_exists('value', $record) &&
+                    !empty($record['namespace']) &&
+                    !empty($record['name'])
+                ){
+                    $name = str_replace('.', '_', $record['name']);
+                    $namespace = str_replace('.', '\\', $record['namespace']);
+                    $trait[] = 'namespace ' . $namespace . ';';
+                    $trait[] = 'trait ' . $name . ' {';
+                    if(substr($namespace, -1 ,1) !== '\\'){
+                        $namespace .= '\\';
+                    }
+                    $use[] = $this->indent(1) . 'use \\' . $namespace . $name . ';';
+                    $explode = explode(PHP_EOL, $record['value']);
+                    foreach($explode as $nr => $line){
+                        $trait[] = $this->indent(1) . $line . PHP_EOL;
+                    }
+                    $trait[] = '}';
+                    $trait[] = '';
+                }
             }
-            $trait[] = '';
         }
         $traits = implode("\n", $trait);
         $usage = implode("\n", $use);
@@ -199,6 +216,7 @@ class Build {
                 break;
             }
         }
+        $count = 0;
         foreach($document as $nr => $row){
             $document[$nr] = str_replace($storage->data('placeholder.traituse'), $usage, $row, $count);
             if($count > 0){
