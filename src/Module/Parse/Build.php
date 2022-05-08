@@ -105,6 +105,8 @@ class Build {
                 return $this->createRun($document);
             case 'class' :
                 return $this->createClass($document);
+            case 'trait' :
+                return $this->createTrait($document);
             default:
                 throw new Exception('Undefined create in build');
         }
@@ -154,6 +156,28 @@ class Build {
         $document[] = '';
         return $document;
     }
+
+    private function createTrait($document=[]){
+        $storage = $this->storage();
+        $trait = [];
+        foreach($storage->data('trait') as $namespace => $list){
+            foreach ($list as $name => $record){
+                dd($record);
+                $trait[] = 'use ' . $name . ';';
+            }
+        }
+        $trait[] = '';
+        $traits = implode("\n", $trait);
+        $count = 0;
+        foreach($document as $nr => $row){
+            $document[$nr] = str_replace($storage->data('placeholder.use'), $traits, $row, $count);
+            if($count > 0){
+                break;
+            }
+        }
+        return $document;
+    }
+
 
     private function createUse($document=[]){
         $storage = $this->storage();
@@ -445,7 +469,7 @@ class Build {
                                     array_key_exists('name', $trait) &&
                                     array_key_exists('value', $trait)
                                 ){
-                                    $storage->set('trait.' . $trait['name'], $trait);
+                                    $storage->set('trait.default.' . $trait['name'], $trait);
                                 }
                             } else {
                                 $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
