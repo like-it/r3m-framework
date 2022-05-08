@@ -109,7 +109,7 @@ class Parse extends View{
                     $object->data('rdelim', '}');
                     $data = $object->data_read($data_url);
                     if($data){
-//                        $data = Core::object_merge($object->data(), $data->data());
+                        $data = Core::object_merge(clone $object->data(), $data->data());
                     }
                     unset($data->{App::NAMESPACE});
                     $read = $parse->compile($read, $data, $parse->storage());
