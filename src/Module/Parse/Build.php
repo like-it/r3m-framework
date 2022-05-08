@@ -160,6 +160,7 @@ class Build {
     private function createTrait($document=[]){
         $storage = $this->storage();
         $trait = [];
+        $use[];
         $list = $storage->data('trait');
         if(
             is_array($list) ||
@@ -169,9 +170,14 @@ class Build {
                 foreach ($list as $name => $record){
                     if($namespace === 'default'){
                         $trait[] = 'trait ' . $name . ' {';
+                        $use[] = 'use ' . $name . ';';
                     } else {
                         $trait[] = 'namespace ' . $namespace . ';';
                         $trait[] = 'trait ' . $name . ' {';
+                        if(substr($namespace, -1 ,1) !== '\\'){
+                            $namespace .= '\\';
+                        }
+                        $use[] = $this->indent(1) . 'use ' . $namespace . $name . ';';
                     }
                     $explode = explode(PHP_EOL, $record['value']);
                     foreach($explode as $nr => $line){
@@ -183,9 +189,11 @@ class Build {
             $trait[] = '';
         }
         $traits = implode("\n", $trait);
+        $usage = implode("\n", $use);
         $count = 0;
         foreach($document as $nr => $row){
             $document[$nr] = str_replace($storage->data('placeholder.trait'), $traits, $row, $count);
+            $document[$nr] = str_replace($storage->data('placeholder.traituse'), $usage, $row, $count);
             if($count > 0){
                 break;
             }
