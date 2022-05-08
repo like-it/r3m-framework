@@ -278,7 +278,6 @@ class Method {
                     } else {
                         $result = '$this->' . $trait_name . '(' . $attribute . ')';
                     }
-                    d($result);
                 }
             }
             $record['value'] = $result;
