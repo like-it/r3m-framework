@@ -162,6 +162,7 @@ class Build {
         $trait = [];
         $use= [];
         $list = $storage->data('trait');
+        d($list);
         if(
             is_array($list)
         ){
