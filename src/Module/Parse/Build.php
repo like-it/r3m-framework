@@ -165,7 +165,6 @@ class Build {
         if(
             is_array($list)
         ){
-            d($list);
             foreach($list as $nr => $record){
                 if(
                     array_key_exists('namespace', $record) &&
@@ -175,6 +174,7 @@ class Build {
                     !empty($record['name'])
                 ){
                     $name = str_replace('.', '_', $record['name']);
+                    $name.= rand(1000,9999) . rand(1000,9999);
                     $trait[] = 'trait ' . $name . ' {';
                     $use[] = $this->indent(1) . 'use ' . $name . ';';
                     $explode = explode(PHP_EOL, $record['value']);
@@ -192,6 +192,7 @@ class Build {
                     !empty($record['name'])
                 ){
                     $name = str_replace('.', '_', $record['name']);
+                    $name.= rand(1000,9999) . rand(1000,9999);
                     $namespace = str_replace('.', '\\', $record['namespace']);
                     $trait[] = 'namespace ' . $namespace . ';';
                     $trait[] = 'trait ' . $name . ' {';
