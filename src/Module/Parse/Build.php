@@ -178,7 +178,7 @@ class Build {
                     $use[] = $this->indent(1) . 'use ' . $name . ';';
                     $explode = explode(PHP_EOL, $record['value']);
                     foreach($explode as $nr => $line){
-                        $trait[] = $this->indent(1) . $line . PHP_EOL;
+                        $trait[] = $this->indent(1) . $line;
                     }
                     $trait[] = '}';
                     $trait[] = '';
@@ -200,7 +200,7 @@ class Build {
                     $use[] = $this->indent(1) . 'use \\' . $namespace . $name . ';';
                     $explode = explode(PHP_EOL, $record['value']);
                     foreach($explode as $nr => $line){
-                        $trait[] = $this->indent(1) . $line . PHP_EOL;
+                        $trait[] = $this->indent(1) . $line;
                     }
                     $trait[] = '}';
                     $trait[] = '';
