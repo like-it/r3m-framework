@@ -193,6 +193,11 @@ class Build {
         $count = 0;
         foreach($document as $nr => $row){
             $document[$nr] = str_replace($storage->data('placeholder.trait'), $traits, $row, $count);
+            if($count > 0){
+                break;
+            }
+        }
+        foreach($document as $nr => $row){
             $document[$nr] = str_replace($storage->data('placeholder.traituse'), $usage, $row, $count);
             if($count > 0){
                 break;
