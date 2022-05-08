@@ -265,11 +265,19 @@ class Method {
                     }
                 }
             } else {
-                d($record);
-                if(empty($attribute)){                    
-                    $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                if(empty($record['trait'])){
+                    if(empty($attribute)){
+                        $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                    } else {
+                        $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+                    }
                 } else {
-                    $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
+                    $trait_name = str_replace('function_', '', $record['method']['php_name']);
+                    if(empty($attribute)){
+                        $result = '$this->' . $trait_name . '()';
+                    } else {
+                        $result = '$this->' . $trait_name . '(' . $attribute . ')';
+                    }
                 }
             }
             $record['value'] = $result;
