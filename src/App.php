@@ -327,8 +327,6 @@ class App extends Data {
         elseif($output instanceof Response){
             return Response::output($object, $output);
         } else {
-            d($output);
-            d(debug_backtrace(true));
             $response = new Response($output, $object->config('response.output'));
             return Response::output($object, $response);
         }
