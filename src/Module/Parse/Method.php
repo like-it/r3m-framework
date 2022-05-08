@@ -265,7 +265,7 @@ class Method {
                     }
                 }
             } else {
-                if(empty($record['trait'])){
+                if(empty($record['method']['trait'])){
                     if(empty($attribute)){
                         $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
                     } else {

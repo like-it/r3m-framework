@@ -124,11 +124,14 @@ class Value {
             case Token::TYPE_METHOD :
                 $method = Method::get($build, $storage, $record);
                 if($method['type'] == Token::TYPE_CODE){
-                    d($method);
                     return $method['value'];
                 } else {
-                    d($record);
-                    return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                    if(empty($record['method']['trait'])){
+                        return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                    } else {
+                        $trait_name = str_replace('function_', '', $record['method']['php_name']);
+                        return '$this->' . $trait_name . '()';
+                    }
                 }
             case Token::TYPE_COMMENT :
             case Token::TYPE_DOC_COMMENT :
