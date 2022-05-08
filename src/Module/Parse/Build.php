@@ -160,6 +160,7 @@ class Build {
     private function createTrait($document=[]){
         $storage = $this->storage();
         $trait = [];
+        d($storage->data());
         $list = $storage->data('trait');
         if(is_array($list)){
             d($list);
