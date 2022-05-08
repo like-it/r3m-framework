@@ -168,7 +168,7 @@ class Build {
         ){
             foreach($storage->data('trait') as $namespace => $list){
                 foreach ($list as $name => $record){
-                    if($namespace === 'default'){
+                    if($namespace === '_'){
                         $trait[] = 'trait ' . $name . ' {';
                         $use[] = 'use ' . $name . ';';
                     } else {
@@ -497,7 +497,7 @@ class Build {
                                     array_key_exists('name', $trait) &&
                                     array_key_exists('value', $trait)
                                 ){
-                                    $storage->set('trait.default.' . $trait['name'], $trait);
+                                    $storage->set('trait._.' . $trait['name'], $trait);
                                 }
                             } else {
                                 $run[] = $this->indent() . Method::create_capture($this, $storage, $selection) . ';';
@@ -682,14 +682,6 @@ class Build {
         $namespace = $this->storage()->data('namespace');
         $document[] = '<?php';
         $document[] = '/**';
-        $document[] = ' * Traits' ;
-        $document[] = ' */';
-        $document[] = '';
-        $document[] = $this->storage()->data('placeholder.trait');
-        $document[] = '';
-        $document[] = 'namespace ' . $namespace . ';';
-        $document[] = '';
-        $document[] = '/**';
         $document[] = ' * @copyright                (c) Remco van der Velde 2019 - ' . date('Y');
         $document[] = ' * @version                  ' . $config->data('framework.version');
         $document[] = ' * @license                  MIT';
@@ -704,7 +696,14 @@ class Build {
         $document[] = ' * @generation-time          ' . $this->storage()->data('placeholder.generation.time');
         $document[] = ' */';
         $document[] = '';
-
+        $document[] = '/**';
+        $document[] = ' * Traits' ;
+        $document[] = ' */';
+        $document[] = '';
+        $document[] = $this->storage()->data('placeholder.trait');
+        $document[] = '';
+        $document[] = 'namespace ' . $namespace . ';';
+        $document[] = '';
         $document[] = $this->storage()->data('placeholder.use');
         $this->storage()->data('document', $document);
         return $document;
