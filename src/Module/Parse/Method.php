@@ -442,6 +442,19 @@ class Method {
                 $trait['name'] = $name;
                 $trait['namespace'] = $namespace;
                 $trait['value'] = $record['value'];
+                $trait['value'] = str_replace(
+                    [
+                        '\\\'',
+                        '{$ldelim}',
+                        '{$rdelim}',
+                    ],
+                    [
+                        '\'',
+                        '{',
+                        '}'
+                    ],
+                    $trait['value']
+                );
                 return $trait;
             }
         }
