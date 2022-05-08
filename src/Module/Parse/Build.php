@@ -279,6 +279,12 @@ class Build {
         foreach($data as $name => $record){
             $exist = false;
             $function_name = str_replace('function_', '', $name, $function_count);
+            if($function_count >= 1){
+                d($data);
+                d($name);
+                d($record);
+                dd($function_name);
+            }
             $modifier_name = str_replace('modifier_', '', $name, $modifier_count);
             if(
                 empty($limit) ||
