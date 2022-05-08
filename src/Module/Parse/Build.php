@@ -162,6 +162,7 @@ class Build {
         $trait = [];
         $list = $storage->data('trait');
         if(is_array($list)){
+            d($list);
             foreach($storage->data('trait') as $namespace => $list){
                 foreach ($list as $name => $record){
                     dd($record);
@@ -173,7 +174,7 @@ class Build {
         $traits = implode("\n", $trait);
         $count = 0;
         foreach($document as $nr => $row){
-            $document[$nr] = str_replace($storage->data('placeholder.use'), $traits, $row, $count);
+            $document[$nr] = str_replace($storage->data('placeholder.trait'), $traits, $row, $count);
             if($count > 0){
                 break;
             }
