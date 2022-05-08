@@ -126,6 +126,7 @@ class Value {
                 if($method['type'] == Token::TYPE_CODE){
                     return $method['value'];
                 } else {
+                    d($record);
                     return '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
                 }
             case Token::TYPE_COMMENT :
