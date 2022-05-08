@@ -160,10 +160,11 @@ class Build {
     private function createTrait($document=[]){
         $storage = $this->storage();
         $trait = [];
-        d($storage->data());
         $list = $storage->data('trait');
-        if(is_array($list)){
-            d($list);
+        if(
+            is_array($list) ||
+            is_object($list)
+        ){
             foreach($storage->data('trait') as $namespace => $list){
                 foreach ($list as $name => $record){
                     dd($record);
