@@ -162,10 +162,10 @@ class Build {
         $trait = [];
         $use= [];
         $list = $storage->data('trait');
-        d($list);
         if(
             is_array($list)
         ){
+            d($list);
             foreach($list as $nr => $record){
                 if(
                     array_key_exists('namespace', $record) &&
