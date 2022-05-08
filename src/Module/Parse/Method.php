@@ -265,6 +265,7 @@ class Method {
                     }
                 }
             } else {
+                d($record);
                 if(empty($attribute)){                    
                     $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
                 } else {
