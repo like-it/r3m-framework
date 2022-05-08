@@ -19,14 +19,32 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Parse\Token;
 
 class Main {
+    private $object;
 	private $parse;
 	private $storage;
 
 	public function __construct(Parse $parse, Data $storage){
 	    set_time_limit(600);
 		$this->parse($parse);
+        $this->object($parse->object());
 		$this->storage($storage);
 	}
+
+    public function object($object=null){
+        if($object !== null){
+            $this->setObject($object);
+        }
+        return $this->getObject();
+    }
+
+    private function setObject($object=null){
+        $this->object= $object;
+    }
+
+    private function getObject(){
+        return $this->object;
+    }
+
 
 	public function parse($parse=null){
 	    if($parse !== null){
