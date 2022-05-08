@@ -279,7 +279,12 @@ class Build {
         foreach($data as $name => $record){
             $exist = false;
             $function_name = str_replace('function_', '', $name, $function_count);
-            if($function_count >= 1){
+            if(
+                $function_count >= 1 &&
+                array_key_exists('method', $record) &&
+                array_key_exists('trait', $record['method']) &&
+                !empty($record['method']['trait'])
+            ){
                 d($data);
                 d($name);
                 d($record);
