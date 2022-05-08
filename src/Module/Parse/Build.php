@@ -167,8 +167,14 @@ class Build {
         ){
             foreach($storage->data('trait') as $namespace => $list){
                 foreach ($list as $name => $record){
-                    dd($record);
-                    $trait[] = 'use ' . $name . ';';
+                    if($namespace === 'default'){
+                        $trait[] = 'trait ' . $name . ' {';
+                    } else {
+                        $trait[] = 'namespace ' . $namespace . ';';
+                        $trait[] = 'trait ' . $name . ' {';
+                    }
+                    $trait[] = $record['value'];
+                    $trait[] = '}';
                 }
             }
             $trait[] = '';
