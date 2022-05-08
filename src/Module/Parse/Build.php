@@ -173,7 +173,10 @@ class Build {
                         $trait[] = 'namespace ' . $namespace . ';';
                         $trait[] = 'trait ' . $name . ' {';
                     }
-                    $trait[] = $record['value'];
+                    $explode = explode(PHP_EOL, $record['value']);
+                    foreach($explode as $nr => $line){
+                        $trait[] = $this->indent(1) . $line . PHP_EOL;
+                    }
                     $trait[] = '}';
                 }
             }
