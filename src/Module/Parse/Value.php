@@ -124,6 +124,7 @@ class Value {
             case Token::TYPE_METHOD :
                 $method = Method::get($build, $storage, $record);
                 if($method['type'] == Token::TYPE_CODE){
+                    d($method);
                     return $method['value'];
                 } else {
                     d($record);
