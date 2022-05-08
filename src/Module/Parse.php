@@ -303,6 +303,13 @@ class Parse {
                 }
             }            
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
+            $template = new $class(new Parse($this->object()), $storage);
+            $string = $template->run();
+            if(empty($this->halt_literal())){
+                $string = Literal::restore($storage, $string);
+            }
+            $storage->data('delete', 'this');
+            /*
             $exists = class_exists($class);
             if($exists){
                 $template = new $class(new Parse($this->object()), $storage);
@@ -345,6 +352,7 @@ class Parse {
                     throw new Exception('Class ('. $class .') doesn\'t exist');
                 }
             }
+            */
         }
         return $string;
     }
