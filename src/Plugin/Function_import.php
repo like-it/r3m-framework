@@ -149,6 +149,7 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
                 $record['namespace'] = null;
                 $record['trait'] = $explode[0];
             }
+            dd($parse->storage());
             $list = $parse->storage()->get('import.trait');
             if(empty($list)){
                 $list = [];
