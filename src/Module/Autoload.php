@@ -39,7 +39,6 @@ class Autoload {
         $autoload = new Autoload();
         $autoload->addPrefix('Host',  $config->data(Config::DATA_PROJECT_DIR_HOST));        
         $autoload->addPrefix('Source',  $config->data(Config::DATA_PROJECT_DIR_SOURCE));
-        dd($config->data(Config::DATA_PROJECT_DIR_SOURCE));
         $cache_dir =
             $config->data(Config::DATA_FRAMEWORK_DIR_CACHE) .
             Autoload::NAME .
