@@ -304,6 +304,7 @@ class Autoload {
         //$this->environment('development'); //needed, should be gone @ home
         if($this->environment() == 'development' || !empty($this->expose())){
             if(empty($this->expose())){
+                d($fileList);
                 throw new Exception('Autoload error, cannot load (' . $load .') class.');
             }
             $object = new stdClass();
