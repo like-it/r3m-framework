@@ -144,10 +144,10 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
             $record = [];
             if(array_key_exists(1, $explode)){
                 $record['namespace'] = $explode[0];
-                $record['trait'] = $explode[1];
+                $record['name'] = $explode[1];
             } else {
                 $record['namespace'] = null;
-                $record['trait'] = $explode[0];
+                $record['name'] = $explode[0];
             }
             $list = $parse->storage()->get('import.trait');
             if(empty($list)){
@@ -157,7 +157,7 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
             foreach($list as $nr => $item){
                 if(
                     $item['namespace'] === $record['namespace'] &&
-                    $item['trait'] === $record['trait']
+                    $item['name'] === $record['name']
                 ){
                     $in_list = true;
                     break;
