@@ -272,13 +272,39 @@ class Method {
                         $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
                     }
                 } else {
-                    dd($record);
                     $trait_name = str_replace('function_', '', $record['method']['php_name']);
                     if(empty($attribute)){
                         $result = '$this->' . $trait_name . '()';
                     } else {
                         $result = '$this->' . $trait_name . '(' . $attribute . ')';
                     }
+                    $parse = $build->parse();
+                    $list = $parse->storage()->get('import.trait');
+                    if(empty($list)){
+                        $list = [];
+                    }
+                    $in_list = false;
+                    foreach($list as $nr => $item){
+                        if(
+                            $item['name'] === $record['method']['trait'] &&
+                            $item['namespace'] === $record['method']['namespace']
+                        ){
+                            $in_list = true;
+                            break;
+                        }
+                        $name = str_replace('.', '_', $record['name']);
+                        $namespace = str_replace('.', '\\', $record['namespace']);
+                        if(substr($namespace, -1 ,1) !== '\\'){
+                            $namespace .= '\\';
+                        }
+                    }
+                    if(!$in_list){
+                        $item = [];
+                        $item['name'] = $record['method']['trait'];
+                        $item['namespace'] = $record['method']['namespace'];
+                        $list[] = $item;
+                    }
+                    $parse->storage()->set('import.trait', $list);
                 }
             }
             $record['value'] = $result;
