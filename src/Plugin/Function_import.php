@@ -149,8 +149,7 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
                 $record['namespace'] = null;
                 $record['trait'] = $explode[0];
             }
-            dd($parse->object());
-            $list = $parse->build()->storage()->get('import.trait');
+            $list = $parse->storage()->get('import.trait');
             if(empty($list)){
                 $list = [];
             }
@@ -168,6 +167,6 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
                 return;
             }
             $list[] = $record;
-            $parse->build()->storage()->set('import.trait', $list);
+            $parse->storage()->set('import.trait', $list);
     }
 }
