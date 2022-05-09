@@ -302,6 +302,7 @@ class Parse {
                     }
                 }
             }
+            $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
             $exists = class_exists($class);
             if($exists){
                 $template = new $class(new Parse($this->object()), $storage);
