@@ -272,6 +272,7 @@ class Method {
                         $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
                     }
                 } else {
+                    dd($record);
                     $trait_name = str_replace('function_', '', $record['method']['php_name']);
                     if(empty($attribute)){
                         $result = '$this->' . $trait_name . '()';
