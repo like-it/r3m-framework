@@ -162,6 +162,10 @@ class Parse {
         return $this->halt_literal;
     }
 
+    /**
+     * @throws \R3m\Io\Exception\ObjectException
+     * @throws \R3m\Io\Exception\FileWriteException
+     */
     public function compile($string='', $data=[], $storage=null, $is_debug=false){
         if($storage === null){            
             $storage = $this->storage(new Data());
@@ -305,7 +309,8 @@ class Parse {
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
             $exists = class_exists($class);
             if($exists){
-                $template = new $class(new Parse($this->object()), $storage);
+//                $template = new $class(new Parse($this->object()), $storage);
+                $template = new $class($this, $storage);
                 $string = $template->run();
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
@@ -320,7 +325,8 @@ class Parse {
                     require $url;;
                     $exists = class_exists($class);
                     if($exists){
-                        $template = new $class(new Parse($this->object()), $storage);
+//                        $template = new $class(new Parse($this->object()), $storage);
+                        $template = new $class($this, $storage);
                         $string = $template->run();
                         if(empty($this->halt_literal())){
                             $string = Literal::restore($storage, $string);
@@ -335,7 +341,8 @@ class Parse {
                 sleep(1);
                 $exists = class_exists($class);
                 if($exists){
-                    $template = new $class(new Parse($this->object()), $storage);
+//                    $template = new $class(new Parse($this->object()), $storage);
+                    $template = new $class($this, $storage);
                     $string = $template->run();
                     if(empty($this->halt_literal())){
                         $string = Literal::restore($storage, $string);
