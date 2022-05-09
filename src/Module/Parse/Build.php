@@ -154,6 +154,11 @@ class Build {
         $document[] = $this->indent(0) . $storage->data('placeholder.function');
         $document[] = $this->indent(0) . '}';
         $document[] = '';
+        $document[] = '/**';
+        $document[] = ' * Traits' ;
+        $document[] = ' */';
+        $document[] = '';
+        $document[] = $this->storage()->data('placeholder.trait');
         return $document;
     }
 
@@ -730,12 +735,6 @@ class Build {
         $document[] = ' * @generation-date          ' . date('Y-m-d H:i:s');
         $document[] = ' * @generation-time          ' . $this->storage()->data('placeholder.generation.time');
         $document[] = ' */';
-        $document[] = '';
-        $document[] = '/**';
-        $document[] = ' * Traits' ;
-        $document[] = ' */';
-        $document[] = '';
-        $document[] = $this->storage()->data('placeholder.trait');
         $document[] = '';
         $document[] = 'namespace ' . $namespace . ';';
         $document[] = '';
