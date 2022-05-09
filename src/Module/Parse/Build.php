@@ -226,7 +226,6 @@ class Build {
                     $namespace .= '\\';
                 }
                 $use[] = $this->indent(1) . 'use \\' . $namespace . $name . ';';
-                $this->parse()->object()->logger()->debug($namespace . $name);
             }
         }
         $traits = implode("\n", $trait);
