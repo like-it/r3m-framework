@@ -79,7 +79,7 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
                     if (is_string($val)) {
                         $val = '\'' . $val . '\'';
                     } elseif (is_array($val) || is_object($val)) {
-                        $val = Core::OBJECT($val, Core::OBJECT_JSON);
+                        $val = Core::object($val, Core::OBJECT_JSON);
                     }
                     $key = '\'' . $key . '\'';
                     $value[] = 'priya.collection(' . $key . ', ' . $val . ');';
@@ -88,7 +88,13 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
             }
             $value[] = File::read($file);
             $value[] = "\t\t\t" . '</script>';
-            $value = implode("\n", $value);
+            $value = implode(PHP_EOL, $value);
+            $list = $data->data($name);
+            if(empty($list)){
+                $list = [];
+            }
+            $list[] = $value;
+            $data->data($name, $list);
         break;
         case 'css' :
             if($controller !== null){
@@ -126,13 +132,41 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
             }
             $name = 'link';
             $value =  '<link rel="stylesheet" href="' .  $href . '?version=' . $object->config('framework.version') . '">';
+            $list = $data->data($name);
+            if(empty($list)){
+                $list = [];
+            }
+            $list[] = $value;
+            $data->data($name, $list);
         break;
+        default :
+            $explode = explode(':', $url);
+            $record = [];
+            if(array_key_exists(1, $explode)){
+                $record['namespace'] = $explode[0];
+                $record['trait'] = $explode[1];
+            } else {
+                $record['namespace'] = null;
+                $record['trait'] = $explode[0];
+            }
+            $list = $parse->build()->storage()->get('import.trait');
+            if(empty($list)){
+                $list = [];
+            }
+            $in_list = false;
+            foreach($list as $nr => $item){
+                if(
+                    $item['namespace'] === $record['namespace'] &&
+                    $item['trait'] === $record['trait']
+                ){
+                    $in_list = true;
+                    break;
+                }
+            }
+            if($in_list){
+                return;
+            }
+            $list[] = $record;
+            $parse->build()->storage()->set('import.trait', $list);
     }
-    $list = $data->data($name);
-//    dd($list);
-    if(empty($list)){
-        $list = [];
-    }
-    $list[] = $value;
-    $data->data($name, $list);
 }

@@ -166,7 +166,7 @@ class Build {
         $storage = $this->storage();
         $trait = [];
         $use= [];
-        $list = $storage->data('trait');
+        $list = $storage->get('trait');
         if(
             is_array($list)
         ){
@@ -214,18 +214,32 @@ class Build {
                 }
             }
         }
+        $list = $storage->get('import.trait');
+        if(
+            !empty($list) &&
+            is_array($list)
+        ){
+            foreach ($list as $nr => $record){
+                $name = str_replace('.', '_', $record['name']);
+                $namespace = str_replace('.', '\\', $record['namespace']);
+                if(substr($namespace, -1 ,1) !== '\\'){
+                    $namespace .= '\\';
+                }
+                $use[] = $this->indent(1) . 'use \\' . $namespace . $name . ';';
+            }
+        }
         $traits = implode("\n", $trait);
         $usage = implode("\n", $use);
         $count = 0;
         foreach($document as $nr => $row){
-            $document[$nr] = str_replace($storage->data('placeholder.trait'), $traits, $row, $count);
+            $document[$nr] = str_replace($storage->get('placeholder.trait'), $traits, $row, $count);
             if($count > 0){
                 break;
             }
         }
         $count = 0;
         foreach($document as $nr => $row){
-            $document[$nr] = str_replace($storage->data('placeholder.traituse'), $usage, $row, $count);
+            $document[$nr] = str_replace($storage->get('placeholder.traituse'), $usage, $row, $count);
             if($count > 0){
                 break;
             }
