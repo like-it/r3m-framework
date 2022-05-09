@@ -869,9 +869,9 @@ class Build {
             $dir .= $uuid . $config->data('ds');
             $autoload = $this->object()->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
             $autoload->unregister();
-            dd($config->data('dictionary.compile'));
             $autoload->addPrefix($config->data('dictionary.compile'),  $dir);
             $dir = $config('project.dir.root');
+            $autoload->addPrefix('Application',  $dir);
             $autoload->register();
             $name = '';
             if(isset($options['parent'])){            
