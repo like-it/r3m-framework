@@ -870,8 +870,8 @@ class Build {
             $autoload = $this->object()->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
             $autoload->unregister();
             $autoload->addPrefix($config->data('dictionary.compile'),  $dir);
-            $dir = $config->data('project.dir.root');
-            $autoload->addPrefix('Application',  $dir);
+            $autoload->addPrefix('Host',  $config->data('project.dir.host'));
+            $autoload->addPrefix('Source',  $config->data('project.dir.source'));
             $autoload->register();
             $name = '';
             if(isset($options['parent'])){            
