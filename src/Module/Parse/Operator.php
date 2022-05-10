@@ -84,9 +84,6 @@ class Operator {
             $get = Operator::get_by_type($token, Token::TYPE_BOOLEAN_OR);
         }
         if($get === false){
-            $get = Operator::get_by_type($token, Token::TYPE_COLON);
-        }
-        if($get === false){
             $get = Operator::get_by_type_2($token, Token::TYPE_IS_PLUS_PLUS);            
         }
         if($get === false){
@@ -317,9 +314,6 @@ class Operator {
                     break;
                     case '=>' :
                         $result[$assign_key]  = $left_value . ' => ' . $right_value;
-                    break;
-                    case ':' :
-                        $result[$assign_key] = $left_value . '\\' . $right_value;
                     break;
                     default :
                         throw new Exception('Unknown operator (' . $operator['value'] .')');
