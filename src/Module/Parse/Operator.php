@@ -84,6 +84,10 @@ class Operator {
             $get = Operator::get_by_type($token, Token::TYPE_BOOLEAN_OR);
         }
         if($get === false){
+            $get = Operator::get_by_type($token, Token::TYPE_COLON);
+            dd($get);
+        }
+        if($get === false){
             $get = Operator::get_by_type_2($token, Token::TYPE_IS_PLUS_PLUS);            
         }
         if($get === false){
