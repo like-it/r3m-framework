@@ -145,7 +145,7 @@ class Autoload {
         $this->prefixList = $list;
     }
 
-    private function getPrefixList(){
+    public function getPrefixList(){
         return $this->prefixList;
     }
 
