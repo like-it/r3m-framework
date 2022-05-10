@@ -190,8 +190,8 @@ class Operator {
             }
         } else {
             d($token);
-            // $debug = debug_backtrace(true);
-            // dd($debug);
+             $debug = debug_backtrace(true);
+             dd($debug);
             dd($statement);
         }
         
