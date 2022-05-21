@@ -416,7 +416,7 @@ class App extends Data {
         if(File::exist($url)){
             $read = File::read($url);
             if(stristr($url, 'en.json')){
-                $read = '{"test" : "te\\st"}';
+                $read = '{"test" : "te\\\\st"}';
                 d(json_decode($read));
                 d(json_last_error());
                 d(json_last_error_msg());
