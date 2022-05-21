@@ -418,6 +418,8 @@ class App extends Data {
             if(stristr($url, 'en.json')){
                 $read = '{"test" : "te\\st"}';
                 d(json_decode($read));
+                d(json_last_error());
+                d(json_last_error_msg());
                 dd(Core::object($read, Core::OBJECT_OBJECT));
             }
             if($read){
