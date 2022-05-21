@@ -397,6 +397,9 @@ class App extends Data {
         }
         if(File::exist($url)){
             $read = File::read($url);
+            if(stristr($url, 'en.json')){
+                dd($read);
+            }
             if($read){
                 $data = new Data();
                 $data->do_not_nest_key($do_not_nest_key);
