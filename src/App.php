@@ -415,13 +415,6 @@ class App extends Data {
         }
         if(File::exist($url)){
             $read = File::read($url);
-            if(stristr($url, 'en.json')){
-                $read = '{"test" : "te\\\\st"}';
-                d(json_decode($read));
-                d(json_last_error());
-                d(json_last_error_msg());
-                dd(Core::object($read, Core::OBJECT_OBJECT));
-            }
             if($read){
                 $data = new Data();
                 $data->do_not_nest_key($do_not_nest_key);
