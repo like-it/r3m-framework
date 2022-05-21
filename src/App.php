@@ -27,6 +27,7 @@ use Monolog\Logger;
 
 use Exception;
 use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\LocateException;
 
 class App extends Data {
@@ -71,6 +72,15 @@ class App extends Data {
         $uuid = posix_geteuid();
         if(empty($uuid)){
             $url = $this->config('project.dir.log') . 'app.log';
+            if(File::exist($url)) {
+                File::chown($url, File::USER_WWW, File::USER_WWW);
+
+            }
+            $url = $this->config('project.dir.log') . 'access.log';
+            if(File::exist($url)){
+                File::chown($url, File::USER_WWW, File::USER_WWW);
+            }
+            $url = $this->config('project.dir.log') . 'error.log';
             if(File::exist($url)){
                 File::chown($url, File::USER_WWW, File::USER_WWW);
             }
@@ -339,11 +349,12 @@ class App extends Data {
         return $this->getLogger();
     }
 
-    private function setLogger($logger=null){
+    private function setLogger(Logger $logger=null){
         $this->logger = $logger;
     }
 
-    private function getLogger(){
+    private function getLogger(): Logger
+    {
         return $this->logger;
     }
 
@@ -363,6 +374,9 @@ class App extends Data {
         return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
+    /**
+     * @throws Exception
+     */
     public function session($attribute=null, $value=null){
         return Handler::session($attribute, $value);
     }
@@ -371,7 +385,8 @@ class App extends Data {
         return Handler::cookie($attribute, $value, $duration);
     }
 
-    public function upload($number=null){
+    public function upload($number=null): Data
+    {
         if($number === null){
             return new Data($this->data(
                 App::NAMESPACE . '.' .
@@ -388,6 +403,9 @@ class App extends Data {
         }
     }
 
+    /**
+     * @throws ObjectException
+     */
     public function data_read($url, $attribute=null, $do_not_nest_key=false){
         if($attribute !== null){
             $data = $this->data($attribute);
@@ -398,7 +416,7 @@ class App extends Data {
         if(File::exist($url)){
             $read = File::read($url);
             if(stristr($url, 'en.json')){
-                dd($read);
+                dd(Core::object($read, Core::OBJECT_OBJECT));
             }
             if($read){
                 $data = new Data();
@@ -417,6 +435,10 @@ class App extends Data {
         }
     }
 
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
     public function parse_read($url, $attribute=null){
         if($attribute !== null){
             $data = $this->data($attribute);
@@ -467,7 +489,8 @@ class App extends Data {
         }
     }
 
-    public static function is_cli(){
+    public static function is_cli() : bool
+    {
         if(!defined('IS_CLI')){
             return Core::is_cli();
         } else {
