@@ -416,6 +416,7 @@ class App extends Data {
         if(File::exist($url)){
             $read = File::read($url);
             if(stristr($url, 'en.json')){
+                d(json_decode($read));
                 dd(Core::object($read, Core::OBJECT_OBJECT));
             }
             if($read){

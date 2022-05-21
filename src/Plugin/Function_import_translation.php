@@ -17,7 +17,6 @@ function function_import_translation(Parse $parse, Data $data){
         foreach($read as $nr => $file){
             $file->basename = File::basename($file->name, $object->config('extension.json'));
             $translation = $object->data_read($file->url, sha1($file->url), true);
-            d($translation);
             if($translation){
                 $object->data('translation.' . strtolower($file->basename), $translation->data());
             }
