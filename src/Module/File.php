@@ -217,8 +217,7 @@ class File {
             }
             $source = escapeshellarg($source);
             $destination = escapeshellarg($destination);
-            exec('mv ' . $source . ' ' . $destination, $output);
-            dd($output);
+            exec('mv ' . $source . ' ' . $destination);
             return true;
         } elseif(
             !$overwrite &&
@@ -228,8 +227,7 @@ class File {
         } else {
             $source = escapeshellarg($source);
             $destination = escapeshellarg($destination);
-            exec('mv ' . $source . ' ' . $destination, $output);
-            dd($output);
+            exec('mv ' . $source . ' ' . $destination);
             return true;
         }
     }
