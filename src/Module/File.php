@@ -197,6 +197,12 @@ class File {
      */
     public static function move($source='', $destination='', $overwrite=false): bool
     {
+        if(substr($source, -1, 1) === DIRECTORY_SEPARATOR){
+            $source = substr($source, 0, -1);
+        }
+        if(substr($destination, -1, 1) === DIRECTORY_SEPARATOR){
+            $destination = substr($destination, 0, -1);
+        }
         if(
             $overwrite &&
             File::exist($destination)
@@ -233,6 +239,12 @@ class File {
      */
     public static function rename($source='', $destination='', $overwrite=false): bool
     {
+        if(substr($source, -1, 1) === DIRECTORY_SEPARATOR){
+            $source = substr($source, 0, -1);
+        }
+        if(substr($destination, -1, 1) === DIRECTORY_SEPARATOR){
+            $destination = substr($destination, 0, -1);
+        }
         $exist = File::exist($source);
         if($exist === false){
             throw new FileMoveException('Source file doesn\'t exist...');
