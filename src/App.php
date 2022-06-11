@@ -193,7 +193,7 @@ class App extends Data {
                                 $route->controller .
                                 ') function (' .
                                 $route->function .
-                                ') not exist.'
+                                ') does not exist.'
                             );
                             $response = new Response(
                                 App::exception_to_json(new Exception(
@@ -201,7 +201,7 @@ class App extends Data {
                                     $route->controller .
                                     ') function (' .
                                     $route->function .
-                                    ') not exist.'
+                                    ') does not exist.'
                                 )),
                                 Response::TYPE_JSON,
                                 Response::STATUS_ERROR
