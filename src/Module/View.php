@@ -170,6 +170,15 @@ class View {
                 ) .
             $config->data(Config::DS)
         );
+        $config->data(Config::DATA_CONTROLLER_DIR_NODE,
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::NODE
+            ) .
+            $config->data(Config::DS)
+        );
         $config->data(Config::DATA_CONTROLLER_DIR_PLUGIN,
             $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
             $config->data(
@@ -213,6 +222,33 @@ class View {
                 '.' .
                 Config::MODEL
                 ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_CONTROLLER_DIR_ENTITY,
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::ENTITY
+            ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_CONTROLLER_DIR_SERVICE,
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::SERVICE
+            ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_CONTROLLER_DIR_COMPONENT,
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::COMPONENT
+            ) .
             $config->data(Config::DS)
         );
         $config->data(Config::DATA_CONTROLLER_DIR_VIEW,

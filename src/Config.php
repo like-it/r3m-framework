@@ -72,8 +72,17 @@ class Config extends Data {
     const MODEL = 'model';
     const VALUE_MODEL = 'Model';
 
+    const COMPONENT = 'component';
+    const VALUE_COMPONENT = 'Component';
+
     const ENTITY = 'entity';
     const VALUE_ENTITY = 'Entity';
+
+    const SERVICE = 'service';
+    const VALUE_SERVICE = 'Service';
+
+    const NODE = 'node';
+    const VALUE_NODE = 'Node';
 
     const TRANSLATION = 'translation';
     const VALUE_TRANSLATION = 'Translation';
@@ -152,7 +161,10 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_FUNCTION = Config::DATA_CONTROLLER_DIR . '.' .'function';
     const DATA_CONTROLLER_DIR_MODEL = Config::DATA_CONTROLLER_DIR . '.' .'model';
     const DATA_CONTROLLER_DIR_ENTITY = Config::DATA_CONTROLLER_DIR . '.' .'entity';
+    const DATA_CONTROLLER_DIR_SERVICE = Config::DATA_CONTROLLER_DIR . '.' .'service';
+    const DATA_CONTROLLER_DIR_NODE = Config::DATA_CONTROLLER_DIR . '.' .'node';
     const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
+    const DATA_CONTROLLER_DIR_COMPONENT = Config::DATA_CONTROLLER_DIR . '.' .'component';
     const DATA_CONTROLLER_DIR_PUBLIC = Config::DATA_CONTROLLER_DIR . '.' .'public';
 
     const DATA_ROUTE = 'route';
@@ -219,6 +231,18 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::LOG;
         $value = Config::VALUE_LOG;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::COMPONENT;
+        $value = Config::VALUE_COMPONENT;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::SERVICE;
+        $value = Config::VALUE_SERVICE;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::ENTITY;
+        $value = Config::VALUE_ENTITY;
         $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::VIEW;
