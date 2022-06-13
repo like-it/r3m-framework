@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_occurence_case_insensitive(Parse $parse, Data $data, $haystack='', $needle='', $before_needle=false){
+function function_string_occurrence_case_insensitive(Parse $parse, Data $data, $haystack='', $needle='', $before_needle=false){
     $result = stristr($haystack, $needle, $before_needle);
     return $result;
 }
