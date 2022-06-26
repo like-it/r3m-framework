@@ -37,6 +37,12 @@ class Parse extends View{
 
     const DEFAULT_COMMAND = Parse::COMMAND_INFO;
 
+    const INFO = [
+        '{{binary()}} parse info                     | parse information',
+        '{{binary()}} parse compile                  | compiles <source> with <data>',
+        '{{binary()}} parse restart                  | removes parse compile cache files',
+    ];
+
     const EXCEPTION_COMMAND_PARAMETER = '{{$command}}';
     const EXCEPTION_COMMAND = 'invalid command (' . Parse::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
