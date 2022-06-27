@@ -94,7 +94,7 @@ class Parse extends View{
         try {
             $template_url = $object->parameter($object, __FUNCTION__, 1);
             $data_url = $object->parameter($object, __FUNCTION__, 2);
-            $state_url = $object->parameter($object, __FUNCTION__, 'state');
+            $state_url = $object->parameter($object, 'state', 1);
             d($template_url);
             d($data_url);
             dd($state_url);
