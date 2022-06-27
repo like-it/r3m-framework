@@ -95,9 +95,6 @@ class Parse extends View{
             $template_url = $object->parameter($object, __FUNCTION__, 1);
             $data_url = $object->parameter($object, __FUNCTION__, 2);
             $state_url = $object->parameter($object, 'state', 1);
-            d($template_url);
-            d($data_url);
-            dd($state_url);
             $is_json = false;
             if (File::exist($template_url)) {
                 $extension = File::extension($template_url);
