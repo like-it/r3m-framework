@@ -120,7 +120,7 @@ class Parse extends View{
                         if($state){
                             $object->data(Core::object_merge(clone $object->data(), $state->data()));
                         }
-                        dd($object->data());
+                        dd($object->data('host'));
                     }
                     $data = $object->parse_read($data_url);
                     if($data){
