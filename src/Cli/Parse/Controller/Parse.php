@@ -109,11 +109,6 @@ class Parse extends View{
                 }
                 if ($read) {
                     $mtime = File::mtime($template_url);
-                    $parse = new Parser($object);
-                    $parse->storage()->data('r3m.io.parse.view.url', $template_url);
-                    $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
-                    $object->data('ldelim', '{');
-                    $object->data('rdelim', '}');
                     //first read state then data
                     if($state_url){
                         $state = $object->parse_read($state_url);
@@ -121,6 +116,11 @@ class Parse extends View{
                             $object->data(Core::object_merge(clone $object->data(), $state->data()));
                         }
                     }
+                    $parse = new Parser($object);
+                    $parse->storage()->data('r3m.io.parse.view.url', $template_url);
+                    $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
+                    $object->data('ldelim', '{');
+                    $object->data('rdelim', '}');
                     $data = $object->parse_read($data_url);
                     if($data){
                         $data = Core::object_merge(clone $object->data(), $data->data());
