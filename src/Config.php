@@ -285,6 +285,10 @@ class Config extends Data {
         $value = Config::VALUE_TRANSLATION;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::NODE;
+        $value = Config::VALUE_NODE;
+        $this->data($key, $value);
+
         $value = Config::VALUE_DS;
         $key = Config::DS;
         $this->data($key, $value);
