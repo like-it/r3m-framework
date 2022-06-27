@@ -45,6 +45,9 @@ class App extends Data {
     const CONTENT_TYPE_CLI = 'text/cli';
     const CONTENT_TYPE_FORM = 'application/x-www-form-urlencoded';
 
+    const HTTP = 'http://';
+    const HTTPS = 'https://';
+
     const RESPONSE_JSON = 'json';
     const RESPONSE_HTML = 'html';
     const RESPONSE_FILE = 'file';
