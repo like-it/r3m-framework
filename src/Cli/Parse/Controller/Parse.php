@@ -117,6 +117,14 @@ class Parse extends View{
                     $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
                     $object->data('ldelim', '{');
                     $object->data('rdelim', '}');
+                    //first read state then data
+                    if($state_url){
+                        $state = $object->parse_read($state_url);
+                        if($state){
+                            $object->data(Core::object_merge(clone $object->data(), $state->data()));
+                        }
+                        dd($object->data());
+                    }
                     $data = $object->parse_read($data_url);
                     if($data){
                         $data = Core::object_merge(clone $object->data(), $data->data());
