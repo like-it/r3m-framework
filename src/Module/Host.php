@@ -95,9 +95,6 @@ class Host {
             $config->data('host.dir.root') .
             $config->data(Config::DICTIONARY . '.' . Config::SOURCE) .
             $config->data('ds');
-
-        dd($value);
-
         $config->data($key, $value);
         $key = 'host.dir.view';
         $value =
