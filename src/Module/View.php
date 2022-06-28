@@ -350,8 +350,14 @@ class View {
         $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
     }
 
+    /**
+     * @throws ObjectException
+     * @throws UrlEmptyException
+     * @throws UrlNotExistException
+     * @throws FileWriteException
+     */
     public static function response(App $object, $url){
-        if(empty($url)){            
+        if(empty($url)){
             throw new UrlEmptyException('Url is empty');
         }
 
@@ -364,7 +370,7 @@ class View {
         $dir_compile = $config->data('parse.dir.compile');
         $dir_cache = $config->data('parse.dir.cache');
         if(File::exist($url) === false){
-            throw new UrlNotExistException('Url (' . $url .')doesn\'t exist');
+            throw new UrlNotExistException('Url (' . $url .') doesn\'t exist');
         }
         $read = File::read($url);
         $mtime = File::mtime($url);

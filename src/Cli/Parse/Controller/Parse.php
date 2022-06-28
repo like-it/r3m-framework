@@ -113,14 +113,14 @@ class Parse extends View{
 
                     d($object->data('host'));
                     d($object->data('controller'));
-                    dd($object->config());
 
 
                     if($state_url){
                         $state = $object->parse_read($state_url);
                         if($state){
-                            $object->data(Core::object_merge(clone $object->data(), $state->data()));
+                            dd($state);
                         }
+//                        $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
                     }
                     $parse = new Parser($object);
                     $parse->storage()->data('r3m.io.parse.view.url', $template_url);
