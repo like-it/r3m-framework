@@ -111,16 +111,14 @@ class Parse extends View{
                     $mtime = File::mtime($template_url);
                     //first read state then data
 
-                    d($object->data('host'));
-                    d($object->data('controller'));
-
-
                     if($state_url){
                         $state = $object->parse_read($state_url);
                         if($state){
-                            dd($state);
+                            $object->config(Core::object_merge($object->config(), $state->get('config')));
+                            $state->delete('config');
+                            $object->data(Core::object_merge($object->data(), $state->data()));
+                            $object->data('controller', $object->config('controller'));
                         }
-//                        $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
                     }
                     $parse = new Parser($object);
                     $parse->storage()->data('r3m.io.parse.view.url', $template_url);
