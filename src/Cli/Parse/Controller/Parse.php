@@ -110,6 +110,12 @@ class Parse extends View{
                 if ($read) {
                     $mtime = File::mtime($template_url);
                     //first read state then data
+
+                    d($object->data('host'));
+                    d($object->data('controller'));
+                    dd($object->config());
+
+
                     if($state_url){
                         $state = $object->parse_read($state_url);
                         if($state){
@@ -126,7 +132,6 @@ class Parse extends View{
                         $data = Core::object_merge(clone $object->data(), $data->data());
                     }
                     unset($data->{App::NAMESPACE});
-                    dd($data);
                     $read = $parse->compile($read, $data, $parse->storage());
                     if($is_json){
                         $read = Core::object($read, Core::OBJECT_JSON);
