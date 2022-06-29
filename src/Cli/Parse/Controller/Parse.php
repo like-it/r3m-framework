@@ -94,7 +94,7 @@ class Parse extends View{
         try {
             $template_url = $object->parameter($object, __FUNCTION__, 1);
             $data_url = $object->parameter($object, __FUNCTION__, 2);
-            $state_url = $object->parameter($object, 'state', 1);
+            //$state_url = $object->parameter($object, 'state', 1);
             $is_json = false;
             if (File::exist($template_url)) {
                 $extension = File::extension($template_url);
@@ -110,7 +110,7 @@ class Parse extends View{
                 if ($read) {
                     $mtime = File::mtime($template_url);
                     //first read state then data
-
+                    /*
                     if($state_url){
                         $state = $object->parse_read($state_url);
                         if($state){
@@ -120,16 +120,19 @@ class Parse extends View{
                             $object->data('controller', $object->config('controller'));
                         }
                     }
+                    */
+                    $data = $object->parse_read($data_url);
                     $parse = new Parser($object);
                     $parse->storage()->data('r3m.io.parse.view.url', $template_url);
                     $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
                     $object->data('ldelim', '{');
                     $object->data('rdelim', '}');
-                    $data = $object->parse_read($data_url);
                     if($data){
                         $data = Core::object_merge(clone $object->data(), $data->data());
                     }
                     unset($data->{App::NAMESPACE});
+                    d($object->config());
+                    dd($data);
                     $read = $parse->compile($read, $data, $parse->storage());
                     if($is_json){
                         $read = Core::object($read, Core::OBJECT_JSON);
