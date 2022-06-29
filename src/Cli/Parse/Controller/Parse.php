@@ -131,8 +131,6 @@ class Parse extends View{
                         $data = Core::object_merge(clone $object->data(), $data->data());
                     }
                     unset($data->{App::NAMESPACE});
-                    d($object->config());
-                    dd($data);
                     $read = $parse->compile($read, $data, $parse->storage());
                     if($is_json){
                         $read = Core::object($read, Core::OBJECT_JSON);
