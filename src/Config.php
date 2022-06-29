@@ -151,7 +151,7 @@ class Config extends Data {
     const DATA_PROJECT_DIR_PLUGIN =  Config::DATA_PROJECT_DIR . '.' . 'plugin';
     const DATA_PROJECT_DIR_FUNCTION =  Config::DATA_PROJECT_DIR . '.' . 'function';
     const DATA_PROJECT_DIR_LOG =  Config::DATA_PROJECT_DIR . '.' . 'log';
-    const DATA_PROJECT_DIR_TRAIT =  Config::DATA_PROJECT_DIR . '.' . 'trait';
+    const DATA_PROJECT_DIR_EXECUTE =  Config::DATA_PROJECT_DIR . '.' . 'execute';
 
     const DATA_CONTROLLER = 'controller';
     const DATA_CONTROLLER_CLASS = 'controller.class';
@@ -351,7 +351,7 @@ class Config extends Data {
             $this->data(Config::DS);
         $this->data($key, $value);
 
-        $key = Config::DATA_PROJECT_DIR_TRAIT;
+        $key = Config::DATA_PROJECT_DIR_EXECUTE;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::EXECUTE) .
