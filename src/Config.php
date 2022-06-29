@@ -95,6 +95,9 @@ class Config extends Data {
     const LOG = ' log';
     const VALUE_LOG = 'Log';
 
+    const EXECUTE = ' execute';
+    const VALUE_EXECUTE = 'Execute';
+
     const ROUTE = 'Route.json';
     const CONFIG = 'Config.json';
 
@@ -148,6 +151,7 @@ class Config extends Data {
     const DATA_PROJECT_DIR_PLUGIN =  Config::DATA_PROJECT_DIR . '.' . 'plugin';
     const DATA_PROJECT_DIR_FUNCTION =  Config::DATA_PROJECT_DIR . '.' . 'function';
     const DATA_PROJECT_DIR_LOG =  Config::DATA_PROJECT_DIR . '.' . 'log';
+    const DATA_PROJECT_DIR_TRAIT =  Config::DATA_PROJECT_DIR . '.' . 'trait';
 
     const DATA_CONTROLLER = 'controller';
     const DATA_CONTROLLER_CLASS = 'controller.class';
@@ -231,6 +235,10 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::LOG;
         $value = Config::VALUE_LOG;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::EXECUTE;
+        $value = Config::VALUE_EXECUTE;
         $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::COMPONENT;
@@ -340,6 +348,13 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::LOG) .
+            $this->data(Config::DS);
+        $this->data($key, $value);
+
+        $key = Config::DATA_PROJECT_DIR_TRAIT;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::EXECUTE) .
             $this->data(Config::DS);
         $this->data($key, $value);
 
