@@ -716,6 +716,11 @@ class Handler {
                         ){
                             Handler::cookie($key, $value->value, $value->parameters);
                         }
+                        elseif(
+                            property_exists($value, 'value')
+                        ){
+                            Handler::cookie($key, $value->value);
+                        }
                     }
                     if(isset($_COOKIE)){
                         return $_COOKIE;
