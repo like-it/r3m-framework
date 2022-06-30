@@ -744,7 +744,7 @@ class Handler {
                         elseif(is_object($duration) && $duration instanceof DateTimeImmutable){
                             $result = @setcookie($attribute, $value, $duration->getTimestamp(), "/");
                         } else {
-                            $result = @setcookie($attribute, $value, time() + $duration, "/");
+                            $result = setcookie($attribute, $value, time() + $duration, "/");
                         }
                         if (!empty($result) && defined('IS_CLI')) {
                             $cookie[$attribute] = $value;
