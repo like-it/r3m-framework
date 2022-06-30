@@ -332,343 +332,356 @@ class Handler {
             }
         }
         if($attribute !== null){
-            $tmp = explode('.', $attribute);
-            if($value !== null){
-                if($attribute == Handler::SESSION_DELETE && $value == Handler::SESSION){
-                    $unset = session_unset();
-                    if($unset === false){
-                        throw new Exception('Could not unset session');
-                    }
-                    $destroy = session_destroy();
-                    if($destroy === false){
-                        throw new Exception('Could not destroy session');
+            if(
+                (is_object($attribute) || is_array($attribute)) &&
+                $value === null
+            ){
+                foreach($attribute as $key => $value){
+                    Handler::session($key, $value);
+                    if(isset($_SESSION)){
+                        return $_SESSION;
                     }
                 }
-                elseif($attribute == Handler::SESSION_DELETE){
-                    $tmp = explode('.', $value);
-                    switch(count($tmp)){
-                        case 1 :
-                            unset(
-                            $_SESSION
-                            [$value]
-                            );
-                            break;
-                        case 2 :
-                            unset(
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            );
-                            break;
-                        case 3 :
-                            unset(
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            );
-                            break;
-                        case 4 :
-                            unset(
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            );
-                            break;
-                        case 5 :
-                            unset(
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            );
-                            break;
-                        case 6 :
-                            unset(
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]]
-                            );
-                            break;
-                        case 7 :
-                            unset(
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]]
-                            [$tmp[6]]
-                            );
-                            break;
-                        case 8 :
-                            unset(
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]]
-                            [$tmp[6]]
-                            [$tmp[7]]
-                            );
-                            break;
-                        case 9 :
-                            unset(
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]]
-                            [$tmp[6]]
-                            [$tmp[7]]
-                            [$tmp[8]]
-                            );
-                            break;
-                        case 10 :
-                            unset(
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]]
-                            [$tmp[6]]
-                            [$tmp[7]]
-                            [$tmp[8]]
-                            [$tmp[9]]
-                            );
-                            break;
+            } else {
+                $tmp = explode('.', $attribute);
+                if($value !== null){
+                    if($attribute == Handler::SESSION_DELETE && $value == Handler::SESSION){
+                        $unset = session_unset();
+                        if($unset === false){
+                            throw new Exception('Could not unset session');
+                        }
+                        $destroy = session_destroy();
+                        if($destroy === false){
+                            throw new Exception('Could not destroy session');
+                        }
                     }
-                    return true;
-                } else {
-                    switch(count($tmp)){
-                        case 1 :
-                            $_SESSION
-                            [$attribute] = $value;
-                            break;
-                        case 2 :
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]] = $value;
-                            break;
-                        case 3 :
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]] = $value;
-                            break;
-                        case 4 :
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]] = $value;
-                            break;
-                        case 5 :
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]] = $value;
-                            break;
-                        case 6 :
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]] = $value;
-                            break;
-                        case 7 :
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]]
-                            [$tmp[6]] = $value;
-                            break;
-                        case 8 :
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]]
-                            [$tmp[6]]
-                            [$tmp[7]] = $value;
-                            break;
-                        case 9 :
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]]
-                            [$tmp[6]]
-                            [$tmp[7]]
-                            [$tmp[8]] = $value;
-                            break;
-                        case 10 :
-                            $_SESSION
-                            [$tmp[0]]
-                            [$tmp[1]]
-                            [$tmp[2]]
-                            [$tmp[3]]
-                            [$tmp[4]]
-                            [$tmp[5]]
-                            [$tmp[6]]
-                            [$tmp[7]]
-                            [$tmp[8]]
-                            [$tmp[9]] = $value;
-                            break;
+                    elseif($attribute == Handler::SESSION_DELETE){
+                        $tmp = explode('.', $value);
+                        switch(count($tmp)){
+                            case 1 :
+                                unset(
+                                    $_SESSION
+                                    [$value]
+                                );
+                                break;
+                            case 2 :
+                                unset(
+                                    $_SESSION
+                                    [$tmp[0]]
+                                    [$tmp[1]]
+                                );
+                                break;
+                            case 3 :
+                                unset(
+                                    $_SESSION
+                                    [$tmp[0]]
+                                    [$tmp[1]]
+                                    [$tmp[2]]
+                                );
+                                break;
+                            case 4 :
+                                unset(
+                                    $_SESSION
+                                    [$tmp[0]]
+                                    [$tmp[1]]
+                                    [$tmp[2]]
+                                    [$tmp[3]]
+                                );
+                                break;
+                            case 5 :
+                                unset(
+                                    $_SESSION
+                                    [$tmp[0]]
+                                    [$tmp[1]]
+                                    [$tmp[2]]
+                                    [$tmp[3]]
+                                    [$tmp[4]]
+                                );
+                                break;
+                            case 6 :
+                                unset(
+                                    $_SESSION
+                                    [$tmp[0]]
+                                    [$tmp[1]]
+                                    [$tmp[2]]
+                                    [$tmp[3]]
+                                    [$tmp[4]]
+                                    [$tmp[5]]
+                                );
+                                break;
+                            case 7 :
+                                unset(
+                                    $_SESSION
+                                    [$tmp[0]]
+                                    [$tmp[1]]
+                                    [$tmp[2]]
+                                    [$tmp[3]]
+                                    [$tmp[4]]
+                                    [$tmp[5]]
+                                    [$tmp[6]]
+                                );
+                                break;
+                            case 8 :
+                                unset(
+                                    $_SESSION
+                                    [$tmp[0]]
+                                    [$tmp[1]]
+                                    [$tmp[2]]
+                                    [$tmp[3]]
+                                    [$tmp[4]]
+                                    [$tmp[5]]
+                                    [$tmp[6]]
+                                    [$tmp[7]]
+                                );
+                                break;
+                            case 9 :
+                                unset(
+                                    $_SESSION
+                                    [$tmp[0]]
+                                    [$tmp[1]]
+                                    [$tmp[2]]
+                                    [$tmp[3]]
+                                    [$tmp[4]]
+                                    [$tmp[5]]
+                                    [$tmp[6]]
+                                    [$tmp[7]]
+                                    [$tmp[8]]
+                                );
+                                break;
+                            case 10 :
+                                unset(
+                                    $_SESSION
+                                    [$tmp[0]]
+                                    [$tmp[1]]
+                                    [$tmp[2]]
+                                    [$tmp[3]]
+                                    [$tmp[4]]
+                                    [$tmp[5]]
+                                    [$tmp[6]]
+                                    [$tmp[7]]
+                                    [$tmp[8]]
+                                    [$tmp[9]]
+                                );
+                                break;
+                        }
+                        return true;
+                    } else {
+                        switch(count($tmp)){
+                            case 1 :
+                                $_SESSION
+                                [$attribute] = $value;
+                                break;
+                            case 2 :
+                                $_SESSION
+                                [$tmp[0]]
+                                [$tmp[1]] = $value;
+                                break;
+                            case 3 :
+                                $_SESSION
+                                [$tmp[0]]
+                                [$tmp[1]]
+                                [$tmp[2]] = $value;
+                                break;
+                            case 4 :
+                                $_SESSION
+                                [$tmp[0]]
+                                [$tmp[1]]
+                                [$tmp[2]]
+                                [$tmp[3]] = $value;
+                                break;
+                            case 5 :
+                                $_SESSION
+                                [$tmp[0]]
+                                [$tmp[1]]
+                                [$tmp[2]]
+                                [$tmp[3]]
+                                [$tmp[4]] = $value;
+                                break;
+                            case 6 :
+                                $_SESSION
+                                [$tmp[0]]
+                                [$tmp[1]]
+                                [$tmp[2]]
+                                [$tmp[3]]
+                                [$tmp[4]]
+                                [$tmp[5]] = $value;
+                                break;
+                            case 7 :
+                                $_SESSION
+                                [$tmp[0]]
+                                [$tmp[1]]
+                                [$tmp[2]]
+                                [$tmp[3]]
+                                [$tmp[4]]
+                                [$tmp[5]]
+                                [$tmp[6]] = $value;
+                                break;
+                            case 8 :
+                                $_SESSION
+                                [$tmp[0]]
+                                [$tmp[1]]
+                                [$tmp[2]]
+                                [$tmp[3]]
+                                [$tmp[4]]
+                                [$tmp[5]]
+                                [$tmp[6]]
+                                [$tmp[7]] = $value;
+                                break;
+                            case 9 :
+                                $_SESSION
+                                [$tmp[0]]
+                                [$tmp[1]]
+                                [$tmp[2]]
+                                [$tmp[3]]
+                                [$tmp[4]]
+                                [$tmp[5]]
+                                [$tmp[6]]
+                                [$tmp[7]]
+                                [$tmp[8]] = $value;
+                                break;
+                            case 10 :
+                                $_SESSION
+                                [$tmp[0]]
+                                [$tmp[1]]
+                                [$tmp[2]]
+                                [$tmp[3]]
+                                [$tmp[4]]
+                                [$tmp[5]]
+                                [$tmp[6]]
+                                [$tmp[7]]
+                                [$tmp[8]]
+                                [$tmp[9]] = $value;
+                                break;
+                        }
                     }
                 }
+                switch(count($tmp)){
+                    case 1 :
+                        if(isset($_SESSION[$attribute])){
+                            return $_SESSION[$attribute];
+                        } else {
+                            return null;
+                        }
+                    case 2 :
+                        if(
+                            isset($_SESSION[$tmp[0]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]])
+                        ){
+                            return $_SESSION[$tmp[0]][$tmp[1]];
+                        } else {
+                            return null;
+                        }
+                    case 3 :
+                        if(
+                            isset($_SESSION[$tmp[0]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]])
+                        ){
+                            return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]];
+                        } else {
+                            return null;
+                        }
+                    case 4 :
+                        if(
+                            isset($_SESSION[$tmp[0]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]])
+                        ){
+                            return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]];
+                        } else {
+                            return null;
+                        }
+                    case 5 :
+                        if(
+                            isset($_SESSION[$tmp[0]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]])
+                        ){
+                            return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]];
+                        } else {
+                            return null;
+                        }
+                    case 6 :
+                        if(
+                            isset($_SESSION[$tmp[0]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]])
+                        ){
+                            return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]];
+                        } else {
+                            return null;
+                        }
+                    case 7 :
+                        if(
+                            isset($_SESSION[$tmp[0]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]])
+                        ){
+                            return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]];
+                        } else {
+                            return null;
+                        }
+                    case 8 :
+                        if(
+                            isset($_SESSION[$tmp[0]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]])
+                        ){
+                            return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]];
+                        } else {
+                            return null;
+                        }
+                    case 9 :
+                        if(
+                            isset($_SESSION[$tmp[0]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]])
+                        ){
+                            return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]];
+                        } else {
+                            return null;
+                        }
+                    case 10 :
+                        if(
+                            isset($_SESSION[$tmp[0]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]]) &&
+                            isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]][$tmp[9]])
+                        ){
+                            return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]][$tmp[9]];
+                        } else {
+                            return null;
+                        }
+                }
             }
-            switch(count($tmp)){
-                case 1 :
-                    if(isset($_SESSION[$attribute])){
-                        return $_SESSION[$attribute];
-                    } else {
-                        return null;
-                    }
-                case 2 :
-                    if(
-                    isset($_SESSION[$tmp[0]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]])
-                    ){
-                        return $_SESSION[$tmp[0]][$tmp[1]];
-                    } else {
-                        return null;
-                    }
-                case 3 :
-                    if(
-                    isset($_SESSION[$tmp[0]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]])
-                    ){
-                        return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]];
-                    } else {
-                        return null;
-                    }
-                case 4 :
-                    if(
-                    isset($_SESSION[$tmp[0]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]])
-                    ){
-                        return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]];
-                    } else {
-                        return null;
-                    }
-                case 5 :
-                    if(
-                    isset($_SESSION[$tmp[0]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]])
-                    ){
-                        return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]];
-                    } else {
-                        return null;
-                    }
-                case 6 :
-                    if(
-                    isset($_SESSION[$tmp[0]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]])
-                    ){
-                        return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]];
-                    } else {
-                        return null;
-                    }
-                case 7 :
-                    if(
-                    isset($_SESSION[$tmp[0]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]])
-                    ){
-                        return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]];
-                    } else {
-                        return null;
-                    }
-                case 8 :
-                    if(
-                    isset($_SESSION[$tmp[0]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]])
-                    ){
-                        return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]];
-                    } else {
-                        return null;
-                    }
-                case 9 :
-                    if(
-                    isset($_SESSION[$tmp[0]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]])
-                    ){
-                        return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]];
-                    } else {
-                        return null;
-                    }
-                case 10 :
-                    if(
-                    isset($_SESSION[$tmp[0]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]]) &&
-                    isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]][$tmp[9]])
-                    ){
-                        return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]][$tmp[9]];
-                    } else {
-                        return null;
-                    }
-            }
+
         } else {
             return $_SESSION;
         }
@@ -677,34 +690,68 @@ class Handler {
     public static function cookie($attribute=null, $value=null, $duration=null){
         $cookie = [];
         if($attribute !== null) {
-            if ($value !== null) {
-                if ($attribute == Handler::COOKIE_DELETE) {
-                    $result = @setcookie($value, '', 0, "/"); //ends at session
-                    if (!empty($result) && defined('IS_CLI')) {
-                        unset($_COOKIE[$value]);
+            if(
+                (is_object($attribute) || is_array($attribute)) &&
+                $value === null
+            ){
+                foreach($attribute as $key => $value){
+                    if(is_object($value)){
+                        if(
+                            property_exists($value, 'duration') &&
+                            property_exists($value, 'value')
+                        ){
+                            Handler::cookie($key, $value->value, $value->duration);
+                        }
+                        elseif(
+                            property_exists($value, 'params') &&
+                            property_exists($value, 'value') &&
+                            is_array($value->params)
+                        ){
+                            Handler::cookie($key, $value->value, $value->params);
+                        }
+                        elseif(
+                            property_exists($value, 'parameters') &&
+                            property_exists($value, 'value') &&
+                            is_array($value->paramaters)
+                        ){
+                            Handler::cookie($key, $value->value, $value->parameters);
+                        }
                     }
-                    return;
-                } else {
-                    if ($duration === null) {
-                        $duration = 60 * 60 * 24 * 365 * 2; // 2 years
-                    }
-                    if(is_array($duration)){
-                        $result = @setcookie($attribute, $value, $duration);
-                    }
-                    elseif(is_object($duration) && $duration instanceof DateTimeImmutable){
-                        $result = @setcookie($attribute, $value, $duration->getTimestamp(), "/");
-                    } else {
-                        $result = @setcookie($attribute, $value, time() + $duration, "/");
-                    }
-                    if (!empty($result) && defined('IS_CLI')) {
-                        $cookie[$attribute] = $value;
+                    if(isset($_COOKIE)){
+                        return $_COOKIE;
                     }
                 }
+            } else {
+                if ($value !== null) {
+                    if ($attribute == Handler::COOKIE_DELETE) {
+                        $result = @setcookie($value, '', 0, "/"); //ends at session
+                        if (!empty($result) && defined('IS_CLI')) {
+                            unset($_COOKIE[$value]);
+                        }
+                        return;
+                    } else {
+                        if ($duration === null) {
+                            $duration = 60 * 60 * 24 * 365 * 2; // 2 years
+                        }
+                        if(is_array($duration)){
+                            $result = @setcookie($attribute, $value, $duration);
+                        }
+                        elseif(is_object($duration) && $duration instanceof DateTimeImmutable){
+                            $result = @setcookie($attribute, $value, $duration->getTimestamp(), "/");
+                        } else {
+                            $result = @setcookie($attribute, $value, time() + $duration, "/");
+                        }
+                        if (!empty($result) && defined('IS_CLI')) {
+                            $cookie[$attribute] = $value;
+                        }
+                    }
+                }
+                if($value === null && is_array($duration)){
+                    $value = '';
+                    $result = @setcookie($attribute, $value, $duration);
+                }
             }
-            if($value === null && is_array($duration)){
-                $value = '';
-                $result = @setcookie($attribute, $value, $duration);
-            }
+
         }
         if(array_key_exists('HTTP_COOKIE', $_SERVER)){
             $explode = explode(';', $_SERVER['HTTP_COOKIE']);

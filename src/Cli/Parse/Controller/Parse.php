@@ -129,6 +129,14 @@ class Parse extends View{
                         if($request){
                             $object->request($request);
                         }
+                        $session = $data->get('session');
+                        if($session){
+                            $object->session($session);
+                        }
+                        $cookie = $data->get('cookie');
+                        if($cookie){
+                            $object->cookie($cookie);
+                        }
                         $data = Core::object_merge(clone $object->data(), $data->data());
                     }
                     $parse = new Parser($object);
