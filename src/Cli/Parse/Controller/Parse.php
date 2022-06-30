@@ -122,14 +122,19 @@ class Parse extends View{
                     }
                     */
                     $data = $object->parse_read($data_url);
-                    $parse = new Parser($object);
-                    $parse->storage()->data('r3m.io.parse.view.url', $template_url);
-                    $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
                     $object->data('ldelim', '{');
                     $object->data('rdelim', '}');
                     if($data){
+                        $request = $data->get('request');
+                        if($request){
+                            $object->request($request);
+                        }
                         $data = Core::object_merge(clone $object->data(), $data->data());
                     }
+                    $parse = new Parser($object);
+                    $parse->storage()->data('r3m.io.parse.view.url', $template_url);
+                    $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
+
                     unset($data->{App::NAMESPACE});
                     $read = $parse->compile($read, $data, $parse->storage());
                     if($is_json){
