@@ -688,6 +688,7 @@ class Handler {
     }
 
     public static function cookie($attribute=null, $value=null, $duration=null){
+        $result = '';
         $cookie = [];
         if($attribute !== null) {
             if(
@@ -773,5 +774,6 @@ class Handler {
                 return $cookie[$attribute];
             }
         }
+        return $result;
     }
 }
