@@ -773,7 +773,7 @@ class Handler {
             return $cookie[$attribute];
 
         } else {
-            return $result;
+            return $cookie;
         }
     }
 }
