@@ -146,6 +146,8 @@ class Parse extends View{
 
                     unset($data->{App::NAMESPACE});
                     $read = $parse->compile($read, $data, $parse->storage());
+                    $object->set('script', \R3m\Io\Module\Parse::readback($object, $parse, App::SCRIPT));
+                    $object->set('link', \R3m\Io\Module\Parse::readback($object, $parse, App::LINK));
                     if($is_json){
                         $read = Core::object($read, Core::OBJECT_JSON);
                     }
