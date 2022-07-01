@@ -14,6 +14,7 @@ function function_cache_clear(Parse $parse, Data $data){
         echo 'Executing: ' . $execute . "...\n";
         $output = [];
         Core::execute($execute, $output);
+        dd($output);
         $output[] = '';
         echo implode("\n", $output);
         ob_flush();
