@@ -115,7 +115,12 @@ class Response {
                 $json->script = $object->data(App::SCRIPT);
                 $json->link = $object->data(App::LINK);
                 if($object->session('test') === true){
-                    dd($json);
+                    $test = Core::object($json, Core::OBJECT_JSON);
+                    $error = [];
+                    $error['code'] = json_last_error();
+                    $error['msg'] = json_last_error_msg();
+                    d($error);
+                    dd($test);
                 }
                 return Core::object($json, Core::OBJECT_JSON);
             case Response::TYPE_FILE :
