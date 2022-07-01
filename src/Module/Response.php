@@ -13,6 +13,7 @@ namespace R3m\Io\Module;
 use R3m\Io\App;
 use stdClass;
 use Exception;
+use R3m\Io\Exception\ObjectException;
 
 class Response {
     const TYPE_JSON = 'json';
@@ -35,6 +36,10 @@ class Response {
         $this->header($headers);
     }
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
     public static function output(App $object, Response $response){
         $status = $response->status();
         if(!Handler::header('has', 'Status')){
@@ -109,6 +114,9 @@ class Response {
                 }
                 $json->script = $object->data(App::SCRIPT);
                 $json->link = $object->data(App::LINK);
+                if($object->session('test') === true){
+                    dd($json);
+                }
                 return Core::object($json, Core::OBJECT_JSON);
             case Response::TYPE_FILE :
             case Response::TYPE_HTML :
