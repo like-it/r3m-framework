@@ -19,6 +19,7 @@ class Response {
     const TYPE_JSON = 'json';
     const TYPE_HTML = 'html';
     const TYPE_OBJECT = 'object';
+    const TYPE_OBJECT_LINE = 'object-line';
     const TYPE_FILE = 'file';
 
     const STATUS_OK = 200;
@@ -84,6 +85,7 @@ class Response {
                     }
                 }
             case Response::TYPE_OBJECT :
+            case Response::TYPE_OBJECT_LINE :
                 $json = new stdClass();
                 $json->html = $response->data();
                 if($object->data('method')){
@@ -114,15 +116,12 @@ class Response {
                 }
                 $json->script = $object->data(App::SCRIPT);
                 $json->link = $object->data(App::LINK);
-                if($object->session('test') === true){
-                    $test = Core::object($json, Core::OBJECT_JSON);
-                    $error = [];
-                    $error['code'] = json_last_error();
-                    $error['msg'] = json_last_error_msg();
-                    d($error);
-                    dd($test);
+                if($type === Response::TYPE_OBJECT_LINE){
+                    return Core::object($json, Core::OBJECT_JSON_LINE);
+                } else {
+                    return Core::object($json, Core::OBJECT_JSON);
                 }
-                return Core::object($json, Core::OBJECT_JSON);
+
             case Response::TYPE_FILE :
             case Response::TYPE_HTML :
                 return $response->data();
