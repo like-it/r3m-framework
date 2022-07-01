@@ -16,6 +16,7 @@ use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
+use R3m\Io\Module\Response;
 use R3m\Io\Module\View;
 use R3m\Io\Module\Parse as Parser;
 use R3m\Io\Exception\LocateException;
@@ -148,7 +149,8 @@ class Parse extends View{
                     if($is_json){
                         $read = Core::object($read, Core::OBJECT_JSON);
                     }
-                    return $read;
+                    $response = new Response($read, $object->config('response.output'));
+                    return Response::output($object, $response);
                 }
             }
         } catch (Exception $exception){
