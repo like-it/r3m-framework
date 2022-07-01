@@ -93,6 +93,7 @@ class Parse extends View{
     private static function compile(App $object)
     {
         try {
+            $object->logger()->debug('compile');
             $template_url = $object->parameter($object, __FUNCTION__, 1);
             $data_url = $object->parameter($object, __FUNCTION__, 2);
             //$state_url = $object->parameter($object, 'state', 1);
