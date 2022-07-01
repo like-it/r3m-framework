@@ -33,6 +33,11 @@ class Dir {
         return $tmp;
     }
 
+    public static function current(): string
+    {
+        return getcwd();
+    }
+
     public static function create($url='', $chmod=''): bool
     {
         if($url !== Dir::SEPARATOR){

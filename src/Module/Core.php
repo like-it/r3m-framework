@@ -57,7 +57,9 @@ class Core {
     }
 
     public static function detach($command){
-        return Core::execute($command, $output, Core::SHELL_DETACHED);
+        $output = [];
+        $error=[];
+        return Core::execute($command, $output, $error,Core::SHELL_DETACHED);
     }
 
     public static function async($command){
@@ -65,10 +67,11 @@ class Core {
             $command .= ' &';
         }
         $output = [];
-        return Core::execute($command, $output, Core::SHELL_PROCESS);
+        $error=[];
+        return Core::execute($command, $output, $error,Core::SHELL_PROCESS);
     }
 
-    public static function execute($command, &$output=[], $type=null){
+    public static function execute($command, &$output=[], &$error=[], $type=null){
         if($output === null){
             $output = [];
         }
@@ -92,11 +95,19 @@ class Core {
                 case 0 :
                     //in child process
                     //create a seperate process to execute another process (async);
-                    exec($command, $output);
-                    if($type != Core::SHELL_PROCESS){
-                        // echo implode(PHP_EOL, $output) . PHP_EOL;
-                    }
-                    $output = [];
+                    $descriptorspec = array(
+                        0 => array("pipe", "r"),  // stdin
+                        1 => array("pipe", "w"),  // stdout
+                        2 => array("pipe", "w"),  // stderr
+                    );
+
+                    $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                    $output = stream_get_contents($pipes[1]);
+                    fclose($pipes[1]);
+
+                    $error = stream_get_contents($pipes[2]);
+                    fclose($pipes[2]);
+                    proc_close($process);
                     exit();
                 default :
                     if($type == Core::SHELL_PROCESS){
@@ -122,7 +133,19 @@ class Core {
             }
             return $result;
         } else {
-            return exec($command, $output);
+            $descriptorspec = array(
+                0 => array("pipe", "r"),  // stdin
+                1 => array("pipe", "w"),  // stdout
+                2 => array("pipe", "w"),  // stderr
+            );
+
+            $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+            $output = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+
+            $error = stream_get_contents($pipes[2]);
+            fclose($pipes[2]);
+            return proc_close($process);
         }
     }
 
