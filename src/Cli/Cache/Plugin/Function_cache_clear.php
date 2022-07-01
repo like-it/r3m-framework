@@ -12,11 +12,8 @@ function function_cache_clear(Parse $parse, Data $data){
     foreach($command as $record){
         $execute = $parse->compile($record);
         echo 'Executing: ' . $execute . "...\n";
-        $output = [];
         Core::execute($execute, $output);
-        dd($output);
-        $output[] = '';
-        echo implode("\n", $output);
+        echo $output . PHP_EOL;
         ob_flush();
     }
     if(File::exist($object->config('project.dir.vendor') . 'Doctrine')){
