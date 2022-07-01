@@ -151,8 +151,7 @@ class Parse extends View{
                     if($is_json){
                         $read = Core::object($read, Core::OBJECT_JSON);
                     }
-                    $response = new Response($read, $object->config('response.output'));
-                    return Response::output($object, $response);
+                    return $read;
                 }
             }
         } catch (Exception $exception){
