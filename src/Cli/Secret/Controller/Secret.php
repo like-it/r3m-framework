@@ -70,7 +70,6 @@ class Secret extends View {
             $object->config('ds') .
             'Secret.key'
         ;
-        dd($action);
         if($action === Secret::ACTION_GET){
             $attribute = $object->parameter($object, $action, 1);
             if(empty($attribute)){
@@ -156,6 +155,7 @@ class Secret extends View {
             }
 
             elseif($action === Secret::ACTION_LOCK) {
+                dd('yes');
                 $username = $object->parameter($object, $action, 1);
                 $password = $object->parameter($object, $action, 2);
                 $cost = $object->parameter($object, $action, 3);
@@ -165,7 +165,6 @@ class Secret extends View {
                 if (empty($password)) {
                     $password = Cli::read('input', 'password: ');
                 }
-
                 $data = $object->data_read($url);
                 if ($data) {
                     $attribute = 'secret.username';
