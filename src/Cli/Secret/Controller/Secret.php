@@ -171,7 +171,37 @@ class Secret extends View {
             if ($data) {
                 $attribute = 'secret.username';
                 $get = $data->get($attribute);
-                if (
+                if(empty($get)){
+                    $string = File::read($key_url);
+                    $key = Key::loadFromAsciiSafeString($string);
+                    $username = Crypto::encrypt($username, $key);
+                    $data->set($attribute, $username);
+                    if (empty($cost)) {
+                        $attribute = 'secret.cost';
+                        if($data->has($attribute)){
+                            $cost = Crypto::decrypt($data->get($attribute), $key);
+                        }
+                        if (empty($cost)) {
+                            $cost = 13;
+                        }
+                    }
+                    $cost = Crypto::encrypt($cost, $key);
+                    $data->set($attribute, $cost);
+                    $attribute = 'secret.password';
+                    $hash = password_hash($password, PASSWORD_BCRYPT, [
+                        'cost' => $cost //move to encrypted old value
+                    ]);
+                    $password = Crypto::encrypt($hash, $key);
+                    $data->set($attribute, $password);
+                    $dir = Dir::name($url);
+                    Dir::create($dir, Dir::CHMOD);
+                    $write = $data->write($url);
+                    echo $url . PHP_EOL;
+                    echo $write . PHP_EOL;
+                    $command = 'chown www-data:www-data ' . $url;
+                    Core::execute($command);
+                    echo "Successfully locked..." . PHP_EOL;
+                } else if (
                     $get &&
                     File::exist($url)
                 ) {
@@ -181,7 +211,9 @@ class Secret extends View {
                     $data->set($attribute, $username);
                     if (empty($cost)) {
                         $attribute = 'secret.cost';
-                        $cost = Crypto::decrypt($attribute, $key);
+                        if($data->has($attribute)){
+                            $cost = Crypto::decrypt($data->get($attribute), $key);
+                        }
                         if (empty($cost)) {
                             $cost = 13;
                         }
