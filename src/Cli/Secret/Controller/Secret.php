@@ -39,6 +39,8 @@ class Secret extends View {
     const ACTION_SET = 'set';
     const ACTION_HAS = 'has';
     const ACTION_DELETE = 'delete';
+    const ACTION_LOCK = 'lock';
+    const ACTION_UNLOCK = 'unlock';
 
     /**
      * @throws WrongKeyOrModifiedCiphertextException
@@ -82,6 +84,12 @@ class Secret extends View {
                 ){
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
+
+                    $uuid = Crypto::decrypt($data->get('secret.uuid'));
+                    $session = Crypto::decrypt($data->get($uuid));
+
+                    dd($session);
+
                     echo Crypto::decrypt($get, $key);
                 }
             }
@@ -144,6 +152,96 @@ class Secret extends View {
                 $command = 'chown www-data:www-data ' . $url;
                 Core::execute($command);
                 echo 'Secret delete: ' . $attribute . PHP_EOL;
+            }
+
+            elseif($action === Secret::ACTION_LOCK) {
+                $username = $object->parameter($object, $action, 1);
+                $password = $object->parameter($object, $action, 2);
+                $cost = $object->parameter($object, $action, 3);
+                if (empty($username)) {
+                    $username = Cli::read('input', 'username: ');
+                }
+                if (empty($password)) {
+                    $password = Cli::read('input', 'password: ');
+                }
+
+                $data = $object->data_read($url);
+                if ($data) {
+                    $attribute = 'secret.username';
+                    $get = $data->get($attribute);
+                    if (
+                        $get &&
+                        File::exist($url)
+                    ) {
+                        $string = File::read($key_url);
+                        $key = Key::loadFromAsciiSafeString($string);
+                        $username = Crypto::encrypt($username, $key);
+                        $data->set($attribute, $username);
+                        if (empty($cost)) {
+                            $attribute = 'secret.cost';
+                            $cost = Crypto::decrypt($attribute, $key);
+                            if (empty($cost)) {
+                                $cost = 13;
+                            }
+                        }
+                        $cost = Crypto::encrypt($cost, $key);
+                        $data->set($attribute, $cost);
+                        $attribute = 'secret.password';
+                        $hash = password_hash($password, PASSWORD_BCRYPT, [
+                            'cost' => $cost //move to encrypted old value
+                        ]);
+                        $password = Crypto::encrypt($hash, $key);
+                        $data->set($attribute, $password);
+                        $dir = Dir::name($url);
+                        Dir::create($dir, Dir::CHMOD);
+                        $data->write($url);
+                    }
+                }
+            }
+            elseif($action === Secret::ACTION_UNLOCK) {
+                $username = $object->parameter($object, $action, 1);
+                $password = $object->parameter($object, $action, 2);
+                if (empty($username)) {
+                    $username = Cli::read('input', 'username: ');
+                }
+                if (empty($password)) {
+                    $password = Cli::read('input', 'password: ');
+                }
+                $data = $object->data_read($url);
+                $verify = false;
+                if ($data) {
+                    $attribute = 'secret.username';
+                    $get = $data->get($attribute);
+                    if (
+                        $get &&
+                        File::exist($url)
+                    ) {
+                        $string = File::read($key_url);
+                        $key = Key::loadFromAsciiSafeString($string);
+                        $get = Crypto::decrypt($get, $key);
+                        if ($get === $username) {
+                            $attribute = 'secret.password';
+                            $get = $data->get($attribute);
+                            $hash = Crypto::decrypt($get, $key);
+                            $verify = password_verify($password, $hash);
+                            if ($verify) {
+                                $attribute = 'secret.uuid';
+                                $uuid = Core::uuid();
+                                $value = Crypto::encrypt($uuid, $key);
+                                $data->set($attribute, $value);
+                                $value = [];
+                                $value['unlock'] = [];
+                                $value['unlock']['since'] = microtime(true);
+                                $data->set($uuid, $value);
+                                $dir = Dir::name($url);
+                                Dir::create($dir, Dir::CHMOD);
+                                $data->write($url);
+                            }
+                        }
+                    }
+                    sleep(2);
+                    echo "Invalid username and / or password..." . PHP_EOL;
+                }
             }
         }
     }
