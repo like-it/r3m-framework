@@ -195,6 +195,8 @@ class Secret extends View {
                         $dir = Dir::name($url);
                         Dir::create($dir, Dir::CHMOD);
                         $data->write($url);
+                        $command = 'chown www-data:www-data ' . $url;
+                        Core::execute($command);
                     }
                 }
             }
@@ -236,6 +238,8 @@ class Secret extends View {
                                 $dir = Dir::name($url);
                                 Dir::create($dir, Dir::CHMOD);
                                 $data->write($url);
+                                $command = 'chown www-data:www-data ' . $url;
+                                Core::execute($command);
                             }
                         }
                     }
