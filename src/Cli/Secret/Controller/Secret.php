@@ -155,7 +155,6 @@ class Secret extends View {
             }
         }
         elseif($action === Secret::ACTION_LOCK) {
-            dd('yes');
             $username = $object->parameter($object, $action, 1);
             $password = $object->parameter($object, $action, 2);
             $cost = $object->parameter($object, $action, 3);
