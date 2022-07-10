@@ -165,6 +165,9 @@ class Secret extends View {
                 $password = Cli::read('input', 'password: ');
             }
             $data = $object->data_read($url);
+            if(!$data) {
+                $data = new Data();
+            }
             if ($data) {
                 $attribute = 'secret.username';
                 $get = $data->get($attribute);
@@ -194,9 +197,11 @@ class Secret extends View {
                     $dir = Dir::name($url);
                     Dir::create($dir, Dir::CHMOD);
                     $write = $data->write($url);
+                    echo $url . PHP_EOL;
                     echo $write . PHP_EOL;
                     $command = 'chown www-data:www-data ' . $url;
                     Core::execute($command);
+                    echo "Successfully locked..." . PHP_EOL;
                 }
             }
         }
@@ -240,6 +245,8 @@ class Secret extends View {
                             $data->write($url);
                             $command = 'chown www-data:www-data ' . $url;
                             Core::execute($command);
+                            echo "Successfully unlocked..." . PHP_EOL;
+                            return;
                         }
                     }
                 }
