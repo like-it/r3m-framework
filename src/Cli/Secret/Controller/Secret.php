@@ -85,8 +85,8 @@ class Secret extends View {
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
 
-                    $uuid = Crypto::decrypt($data->get('secret.uuid'));
-                    $session = Crypto::decrypt($data->get($uuid));
+                    $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
+                    $session = Crypto::decrypt($data->get($uuid), $key);
 
                     dd($session);
 
