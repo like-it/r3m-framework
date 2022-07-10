@@ -193,7 +193,8 @@ class Secret extends View {
                     $data->set($attribute, $password);
                     $dir = Dir::name($url);
                     Dir::create($dir, Dir::CHMOD);
-                    $data->write($url);
+                    $write = $data->write($url);
+                    echo $write . PHP_EOL;
                     $command = 'chown www-data:www-data ' . $url;
                     Core::execute($command);
                 }
