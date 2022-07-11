@@ -174,7 +174,7 @@ class Secret extends View {
                 if(empty($get)){
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
-                    $username = Crypto::encrypt($username, $key);
+                    $username = Crypto::encrypt((string) $username, $key);
                     $data->set($attribute, $username);
                     if (empty($cost)) {
                         $attribute = 'secret.cost';
@@ -182,18 +182,19 @@ class Secret extends View {
                             $cost = Crypto::decrypt($data->get($attribute), $key);
                         }
                         if (empty($cost)) {
-                            $cost = "13";
+                            $cost = 13;
                         }
                     }
-                    $cost = Crypto::encrypt($cost, $key);
+                    $cost = Crypto::encrypt((string) $cost, $key);
                     $data->set($attribute, $cost);
                     $attribute = 'secret.password';
                     $hash = password_hash($password, PASSWORD_BCRYPT, [
                         'cost' => (int) $cost //move to encrypted old value
                     ]);
-                    $password = Crypto::encrypt($hash, $key);
+                    $password = Crypto::encrypt((string) $hash, $key);
                     $data->set($attribute, $password);
                     $dir = Dir::name($url);
+                    echo $dir . PHP_EOL;
                     Dir::create($dir, Dir::CHMOD);
                     $write = $data->write($url);
                     echo $url . PHP_EOL;
