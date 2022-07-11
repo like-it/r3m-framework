@@ -198,11 +198,8 @@ class Secret extends View {
                     $password = Crypto::encrypt((string) $hash, $key);
                     $data->set($attribute, $password);
                     $dir = Dir::name($url);
-                    echo $dir . PHP_EOL;
                     Dir::create($dir, Dir::CHMOD);
                     $write = $data->write($url);
-                    echo $url . PHP_EOL;
-                    echo $write . PHP_EOL;
                     $command = 'chown www-data:www-data ' . $url;
                     Core::execute($command);
                     echo "Successfully locked..." . PHP_EOL;
@@ -277,9 +274,11 @@ class Secret extends View {
                             $uuid = Core::uuid();
                             $value = Crypto::encrypt($uuid, $key);
                             $data->set($attribute, $value);
-                            $value = [];
-                            $value['unlock'] = [];
-                            $value['unlock']['since'] = microtime(true);
+                            $json = [];
+                            $json['unlock'] = [];
+                            $json['unlock']['since'] = microtime(true);
+                            $value = Core::object($json, Core::OBJECT_JSON);
+                            $value = Crypto::encrypt($value, $key);
                             $data->set($uuid, $value);
                             $dir = Dir::name($url);
                             Dir::create($dir, Dir::CHMOD);
