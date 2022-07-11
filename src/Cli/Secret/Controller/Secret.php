@@ -272,8 +272,12 @@ class Secret extends View {
             }
             if ($data) {
                 if($data->has('secret.uuid')){
-                    $username = Cli::read('input', 'username: ');
-                    $password = Cli::read('input-hidden', 'password: ');
+                    if(empty($username)){
+                        $username = Cli::read('input', 'username: ');
+                    }
+                    if(empty($password)){
+                        $password = Cli::read('input-hidden', 'password: ');
+                    }
                     if($username && $password){
                         $attribute = 'secret.username';
                         $get = $data->get($attribute);
