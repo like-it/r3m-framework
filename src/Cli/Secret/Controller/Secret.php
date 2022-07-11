@@ -272,7 +272,10 @@ class Secret extends View {
             }
             if ($data) {
                 if($data->has('secret.uuid')){
-                    if($username && $password){
+                    if(
+                        !empty($username) &&
+                        !empty($password)
+                    ){
                         $attribute = 'secret.username';
                         $get = $data->get($attribute);
                         $string = File::read($key_url);
