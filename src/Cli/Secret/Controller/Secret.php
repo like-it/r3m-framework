@@ -296,6 +296,10 @@ class Secret extends View {
             $data = $object->data_read($url);
             $verify = false;
             if ($data) {
+                if($data->get('secret.uuid')){
+                    echo "Already unlocked..." . PHP_EOL;
+                    return;
+                }
                 $attribute = 'secret.username';
                 $get = $data->get($attribute);
                 if (
@@ -304,22 +308,22 @@ class Secret extends View {
                 ) {
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
-                    $get = Crypto::decrypt($get, $key);
+                    $get = Crypto::decrypt((string) $get, $key);
                     if ($get === $username) {
                         $attribute = 'secret.password';
                         $get = $data->get($attribute);
-                        $hash = Crypto::decrypt($get, $key);
+                        $hash = Crypto::decrypt((string) $get, $key);
                         $verify = password_verify($password, $hash);
                         if ($verify) {
                             $attribute = 'secret.uuid';
                             $uuid = Core::uuid();
-                            $value = Crypto::encrypt($uuid, $key);
+                            $value = Crypto::encrypt((string) $uuid, $key);
                             $data->set($attribute, $value);
                             $json = [];
                             $json['unlock'] = [];
                             $json['unlock']['since'] = microtime(true);
                             $value = Core::object($json, Core::OBJECT_JSON);
-                            $value = Crypto::encrypt($value, $key);
+                            $value = Crypto::encrypt((string) $value, $key);
                             $data->set($uuid, $value);
                             $dir = Dir::name($url);
                             Dir::create($dir, Dir::CHMOD);
