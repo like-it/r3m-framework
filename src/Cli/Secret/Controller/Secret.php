@@ -188,7 +188,6 @@ class Secret extends View {
                     $value = Crypto::encrypt((string) $cost, $key);
                     $data->set($attribute, $value);
                     $attribute = 'secret.password';
-                    d($password);
                     $hash = password_hash(
                         $password,
                         PASSWORD_BCRYPT,
@@ -196,9 +195,7 @@ class Secret extends View {
                             'cost' => (int) $cost
                         ]
                     );
-                    dd($hash);
                     $password = Crypto::encrypt((string) $hash, $key);
-                    dd($password);
                     $data->set($attribute, $password);
                     $dir = Dir::name($url);
                     echo $dir . PHP_EOL;
@@ -215,7 +212,7 @@ class Secret extends View {
                 ) {
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
-                    $username = Crypto::encrypt($username, $key);
+                    $username = Crypto::encrypt((string) $username, $key);
                     $data->set($attribute, $username);
                     if (empty($cost)) {
                         $attribute = 'secret.cost';
@@ -223,16 +220,20 @@ class Secret extends View {
                             $cost = Crypto::decrypt($data->get($attribute), $key);
                         }
                         if (empty($cost)) {
-                            $cost = "13";
+                            $cost = 13;
                         }
                     }
-                    $cost = Crypto::encrypt($cost, $key);
-                    $data->set($attribute, $cost);
+                    $value = Crypto::encrypt((string) $cost, $key);
+                    $data->set($attribute, $value);
                     $attribute = 'secret.password';
-                    $hash = password_hash($password, PASSWORD_BCRYPT, [
-                        'cost' => (int) $cost //move to encrypted old value
-                    ]);
-                    $password = Crypto::encrypt($hash, $key);
+                    $hash = password_hash(
+                        $password,
+                        PASSWORD_BCRYPT,
+                        [
+                            'cost' => (int) $cost //move to encrypted old value
+                        ]
+                    );
+                    $password = Crypto::encrypt((string) $hash, $key);
                     $data->set($attribute, $password);
                     $dir = Dir::name($url);
                     Dir::create($dir, Dir::CHMOD);
