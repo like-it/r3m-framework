@@ -171,12 +171,12 @@ class Secret extends View {
             if ($data) {
                 $attribute = 'secret.username';
                 $get = $data->get($attribute);
-                dd($get);
                 if(empty($get)){
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
                     $username = Crypto::encrypt((string) $username, $key);
                     $data->set($attribute, $username);
+                    dd($data);
                     if (empty($cost)) {
                         $attribute = 'secret.cost';
                         if($data->has($attribute)){
