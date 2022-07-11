@@ -185,15 +185,15 @@ class Secret extends View {
                             $cost = 13;
                         }
                     }
-                    $cost = Crypto::encrypt((string) $cost, $key);
-                    $data->set($attribute, $cost);
+                    $value = Crypto::encrypt((string) $cost, $key);
+                    $data->set($attribute, $value);
                     $attribute = 'secret.password';
                     d($password);
                     $hash = password_hash(
                         $password,
                         PASSWORD_BCRYPT,
                         [
-                            'cost' => 13
+                            'cost' => (int) $cost
                         ]
                     );
                     dd($hash);
