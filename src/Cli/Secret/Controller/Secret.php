@@ -187,13 +187,13 @@ class Secret extends View {
                     }
                     $cost = Crypto::encrypt((string) $cost, $key);
                     $data->set($attribute, $cost);
+                    dd($data);
                     $attribute = 'secret.password';
                     $hash = password_hash($password, PASSWORD_BCRYPT, [
                         'cost' => (int) $cost //move to encrypted old value
                     ]);
                     $password = Crypto::encrypt((string) $hash, $key);
                     $data->set($attribute, $password);
-                    dd($data);
                     $dir = Dir::name($url);
                     echo $dir . PHP_EOL;
                     Dir::create($dir, Dir::CHMOD);
