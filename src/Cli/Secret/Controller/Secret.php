@@ -245,6 +245,14 @@ class Secret extends View {
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
 
+                    if(
+                        $data->has('secret.username') &&
+                        $data->has('secret.password') &&
+                        !$data->has('secret.uuid')
+                    ){
+                        echo "Secret is locked, unlock first..." . PHP_EOL;
+                        return;
+                    }
                     if($data->has('secret.uuid')){
                         $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
                         $data->delete('secret.uuid');
