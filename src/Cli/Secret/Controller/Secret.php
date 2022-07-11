@@ -136,18 +136,52 @@ class Secret extends View {
                 $command = 'chown www-data:www-data ' . $dir . ' -R';
                 Core::execute($command);
             }
-            $value = Crypto::encrypt($value, $key);
+            $string = File::read($key_url);
+            $key = Key::loadFromAsciiSafeString($string);
             $data = $object->data_read($url);
             if(!$data) {
                 $data = new Data();
             }
-            $data->set($attribute, $value);
-            $dir = Dir::name($url);
-            Dir::create($dir, Dir::CHMOD);
-            $data->write($url);
-            $command = 'chown www-data:www-data ' . $url;
-            Core::execute($command);
-            echo $attribute . PHP_EOL;
+            if($data){
+                if($data->has('secret.uuid')) {
+                    $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
+                    if ($data->has($uuid)) {
+                        $session = Crypto::decrypt($data->get($uuid), $key);
+                        if ($session) {
+                            $session = Core::object($session, Core::OBJECT_ARRAY);
+                            if (
+                                array_key_exists('unlock', $session) &&
+                                array_key_exists('since', $session['unlock']) &&
+                                !empty($session['unlock']['since'])
+                            ) {
+                                $value = Crypto::encrypt((string) $value, $key);
+                                $data->set($attribute, $value);
+                                $dir = Dir::name($url);
+                                Dir::create($dir, Dir::CHMOD);
+                                $data->write($url);
+                                $command = 'chown www-data:www-data ' . $url;
+                                Core::execute($command);
+                                echo $attribute . PHP_EOL;
+                                return;
+                            }
+                        }
+                    }
+                }
+                if($data->has('secret.username')){
+                    echo "Secret locked..." . PHP_EOL;
+                } else {
+                    $value = Crypto::encrypt((string) $value, $key);
+                    $data->set($attribute, $value);
+                    $dir = Dir::name($url);
+                    Dir::create($dir, Dir::CHMOD);
+                    $data->write($url);
+                    $command = 'chown www-data:www-data ' . $url;
+                    Core::execute($command);
+                    echo $attribute . PHP_EOL;
+                }
+            }
+
+
         }
         elseif($action === Secret::ACTION_HAS){
             $attribute = $object->parameter($object, $action, 1);
@@ -155,10 +189,35 @@ class Secret extends View {
                 $attribute = Cli::read('input', 'key: ');
             }
             $data = $object->data_read($url);
-            if($data && $data->has($attribute)) {
-                echo 'true' . PHP_EOL;
-            } else {
-                echo 'false' . PHP_EOL;
+            if(
+                $data->has('secret.username') &&
+                $data->has('secret.password') &&
+                !$data->has('secret.uuid')
+            ){
+                echo "Secret is locked, unlock first..." . PHP_EOL;
+                return;
+            }
+            if($data->has('secret.uuid')) {
+                $string = File::read($key_url);
+                $key = Key::loadFromAsciiSafeString($string);
+                $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
+                if ($data->has($uuid)) {
+                    $session = Crypto::decrypt($data->get($uuid), $key);
+                    if ($session) {
+                        $session = Core::object($session, Core::OBJECT_ARRAY);
+                        if (
+                            array_key_exists('unlock', $session) &&
+                            array_key_exists('since', $session['unlock']) &&
+                            !empty($session['unlock']['since'])
+                        ) {
+                            if ($data && $data->has($attribute)) {
+                                echo 'true' . PHP_EOL;
+                            } else {
+                                echo 'false' . PHP_EOL;
+                            }
+                        }
+                    }
+                }
             }
         }
         elseif($action === Secret::ACTION_DELETE) {
@@ -168,11 +227,39 @@ class Secret extends View {
             }
             $data = $object->data_read($url);
             if ($data) {
-                $data->delete($attribute);
-                $data->write($url);
-                $command = 'chown www-data:www-data ' . $url;
-                Core::execute($command);
-                echo 'Secret delete: ' . $attribute . PHP_EOL;
+                if(
+                    $data->has('secret.username') &&
+                    $data->has('secret.password') &&
+                    !$data->has('secret.uuid')
+                ){
+                    echo "Secret is locked, unlock first..." . PHP_EOL;
+                    return;
+                }
+                if($data->has('secret.uuid')){
+                    $string = File::read($key_url);
+                    $key = Key::loadFromAsciiSafeString($string);
+                    $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
+                    if($data->has($uuid)){
+                        $session = Crypto::decrypt($data->get($uuid), $key);
+                        if($session){
+                            $session = Core::object($session, Core::OBJECT_ARRAY);
+                            if(
+                                array_key_exists('unlock', $session) &&
+                                array_key_exists('since', $session['unlock']) &&
+                                !empty($session['unlock']['since'])
+                            ){
+                                $data->delete($attribute);
+                                $data->write($url);
+                                $command = 'chown www-data:www-data ' . $url;
+                                Core::execute($command);
+                                echo 'Secret delete: ' . $attribute . PHP_EOL;
+                                return;
+                            }
+                        }
+                    }
+                }
+                echo 'Secret is locked...' . PHP_EOL;
+                return;
             }
         }
         elseif($action === Secret::ACTION_LOCK) {
@@ -244,7 +331,6 @@ class Secret extends View {
                 ) {
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
-
                     if(
                         $data->has('secret.username') &&
                         $data->has('secret.password') &&
