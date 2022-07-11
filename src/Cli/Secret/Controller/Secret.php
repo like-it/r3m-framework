@@ -168,7 +168,7 @@ class Secret extends View {
                     }
                 }
                 if($data->has('secret.username')){
-                    echo "Secret locked..." . PHP_EOL;
+                    echo "Secret locked, unlock first..." . PHP_EOL;
                 } else {
                     $value = Crypto::encrypt((string) $value, $key);
                     $data->set($attribute, $value);
@@ -272,6 +272,49 @@ class Secret extends View {
             }
             if ($data) {
                 if($data->has('secret.uuid')){
+                    $username = Cli::read('input', 'username: ');
+                    $password = Cli::read('input-hidden', 'password: ');
+                    if($username && $password){
+                        $attribute = 'secret.username';
+                        $get = $data->get($attribute);
+                        $string = File::read($key_url);
+                        $key = Key::loadFromAsciiSafeString($string);
+                        $username = Crypto::encrypt((string) $username, $key);
+                        $data->set($attribute, $username);
+                        if (empty($cost)) {
+                            $attribute = 'secret.cost';
+                            if($data->has($attribute)){
+                                $cost = Crypto::decrypt($data->get($attribute), $key);
+                            }
+                            if (empty($cost)) {
+                                $cost = 13;
+                            }
+                        }
+                        $value = Crypto::encrypt((string) $cost, $key);
+                        $data->set($attribute, $value);
+                        $attribute = 'secret.password';
+                        $hash = password_hash(
+                            $password,
+                            PASSWORD_BCRYPT,
+                            [
+                                'cost' => (int) $cost
+                            ]
+                        );
+                        $password = Crypto::encrypt((string) $hash, $key);
+                        $data->set($attribute, $password);
+                        if($data->has('secret.uuid')){
+                            $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
+                            $data->delete('secret.uuid');
+                            $data->delete($uuid);
+                        }
+                        $dir = Dir::name($url);
+                        Dir::create($dir, Dir::CHMOD);
+                        $write = $data->write($url);
+                        $command = 'chown www-data:www-data ' . $url;
+                        Core::execute($command);
+                        echo "Successfully locked with new username & password..." . PHP_EOL;
+                        return;
+                    }
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
                     $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
