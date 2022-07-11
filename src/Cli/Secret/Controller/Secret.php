@@ -91,7 +91,7 @@ class Secret extends View {
                     if($data->has('secret.uuid')){
                         $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
                         if($data->has($uuid)){
-                            $session = Crypto::decrypt($data->get($uuid), $key);
+                            $session = Crypto::decrypt((string) $data->get($uuid), $key);
                             if($session){
                                 $session = Core::object($session, Core::OBJECT_ARRAY);
                                 if(
@@ -106,10 +106,10 @@ class Secret extends View {
                         }
                     }
                     if($data->has('secret.username')){
-                        echo "Secret locked..." . PHP_EOL;
+                        echo "Secret is locked, unlock first..." . PHP_EOL;
                         return;
                     } else {
-                        echo Crypto::decrypt($get, $key) . PHP_EOL;
+                        echo "Secret is locked, unlock first..." . PHP_EOL;
                         return;
                     }
                 }
@@ -493,7 +493,7 @@ class Secret extends View {
                                 array_key_exists('since', $session['unlock']) &&
                                 !empty($session['unlock']['since'])
                             ) {
-                                echo 'Session unlocked since: ' . date('Y-m-d H:i:s', $session['unlock']['since']) . PHP_EOL;
+                                echo 'Session unlocked since: ' . date('Y-m-d H:i:s', $session['unlock']['since']) . '+00:00' . PHP_EOL;
                                 return;
                             }
                         }
