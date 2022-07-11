@@ -87,10 +87,17 @@ class Secret extends View {
 
                     $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
                     $session = Crypto::decrypt($data->get($uuid), $key);
-
-                    dd($session);
-
-                    echo Crypto::decrypt($get, $key);
+                    if($session){
+                        $session = Core::object($session, Core::OBJECT_ARRAY);
+                        if(
+                            array_key_exists('unlock', $session) &&
+                            array_key_exists('since', $session['unlock']) &&
+                            !empty($session['unlock']['since'])
+                        ){
+                            echo Crypto::decrypt($get, $key) . PHP_EOL;
+                            return;
+                        }
+                    }
                 }
             }
         }
@@ -209,6 +216,12 @@ class Secret extends View {
                 ) {
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
+
+                    if($data->has('secret.uuid')){
+                        $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
+                        $data->delete('secret.uuid');
+                        $data->delete($uuid);
+                    }
                     $username = Crypto::encrypt((string) $username, $key);
                     $data->set($attribute, $username);
                     if (empty($cost)) {
