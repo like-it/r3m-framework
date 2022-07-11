@@ -193,7 +193,7 @@ class Secret extends View {
                         $password,
                         PASSWORD_BCRYPT,
                         [
-                            'cost' => (int) $cost
+                            'cost' => 13
                         ]
                     );
                     dd($hash);
