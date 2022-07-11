@@ -26,6 +26,8 @@ use R3m\Io\Module\View;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Exception\FileWriteException;
+use R3m\Io\Exception\ObjectException;
 
 class Secret extends View {
     const DIR = __DIR__;
@@ -41,12 +43,14 @@ class Secret extends View {
     const ACTION_DELETE = 'delete';
     const ACTION_LOCK = 'lock';
     const ACTION_UNLOCK = 'unlock';
+    const ACTION_STATUS = 'status';
 
     /**
      * @throws WrongKeyOrModifiedCiphertextException
      * @throws EnvironmentIsBrokenException
      * @throws BadFormatException
-     * @throws \R3m\Io\Exception\FileWriteException
+     * @throws FileWriteException
+     * @throws ObjectException
      */
     public static function run(App $object){
         $action = $object->parameter($object, Secret::NAME, 1);
@@ -86,16 +90,18 @@ class Secret extends View {
                     $key = Key::loadFromAsciiSafeString($string);
                     if($data->has('secret.uuid')){
                         $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
-                        $session = Crypto::decrypt($data->get($uuid), $key);
-                        if($session){
-                            $session = Core::object($session, Core::OBJECT_ARRAY);
-                            if(
-                                array_key_exists('unlock', $session) &&
-                                array_key_exists('since', $session['unlock']) &&
-                                !empty($session['unlock']['since'])
-                            ){
-                                echo Crypto::decrypt($get, $key) . PHP_EOL;
-                                return;
+                        if($data->has($uuid)){
+                            $session = Crypto::decrypt($data->get($uuid), $key);
+                            if($session){
+                                $session = Core::object($session, Core::OBJECT_ARRAY);
+                                if(
+                                    array_key_exists('unlock', $session) &&
+                                    array_key_exists('since', $session['unlock']) &&
+                                    !empty($session['unlock']['since'])
+                                ){
+                                    echo Crypto::decrypt($get, $key) . PHP_EOL;
+                                    return;
+                                }
                             }
                         }
                     }
@@ -313,6 +319,36 @@ class Secret extends View {
                 }
                 sleep(2);
                 echo "Invalid username and / or password..." . PHP_EOL;
+            }
+        }
+        elseif($action === Secret::ACTION_STATUS) {
+            $string = File::read($key_url);
+            $key = Key::loadFromAsciiSafeString($string);
+            $data = $object->data_read($url);
+            if($data){
+                if($data->has('secret.uuid')){
+                    $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
+                    if($data->has($uuid)){
+                        $session = Crypto::decrypt($data->get($uuid), $key);
+                        if($session) {
+                            $session = Core::object($session, Core::OBJECT_ARRAY);
+                            if (
+                                array_key_exists('unlock', $session) &&
+                                array_key_exists('since', $session['unlock']) &&
+                                !empty($session['unlock']['since'])
+                            ) {
+                                echo 'Session unlocked since: ' . date('Y-m-d H:i:s', $session['unlock']['since']) . PHP_EOL;
+                                return;
+                            }
+                        }
+                    }
+                } else {
+                    if($data->get('secret.username')){
+                        echo 'Session locked...' . PHP_EOL;
+                    } else {
+                        echo 'Session unlocked...' . PHP_EOL;
+                    }
+                }
             }
         }
     }
