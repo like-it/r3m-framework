@@ -182,14 +182,14 @@ class Secret extends View {
                             $cost = Crypto::decrypt($data->get($attribute), $key);
                         }
                         if (empty($cost)) {
-                            $cost = 13;
+                            $cost = "13";
                         }
                     }
                     $cost = Crypto::encrypt($cost, $key);
                     $data->set($attribute, $cost);
                     $attribute = 'secret.password';
                     $hash = password_hash($password, PASSWORD_BCRYPT, [
-                        'cost' => $cost //move to encrypted old value
+                        'cost' => (int) $cost //move to encrypted old value
                     ]);
                     $password = Crypto::encrypt($hash, $key);
                     $data->set($attribute, $password);
@@ -215,14 +215,14 @@ class Secret extends View {
                             $cost = Crypto::decrypt($data->get($attribute), $key);
                         }
                         if (empty($cost)) {
-                            $cost = 13;
+                            $cost = "13";
                         }
                     }
                     $cost = Crypto::encrypt($cost, $key);
                     $data->set($attribute, $cost);
                     $attribute = 'secret.password';
                     $hash = password_hash($password, PASSWORD_BCRYPT, [
-                        'cost' => $cost //move to encrypted old value
+                        'cost' => (int) $cost //move to encrypted old value
                     ]);
                     $password = Crypto::encrypt($hash, $key);
                     $data->set($attribute, $password);
