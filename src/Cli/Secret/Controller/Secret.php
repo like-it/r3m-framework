@@ -191,7 +191,7 @@ class Secret extends View {
                     $hash = password_hash($password, PASSWORD_BCRYPT, [
                         'cost' => (int) $cost //move to encrypted old value
                     ]);
-                    d($hash);
+                    dd($hash);
                     $password = Crypto::encrypt((string) $hash, $key);
                     dd($password);
                     $data->set($attribute, $password);
