@@ -84,20 +84,23 @@ class Secret extends View {
                 ){
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
-
-                    $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
-                    $session = Crypto::decrypt($data->get($uuid), $key);
-                    if($session){
-                        $session = Core::object($session, Core::OBJECT_ARRAY);
-                        if(
-                            array_key_exists('unlock', $session) &&
-                            array_key_exists('since', $session['unlock']) &&
-                            !empty($session['unlock']['since'])
-                        ){
-                            echo Crypto::decrypt($get, $key) . PHP_EOL;
-                            return;
+                    if($data->has('secret.uuid')){
+                        $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
+                        $session = Crypto::decrypt($data->get($uuid), $key);
+                        if($session){
+                            $session = Core::object($session, Core::OBJECT_ARRAY);
+                            if(
+                                array_key_exists('unlock', $session) &&
+                                array_key_exists('since', $session['unlock']) &&
+                                !empty($session['unlock']['since'])
+                            ){
+                                echo Crypto::decrypt($get, $key) . PHP_EOL;
+                                return;
+                            }
                         }
                     }
+                    echo "Secret locked..." . PHP_EOL;
+                    return;
                 }
             }
         }
