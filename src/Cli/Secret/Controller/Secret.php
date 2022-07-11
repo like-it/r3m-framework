@@ -176,7 +176,6 @@ class Secret extends View {
                     $key = Key::loadFromAsciiSafeString($string);
                     $username = Crypto::encrypt((string) $username, $key);
                     $data->set($attribute, $username);
-                    dd($data);
                     if (empty($cost)) {
                         $attribute = 'secret.cost';
                         if($data->has($attribute)){
@@ -194,6 +193,7 @@ class Secret extends View {
                     ]);
                     $password = Crypto::encrypt((string) $hash, $key);
                     $data->set($attribute, $password);
+                    dd($data);
                     $dir = Dir::name($url);
                     echo $dir . PHP_EOL;
                     Dir::create($dir, Dir::CHMOD);
