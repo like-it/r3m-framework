@@ -179,17 +179,31 @@ class Secret extends View {
             $username = $object->parameter($object, $action, 1);
             $password = $object->parameter($object, $action, 2);
             $cost = $object->parameter($object, $action, 3);
-            if (empty($username)) {
-                $username = Cli::read('input', 'username: ');
-            }
-            if (empty($password)) {
-                $password = Cli::read('input', 'password: ');
-            }
             $data = $object->data_read($url);
             if(!$data) {
                 $data = new Data();
             }
             if ($data) {
+                if($data->has('secret.uuid')){
+                    $string = File::read($key_url);
+                    $key = Key::loadFromAsciiSafeString($string);
+                    $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
+                    $data->delete('secret.uuid');
+                    $data->delete($uuid);
+                    $dir = Dir::name($url);
+                    Dir::create($dir, Dir::CHMOD);
+                    $write = $data->write($url);
+                    $command = 'chown www-data:www-data ' . $url;
+                    Core::execute($command);
+                    echo "Successfully locked..." . PHP_EOL;
+                    return;
+                }
+                if (empty($username)) {
+                    $username = Cli::read('input', 'username: ');
+                }
+                if (empty($password)) {
+                    $password = Cli::read('input', 'password: ');
+                }
                 $attribute = 'secret.username';
                 $get = $data->get($attribute);
                 if(empty($get)){
