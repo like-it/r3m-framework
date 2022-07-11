@@ -99,8 +99,13 @@ class Secret extends View {
                             }
                         }
                     }
-                    echo "Secret locked..." . PHP_EOL;
-                    return;
+                    if($data->has('secret.username')){
+                        echo "Secret locked..." . PHP_EOL;
+                        return;
+                    } else {
+                        echo Crypto::decrypt($get, $key) . PHP_EOL;
+                        return;
+                    }
                 }
             }
         }
