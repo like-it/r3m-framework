@@ -168,10 +168,10 @@ class Secret extends View {
             if(!$data) {
                 $data = new Data();
             }
-            dd($data);
             if ($data) {
                 $attribute = 'secret.username';
                 $get = $data->get($attribute);
+                dd($get);
                 if(empty($get)){
                     $string = File::read($key_url);
                     $key = Key::loadFromAsciiSafeString($string);
