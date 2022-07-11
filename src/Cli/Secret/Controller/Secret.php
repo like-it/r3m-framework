@@ -202,7 +202,7 @@ class Secret extends View {
                     $username = Cli::read('input', 'username: ');
                 }
                 if (empty($password)) {
-                    $password = Cli::read('input', 'password: ');
+                    $password = Cli::read('input-hidden', 'password: ');
                 }
                 $attribute = 'secret.username';
                 $get = $data->get($attribute);
@@ -291,7 +291,7 @@ class Secret extends View {
                 $username = Cli::read('input', 'username: ');
             }
             if (empty($password)) {
-                $password = Cli::read('input', 'password: ');
+                $password = Cli::read('input-hidden', 'password: ');
             }
             $data = $object->data_read($url);
             $verify = false;
