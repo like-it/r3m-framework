@@ -329,7 +329,9 @@ class Secret extends View {
                     echo "Successfully locked..." . PHP_EOL;
                     return;
                 } else {
-
+                    d($username);
+                    d($password);
+                    d($cost);
                     dd($url);
                     $attribute = 'secret.username';
                     $get = $data->get($attribute);
