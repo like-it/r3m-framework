@@ -316,8 +316,18 @@ class Secret extends View {
                         echo "Successfully locked with new username & password..." . PHP_EOL;
                         return;
                     }
-                    $string = File::read($key_url);
-                    $key = Key::loadFromAsciiSafeString($string);
+                    if(File::exist($key_url)){
+                        $string = File::read($key_url);
+                        $key = Key::loadFromAsciiSafeString($string);
+                    } else {
+                        $key = Key::createNewRandomKey();
+                        $string = $key->saveToAsciiSafeString();
+                        $dir = Dir::name($key_url);
+                        Dir::create($dir, Dir::CHMOD);
+                        File::write($key_url, $string);
+                        $command = 'chown www-data:www-data ' . $dir . ' -R';
+                        Core::execute($command);
+                    }
                     $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
                     $data->delete('secret.uuid');
                     $data->delete($uuid);
@@ -336,8 +346,18 @@ class Secret extends View {
                         $attribute = 'secret.username';
                         $get = $data->get($attribute);
                         if(empty($get)) {
-                            $string = File::read($key_url);
-                            $key = Key::loadFromAsciiSafeString($string);
+                            if(File::exist($key_url)){
+                                $string = File::read($key_url);
+                                $key = Key::loadFromAsciiSafeString($string);
+                            } else {
+                                $key = Key::createNewRandomKey();
+                                $string = $key->saveToAsciiSafeString();
+                                $dir = Dir::name($key_url);
+                                Dir::create($dir, Dir::CHMOD);
+                                File::write($key_url, $string);
+                                $command = 'chown www-data:www-data ' . $dir . ' -R';
+                                Core::execute($command);
+                            }
                             $username = Crypto::encrypt((string)$username, $key);
                             $data->set($attribute, $username);
                             if (empty($cost)) {
