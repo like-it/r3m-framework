@@ -369,7 +369,6 @@ class Secret extends View {
                                     $cost = 13;
                                 }
                             }
-                            dd($data);
                             $value = Crypto::encrypt((string)$cost, $key);
                             $data->set($attribute, $value);
                             $attribute = 'secret.password';
