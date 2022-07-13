@@ -329,10 +329,6 @@ class Secret extends View {
                     echo "Successfully locked..." . PHP_EOL;
                     return;
                 } else {
-                    d($username);
-                    d($password);
-                    d($cost);
-                    dd($url);
                     $attribute = 'secret.username';
                     $get = $data->get($attribute);
                     if(empty($get)) {
@@ -352,6 +348,7 @@ class Secret extends View {
                         $value = Crypto::encrypt((string)$cost, $key);
                         $data->set($attribute, $value);
                         $attribute = 'secret.password';
+                        dd($data);
                         $hash = password_hash(
                             $password,
                             PASSWORD_BCRYPT,
