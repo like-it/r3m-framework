@@ -38,6 +38,10 @@ class Host {
         $key = 'host.subdomain';
         $subdomain = Host::subdomain();
         $object->data($key, $subdomain);
+        $key = 'host.port';
+        $port = Host::port();
+        $object->data($key, $port);
+
         $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $key = 'host.dir.root';
         if(empty($subdomain)){
@@ -157,6 +161,24 @@ class Host {
             array_pop($explode);
             array_pop($explode);
             return implode('.', $explode);
+        }
+        return false;
+    }
+
+    public static function port($host=''){
+        if(empty($host)){
+            if(isset($_SERVER['HTTP_HOST'])){
+                $host = $_SERVER['HTTP_HOST'];
+            }
+        }
+        if(empty($host)){
+            return false;
+        }
+        $explode = explode(':', $host);
+        if(count($explode) >= 2){
+            $string = array_pop($explode);
+            $test = explode('?', $string);
+            return $test[0];
         }
         return false;
     }
