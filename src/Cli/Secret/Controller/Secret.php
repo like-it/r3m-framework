@@ -329,41 +329,48 @@ class Secret extends View {
                     echo "Successfully locked..." . PHP_EOL;
                     return;
                 } else {
-                    $attribute = 'secret.username';
-                    $get = $data->get($attribute);
-                    if(empty($get)) {
-                        $string = File::read($key_url);
-                        $key = Key::loadFromAsciiSafeString($string);
-                        $username = Crypto::encrypt((string)$username, $key);
-                        $data->set($attribute, $username);
-                        if (empty($cost)) {
-                            $attribute = 'secret.cost';
-                            if ($data->has($attribute)) {
-                                $cost = Crypto::decrypt($data->get($attribute), $key);
-                            }
+                    if(
+                        !empty($username) &&
+                        !empty($password)
+                    ){
+                        $attribute = 'secret.username';
+                        $get = $data->get($attribute);
+                        if(empty($get)) {
+                            $string = File::read($key_url);
+                            $key = Key::loadFromAsciiSafeString($string);
+                            $username = Crypto::encrypt((string)$username, $key);
+                            $data->set($attribute, $username);
                             if (empty($cost)) {
-                                $cost = 13;
+                                $attribute = 'secret.cost';
+                                if ($data->has($attribute)) {
+                                    $cost = Crypto::decrypt($data->get($attribute), $key);
+                                }
+                                if (empty($cost)) {
+                                    $cost = 13;
+                                }
                             }
+                            dd($data);
+                            $value = Crypto::encrypt((string)$cost, $key);
+                            $data->set($attribute, $value);
+                            $attribute = 'secret.password';
+                            dd($data);
+                            $hash = password_hash(
+                                $password,
+                                PASSWORD_BCRYPT,
+                                [
+                                    'cost' => (int)$cost
+                                ]
+                            );
+                            $password = Crypto::encrypt((string)$hash, $key);
+                            $data->set($attribute, $password);
+                            $dir = Dir::name($url);
+                            Dir::create($dir, Dir::CHMOD);
+                            $write = $data->write($url);
+                            $command = 'chown www-data:www-data ' . $url;
+                            Core::execute($command);
+                            echo "Successfully locked..." . PHP_EOL;
+                            return;
                         }
-                        $value = Crypto::encrypt((string)$cost, $key);
-                        $data->set($attribute, $value);
-                        $attribute = 'secret.password';
-                        dd($data);
-                        $hash = password_hash(
-                            $password,
-                            PASSWORD_BCRYPT,
-                            [
-                                'cost' => (int)$cost
-                            ]
-                        );
-                        $password = Crypto::encrypt((string)$hash, $key);
-                        $data->set($attribute, $password);
-                        $dir = Dir::name($url);
-                        Dir::create($dir, Dir::CHMOD);
-                        $write = $data->write($url);
-                        $command = 'chown www-data:www-data ' . $url;
-                        Core::execute($command);
-                        echo "Successfully locked..." . PHP_EOL;
                     }
                 }
                 if (empty($username)) {
