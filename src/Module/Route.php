@@ -10,7 +10,6 @@
  */
 namespace R3m\Io\Module;
 
-use R3m\Io\Module\Handler;
 use stdClass;
 use R3m\Io\App;
 use R3m\Io\Config;
