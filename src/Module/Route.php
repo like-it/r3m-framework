@@ -215,6 +215,8 @@ class Route extends Data{
             }
             $select->host = array_unique($select->host);
             $request = Route::selectWildcard($object, $select);
+            $route =  $object->data(App::ROUTE);
+            return $route->current($request);
         }
     }
 
