@@ -192,6 +192,7 @@ class Route extends Data{
     }
 
     public static function wildcard(App $object){
+        dd(defined('IS_CLI'));
         if(defined('IS_CLI')){
 
         } else {
