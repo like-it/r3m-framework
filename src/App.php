@@ -143,6 +143,14 @@ class App extends Data {
                 ){
                     $object->logger->info('Redirect: ' . $route->redirect);
                     Core::redirect($route->redirect);
+                }
+                elseif(
+                    property_exists($route, 'url')
+                ){
+                    $parse = new Parse($object, $object->data());
+                    $route->url = $parse->compile($route->url);
+                    dd($route->url);
+                    return File::read($route->url);
                 } else {
                     App::contentType($object);
                     $exception = App::controller($object, $route);
