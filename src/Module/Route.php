@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Module\Handler;
 use stdClass;
 use R3m\Io\App;
 use R3m\Io\Config;
@@ -191,6 +192,33 @@ class Route extends Data{
         return $select;
     }
 
+    public static function wildcard(App $object){
+        if(defined('IS_CLI')){
+
+        } else {
+            $input = Route::input($object);
+            if(substr($input->data('request'), -1) != '/'){
+                $input->data('request', $input->data('request') . '/');
+            }
+            $select = new stdClass();
+            $select->method = Handler::method();
+            $select->host = [];
+            $subdomain = Host::subdomain();
+            if($subdomain){
+                $select->host[] = $subdomain . '.' . Host::domain() . '.' . Host::extension();
+            } else {
+                $domain = Host::domain();
+                if($domain){
+                    $select->host[] = Host::domain() . '.' . Host::extension();
+                } else {
+                    $select->host[] = 'localhost';
+                }
+            }
+            $select->host = array_unique($select->host);
+            $request = Route::selectWildcard($object, $select);
+        }
+    }
+
     public static function request(App $object){
         if(defined('IS_CLI')){
             $input = Route::input($object);
@@ -282,6 +310,52 @@ class Route extends Data{
         if($current !== false){
             $current = Route::prepare($object, $current, $select);
             $current->parameter = $select->parameter;
+            return $current;
+        }
+        return false;
+    }
+
+    private static function selectWildcard($object, $select){
+        $route =  $object->data(App::ROUTE);
+        $match = false;
+        $data = $route->data();
+        if(empty($data)){
+            return $select;
+        }
+        if(!is_object($data)){
+            return $select;
+        }
+        $current = false;
+        foreach($data as $record){
+            if(property_exists($record, 'resource')){
+                continue;
+            }
+            if(!property_exists($record, 'deep')){
+                continue;
+            }
+            $match = Route::is_match_by_wildcard($object, $record, $select);
+            if($match === true){
+                $current = $record;
+                break;
+            }
+        }
+        if($match === false){
+            foreach($data as $record){
+                if(property_exists($record, 'resource')){
+                    continue;
+                }
+                if(!property_exists($record, 'deep')){
+                    continue;
+                }
+                $match = Route::is_match_by_wildcard_has_slash_in_attribute($object, $record, $select);
+                if($match === true){
+                    $current = $record;
+                    break;
+                }
+            }
+        }
+        if($current !== false){
+            $current = Route::prepare($object, $current, $select);
             return $current;
         }
         return false;
@@ -650,6 +724,32 @@ class Route extends Data{
             return $is_match;
         }
         $is_match = Route::is_match_by_condition($object, $route, $select);
+        if($is_match === false){
+            return $is_match;
+        }
+        return $is_match;
+    }
+
+    private static function is_match_by_wildcard($object, $route, $select){
+        $is_match = Route::is_match_by_method($object, $route, $select);
+        if($is_match === false){
+            return $is_match;
+        }
+        $route = Route::add_localhost($object, $route);
+        $is_match = Route::is_match_by_host($object, $route, $select);
+        if($is_match === false){
+            return $is_match;
+        }
+        return $is_match;
+    }
+
+    private static function is_match_by_wildcard_has_slash_in_attribute($object, $route, $select){
+        $is_match = Route::is_match_by_method($object, $route, $select);
+        if($is_match === false){
+            return $is_match;
+        }
+        $route = Route::add_localhost($object, $route);
+        $is_match = Route::is_match_by_host($object, $route, $select);
         if($is_match === false){
             return $is_match;
         }

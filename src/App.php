@@ -112,6 +112,8 @@ class App extends Data {
             try {
                 $route = Route::request($object);
                 if($route === false){
+                    $route = Route::wildcard($object);
+                    dd($route);
                     $object->logger()->error('Couldn\'t determine route (' . $object->request('request') .')...');
                     $response = new Response(
                         App::exception_to_json(new Exception(
