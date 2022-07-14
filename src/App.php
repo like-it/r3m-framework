@@ -112,125 +112,127 @@ class App extends Data {
             try {
                 $route = Route::request($object);
                 if($route === false){
-                    $route = Route::wildcard($object);
-                    dd($route);
-                    $object->logger()->error('Couldn\'t determine route (' . $object->request('request') .')...');
-                    $response = new Response(
-                        App::exception_to_json(new Exception(
-                            'Couldn\'t determine route (' . $object->request('request') .')...'
-                        )),
-                        Response::TYPE_JSON,
-                        Response::STATUS_ERROR
-                    );
-                    return Response::output($object, $response);
-                } else {
-                    if(
-                        property_exists($route, 'redirect') &&
-                        property_exists($route, 'method') &&
-                        in_array(
-                            Handler::method(),
-                            $route->method
-                        )
-                    ) {
-                        $object->logger->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . $route->method);
-                        Core::redirect($route->redirect);
-                    }
-                    elseif(
-                        property_exists($route, 'redirect') &&
-                        !property_exists($route, 'method')
-                    ){
-                        $object->logger->info('Redirect: ' . $route->redirect);
-                        Core::redirect($route->redirect);
+                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                        $object->logger()->error('Couldn\'t determine route (' . $object->request('request') .')...');
+                        $response = new Response(
+                            App::exception_to_json(new Exception(
+                                'Couldn\'t determine route (' . $object->request('request') .')...'
+                            )),
+                            Response::TYPE_JSON,
+                            Response::STATUS_ERROR
+                        );
+                        return Response::output($object, $response);
                     } else {
-                        App::contentType($object);
-                        $exception = App::controller($object, $route);
-                        if(
-                            $exception &&
-                            is_object($exception) &&
-                            get_class($exception) === 'Exception'
-                        ){
-                            $object->logger()->error($exception->getMessage());
-                            $response = new Response(
-                                App::exception_to_json($exception),
-                                Response::TYPE_JSON,
-                                Response::STATUS_ERROR
-                            );
-                            return Response::output($object, $response);
-                        }
-                        $methods = get_class_methods($route->controller);
-                        if(empty($methods)){
-                            $object->logger()->error('Couldn\'t determine controller (' . $route->controller .') with request (' . $object->request('request') .')');
-                            $response = new Response(
-                                App::exception_to_json(new Exception(
-                            'Couldn\'t determine controller (' . $route->controller .')'
-                                )),
-                                Response::TYPE_JSON,
-                                Response::STATUS_ERROR
-                            );
-                            return Response::output($object, $response);
-                        }
-                        $functions = [];
-                        if(in_array('controller', $methods)){
-                            $functions[] = 'controller';
-                            //$object->logger()->info('Function: ' . 'controller' . ' called in controller: ' . $route->controller);
-                            $route->controller::controller($object);
-                        }
-                        if(in_array('configure', $methods)){
-                            $functions[] = 'configure';
+                        $route = Route::wildcard($object);
+                    }
+                }
+                if(
+                    property_exists($route, 'redirect') &&
+                    property_exists($route, 'method') &&
+                    in_array(
+                        Handler::method(),
+                        $route->method
+                    )
+                ) {
+                    $object->logger->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . $route->method);
+                    Core::redirect($route->redirect);
+                }
+                elseif(
+                    property_exists($route, 'redirect') &&
+                    !property_exists($route, 'method')
+                ){
+                    $object->logger->info('Redirect: ' . $route->redirect);
+                    Core::redirect($route->redirect);
+                } else {
+                    App::contentType($object);
+                    $exception = App::controller($object, $route);
+                    if(
+                        $exception &&
+                        is_object($exception) &&
+                        get_class($exception) === 'Exception'
+                    ){
+                        $object->logger()->error($exception->getMessage());
+                        $response = new Response(
+                            App::exception_to_json($exception),
+                            Response::TYPE_JSON,
+                            Response::STATUS_ERROR
+                        );
+                        return Response::output($object, $response);
+                    }
+                    $methods = get_class_methods($route->controller);
+                    if(empty($methods)){
+                        $object->logger()->error('Couldn\'t determine controller (' . $route->controller .') with request (' . $object->request('request') .')');
+                        $response = new Response(
+                            App::exception_to_json(new Exception(
+                        'Couldn\'t determine controller (' . $route->controller .')'
+                            )),
+                            Response::TYPE_JSON,
+                            Response::STATUS_ERROR
+                        );
+                        return Response::output($object, $response);
+                    }
+                    $functions = [];
+                    if(in_array('controller', $methods)){
+                        $functions[] = 'controller';
+                        //$object->logger()->info('Function: ' . 'controller' . ' called in controller: ' . $route->controller);
+                        $route->controller::controller($object);
+                    }
+                    if(in_array('configure', $methods)){
+                        $functions[] = 'configure';
 //                            $object->logger()->info('Function: ' . 'configure' . ' called in controller: ' . $route->controller);
-                            $route->controller::configure($object);
-                        }
-                        if(in_array('before_run', $methods)){
-                            $functions[] = 'before_run';
+                        $route->controller::configure($object);
+                    }
+                    if(in_array('before_run', $methods)){
+                        $functions[] = 'before_run';
 //                            $object->logger()->info('Function: ' . 'before_run' . ' called in controller: ' . $route->controller);
-                            $route->controller::before_run($object);
-                        }
-                        if(in_array($route->function, $methods)){
-                            $functions[] = $route->function;
+                        $route->controller::before_run($object);
+                    }
+                    if(in_array($route->function, $methods)){
+                        $functions[] = $route->function;
 //                            $object->logger()->info('Function: ' . $route->function . ' called in controller: ' . $route->controller);
-                            $result = $route->controller::{$route->function}($object);
-                        } else {
-                            $object->logger()->error(
-                                'Controller (' .
+                        $result = $route->controller::{$route->function}($object);
+                    } else {
+                        $object->logger()->error(
+                            'Controller (' .
+                            $route->controller .
+                            ') function (' .
+                            $route->function .
+                            ') does not exist.'
+                        );
+                        $response = new Response(
+                            App::exception_to_json(new Exception(
+                        'Controller (' .
                                 $route->controller .
                                 ') function (' .
                                 $route->function .
                                 ') does not exist.'
-                            );
-                            $response = new Response(
-                                App::exception_to_json(new Exception(
-                            'Controller (' .
-                                    $route->controller .
-                                    ') function (' .
-                                    $route->function .
-                                    ') does not exist.'
-                                )),
-                                Response::TYPE_JSON,
-                                Response::STATUS_ERROR
-                            );
-                            return Response::output($object, $response);
-                        }
-                        if(in_array('after_run', $methods)){
-                            $functions[] = 'after_run';
-//                            $object->logger()->info('Function: ' . 'after_run' . ' called in controller: ' . $route->controller);
-                            $route->controller::after_run($object);
-                        }
-                        if(in_array('before_result', $methods)){
-                            $functions[] = 'before_result';
-//                            $object->logger()->info('Function: ' . 'before_result' . ' called in controller: ' . $route->controller);
-                            $route->controller::before_result($object);
-                        }
-                        $functions[] = 'result';
-//                        $object->logger()->info('Function: ' . 'result' . ' called in controller: ' . $route->controller);
-                        $result = App::result($object, $result);
-                        if(in_array('after_result', $methods)){
-                            $functions[] = 'after_result';
-                            $route->controller::after_result($object);
-                        }
-                        $object->logger()->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
-                        return $result;
+                            )),
+                            Response::TYPE_JSON,
+                            Response::STATUS_ERROR
+                        );
+                        return Response::output($object, $response);
                     }
+                    if(in_array('after_run', $methods)){
+                        $functions[] = 'after_run';
+//                            $object->logger()->info('Function: ' . 'after_run' . ' called in controller: ' . $route->controller);
+                        $route->controller::after_run($object);
+                    }
+                    if(in_array('before_result', $methods)){
+                        $functions[] = 'before_result';
+//                            $object->logger()->info('Function: ' . 'before_result' . ' called in controller: ' . $route->controller);
+                        $route->controller::before_result($object);
+                    }
+                    $functions[] = 'result';
+//                        $object->logger()->info('Function: ' . 'result' . ' called in controller: ' . $route->controller);
+                    $result = App::result($object, $result);
+                    if(in_array('after_result', $methods)){
+                        $functions[] = 'after_result';
+                        $route->controller::after_result($object);
+                    }
+                    $object->logger()->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
+                    return $result;
                 }
+
             } catch (Exception $exception) {
                 try {
                     if($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
