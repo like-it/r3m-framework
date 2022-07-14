@@ -149,7 +149,7 @@ class App extends Data {
                 ){
                     $parse = new Parse($object, $object->data());
                     $route->url = $parse->compile($route->url);
-                    if(File::extension($route->url) === Config('extension.json')){
+                    if(File::extension($route->url) === $object->config('extension.json')){
                         $response = new Response(
                             File::read($route->url),
                             Response::TYPE_JSON,
