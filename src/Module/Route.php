@@ -192,7 +192,6 @@ class Route extends Data{
     }
 
     public static function wildcard(App $object){
-        dd(defined('IS_CLI'));
         if(defined('IS_CLI')){
 
         } else {
@@ -211,6 +210,7 @@ class Route extends Data{
                 }
             }
             $select->host = array_unique($select->host);
+            d($select);
             $request = Route::selectWildcard($object, $select);
             dd($request);
             $route =  $object->data(App::ROUTE);
@@ -354,7 +354,9 @@ class Route extends Data{
             }
         }
         if($current !== false){
-            $current = Route::prepare($object, $current, $select);
+            if(property_exists($current, 'controller')){
+                $current = Route::controller($current);
+            }
             return $current;
         }
         return false;
