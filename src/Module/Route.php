@@ -315,43 +315,8 @@ class Route extends Data{
     private static function selectWildcard($object, $select){
         $route =  $object->data(App::ROUTE);
         $match = false;
-        $data = $route->data();
-        if(empty($data)){
-            return $select;
-        }
-        if(!is_object($data)){
-            return $select;
-        }
-        $current = false;
-        foreach($data as $record){
-            if(property_exists($record, 'resource')){
-                continue;
-            }
-            if(!property_exists($record, 'deep')){
-                continue;
-            }
-            $match = Route::is_match_by_wildcard($object, $record, $select);
-            if($match === true){
-                $current = $record;
-                break;
-            }
-        }
-        if($match === false){
-            foreach($data as $record){
-                if(property_exists($record, 'resource')){
-                    continue;
-                }
-                if(!property_exists($record, 'deep')){
-                    continue;
-                }
-                $match = Route::is_match_by_wildcard_has_slash_in_attribute($object, $record, $select);
-                if($match === true){
-                    $current = $record;
-                    break;
-                }
-            }
-        }
-        if($current !== false){
+        $current = $route->data('*');
+        if(!empty($current)){
             if(property_exists($current, 'controller')){
                 $current = Route::controller($current);
             }
