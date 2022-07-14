@@ -195,10 +195,6 @@ class Route extends Data{
         if(defined('IS_CLI')){
 
         } else {
-            $input = Route::input($object);
-            if(substr($input->data('request'), -1) != '/'){
-                $input->data('request', $input->data('request') . '/');
-            }
             $select = new stdClass();
             $select->method = Handler::method();
             $select->host = [];
@@ -215,6 +211,7 @@ class Route extends Data{
             }
             $select->host = array_unique($select->host);
             $request = Route::selectWildcard($object, $select);
+            dd($request);
             $route =  $object->data(App::ROUTE);
             return $route->current($request);
         }
