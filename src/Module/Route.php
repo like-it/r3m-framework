@@ -669,6 +669,7 @@ class Route extends Data{
             }
             $allowed_host[] = $host;
         }
+        d($route);
         foreach($route->host as $host){
             if(in_array($host, $disallowed_host)){
                 return false;
@@ -677,9 +678,6 @@ class Route extends Data{
                 return true;
             }
         }
-        d($select);
-        d($disallowed_host);
-        d($allowed_host);
         if(!empty($disallowed_host) && count($allowed_host) <= 1){
             return true;
         } else {
