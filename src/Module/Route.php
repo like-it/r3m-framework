@@ -19,6 +19,7 @@ use R3m\Io\Module\Core;
 
 use Exception;
 use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\UrlEmptyException;
 
 class Route extends Data{
     const NAMESPACE = __NAMESPACE__;
@@ -216,6 +217,11 @@ class Route extends Data{
         }
     }
 
+    /**
+     * @throws UrlEmptyException
+     * @throws ObjectException
+     * @throws Exception
+     */
     public static function request(App $object){
         if(defined('IS_CLI')){
             $input = Route::input($object);
@@ -231,8 +237,6 @@ class Route extends Data{
             $select->method = Handler::method();
             $select->host = [];
             $request = Route::select_cli($object, $select);
-            //d($select);
-            //dd($request);
             if($request === false){
                 $select = Route::select_info($object, $select);
                 $request = Route::select_cli($object, $select);
@@ -247,9 +251,22 @@ class Route extends Data{
         } else {
             if(
                 Host::scheme() === Host::SCHEME_HTTP &&
-                $object->config('server.http.upgrade_insecure') === true
+                $object->config('server.http.upgrade_insecure') === true &&
+                $object->config('framework.environment') !== Config::MODE_DEVELOPMENT
             ){
-                dd(Host::SCHEME_HTTPS . '://' . Host::url(false));
+                $url = false;
+                $subdomain = Host::subdomain();
+                if($subdomain){
+                    $url = Host::SCHEME_HTTPS . '://' . $subdomain . '.' . Host::domain() . '.' . Host::extension();
+                } else {
+                    $domain = Host::domain();
+                    if ($domain) {
+                        $url = Host::SCHEME_HTTPS . '://' . Host::domain() . '.' . Host::extension();
+                    }
+                }
+                if($url) {
+                    Core::redirect($url);
+                }
             }
             $input = Route::input($object);
             if(substr($input->data('request'), -1) != '/'){
