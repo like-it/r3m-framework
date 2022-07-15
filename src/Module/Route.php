@@ -245,10 +245,11 @@ class Route extends Data{
             $object = Route::add_request($object, $request);
             return $route->current($request);
         } else {
-            if(Host::scheme() === Host::SCHEME_HTTP){
-                $input = Route::input($object);
-                d($input);
-                dd($object);
+            if(
+                Host::scheme() === Host::SCHEME_HTTP &&
+                $object->config('server.http.upgrade_insecure') === true
+            ){
+                dd(Host::SCHEME_HTTPS . '://' . Host::url(false));
             }
             $input = Route::input($object);
             if(substr($input->data('request'), -1) != '/'){
