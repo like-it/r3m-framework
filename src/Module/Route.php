@@ -245,6 +245,11 @@ class Route extends Data{
             $object = Route::add_request($object, $request);
             return $route->current($request);
         } else {
+            if(Host::scheme() === Host::SCHEME_HTTP){
+                $input = Route::input($object);
+                d($input);
+                dd($object);
+            }
             $input = Route::input($object);
             if(substr($input->data('request'), -1) != '/'){
                 $input->data('request', $input->data('request') . '/');
