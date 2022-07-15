@@ -677,7 +677,11 @@ class Route extends Data{
                 return true;
             }
         }
-        return false;
+        if(!empty($disallowed_host) && empty($allowed_host)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private static function is_match_by_deep($object, $route, $select){
