@@ -677,6 +677,7 @@ class Route extends Data{
                 return true;
             }
         }
+        d($select);
         d($disallowed_host);
         d($allowed_host);
         if(!empty($disallowed_host) && count($allowed_host) <= 1){
