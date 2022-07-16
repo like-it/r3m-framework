@@ -674,6 +674,7 @@ class Route extends Data{
         d($allowed_host);
         d($disallowed_host);
         foreach($route->host as $host){
+            d($host);
             if(in_array($host, $disallowed_host)){
                 return false;
             }
