@@ -670,12 +670,13 @@ class Route extends Data{
             }
             $allowed_host[] = $host;
             $explode = explode('.', $host);
-            array_shift($explode);
+            $explode[0] = '';
             $allowed_host_wildcard[] = implode('.', $explode);
         }
         d($route);
         d($select);
         d($allowed_host);
+        d($allowed_host_wildcard);
         d($disallowed_host);
         foreach($route->host as $host){
             if(
