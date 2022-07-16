@@ -660,6 +660,7 @@ class Route extends Data{
             return false;
         }
         $allowed_host = [];
+        $allowed_host_wildcard = [];
         $disallowed_host = [];
         foreach($select->host as $host){
             $host = strtolower($host);
@@ -668,25 +669,35 @@ class Route extends Data{
                 continue;
             }
             $allowed_host[] = $host;
+            $explode = explode('.', $host);
+            array_shift($explode);
+            $allowed_host_wildcard[] = implode('.', $explode);
         }
         d($route);
         d($select);
         d($allowed_host);
         d($disallowed_host);
         foreach($route->host as $host){
+            if(
+                substr($host, 0, 1) === '!' ||
+                substr($host, 0, 1) === '*'
+            ){
+                $host = substr($host, 1);
+            }
             d($host);
+            d($allowed_host_wildcard);
             if(in_array($host, $disallowed_host)){
                 return false;
             }
             if(in_array($host, $allowed_host)){
                 return true;
             }
+            if(in_array($host, $allowed_host_wildcard)){
+                return true;
+            }
+
         }
-        if(!empty($disallowed_host) && count($allowed_host) <= 1){
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
     private static function is_match_by_deep($object, $route, $select){
