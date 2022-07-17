@@ -1,14 +1,9 @@
-php_value iconv.input_encoding "UTF-8"
-php_value iconv.output_encoding "UTF-8"
-php_value iconv.internal_encoding "UTF-8"
-php_value default_charset "UTF-8"
-php_value memory_limit 1024M
-php_value post_max_size 1768M
-php_value upload_max_filesize 1512M
-php_flag display_startup_errors on
-php_flag display_errors on
-php_flag html_errors on
-php_flag log_errors on
+#
+# php-fpm can use .user.ini instead of .htaccess
+#
+<Files ".user.ini">
+    Require all denied
+</Files>
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
