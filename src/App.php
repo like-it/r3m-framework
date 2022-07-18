@@ -148,7 +148,7 @@ class App extends Data {
                     property_exists($route, 'url')
                 ){
                     $parse = new Parse($object, $object->data());
-                    $route->url = $parse->compile($route->url);
+                    $route->url = $parse->compile($route->url, $object->data());
                     if(File::extension($route->url) === $object->config('extension.json')){
                         $response = new Response(
                             File::read($route->url),
