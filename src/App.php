@@ -156,7 +156,6 @@ class App extends Data {
                         );
                         return Response::output($object, $response);
                     } else {
-                        dd($route->url);
                         return File::read($route->url);
                     }
                 } else {
