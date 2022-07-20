@@ -23,6 +23,7 @@ class FileRequest {
         'html',
         'php',
         'xml',
+        'asp',
         'aspx'
     ];
     const ERROR_EXTENSION_TEXT = [
