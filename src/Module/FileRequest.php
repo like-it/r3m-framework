@@ -169,6 +169,8 @@ class FileRequest {
                     $data->set('file', $file);
                     $data->set('extension', $extension);
                     $data->set('location', $location);
+                    $contentType = $config->data('contentType.' . $extension);
+                    $data->set('contentType', $contentType);
                     $parse = new Parse($object, $data);
                     $compile = $parse->compile(File::read($config->data('server.http.error.404')), $data->get());
                     echo $compile;
@@ -200,6 +202,7 @@ class FileRequest {
                     FileRequest::ERROR_EXTENSION_JSON
                 )
             ){
+                Handler::header('Content-Type: application/json', null, true);
                 echo '{}';
             }
         }
