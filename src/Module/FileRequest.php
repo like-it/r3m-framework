@@ -18,6 +18,26 @@ use R3m\Io\Exception\LocateException;
 class FileRequest {
     const REQUEST = 'Request';
 
+    const ERROR_EXTENSION_TPL = [
+        'htm',
+        'html',
+        'php',
+        'xml',
+        'aspx'
+    ];
+    const ERROR_EXTENSION_TEXT = [
+        'env',
+        'txt',
+        'log',
+        'cgi'
+    ];
+    const ERROR_EXTENSION_JS = [
+        'js'
+    ];
+    const ERROR_EXTENSION_JSON = [
+        'json'
+    ];
+
     /**
      * @throws LocateException
      * @throws Exception
@@ -140,41 +160,34 @@ class FileRequest {
             if(
                 in_array(
                     $extension,
-                    [
-                        'htm',
-                        'html',
-                        'php',
-                        'xml',
-                        'aspx'
-                    ]
+            FileRequest::ERROR_EXTENSION_TPL
                 )
             ){
                 if($config->data('server.http.error.404')){
                     //let's parse this tpl
-                    echo 'parser initialisation required...' . PHP_EOL;
+                    $data = new Data();
+                    $data->set('file', $file);
+                    $data->set('extension', $extension);
+                    $data->set('location', $location);
+                    $parse = new Parse($object, $data);
+                    $compile = $parse->compile(File::read($config->data('server.http.error.404')), $data->get());
+                    echo $compile;
                 }
             }
             elseif(
                 in_array(
                     $extension,
-                    [
-                        'env',
-                        'txt',
-                        'log',
-                        'cgi',
-                    ]
+                    FileRequest::ERROR_EXTENSION_TEXT
                 )
             ){
                 if($config->data('server.http.error.404')){
-                    echo "HTTP/1.0 404 Not Found";
+                    echo "HTTP/1.0 404 Not Found: " . $file . PHP_EOL;
                 }
             }
             elseif(
                 in_array(
                     $extension,
-                    [
-                        'js',
-                    ]
+                    FileRequest::ERROR_EXTENSION_JS
                 )
             ){
                 if($config->data('server.http.error.404')){
@@ -186,9 +199,7 @@ class FileRequest {
             elseif(
                 in_array(
                     $extension,
-                    [
-                        'json',
-                    ]
+                    FileRequest::ERROR_EXTENSION_JSON
                 )
             ){
                 echo '{}';
