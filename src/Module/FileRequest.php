@@ -109,6 +109,12 @@ class FileRequest {
                 $contentType = $config->data('contentType.' . $extension);
                 if(empty($contentType)){
                     Handler::header('HTTP/1.0 415 Unsupported Media Type', 415);
+                    if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
+                        $json = [];
+                        $json['message'] = 'HTTP/1.0 415 Unsupported Media Type';
+                        $json['available'] = $config->data('contentType');
+                        echo Core::object($json, Core::OBJECT_JSON);
+                    }
                     exit();
                 }
                 if(!headers_sent()){
@@ -130,6 +136,56 @@ class FileRequest {
         Handler::header('HTTP/1.0 404 Not Found', 404);
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
             throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
+        } else {
+            if(
+                in_array(
+                    $extension,
+                    [
+                        'htm',
+                        'html',
+                        'php',
+                        'xml',
+                        'aspx'
+                    ]
+                )
+            ){
+                if($config->data('server.http.error.404')){
+                    //let's parse this tpl
+                    echo 'parser initialisation required...' . PHP_EOL;
+                }
+            }
+            elseif(
+                in_array(
+                    $extension,
+                    [
+                        'env',
+                        'txt',
+                        'log',
+                        'cgi',
+                    ]
+                )
+            ){
+                if($config->data('server.http.error.404')){
+                    echo "HTTP/1.0 404 Not Found";
+                }
+            }
+            elseif(
+                in_array(
+                    $extension,
+                    [
+                        'js',
+                    ]
+                )
+            ){
+                if($config->data('server.http.error.404')){
+                    $json = [];
+                    $json['script'] = [];
+                    $json['script'][] = '<script type="text/javascript">
+    console.error("HTTP/1.0 404 Not Found",  "' . $file . '");
+</script>';
+                    echo Core::object($json, Core::OBJECT_JSON);
+                }
+            }
         }
         exit();
     }
