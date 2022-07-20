@@ -178,12 +178,9 @@ class FileRequest {
                 )
             ){
                 if($config->data('server.http.error.404')){
-                    $json = [];
-                    $json['script'] = [];
-                    $json['script'][] = '<script type="text/javascript">
-    console.error("HTTP/1.0 404 Not Found",  "' . $file . '");
-</script>';
-                    echo Core::object($json, Core::OBJECT_JSON);
+                    echo '<script type="text/javascript">
+                    console.error("HTTP/1.0 404 Not Found",  "' . $file . '");
+                    </script>';
                 }
             }
         }
