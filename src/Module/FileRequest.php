@@ -207,6 +207,7 @@ class FileRequest {
                 echo '{}';
             }
         }
+        $object->logger()->error('HTTP/1.0 404 Not Found', $location);
         exit();
     }
 
