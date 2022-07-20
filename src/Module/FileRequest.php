@@ -191,9 +191,7 @@ class FileRequest {
                     ]
                 )
             ){
-                if($config->data('server.http.error.404')){
-                    echo '{}';
-                }
+                echo '{}';
             }
         }
         exit();
