@@ -183,6 +183,18 @@ class FileRequest {
                     </script>';
                 }
             }
+            elseif(
+                in_array(
+                    $extension,
+                    [
+                        'json',
+                    ]
+                )
+            ){
+                if($config->data('server.http.error.404')){
+                    echo '{}';
+                }
+            }
         }
         exit();
     }
