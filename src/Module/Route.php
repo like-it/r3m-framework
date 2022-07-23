@@ -252,11 +252,9 @@ class Route extends Data{
             if(
                 Host::scheme() === Host::SCHEME_HTTP &&
                 $object->config('server.http.upgrade_insecure') === true &&
-                $object->config('framework.environment') !== Config::MODE_DEVELOPMENT
+                $object->config('framework.environment') !== Config::MODE_DEVELOPMENT &&
+                Host::isIp4Address() === false
             ){
-                d(Host::subdomain());
-                d(Host::domain());
-                dd(Host::extension());
                 $url = false;
                 $subdomain = Host::subdomain();
                 if($subdomain){

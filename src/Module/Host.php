@@ -235,4 +235,23 @@ class Host {
         }
         return $scheme;
     }
+
+    public static function isIp4Address(){
+        $subdomain = Host::subdomain();
+        $domain = Host::domain();
+        $extension = Host::extension();
+        $explode = explode('.', $subdomain);
+        foreach($explode as $possibility){
+            if(!intval($possibility) > 0){
+                return false;
+            }
+        }
+        if(!intval($domain) > 0){
+            return false;
+        }
+        if(!intval($extension) > 0){
+            return false;
+        }
+        return true;
+    }
 }
