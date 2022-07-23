@@ -254,6 +254,9 @@ class Route extends Data{
                 $object->config('server.http.upgrade_insecure') === true &&
                 $object->config('framework.environment') !== Config::MODE_DEVELOPMENT
             ){
+                d(Host::subdomain());
+                d(Host::domain());
+                d(Host::extension());
                 $url = false;
                 $subdomain = Host::subdomain();
                 if($subdomain){
