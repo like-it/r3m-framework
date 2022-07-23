@@ -256,7 +256,7 @@ class Route extends Data{
             ){
                 d(Host::subdomain());
                 d(Host::domain());
-                d(Host::extension());
+                dd(Host::extension());
                 $url = false;
                 $subdomain = Host::subdomain();
                 if($subdomain){
