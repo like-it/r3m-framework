@@ -27,6 +27,8 @@ use R3m\Io\Module\Parse;
 use Exception;
 use R3m\Io\Exception\PluginNotFoundException;
 use R3m\Io\Exception\PluginNotAllowedException;
+use R3m\Io\Exception\FileWriteException;
+use R3m\Io\Exception\FileAppendException;
 
 class Build {
     const NAME = 'Build';
@@ -393,14 +395,33 @@ class Build {
         return $document;
     }
 
+    /**
+     * @throws FileWriteException
+     * @throws FileAppendException
+     */
     public function write($url, $document=[]){
         $write = implode("\n", $document);
         $this->storage()->data('time.end', microtime(true));
         $this->storage()->data('time.duration', $this->storage()->data('time.end') - $this->storage()->data('time.start'));
         $write = str_replace($this->storage()->data('placeholder.generation.time'), round($this->storage()->data('time.duration') * 1000, 2). ' msec', $write);
         $dir = Dir::name($url);
-        $create = Dir::create($dir);
-        return File::write($url, $write);
+        Dir::create($dir);
+        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
+        $command = 'php -l ' . escapeshellcmd($url);
+        Core::execute($command, $output, $error);
+        if($output){
+            $url = '/tmp/r3m/io/debug/output';
+            $dir = Dir::name($url);
+            Dir::create($dir);
+            File::append($url, $output);
+        }
+        if($error){
+            $url = '/tmp/r3m/io/debug/error';
+            $dir = Dir::name($url);
+            Dir::create($dir);
+            File::append($url, $error);
+        }
+        return $write;
     }
 
     public static function getPluginMultiline(App $object){

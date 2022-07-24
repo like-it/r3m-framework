@@ -324,7 +324,6 @@ class File {
         } else {
             return $written;
         }
-
     }
 
     /**
