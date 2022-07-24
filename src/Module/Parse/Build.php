@@ -420,7 +420,7 @@ class Build {
         }
         if($error){
             $url_write_error = '/tmp/r3m/io/parse/error/' . File::basename($url);
-            $this->object()->logger()->error($error);
+            $this->object()->logger()->error($error, [ $url_write_error ]);
             $this->object()->logger()->error('Parse error document: ', [ $document ] );
             //need re attempt and log document
             File::move($url, $url_write_error);
