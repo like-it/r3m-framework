@@ -425,6 +425,8 @@ class Build {
             $this->object()->logger()->error($error, [ $url_write_error ]);
             $this->object()->logger()->error('Parse error document: ', [ $document ] );
             //need re attempt and log document
+            $dir = Dir::name($url_write_error);
+            Dir::create($dir);
             File::move($url, $url_write_error);
             $url_error = '/tmp/r3m/io/debug/error';
             $dir = Dir::name($url_error);
