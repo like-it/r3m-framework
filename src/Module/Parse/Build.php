@@ -408,7 +408,8 @@ class Build {
         $write = str_replace($this->storage()->data('placeholder.generation.time'), round($this->storage()->data('time.duration') * 1000, 2). ' msec', $write);
         $dir = Dir::name($url);
         Dir::create($dir);
-        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
+        $put = file_put_contents($url, $write, LOCK_EX); //test if bug doesn't get there...
+//        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
         $command = 'php -l ' . escapeshellcmd($url);
         Core::execute($command, $output, $error);
         if($output){
