@@ -414,12 +414,14 @@ class Build {
             $dir = Dir::name($url);
             Dir::create($dir);
             File::append($url, $output);
+            File::chown($dir, 'www-data', 'www-data', true);
         }
         if($error){
             $url = '/tmp/r3m/io/debug/error';
             $dir = Dir::name($url);
             Dir::create($dir);
             File::append($url, $error);
+            File::chown($dir, 'www-data', 'www-data', true);
         }
         return $write;
     }
