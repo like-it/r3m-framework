@@ -307,7 +307,7 @@ class File {
 
     /**
      * @throws FileWriteException
-     * @bug may write wrong files in Parse:Build:write . solution use file::put
+     * @bug may write wrong files in Parse:Build:write in a multithreading situation . solution use file::put
      */
     public static function write($url='', $data=''){
         $url = (string) $url;
