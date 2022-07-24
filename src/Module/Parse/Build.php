@@ -417,7 +417,9 @@ class Build {
             $url_output = $this->object()->config('dictionary.cache') . 'parse/build/output';
             $dir = Dir::name($url_output);
             Dir::create($dir);
-            File::append($url_output, $output);
+            $microtime = microtime(true);
+            $explode = explode('.', $microtime);
+            File::append($url_output, '[' . date('Y-m-dTH:i:s') . '.' . $explode[1] . '+00:00]' .  $output);
             if(posix_getuid() === 0) {
                 File::chown(Dir::name($this->object()->config('dictionary.cache')), 'www-data', 'www-data', true);
             }
@@ -429,11 +431,13 @@ class Build {
             //need re attempt and log document
             $dir = Dir::name($url_write_error);
             Dir::create($dir);
+            $microtime = microtime(true);
+            $explode = explode('.', $microtime);
             File::move($url, $url_write_error);
             $url_error = $this->object()->config('dictionary.cache') . 'parse/build/error';
             $dir = Dir::name($url_error);
             Dir::create($dir);
-            File::append($url_error, $error);
+            File::append($url_error, '[' . date('Y-m-dTH:i:s') . '.' . $explode[1] . '+00:00]' .  $error);
             if(posix_getuid() === 0) {
                 File::chown(Dir::name($this->object()->config('dictionary.cache')), 'www-data', 'www-data', true);
             }
