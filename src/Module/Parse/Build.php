@@ -29,6 +29,7 @@ use R3m\Io\Exception\PluginNotFoundException;
 use R3m\Io\Exception\PluginNotAllowedException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\FileAppendException;
+use R3m\Io\Exception\FileMoveException;
 
 class Build {
     const NAME = 'Build';
@@ -398,6 +399,7 @@ class Build {
     /**
      * @throws FileWriteException
      * @throws FileAppendException
+     * @throws FileMoveException
      */
     public function write($url, $document=[]){
         $write = implode("\n", $document);
@@ -417,7 +419,10 @@ class Build {
             File::chown('/tmp/r3m/', 'www-data', 'www-data', true);
         }
         if($error){
-            File::delete($url);
+            $url_write_error = '/tmp/r3m/io/parse/error/' . File::basename($url);
+            $this->object()->logger()->error('Parse error document: ', $document);
+            //need re attempt and log document
+            File::move($url, $url_write_error);
             $url_error = '/tmp/r3m/io/debug/error';
             $dir = Dir::name($url_error);
             Dir::create($dir);
