@@ -414,11 +414,16 @@ class Build {
         $command = 'php -l ' . escapeshellcmd($url);
         Core::execute($command, $output, $error);
         if($output){
+            $config = (array) $this->object()->config();
+            $this->object()->logger()->error('config: ', [ $config ]);
             $url_output = '/tmp/r3m/io/debug/output';
             $dir = Dir::name($url_output);
             Dir::create($dir);
             File::append($url_output, $output);
-            File::chown('/tmp/r3m/', 'www-data', 'www-data', true);
+            if(posix_getuid() === 0) {
+                File::chown('/tmp/r3m/', 'www-data', 'www-data', true);
+            }
+
         }
         if($error){
             $url_write_error = '/tmp/r3m/io/parse/error/' . File::basename($url);
@@ -432,7 +437,9 @@ class Build {
             $dir = Dir::name($url_error);
             Dir::create($dir);
             File::append($url_error, $error);
-            File::chown('/tmp/r3m/', 'www-data', 'www-data', true);
+            if(posix_getuid() === 0) {
+                File::chown('/tmp/r3m/', 'www-data', 'www-data', true);
+            }
         }
         return $write;
     }
