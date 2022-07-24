@@ -410,17 +410,18 @@ class Build {
         $command = 'php -l ' . escapeshellcmd($url);
         Core::execute($command, $output, $error);
         if($output){
-            $url = '/tmp/r3m/io/debug/output';
-            $dir = Dir::name($url);
+            $url_output = '/tmp/r3m/io/debug/output';
+            $dir = Dir::name($url_output);
             Dir::create($dir);
-            File::append($url, $output);
+            File::append($url_output, $output);
             File::chown('/tmp/r3m/', 'www-data', 'www-data', true);
         }
         if($error){
-            $url = '/tmp/r3m/io/debug/error';
-            $dir = Dir::name($url);
+            File::delete($url);
+            $url_error = '/tmp/r3m/io/debug/error';
+            $dir = Dir::name($url_error);
             Dir::create($dir);
-            File::append($url, $error);
+            File::append($url_error, $error);
             File::chown('/tmp/r3m/', 'www-data', 'www-data', true);
         }
         return $write;
