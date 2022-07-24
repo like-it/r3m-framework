@@ -419,7 +419,7 @@ class Build {
             Dir::create($dir);
             $microtime = microtime(true);
             $explode = explode('.', $microtime);
-            File::append($url_output, '[' . date('Y-m-dTH:i:s') . '.' . $explode[1] . '+00:00]' .  $output);
+            File::append($url_output, '[' . date('Y-m-d\TH:i:s') . '.' . $explode[1] . '+00:00] ' .  $output);
             if(posix_getuid() === 0) {
                 File::chown(Dir::name($this->object()->config('dictionary.cache')), 'www-data', 'www-data', true);
             }
@@ -437,7 +437,7 @@ class Build {
             $url_error = $this->object()->config('dictionary.cache') . 'parse/build/error';
             $dir = Dir::name($url_error);
             Dir::create($dir);
-            File::append($url_error, '[' . date('Y-m-dTH:i:s') . '.' . $explode[1] . '+00:00]' .  $error);
+            File::append($url_error, '[' . date('Y-m-d\TH:i:s') . '.' . $explode[1] . '+00:00] ' .  $error);
             if(posix_getuid() === 0) {
                 File::chown(Dir::name($this->object()->config('dictionary.cache')), 'www-data', 'www-data', true);
             }
