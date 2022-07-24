@@ -414,7 +414,7 @@ class Build {
         $command = 'php -l ' . escapeshellcmd($url);
         Core::execute($command, $output, $error);
         if($output){
-            $config = (array) $this->object()->config();
+            $config = (array) $this->object()->config('dictionary.cache');
             $this->object()->logger()->error('config: ', [ $config ]);
             $url_output = '/tmp/r3m/io/debug/output';
             $dir = Dir::name($url_output);
