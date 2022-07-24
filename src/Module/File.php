@@ -300,8 +300,14 @@ class File {
         return chmod($url, $mode);
     }
 
+
+    public static function put($url, $data, $flags=LOCK_EX){
+        return file_put_contents($url, $data, $flags);
+    }
+
     /**
      * @throws FileWriteException
+     * @bug may write wrong files in Parse:Build:write . solution use file::put
      */
     public static function write($url='', $data=''){
         $url = (string) $url;
