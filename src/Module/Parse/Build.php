@@ -414,31 +414,28 @@ class Build {
         $command = 'php -l ' . escapeshellcmd($url);
         Core::execute($command, $output, $error);
         if($output){
-            $config = (array) $this->object()->config('dictionary.cache');
-            $this->object()->logger()->error('config: ', [ $config ]);
-            $url_output = '/tmp/r3m/io/debug/output';
+            $url_output = $this->object()->config('dictionary.cache') . 'parse/build/output';
             $dir = Dir::name($url_output);
             Dir::create($dir);
             File::append($url_output, $output);
             if(posix_getuid() === 0) {
-                File::chown('/tmp/r3m/', 'www-data', 'www-data', true);
+                File::chown(Dir::name($this->object()->config('dictionary.cache')), 'www-data', 'www-data', true);
             }
-
         }
         if($error){
-            $url_write_error = '/tmp/r3m/io/parse/error/' . File::basename($url);
+            $url_write_error = $this->object()->config('dictionary.cache') . 'parse/error/' . File::basename($url);
             $this->object()->logger()->error($error, [ $url_write_error ]);
             $this->object()->logger()->error('Parse error document: ', [ $document ] );
             //need re attempt and log document
             $dir = Dir::name($url_write_error);
             Dir::create($dir);
             File::move($url, $url_write_error);
-            $url_error = '/tmp/r3m/io/debug/error';
+            $url_error = $this->object()->config('dictionary.cache') . 'parse/build/error';
             $dir = Dir::name($url_error);
             Dir::create($dir);
             File::append($url_error, $error);
             if(posix_getuid() === 0) {
-                File::chown('/tmp/r3m/', 'www-data', 'www-data', true);
+                File::chown(Dir::name($this->object()->config('dictionary.cache')), 'www-data', 'www-data', true);
             }
         }
         return $write;
