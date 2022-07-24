@@ -419,6 +419,15 @@ class Build {
             Dir::create($dir);
             $microtime = microtime(true);
             $explode = explode('.', $microtime);
+            if(strlen($explode[1]) === 1){
+                $explode[1] .= '000';
+            }
+            if(strlen($explode[2]) === 2){
+                $explode[1] .= '00';
+            }
+            if(strlen($explode[2]) === 3){
+                $explode[1] .= '0';
+            }
             File::append($url_output, '[' . date('Y-m-d H:i:s') . '.' . $explode[1] . '+00:00] ' .  $output);
             if(posix_getuid() === 0) {
                 File::chown(Dir::name($this->object()->config('dictionary.cache')), 'www-data', 'www-data', true);
@@ -433,6 +442,15 @@ class Build {
             Dir::create($dir);
             $microtime = microtime(true);
             $explode = explode('.', $microtime);
+            if(strlen($explode[1]) === 1){
+                $explode[1] .= '000';
+            }
+            if(strlen($explode[2]) === 2){
+                $explode[1] .= '00';
+            }
+            if(strlen($explode[2]) === 3){
+                $explode[1] .= '0';
+            }
             File::move($url, $url_write_error);
             $url_error = $this->object()->config('dictionary.cache') . 'parse/build/error';
             $dir = Dir::name($url_error);
