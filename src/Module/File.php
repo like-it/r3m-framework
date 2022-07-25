@@ -325,7 +325,7 @@ class File {
         }
         flock($resource, LOCK_UN);
         fclose($resource);
-        if($written != strlen($data)){
+        if($written !== strlen($data)){
             throw new FileWriteException('File.write failed, written != strlen data....');
         } else {
             return $written;
