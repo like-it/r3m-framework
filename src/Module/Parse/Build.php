@@ -408,57 +408,17 @@ class Build {
         $write = str_replace($this->storage()->data('placeholder.generation.time'), round($this->storage()->data('time.duration') * 1000, 2). ' msec', $write);
         $dir = Dir::name($url);
         Dir::create($dir);
-        File::put($url, $write); //->
+//        File::put($url, $write); //->
 //        $put = file_put_contents($url, $write, LOCK_EX); //test if bug doesn't get there... : successful
-//        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
+        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
         $command = 'php -l ' . escapeshellcmd($url);
         Core::execute($command, $output, $error);
-        if($output){
-            $url_output = $this->object()->config('dictionary.cache') . 'parse/build/output';
-            $dir = Dir::name($url_output);
-            Dir::create($dir);
-            $microtime = microtime(true);
-            $explode = explode('.', $microtime);
-            if(strlen($explode[1]) === 1){
-                $explode[1] .= '000';
-            }
-            if(strlen($explode[2]) === 2){
-                $explode[1] .= '00';
-            }
-            if(strlen($explode[2]) === 3){
-                $explode[1] .= '0';
-            }
-            File::append($url_output, '[' . date('Y-m-d H:i:s') . '.' . $explode[1] . '+00:00] ' .  $output);
-            if(posix_getuid() === 0) {
-                File::chown(Dir::name($this->object()->config('dictionary.cache')), 'www-data', 'www-data', true);
-            }
-        }
         if($error){
             $url_write_error = $this->object()->config('dictionary.cache') . 'parse/error/' . File::basename($url);
             $this->object()->logger()->error($error, [ $url_write_error ]);
-            $this->object()->logger()->error('Parse error document: ', [ $document ] );
-            //need re attempt and log document
             $dir = Dir::name($url_write_error);
             Dir::create($dir);
-            $microtime = microtime(true);
-            $explode = explode('.', $microtime);
-            if(strlen($explode[1]) === 1){
-                $explode[1] .= '000';
-            }
-            if(strlen($explode[2]) === 2){
-                $explode[1] .= '00';
-            }
-            if(strlen($explode[2]) === 3){
-                $explode[1] .= '0';
-            }
             File::move($url, $url_write_error);
-            $url_error = $this->object()->config('dictionary.cache') . 'parse/build/error';
-            $dir = Dir::name($url_error);
-            Dir::create($dir);
-            File::append($url_error, '[' . date('Y-m-d H:i:s') . '.' . $explode[1] . '+00:00] ' .  $error);
-            if(posix_getuid() === 0) {
-                File::chown(Dir::name($this->object()->config('dictionary.cache')), 'www-data', 'www-data', true);
-            }
         }
         return $write;
     }
