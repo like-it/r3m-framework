@@ -244,7 +244,7 @@ class App extends Data {
                         $functions[] = 'after_result';
                         $route->controller::after_result($object);
                     }
-                    $object->logger()->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller, [ $route->function ]);
+                    $object->logger()->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
                     return $result;
                 }
 
