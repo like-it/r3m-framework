@@ -11,13 +11,18 @@
 namespace R3m\Io\Module;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\ORMSetup;
 use stdClass;
 use R3m\Io\App;
 use R3m\Io\Config;
 use Exception;
 use PDO;
 use PDOException;
+
+use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\FileWriteException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException as ORMException2;
 
 class Database {
     const NAMESPACE = __NAMESPACE__;
@@ -75,29 +80,30 @@ class Database {
         return $pdo;
     }
 
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     * @throws ORMException
+     * @throws ORMException2
+     */
     public static function entityManager(App $object, $options=[]){
+
+        $environment = $object->config('framework.environment');
         $url = $object->config('project.dir.data') . 'Config.json';
         $config  = $object->parse_read($url, sha1($url));
         if($config){
-            $environment = $config->get('framework.environment');
             if(empty($environment)){
                 $environment = Config::MODE_DEVELOPMENT;
             }
-            $connection = (array) $config->get('doctrine.' . $environment);
-            $is_development = false;
-            /*
-            if($environment == Config::MODE_DEVELOPMENT){
-                $is_development = true;
+            if(array_key_exists('environment', $options)){
+                $environment = $options['environment'];
             }
-            */
+            $connection = (array) $config->get('doctrine.' . $environment);
             $paths = $config->get('doctrine.paths');
             $proxyDir = $config->get('doctrine.proxy.dir');
             $cache = null;
             $useSimpleAnnotationReader = false;
-            $config = Setup::createAnnotationMetadataConfiguration($paths, $is_development, $proxyDir, $cache, $useSimpleAnnotationReader);
-            /*
-            $config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml"), $is_development);
-            */
+            $config = ORMSetup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, $cache);
             return EntityManager::create($connection, $config);
         }
     }

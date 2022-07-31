@@ -189,22 +189,18 @@ class App extends Data {
                     $functions = [];
                     if(in_array('controller', $methods)){
                         $functions[] = 'controller';
-                        //$object->logger()->info('Function: ' . 'controller' . ' called in controller: ' . $route->controller);
                         $route->controller::controller($object);
                     }
                     if(in_array('configure', $methods)){
                         $functions[] = 'configure';
-//                            $object->logger()->info('Function: ' . 'configure' . ' called in controller: ' . $route->controller);
                         $route->controller::configure($object);
                     }
                     if(in_array('before_run', $methods)){
                         $functions[] = 'before_run';
-//                            $object->logger()->info('Function: ' . 'before_run' . ' called in controller: ' . $route->controller);
                         $route->controller::before_run($object);
                     }
                     if(in_array($route->function, $methods)){
                         $functions[] = $route->function;
-//                            $object->logger()->info('Function: ' . $route->function . ' called in controller: ' . $route->controller);
                         $result = $route->controller::{$route->function}($object);
                     } else {
                         $object->logger()->error(
@@ -229,16 +225,13 @@ class App extends Data {
                     }
                     if(in_array('after_run', $methods)){
                         $functions[] = 'after_run';
-//                            $object->logger()->info('Function: ' . 'after_run' . ' called in controller: ' . $route->controller);
                         $route->controller::after_run($object);
                     }
                     if(in_array('before_result', $methods)){
                         $functions[] = 'before_result';
-//                            $object->logger()->info('Function: ' . 'before_result' . ' called in controller: ' . $route->controller);
                         $route->controller::before_result($object);
                     }
                     $functions[] = 'result';
-//                        $object->logger()->info('Function: ' . 'result' . ' called in controller: ' . $route->controller);
                     $result = App::result($object, $result);
                     if(in_array('after_result', $methods)){
                         $functions[] = 'after_result';
