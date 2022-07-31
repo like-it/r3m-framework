@@ -101,12 +101,7 @@ class Database {
             $connection = (array) $config->get('doctrine.' . $environment);
             $paths = $config->get('doctrine.paths');
             $proxyDir = $config->get('doctrine.proxy.dir');
-
-            d($paths);
-            d($proxyDir);
-
             $cache = null;
-            $useSimpleAnnotationReader = false;
             $config = ORMSetup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, $cache);
             return EntityManager::create($connection, $config);
         }
