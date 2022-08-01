@@ -11,6 +11,7 @@
 use R3m\Io\Module\Parse\Token;
 
 function validate_in_array_email(R3m\Io\App $object, $field='', $argument=''){
+    d($object->request());
     d($field);
     if($object->request('has', 'node.' . $field)){
         $array = $object->request('node.' . $field);
