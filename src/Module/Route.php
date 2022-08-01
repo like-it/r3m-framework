@@ -149,6 +149,7 @@ class Route extends Data{
         } else {
             $url = $object->data('host.url') . $path;
         }
+        $object->logger()->debug('route:find.url:', [$url]);
         return $url;
     }
 
@@ -293,8 +294,9 @@ class Route extends Data{
             }
             $select->host = array_unique($select->host);
             $request = Route::select($object, $select);
+            $object->logger()->debug('route.request:', [(array) $request]);
             $route =  $object->data(App::ROUTE);
-            $object = Route::add_request($object, $request);
+            Route::add_request($object, $request);
             return $route->current($request);
         }
     }
