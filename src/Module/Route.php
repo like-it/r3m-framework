@@ -278,7 +278,9 @@ class Route extends Data{
             $select->input = $input;
             $select->deep = substr_count($input->data('request'), '/');
             $select->attribute = explode('/', $input->data('request'));
-            array_pop($select->attribute);
+            if(end($select->attribute) === ''){
+                array_pop($select->attribute);
+            }
             $select->method = Handler::method();
             $select->host = [];
             $subdomain = Host::subdomain();
