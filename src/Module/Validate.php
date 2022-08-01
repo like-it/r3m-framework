@@ -44,8 +44,13 @@ class Validate {
         $extension = $object->config('extension.php');  
         $test = [];
         foreach($validate as $field => $list){
+            $is_optional = false;
             if($field == 'test'){
                 continue;
+            }
+            if(substr($field, 0, 1) === '?'){
+                $field = substr($field, 1);
+                $is_optional = true;
             }
             $test[$field] = [];
             if(is_object($list)){
@@ -65,7 +70,11 @@ class Validate {
                             if(empty($test[$field][$function])){
                                 $test[$field][$function] = [];
                             }
-                            $test[$field][$function][] = $function($object, $field, $value);
+                            if($is_optional === true && !empty($value)){
+                                $test[$field][$function][] = $function($object, $field, $value);
+                            } else {
+                                $test[$field][$function][] = $function($object, $field, $value);
+                            }
                         } else {                            
                             throw new Exception('validator (' . $url . ') not found');
                         }                                                                        
