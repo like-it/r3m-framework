@@ -15,13 +15,21 @@ use R3m\Io\Module\File;
 function validate_in_list_json(R3m\Io\App $object, $field='', $argument=''){
     if($object->request('has', 'node.' . 'uuid')){
         $original_uuid = $object->request('node.' . 'uuid');
-    } else {
+    }
+    elseif($object->request('has', 'node_' . 'uuid')){
+        $original_uuid = $object->request('node_' . 'uuid');
+    }
+    else {
         $original_uuid = $object->request('uuid');
     }
     $field = str_replace('[]', '', $field);
     if($object->request('has', 'node.' . $field)){
         $request = $object->request('node.' . $field);
-    } else {
+    }
+    elseif($object->request('has', 'node_' . $field)) {
+        $request = $object->request('node_' . $field);
+    }
+    else {
         $request = $object->request($field);
     }
     if(is_array($request)){

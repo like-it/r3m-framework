@@ -15,11 +15,18 @@ use R3m\Io\Module\File;
 function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
     if($object->request('has', 'node.' . 'uuid')){
         $original_uuid = $object->request('node.' . 'uuid');
-    } else {
+    }
+    elseif($object->request('has', 'node_' . 'uuid')) {
+        $original_uuid = $object->request('node_' . 'uuid');
+    }
+    else {
         $original_uuid = $object->request('uuid');
     }
     if($object->request('has', 'node.' . $field)){
         $string = strtolower($object->request('node.' . $field));
+    }
+    elseif($object->request('has', 'node_' . $field)) {
+        $string = $object->request('node_' . $field);
     } else {
         $string = strtolower($object->request($field));
     }

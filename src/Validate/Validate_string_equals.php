@@ -13,7 +13,11 @@ use R3m\Io\Module\Parse\Token;
 function validate_string_equals(R3m\Io\App $object, $field='', $argument=''){
     if($object->request('has', 'node.' . $field)){
         $string = $object->request('node.' . $field);
-    } else {
+    }
+    elseif($object->request('has', 'node_' . $field)) {
+        $string = $object->request('node_' . $field);
+    }
+    else {
         $string = $object->request($field);
     }
     $compare = $object->request('node.' . $argument);

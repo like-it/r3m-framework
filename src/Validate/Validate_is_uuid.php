@@ -13,7 +13,11 @@ use R3m\Io\Module\Parse\Token;
 function validate_is_uuid(R3m\Io\App $object, $field='', $argument=''){
     if($object->request('has', 'node.' . $field)){
         $string = $object->request('node.' . $field);
-    } else {
+    }
+    elseif($object->request('has', 'node_' . $field)) {
+        $string = $object->request('node_' . $field);
+    }
+    else {
         $string = $object->request($field);
     }
     //format: %s%s-%s-%s-%s-%s%s%s

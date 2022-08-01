@@ -9,16 +9,25 @@
  *     -            all
  */
 
-//use Host\Backend\Universeorange\Com\User\Entity\User;
-use R3m\Io\Module\Core;
-use R3m\Io\Module\Data;
-use R3m\Io\Module\File;
 use R3m\Io\Module\Database;
 
+use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\FileWriteException;
+
+/**
+ * @throws ObjectException
+ * @throws FileWriteException
+ * @throws \Doctrine\ORM\Exception\ORMException
+ * @throws \Doctrine\ORM\ORMException
+ */
 function validate_is_unique_mysql(R3m\Io\App $object, $field='', $argument=''){
     if($object->request('has', 'node.' . $field)){
         $string = strtolower($object->request('node.' . $field));
-    } else {
+    }
+    elseif($object->request('has', 'node_' . $field)) {
+        $string = $object->request('node_' . $field);
+    }
+    else {
         $string = strtolower($object->request($field));
     }
     $table = false;
