@@ -71,8 +71,11 @@ class Validate {
                             if(empty($test[$field][$function])){
                                 $test[$field][$function] = [];
                             }
-                            if($is_optional === true && !empty($value)){
-                                $test[$field][$function][] = $function($object, $field, $value);
+                            if($is_optional === true){
+                                $result = $function($object, $field, $value);
+                                if($result){
+                                    $test[$field][$function][] = $result;
+                                }
                             } else {
                                 $test[$field][$function][] = $function($object, $field, $value);
                             }
