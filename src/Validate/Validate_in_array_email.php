@@ -16,6 +16,7 @@ function validate_in_array_email(R3m\Io\App $object, $field='', $argument=''){
     } else {
         $array = $object->request($field);
     }
+    dd($array);
     foreach($array as $nr => $value){
         if(!filter_var($value, FILTER_VALIDATE_EMAIL)) {
             // invalid address
