@@ -605,7 +605,7 @@ class Core {
      * @throws BadFormatException
      * @throws EnvironmentIsBrokenException
      */
-    private static function key($url): Key
+    public static function key($url): Key
     {
         if(File::exist($url)){
             $string = File::read($url);
