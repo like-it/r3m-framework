@@ -60,6 +60,7 @@ class Validate {
                 }
             } 
             elseif(is_array($list)){
+                d($list);
                 foreach($list as $nr => $record){
                     foreach($record as $key => $value){
                         $key = 'validate' . '.' . $key;
