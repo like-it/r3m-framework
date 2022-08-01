@@ -2,7 +2,7 @@
 	"name" : "r3m/framework",
 	"description" : "R3M framework see https://universeorange.com for detailed usage",
 	"type" : "library",
-	"keywords" : ["framework", "r3m", "library"],
+	"keywords" : ["framework", "r3m", "library", "language", "template", "engine"],
 	"homepage": "https://universeorange.com",
 	"require" : {
 		"php": ">=7.4",

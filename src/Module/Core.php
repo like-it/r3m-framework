@@ -10,10 +10,16 @@
  */
 namespace R3m\Io\Module;
 
-use R3m\Io\Exception\UrlEmptyException;
-use stdClass;
-use R3m\Io\Exception\ObjectException;
+use Defuse\Crypto\Key;
 use R3m\Io\App;
+use stdClass;
+
+use Defuse\Crypto\Exception\BadFormatException;
+use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
+
+use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\FileWriteException;
 
 class Core {
 
@@ -592,6 +598,29 @@ class Core {
         } else {
             return $object;
         }
+    }
+
+    /**
+     * @throws FileWriteException
+     * @throws BadFormatException
+     * @throws EnvironmentIsBrokenException
+     */
+    private static function key($url): Key
+    {
+        if(File::exist($url)){
+            $string = File::read($url);
+            $key = Key::loadFromAsciiSafeString($string);
+        } else {
+            $key = Key::createNewRandomKey();
+            $string = $key->saveToAsciiSafeString();
+            $dir = Dir::name($url);
+            Dir::create($dir, Dir::CHMOD);
+            File::write($url, $string);
+            if(posix_geteuid() === 0){
+                File::chown($dir, 'www-data', 'www-data', true);
+            }
+        }
+        return $key;
     }
 
     public static function uuid(){
