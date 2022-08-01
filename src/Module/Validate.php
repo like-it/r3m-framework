@@ -50,7 +50,7 @@ class Validate {
             }
             if(substr($field, 0, 1) === '?'){
                 $field = substr($field, 1);
-                $is_optional = true;
+                continue;
             }
             $test[$field] = [];
             if(is_object($list)){
@@ -60,7 +60,6 @@ class Validate {
                 }
             } 
             elseif(is_array($list)){
-                d($list);
                 foreach($list as $nr => $record){
                     foreach($record as $key => $value){
                         $key = 'validate' . '.' . $key;
@@ -71,15 +70,8 @@ class Validate {
                             if(empty($test[$field][$function])){
                                 $test[$field][$function] = [];
                             }
-                            if($is_optional === true){
-                                $result = $function($object, $field, $value);
-                                if($result){
-                                    $test[$field][$function][] = $result;
-                                }
-                            } else {
-                                $test[$field][$function][] = $function($object, $field, $value);
-                            }
-                        } else {                            
+                            $test[$field][$function][] = $function($object, $field, $value);
+                        } else {
                             throw new Exception('validator (' . $url . ') not found');
                         }                                                                        
                     }                    
