@@ -295,6 +295,7 @@ class Route extends Data{
                 }
             }
             $select->host = array_unique($select->host);
+            $object->logger()->debug('app.request:', [(array) $object->request()]);
             $object->logger()->debug('route.request.select:', [(array) $select]);
             $request = Route::select($object, $select);
             $object->logger()->debug('route.request:', [(array) $request]);
