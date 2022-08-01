@@ -60,9 +60,7 @@ class Validate {
                 }
             } 
             elseif(is_array($list)){
-                d($list);
                 foreach($list as $nr => $record){
-                    d($record);
                     foreach($record as $key => $value){
                         $key = 'validate' . '.' . $key;
                         $url = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);                        
