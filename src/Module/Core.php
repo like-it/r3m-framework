@@ -243,6 +243,7 @@ class Core {
      */
     public static function object($input='', $output=null, $type=null){
         var_dump(gettype($input));
+        var_dump($input);
         if($output === null){
             $output = Core::OBJECT_OBJECT;
         }
