@@ -267,7 +267,7 @@ class Core {
                 throw new ObjectException(Core::EXCEPTION_OBJECT_OUTPUT);
             }
         }
-        if(is_null($input)){
+        elseif(is_null($input)){
             if($output == Core::OBJECT_OBJECT){
                 return new stdClass();
             }
@@ -278,10 +278,11 @@ class Core {
                 return '{}';
             }
         }
-        if(is_array($input) && $output === Core::OBJECT_OBJECT){
+        elseif(is_array($input) && $output === Core::OBJECT_OBJECT){
             return Core::array_object($input);
         }
         elseif(is_array($input) && $output === Core::OBJECT_JSON){
+            d($input);
             $json = json_encode($input);
             if(json_last_error()){
                 throw new ObjectException(json_last_error_msg());
