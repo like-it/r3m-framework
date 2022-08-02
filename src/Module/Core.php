@@ -280,6 +280,13 @@ class Core {
                 return '{}';
             }
         }
+        elseif(is_object($input) && $output === Core::OBJECT_JSON){
+            $json = json_encode($input);
+            if(json_last_error()){
+                throw new ObjectException(json_last_error_msg());
+            }
+            return $json;
+        }
         elseif(is_array($input) && $output === Core::OBJECT_OBJECT){
             return Core::array_object($input);
         }
