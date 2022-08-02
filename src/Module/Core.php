@@ -242,7 +242,7 @@ class Core {
      * @throws ObjectException
      */
     public static function object($input='', $output=null, $type=null){
-        d(gettype($input));
+        var_dump(gettype($input));
         if($output === null){
             $output = Core::OBJECT_OBJECT;
         }
