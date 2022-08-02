@@ -17,16 +17,7 @@ use R3m\Io\Exception\ObjectException;
 /**
  * @throws ObjectException
  */
-function validate_in_array_email(R3m\Io\App $object, $field='', $argument=''){
-    if($object->request('has', 'node.' . $field)){
-        $array = $object->request('node.' . $field);
-    }
-    elseif($object->request('has', 'node_' . $field)) {
-        $array = $object->request('node_' . $field);
-    }
-    else {
-        $array = $object->request($field);
-    }
+function validate_in_array_email(R3m\Io\App $object, $array=null, $field='', $argument=''){
     if(
         is_string($array) &&
         substr($array, 0, 1) === '[' &&

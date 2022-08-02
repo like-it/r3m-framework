@@ -10,16 +10,7 @@
  */
 use R3m\Io\Module\Parse\Token;
 
-function validate_string_contains(R3m\Io\App $object, $field='', $argument=''){
-    if($object->request('has', 'node.' . $field)){
-        $string = $object->request('node.' . $field);
-    }
-    elseif($object->request('has', 'node_' . $field)) {
-        $string = $object->request('node_' . $field);
-    }
-    else {
-        $string = $object->request($field);
-    }
+function validate_string_contains(R3m\Io\App $object, $string='', $field='', $argument=''){
     if(empty($string)){
         return true;
     }

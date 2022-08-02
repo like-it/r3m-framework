@@ -60,23 +60,24 @@ class Validate {
                 }
             } 
             elseif(is_array($list)){
-                if($object->request('has', 'node.' . $field)){
-                    $optional = $object->request('node.' . $field);
+                $field_request = str_replace('[]', '', $field);
+                if($object->request('has', 'node.' . $field_request)){
+                    $value = $object->request('node.' . $field_request);
                 }
-                elseif($object->request('has', 'node_' . $field)) {
-                    $optional = $object->request('node_' . $field);
+                elseif($object->request('has', 'node_' . $field_request)) {
+                    $value = $object->request('node_' . $field_request);
                 }
                 else {
-                    $optional = $object->request($field);
+                    $value = $object->request($field_request);
                 }
                 if(
-                    is_string($optional) &&
-                    substr($optional, 0, 1) === '[' &&
-                    substr($optional, -1, 1) === ']'
+                    is_string($value) &&
+                    substr($value, 0, 1) === '[' &&
+                    substr($value, -1, 1) === ']'
                 ){
-                    $optional = Core::object($optional, Core::OBJECT_ARRAY);
+                    $value = Core::object($value, Core::OBJECT_ARRAY);
                 }
-                if($is_optional && empty($optional)){
+                if($is_optional && empty($value)){
                     $function = 'optional';
                     if(empty($test[$field][$function])){
                         $test[$field][$function] = [];
@@ -84,7 +85,7 @@ class Validate {
                     $test[$field][$function][] = true;
                 } else {
                     foreach($list as $nr => $record){
-                        foreach($record as $key => $value){
+                        foreach($record as $key => $argument){
                             $key = 'validate' . '.' . $key;
                             $url = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
                             if(File::exist($url)){
@@ -93,7 +94,7 @@ class Validate {
                                 if(empty($test[$field][$function])){
                                     $test[$field][$function] = [];
                                 }
-                                $test[$field][$function][] = $function($object, $field, $value);
+                                $test[$field][$function][] = $function($object, $value, $field, $argument);
                             } else {
                                 throw new Exception('validator (' . $url . ') not found');
                             }

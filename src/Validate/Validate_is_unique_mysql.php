@@ -20,16 +20,7 @@ use R3m\Io\Exception\FileWriteException;
  * @throws \Doctrine\ORM\Exception\ORMException
  * @throws \Doctrine\ORM\ORMException
  */
-function validate_is_unique_mysql(R3m\Io\App $object, $field='', $argument=''){
-    if($object->request('has', 'node.' . $field)){
-        $string = strtolower($object->request('node.' . $field));
-    }
-    elseif($object->request('has', 'node_' . $field)) {
-        $string = $object->request('node_' . $field);
-    }
-    else {
-        $string = strtolower($object->request($field));
-    }
+function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $argument=''){
     $table = false;
     $field = false;
     if(property_exists($argument, 'table')){
@@ -54,5 +45,4 @@ function validate_is_unique_mysql(R3m\Io\App $object, $field='', $argument=''){
     } else {
         return false;
     }
-
 }

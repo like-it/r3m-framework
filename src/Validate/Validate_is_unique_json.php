@@ -12,7 +12,7 @@ use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 
-function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
+function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $argument=''){
     if($object->request('has', 'node.' . 'uuid')){
         $original_uuid = $object->request('node.' . 'uuid');
     }
@@ -21,14 +21,6 @@ function validate_is_unique_json(R3m\Io\App $object, $field='', $argument=''){
     }
     else {
         $original_uuid = $object->request('uuid');
-    }
-    if($object->request('has', 'node.' . $field)){
-        $string = strtolower($object->request('node.' . $field));
-    }
-    elseif($object->request('has', 'node_' . $field)) {
-        $string = $object->request('node_' . $field);
-    } else {
-        $string = strtolower($object->request($field));
     }
     $url = false;
     $list = false;

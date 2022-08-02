@@ -10,16 +10,7 @@
  */
 use R3m\Io\Module\Parse\Token;
 
-function validate_in_array(R3m\Io\App $object, $field='', $array=''){
-    if($object->request('has', 'node.' . $field)){
-        $in = $object->request('node.' . $field);
-    }
-    elseif($object->request('has', 'node_' . $field)) {
-        $in = $object->request('node_' . $field);
-    }
-    else {
-        $in = $object->request($field);
-    }
+function validate_in_array(R3m\Io\App $object, $in='', $field='', $array=''){
     if(empty($in)){
         return false;
     }
