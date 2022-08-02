@@ -78,7 +78,6 @@ class Response {
                     return trim($response->data(), " \t\r\n");
                 } else {
                     try {
-                        dd($response->data());
                         return Core::object($response->data(), Core::OBJECT_JSON);
                     }
                     catch (Exception $exception){

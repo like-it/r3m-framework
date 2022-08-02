@@ -278,10 +278,17 @@ class Core {
                 return '{}';
             }
         }
-        if(is_array($input) && $output == Core::OBJECT_OBJECT){
+        if(is_array($input) && $output === Core::OBJECT_OBJECT){
             return Core::array_object($input);
         }
-        if(is_string($input)){
+        elseif(is_array($input) && $output === Core::OBJECT_JSON){
+            $json = json_decode($input);
+            if(json_last_error()){
+                throw new ObjectException(json_last_error_msg());
+            }
+            return $json;
+        }
+        elseif(is_string($input)){
             $input = trim($input);
             if($output == Core::OBJECT_OBJECT){
                 if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
