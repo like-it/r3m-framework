@@ -79,7 +79,9 @@ class Response {
                 } else {
                     try {
                         if(is_object($response->data())){
-                            return Core::object($response->data()->get(), Core::OBJECT_JSON);
+                            d(get_class_methods($response->data()));
+                            dd($response->data());
+                            return Core::object($response->data(), Core::OBJECT_JSON);
                         } else {
                             return Core::object($response->data(), Core::OBJECT_JSON);
                         }
