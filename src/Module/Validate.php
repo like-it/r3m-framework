@@ -50,7 +50,7 @@ class Validate {
             }
             if(substr($field, 0, 1) === '?'){
                 $field = substr($field, 1);
-                continue;
+                $is_optional = true;
             }
             $test[$field] = [];
             if(is_object($list)){
@@ -60,22 +60,46 @@ class Validate {
                 }
             } 
             elseif(is_array($list)){
-                foreach($list as $nr => $record){
-                    foreach($record as $key => $value){
-                        $key = 'validate' . '.' . $key;
-                        $url = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);                        
-                        if(File::exist($url)){
-                            require_once $url;
-                            $function = str_replace('.', '_', $key);
-                            if(empty($test[$field][$function])){
-                                $test[$field][$function] = [];
+                if($object->request('has', 'node.' . $field)){
+                    $optional = $object->request('node.' . $field);
+                }
+                elseif($object->request('has', 'node_' . $field)) {
+                    $optional = $object->request('node_' . $field);
+                }
+                else {
+                    $optional = $object->request($field);
+                }
+                if(
+                    is_string($optional) &&
+                    substr($optional, 0, 1) === '[' &&
+                    substr($optional, -1, 1) === ']'
+                ){
+                    $optional = Core::object($optional, Core::OBJECT_ARRAY);
+                }
+                if($is_optional && empty($optional)){
+                    $function = 'optional';
+                    if(empty($test[$field][$function])){
+                        $test[$field][$function] = [];
+                    }
+                    $test[$field][$function][] = true;
+                } else {
+                    foreach($list as $nr => $record){
+                        foreach($record as $key => $value){
+                            $key = 'validate' . '.' . $key;
+                            $url = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
+                            if(File::exist($url)){
+                                require_once $url;
+                                $function = str_replace('.', '_', $key);
+                                if(empty($test[$field][$function])){
+                                    $test[$field][$function] = [];
+                                }
+                                $test[$field][$function][] = $function($object, $field, $value);
+                            } else {
+                                throw new Exception('validator (' . $url . ') not found');
                             }
-                            $test[$field][$function][] = $function($object, $field, $value);
-                        } else {
-                            throw new Exception('validator (' . $url . ') not found');
-                        }                                                                        
-                    }                    
-                }                
+                        }
+                    }
+                }
             }
         }        
         if(property_exists($validate, 'test')){            
