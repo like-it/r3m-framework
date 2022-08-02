@@ -279,9 +279,7 @@ class Core {
             }
         }
         elseif(is_object($input) && $output === Core::OBJECT_JSON){
-            var_dump(gettype($input));
-            var_dump($input);
-            $json = json_encode($input);
+            $json = json_encode($input,JSON_PRETTY_PRINT);
             if(json_last_error()){
                 throw new ObjectException(json_last_error_msg());
             }
@@ -291,7 +289,7 @@ class Core {
             return Core::array_object($input);
         }
         elseif(is_array($input) && $output === Core::OBJECT_JSON){
-            $json = json_encode($input);
+            $json = json_encode($input, JSON_PRETTY_PRINT);
             if(json_last_error()){
                 throw new ObjectException(json_last_error_msg());
             }

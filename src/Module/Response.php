@@ -78,13 +78,7 @@ class Response {
                     return trim($response->data(), " \t\r\n");
                 } else {
                     try {
-                        if(is_object($response->data())){
-                            d(get_class_methods($response->data()));
-                            dd($response->data());
-                            return Core::object($response->data()->data(), Core::OBJECT_JSON);
-                        } else {
-                            return Core::object($response->data(), Core::OBJECT_JSON);
-                        }
+                        return Core::object($response->data(), Core::OBJECT_JSON);
                     }
                     catch (Exception $exception){
                         return $exception;
