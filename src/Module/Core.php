@@ -282,7 +282,7 @@ class Core {
             return Core::array_object($input);
         }
         elseif(is_array($input) && $output === Core::OBJECT_JSON){
-            $json = json_decode($input);
+            $json = json_encode($input);
             if(json_last_error()){
                 throw new ObjectException(json_last_error_msg());
             }
