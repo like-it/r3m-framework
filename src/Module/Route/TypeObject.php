@@ -11,6 +11,7 @@
 
 namespace R3m\Io\Module\Route;
 
+use stdClass;
 use R3m\Io\App;
 
 class TypeObject {
@@ -27,6 +28,14 @@ class TypeObject {
             }
         }
         return false;
+    }
+
+    public static function cast(App $object, $string=''){
+        $object = json_decode($string);
+        if(is_object($object)){
+            return $object;
+        }
+        return new stdClass();
     }
 
 }

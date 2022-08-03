@@ -29,4 +29,11 @@ class TypeArray {
         return false;
     }
 
+    public static function cast(App $object, $string=''){
+        $array = json_decode($string, true);
+        if(is_array($array)){
+            return $array;
+        }
+        return [];
+    }
 }
