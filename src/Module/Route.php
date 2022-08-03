@@ -584,19 +584,14 @@ class Route extends Data{
         if(empty($attribute)){
             return true;
         }
+        d($route);
+        dd($select);
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 continue;
             }
             if(array_key_exists($nr, $attribute) === false){
                 return false;
-            }
-            $variable = Route::get_variable($part);
-            $temp = explode(':', $variable, 2);
-            if(count($temp) > 1){
-                d($part);
-                d($attribute);
-                dd($temp);
             }
             if(strtolower($part) != strtolower($attribute[$nr])){
                 return false;
