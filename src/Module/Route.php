@@ -587,7 +587,9 @@ class Route extends Data{
         $path_attribute = [];
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
-                $path_attribute[$nr] = Route::get_variable($part);
+                $variable = Route::get_variable($part);
+                $temp = explode(':', 2);
+                $path_attribute[$nr] = $temp[0];
                 continue;
             }
             if(array_key_exists($nr, $attribute) === false){
@@ -608,14 +610,19 @@ class Route extends Data{
                         $className = '\\R3m\\Io\\Module\\Route\\Type' . $type;
                         $exist = class_exists($className);
                         if($exist){
-                            d($attribute);
-                            d($route);
-                            d($path_attribute);
-                            d($select->attribute);
-                            $validate = $className::validate($object->request($attribute));
-                            d($validate);
-                            if(!$validate){
-                                return false;
+                            $value = null;
+                            foreach($path_attribute as $path_nr => $path_value){
+                                if($path_value === $attribute){
+                                    $value = $select->attribute[$path_nr];
+                                    break;
+                                }
+                            }
+                            if($value){
+                                $validate = $className::validate($object->request($attribute));
+                                d($validate);
+                                if(!$validate){
+                                    return false;
+                                }
                             }
                         }
                     }
