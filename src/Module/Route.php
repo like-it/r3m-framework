@@ -533,21 +533,21 @@ class Route extends Data{
                 $temp = explode(':', $get_attribute, 2);
                 if(array_key_exists(1, $temp)){
                     $variable = $temp[0];
-                    $type = ucfirst($temp[1]);
-                    $className = '\\R3m\\Io\\Module\\Route\\Type' . $type;
-                    $exist = class_exists($className);
-                    if(
-                        $exist &&
-                        in_array('cast', get_class_methods($className))
-                    ){
-                        $value = $className::cast($object, urldecode($attribute[$nr]));
-                    } else {
-                        $value = urldecode($attribute[$nr]);
-                    }
                     if(property_exists($route->request, $variable)){
                         continue;
                     }
                     if(array_key_exists($nr, $attribute)){
+                        $type = ucfirst($temp[1]);
+                        $className = '\\R3m\\Io\\Module\\Route\\Type' . $type;
+                        $exist = class_exists($className);
+                        if(
+                            $exist &&
+                            in_array('cast', get_class_methods($className))
+                        ){
+                            $value = $className::cast($object, urldecode($attribute[$nr]));
+                        } else {
+                            $value = urldecode($attribute[$nr]);
+                        }
                         $route->request->data($variable, $value);
                     }
                 } else {
@@ -555,8 +555,8 @@ class Route extends Data{
                     if(property_exists($route->request, $variable)){
                         continue;
                     }
-                    $value = urldecode($attribute[$nr]);
                     if(array_key_exists($nr, $attribute)){
+                        $value = urldecode($attribute[$nr]);
                         $route->request->data($variable, $value);
                     }
                 }
