@@ -35,6 +35,9 @@ class TypeFloat {
 
     public static function validate($object, $string=''): bool
     {
+        if(empty($string)){
+            return false;
+        }
         $value = $string + 0;
         if(is_float($value)){
             return true;

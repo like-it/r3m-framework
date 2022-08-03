@@ -35,6 +35,9 @@ class TypeInteger {
 
     public static function validate($object, $string=''): bool
     {
+        if(empty($string)){
+            return false;
+        }
         $value = $string + 0;
         if(is_int($value)){
             return true;
