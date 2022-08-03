@@ -599,29 +599,33 @@ class Route extends Data{
                 return false;
             }
         }
-        foreach($explode as $nr => $part){
-            if(Route::is_variable($part)){
-                $variable = Route::get_variable($part);
-                if($variable){
-                    $temp = explode(':', $variable, 2);
-                    if(count($temp) === 2){
-                        $attribute = $temp[0];
-                        $type = ucfirst($temp[1]);
-                        $className = '\\R3m\\Io\\Module\\Route\\Type' . $type;
-                        $exist = class_exists($className);
-                        if($exist){
-                            $value = null;
-                            foreach($path_attribute as $path_nr => $path_value){
-                                if($path_value == $attribute){
-                                    $value = $select->attribute[$path_nr];
-                                    break;
+        if(!empty($path_attribute)){
+            foreach($explode as $nr => $part){
+                if(Route::is_variable($part)){
+                    $variable = Route::get_variable($part);
+                    if($variable){
+                        $temp = explode(':', $variable, 2);
+                        if(count($temp) === 2){
+                            $attribute = $temp[0];
+                            $type = ucfirst($temp[1]);
+                            $className = '\\R3m\\Io\\Module\\Route\\Type' . $type;
+                            $exist = class_exists($className);
+                            if($exist){
+                                $value = null;
+                                foreach($path_attribute as $path_nr => $path_value){
+                                    d($attribute);
+                                    d($path_value);
+                                    if($path_value == $attribute){
+                                        $value = $select->attribute[$path_nr];
+                                        break;
+                                    }
                                 }
-                            }
-                            if($value){
-                                $validate = $className::validate($value);
-                                d($validate);
-                                if(!$validate){
-                                    return false;
+                                if($value){
+                                    $validate = $className::validate($value);
+                                    d($validate);
+                                    if(!$validate){
+                                        return false;
+                                    }
                                 }
                             }
                         }
