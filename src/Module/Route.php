@@ -584,6 +584,19 @@ class Route extends Data{
         if(empty($attribute)){
             return true;
         }
+        $variable = [];
+        foreach($explode as $nr => $part){
+            if(Route::is_variable($part)){
+                $variable[] = Route::get_variable($part);
+                continue;
+            }
+            if(array_key_exists($nr, $attribute) === false){
+                return false;
+            }
+            if(strtolower($part) != strtolower($attribute[$nr])){
+                return false;
+            }
+        }
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 $variable = Route::get_variable($part);
@@ -597,10 +610,8 @@ class Route extends Data{
                         if($exist){
                             d($attribute);
                             d($route);
-                            d($select);
-                            d($object->request());
-
-
+                            d($variable);
+                            d($select->attribute);
                             $validate = $className::validate($object->request($attribute));
                             d($validate);
                             if(!$validate){
@@ -609,13 +620,6 @@ class Route extends Data{
                         }
                     }
                 }
-                continue;
-            }
-            if(array_key_exists($nr, $attribute) === false){
-                return false;
-            }
-            if(strtolower($part) != strtolower($attribute[$nr])){
-                return false;
             }
         }
         return true;
