@@ -590,7 +590,7 @@ class Route extends Data{
                 $temp = explode(':', $variable, 2);
                 if(count($temp) === 2){
                     $attribute = $temp[0];
-                    $type = $temp[1];
+                    $type = ucfirst($temp[1]);
                     $className = '\\R3m\\Io\\Module\\Route\\' . $type;
                     $exist = class_exists($className);
                     if($exist){
