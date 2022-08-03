@@ -588,7 +588,7 @@ class Route extends Data{
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
                 $variable = Route::get_variable($part);
-                $temp = explode(':', 2);
+                $temp = explode(':', $variable, 2);
                 $path_attribute[$nr] = $temp[0];
                 continue;
             }
