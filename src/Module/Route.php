@@ -591,10 +591,13 @@ class Route extends Data{
                 if(count($temp) === 2){
                     $attribute = $temp[0];
                     $type = $temp[1];
-                    $className = 'R3m\\Io\\Module\\Route\\' . $type;
-                    $validate = $className::validate($object->request($attribute));
-                    if(!$validate){
-                        return false;
+                    $className = '\\R3m\\Io\\Module\\Route\\' . $type;
+                    $exist = class_exists($className);
+                    if($exist){
+                        $validate = $className::validate($object->request($attribute));
+                        if(!$validate){
+                            return false;
+                        }
                     }
                 }
             }
