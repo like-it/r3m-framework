@@ -586,7 +586,18 @@ class Route extends Data{
         }
         foreach($explode as $nr => $part){
             $variable = Route::get_variable($part);
-            d($variable);
+            if($variable){
+                $temp = explode(':', $variable, 2);
+                if(count($temp) === 2){
+                    $attribute = $temp[0];
+                    $type = $temp[1];
+                    $className = 'R3m\\Io\\Module\\Route\\' . $type;
+                    $validate = $className::validate($object->request($attribute));
+                    if(!$validate){
+                        return false;
+                    }
+                }
+            }
             if(Route::is_variable($part)){
                 continue;
             }
