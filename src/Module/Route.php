@@ -613,7 +613,9 @@ class Route extends Data{
             if(Route::is_variable($part)){
                 $variable = Route::get_variable($part);
                 $temp = explode(':', $variable, 2);
-                $path_attribute[$nr] = $temp[0];
+                if(array_key_exists(1, $temp)){
+                    $path_attribute[$nr] = $temp[0];
+                }
                 continue;
             }
             if(array_key_exists($nr, $attribute) === false){
