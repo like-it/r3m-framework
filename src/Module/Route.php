@@ -612,13 +612,13 @@ class Route extends Data{
                         if($exist){
                             $value = null;
                             foreach($path_attribute as $path_nr => $path_value){
-                                if($path_value === $attribute){
+                                if($path_value == $attribute){
                                     $value = $select->attribute[$path_nr];
                                     break;
                                 }
                             }
                             if($value){
-                                $validate = $className::validate($object->request($attribute));
+                                $validate = $className::validate($value);
                                 d($validate);
                                 if(!$validate){
                                     return false;
