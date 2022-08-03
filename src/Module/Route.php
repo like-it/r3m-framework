@@ -585,26 +585,27 @@ class Route extends Data{
             return true;
         }
         foreach($explode as $nr => $part){
-            $variable = Route::get_variable($part);
-            if($variable){
-                $temp = explode(':', $variable, 2);
-                if(count($temp) === 2){
-                    $attribute = $temp[0];
-                    $type = ucfirst($temp[1]);
-                    $className = '\\R3m\\Io\\Module\\Route\\Type' . $type;
-                    $exist = class_exists($className);
-                    if($exist){
-                        d($attribute);
-                        d($object->request($attribute));
-                        $validate = $className::validate($object->request($attribute));
-                        d($validate);
-                        if(!$validate){
-                            return false;
+
+            if(Route::is_variable($part)){
+                $variable = Route::get_variable($part);
+                if($variable){
+                    $temp = explode(':', $variable, 2);
+                    if(count($temp) === 2){
+                        $attribute = $temp[0];
+                        $type = ucfirst($temp[1]);
+                        $className = '\\R3m\\Io\\Module\\Route\\Type' . $type;
+                        $exist = class_exists($className);
+                        if($exist){
+                            d($attribute);
+                            d($object->request($attribute));
+                            $validate = $className::validate($object->request($attribute));
+                            d($validate);
+                            if(!$validate){
+                                return false;
+                            }
                         }
                     }
                 }
-            }
-            if(Route::is_variable($part)){
                 continue;
             }
             if(array_key_exists($nr, $attribute) === false){
