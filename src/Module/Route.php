@@ -529,12 +529,35 @@ class Route extends Data{
         }
         foreach($explode as $nr => $part){
             if(Route::is_variable($part)){
-                $variable = Route::get_variable($part);
-                if(property_exists($route->request, $variable)){
-                    continue;
-                }
-                if(array_key_exists($nr, $attribute)){
-                    $route->request->data($variable, urldecode($attribute[$nr]));
+                $get_attribute = Route::get_variable($part);
+                $temp = explode(':', $get_attribute, 2);
+                if(array_key_exists(1, $temp)){
+                    $variable = $temp[0];
+                    $type = ucfirst($temp[1]);
+                    $className = '\\R3m\\Io\\Module\\Route\\Type' . $type;
+                    $exist = class_exists($className);
+                    if(
+                        $exist &&
+                        in_array('cast', get_class_methods($className))
+                    ){
+                        $value = $className::cast($object, urldecode($attribute[$nr]));
+                    } else {
+                        $value = urldecode($attribute[$nr]);
+                    }
+                    if(property_exists($route->request, $variable)){
+                        continue;
+                    }
+                    if(array_key_exists($nr, $attribute)){
+                        $route->request->data($variable, $value);
+                    }
+                } else {
+                    if(property_exists($route->request, $variable)){
+                        continue;
+                    }
+                    $value = urldecode($attribute[$nr]);
+                    if(array_key_exists($nr, $attribute)){
+                        $route->request->data($variable, $value);
+                    }
                 }
             }
         }
@@ -613,18 +636,13 @@ class Route extends Data{
                             if($exist){
                                 $value = null;
                                 foreach($path_attribute as $path_nr => $path_value){
-                                    d($attribute);
-                                    d($path_value);
                                     if($path_value == $attribute){
-                                        $value = $select->attribute[$path_nr];
+                                        $value = urldecode($select->attribute[$path_nr]);
                                         break;
                                     }
                                 }
                                 if($value){
-                                    d($value);
-                                    d($className);
                                     $validate = $className::validate($object, $value);
-                                    d($validate);
                                     if(!$validate){
                                         return false;
                                     }

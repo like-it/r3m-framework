@@ -27,4 +27,7 @@ class TypeFloat {
         return false;
     }
 
+    public static function cast(App $object, $string=''){
+        return $string + 0;
+    }
 }
