@@ -592,7 +592,7 @@ class Route extends Data{
                 return false;
             }
             $variable = Route::get_variable($part);
-            $temp = explode(':', $variable);
+            $temp = explode(':', $variable, 2);
             if(count($temp) > 1){
                 dd($temp);
             }
