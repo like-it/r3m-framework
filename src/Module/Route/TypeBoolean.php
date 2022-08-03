@@ -31,31 +31,17 @@ use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\FileAppendException;
 use R3m\Io\Exception\FileMoveException;
 
-class Uuid {
+class TypeBoolean {
 
     public static function validate($object, $string=''): bool
     {
-        //format: %s%s-%s-%s-%s-%s%s%s
-        $explode = explode('-', $string);
-        if (count($explode) !== 5) {
-            return false;
+        if(strtolower($string) === 'true'){
+            return true;
         }
-        if (strlen($explode[0]) !== 8) {
-            return false;
+        elseif(strtolower($string) === 'false'){
+            return true;
         }
-        if (strlen($explode[1]) !== 4) {
-            return false;
-        }
-        if (strlen($explode[2]) !== 4) {
-            return false;
-        }
-        if (strlen($explode[3]) !== 4) {
-            return false;
-        }
-        if (strlen($explode[4]) !== 12) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
 }
