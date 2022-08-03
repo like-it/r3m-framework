@@ -11,29 +11,11 @@
 
 namespace R3m\Io\Module\Route;
 
-use stdClass;
-
 use R3m\Io\App;
-use R3m\Io\Config;
-
-use R3m\Io\Module\Autoload;
-use R3m\Io\Module\Core;
-use R3m\Io\Module\Data;
-use R3m\Io\Module\Dir;
-use R3m\Io\Module\File;
-use R3m\Io\Module\Parse;
-
-
-use Exception;
-use R3m\Io\Exception\PluginNotFoundException;
-use R3m\Io\Exception\PluginNotAllowedException;
-use R3m\Io\Exception\FileWriteException;
-use R3m\Io\Exception\FileAppendException;
-use R3m\Io\Exception\FileMoveException;
 
 class TypeObject {
 
-    public static function validate($object, $string=''): bool
+    public static function validate(App $object, $string=''): bool
     {
         if(
             substr($string, 0, 1) == '{' &&
