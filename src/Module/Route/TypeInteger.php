@@ -21,7 +21,6 @@ class TypeInteger {
             return false;
         }
         $value = $string + 0;
-        d($value);
         if(is_int($value)){
             return true;
         }

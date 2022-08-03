@@ -551,6 +551,7 @@ class Route extends Data{
                         $route->request->data($variable, $value);
                     }
                 } else {
+                    $variable = $temp[0];
                     if(property_exists($route->request, $variable)){
                         continue;
                     }
