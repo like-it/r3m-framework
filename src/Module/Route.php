@@ -594,6 +594,8 @@ class Route extends Data{
             $variable = Route::get_variable($part);
             $temp = explode(':', $variable, 2);
             if(count($temp) > 1){
+                d($part);
+                d($attribute);
                 dd($temp);
             }
             if(strtolower($part) != strtolower($attribute[$nr])){
