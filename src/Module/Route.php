@@ -271,7 +271,7 @@ class Route extends Data{
             ){
                 $is_type = true;
                 if(!empty($collection)){
-                    $explode[] = substr($collection, 0,-2);
+                    $explode[] = substr($collection, 0,-1);
                 }
                 $collection = $char;
             }
@@ -282,7 +282,7 @@ class Route extends Data{
             ){
                 $is_type = true;
                 if(!empty($collection)){
-                    $explode[] = substr($collection, 0,-2);
+                    $explode[] = substr($collection, 0,-1);
                 }
                 $collection = $char;
             }
