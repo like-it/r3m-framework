@@ -271,7 +271,7 @@ class Route extends Data{
                 }
             }
             $input = Route::input($object);
-            if(substr($input->data('request'), -1) != '/'){
+            if(substr($input->data('request'), -1) !    = '/'){
                 $input->data('request', $input->data('request') . '/');
             }
             $select = new stdClass();
@@ -279,16 +279,22 @@ class Route extends Data{
             $test = explode('{', $input->data('request'), 2);
             if(count($test) > 1){
                 $string_count = $test[0];
+                $select->deep = substr_count($string_count, '/');
+                $select->attribute = explode('/', $test[0]);
+                $select->attribute[] = '{' . $test[1];
             } else {
                 $test = explode('[', $input->data('request'), 2);
                 if(count($test) > 1) {
                     $string_count = $test[0];
+                    $select->deep = substr_count($string_count, '/');
+                    $select->attribute = explode('/', $test[0]);
+                    $select->attribute[] = '[' . $test[1];
                 } else {
                     $string_count = $input->data('request');
+                    $select->deep = substr_count($string_count, '/');
+                    $select->attribute = explode('/', $input->data('request'));
                 }
             }
-            $select->deep = substr_count($string_count, '/');
-            $select->attribute = explode('/', $input->data('request'));
             if(end($select->attribute) === ''){
                 array_pop($select->attribute);
             }
@@ -307,7 +313,7 @@ class Route extends Data{
             }
             $select->host = array_unique($select->host);
             d($select);
-            
+
             $request = Route::select($object, $select);
             $route =  $object->data(App::ROUTE);
             Route::add_request($object, $request);
