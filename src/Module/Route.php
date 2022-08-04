@@ -237,10 +237,14 @@ class Route extends Data{
             }
             $select->method = Handler::method();
             $select->host = [];
+            d($select);
             $request = Route::select_cli($object, $select);
+            d($request);
             if($request === false){
                 $select = Route::select_info($object, $select);
+                d($select);
                 $request = Route::select_cli($object, $select);
+                d($request);
             }
             if($request === false){
                 throw new Exception('Exception in request');
