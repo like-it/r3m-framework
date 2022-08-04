@@ -20,9 +20,11 @@ class TypeInteger {
         if(empty($string)){
             return false;
         }
-        $value = $string + 0;
-        if(is_int($value)){
-            return true;
+        if(is_numeric($string)){
+            $value = $string + 0;
+            if(is_int($value)){
+                return true;
+            }
         }
         return false;
     }
