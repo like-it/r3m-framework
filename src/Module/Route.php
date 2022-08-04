@@ -271,7 +271,7 @@ class Route extends Data{
                 }
             }
             $input = Route::input($object);
-            if(substr($input->data('request'), -1) !    = '/'){
+            if(substr($input->data('request'), -1) != '/'){
                 $input->data('request', $input->data('request') . '/');
             }
             $select = new stdClass();
