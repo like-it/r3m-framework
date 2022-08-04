@@ -367,7 +367,7 @@ class Route extends Data{
             }
             $select = new stdClass();
             $select->input = $input;
-            $test = Route::request_explode(urlencode($input->data('request')));
+            $test = Route::request_explode(urldecode($input->data('request')));
             d($test);
             $test_count = count($test);
             d($test_count);
