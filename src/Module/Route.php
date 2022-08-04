@@ -630,6 +630,7 @@ class Route extends Data{
             }
         }
         if(!empty($path_attribute)){
+            d($path_attribute);
             foreach($explode as $nr => $part){
                 if(Route::is_variable($part)){
                     $variable = Route::get_variable($part);
