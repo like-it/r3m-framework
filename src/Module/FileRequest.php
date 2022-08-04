@@ -56,12 +56,12 @@ class FileRequest {
         $file = str_replace($dir,'', $input);
         if(
             (
-                substr($file, 0, 1) === '{' &&
-                substr($file, -1, 1) === '}'
+                substr($input, 0, 1) === '{' &&
+                substr($input, -1, 1) === '}'
             ) ||
             (
-                substr($file, 0, 1) === '[' &&
-                substr($file, -1, 1) === ']'
+                substr($input, 0, 1) === '[' &&
+                substr($input, -1, 1) === ']'
             )
         ){
             return false;
