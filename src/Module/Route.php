@@ -276,7 +276,18 @@ class Route extends Data{
             }
             $select = new stdClass();
             $select->input = $input;
-            $select->deep = substr_count($input->data('request'), '/');
+            $test = explode('{', $input->data('request'), 2);
+            if(count($test) > 1){
+                $string_count = $test[0];
+            } else {
+                $test = explode('[', $input->data('request'), 2);
+                if(count($test) > 1) {
+                    $string_count = $test[0];
+                } else {
+                    $string_count = $input->data('request');
+                }
+            }
+            $select->deep = substr_count($string_count, '/');
             $select->attribute = explode('/', $input->data('request'));
             if(end($select->attribute) === ''){
                 array_pop($select->attribute);
