@@ -23,6 +23,7 @@ class TypeObject {
             substr($string, -1, 1) == '}'
         ){
             $object = json_decode($string);
+            d(json_last_error_msg());
             if(is_object($object)){
                 return true;
             }
