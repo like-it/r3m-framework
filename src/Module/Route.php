@@ -259,7 +259,6 @@ class Route extends Data{
 
     private static function request_explode($input=''): array
     {
-        d($input);
         $split = str_split($input);
         $is_quote_double = false;
         $in_type = false;
@@ -752,7 +751,6 @@ class Route extends Data{
                             $exist = class_exists($className);
                             if($exist){
                                 $value = null;
-                                d($select);
                                 foreach($path_attribute as $path_nr => $path_value){
                                     if(
                                         $path_value == $attribute &&
@@ -763,10 +761,7 @@ class Route extends Data{
                                     }
                                 }
                                 if($value){
-                                    d($value);
-                                    d($className);
                                     $validate = $className::validate($object, $value);
-                                    d($validate);
                                     if(!$validate){
                                         return false;
                                     }
