@@ -257,8 +257,8 @@ class Route extends Data{
         return $array;
     }
 
-    private function request_explode(Data $input, $type='/{'){
-        $split = str_split($input->data('request'));
+    private function request_explode($input=''){
+        $split = str_split($input);
         $is_quote_double = false;
         $in_type = false;
         $collection = '';
