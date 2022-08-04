@@ -632,8 +632,6 @@ class Route extends Data{
             }
         }
         if(!empty($path_attribute)){
-            d($variable);
-            d($path_attribute);
             foreach($explode as $nr => $part){
                 if(Route::is_variable($part)){
                     $variable = Route::get_variable($part);
@@ -655,10 +653,8 @@ class Route extends Data{
                                         break;
                                     }
                                 }
-                                d($value);
                                 if($value){
                                     $validate = $className::validate($object, $value);
-                                    d($validate);
                                     if(!$validate){
                                         return false;
                                     }
