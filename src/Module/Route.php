@@ -278,7 +278,7 @@ class Route extends Data{
             }
             $select = new stdClass();
             $select->input = $input;
-            $test = explode('{', $input->data('request'), 2);
+            $test = explode(urlendcode('{'), $input->data('request'), 2);
             if(count($test) > 1){
                 $string_count = $test[0];
                 $select->deep = substr_count($string_count, '/');
@@ -287,9 +287,9 @@ class Route extends Data{
                     array_pop($select->attribute);
                 }
                 if($is_added){
-                    $select->attribute[] = '{' . substr($test[1], 0, -1);
+                    $select->attribute[] = urlencode('{') . substr($test[1], 0, -1);
                 } else {
-                    $select->attribute[] = '{' . $test[1];
+                    $select->attribute[] = urlencode('{') . $test[1];
                 }
                 $select->deep++;
             } else {
