@@ -271,8 +271,10 @@ class Route extends Data{
                 }
             }
             $input = Route::input($object);
+            $is_added = false;
             if(substr($input->data('request'), -1) != '/'){
                 $input->data('request', $input->data('request') . '/');
+                $is_added = true;
             }
             $select = new stdClass();
             $select->input = $input;
@@ -284,7 +286,11 @@ class Route extends Data{
                 if(end($select->attribute) === ''){
                     array_pop($select->attribute);
                 }
-                $select->attribute[] = '{' . $test[1];
+                if($is_added){
+                    $select->attribute[] = '{' . substr($test[1], 0, -1);
+                } else {
+                    $select->attribute[] = '{' . $test[1];
+                }
                 $select->deep++;
             } else {
                 $test = explode('[', $input->data('request'), 2);
@@ -295,7 +301,11 @@ class Route extends Data{
                     if(end($select->attribute) === ''){
                         array_pop($select->attribute);
                     }
-                    $select->attribute[] = '[' . $test[1];
+                    if($is_added){
+                        $select->attribute[] = '[' . substr($test[1], 0, -1);
+                    } else {
+                        $select->attribute[] = '[' . $test[1];
+                    }
                     $select->deep++;
                 } else {
                     $string_count = $input->data('request');
