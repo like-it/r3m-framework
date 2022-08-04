@@ -218,6 +218,44 @@ class Route extends Data{
         }
     }
 
+    private static function find_array($string=''){
+        $split = str_split($string);
+        $is_array = false;
+        $is_quote_double = false;
+        $previous_char = false;
+        $collection = '';
+        $array = [];
+        foreach($split as $nr => $char){
+            if(
+                $char == '[' &&
+                $is_quote_double === false
+            ){
+                $is_array = true;
+            }
+            elseif(
+                $char == ']' &&
+                $is_quote_double === false
+            ){
+                if($is_array){
+                    $array[] = $collection;
+                    $collection = '';
+                }
+                $is_array = false;
+            }
+            elseif(
+                $char === '"' &&
+                $previous_char !== '\\'
+            ){
+                $is_quote_double = !$is_quote_double;
+            }
+            if($is_array){
+                $collection .= $char;
+            }
+            $previous_char = $char;
+        }
+        return $array;
+    }
+
     /**
      * @throws UrlEmptyException
      * @throws ObjectException
@@ -302,11 +340,13 @@ class Route extends Data{
                         array_pop($select->attribute);
                     }
                     if($is_added){
-                        $select->attribute[] = '[' . substr($test[1], 0, -1);
+                        $array = Route::find_array('[' . substr($test[1], 0, -1));
                     } else {
-                        $select->attribute[] = '[' . $test[1];
+                        $array = Route::find_array('[' . $test[1]);
                     }
-                    $select->deep++;
+                    $select->attribute = array_merge($select->attribute, $array);
+                        $select->deep+=count($array);
+
                 } else {
                     $string_count = $input->data('request');
                     $select->deep = substr_count($string_count, '/');
