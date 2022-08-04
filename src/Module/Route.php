@@ -227,13 +227,14 @@ class Route extends Data{
         $array = [];
         foreach($split as $nr => $char){
             if(
-                $char == '[' &&
+                $previous_char === '/' &&
+                $char === '[' &&
                 $is_quote_double === false
             ){
                 $is_array = true;
             }
             elseif(
-                $char == ']' &&
+                $char === ']' &&
                 $is_quote_double === false
             ){
                 if($is_array){
@@ -254,6 +255,54 @@ class Route extends Data{
             $previous_char = $char;
         }
         return $array;
+    }
+
+    private function request_explode(Data $input, $type='/{'){
+        $split = str_split($input->data('request'));
+        $is_quote_double = false;
+        $in_type = false;
+        $collection = '';
+        $explode = [];
+        foreach($split as $nr => $char){
+            if(
+                $previous_char === '/' &&
+                $char === '{' &&
+                $is_quote_double === false
+            ){
+                $is_type = true;
+                if(!empty($collection)){
+                    $explode[] = substr($collection, 0,-2);
+                }
+                $collection = $char;
+            }
+            elseif(
+                $previous_char === '/' &&
+                $char == '[' &&
+                $is_quote_double === false
+            ){
+                $is_type = true;
+                if(!empty($collection)){
+                    $explode[] = substr($collection, 0,-2);
+                }
+                $collection = $char;
+            }
+            elseif(
+                $char === '"' &&
+                $previous_char !== '\\'
+            ){
+                $is_quote_double = !$is_quote_double;
+            }
+            $collection .= $char;
+            $previous_char = $char;
+        }
+        if(!empty($collection)){
+            if($previous_char === '/'){
+                $explode[] = substr($collection, 0,-1);
+            } else {
+                $explode[] = $collection;
+            }
+        }
+        return $explode;
     }
 
     /**
@@ -316,42 +365,25 @@ class Route extends Data{
             }
             $select = new stdClass();
             $select->input = $input;
-            $test = explode(urlencode('{'), $input->data('request'), 2);
-            if(count($test) > 1){
+            $test = Route::request_explode(urlencode($input->data('request')));
+            $test_count = count($test);
+            if($test_count > 1){
                 $string_count = $test[0];
                 $select->deep = substr_count($string_count, '/');
                 $select->attribute = explode('/', $test[0]);
                 if(end($select->attribute) === ''){
                     array_pop($select->attribute);
                 }
-                if($is_added){
-                    $select->attribute[] = urlencode('{') . substr($test[1], 0, -1);
-                } else {
-                    $select->attribute[] = urlencode('{') . $test[1];
+                $array = [];
+                for($i=1; $i < $test_count; $i++){
+                    $array[] = $test[$i];
                 }
-                $select->deep++;
+                $select->attribute = array_merge($select->attribute, $array);
+                $select->deep += count($array) - 1;
             } else {
-                $test = explode('[', $input->data('request'), 2);
-                if(count($test) > 1) {
-                    $string_count = $test[0];
-                    $select->deep = substr_count($string_count, '/');
-                    $select->attribute = explode('/', $test[0]);
-                    if(end($select->attribute) === ''){
-                        array_pop($select->attribute);
-                    }
-                    if($is_added){
-                        $array = Route::find_array('[' . substr($test[1], 0, -1));
-                    } else {
-                        $array = Route::find_array('[' . $test[1]);
-                    }
-                    $select->attribute = array_merge($select->attribute, $array);
-                        $select->deep+=count($array);
-
-                } else {
-                    $string_count = $input->data('request');
-                    $select->deep = substr_count($string_count, '/');
-                    $select->attribute = explode('/', $input->data('request'));
-                }
+                $string_count = $input->data('request');
+                $select->deep = substr_count($string_count, '/');
+                $select->attribute = explode('/', $input->data('request'));
             }
             if(end($select->attribute) === ''){
                 array_pop($select->attribute);
