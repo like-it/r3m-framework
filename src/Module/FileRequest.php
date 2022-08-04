@@ -54,15 +54,14 @@ class FileRequest {
         $input = $request->data('request');
         $dir = str_replace(['../','..'], '', Dir::name($input));
         $file = str_replace($dir,'', $input);
-        d($file);
         if(
             (
-                substr($input, 0, 1) === '%7B' &&
-                substr($input, -1, 1) === '}'
+                substr($file, 0, 3) === '%7B' &&
+                substr($file, -3, 3) === '%7D'
             ) ||
             (
-                substr($input, 0, 1) === '[' &&
-                substr($input, -1, 1) === ']'
+                substr($file, 0, 1) === '[' &&
+                substr($file, -1, 1) === ']'
             )
         ){
             return false;
