@@ -384,7 +384,7 @@ class Route extends Data{
                     $array[] = $test[$i];
                 }
                 $select->attribute = array_merge($select->attribute, $array);
-                $select->deep += count($array);
+                $select->deep = count($select->attribute);
             } else {
                 $string_count = $input->data('request');
                 $select->deep = substr_count($string_count, '/');
