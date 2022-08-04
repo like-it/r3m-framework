@@ -265,6 +265,7 @@ class Route extends Data{
         $in_type = false;
         $collection = '';
         $explode = [];
+        $previous_char = false;
         foreach($split as $nr => $char){
             if(
                 $previous_char === '/' &&
