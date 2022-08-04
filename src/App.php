@@ -110,6 +110,7 @@ class App extends Data {
         $file = FileRequest::get($object);
         if($file === false){
             try {
+                d($object);
                 $route = Route::request($object);
                 dd($route);
                 if($route === false){
