@@ -277,6 +277,7 @@ class Route extends Data{
                     $explode[] = substr($collection, 0,-1);
                 }
                 $collection = $char;
+                continue;
             }
             elseif(
                 $previous_char === '/' &&
@@ -288,6 +289,7 @@ class Route extends Data{
                     $explode[] = substr($collection, 0,-1);
                 }
                 $collection = $char;
+                continue;
             }
             elseif(
                 $char === '"' &&
@@ -369,9 +371,7 @@ class Route extends Data{
             $select = new stdClass();
             $select->input = $input;
             $test = Route::request_explode(urldecode($input->data('request')));
-            d($test);
             $test_count = count($test);
-            d($test_count);
             if($test_count > 1){
                 $string_count = $test[0];
                 $select->deep = substr_count($string_count, '/');
@@ -407,6 +407,7 @@ class Route extends Data{
                 }
             }
             $select->host = array_unique($select->host);
+            d($select);
             $request = Route::select($object, $select);
             $route =  $object->data(App::ROUTE);
             Route::add_request($object, $request);
