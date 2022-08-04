@@ -281,6 +281,9 @@ class Route extends Data{
                 $string_count = $test[0];
                 $select->deep = substr_count($string_count, '/');
                 $select->attribute = explode('/', $test[0]);
+                if(end($select->attribute) === ''){
+                    array_pop($select->attribute);
+                }
                 $select->attribute[] = '{' . $test[1];
             } else {
                 $test = explode('[', $input->data('request'), 2);
@@ -288,6 +291,9 @@ class Route extends Data{
                     $string_count = $test[0];
                     $select->deep = substr_count($string_count, '/');
                     $select->attribute = explode('/', $test[0]);
+                    if(end($select->attribute) === ''){
+                        array_pop($select->attribute);
+                    }
                     $select->attribute[] = '[' . $test[1];
                 } else {
                     $string_count = $input->data('request');
@@ -622,6 +628,7 @@ class Route extends Data{
             return false;
         }
         d($route);
+        d($select);
         $explode = explode('/', $route->path);
         array_pop($explode);
         $attribute = $select->attribute;
