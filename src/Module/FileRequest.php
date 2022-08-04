@@ -52,6 +52,7 @@ class FileRequest {
         }
         $request = $object->data(App::REQUEST);
         $input = $request->data('request');
+        d($input);
         $dir = str_replace(['../','..'], '', Dir::name($input));
         $file = str_replace($dir,'', $input);
         if(
