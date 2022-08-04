@@ -675,6 +675,7 @@ class Route extends Data{
                             $exist = class_exists($className);
                             if($exist){
                                 $value = null;
+                                d($select);
                                 foreach($path_attribute as $path_nr => $path_value){
                                     if(
                                         $path_value == $attribute &&
