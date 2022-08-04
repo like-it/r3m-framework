@@ -407,7 +407,6 @@ class Route extends Data{
                 }
             }
             $select->host = array_unique($select->host);
-            d($select);
             $request = Route::select($object, $select);
             $route =  $object->data(App::ROUTE);
             Route::add_request($object, $request);
@@ -765,6 +764,7 @@ class Route extends Data{
                                 }
                                 if($value){
                                     d($value);
+                                    d($className);
                                     $validate = $className::validate($object, $value);
                                     d($validate);
                                     if(!$validate){
