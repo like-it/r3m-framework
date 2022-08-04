@@ -647,13 +647,18 @@ class Route extends Data{
                             if($exist){
                                 $value = null;
                                 foreach($path_attribute as $path_nr => $path_value){
-                                    if($path_value == $attribute){
+                                    if(
+                                        $path_value == $attribute &&
+                                        array_key_exists($path_nr, $select->attribute)
+                                    ){
                                         $value = urldecode($select->attribute[$path_nr]);
                                         break;
                                     }
                                 }
+                                d($value);
                                 if($value){
                                     $validate = $className::validate($object, $value);
+                                    d($validate);
                                     if(!$validate){
                                         return false;
                                     }
