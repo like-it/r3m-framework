@@ -285,7 +285,6 @@ class Route extends Data{
                     array_pop($select->attribute);
                 }
                 $select->attribute[] = '{' . $test[1];
-                $select->deep++;
             } else {
                 $test = explode('[', $input->data('request'), 2);
                 if(count($test) > 1) {
@@ -296,7 +295,6 @@ class Route extends Data{
                         array_pop($select->attribute);
                     }
                     $select->attribute[] = '[' . $test[1];
-                    $select->deep++;
                 } else {
                     $string_count = $input->data('request');
                     $select->deep = substr_count($string_count, '/');
