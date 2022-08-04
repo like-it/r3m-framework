@@ -320,8 +320,6 @@ class Route extends Data{
                 }
             }
             $select->host = array_unique($select->host);
-            d($select);
-
             $request = Route::select($object, $select);
             $route =  $object->data(App::ROUTE);
             Route::add_request($object, $request);
@@ -658,7 +656,6 @@ class Route extends Data{
             foreach($explode as $nr => $part){
                 if(Route::is_variable($part)){
                     $variable = Route::get_variable($part);
-                    d($variable);
                     if($variable){
                         $temp = explode(':', $variable, 2);
                         if(count($temp) === 2){
@@ -677,7 +674,6 @@ class Route extends Data{
                                         break;
                                     }
                                 }
-                                d($value);
                                 if($value){
                                     $validate = $className::validate($object, $value);
                                     if(!$validate){
