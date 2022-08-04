@@ -685,7 +685,9 @@ class Route extends Data{
                                     }
                                 }
                                 if($value){
+                                    d($value);
                                     $validate = $className::validate($object, $value);
+                                    d($validate);
                                     if(!$validate){
                                         return false;
                                     }
