@@ -306,6 +306,8 @@ class Route extends Data{
                 }
             }
             $select->host = array_unique($select->host);
+            d($select);
+            
             $request = Route::select($object, $select);
             $route =  $object->data(App::ROUTE);
             Route::add_request($object, $request);
