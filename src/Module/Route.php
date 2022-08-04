@@ -629,8 +629,6 @@ class Route extends Data{
         if(!property_exists($route, 'path')){
             return false;
         }
-        d($route);
-        d($select);
         $explode = explode('/', $route->path);
         array_pop($explode);
         $attribute = $select->attribute;
@@ -660,6 +658,7 @@ class Route extends Data{
             foreach($explode as $nr => $part){
                 if(Route::is_variable($part)){
                     $variable = Route::get_variable($part);
+                    d($variable);
                     if($variable){
                         $temp = explode(':', $variable, 2);
                         if(count($temp) === 2){
@@ -678,6 +677,7 @@ class Route extends Data{
                                         break;
                                     }
                                 }
+                                d($value);
                                 if($value){
                                     $validate = $className::validate($object, $value);
                                     if(!$validate){
