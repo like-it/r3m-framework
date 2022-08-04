@@ -110,9 +110,7 @@ class App extends Data {
         $file = FileRequest::get($object);
         if($file === false){
             try {
-                d($object);
                 $route = Route::request($object);
-                dd($route);
                 if($route === false){
                     if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
                         $object->logger()->error('Couldn\'t determine route (' . $object->request('request') .')...');
