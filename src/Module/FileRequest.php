@@ -54,6 +54,18 @@ class FileRequest {
         $input = $request->data('request');
         $dir = str_replace(['../','..'], '', Dir::name($input));
         $file = str_replace($dir,'', $input);
+        if(
+            (
+                substr($file, 0, 1) === '{' &&
+                substr($file, -1, 1) === '}'
+            ) ||
+            (
+                substr($file, 0, 1) === '[' &&
+                substr($file, -1, 1) === ']'
+            )
+        ){
+            return false;
+        }
         $extension = File::extension($file);
         if(empty($extension)){
             return false;
