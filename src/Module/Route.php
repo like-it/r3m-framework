@@ -756,7 +756,7 @@ class Route extends Data{
                                         $path_value == $attribute &&
                                         array_key_exists($path_nr, $select->attribute)
                                     ){
-                                        $value = urldecode($select->attribute[$path_nr]);
+                                        $value = $select->attribute[$path_nr];
                                         break;
                                     }
                                 }
