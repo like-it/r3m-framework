@@ -900,25 +900,32 @@ class Route extends Data{
     }
 
     private static function is_match($object, $route, $select){
+        d($route);
+        d($select);
         $is_match = Route::is_match_by_method($object, $route, $select);
+        d($is_match);
         if($is_match === false){
             return $is_match;
         }
         $route = Route::add_localhost($object, $route);
         $is_match = Route::is_match_by_host($object, $route, $select);
+        d($is_match);
         if($is_match === false){
             return $is_match;
         }
         $is_match = Route::is_match_by_deep($object, $route, $select);
+        d($is_match);
         if($is_match === false){
             return $is_match;
         }
 
         $is_match = Route::is_match_by_attribute($object, $route, $select);
+        d($is_match);
         if($is_match === false){
             return $is_match;
         }
         $is_match = Route::is_match_by_condition($object, $route, $select);
+        d($is_match);
         if($is_match === false){
             return $is_match;
         }
