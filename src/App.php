@@ -470,6 +470,8 @@ class App extends Data {
                 $data = clone $this->data();
                 unset($data->{App::NAMESPACE});
                 d($url);
+                $debug = debug_backtrace(true);
+                d($debug);
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
                 $data = new Data($read);
                 $script = Parse::readback($this, $parse, App::SCRIPT);
@@ -520,7 +522,6 @@ class App extends Data {
             'dir.vendor' => $dir_vendor,
             ...$configuration
         ]);
-        d($autoload);
         return new App($autoload, $config);
     }
 }

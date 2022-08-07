@@ -909,10 +909,6 @@ class Build {
 //            $autoload->addPrefix('Host',  $config->data('project.dir.host'));
 //            $autoload->addPrefix('Source',  $config->data('project.dir.source'));
                 $autoload->register();
-            } else {
-                d($autoload);
-                dd(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
-                dd($this->object());
             }
             $name = '';
             if(isset($options['parent'])){            
