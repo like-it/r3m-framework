@@ -510,7 +510,7 @@ class App extends Data {
 
     public static function instance($configuration=[]): App
     {
-        $dir_vendor = Dir::name(__DIR__, 2) . 'vendor' . DIRECTORY_SEPARATOR;
+        $dir_vendor = Dir::name(__DIR__, 3) . DIRECTORY_SEPARATOR;
         dd($dir_vendor);
         $autoload = $dir_vendor . 'autoload.php';
         $autoload = require $autoload;
