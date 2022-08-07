@@ -16,6 +16,7 @@ use Exception;
 use R3m\Io\Exception\ObjectException;
 
 class Response {
+    const TYPE_CLI = 'cli';
     const TYPE_JSON = 'json';
     const TYPE_HTML = 'html';
     const TYPE_OBJECT = 'object';
@@ -42,10 +43,6 @@ class Response {
      * @throws Exception
      */
     public static function output(App $object, Response $response){
-        $status = $response->status();
-        if(!Handler::header('has', 'Status')){
-            Handler::header('Status: ' . $status, $status, true);
-        }
         $type = $response->type();
         if($type === null &&  $object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
             $type = Response::TYPE_OBJECT;
@@ -53,31 +50,41 @@ class Response {
         elseif($type === null){
             $type = Response::TYPE_FILE;
         }
-        if(!Handler::header('has', 'Content-Type')){
-            switch($type){
-                case Response::TYPE_OBJECT :
-                case Response::TYPE_JSON :
-                    Handler::header('Content-Type: application/json', null, true);
-                    break;
-                case Response::TYPE_HTML :
-                    Handler::header('Content-Type: text/html', null, true);
-                    break;
-                case Response::TYPE_FILE :
-                    break;
+        $status = $response->status();
+        if($type === Response::TYPE_CLI){
+
+        } else {
+            if(!Handler::header('has', 'Status')){
+                Handler::header('Status: ' . $status, $status, true);
+            }
+            if(!Handler::header('has', 'Content-Type')){
+                switch($type){
+                    case Response::TYPE_OBJECT :
+                    case Response::TYPE_JSON :
+                        Handler::header('Content-Type: application/json', null, true);
+                        break;
+                    case Response::TYPE_HTML :
+                        Handler::header('Content-Type: text/html', null, true);
+                        break;
+                    case Response::TYPE_FILE :
+                        break;
+                }
+            }
+            $header = $response->header();
+            if(is_array($header)){
+                foreach($header as $value){
+                    Handler::header($value,null, true);
+                }
             }
         }
-        $header = $response->header();
-        if(is_array($header)){
-            foreach($header as $value){
-                Handler::header($value,null, true);
-            }
-        }
+
         switch($type){
             case Response::TYPE_JSON :
                 if(is_string($response->data())){
                     return trim($response->data(), " \t\r\n");
                 } else {
                     try {
+
                         return Core::object($response->data(), Core::OBJECT_JSON);
                     }
                     catch (Exception $exception){
@@ -121,7 +128,14 @@ class Response {
                 } else {
                     return Core::object($json, Core::OBJECT_JSON);
                 }
-
+            case Response::TYPE_CLI :
+                if($status === Response::STATUS_ERROR){
+                    echo 'ERROR' . PHP_EOL;
+                    echo str_repeat('_', 80) . PHP_EOL;
+                    return $response->data();
+                } else {
+                    return $response->data();
+                }
             case Response::TYPE_FILE :
             case Response::TYPE_HTML :
                 return $response->data();
