@@ -911,7 +911,7 @@ class Build {
                 $autoload->register();
             } else {
                 d($autoload);
-                dd(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M); 
+                dd(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
                 dd($this->object());
             }
             $name = '';
