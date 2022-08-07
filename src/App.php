@@ -518,6 +518,7 @@ class App extends Data {
             'dir.vendor' => $dir_vendor,
             ...$configuration
         ]);
+        d($autoload);
         return new App($autoload, $config);
     }
 }
