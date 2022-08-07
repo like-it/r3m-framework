@@ -887,27 +887,32 @@ class Build {
             }
             $dir .= $uuid . $config->data('ds');
             $autoload = $this->object()->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
-            $prefixList = $autoload->getPrefixList();
-            $autoload->unregister();
-            $autoload->addPrefix($config->data('dictionary.compile'),  $dir);
-            foreach ($prefixList as $nr => $record){
-                if(
-                    array_key_exists('prefix', $record) &&
-                    array_key_exists('directory', $record) &&
-                    array_key_exists('extension', $record)
-                ){
-                    $autoload->addPrefix($record['prefix'],  $record['directory'], $record['extension']);
+            if($autoload) {
+                $prefixList = $autoload->getPrefixList();
+                $autoload->unregister();
+                $autoload->addPrefix($config->data('dictionary.compile'),  $dir);
+                foreach ($prefixList as $nr => $record){
+                    if(
+                        array_key_exists('prefix', $record) &&
+                        array_key_exists('directory', $record) &&
+                        array_key_exists('extension', $record)
+                    ){
+                        $autoload->addPrefix($record['prefix'],  $record['directory'], $record['extension']);
+                    }
+                    else if(
+                        array_key_exists('prefix', $record) &&
+                        array_key_exists('directory', $record)
+                    ){
+                        $autoload->addPrefix($record['prefix'],  $record['directory']);
+                    }
                 }
-                else if(
-                    array_key_exists('prefix', $record) &&
-                    array_key_exists('directory', $record)
-                ){
-                    $autoload->addPrefix($record['prefix'],  $record['directory']);
-                }
-            }
 //            $autoload->addPrefix('Host',  $config->data('project.dir.host'));
 //            $autoload->addPrefix('Source',  $config->data('project.dir.source'));
-            $autoload->register();
+                $autoload->register();
+            } else {
+                d($autoload);
+                dd($this->object());
+            }
             $name = '';
             if(isset($options['parent'])){            
                 $name .= str_replace(
