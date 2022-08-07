@@ -469,9 +469,6 @@ class App extends Data {
                 $this->data('rdelim', '}');
                 $data = clone $this->data();
                 unset($data->{App::NAMESPACE});
-                d($url);
-                $debug = debug_backtrace(true);
-                d($debug);
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
                 $data = new Data($read);
                 $script = Parse::readback($this, $parse, App::SCRIPT);
