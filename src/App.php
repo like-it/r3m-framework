@@ -506,4 +506,17 @@ class App extends Data {
             return true;
         }
     }
+
+    public static function instance($configuration=[]): App
+    {
+        $dir_vendor = Dir::name(__DIR__, 2) . 'vendor' . DIRECTORY_SEPARATOR;
+        dd($dir_vendor);
+        $autoload = $dir_vendor . 'autoload.php';
+        $autoload = require $autoload;
+        $config = new Config([
+            'dir.vendor' => $dir_vendor,
+            ...$configuration
+        ]);
+        return new App($autoload, $config);
+    }
 }
