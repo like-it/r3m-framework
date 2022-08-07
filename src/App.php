@@ -511,7 +511,6 @@ class App extends Data {
     public static function instance($configuration=[]): App
     {
         $dir_vendor = Dir::name(__DIR__, 3);
-        dd($dir_vendor);
         $autoload = $dir_vendor . 'autoload.php';
         $autoload = require $autoload;
         $config = new Config([
