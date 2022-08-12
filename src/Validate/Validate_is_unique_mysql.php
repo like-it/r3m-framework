@@ -35,9 +35,17 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
     ){
         $entityManager = Database::entityManager($object, []);
         $repository = $entityManager->getRepository($table);
+        $criteria = [];
         if(is_array($field)){
-            d($string);
-            dd($field);
+            foreach($field as $attribute){
+                $criteria[$attribute] = $object->request($attribute);
+            }
+            $record = $repository->findOneBy($criteria);
+            if($record === null){
+                return true;
+            } else {
+                return false;
+            }
         } else {
             $criteria[$field] = $string;
             $record = $repository->findOneBy($criteria);
