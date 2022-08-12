@@ -47,9 +47,10 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
                     'uuid' => $uuid,
                     $field => $string
                 ])
-                ->setFirstResult(0)
                 ->setMaxResults(1)
-                ->getFirstResult();
+                ->getDQL();
+            dd($record);
+//                ->getFirstResult();
         }
         elseif($id){
             $qb = $entityManager->createQueryBuilder();
@@ -61,7 +62,6 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
                     'id' => $id,
                     $field => $string
                 ])
-                ->setFirstResult(0)
                 ->setMaxResults(1)
                 ->getFirstResult();
         } else {
