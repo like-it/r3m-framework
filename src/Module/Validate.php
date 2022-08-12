@@ -70,6 +70,7 @@ class Validate {
                 else {
                     $value = $object->request($field_request);
                 }
+                d($value);
                 if(
                     is_string($value) &&
                     substr($value, 0, 1) === '[' &&
