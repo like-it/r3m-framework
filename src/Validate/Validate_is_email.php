@@ -11,6 +11,7 @@
 use R3m\Io\Module\Parse\Token;
 
 function validate_is_email(R3m\Io\App $object, $string='', $field='', $argument=''){
+    d($string);
     if(filter_var($string, FILTER_VALIDATE_EMAIL)) {
         // valid address
         if($argument === false){
