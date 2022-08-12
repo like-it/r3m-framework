@@ -70,6 +70,7 @@ class Validate {
                 else {
                     $value = $object->request($field_request);
                 }
+                d($object->request());
                 d($value);
                 if(
                     is_string($value) &&
