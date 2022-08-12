@@ -40,6 +40,7 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
             foreach($field as $attribute){
                 $criteria[$attribute] = $object->request($attribute);
             }
+            d($criteria);
             $record = $repository->findOneBy($criteria);
             if($record === null){
                 return true;
