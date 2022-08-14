@@ -42,10 +42,10 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
             $record = $qb->select(['entity'])
                 ->from($table, 'entity')
                 ->where('entity.uuid = :uuid')
-//                ->andWhere('entity.' . $field . ' = :'  . $field)
+                ->andWhere('entity.' . $field . ' = :'  . $field)
                 ->setParameters([
                     'uuid' => $uuid,
-//                    $field => $string
+                    $field => $string
                 ])
                 ->setMaxResults(1)
                 ->getQuery()
