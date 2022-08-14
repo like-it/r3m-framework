@@ -49,7 +49,7 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
                 ])
                 ->setMaxResults(1)
                 ->getQuery()
-                ->getFirstResult();
+                ->getSingleResult();
         }
         elseif($id){
             $qb = $entityManager->createQueryBuilder();
