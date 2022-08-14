@@ -40,7 +40,7 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
             $qb = $entityManager->createQueryBuilder();
             $record = $qb->select(['entity'])
                 ->from($table, 'entity')
-                ->where('entity.uuid != :uuid')
+                ->where('entity.uuid = :uuid')
                 ->andWhere('entity.' . $field . ' = :'  . $field)
                 ->setParameters([
                     'uuid' => $uuid,
@@ -48,8 +48,8 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
                 ])
                 ->setMaxResults(1)
                 ->getQuery()
-                ->getResult();
-            d($record);
+                ->getOneOrNullResult();
+            dd($record);
         }
         elseif($id){
             $qb = $entityManager->createQueryBuilder();
@@ -63,7 +63,7 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
                 ])
                 ->setMaxResults(1)
                 ->getQuery()
-                ->getSingleResult();
+                ->getOneOrNullResult();
         } else {
             $repository = $entityManager->getRepository($table);
             $criteria = [];
