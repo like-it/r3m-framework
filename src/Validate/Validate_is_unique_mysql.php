@@ -48,7 +48,8 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
                 ])
                 ->setMaxResults(1)
                 ->getQuery()
-                ->getSingleResult();
+                ->getResult();
+            d($record);
         }
         elseif($id){
             $qb = $entityManager->createQueryBuilder();
