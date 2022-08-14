@@ -34,14 +34,13 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
         $field
     ){
         $entityManager = Database::entityManager($object);
-
         $uuid = $object->request('uuid');
         $id = $object->request('id');
         if($uuid){
             $qb = $entityManager->createQueryBuilder();
             $record = $qb->select(['entity'])
                 ->from($table, 'entity')
-                ->where('entity.uuid = :uuid')
+                ->where('entity.uuid != :uuid')
                 ->andWhere('entity.' . $field . ' = :'  . $field)
                 ->setParameters([
                     'uuid' => $uuid,
@@ -55,7 +54,7 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
             $qb = $entityManager->createQueryBuilder();
             $record = $qb->select(['entity'])
                 ->from($table, 'entity')
-                ->where('entity.id = :id')
+                ->where('entity.id != :id')
                 ->andWhere('entity.' . $field . ' = :'  . $field)
                 ->setParameters([
                     'id' => $id,
@@ -63,27 +62,18 @@ function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $ar
                 ])
                 ->setMaxResults(1)
                 ->getQuery()
-                ->getFirstResult();
+                ->getSingleResult();
         } else {
             $repository = $entityManager->getRepository($table);
             $criteria = [];
             $criteria[$field] = $string;
             $record = $repository->findOneBy($criteria);
         }
-
-
-        dd($record);
-
-
-
-
         if($record === null){
             return true;
         } else {
             return false;
         }
-
-
     } else {
         return false;
     }
