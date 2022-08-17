@@ -232,7 +232,7 @@ class App extends Data {
                     return $result;
                 }
 
-            } catch (Exception | AuthorizationException $exception) {
+            } catch (Exception $exception) {
                 try {
                     if($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
                         if(!headers_sent()){
@@ -244,6 +244,9 @@ class App extends Data {
                     elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
                         $object->logger()->error($exception->getMessage());
                         return App::exception_to_json($exception);
+                    } else {
+                        d($exception);
+                        echo $exception;
                     }
                 } catch (ObjectException $exception){
                     return $exception;
