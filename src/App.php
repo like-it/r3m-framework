@@ -10,6 +10,7 @@
  */
 namespace R3m\Io;
 
+use R3m\Io\Exception\AuthorizationException;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
@@ -231,7 +232,7 @@ class App extends Data {
                     return $result;
                 }
 
-            } catch (Exception $exception) {
+            } catch (Exception | AuthorizationException $exception) {
                 try {
                     if($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
                         if(!headers_sent()){
