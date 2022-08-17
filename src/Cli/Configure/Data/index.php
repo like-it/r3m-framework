@@ -6,6 +6,13 @@
  * @changeLog
  *     -    all
  */
+
+use R3m\Io\App;
+use R3m\Io\Config;
+
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\ObjectException;
+
 $dir = __DIR__;
 $dir_vendor =
 dirname($dir, 1) .
@@ -15,19 +22,14 @@ DIRECTORY_SEPARATOR;
 
 $autoload = $dir_vendor . 'autoload.php';
 $autoload = require $autoload;
-$config = new R3m\Io\Config(
+$config = new Config(
     [
         'dir.vendor' => $dir_vendor
     ]
 );
-$app = new R3m\Io\App($autoload, $config);
+$app = new App($autoload, $config);
 try {
-    echo R3m\Io\App::run($app);
-} catch (
-    \R3m\Io\Exception\LocateException  |
-    \R3m\Io\Exception\ObjectException |
-    Exception
-    $exception
-) {
-    echo R3m\Io\App::exception_to_json($exception);
+    echo App::run($app);
+} catch (Exception | LocateException | ObjectException $e) {
+    echo $e->getMessage();
 }

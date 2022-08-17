@@ -163,20 +163,7 @@ class App extends Data {
                     }
                 } else {
                     App::contentType($object);
-                    $exception = App::controller($object, $route);
-                    if(
-                        $exception &&
-                        is_object($exception) &&
-                        get_class($exception) === 'Exception'
-                    ){
-                        $object->logger()->error($exception->getMessage());
-                        $response = new Response(
-                            App::exception_to_json($exception),
-                            Response::TYPE_JSON,
-                            Response::STATUS_ERROR
-                        );
-                        return Response::output($object, $response);
-                    }
+                    App::controller($object, $route);
                     $methods = get_class_methods($route->controller);
                     if(empty($methods)){
                         $object->logger()->error('Couldn\'t determine controller (' . $route->controller .') with request (' . $object->request('request') .')');
@@ -253,6 +240,10 @@ class App extends Data {
                         $object->logger()->error($exception->getMessage());
                         return App::exception_to_json($exception);
                     }
+                    elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
+                        $object->logger()->error($exception->getMessage());
+                        return App::exception_to_json($exception);
+                    }
                 } catch (ObjectException $exception){
                     return $exception;
                 }
@@ -268,23 +259,9 @@ class App extends Data {
      */
     public static function controller(App $object, $route){
         if(property_exists($route, 'controller')){
-            try {
-                $check = class_exists($route->controller);
-                if(empty($check)){
-                    /*
-                     * $response = new Response(
-                                    App::exception_to_json(new Exception(
-                                'Couldn\'t determine controller (' . $route->controller .')'
-                                    )),
-                                    Response::TYPE_JSON,
-                                    Response::STATUS_ERROR
-                                );
-                                return Response::output($object, $response);
-                     */
-                    throw new Exception('Cannot call controller (' . $route->controller .')');
-                }
-            } catch (Exception $exception){
-                return $exception;
+            $check = class_exists($route->controller);
+            if(empty($check)){
+                throw new Exception('Cannot call controller (' . $route->controller .')');
             }
         } else {
             throw new Exception('Missing controller in route');
@@ -313,6 +290,9 @@ class App extends Data {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function exception_to_json(Exception $exception){
         $class = get_class($exception);
         $array = [];
@@ -329,8 +309,8 @@ class App extends Data {
         $array['trace_as_string'] = $exception->getTraceAsString();
         try {
             return Core::object($array, Core::OBJECT_JSON);
-        } catch (ObjectException $exception) {
-            return $exception;
+        } catch (ObjectException $objectException) {
+            throw $exception;
         }
     }
 
@@ -338,6 +318,10 @@ class App extends Data {
         $object->config('response.output', $output);
     }
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
     private static function result(App $object, $output){
         if($output instanceof Exception){
             if(App::is_cli()){
