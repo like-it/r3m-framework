@@ -246,6 +246,7 @@ class App extends Data {
                         return App::exception_to_json($exception);
                     } else {
                         $url = $object->config('server.http.error.501');
+                        d($url);
                         if(File::exist($url)){
                             $parse = new Module\Parse($object, $object->data());
                             $read = File::read($url);
