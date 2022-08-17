@@ -31,5 +31,5 @@ $app = new App($autoload, $config);
 try {
     echo App::run($app);
 } catch (Exception | LocateException | ObjectException $e) {
-    echo $e->getMessage();
+    echo $e;
 }
