@@ -245,8 +245,15 @@ class App extends Data {
                         $object->logger()->error($exception->getMessage());
                         return App::exception_to_json($exception);
                     } else {
-                        d($exception);
-                        echo $exception;
+                        $url = $object->config('server.http.error.501');
+                        if(File::exist($url)){
+                            $parse = new Module\Parse($object, $object->data());
+                            $read = File::read($url);
+                            dd($read);
+                            d($exception);
+                        } else {
+                            echo $exception;
+                        }
                     }
                 } catch (ObjectException $exception){
                     return $exception;
