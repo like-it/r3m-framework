@@ -246,12 +246,11 @@ class App extends Data {
                         return App::exception_to_json($exception);
                     } else {
                         $url = $object->config('server.http.error.501');
-                        d($url);
                         if(File::exist($url)){
                             $parse = new Module\Parse($object, $object->data());
                             $read = File::read($url);
-                            dd($read);
-                            d($exception);
+                            d((array) $exception);
+                            return $parse->compile($read, [(array) $exception]);
                         } else {
                             echo $exception;
                         }
