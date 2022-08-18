@@ -186,7 +186,8 @@ class Core {
         exit;
     }
 
-    public static function is_array_nested($array=[]){
+    public static function is_array_nested($array=[]): bool
+    {
         $array = (array) $array;
         foreach($array as $value){
             if(is_array($value)){
@@ -196,7 +197,8 @@ class Core {
         return false;
     }
 
-    public static function array_object($array=[]){
+    public static function array_object($array=[]): stdClass
+    {
         $object = new stdClass();
         foreach ($array as $key => $value){
             if(is_array($value)){
@@ -208,7 +210,19 @@ class Core {
         return $object;
     }
 
-    public static function explode_multi($delimiter=[], $string='', $limit=[]){
+    public static function object_array($object): array
+    {
+        $reflection = new ReflectionObject($object);
+        $list = array();
+        foreach ($reflection->getProperties() as $property) {
+            $property->setAccessible(true);
+            $list[$property->name] = $property->getValue($object);
+        }
+        return $list;
+    }
+
+    public static function explode_multi($delimiter=[], $string='', $limit=[]): array
+    {
         $result = array();
         if(!is_array($limit)){
             $limit = explode(',', $limit);
@@ -374,7 +388,8 @@ class Core {
         }
     }
 
-    public static function object_has($attributeList=[], $object=''){
+    public static function object_has($attributeList=[], $object=''): bool
+    {
         if(Core::object_is_empty($object)){
             if(empty($attributeList)){
                 return true;
@@ -452,6 +467,9 @@ class Core {
         return null;
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function object_merge(){
         $objects = func_get_args();
         $main = array_shift($objects);
@@ -539,7 +557,8 @@ class Core {
         return $return;
     }
 
-    public static function object_is_empty($object=null){
+    public static function object_is_empty($object=null): bool
+    {
         if(!is_object($object)){
             return true;
         }
@@ -637,7 +656,8 @@ class Core {
         return $key;
     }
 
-    public static function uuid(){
+    public static function uuid(): string
+    {
         $data = openssl_random_pseudo_bytes(16);
         assert(strlen($data) == 16);
 
@@ -647,7 +667,8 @@ class Core {
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
-    public static function uuid_variable(){
+    public static function uuid_variable(): string
+    {
         $uuid = Core::uuid();
         $search = [];
         $search[] = 0;
@@ -677,7 +698,8 @@ class Core {
         return $variable;
     }
 
-    public static function ucfirst_sentence($string='', $delimiter='.'){
+    public static function ucfirst_sentence($string='', $delimiter='.'): string
+    {
         $explode = explode($delimiter, $string);
         foreach($explode as $nr => $part){
             $explode[$nr] = ucfirst(trim($part));
