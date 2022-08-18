@@ -223,7 +223,7 @@ class Core {
         $reflection = new ReflectionObject($object);
         $list = array();
 
-        dd($reflection->getProperties( ReflectionProperty::IS_PRIVATE));
+        dd($reflection->getParentClass()->getProperties( ));
 
         if(empty($properties)){
             $properties = $reflection->getProperties();
