@@ -251,6 +251,7 @@ class App extends Data {
                             $read = File::read($url);
                             $data = [];
                             $data['exception'] = Core::object_array($exception);
+                            $data['exception']['className'] = get_class($exception);
                             return $parse->compile($read, $data);
                         } else {
                             echo $exception;
