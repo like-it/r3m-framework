@@ -218,24 +218,16 @@ class Core {
     /**
      * @throws ReflectionException
      */
-    public static function object_array($object, $properties=[]): array
+    public static function object_array($object): array
     {
         $reflection = new ReflectionObject($object);
         $list = array();
-
-        dd($reflection->getParentClass()->getProperties( ));
-
-        if(empty($properties)){
-            $properties = $reflection->getProperties();
-        } else {
-            foreach($properties as $nr => $property){
-                $properties[$nr] = $reflection->getProperty($property);
+        do {
+            foreach ($reflection->getProperties() as $property) {
+                $property->setAccessible(true);
+                $list[$property->name] = $property->getValue($object);
             }
-        }
-        foreach ($properties as $property) {
-            $property->setAccessible(true);
-            $list[$property->name] = $property->getValue($object);
-        }
+        } while ($reflection = $reflection->getParentClass());
         return $list;
     }
 
