@@ -217,6 +217,7 @@ class Core {
         $list = array();
         foreach ($reflection->getProperties() as $property) {
             $property->setAccessible(true);
+            d($property);
             $list[$property->name] = $property->getValue($object);
         }
         return $list;
