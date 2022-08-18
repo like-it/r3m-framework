@@ -217,8 +217,12 @@ class Core {
         $list = array();
         foreach ($reflection->getProperties() as $property) {
             $property->setAccessible(true);
-            d($property);
-            $list[$property->name] = $property->getValue($object);
+            if(method_exists($object, 'get' . ucfirst($property->name))){
+                $method = 'get' . ucfirst($property->name);
+                $list[$property->name] = $object->$method($object);
+            } else {
+                $list[$property->name] = $property->getValue($object);
+            }
         }
         return $list;
     }
