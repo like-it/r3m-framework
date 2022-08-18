@@ -278,6 +278,7 @@ class Parse {
                     $string
                 );
                 $string = ltrim($string, " \t\n\r\0\x0B");
+                dd($string);
             }
             $tree = Token::tree($string, $is_debug);
             $tree = $build->require('function', $tree);
