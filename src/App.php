@@ -250,13 +250,7 @@ class App extends Data {
                             $parse = new Module\Parse($object, $object->data());
                             $read = File::read($url);
                             $data = [];
-                            $data['exception'] = Core::object_array($exception, [
-                                'message',
-                                'code',
-                                'file',
-                                'line',
-                                'trace'
-                            ]);
+                            $data['exception'] = Core::object_array($exception);
                             dd($data);
                             return $parse->compile($read, (object) $data);
                         } else {
