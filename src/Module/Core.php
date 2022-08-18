@@ -10,13 +10,17 @@
  */
 namespace R3m\Io\Module;
 
+use stdClass;
+use ReflectionObject;
+use ReflectionProperty;
+
 use Defuse\Crypto\Key;
 use R3m\Io\App;
-use ReflectionObject;
-use stdClass;
 
 use Defuse\Crypto\Exception\BadFormatException;
 use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
+
+use ReflectionException;
 
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\ObjectException;
@@ -212,12 +216,14 @@ class Core {
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function object_array($object, $properties=[]): array
     {
         $reflection = new ReflectionObject($object);
         $list = array();
+
+        dd($reflection->getProperties( ReflectionProperty::IS_PRIVATE));
 
         if(empty($properties)){
             $properties = $reflection->getProperties();
