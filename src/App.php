@@ -250,7 +250,7 @@ class App extends Data {
                             $parse = new Module\Parse($object, $object->data());
                             $read = File::read($url);
                             $data = [];
-                            $data['exception'] = (array) $exception;
+                            $data['exception'] = (object) (array) $exception;
                             dd($data);
                             return $parse->compile($read, $data);
                         } else {
