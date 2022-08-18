@@ -249,8 +249,7 @@ class App extends Data {
                         if(File::exist($url)){
                             $parse = new Module\Parse($object, $object->data());
                             $read = File::read($url);
-                            d((array) $exception);
-                            return $parse->compile($read, [(array) $exception]);
+                            return $parse->compile($read, (array) $exception);
                         } else {
                             echo $exception;
                         }
