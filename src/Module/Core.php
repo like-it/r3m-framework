@@ -211,14 +211,22 @@ class Core {
         return $object;
     }
 
-    public static function object_array($object): array
+    /**
+     * @throws \ReflectionException
+     */
+    public static function object_array($object, $properties=[]): array
     {
         $reflection = new ReflectionObject($object);
         $list = array();
 
-        dd($reflection->getProperties());
-
-        foreach ($reflection->getProperties() as $property) {
+        if(empty($properties)){
+            $properties = $reflection->getProperties();
+        } else {
+            foreach($properties as $nr => $property){
+                $properties[$nr] = $reflection->getProperty($property);
+            }
+        }
+        foreach ($properties as $property) {
             $property->setAccessible(true);
             $list[$property->name] = $property->getValue($object);
         }
