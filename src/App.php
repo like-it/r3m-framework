@@ -251,6 +251,7 @@ class App extends Data {
                             $read = File::read($url);
                             $data = [];
                             $data['exception'] = (array) $exception;
+                            dd($data);
                             return $parse->compile($read, $data);
                         } else {
                             echo $exception;
