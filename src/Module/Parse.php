@@ -251,7 +251,7 @@ class Parse {
                 if($storage->get('ldelim') === null){
                     $storage->set('ldelim','{');
                 }
-                if($storage->get('ldelim') === null){
+                if($storage->get('rdelim') === null){
                     $storage->set('rdelim','}');
                 }
                 $storage->data('r3m.io.parse.compile.remove_newline', true);
