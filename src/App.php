@@ -250,7 +250,7 @@ class App extends Data {
                             $parse = new Module\Parse($object, $object->data());
                             $read = File::read($url);
                             $data = [];
-                            $data['exception'] = json_decode(json_encode((array) $exception));
+                            $data['exception'] = Core::object_array($exception);
                             dd($data);
                             return $parse->compile($read, (object) $data);
                         } else {
