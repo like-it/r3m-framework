@@ -12,6 +12,7 @@ namespace R3m\Io\Module;
 
 use Defuse\Crypto\Key;
 use R3m\Io\App;
+use ReflectionObject;
 use stdClass;
 
 use Defuse\Crypto\Exception\BadFormatException;
