@@ -331,7 +331,6 @@ class Parse {
 
             }
         }
-        dd($string);
         return $string;
     }
 
