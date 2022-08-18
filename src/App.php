@@ -250,7 +250,8 @@ class App extends Data {
                             $parse = new Module\Parse($object, $object->data());
                             $read = File::read($url);
                             $data = [];
-                            $data['exception'] = (object) (array) $exception; //yes first make array then create object
+                            $data['exception'] = json_encode((array) $exception); //yes first make array then create object
+                            dd($data);
                             return $parse->compile($read, (object) $data);
                         } else {
                             echo $exception;
