@@ -248,6 +248,12 @@ class Parse {
             $string = str_replace('{{R3M}}', '{R3M}', $string);
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){
+                if($storage->get('ldelim') === null){
+                    $storage->set('ldelim','{');
+                }
+                if($storage->get('ldelim') === null){
+                    $storage->set('rdelim','}');
+                }
                 $storage->data('r3m.io.parse.compile.remove_newline', true);
                 $string = str_replace(
                     [
