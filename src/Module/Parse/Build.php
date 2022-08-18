@@ -115,7 +115,8 @@ class Build {
         }
     }
 
-    public function indent($indent=null){
+    public function indent($indent=null): string
+    {
         if($indent !== null){
             $this->indent = $indent;
         }
@@ -137,7 +138,8 @@ class Build {
         return $this->limit;
     }
 
-    private function createClass($document=[]){
+    private function createClass($document=[]): array
+    {
         $config = $this->object()->data(App::CONFIG);
 
         $storage = $this->storage();
@@ -165,7 +167,8 @@ class Build {
         return $document;
     }
 
-    private function createTrait($document=[]){
+    private function createTrait($document=[]): array
+    {
         $storage = $this->storage();
         $trait = [];
         $use= [];
@@ -251,7 +254,8 @@ class Build {
     }
 
 
-    private function createUse($document=[]){
+    private function createUse($document=[]): array
+    {
         $storage = $this->storage();
         $use = [];
         foreach($storage->data('use') as $name => $record){
@@ -269,7 +273,8 @@ class Build {
         return $document;
     }
 
-    private function createRun($document=[]){
+    private function createRun($document=[]): array
+    {
         $storage = $this->storage();
         $run = $storage->data('run');
         $content = implode("\n", $run);
@@ -289,7 +294,8 @@ class Build {
      * @throws PluginNotFoundException
      * @throws PluginNotAllowedException
      */
-    private function createRequireContent($type='', $document=[]){
+    private function createRequireContent($type='', $document=[]): array
+    {
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
         $dir_plugin = $storage->data('plugin');
@@ -367,7 +373,8 @@ class Build {
         return $document;
     }
 
-    private function createRequireCategory($type='', $document=[]){
+    private function createRequireCategory($type='', $document=[]): array
+    {
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
         $dir_plugin = $storage->data('plugin');
@@ -401,7 +408,8 @@ class Build {
      * @throws FileAppendException
      * @throws FileMoveException
      */
-    public function write($url, $document=[]){
+    public function write($url, $document=[]): string
+    {
         $write = implode("\n", $document);
         $this->storage()->data('time.end', microtime(true));
         $this->storage()->data('time.duration', $this->storage()->data('time.end') - $this->storage()->data('time.start'));
@@ -429,7 +437,8 @@ class Build {
     /**
      * @throws Exception
      */
-    public function document(Data $data, $tree=[], $document=[]){
+    public function document(Data $data, $tree=[], $document=[]): array
+    {
         $is_tag = false;
         $tag = null;
         $this->indent(2);
@@ -665,7 +674,8 @@ class Build {
     /**
      * @throws Exception
      */
-    public static function getType($object='', $record=[]){
+    public static function getType($object='', $record=[]): string
+    {
         switch($record['type']){
             case Token::TYPE_VARIABLE :
                 if(
@@ -737,7 +747,12 @@ class Build {
         }
     }
 
-    private function createRequire($document=[]){
+    /**
+     * @throws PluginNotAllowedException
+     * @throws PluginNotFoundException
+     */
+    private function createRequire($document=[]): array
+    {
         $document = $this->createRequireContent('modifier', $document);
         $document = $this->createRequireContent('function', $document);
         $document = str_replace('function ' . 'capture', 'private function ' . 'capture', $document);
@@ -747,7 +762,8 @@ class Build {
         return $document;
     }
 
-    private function createHeader($document=[]){
+    private function createHeader($document=[]): array
+    {
         if(empty($document)){
             $document = [];
         }
@@ -760,7 +776,7 @@ class Build {
         $document[] = ' * @license                  MIT';
         $document[] = ' * @note                     Auto generated file, do not modify!';
         $document[] = ' * @author                   R3m\Io\Module\Parse\Build';
-        $document[] = ' * @author                   Remco van der Velde';
+        $document[] = ' * @author                   Remco van der Velde remco@universeorange.com';
         if($this->storage()->data('parent')){
             $document[] = ' * @parent                   ' . $this->storage()->data('parent');
         }
@@ -776,7 +792,8 @@ class Build {
         return $document;
     }
 
-    public function meta($options=[]){        
+    public function meta($options=[]): array
+    {
         $config = $this->object()->data(App::CONFIG);
         $this->storage()->data('placeholder.use', '// R3M-IO-' . Core::uuid());
         $namespace = 'R3m\\Io\\Module\\' .  $config->data('dictionary.compile');
@@ -874,7 +891,8 @@ class Build {
     /**
      * @throws Exception
      */
-    public function url($string=null, $options=[]){
+    public function url($string=null, $options=[]): string
+    {
         $storage = $this->storage();
         $url = $storage->data('url');
         if($string !== null && $url === null){
@@ -961,7 +979,8 @@ class Build {
     /**
      * @throws Exception
      */
-    public function require($type='', $tree=[]){
+    public function require($type='', $tree=[]): array
+    {
         switch($type){
             case 'function':
                 $tree = $this->requireFunction($tree);
@@ -975,7 +994,8 @@ class Build {
         return $tree;
     }
 
-    private function requireModifier($tree=[]){
+    private function requireModifier($tree=[]): array
+    {
         $storage = $this->storage();
         foreach($tree as $nr => $record){
             if(
@@ -1000,7 +1020,8 @@ class Build {
         return $tree;
     }
 
-    private function requireFunction($tree=[]){
+    private function requireFunction($tree=[]): array
+    {
         $storage = $this->storage();
         foreach($tree as $nr => $record){
             if($record['type'] == Token::TYPE_METHOD){

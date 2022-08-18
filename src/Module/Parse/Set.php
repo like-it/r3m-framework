@@ -14,7 +14,8 @@ use R3m\Io\Module\Logger;
 
 class Set {
 
-    public static function has($token=[]){
+    public static function has($token=[]): bool
+    {
         foreach ($token as $nr => $record){
             if(
                 !empty($record['depth']) &&
@@ -26,7 +27,8 @@ class Set {
         return false;
     }
 
-    public static function get($token=[]){
+    public static function get($token=[]): array
+    {
         $highest = Set::highest($token);
         $set = [];
         $is_collect = false;
@@ -65,7 +67,8 @@ class Set {
         }
     }
 
-    public static function replace($token=[], $set=[], $target=0){
+    public static function replace($token=[], $set=[], $target=0): array
+    {
         $target += 0;
         $nr = 0;
         foreach($set as $record){
@@ -75,7 +78,8 @@ class Set {
         return $token;
     }
 
-    public static function pre_remove($token=[]){
+    public static function pre_remove($token=[]): array
+    {
         $highest = Set::highest($token);
         $is_collect = false;
         foreach($token as $nr => $record){
@@ -93,7 +97,8 @@ class Set {
         return $token;
     }
 
-    public static function remove($token=[]){
+    public static function remove($token=[]): array
+    {
         foreach($token as $nr => $record){
             if($record === null){
                 unset($token[$nr]);
@@ -102,7 +107,8 @@ class Set {
         return $token;
     }
 
-    public static function highest($token=[]){
+    public static function highest($token=[]): int
+    {
         $depth = 0;
         foreach ($token as $nr => $record){
             if(

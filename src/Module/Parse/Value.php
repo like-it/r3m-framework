@@ -149,7 +149,8 @@ class Value {
     /**
      * @throws Exception
      */
-    private static function getCast($record=[]){
+    private static function getCast($record=[]): string
+    {
         switch(strtolower($record['value'])){
             case 'bool':
             case 'boolean':

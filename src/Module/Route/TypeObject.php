@@ -30,7 +30,8 @@ class TypeObject {
         return false;
     }
 
-    public static function cast(App $object, $string=''){
+    public static function cast(App $object, $string=''): stdClass
+    {
         $object = json_decode($string);
         if(is_object($object)){
             return $object;

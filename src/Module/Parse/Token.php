@@ -10,6 +10,8 @@
  */
 namespace R3m\Io\Module\Parse;
 
+use Exception;
+
 class Token {
     const TYPE_NULL = 'null';
     const TYPE_STRING = 'string';
@@ -191,7 +193,8 @@ class Token {
         '|='
     ];
 
-    public static function split($string='', $length=1, $encoding='UTF-8') {
+    public static function split($string='', $length=1, $encoding='UTF-8'): array
+    {
         $array = [];
         $strlen = mb_strlen($string);
         for($i=0; $i<$strlen; $i=$i+$length){
@@ -200,7 +203,8 @@ class Token {
         return $array;
     }
 
-    private static function operator($record=[], $level=1){
+    private static function operator($record=[], $level=1): array
+    {
         if($record['type'] != Token::TYPE_OPERATOR){
             return $record;
         }
@@ -401,7 +405,8 @@ class Token {
         return $record;
     }
 
-    public static function tree_prepare($string='', &$count=0, $is_debug=false){
+    public static function tree_prepare($string='', &$count=0, $is_debug=false): array
+    {
         $array = Token::split($string);
         $token = array();
         $row = 1;
@@ -637,7 +642,8 @@ class Token {
         return $prepare;
     }
 
-    public static function tree($string='', $is_debug=false){
+    public static function tree($string='', $is_debug=false): array
+    {
         $prepare = Token::tree_prepare($string, $count);
         $prepare = Token::prepare($prepare, $count, $is_debug);
         $token = Token::define($prepare);
@@ -647,7 +653,8 @@ class Token {
         return $token;
     }
 
-    public static function cast($token=[]){
+    public static function cast($token=[]): array
+    {
         $previous_nr = null;
         $previous_previous_nr = null;
         foreach($token as $nr => $record){
@@ -669,14 +676,16 @@ class Token {
         return $token;
     }
 
-    public static function attribute($token=[]){
+    public static function attribute($token=[]): array
+    {
         foreach($token as $nr => $record){
             $token[$nr]['is_attribute'] = true;
         }
         return $token;
     }
 
-    public static function method($token=[], $is_debug=false){
+    public static function method($token=[], $is_debug=false): array
+    {
         $selection = [];
         $collect = false;
         $depth = null;
@@ -791,7 +800,8 @@ class Token {
         return $token;
     }
 
-    public static function group($token=[], $is_debug=false){
+    public static function group($token=[], $is_debug=false): array
+    {
         $is_outside = true;
         $curly_depth = 0;
         foreach($token as $nr => $record){
@@ -862,7 +872,8 @@ class Token {
         return $token;
     }
 
-    private static function modifier($token=[]){
+    private static function modifier($token=[]): array
+    {
         foreach($token as $token_nr => $modifier_list){
             $modifier = null;
             $is_attribute = 0;
@@ -896,7 +907,8 @@ class Token {
         return $token;
     }
 
-    public static function define($token=[]){
+    public static function define($token=[]): array
+    {
         $define = [];
         $method = [];
         $variable = [];
@@ -975,7 +987,11 @@ class Token {
         return $token;
     }
 
-    public static function prepare($token=[], $count=0, $is_debug=null){
+    /**
+     * @throws Exception
+     */
+    public static function prepare($token=[], $count=0, $is_debug=null): array
+    {
         $hex = null;
         $start = null;
         $skip = 0;
@@ -1637,14 +1653,16 @@ class Token {
         return $token;
     }
 
-    private static function is_hex($hex=''){
+    private static function is_hex($hex=''): bool
+    {
         if(strtolower($hex) == 'nan'){
             $hex = NAN;
         }
         return ctype_xdigit($hex);
     }
 
-    private static function type($char=null){
+    private static function type($char=null): string
+    {
         switch($char){
             case '.' :
                 return Token::TYPE_DOT;

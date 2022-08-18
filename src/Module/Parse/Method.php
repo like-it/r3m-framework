@@ -21,7 +21,8 @@ class Method {
     const WHERE_BEFORE = 'before';
     const WHERE_AFTER = 'after';
 
-    public static function get(Build $build, Data $storage, $record=[], $is_debug=false){        
+    public static function get(Build $build, Data $storage, $record=[], $is_debug=false): array
+    {
         if($record['type'] != Token::TYPE_METHOD){
             return $record;
         }
@@ -313,7 +314,11 @@ class Method {
         return $record;
     }
 
-    public static function get_trait(Build $build, Data $storage, $record=[], $is_debug=false){
+    /**
+     * @throws Exception
+     */
+    public static function get_trait(Build $build, Data $storage, $record=[], $is_debug=false): array
+    {
         if($record['type'] != Token::TYPE_METHOD){
             return $record;
         }
@@ -384,13 +389,17 @@ class Method {
         return $record;
     }
 
-    private static function getAssign($token=[], $where=''){
+    /**
+     * @throws Exception
+     */
+    private static function getAssign($token=[], $where=''): array
+    {
         if(empty($where)){
             $where = Method::WHERE_BEFORE;
         }
+        $data = [];
         switch($where){
             case Method::WHERE_BEFORE :
-                $data = [];
                 if(isset($token[0])){
                     $data[0] = $token[0];
                 } else {
@@ -398,17 +407,19 @@ class Method {
                 }
                 return $data;
             case Method::WHERE_AFTER :
-                $data = [];
                 if(isset($token[2])){
                     $data[0] = $token[2];
                 } else {
                     $data[0] = [];
                 }
                 return $data;
+            default:
+                throw new Exception('Unkown method in getAssign (' . $where . ')');
         }
     }
 
-    private static function getAttribute($token=[]){
+    private static function getAttribute($token=[]): array
+    {
         $data = [];
         if(isset($token[1])){
             $data[0] = $token[1];
@@ -421,7 +432,8 @@ class Method {
     /**
      * @throws Exception
      */
-    public static function create_control(Build $build, Data $storage, $token=[]){
+    public static function create_control(Build $build, Data $storage, $token=[]): string
+    {
         $method = array_shift($token);
         $record = Method::get($build, $storage, $method);
         if($record['type'] === Token::TYPE_CODE){
@@ -433,7 +445,8 @@ class Method {
     /**
      * @throws Exception
      */
-    public static function create(Build $build, Data $storage, $token=[]){
+    public static function create(Build $build, Data $storage, $token=[]): string
+    {
         $method = array_shift($token);
         $record = Method::get($build, $storage, $method);
         if($record['type'] === Token::TYPE_CODE){
@@ -445,7 +458,8 @@ class Method {
     /**
      * @throws Exception
      */
-    public static function create_trait(Build $build, Data $storage, $token=[], $is_debug=false){
+    public static function create_trait(Build $build, Data $storage, $token=[], $is_debug=false): array
+    {
         $method = array_shift($token);
         $method['method']['attribute'][] = $token;
         $record = Method::get_trait($build, $storage, $method, $is_debug);
@@ -500,7 +514,8 @@ class Method {
     /**
      * @throws Exception
      */
-    public static function create_capture(Build $build, Data $storage, $token=[], $is_debug=false){
+    public static function create_capture(Build $build, Data $storage, $token=[], $is_debug=false): string
+    {
         $method = array_shift($token);
         $method['method']['attribute'][] = $token;
         $record = Method::get($build, $storage, $method, $is_debug);
@@ -527,7 +542,8 @@ class Method {
         throw new Exception('Method type (' . $record['type'] . ') undefined');
     }
 
-    public static function capture_selection(Build $build, Data $storage, $tree=[], $selection=[]){
+    public static function capture_selection(Build $build, Data $storage, $tree=[], $selection=[]): array
+    {
         $key = key($selection);
         $is_collect = false;
         $break = '';

@@ -15,7 +15,8 @@ use R3m\Io\Module\Data;
 
 class Operator {
 
-    public static function has($token=array()){
+    public static function has($token=array()): bool
+    {
         foreach($token as $nr => $record){
             if(                
                 isset($record['is_operator']) && 
@@ -178,7 +179,11 @@ class Operator {
         return false;        
     }
 
-    public static function remove($token=[], $statement=[]){
+    /**
+     * @throws Exception
+     */
+    public static function remove($token=[], $statement=[]): array
+    {
         $assign_key = false;
         if(is_array($statement)){
             foreach($statement as $nr => $record){
@@ -189,10 +194,7 @@ class Operator {
                 unset($token[$nr]);
             }
         } else {
-            d($token);
-             $debug = debug_backtrace(true);
-             dd($debug);
-            dd($statement);
+            throw new exception('Statement must be an array in Operator::remove');
         }
         
         return $token;
@@ -201,7 +203,8 @@ class Operator {
     /**
      * @throws Exception
      */
-    public static function create($build, Data $storage, $statement=[], &$depth=0){
+    public static function create($build, Data $storage, $statement=[], &$depth=0): array
+    {
         $assign_key = null;
         $left = null;
         $operator = null;

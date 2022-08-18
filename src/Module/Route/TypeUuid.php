@@ -18,6 +18,9 @@ class TypeUuid {
     public static function validate(App $object, $string=''): bool
     {
         //format: %s%s-%s-%s-%s-%s%s%s
+        if(strlen($string) === 36){
+            return false;
+        }
         $explode = explode('-', $string);
         if (count($explode) !== 5) {
             return false;

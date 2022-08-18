@@ -10,15 +10,19 @@
  */
 namespace R3m\Io\Module;
 
-use ParseError;
-use Exception;
+use stdClass;
+
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Parse\Token;
 use R3m\Io\Module\Parse\Build;
 use R3m\Io\Module\Parse\Literal;
 
-use stdClass;
+use Exception;
+use ParseError;
+
+use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\FileWriteException;
 
 class Parse {
     const PLUGIN = 'Plugin';
@@ -163,8 +167,9 @@ class Parse {
     }
 
     /**
-     * @throws \R3m\Io\Exception\ObjectException
-     * @throws \R3m\Io\Exception\FileWriteException
+     * @throws ObjectException
+     * @throws FileWriteException
+     * @throws Exception
      */
     public function compile($string='', $data=[], $storage=null, $is_debug=false){
         if($storage === null){            
@@ -316,38 +321,8 @@ class Parse {
                 }
                 $storage->data('delete', 'this');
             } else {
-                if(File::exist($url)){
-                    //not ready yet
-                    sleep(1);
-                    $write = implode("\n", $document);
-                    $written = File::write($url, $write);
-                    require $url;;
-                    $exists = class_exists($class);
-                    if($exists){
-                        $template = new $class(new Parse($this->object()), $storage);
-                        $string = $template->run();
-                        if(empty($this->halt_literal())){
-                            $string = Literal::restore($storage, $string);
-                        }
-                        $storage->data('delete', 'this');
-                        return $string;
-                    } else {
-                        throw new Exception('Class ('. $class .') doesn\'t exist');
-                    }
-                }
-                //not ready yet
-                sleep(1);
-                $exists = class_exists($class);
-                if($exists){
-                    $template = new $class(new Parse($this->object()), $storage);
-                    $string = $template->run();
-                    if(empty($this->halt_literal())){
-                        $string = Literal::restore($storage, $string);
-                    }
-                    $storage->data('delete', 'this');
-                } else {
-                    throw new Exception('Class ('. $class .') doesn\'t exist');
-                }
+                throw new Exception('Class ('. $class .') doesn\'t exist');
+
             }
         }
         dd($string);

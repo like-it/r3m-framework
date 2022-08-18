@@ -16,7 +16,11 @@ use R3m\Io\Module\Core;
 
 class Variable {
 
-    public static function count_assign($build, Data $storage, $token=[], $is_result=false){
+    /**
+     * @throws Exception
+     */
+    public static function count_assign($build, Data $storage, $token=[], $is_result=false): string
+    {
         $count = array_shift($token);
         $variable = array_shift($token);
         switch($count['type']){
@@ -36,10 +40,16 @@ class Variable {
                 $assign .= $variable['variable']['attribute'] . '\')';
                 $assign .= '))';
                 return $assign;
+            default:
+                throw new Exception('unknown counter in assign (' . $count['type'] . ')');
         }        
     }
 
-    public static function assign($build, Data $storage, $token=[], $is_result=false){
+    /**
+     * @throws Exception
+     */
+    public static function assign($build, Data $storage, $token=[], $is_result=false): string
+    {
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
             return '';
@@ -95,12 +105,14 @@ class Variable {
                 $assign .= $variable['variable']['attribute'] . '\')';
                 $assign .= '))';
                 return $assign;
-            default: throw new Exception('Variable operator not defined');
+            default:
+                throw new Exception('Variable operator not defined');
 
         }
     }
 
-    private static function addAssign($token=[]){
+    private static function addAssign($token=[]): array
+    {
         foreach ($token as $nr => $record){
             $record['is_assign'] = true;
             $token[$nr] = $record;
@@ -108,7 +120,8 @@ class Variable {
         return $token;
     }
 
-    public static function is_count($build, Data $storage, $token=[]){
+    public static function is_count($build, Data $storage, $token=[]): array
+    {
         $count = null;
         foreach($token as $nr => $record){
             if($count === null){
@@ -123,7 +136,8 @@ class Variable {
         return $token;
     }
 
-    public static function define($build, Data $storage, $token=[]){
+    public static function define($build, Data $storage, $token=[]): string
+    {
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
             return '';
@@ -165,7 +179,8 @@ class Variable {
     /**
      * @throws Exception
      */
-    public static function getValue($build, Data $storage, $token=[], $is_result=false){
+    public static function getValue($build, Data $storage, $token=[], $is_result=false): string
+    {
         $set_max = 1024;
         $set_counter = 0;
         $operator_max = 1024;
