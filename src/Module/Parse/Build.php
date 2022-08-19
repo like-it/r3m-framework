@@ -38,6 +38,20 @@ class Build {
     const VARIABLE_DEFINE = 'variable-define';
     const METHOD = 'method';
     const METHOD_CONTROL = 'method-control';
+
+    const METHOD_DEFAULT = [
+        'if',
+        'else.if',
+        'elseif',
+        'for',
+        'for.each',
+        'foreach',
+        'while',
+        'switch',
+        'break',
+        'continue',
+    ];
+
     const CODE = 'code';
     const ELSE = 'else';
     const TAG_CLOSE = 'tag-close';
@@ -692,18 +706,7 @@ class Build {
                 foreach($multi_line as $nr => $plugin){
                     $multi_line[$nr] = 'function_' . str_replace('.', '_', $plugin);
                 }
-                $method = [
-                    'if',
-                    'else.if',
-                    'elseif',
-                    'for',
-                    'for.each',
-                    'foreach',
-                    'while',
-                    'switch',
-                    'break',
-                    'continue',
-                ];
+                $method = Build::METHOD_DEFAULT;                 
                 $method = array_merge($method, $multi_line);
                 if(
                     in_array(
@@ -1029,18 +1032,7 @@ class Build {
             if($record['type'] == Token::TYPE_METHOD){
                 $multi_line = Build::getPluginMultiline($this->object());
                 // 'capture.append'
-                $method = [
-                    'if',
-                    'else.if',
-                    'elseif',
-                    'for',
-                    'for.each',
-                    'foreach',
-                    'while',
-                    'switch',
-                    'break',
-                    'continue',
-                ];
+                $method = Build::METHOD_DEFAULT;
                 $method = array_merge($method, $multi_line);
                 if(
                     !in_array(
