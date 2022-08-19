@@ -271,6 +271,7 @@ class Variable {
             }
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
+                d($result);
                 $result .= '[';
             }
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
