@@ -316,7 +316,8 @@ class Variable {
         }
         if(substr($result, -3) == ' . '){
             $result = substr($result,0, -3);
-        }        
+        }
+        d($result);
         return $result;
     }
 }
