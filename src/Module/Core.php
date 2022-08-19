@@ -221,11 +221,13 @@ class Core {
     public static function object_array($object): array
     {
         $reflection = new ReflectionObject($object);
-        $list = array();
+        $list = [];
         do {
             foreach ($reflection->getProperties() as $property) {
                 $property->setAccessible(true);
-                $list[$property->name] = $property->getValue($object);
+                if(!array_key_exists($property->name, $list)){
+                    $list[$property->name] = $property->getValue($object);
+                }
             }
         } while ($reflection = $reflection->getParentClass());
         return $list;
