@@ -706,7 +706,7 @@ class Build {
                 foreach($multi_line as $nr => $plugin){
                     $multi_line[$nr] = 'function_' . str_replace('.', '_', $plugin);
                 }
-                $method = Build::METHOD_DEFAULT;                 
+                $method = Build::METHOD_DEFAULT;
                 $method = array_merge($method, $multi_line);
                 if(
                     in_array(
