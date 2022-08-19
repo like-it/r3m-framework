@@ -694,8 +694,10 @@ class Build {
                 }
                 $method = [
                     'if',
+                    'else.if',
                     'elseif',
                     'for',
+                    'for.each',
                     'foreach',
                     'while',
                     'switch',
