@@ -236,6 +236,7 @@ class App extends Data {
                 try {
                     if($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
                         if(!headers_sent()){
+                            header('Status: 500');
                             header('Content-Type: application/json');
                         }
                         $object->logger()->error($exception->getMessage());
@@ -246,6 +247,9 @@ class App extends Data {
                         return App::exception_to_json($exception);
                     } else {
                         $url = $object->config('server.http.error.500');
+                        if(!headers_sent()){
+                            header('Status: 500');
+                        }
                         if(File::exist($url)){
                             $parse = new Module\Parse($object, $object->data());
                             $read = File::read($url);
