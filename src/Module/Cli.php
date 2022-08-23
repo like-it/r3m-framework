@@ -22,9 +22,9 @@ class Cli {
     const COLOR_PURPLE = 5;
     const COLOR_LIGHTBLUE = 6;
     const COLOR_LIGHTGREY = 7;
-    const COLOR_SET = 11;
 
-    public static function read($url='', $text=''){
+    public static function read($url='', $text=''): ?string
+    {
         $is_flush = false;
         if(ob_get_level() > 0){
             $is_flush =true;
@@ -53,7 +53,8 @@ class Cli {
         return $input;
     }
 
-    public static function tput($tput='', $arguments=[]){
+    public static function tput($tput='', $arguments=[]): string
+    {
         if(!is_array($arguments)){
             $arguments = (array) $arguments;
         }
