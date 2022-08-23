@@ -2,7 +2,6 @@
 {{if(config('silence') === true)}}
 R3m.io silence mode... {{cli.color('green')}}{{config('framework.version')}}{{cli.reset()}}
 
-
 {{else}}
 Welcome to R3m.io {{cli.color('green')}}{{config('framework.version')}}{{cli.reset()}}
 
