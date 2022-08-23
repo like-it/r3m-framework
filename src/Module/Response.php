@@ -129,13 +129,20 @@ class Response {
                     return Core::object($json, Core::OBJECT_JSON);
                 }
             case Response::TYPE_CLI :
-                if($status === Response::STATUS_ERROR){
-                    echo 'ERROR' . PHP_EOL;
-                    echo str_repeat('_', 80) . PHP_EOL;
-                    return $response->data();
-                } else {
-                    return $response->data();
+                $data = $response->data();
+                if(is_array($data)){
+                    $data = implode(PHP_EOL, $data);
                 }
+                if($status === Response::STATUS_ERROR){
+                    echo CLi::tput('color', Cli::COLOR_RED);
+                    echo 'ERROR' . PHP_EOL;
+                    echo str_repeat('_', Cli::tput('width')) . PHP_EOL;
+                    echo $data;
+                    echo CLi::tput('color', 'reset');
+                } else {
+                    echo $data;
+                }
+                return null;
             case Response::TYPE_FILE :
             case Response::TYPE_HTML :
                 return $response->data();
