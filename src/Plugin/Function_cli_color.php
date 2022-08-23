@@ -41,5 +41,8 @@ function function_cli_color(Parse $parse, Data $data, $attribute=null){
         case 'light-grey' :
             echo Cli::tput('color', Cli::COLOR_LIGHTGREY);
             break;
+        case 'set' :
+            echo Cli::tput('color', Cli::COLOR_SET);
+            break;
     }
 }
