@@ -1,6 +1,6 @@
 {{R3M}}
 {{if(config('silence') === true)}}
-R3m.io silence mode... {{cli.background.color('green')}}{{config('framework.version')}}{{cli.reset()}}
+R3m.io silence mode... {{cli.color('green')}}{{config('framework.version')}}{{cli.reset()}}
 
 
 {{else}}
