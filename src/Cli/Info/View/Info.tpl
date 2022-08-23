@@ -1,6 +1,7 @@
 {{R3M}}
-{{if(request('silence') === true)}}
+{{if(config('silence') === true)}}
 R3m.io silence mode...
+
 {{else}}
 Welcome to R3m.io
 
@@ -13,5 +14,5 @@ Welcome to R3m.io
 {{binary()}} password                       | Password hash generation
 {{binary()}} uuid                           | Uuid generation
 {{binary()}} version                        | Version information
-{{/if}}
 
+{{/if}}
