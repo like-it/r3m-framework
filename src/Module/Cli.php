@@ -22,7 +22,7 @@ class Cli {
     const COLOR_PURPLE = 5;
     const COLOR_LIGHTBLUE = 6;
     const COLOR_LIGHTGREY = 7;
-    const COLOR_SET = 8;
+    const COLOR_SET = 7;
 
     public static function read($url='', $text=''){
         $is_flush = false;
