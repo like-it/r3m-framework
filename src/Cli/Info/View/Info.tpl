@@ -1,13 +1,21 @@
 {{R3M}}
 {{if(config('silence') === true)}}
 R3m.io silence mode... {{cli.background.color('set')}}{{config('framework.version')}}{{cli.reset()}}
+
 {{cli.background.color('black')}}{{config('framework.version')}}{{cli.reset()}}
+
 {{cli.background.color('red')}}{{config('framework.version')}}{{cli.reset()}}
+
 {{cli.background.color('blue')}}{{config('framework.version')}}{{cli.reset()}}
+
 {{cli.background.color('yellow')}}{{config('framework.version')}}{{cli.reset()}}
+
 {{cli.background.color('green')}}{{config('framework.version')}}{{cli.reset()}}
+
 {{cli.background.color('purple')}}{{config('framework.version')}}{{cli.reset()}}
+
 {{cli.background.color('lightgrey')}}{{config('framework.version')}}{{cli.reset()}}
+
 {{cli.background.color('set')}}{{config('framework.version')}}{{cli.reset()}}
 
 
