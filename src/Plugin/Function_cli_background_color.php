@@ -13,7 +13,7 @@ use R3m\Io\Module\Cli;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_cli_color(Parse $parse, Data $data, $attribute=null){
+function function_cli_background_color(Parse $parse, Data $data, $attribute=null){
     switch(strtolower($attribute)) {
         case 'black' :
             echo Cli::tput('background', Cli::COLOR_BLACK);
