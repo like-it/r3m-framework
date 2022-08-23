@@ -439,7 +439,7 @@ class Build {
             $this->object()->logger()->error($error, [ $url_write_error ]);
             $dir = Dir::name($url_write_error);
             Dir::create($dir);
-            File::move($url, $url_write_error);
+            File::move($url, $url_write_error, true);
         }
         return $write;
     }
