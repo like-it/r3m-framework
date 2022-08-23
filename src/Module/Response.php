@@ -138,7 +138,7 @@ class Response {
                     echo 'ERROR' . PHP_EOL;
                     echo str_repeat('_', Cli::tput('width')) . PHP_EOL;
                     echo $data;
-                    echo CLi::tput('color', 'reset');
+                    echo CLi::tput('reset');
                 } else {
                     echo $data;
                 }
