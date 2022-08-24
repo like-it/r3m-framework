@@ -268,6 +268,7 @@ class Handler {
                 );
             */
             $input = implode('', file('php://input'));
+            dd($input);
             if(!empty($input)){
                 $input = json_decode($input);
             }
