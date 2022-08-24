@@ -239,8 +239,6 @@ class Handler {
                 $data->data($key, trim($value));
             }
         } else {
-            var_dump($_REQUEST);
-            die;
             $request = Handler::request_key_group($_REQUEST);
             if(!property_exists($request, 'request')){
                 $request->request = '/';
