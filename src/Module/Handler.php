@@ -238,7 +238,9 @@ class Handler {
                 $key = str_replace(['-', '_'], ['.', '.'], $key);
                 $data->data($key, trim($value));
             }
-        } else {                            
+        } else {
+            var_dump($_REQUEST);
+            die;
             $request = Handler::request_key_group($_REQUEST);
             if(!property_exists($request, 'request')){
                 $request->request = '/';
@@ -268,7 +270,6 @@ class Handler {
                 );
             */
             $input = implode('', file('php://input'));
-            dd($input);
             if(!empty($input)){
                 $input = json_decode($input);
             }
