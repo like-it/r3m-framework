@@ -5,6 +5,8 @@
 ])}}
 {{$route = info_all_add($route)}}
 Welcome to R3m.io                             {{cli.color('blue')}}(c) Remco van der Velde {{cli.color('green')}}({{config('framework.version')}}){{cli.reset()}}
+
+
 {{$route = sort($route, [
 'info' => 'ASC'
 ])}}
