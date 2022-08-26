@@ -19,7 +19,6 @@ class TypeUuid {
     {
         //format: %s%s-%s-%s-%s-%s%s%s
         d($string);
-        dd(strlen($string));
         if(strlen($string) === 36){
             return false;
         }
@@ -42,6 +41,7 @@ class TypeUuid {
         if (strlen($explode[4]) !== 12) {
             return false;
         }
+        dd('test');
         return true;
     }
 
