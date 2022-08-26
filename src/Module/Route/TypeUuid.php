@@ -24,21 +24,27 @@ class TypeUuid {
         }
         $explode = explode('-', $string);
         if (count($explode) !== 5) {
+            d('1');
             return false;
         }
         if (strlen($explode[0]) !== 8) {
+            d('2');
             return false;
         }
         if (strlen($explode[1]) !== 4) {
+            d('3');
             return false;
         }
         if (strlen($explode[2]) !== 4) {
+            d('4');
             return false;
         }
         if (strlen($explode[3]) !== 4) {
+            d('5');
             return false;
         }
         if (strlen($explode[4]) !== 12) {
+            d('6');
             return false;
         }
         dd('test');
