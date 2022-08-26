@@ -331,6 +331,18 @@ class Parse {
 
             }
         }
+        if($string === 'null'){
+            return null;
+        }
+        elseif($string === 'true'){
+            return true;
+        }
+        elseif($string === 'false'){
+            return false;
+        }
+        elseif(is_numeric($string)){
+            return $string + 0;
+        }
         return $string;
     }
 
