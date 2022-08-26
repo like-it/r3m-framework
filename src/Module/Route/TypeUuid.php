@@ -18,6 +18,8 @@ class TypeUuid {
     public static function validate(App $object, $string=''): bool
     {
         //format: %s%s-%s-%s-%s-%s%s%s
+        d($string);
+        dd(strlen($string));
         if(strlen($string) === 36){
             return false;
         }
