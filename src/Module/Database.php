@@ -127,7 +127,7 @@ class Database {
             $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
             $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
 
-            $logger->info('Logger initialized...');
+            $logger->info('Logger initialized...' . rand(1000, 9999));
 
             $configuration = $em->getConnection()->getConfiguration();
             $configuration->setMiddlewares([new Logging\Middleware($logger)]);
