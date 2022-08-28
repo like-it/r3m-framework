@@ -103,7 +103,10 @@ class Database {
      * @throws ORMException2
      */
     public static function entityManager(App $object, $options=[]){
-
+        $entityManager = $object->get('entityManager');
+        if(!empty($entityManager)){
+            return $entityManager;
+        }
         $environment = $object->config('framework.environment');
         $url = $object->config('project.dir.data') . 'Config.json';
         $config  = $object->parse_read($url, sha1($url));
@@ -131,6 +134,7 @@ class Database {
 
             $configuration = $em->getConnection()->getConfiguration();
             $configuration->setMiddlewares([new Logging\Middleware($logger)]);
+            $object->set('entityManager', $em);
             return $em;
         }
     }
