@@ -91,7 +91,7 @@ class App extends Data {
                 File::chown($url, File::USER_WWW, File::USER_WWW);
             }
         }
-        $this->logger($logger, $logger->getName());
+        $this->logger($logger->getName(), $logger);
         Config::configure($this);
         Autoload::configure($this);
     }
