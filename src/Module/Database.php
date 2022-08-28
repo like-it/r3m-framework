@@ -10,7 +10,8 @@
  */
 namespace R3m\Io\Module;
 
-use Doctrine\DBAL\Logging\Middleware;
+use Doctrine\DBAL\Logging\DebugStack;
+//use Doctrine\DBAL\Logging\Middleware;
 use stdClass;
 use PDO;
 
@@ -116,11 +117,13 @@ class Database {
             $cache = null;
             $config = ORMSetup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, $cache);
             $em = EntityManager::create($connection, $config);
-//            $logger = new DebugStack();
-
+            $logger = new DebugStack();
+            $em->getConnection()->getConfiguration()->setSQLLogger($logger);
+            /*
             $logger = new Logger('Doctrine');
             $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
-
+            */
+            /*
             $configuration = $em->getConnection()->getConfiguration(); //->setSQLLogger($logger);
             $configuration->setMiddlewares(
                 array_merge(
@@ -128,6 +131,7 @@ class Database {
                     [new Middleware($logger)]
                 )
             );
+            */
             return $em;
         }
     }
