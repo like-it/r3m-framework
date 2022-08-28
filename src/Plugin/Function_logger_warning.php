@@ -6,7 +6,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_logger_warning(Parse $parse, Data $data, $message=null, $context=[]){
+function function_logger_warning(Parse $parse, Data $data, $message=null, $context=[], $name=App::LOGGER_NAME){
     $object = $parse->object();
-    $object->logger()->warning($message, $context);
+    $object->logger($name)->warning($message, $context);
 }

@@ -33,7 +33,7 @@ class Zip extends View {
     public static function run(App $object){
         try {
             $command = App::parameter($object, 'zip', 1);
-            Logger::info('command: ' . $command);
+            Logger::info('Command: ' . $command, [], App::LOGGER_NAME);
             if(in_array($command, Zip::COMMAND)) {
                 $name = Zip::name($command, Zip::NAME);
                 $url = Zip::locate($object, $name);

@@ -52,6 +52,8 @@ class App extends Data {
     const RESPONSE_FILE = 'file';
     const RESPONSE_OBJECT = 'object';
 
+    const LOGGER_NAME = 'App';
+
     const ROUTE = App::NAMESPACE . '.' . Route::NAME;
     const CONFIG = App::NAMESPACE . '.' . Config::NAME;
     const REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
@@ -61,22 +63,24 @@ class App extends Data {
     const AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
     const AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;
 
-    private Logger $logger;
+    private $logger = [];
 
+    /**
+     * @throws Exception
+     */
     public function __construct($autoload, $config){
         $this->data(App::AUTOLOAD_COMPOSER, $autoload);
         $this->data(App::CONFIG, $config);
         App::is_cli();
         require_once 'Debug.php';
         require_once 'Error.php';
-        $logger = new Logger('App');
+        $logger = new Logger(App::LOGGER_NAME);
         $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . 'app.log', Logger::DEBUG));
         $uuid = posix_geteuid();
         if(empty($uuid)){
             $url = $this->config('project.dir.log') . 'app.log';
             if(File::exist($url)) {
                 File::chown($url, File::USER_WWW, File::USER_WWW);
-
             }
             $url = $this->config('project.dir.log') . 'access.log';
             if(File::exist($url)){
@@ -87,7 +91,7 @@ class App extends Data {
                 File::chown($url, File::USER_WWW, File::USER_WWW);
             }
         }
-        $this->logger($logger);
+        $this->logger($logger, $logger->getName());
         Config::configure($this);
         Autoload::configure($this);
     }
@@ -104,9 +108,9 @@ class App extends Data {
         //Config::configure($object); //@moved to construct
         Handler::request_configure($object);
         if(empty($object->request('request'))){
-            $object->logger->info('Logger: App initialized and enabling cors');
+            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors');
         } else {
-            $object->logger->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
+            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
         }
         Host::configure($object);
         //Autoload::configure($object); //@moved to construct
@@ -138,14 +142,14 @@ class App extends Data {
                         $route->method
                     )
                 ) {
-                    $object->logger->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . $route->method);
+                    $object->logger(App::LOGGER_NAME)->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . $route->method);
                     Core::redirect($route->redirect);
                 }
                 elseif(
                     property_exists($route, 'redirect') &&
                     !property_exists($route, 'method')
                 ){
-                    $object->logger->info('Redirect: ' . $route->redirect);
+                    $object->logger(App::LOGGER_NAME)->info('Redirect: ' . $route->redirect);
                     Core::redirect($route->redirect);
                 }
                 elseif(
@@ -167,7 +171,7 @@ class App extends Data {
                     App::controller($object, $route);
                     $methods = get_class_methods($route->controller);
                     if(empty($methods)){
-                        $object->logger()->error('Couldn\'t determine controller (' . $route->controller .') with request (' . $object->request('request') .')');
+                        $object->logger(App::LOGGER_NAME)->error('Couldn\'t determine controller (' . $route->controller .') with request (' . $object->request('request') .')');
                         $response = new Response(
                             App::exception_to_json(new Exception(
                         'Couldn\'t determine controller (' . $route->controller .')'
@@ -194,7 +198,7 @@ class App extends Data {
                         $functions[] = $route->function;
                         $result = $route->controller::{$route->function}($object);
                     } else {
-                        $object->logger()->error(
+                        $object->logger(App::LOGGER_NAME)->error(
                             'Controller (' .
                             $route->controller .
                             ') function (' .
@@ -228,7 +232,7 @@ class App extends Data {
                         $functions[] = 'after_result';
                         $route->controller::after_result($object);
                     }
-                    $object->logger()->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
+                    $object->logger(App::LOGGER_NAME)->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
                     return $result;
                 }
 
@@ -239,11 +243,11 @@ class App extends Data {
                             header('Status: 500');
                             header('Content-Type: application/json');
                         }
-                        $object->logger()->error($exception->getMessage());
+                        $object->logger(App::LOGGER_NAME)->error($exception->getMessage());
                         return App::exception_to_json($exception);
                     }
                     elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
-                        $object->logger()->error($exception->getMessage());
+                        $object->logger(App::LOGGER_NAME)->error($exception->getMessage());
                         return App::exception_to_json($exception);
                     } else {
                         $url = $object->config('server.http.error.500');
@@ -266,7 +270,7 @@ class App extends Data {
                 }
             }
         } else {
-            $object->logger()->info('File request: ' . $object->request('request') . ' called...');
+            $object->logger(App::LOGGER_NAME)->info('File request: ' . $object->request('request') . ' called...');
             return $file;
         }
     }
@@ -358,20 +362,30 @@ class App extends Data {
         }
     }
 
-    public function logger($logger=null){
-        if($logger !== null){
-            $this->setLogger($logger);
-        }
-        return $this->getLogger();
-    }
-
-    private function setLogger(Logger $logger=null){
-        $this->logger = $logger;
-    }
-
-    private function getLogger(): Logger
+    /**
+     * @throws Exception
+     */
+    public function logger($name='App', $logger=null): Logger
     {
-        return $this->logger;
+        if($logger !== null){
+            $this->setLogger($name, $logger);
+        }
+        return $this->getLogger($name);
+    }
+
+    private function setLogger($name='App', Logger $logger=null){
+        $this->logger[$name] = $logger;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getLogger($name='App'): Logger
+    {
+        if(array_key_exists($name, $this->logger)){
+            return $this->logger[$name];
+        }
+        throw new Exception('Logger with name: ' . $name . ' not initialised.');
     }
 
     public function route(){
@@ -511,6 +525,9 @@ class App extends Data {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function instance($configuration=[]): App
     {
         $dir_vendor = Dir::name(__DIR__, 3);

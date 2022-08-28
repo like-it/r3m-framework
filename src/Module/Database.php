@@ -10,21 +10,15 @@
  */
 namespace R3m\Io\Module;
 
-use Doctrine\DBAL\Logging\DebugStack;
-//use Doctrine\DBAL\Logging\Middleware;
-use Monolog\Processor\PsrLogMessageProcessor;
-use stdClass;
 use PDO;
 
+use Monolog\Processor\PsrLogMessageProcessor;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
 use Doctrine\DBAL\Logging;
+use Doctrine\DBAL\Logging\DebugStack;
 
-//use Doctrine\DBAL\ColumnCase;
-//use Doctrine\DBAL\Logging\DebugStack;
-//use Doctrine\DBAL\Portability\Connection;
-//use Doctrine\DBAL\Portability\Middleware;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 
@@ -45,6 +39,9 @@ class Database {
     const NAME = 'Database';
     const FETCH = PDO::FETCH_OBJ;
 
+    /**
+     * @throws Exception
+     */
     public static function connect($object, $environment=null){
         $config = $object->data(App::CONFIG);
         if(empty($environment)){
@@ -101,6 +98,7 @@ class Database {
      * @throws FileWriteException
      * @throws ORMException
      * @throws ORMException2
+     * @throws Exception
      */
     public static function entityManager(App $object, $options=[]){
         $entityManager = $object->get('entityManager');
@@ -130,6 +128,7 @@ class Database {
             $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
             $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
 
+            $object->logger('Doctrine', $logger);
             $logger->info('Logger initialized...');
 
             $configuration = $em->getConnection()->getConfiguration();
