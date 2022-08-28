@@ -128,6 +128,7 @@ class Database {
                     [new Middleware($logger)]
                 )
             );
+            return $em;
         }
     }
 }
