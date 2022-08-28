@@ -39,6 +39,8 @@ class Database {
     const NAME = 'Database';
     const FETCH = PDO::FETCH_OBJ;
 
+    const LOGGER_DOCTRINE = 'Doctrine';
+
     /**
      * @throws Exception
      */
@@ -124,11 +126,11 @@ class Database {
             $logger = new DebugStack();
             $em->getConnection()->getConfiguration()->setSQLLogger($logger);
 
-            $logger = new Logger('Doctrine');
+            $logger = new Logger(Database::LOGGER_DOCTRINE);
             $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
             $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
 
-            $object->logger('Doctrine', $logger);
+            $object->logger($logger->getName(), $logger);
             $logger->info('Logger initialized...');
 
             $configuration = $em->getConnection()->getConfiguration();
