@@ -10,13 +10,16 @@
  */
 namespace R3m\Io\Module;
 
-use Doctrine\DBAL\Logging\DebugStack;
+//use Doctrine\DBAL\Logging\DebugStack;
 //use Doctrine\DBAL\Logging\Middleware;
+use Monolog\Processor\PsrLogMessageProcessor;
 use stdClass;
 use PDO;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+
+use Doctrine\DBAL\Logging;
 
 //use Doctrine\DBAL\ColumnCase;
 //use Doctrine\DBAL\Logging\DebugStack;
@@ -29,11 +32,11 @@ use R3m\Io\App;
 use R3m\Io\Config;
 
 use Exception;
-
 use PDOException;
 
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\FileWriteException;
+
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Exception\ORMException as ORMException2;
 
@@ -119,19 +122,13 @@ class Database {
             $em = EntityManager::create($connection, $config);
             $logger = new DebugStack();
             $em->getConnection()->getConfiguration()->setSQLLogger($logger);
-            /*
+
             $logger = new Logger('Doctrine');
             $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
-            */
-            /*
-            $configuration = $em->getConnection()->getConfiguration(); //->setSQLLogger($logger);
-            $configuration->setMiddlewares(
-                array_merge(
-                    $configuration->getMiddlewares(),
-                    [new Middleware($logger)]
-                )
-            );
-            */
+            $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
+
+            $configuration = $em->getConnection()->getConfiguration();
+            $configuration->setMiddlewares([new Logging\Middleware($logger)]);
             return $em;
         }
     }
