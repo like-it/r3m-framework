@@ -10,7 +10,7 @@
  */
 namespace R3m\Io\Module;
 
-//use Doctrine\DBAL\Logging\DebugStack;
+use Doctrine\DBAL\Logging\DebugStack;
 //use Doctrine\DBAL\Logging\Middleware;
 use Monolog\Processor\PsrLogMessageProcessor;
 use stdClass;
