@@ -10,13 +10,25 @@
  */
 namespace R3m\Io\Module;
 
+use Doctrine\DBAL\Logging\Middleware;
+use stdClass;
+use PDO;
+
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
+//use Doctrine\DBAL\ColumnCase;
+//use Doctrine\DBAL\Logging\DebugStack;
+//use Doctrine\DBAL\Portability\Connection;
+//use Doctrine\DBAL\Portability\Middleware;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
-use stdClass;
+
 use R3m\Io\App;
 use R3m\Io\Config;
+
 use Exception;
-use PDO;
+
 use PDOException;
 
 use R3m\Io\Exception\ObjectException;
@@ -103,7 +115,19 @@ class Database {
             $proxyDir = $config->get('doctrine.proxy.dir');
             $cache = null;
             $config = ORMSetup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, $cache);
-            return EntityManager::create($connection, $config);
+            $em = EntityManager::create($connection, $config);
+//            $logger = new DebugStack();
+
+            $logger = new Logger('Doctrine');
+            $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
+
+            $configuration = $em->getConnection()->getConfiguration(); //->setSQLLogger($logger);
+            $configuration->setMiddlewares(
+                array_merge(
+                    $configuration->getMiddlewares(),
+                    [new Middleware($logger)]
+                )
+            );
         }
     }
 }
