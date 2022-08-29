@@ -103,7 +103,7 @@ class Database {
      * @throws Exception
      */
     public static function entityManager(App $object, $options=[]){
-        $entityManager = $object->get('entityManager');
+        $entityManager = $object->get('doctrine.entityManager');
         if(!empty($entityManager)){
             return $entityManager;
         }
@@ -135,7 +135,7 @@ class Database {
 
             $configuration = $em->getConnection()->getConfiguration();
             $configuration->setMiddlewares([new Logging\Middleware($logger)]);
-            $object->set('entityManager', $em);
+            $object->set('doctrine.entityManager', $em);
             return $em;
         }
     }
