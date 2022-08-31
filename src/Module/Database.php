@@ -11,7 +11,7 @@
 namespace R3m\Io\Module;
 
 use Doctrine\Common\EventManager;
-use Doctrine\DBAL\Driver\PDO\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use PDO;
 
@@ -133,9 +133,7 @@ class Database {
             $object->logger($logger->getName(), $logger);
             $logger->info('Logger initialized...');
             $eventManager = null;
-            $dsn = 'mysql:dbname=' . $connection['dbname'] . ';host=' . $connection['host'];
-            $connection = new Connection($dsn, $connection['user'], $connection['password']);
-//            $connection = DriverManager::getConnection($connection, $config, $eventManager ?: new EventManager());
+            $connection = DriverManager::getConnection($connection, $config, $eventManager ?: new EventManager());
             $connection = new Logging\Connection($connection, $logger);
             $em = EntityManager::create($connection, $config);
             $debug_stack = new DebugStack();
