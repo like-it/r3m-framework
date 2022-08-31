@@ -17,6 +17,9 @@ function validate_is_uuid(R3m\Io\App $object, $string='', $field='', $argument='
     if($argument === false){
         $result = true;
     }
+    if(strlen($string) !== 36){
+        return $result;
+    }
     if(count($explode) !== 5){
         return $result;
     }

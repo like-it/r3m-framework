@@ -10,6 +10,9 @@
  */
 namespace R3m\Io\Module;
 
+use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Driver\PDO\Connection;
+use Doctrine\DBAL\DriverManager;
 use PDO;
 
 use Monolog\Processor\PsrLogMessageProcessor;
@@ -18,8 +21,8 @@ use Monolog\Logger;
 
 use Doctrine\DBAL\Logging;
 use Doctrine\DBAL\Logging\DebugStack;
-
 use Doctrine\ORM\EntityManager;
+
 use Doctrine\ORM\ORMSetup;
 
 use R3m\Io\App;
@@ -103,7 +106,7 @@ class Database {
      * @throws Exception
      */
     public static function entityManager(App $object, $options=[]){
-        $entityManager = $object->get('doctrine.entityManager');
+        $entityManager = $object->get(Database::NAME . '.entityManager');
         if(!empty($entityManager)){
             return $entityManager;
         }
@@ -122,9 +125,6 @@ class Database {
             $proxyDir = $config->get('doctrine.proxy.dir');
             $cache = null;
             $config = ORMSetup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, $cache);
-            $em = EntityManager::create($connection, $config);
-            $logger = new DebugStack();
-            $em->getConnection()->getConfiguration()->setSQLLogger($logger);
 
             $logger = new Logger(Database::LOGGER_DOCTRINE);
             $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
@@ -132,10 +132,15 @@ class Database {
 
             $object->logger($logger->getName(), $logger);
             $logger->info('Logger initialized...');
-
+            $eventManager = null;
+            $connection = DriverManager::getConnection($connection, $config, $eventManager ?: new EventManager());
+            $connection = new Logging\Connection($connection, $logger);
+            $em = EntityManager::create($connection, $config);
+            $debug_stack = new DebugStack();
+            $em->getConnection()->getConfiguration()->setSQLLogger($debug_stack);
             $configuration = $em->getConnection()->getConfiguration();
             $configuration->setMiddlewares([new Logging\Middleware($logger)]);
-            $object->set('doctrine.entityManager', $em);
+            $object->set(Database::NAME .'.entityManager', $em);
             return $em;
         }
     }
