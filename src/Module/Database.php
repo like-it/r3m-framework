@@ -133,7 +133,9 @@ class Database {
             $object->logger($logger->getName(), $logger);
             $logger->info('Logger initialized...');
             $eventManager = null;
-            $connection = DriverManager::getConnection($connection, $config, $eventManager ?: new EventManager());
+            $dsn = 'mysql:dbname=' . $connection['dbname'] . ';host=' . $connection['host'];
+            $connection = new Connection($dsn, $connection['user'], $connection['password']);
+//            $connection = DriverManager::getConnection($connection, $config, $eventManager ?: new EventManager());
             $connection = new Logging\Connection($connection, $logger);
             $em = EntityManager::create($connection, $config);
             $debug_stack = new DebugStack();
