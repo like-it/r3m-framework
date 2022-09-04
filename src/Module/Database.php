@@ -132,15 +132,15 @@ class Database {
 
             $object->logger($logger->getName(), $logger);
             $logger->info('Logger initialized...');
-            /*
+
+            $config->setMiddlewares([new Logging\Middleware($logger)]);
             $connection = DriverManager::getConnection($connection, $config, new EventManager());
-            $connection = new Logging\Connection($connection, $logger);
-            */
+            $logging_connection = new Logging\Connection($connection, $logger);
             $em = EntityManager::create($connection, $config);
             $debug_stack = new DebugStack();
             $em->getConnection()->getConfiguration()->setSQLLogger($debug_stack);
-            $configuration = $em->getConnection()->getConfiguration();
-            $configuration->setMiddlewares([new Logging\Middleware($logger)]);
+
+
             $object->set(Database::NAME .'.entityManager', $em);
             return $em;
         }
