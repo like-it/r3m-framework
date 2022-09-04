@@ -135,9 +135,10 @@ class Database {
 
             $config->setMiddlewares([new Logging\Middleware($logger)]);
             $connection = DriverManager::getConnection($connection, $config, new EventManager());
-            $logging_connection = new Logging\Connection($connection, $logger);
             $em = EntityManager::create($connection, $config);
             $debug_stack = new DebugStack();
+//            $logging_connection = new Logging\Connection($connection, $logger);
+//            dd(get_class($connection));
             $em->getConnection()->getConfiguration()->setSQLLogger($debug_stack);
 
 
