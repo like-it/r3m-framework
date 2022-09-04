@@ -136,7 +136,7 @@ class Database {
             }
             $connection = DriverManager::getConnection($connection, $config, new EventManager());
             $em = EntityManager::create($connection, $config);
-            $object->set(Database::NAME .'.entityManager. ' . $environment, $em);
+            $object->set(Database::NAME .'.entityManager.' . $environment, $em);
             return $em;
         }
         return null;
