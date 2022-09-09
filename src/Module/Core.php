@@ -218,10 +218,13 @@ class Core {
     /**
      * @throws ReflectionException
      */
-    public static function object_array($object): array
+    public static function object_array($object=null): array
     {
-        $reflection = new ReflectionObject($object);
         $list = [];
+        if($object === null){
+            return $list;
+        }
+        $reflection = new ReflectionObject($object);
         do {
             foreach ($reflection->getProperties() as $property) {
                 $property->setAccessible(true);

@@ -12,9 +12,12 @@ namespace R3m\Io\Module;
 
 
 use stdClass;
-use Exception;
 use R3m\Io\App;
 use DateTimeImmutable;
+
+use Exception;
+
+use R3m\Io\Exception\ObjectException;
 
 class Handler {
     const NAMESPACE = __NAMESPACE__;
@@ -78,7 +81,8 @@ class Handler {
         );
     }
 
-    private static function request_header(){
+    private static function request_header(): stdClass
+    {
         //check if cli
         if(defined('IS_CLI')){
             //In Cli mode apache functions aren't defined
@@ -212,6 +216,9 @@ class Handler {
         return Core::array_object($nodeList);
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function request_key_group($data){
         $result = new stdClass();
         foreach($data as $key => $value){
@@ -226,7 +233,8 @@ class Handler {
         return $result;
     }
 
-    private static function request_input(){
+    private static function request_input(): Data
+    {
         $data = new Data();
         if(defined('IS_CLI')){
             global $argc, $argv;
@@ -297,6 +305,9 @@ class Handler {
         return $data;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function method(){
         if(array_key_exists('REQUEST_METHOD', $_SERVER)){
             $method = $_SERVER['REQUEST_METHOD'];
@@ -308,17 +319,20 @@ class Handler {
         throw new Exception('Method undefined');
     }
 
+    /**
+     * @throws Exception
+     */
     public static function session($attribute=null, $value=null){
         if($attribute == Handler::SESSION_HAS){
             return isset($_SESSION);
         }
         elseif($attribute == Handler::SESSION_CLOSE){
             session_write_close();
-            return;
+            return null;
         }
         if(!isset($_SESSION)){
             if(headers_sent()){
-               return;
+               return null;
             }
             session_start();
             $_SESSION['id'] = session_id();
@@ -734,7 +748,7 @@ class Handler {
                         if (!empty($result) && defined('IS_CLI')) {
                             unset($_COOKIE[$value]);
                         }
-                        return;
+                        return null;
                     } else {
                         if ($duration === null) {
                             $duration = 60 * 60 * 24 * 365 * 2; // 2 years

@@ -100,10 +100,10 @@ class Database {
 
     /**
      * @throws ObjectException
-     * @throws FileWriteException
-     * @throws ORMException
      * @throws ORMException2
-     * @throws Exception
+     * @throws ORMException
+     * @throws \Doctrine\DBAL\Exception
+     * @throws FileWriteException
      */
     public static function entityManager(App $object, $options=[]): ?EntityManager
     {
