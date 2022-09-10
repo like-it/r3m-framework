@@ -13,11 +13,17 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
 
-function function_json_select(Parse $parse, Data $data, $url, $select=null){    
+/**
+ * @throws \R3m\Io\Exception\ObjectException
+ * @throws \R3m\Io\Exception\FileWriteException
+ */
+function function_json_select(Parse $parse, Data $data, $url, $select=null, $compile=false){
     if(File::exist($url)){
         $read = File::read($url);
         $read = Core::object($read);
-        $read = $parse->compile($read, [], $data);
+        if($compile){
+            $read = $parse->compile($read, [], $data);
+        }
         $json = new Data();
         $json->data($read);
         return $json->data($select);
