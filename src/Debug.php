@@ -36,3 +36,17 @@ if(!function_exists('dd')){
         exit;
     }
 }
+
+if(!function_exists('ddd')){
+    function ddd($data=null){
+        $trace = debug_backtrace(true);
+        if(!defined('IS_CLI')){
+            echo '<pre class="priya-debug">';
+        }
+        echo $trace[0]['file'] . ':' . $trace[0]['line'] . PHP_EOL;
+        if(!defined('IS_CLI')){
+            echo '</pre>';
+        }
+        dd($data);
+    }
+}
