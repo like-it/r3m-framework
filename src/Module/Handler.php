@@ -579,6 +579,7 @@ class Handler {
                     case 2 :
                         if(
                             isset($_SESSION[$tmp[0]]) &&
+                            is_array($_SESSION[$tmp[0]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]])
                         ){
                             return $_SESSION[$tmp[0]][$tmp[1]];
@@ -588,7 +589,9 @@ class Handler {
                     case 3 :
                         if(
                             isset($_SESSION[$tmp[0]]) &&
+                            is_array($_SESSION[$tmp[0]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]])
                         ){
                             return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]];
@@ -598,8 +601,11 @@ class Handler {
                     case 4 :
                         if(
                             isset($_SESSION[$tmp[0]]) &&
+                            is_array($_SESSION[$tmp[0]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]])
                         ){
                             return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]];
@@ -609,9 +615,13 @@ class Handler {
                     case 5 :
                         if(
                             isset($_SESSION[$tmp[0]]) &&
+                            is_array($_SESSION[$tmp[0]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]])
                         ){
                             return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]];
@@ -621,10 +631,15 @@ class Handler {
                     case 6 :
                         if(
                             isset($_SESSION[$tmp[0]]) &&
+                            is_array($_SESSION[$tmp[0]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]])
                         ){
                             return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]];
@@ -634,11 +649,17 @@ class Handler {
                     case 7 :
                         if(
                             isset($_SESSION[$tmp[0]]) &&
+                            is_array($_SESSION[$tmp[0]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]])
                         ){
                             return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]];
@@ -648,12 +669,19 @@ class Handler {
                     case 8 :
                         if(
                             isset($_SESSION[$tmp[0]]) &&
+                            is_array($_SESSION[$tmp[0]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]])
                         ){
                             return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]];
@@ -663,13 +691,21 @@ class Handler {
                     case 9 :
                         if(
                             isset($_SESSION[$tmp[0]]) &&
+                            is_array($_SESSION[$tmp[0]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]])
                         ){
                             return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]];
@@ -679,14 +715,23 @@ class Handler {
                     case 10 :
                         if(
                             isset($_SESSION[$tmp[0]]) &&
+                            is_array($_SESSION[$tmp[0]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]]) &&
+                            is_array($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]]) &&
                             isset($_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]][$tmp[9]])
                         ){
                             return $_SESSION[$tmp[0]][$tmp[1]][$tmp[2]][$tmp[3]][$tmp[4]][$tmp[5]][$tmp[6]][$tmp[7]][$tmp[8]][$tmp[9]];
