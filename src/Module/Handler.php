@@ -480,6 +480,9 @@ class Handler {
                         }
                         return true;
                     } else {
+                        if(is_array($value) || is_object($value)){
+                            $value = Core::object($value, Core::OBJECT_ARRAY); //session can only handle array
+                        }
                         switch(count($tmp)){
                             case 1 :
                                 $_SESSION
