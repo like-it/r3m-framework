@@ -134,6 +134,9 @@ class File {
 
     public static function touch($url='', $time=null, $atime=null): bool
     {
+        if($time === null){
+            $time = time();
+        }
         if($atime === null){
             try {
                 return @touch($url, $time); //wsdl not working
