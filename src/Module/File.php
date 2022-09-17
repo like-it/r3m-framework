@@ -159,7 +159,11 @@ class File {
             $node->filetype = ucfirst(strtolower($ext)) . ' ' . strtolower(File::TYPE);
         } else {
             $node->extension = '';
-            $node->filetype = File::TYPE;
+            if($node->type === Dir::TYPE){
+                $node->filetype = Dir::TYPE;
+            } else {
+                $node->filetype = File::TYPE;
+            }
         }
         $node->mtime = File::mtime($node->url);
         $node->size = File::size($node->url);
