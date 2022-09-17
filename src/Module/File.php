@@ -155,8 +155,8 @@ class File {
         $explode = explode('.', $rev, 2);
         if(count($explode) == 2){
             $ext = strrev($explode[0]);
-            $node->extension = strtolower($ext);
-            $node->filetype = ucfirst(strtolower($ext)) . ' ' . strtolower(File::TYPE);
+            $node->extension = $ext;
+            $node->filetype = ucfirst($ext) . ' ' . strtolower(File::TYPE);
         } else {
             $node->extension = '';
             if($node->type === Dir::TYPE){
