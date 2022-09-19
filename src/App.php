@@ -132,6 +132,14 @@ class App extends Data {
                         return Response::output($object, $response);
                     } else {
                         $route = Route::wildcard($object);
+                        if($route === false){
+                            $object->logger()->error('Couldn\'t determine route (wildcard) (' . $object->request('request') .')...');
+                            $response = new Response(
+                                "Website is not configured...",
+                                Response::TYPE_JSON
+                            );
+                            return Response::output($object, $response);
+                        }
                     }
                 }
                 ddd($route);
