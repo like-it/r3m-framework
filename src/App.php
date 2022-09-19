@@ -136,7 +136,7 @@ class App extends Data {
                             $object->logger()->error('Couldn\'t determine route (wildcard) (' . $object->request('request') .')...');
                             $response = new Response(
                                 "Website is not configured...",
-                                Response::TYPE_JSON
+                                Response::TYPE_HTML
                             );
                             return Response::output($object, $response);
                         }
