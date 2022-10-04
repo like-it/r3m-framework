@@ -121,7 +121,7 @@ class App extends Data {
                 $route = Route::request($object);
                 if($route === false){
                     if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-                        $object->logger()->error('Couldn\'t determine route (' . $object->request('request') .')...');
+                        $object->logger(App::LOGGER_NAME)->error('Couldn\'t determine route (' . $object->request('request') .')...');
                         $response = new Response(
                             App::exception_to_json(new Exception(
                                 'Couldn\'t determine route (' . $object->request('request') .')...'
@@ -133,7 +133,7 @@ class App extends Data {
                     } else {
                         $route = Route::wildcard($object);
                         if($route === false){
-                            $object->logger()->error('Couldn\'t determine route (wildcard) (' . $object->request('request') .')...');
+                            $object->logger(App::LOGGER_NAME)->error('Couldn\'t determine route (wildcard) (' . $object->request('request') .')...');
                             $response = new Response(
                                 "Website is not configured...",
                                 Response::TYPE_HTML
