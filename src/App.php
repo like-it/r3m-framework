@@ -150,7 +150,7 @@ class App extends Data {
                         $route->method
                     )
                 ) {
-                    $object->logger(App::LOGGER_NAME)->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . $route->method);
+                    $object->logger(App::LOGGER_NAME)->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . implode(', ', $route->method));
                     Core::redirect($route->redirect);
                 }
                 elseif(
