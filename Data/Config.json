@@ -108,6 +108,31 @@
         "mov" :  ".mov",
         "wmv" : ".wmv"
     },
+    "error" : {
+        "extension" : {
+            "tpl" : [
+                "htm",
+                "html",
+                "php",
+                "xml",
+                "asp",
+                "aspx",
+                "pdf"
+            ],
+            "text" : [
+                "env",
+                "txt",
+                "log",
+                "cgi"
+            ],
+            "js" : [
+                "js"
+            ],
+            "json" : [
+                "json"
+            ]
+        }
+    },
     "parse": {
         "read" : {
             "parser" : "{{R3M}}"

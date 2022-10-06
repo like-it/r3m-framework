@@ -17,28 +17,7 @@ use R3m\Io\Exception\LocateException;
 
 class FileRequest {
     const REQUEST = 'Request';
-
-    const ERROR_EXTENSION_TPL = [
-        'htm',
-        'html',
-        'php',
-        'xml',
-        'asp',
-        'aspx'
-    ];
-    const ERROR_EXTENSION_TEXT = [
-        'env',
-        'txt',
-        'log',
-        'cgi'
-    ];
-    const ERROR_EXTENSION_JS = [
-        'js'
-    ];
-    const ERROR_EXTENSION_JSON = [
-        'json'
-    ];
-
+    
     /**
      * @throws LocateException
      * @throws Exception
@@ -173,7 +152,7 @@ class FileRequest {
             if(
                 in_array(
                     $extension,
-            FileRequest::ERROR_EXTENSION_TPL
+                    $config->get('error.extension.tpl')
                 )
             ){
                 if($config->data('server.http.error.404')){
@@ -192,7 +171,7 @@ class FileRequest {
             elseif(
                 in_array(
                     $extension,
-                    FileRequest::ERROR_EXTENSION_TEXT
+                    $config->get('error.extension.text')
                 )
             ){
                 if($config->data('server.http.error.404')){
@@ -202,7 +181,7 @@ class FileRequest {
             elseif(
                 in_array(
                     $extension,
-                    FileRequest::ERROR_EXTENSION_JS
+                    $config->get('error.extension.js')
                 )
             ){
                 if($config->data('server.http.error.404')){
@@ -212,7 +191,7 @@ class FileRequest {
             elseif(
                 in_array(
                     $extension,
-                    FileRequest::ERROR_EXTENSION_JSON
+                    $config->get('error.extension.json')
                 )
             ){
                 Handler::header('Content-Type: application/json', null, true);
