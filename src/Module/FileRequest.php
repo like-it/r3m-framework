@@ -199,7 +199,8 @@ class FileRequest {
                 echo '{
                     "file" : "' . $file . '",
                     "extension" : "' . $extension . '",
-                    "contentType" : "' . $contentType . '"
+                    "contentType" : "' . $contentType . '",
+                    "message" : "Error: cannot find file."
                 }';
             }
         }
