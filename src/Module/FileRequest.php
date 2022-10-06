@@ -146,8 +146,6 @@ class FileRequest {
             }
         }
         Handler::header('HTTP/1.0 404 Not Found', 404);
-        d($extension);
-        ddd($config->get('error.extension.tpl'));
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
             throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
         } else {
@@ -166,7 +164,7 @@ class FileRequest {
                     $contentType = $config->data('contentType.' . $extension);
                     $data->set('contentType', $contentType);
                     $parse = new Parse($object, $data);
-                    $compile = $parse->compile(File::read($config->data('server.http.error.404')), $data->get());
+                    $compile = $parse->compile(File::read($parse->compile($config->data('server.http.error.404'), $data->get())), $data->get());
                     echo $compile;
                 }
             }
