@@ -29,6 +29,17 @@ class FileRequest {
         ) {
             Core::cors();
         }
+        if(
+            array_key_exists('REQUEST_SCHEME', $_SERVER) &&
+            array_key_exists('REQUEST_URI', $_SERVER) &&
+            $_SERVER['REQUEST_SCHEME'] === Host::SCHEME_HTTP
+        ){
+            $subdomain = Host::subdomain();
+            $domain = Host::domain();
+            $extension = Host::extension();
+            $url = Host::SCHEME_HTTPS . '://' . $subdomain . '.' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
+            Core::redirect($url);
+        }
         $request = $object->data(App::REQUEST);
         $input = $request->data('request');
         $dir = str_replace(['../','..'], '', Dir::name($input));
@@ -145,7 +156,6 @@ class FileRequest {
                 return File::read($url);
             }
         }
-        ddd($_SERVER);
         Handler::header('HTTP/1.0 404 Not Found', 404);
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
             throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
