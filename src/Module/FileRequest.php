@@ -30,6 +30,7 @@ class FileRequest {
             Core::cors();
         }
         if(
+            $object->config('server.http.upgrade_insecure') === true &&
             array_key_exists('REQUEST_SCHEME', $_SERVER) &&
             array_key_exists('REQUEST_URI', $_SERVER) &&
             $_SERVER['REQUEST_SCHEME'] === Host::SCHEME_HTTP
