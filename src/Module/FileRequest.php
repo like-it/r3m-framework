@@ -185,7 +185,7 @@ class FileRequest {
                 )
             ){
                 if($config->data('server.http.error.404')){
-                    echo 'console.error("HTTP/1.0 404 Not Found",  "' . $file . '");';
+                    //echo 'console.error("HTTP/1.0 404 Not Found",  "' . $file . '");';
                 }
             }
             elseif(
