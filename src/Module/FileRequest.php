@@ -17,7 +17,7 @@ use R3m\Io\Exception\LocateException;
 
 class FileRequest {
     const REQUEST = 'Request';
-    
+
     /**
      * @throws LocateException
      * @throws Exception
@@ -146,6 +146,7 @@ class FileRequest {
             }
         }
         Handler::header('HTTP/1.0 404 Not Found', 404);
+        ddd($config->get('error.extension.tpl'));
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
             throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
         } else {
