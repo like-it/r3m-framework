@@ -197,11 +197,11 @@ class FileRequest {
                 $contentType = 'application/json';
                 Handler::header('Content-Type: ' . $contentType, null, true);
                 echo '{
-                    "file" : "' . $file . '",
-                    "extension" : "' . $extension . '",
-                    "contentType" : "' . $contentType . '",
-                    "message" : "Error: cannot find file."
-                }';
+    "file" : "' . $file . '",
+    "extension" : "' . $extension . '",
+    "contentType" : "' . $contentType . '",
+    "message" : "Error: cannot find file."
+}';
             }
         }
         $object->logger()->error('HTTP/1.0 404 Not Found', $location);
