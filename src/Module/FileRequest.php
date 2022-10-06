@@ -194,8 +194,13 @@ class FileRequest {
                     $config->get('error.extension.json')
                 )
             ){
-                Handler::header('Content-Type: application/json', null, true);
-                echo '{}';
+                $contentType = 'application/json';
+                Handler::header('Content-Type: ' . $contentType, null, true);
+                echo '{
+                    "file" : "' . $file . '",
+                    "extension" : "' . $extension . '",
+                    "contentType" : "' . $contentType . '"
+                }';
             }
         }
         $object->logger()->error('HTTP/1.0 404 Not Found', $location);
