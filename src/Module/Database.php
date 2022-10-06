@@ -104,6 +104,7 @@ class Database {
      * @throws ORMException
      * @throws \Doctrine\DBAL\Exception
      * @throws FileWriteException
+     * @throws Exception
      */
     public static function entityManager(App $object, $options=[]): ?EntityManager
     {
@@ -114,14 +115,26 @@ class Database {
         if(array_key_exists('environment', $options)){
             $environment = $options['environment'];
         }
-        $entityManager = $object->get(Database::NAME . '.entityManager.' . $environment);
+        $name = $object->config('framework.api');
+        if(array_key_exists('name', $options)){
+            $name = $options['name'];
+        }
+        $entityManager = $object->get(Database::NAME . '.entityManager.' . $name . '.' . $environment);
         if(!empty($entityManager)){
             return $entityManager;
         }
         $url = $object->config('project.dir.data') . 'Config.json';
         $config  = $object->parse_read($url, sha1($url));
         if($config){
-            $connection = (array) $config->get('doctrine.' . $environment);
+            $connection = (array) $config->get('doctrine.' . $name . '.' . $environment);
+            if(empty($connection)){
+                $logger = new Logger(Database::LOGGER_DOCTRINE);
+                $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
+                $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
+                $object->logger($logger->getName(), $logger);
+                $logger->error('Error: No connection string...');
+                return null;
+            }
             $paths = $config->get('doctrine.paths');
             $proxyDir = $config->get('doctrine.proxy.dir');
             $cache = null;
@@ -136,7 +149,7 @@ class Database {
             }
             $connection = DriverManager::getConnection($connection, $config, new EventManager());
             $em = EntityManager::create($connection, $config);
-            $object->set(Database::NAME .'.entityManager.' . $environment, $em);
+            $object->set(Database::NAME .'.entityManager.' . $name . '.' . $environment, $em);
             return $em;
         }
         return null;
