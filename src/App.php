@@ -258,7 +258,9 @@ class App extends Data {
                         $object->logger(App::LOGGER_NAME)->error($exception->getMessage());
                         return App::exception_to_json($exception);
                     } else {
+                        $parse = new Module\Parse($object, $object->data());
                         $url = $object->config('server.http.error.500');
+                        $url = $parse->compile($url, $object->data());
                         if(!headers_sent()){
                             header('Status: 500');
                         }
