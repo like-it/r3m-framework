@@ -109,6 +109,7 @@ class FileRequest {
             'Public' .
             $config->data('ds') .
             $file;
+        ddd($location);
         if($type){
             $location[] = $config->data('host.dir.root') .
                 'View' .
