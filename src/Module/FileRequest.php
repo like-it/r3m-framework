@@ -71,12 +71,19 @@ class FileRequest {
             array_unshift($explode, $controller);
         }
         array_unshift($view, 'Public');
+        $view_2 = $view;
         array_unshift($view, 'View');
         if(!empty($controller)){
             array_unshift($view, $controller);
+            array_unshift($view_2, $controller);
         }
+        array_unshift($view_2, 'View');
         $location[] = $config->data('host.dir.root') .
             rtrim(implode($config->data('ds'), $view), '/') .
+            $config->data('ds') .
+            $file;
+        $location[] = $config->data('host.dir.root') .
+            rtrim(implode($config->data('ds'), $view_2), '/') .
             $config->data('ds') .
             $file;
         $location[] = $config->data('host.dir.root') .
