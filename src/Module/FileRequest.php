@@ -83,6 +83,7 @@ class FileRequest {
             rtrim(implode($config->data('ds'), $explode), '/') .
             $config->data('ds') .
             $file;
+        ddd($location);
         $location[] = $config->data('host.dir.root') .
             $dir .
             'Public' .
@@ -109,7 +110,6 @@ class FileRequest {
             'Public' .
             $config->data('ds') .
             $file;
-        ddd($location);
         if($type){
             $location[] = $config->data('host.dir.root') .
                 'View' .
