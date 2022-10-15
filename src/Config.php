@@ -92,10 +92,10 @@ class Config extends Data {
         'local'
     ];
 
-    const LOG = ' log';
+    const LOG = 'log';
     const VALUE_LOG = 'Log';
 
-    const EXECUTE = ' execute';
+    const EXECUTE = 'execute';
     const VALUE_EXECUTE = 'Execute';
 
     const ROUTE = 'Route.json';
