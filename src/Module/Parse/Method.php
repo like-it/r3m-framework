@@ -21,6 +21,9 @@ class Method {
     const WHERE_BEFORE = 'before';
     const WHERE_AFTER = 'after';
 
+    /**
+     * @throws Exception
+     */
     public static function get(Build $build, Data $storage, $record=[], $is_debug=false): array
     {
         if($record['type'] != Token::TYPE_METHOD){
@@ -267,6 +270,7 @@ class Method {
                 }
             } else {
                 if(empty($record['method']['trait'])){
+                    d($record);
                     if(empty($attribute)){
                         $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
                     } else {
