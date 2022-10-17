@@ -321,6 +321,7 @@ class Build {
         $url_list = [];
         $limit = $this->limit();
         foreach($data as $name => $record){
+            $name = str_replace('`', '', $name);
             $exist = false;
             $function_name = str_replace('function_', '', $name, $function_count);
             if(
