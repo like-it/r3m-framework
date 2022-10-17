@@ -112,7 +112,6 @@ class Value {
                 } else {
                     if(substr($record['value'], 0,3) ==='"{`' && substr($record['value'], -2,2) === '}"'){
                         $record['value'] = '{' . substr($record['value'], 3, -2) . '}';
-                        ddd($record['value']);
                     }
                     return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
                 }
