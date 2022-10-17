@@ -98,10 +98,11 @@ class Value {
                 if(stristr($record['value'], '{') === false){                                        
                     return $record['value'];
                 }
-
                 $record['value'] = str_replace('\\\'', '\'', $record['value']);
                 $record['value'] = str_replace('\'', '\\\'', $record['value']);
-
+                if(substr($record['value'], 0,3 ==='"{`') && substr($record['value'], -2,2) === '}"'){
+                    $record['value'] = '{' . substr($record['value'], 3, -2) . '}';
+                }
                 if($record['depth'] > 0){
                     // $write = File::read($storage->data('debug.url'));
                     // $string = Core::object($record, 'json');
