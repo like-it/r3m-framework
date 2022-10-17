@@ -110,7 +110,7 @@ class Value {
                 elseif(!empty($record['is_assign'])){
                     return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
                 } else {
-                    if(substr($record['value'], 0,3 ==='"{`') && substr($record['value'], -2,2) === '}"'){
+                    if(substr($record['value'], 0,3) ==='"{`' && substr($record['value'], -2,2) === '}"'){
                         $record['value'] = '{' . substr($record['value'], 3, -2) . '}';
                         ddd($record['value']);
                     }
