@@ -149,6 +149,7 @@ class Value {
                 return Variable::define($build, $storage, $token);
             case Token::TYPE_METHOD :
                 $method = Method::get($build, $storage, $record);
+                d($method);
                 if($method['type'] == Token::TYPE_CODE){
                     return $method['value'];
                 } else {
