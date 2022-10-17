@@ -100,6 +100,19 @@ class Value {
                 }
                 $record['value'] = str_replace('\\\'', '\'', $record['value']);
                 $record['value'] = str_replace('\'', '\\\'', $record['value']);
+                $record['value'] = explode('`', $record['value'], 2);
+                $is_backtick = false;
+                if(array_key_exists(1, $record['value'])){
+                    $is_backtick = true;
+                }
+                $record['value'] = implode('', $record['value']);
+                if(
+                    $is_backtick &&
+                    substr($record['value'], 0,2) ==='"{' &&
+                    substr($record['value'], -2,2) === '}"'
+                ){
+                    $record['value'] = '{' . substr($record['value'], 2, -2) . '}';
+                }
                 if($record['depth'] > 0){
                     // $write = File::read($storage->data('debug.url'));
                     // $string = Core::object($record, 'json');
@@ -110,9 +123,6 @@ class Value {
                 elseif(!empty($record['is_assign'])){
                     return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
                 } else {
-                    if(substr($record['value'], 0,3) ==='"{`' && substr($record['value'], -2,2) === '}"'){
-                        $record['value'] = '{' . substr($record['value'], 3, -2) . '}';
-                    }
                     return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
                 }
             case Token::TYPE_CAST :
