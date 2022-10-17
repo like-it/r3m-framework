@@ -100,9 +100,6 @@ class Value {
                 }
                 $record['value'] = str_replace('\\\'', '\'', $record['value']);
                 $record['value'] = str_replace('\'', '\\\'', $record['value']);
-                if(substr($record['value'], 0,3 ==='"{`') && substr($record['value'], -2,2) === '}"'){
-                    $record['value'] = '{' . substr($record['value'], 3, -2) . '}';
-                }
                 if($record['depth'] > 0){
                     // $write = File::read($storage->data('debug.url'));
                     // $string = Core::object($record, 'json');
@@ -113,6 +110,10 @@ class Value {
                 elseif(!empty($record['is_assign'])){
                     return '$this->parse()->compile(\'' . substr($record['value'], 1, -1) . '\', [], $this->storage())';
                 } else {
+                    if(substr($record['value'], 0,3 ==='"{`') && substr($record['value'], -2,2) === '}"'){
+                        $record['value'] = '{' . substr($record['value'], 3, -2) . '}';
+                        ddd($record['value']);
+                    }
                     return '$this->parse()->compile(\'' . $record['value'] . '\', [], $this->storage())';
                 }
             case Token::TYPE_CAST :
