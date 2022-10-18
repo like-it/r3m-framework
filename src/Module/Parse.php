@@ -169,6 +169,7 @@ class Parse {
     private static function replace_backtick($string=''): string
     {
         $explode = explode('"{{`', $string, 2);
+        d($string);
         if(array_key_exists(1, $explode)){
             $temp = explode('}}"', $explode[1], 2);
             if(array_key_exists(1, $temp)){
