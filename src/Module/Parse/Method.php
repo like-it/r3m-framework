@@ -270,12 +270,6 @@ class Method {
                 }
             } else {
                 if(empty($record['method']['trait'])){
-                    $record['method']['php_name'] = explode('`', $record['method']['php_name'], 2);
-                    $is_backtick = false;
-                    if(array_key_exists(1, $record['method']['php_name'])){
-                        $is_backtick = true;
-                    }
-                    $record['method']['php_name'] = implode('', $record['method']['php_name']);
                     if(empty($attribute)){
                         $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
                     } else {

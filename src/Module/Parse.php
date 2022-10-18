@@ -166,6 +166,20 @@ class Parse {
         return $this->halt_literal;
     }
 
+    private static function replace_backtick($string=''): string
+    {
+        $explode = explode('"{{`', $string, 2);
+        if(array_key_exists(1, $explode)){
+            $temp = explode('}}"', $explode[1], 2);
+            if(array_key_exists(1, $temp)){
+                $explode[1] = implode('}', $temp);
+                $string = implode('{', $explode);
+                return Parse::replace_backtick($string);
+            }
+        }
+        return $string;
+    }
+
     /**
      * @throws ObjectException
      * @throws FileWriteException
@@ -255,6 +269,7 @@ class Parse {
                     $storage->set('rdelim','}');
                 }
                 $storage->data('r3m.io.parse.compile.remove_newline', true);
+                $string = Parse::replace_backtick($string);
                 $string = str_replace(
                     [
                         '{',

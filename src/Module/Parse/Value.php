@@ -83,13 +83,6 @@ class Value {
                     '{',
                     '}'
                 ], $record['value']);
-                $record['value'] = explode('`', $record['value'], 2);
-                $is_backtick = false;
-                if(array_key_exists(1, $record['value'])){
-                    $is_backtick = true;
-                    ddd('yes1');
-                }
-                $record['value'] = implode('', $record['value']);
                 return $record['value'];
             case Token::TYPE_STRING :
                 $record['value'] = str_replace([
@@ -99,13 +92,6 @@ class Value {
                     '{',
                     '}'
                 ], $record['value']);
-                $record['value'] = explode('`', $record['value'], 2);
-                $is_backtick = false;
-                if(array_key_exists(1, $record['value'])){
-                    $is_backtick = true;
-                    ddd('yes2');
-                }
-                $record['value'] = implode('', $record['value']);
                 //$record['value'] = str_replace('\\', '\\\\', $record['value']);
                 return '\'' . $record['value'] . '\''; //might need str_replace on quote_single (') to (\')
             case Token::TYPE_QUOTE_DOUBLE_STRING :
@@ -114,20 +100,6 @@ class Value {
                 }
                 $record['value'] = str_replace('\\\'', '\'', $record['value']);
                 $record['value'] = str_replace('\'', '\\\'', $record['value']);
-                $record['value'] = explode('`', $record['value'], 2);
-                $is_backtick = false;
-                if(array_key_exists(1, $record['value'])){
-                    $is_backtick = true;
-                    ddd('yes3');
-                }
-                $record['value'] = implode('', $record['value']);
-                if(
-                    $is_backtick &&
-                    substr($record['value'], 0,2) ==='"{' &&
-                    substr($record['value'], -2,2) === '}"'
-                ){
-                    $record['value'] = '{' . substr($record['value'], 2, -2) . '}';
-                }
                 if($record['depth'] > 0){
                     // $write = File::read($storage->data('debug.url'));
                     // $string = Core::object($record, 'json');
@@ -149,7 +121,6 @@ class Value {
                 return Variable::define($build, $storage, $token);
             case Token::TYPE_METHOD :
                 $method = Method::get($build, $storage, $record);
-                d($method);
                 if($method['type'] == Token::TYPE_CODE){
                     return $method['value'];
                 } else {
