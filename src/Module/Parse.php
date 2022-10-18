@@ -172,8 +172,8 @@ class Parse {
         if(array_key_exists(1, $explode)){
             $temp = explode('}}"', $explode[1], 2);
             if(array_key_exists(1, $temp)){
-                $explode[1] = implode('}', $temp);
-                $string = implode('{', $explode);
+                $explode[1] = implode('}}', $temp);
+                $string = implode('{{', $explode);
                 return Parse::replace_backtick($string);
             }
         }
