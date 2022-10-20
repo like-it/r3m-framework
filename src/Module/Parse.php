@@ -166,15 +166,24 @@ class Parse {
         return $this->halt_literal;
     }
 
-    private static function replace_backtick($string=''): string
+    private static function replace_raw($string=''): string
     {
-        $explode = explode('"{{`', $string, 2);
+        $explode = explode('"{{raw|', $string, 2);
         if(array_key_exists(1, $explode)){
             $temp = explode('}}"', $explode[1], 2);
             if(array_key_exists(1, $temp)){
                 $explode[1] = implode('}}', $temp);
                 $string = implode('{{', $explode);
-                return Parse::replace_backtick($string);
+                return Parse::replace_raw($string);
+            }
+        }
+        $explode = explode('"{{ raw |', $string, 2);
+        if(array_key_exists(1, $explode)){
+            $temp = explode('}}"', $explode[1], 2);
+            if(array_key_exists(1, $temp)){
+                $explode[1] = implode('}}', $temp);
+                $string = implode('{{', $explode);
+                return Parse::replace_raw($string);
             }
         }
         return $string;
@@ -259,7 +268,7 @@ class Parse {
             if(empty($this->halt_literal())){
                 $string = literal::apply($storage, $string);
             }
-            $string = Parse::replace_backtick($string);
+            $string = Parse::replace_raw($string);
             $string = str_replace('{{R3M}}', '{R3M}', $string);
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){
