@@ -145,13 +145,6 @@ class Parse {
         return $this->cache_dir;
     }
 
-    public function parent($parent=null){
-        if($parent !== null){
-            $this->parent = $parent;
-        }
-        return $this->parent;
-    }
-
     public function local($local=null){
         if($local !== null){
             $this->local = $local;
@@ -216,7 +209,6 @@ class Parse {
             }
         }
         elseif(is_object($string)){
-//            $this->parent($string);
             foreach($string as $key => $value){
                 try {
                     $this->local($string);
