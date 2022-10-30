@@ -843,10 +843,17 @@ class Route extends Data{
         $allowed_host = [];
         $allowed_host_wildcard = [];
         $disallowed_host = [];
-        foreach($select->host as $host){
-            $host = strtolower($host);
-            if(substr($host, 0, 1) == '!'){
-                $disallowed_host[] = substr($host, 1);
+        foreach($route->host as $host){
+            $type = false;
+            if(
+                substr($host, 0, 1) === '!' ||
+                substr($host, 0, 1) === '*'
+            ){
+                $type = substr($host, 0, 1);
+                $host = substr($host, 1);
+            }
+            if($type === '!'){
+                $disallowed_host[] = $host;
                 continue;
             }
             $allowed_host[] = $host;
@@ -854,22 +861,18 @@ class Route extends Data{
             $explode[0] = '';
             $allowed_host_wildcard[] = implode('.', $explode);
         }
-        foreach($route->host as $host){
-            if(
-                substr($host, 0, 1) === '!' ||
-                substr($host, 0, 1) === '*'
-            ){
-                $host = substr($host, 1);
-            }
-            if(in_array($host, $disallowed_host)){
-                return false;
-            }
-            if(in_array($host, $allowed_host)){
-                return true;
-            }
-            if(in_array($host, $allowed_host_wildcard)){
-                return true;
-            }
+        $host = reset($select->host);
+        if(in_array($host, $disallowed_host)){
+            return false;
+        }
+        if(in_array($host, $allowed_host)){
+            return true;
+        }
+        $explode = explode('.', $host);
+        $explode[0] = '';
+        $host = implode('.', $explode);
+        if(in_array($host, $allowed_host_wildcard)){
+            return true;
         }
         return false;
     }
