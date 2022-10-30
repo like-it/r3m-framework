@@ -278,6 +278,7 @@ class Parse {
                 if($storage->get('rdelim') === null){
                     $storage->set('rdelim','}');
                 }
+                $uuid = Core::uuid();
                 $storage->data('r3m.io.parse.compile.remove_newline', true);
                 $string = str_replace(
                     [
@@ -285,15 +286,15 @@ class Parse {
                         '}',
                     ],
                     [
-                        '[$ldelim]',
-                        '[$rdelim]',
+                        '[$ldelim-' . $uuid . ']',
+                        '[$rdelim-' . $uuid . ']',
                     ],
                     $explode[1]
                 );
                 $string = str_replace(
                     [
-                        '[$ldelim]',
-                        '[$rdelim]',
+                        '[$ldelim-' . $uuid . ']',
+                        '[$rdelim-' . $uuid . ']',
                     ],
                     [
                         '{$ldelim}',

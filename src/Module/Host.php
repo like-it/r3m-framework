@@ -179,6 +179,8 @@ class Host {
             $string = array_pop($explode);
             $test = explode('?', $string);
             return $test[0];
+        } elseif(isset($_SERVER['SERVER_PORT'])) {
+            return $_SERVER['SERVER_PORT'];
         }
         return false;
     }
