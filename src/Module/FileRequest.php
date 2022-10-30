@@ -38,7 +38,12 @@ class FileRequest {
             $subdomain = Host::subdomain();
             $domain = Host::domain();
             $extension = Host::extension();
-            $url = Host::SCHEME_HTTPS . '://' . $subdomain . '.' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
+            if($subdomain){
+                $url = Host::SCHEME_HTTPS . '://' . $subdomain . '.' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
+            } else {
+                $url = Host::SCHEME_HTTPS . '://' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
+            }
+
             Core::redirect($url);
         }
         $request = $object->data(App::REQUEST);
