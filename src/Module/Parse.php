@@ -145,6 +145,13 @@ class Parse {
         return $this->cache_dir;
     }
 
+    public function parent($parent=null){
+        if($parent !== null){
+            $this->parent = $parent;
+        }
+        return $this->parent;
+    }
+
     public function local($local=null){
         if($local !== null){
             $this->local = $local;
@@ -208,16 +215,13 @@ class Parse {
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
             }
         }
-        elseif(is_object($string)){                                                             
+        elseif(is_object($string)){
+//            $this->parent($string);
             foreach($string as $key => $value){
                 try {
-                    if($key === 'parent'){
-                        continue;
-                    }
                     $this->local($string);
                     $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                     $string->$key = $value;
-                    $string->parent = clone $string;
                 } catch (Exception | ParseError $exception){
                     dd($exception);
                 }
