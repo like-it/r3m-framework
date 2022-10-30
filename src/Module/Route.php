@@ -858,7 +858,9 @@ class Route extends Data{
             }
             $allowed_host[] = $host;
             $explode = explode('.', $host);
-            $explode[0] = '';
+            if(count($explode) > 2){
+                $explode[0] = '';
+            }
             $allowed_host_wildcard[] = implode('.', $explode);
         }
         $host = reset($select->host);
@@ -869,7 +871,9 @@ class Route extends Data{
             return true;
         }
         $explode = explode('.', $host);
-        $explode[0] = '';
+        if(count($explode) > 2){
+            $explode[0] = '';
+        }
         $host = implode('.', $explode);
         if(in_array($host, $allowed_host_wildcard)){
             return true;
