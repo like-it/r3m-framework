@@ -33,12 +33,18 @@ class FileRequest {
             $object->config('server.http.upgrade_insecure') === true &&
             array_key_exists('REQUEST_SCHEME', $_SERVER) &&
             array_key_exists('REQUEST_URI', $_SERVER) &&
-            $_SERVER['REQUEST_SCHEME'] === Host::SCHEME_HTTP
+            $_SERVER['REQUEST_SCHEME'] === Host::SCHEME_HTTP &&
+            $object->config('framework.environment') !== Config::MODE_DEVELOPMENT &&
+            Host::isIp4Address() === false
         ){
             $subdomain = Host::subdomain();
             $domain = Host::domain();
             $extension = Host::extension();
-            $url = Host::SCHEME_HTTPS . '://' . $subdomain . '.' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
+            if($subdomain){
+                $url = Host::SCHEME_HTTPS . '://' . $subdomain . '.' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
+            } else {
+                $url = Host::SCHEME_HTTPS . '://' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
+            }
             Core::redirect($url);
         }
         $request = $object->data(App::REQUEST);
