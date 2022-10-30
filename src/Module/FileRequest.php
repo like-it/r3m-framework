@@ -43,7 +43,6 @@ class FileRequest {
             } else {
                 $url = Host::SCHEME_HTTPS . '://' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
             }
-
             Core::redirect($url);
         }
         $request = $object->data(App::REQUEST);
