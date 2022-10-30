@@ -859,10 +859,11 @@ class Route extends Data{
             }
             $allowed_host[] = $host;
             $explode = explode('.', $host);
-            if(count($explode) > 2){
+            if($type === '*' && count($explode) > 2){
                 $explode[0] = '';
+                $allowed_host_wildcard[] = implode('.', $explode);
             }
-            $allowed_host_wildcard[] = implode('.', $explode);
+
         }
         $host = reset($select->host);
         if(in_array($host, $disallowed_host)){
@@ -875,9 +876,10 @@ class Route extends Data{
         $explode = explode('.', $host);
         if(count($explode) > 2){
             $explode[0] = '';
+            $host = implode('.', $explode);
         }
-        $host = implode('.', $explode);
         if(in_array($host, $allowed_host_wildcard)){
+            d($host);
             d('all');
             return true;
         }
