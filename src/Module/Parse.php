@@ -211,6 +211,9 @@ class Parse {
         elseif(is_object($string)){                                                             
             foreach($string as $key => $value){
                 try {
+                    if($key === 'parent'){
+                        continue;
+                    }
                     $this->local($string);
                     $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                     $string->$key = $value;
