@@ -217,7 +217,7 @@ class Parse {
                     $this->local($string);
                     $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                     $string->$key = $value;
-//                    $string->parent = $string;
+                    $string->parent = clone $string;
                 } catch (Exception | ParseError $exception){
                     dd($exception);
                 }
