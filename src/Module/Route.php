@@ -843,6 +843,7 @@ class Route extends Data{
         $allowed_host = [];
         $allowed_host_wildcard = [];
         $disallowed_host = [];
+        d($select);
         foreach($route->host as $host){
             $type = false;
             if(
@@ -868,6 +869,7 @@ class Route extends Data{
             return false;
         }
         if(in_array($host, $allowed_host)){
+            d('allowed');
             return true;
         }
         $explode = explode('.', $host);
@@ -876,6 +878,7 @@ class Route extends Data{
         }
         $host = implode('.', $explode);
         if(in_array($host, $allowed_host_wildcard)){
+            d('all');
             return true;
         }
         return false;
