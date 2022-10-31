@@ -277,8 +277,11 @@ class Parse {
             $storage->data('r3m.io.parse.compile.url', $url);
             $storage->data('this', $this->local($this->depth()));
             if($this->depth() > 0){
-                d($this->local($this->depth()-1));
-                $storage->data('this.parentNode', $this->local($this->depth()-1));
+                $key = 'this';
+                for($index = $this->depth() - 1; $index >= 0; $index++){
+                    $key .= '.parentNode';
+                    $storage->data($key, $index);
+                }
             }
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
             if(File::exist($url) && File::mtime($url) == $mtime){
