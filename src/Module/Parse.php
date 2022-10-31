@@ -379,7 +379,6 @@ class Parse {
             if($exists){
                 $template = new $class(new Parse($this->object()), $storage);
                 $string = $template->run();
-                d($string);
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
                 }
