@@ -267,10 +267,10 @@ class Parse {
                 ];
                 $url = $build->url($string, $options);
             }
-            $string = str_replace('{{literal}}', '{literal}', $string);
             $string = str_replace('{{ literal }}', '{literal}', $string);
-            $string = str_replace('{{/literal}}', '{/literal}', $string);
+            $string = str_replace('{{literal}}', '{literal}', $string);
             $string = str_replace('{{ /literal }}', '{/literal}', $string);
+            $string = str_replace('{{/literal}}', '{/literal}', $string);
             $storage->data('r3m.io.parse.compile.url', $url);
             $storage->data('this', $this->local($this->depth()));
             if($this->depth() > 0){
@@ -280,7 +280,8 @@ class Parse {
             if(File::exist($url) && File::mtime($url) == $mtime){
                 //cache file                   
                 $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
-                $template = new $class(new Parse($this->object()), $storage);                
+                $template = new $class(new Parse($this->object()), $storage);
+                $this->object()->logger()->debug('test: halt literal', [ $this->halt_literal() ]);
                 if(empty($this->halt_literal())){
                     $string = Literal::apply($storage, $string);
                 }                
@@ -299,8 +300,8 @@ class Parse {
                 $string = literal::apply($storage, $string);
             }
             $string = Parse::replace_raw($string);
-            $string = str_replace('{{R3M}}', '{R3M}', $string);
             $string = str_replace('{{ R3M }}', '{R3M}', $string);
+            $string = str_replace('{{R3M}}', '{R3M}', $string);
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){
                 if($storage->get('ldelim') === null){
