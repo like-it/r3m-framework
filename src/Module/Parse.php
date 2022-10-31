@@ -228,6 +228,9 @@ class Parse {
         }
         elseif(is_object($string)){
             foreach($string as $key => $value){
+                if($key === 'parentNode'){
+                    continue;
+                }
                 try {
                     $depth = $this->depth();
                     if($depth === null){
@@ -241,7 +244,7 @@ class Parse {
                     $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
-                    dd($exception);
+                    ddd($exception);
                 }
 
             }            
