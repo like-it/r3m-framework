@@ -274,7 +274,7 @@ class Parse {
             $storage->data('r3m.io.parse.compile.url', $url);
             $storage->data('this', $this->local($this->depth()));
             if($this->depth() > 0){
-                $storage->data('this.parentNode', $this->local($this->depth()-1));
+//                $storage->data('this.parentNode', $this->local($this->depth()-1));
             }
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
             if(File::exist($url) && File::mtime($url) == $mtime){
@@ -379,6 +379,7 @@ class Parse {
             if($exists){
                 $template = new $class(new Parse($this->object()), $storage);
                 $string = $template->run();
+                $this->object()->logger()->debug('test: template run', [ $string ]);
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
                 }
