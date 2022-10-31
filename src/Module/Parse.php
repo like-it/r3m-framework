@@ -208,7 +208,7 @@ class Parse {
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
             }
         }
-        elseif(is_object($string)){                                                             
+        elseif(is_object($string)){
             foreach($string as $key => $value){
                 try {
                     $this->local($string);
@@ -223,8 +223,7 @@ class Parse {
         }
         elseif(stristr($string, '{') === false){
             return $string;
-        }
-        else {
+        } else {
             $build = $this->build(new Build($this->object(), $this, $is_debug));
             $build->cache_dir($this->cache_dir());
             $build->limit($this->limit());
@@ -242,6 +241,8 @@ class Parse {
                 ];
                 $url = $build->url($string, $options);
             }
+            $string = str_replace('{{literal}}', '{literal}', $string);
+            $string = str_replace('{{/literal}}', '{/literal}', $string);
             $storage->data('r3m.io.parse.compile.url', $url);
             $storage->data('this', $this->local());
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
@@ -263,8 +264,6 @@ class Parse {
             elseif(File::exist($url) && File::mtime($url) != $mtime){
                 opcache_invalidate($url, true);
             }
-            $string = str_replace('{{literal}}', '{literal}', $string);
-            $string = str_replace('{{/literal}}', '{/literal}', $string);
             if(empty($this->halt_literal())){
                 $string = literal::apply($storage, $string);
             }
@@ -278,6 +277,7 @@ class Parse {
                 if($storage->get('rdelim') === null){
                     $storage->set('rdelim','}');
                 }
+                $uuid = Core::uuid();
                 $storage->data('r3m.io.parse.compile.remove_newline', true);
                 $string = str_replace(
                     [
@@ -285,15 +285,15 @@ class Parse {
                         '}',
                     ],
                     [
-                        '[$ldelim]',
-                        '[$rdelim]',
+                        '[$ldelim-' . $uuid . ']',
+                        '[$rdelim-' . $uuid . ']',
                     ],
                     $explode[1]
                 );
                 $string = str_replace(
                     [
-                        '[$ldelim]',
-                        '[$rdelim]',
+                        '[$ldelim-' . $uuid . ']',
+                        '[$rdelim-' . $uuid . ']',
                     ],
                     [
                         '{$ldelim}',
