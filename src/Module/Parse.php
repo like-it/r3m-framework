@@ -155,10 +155,19 @@ class Parse {
     }
 
     public function local($depth=0, $local=null){
+        if($this->local === null){
+            $this->local = [];
+        }
         if($local !== null){
             $this->local[$depth] = $local;
-        }        
-        return $this->local[$depth];
+        }
+        if(
+            $depth !== null &&
+            array_key_exists($depth, $this->local)
+        ){
+            return $this->local[$depth];
+        }
+        return null;
     }
 
     public function is_assign($is_assign=null){
