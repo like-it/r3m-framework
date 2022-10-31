@@ -746,6 +746,8 @@ class Build {
                 return Token::TYPE_IS_MINUS_MINUS;
             case Token::TYPE_DOC_COMMENT :
                 return Token::TYPE_DOC_COMMENT;
+            case Token::TYPE_IS_SMALLER :
+                return Token::TYPE_IS_SMALLER;
             default:
                 d($record);
                 throw new Exception('Undefined type (' . $record['type'] . ')');
