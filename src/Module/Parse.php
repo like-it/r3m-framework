@@ -235,7 +235,6 @@ class Parse {
                 $depth++;
                 $this->local($depth, $string);
             }
-//            $this->depth($depth);
             foreach($string as $key => $value){
                 if(
                     in_array(
@@ -249,9 +248,7 @@ class Parse {
                     continue;
                 }
                 try {
-//                    $storage->set('r3m.io.parse.depth', $depth);
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
-                    d($value);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
                     ddd($exception);
@@ -294,23 +291,6 @@ class Parse {
                     $key .= '.parentNode';
                     $storage->data($key, $this->local($index));
                 }
-                d($depth);
-//                $parentNode = $this->local($depth-1);
-//                d($parentNode);
-                /*
-                if($depth > 0){
-                    $key = 'this';
-                    for($index = $depth - 1; $index >= 0; $index--){
-                        $key .= '.parentNode';
-                        if($index === 0){
-                            $storage->data($key, clone $rootNode);
-                        } else {
-                            $parentNode = $this->local($index);
-                            $storage->data($key, $this->local($index));
-                        }
-                    }
-                }
-                */
             }
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
             if(File::exist($url) && File::mtime($url) == $mtime){
