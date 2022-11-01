@@ -228,7 +228,15 @@ class Parse {
         }
         elseif(is_object($string)){
             foreach($string as $key => $value){
-                if($key === 'parentNode'){
+                if(
+                    in_array(
+                        $key,
+                        [
+                            'parentNode',
+                            'rootNode'
+                        ]
+                    )
+                ){
                     continue;
                 }
                 try {
