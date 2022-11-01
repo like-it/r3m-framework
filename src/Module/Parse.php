@@ -289,6 +289,11 @@ class Parse {
             $rootNode = $this->local(0);
             if($rootNode && is_object($rootNode)){
                 $storage->data('this.rootNode', $rootNode);
+                $key = 'this';
+                for($index = $depth - 1; $index >= 0; $index--){
+                    $key .= '.parentNode';
+                    $storage->data($key, $this->local($index));
+                }
                 d($depth);
 //                $parentNode = $this->local($depth-1);
 //                d($parentNode);
