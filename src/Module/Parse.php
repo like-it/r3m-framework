@@ -289,7 +289,7 @@ class Parse {
                 $key = 'this';
                 for($index = $this->depth() - 1; $index >= 0; $index--){
                     $key .= '.parentNode';
-                    $storage->data($key, $this->local($index));
+//                    $storage->data($key, $this->local($index));
                 }
             }
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
