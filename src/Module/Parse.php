@@ -165,7 +165,7 @@ class Parse {
             $depth !== null &&
             array_key_exists($depth, $this->local)
         ){
-            return $this->local[$depth];
+            return clone $this->local[$depth];
         }
         return null;
     }
@@ -284,7 +284,7 @@ class Parse {
             $string = str_replace('{{/literal}}', '{/literal}', $string);
             $storage->data('r3m.io.parse.compile.url', $url);
             $storage->data('this', $this->local($this->depth()));
-            //$storage->data('this.rootNode', $this->local(0));
+            $storage->data('this.rootNode', $this->local(0));
             if($this->depth() > 0){
                 $key = 'this';
                 for($index = $this->depth() - 1; $index >= 0; $index--){
