@@ -285,7 +285,10 @@ class Parse {
             $string = str_replace('{{/literal}}', '{/literal}', $string);
             $storage->data('r3m.io.parse.compile.url', $url);
             $storage->data('this', $this->local($this->depth()));
-            $storage->data('this.rootNode', clone $this->local(0));
+            $rootNode = $this->local(0);
+            if($rootNode && is_object($rootNode)){
+                $storage->data('this.rootNode', clone $rootNode);
+            }
             if($this->depth() > 0){
                 $key = 'this';
                 for($index = $this->depth() - 1; $index >= 0; $index--){
