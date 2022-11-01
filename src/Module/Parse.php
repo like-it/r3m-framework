@@ -249,9 +249,10 @@ class Parse {
                     }
                     $this->depth($depth);
 //                    $storage->set('r3m.io.parse.depth', $depth);
-                    $this->local($depth, $string);
+                    $this->local($depth, clone $string);
                     $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                     $string->$key = $value;
+                    $this->local($depth, clone $string);
                 } catch (Exception | ParseError $exception){
                     ddd($exception);
                 }
