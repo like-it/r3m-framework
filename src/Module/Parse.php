@@ -253,7 +253,6 @@ class Parse {
                 } catch (Exception | ParseError $exception){
                     ddd($exception);
                 }
-
             }            
             return $string;
         }
