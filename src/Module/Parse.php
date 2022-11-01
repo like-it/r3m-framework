@@ -288,12 +288,16 @@ class Parse {
             $rootNode = $this->local(0);
             if($rootNode && is_object($rootNode)){
                 $storage->data('this.rootNode', clone $rootNode);
-            }
-            if($this->depth() > 0){
-                $key = 'this';
-                for($index = $this->depth() - 1; $index >= 0; $index--){
-                    $key .= '.parentNode';
-                    $storage->data($key, $this->local($index));
+                if($this->depth() > 0){
+                    $key = 'this';
+                    for($index = $this->depth() - 1; $index >= 0; $index--){
+                        $key .= '.parentNode';
+                        if($index === 0){
+                            $storage->data($key, clone $rootNode);
+                        } else {
+                            $storage->data($key, $this->local($index));
+                        }
+                    }
                 }
             }
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
