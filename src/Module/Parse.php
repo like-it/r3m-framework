@@ -35,6 +35,7 @@ class Parse {
     private $limit;
     private $cache_dir;
     private $local;
+    private $depth;
     private $is_assign;
     private $halt_literal;
 
@@ -145,11 +146,28 @@ class Parse {
         return $this->cache_dir;
     }
 
-    public function local($local=null){
+    public function depth($depth=null){
+        if($depth !== null){
+            $this->depth = $depth;
+        }
+        return $this->depth;
+
+    }
+
+    public function local($depth=0, $local=null){
+        if($this->local === null){
+            $this->local = [];
+        }
         if($local !== null){
-            $this->local = $local;
-        }        
-        return $this->local;
+            $this->local[$depth] = $local;
+        }
+        if(
+            $depth !== null &&
+            array_key_exists($depth, $this->local)
+        ){
+            return $this->local[$depth];
+        }
+        return null;
     }
 
     public function is_assign($is_assign=null){
@@ -210,12 +228,23 @@ class Parse {
         }
         elseif(is_object($string)){
             foreach($string as $key => $value){
+                if($key === 'parentNode'){
+                    continue;
+                }
                 try {
-                    $this->local($string);
+                    $depth = $this->depth();
+                    if($depth === null){
+                        $depth = 0;
+                    } else {
+                        $depth++;
+                    }
+                    $this->depth($depth);
+//                    $storage->set('r3m.io.parse.depth', $depth);
+                    $this->local($depth, $string);
                     $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
-                    dd($exception);
+                    ddd($exception);
                 }
 
             }            
@@ -241,15 +270,26 @@ class Parse {
                 ];
                 $url = $build->url($string, $options);
             }
+            $string = str_replace('{{ literal }}', '{literal}', $string);
             $string = str_replace('{{literal}}', '{literal}', $string);
+            $string = str_replace('{{ /literal }}', '{/literal}', $string);
             $string = str_replace('{{/literal}}', '{/literal}', $string);
             $storage->data('r3m.io.parse.compile.url', $url);
-            $storage->data('this', $this->local());
+            $storage->data('this', $this->local($this->depth()));
+            $storage->data('this.rootNode', $this->local(0));
+            if($this->depth() > 0){
+                $key = 'this';
+                for($index = $this->depth() - 1; $index >= 0; $index--){
+                    $key .= '.parentNode';
+                    $storage->data($key, $this->local($index));
+                }
+            }
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
             if(File::exist($url) && File::mtime($url) == $mtime){
                 //cache file                   
                 $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
-                $template = new $class(new Parse($this->object()), $storage);                
+                $template = new $class(new Parse($this->object()), $storage);
+                $this->object()->logger()->debug('test: halt literal', [ $this->halt_literal() ]);
                 if(empty($this->halt_literal())){
                     $string = Literal::apply($storage, $string);
                 }                
@@ -268,6 +308,7 @@ class Parse {
                 $string = literal::apply($storage, $string);
             }
             $string = Parse::replace_raw($string);
+            $string = str_replace('{{ R3M }}', '{R3M}', $string);
             $string = str_replace('{{R3M}}', '{R3M}', $string);
             $explode = explode('{R3M}', $string, 2);
             if(array_key_exists(1, $explode)){
@@ -346,6 +387,7 @@ class Parse {
             if($exists){
                 $template = new $class(new Parse($this->object()), $storage);
                 $string = $template->run();
+                $this->object()->logger()->debug('test: template run', [ $string ]);
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
                 }
