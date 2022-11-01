@@ -213,7 +213,7 @@ class Parse {
      * @throws FileWriteException
      * @throws Exception
      */
-    public function compile($string='', $data=[], $storage=null, $is_debug=false){
+    public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
         if($storage === null){            
             $storage = $this->storage(new Data());
         }
@@ -224,17 +224,16 @@ class Parse {
         }
         if(is_array($string)){
             foreach($string as $key => $value){
-                $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
+                $string[$key] = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
             }
         }
         elseif(is_object($string)){
-            $depth = $this->depth();
             if($depth === null){
                 $depth = 0;
             } else {
                 $depth++;
             }
-            $this->depth($depth);
+//            $this->depth($depth);
             $this->local($depth, $string);
             foreach($string as $key => $value){
                 if(
@@ -250,7 +249,7 @@ class Parse {
                 }
                 try {
 //                    $storage->set('r3m.io.parse.depth', $depth);
-                    $value = $this->compile($value, $storage->data(), $storage, $is_debug);
+                    $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     d($value);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
@@ -285,13 +284,13 @@ class Parse {
             $string = str_replace('{{ /literal }}', '{/literal}', $string);
             $string = str_replace('{{/literal}}', '{/literal}', $string);
             $storage->data('r3m.io.parse.compile.url', $url);
-            $storage->data('this', $this->local($this->depth()));
+            $storage->data('this', $this->local($depth));
             $rootNode = $this->local(0);
             if($rootNode && is_object($rootNode)){
                 $storage->data('this.rootNode', clone $rootNode);
-                if($this->depth() > 0){
+                if($depth > 0){
                     $key = 'this';
-                    for($index = $this->depth() - 1; $index >= 0; $index--){
+                    for($index = $depth - 1; $index >= 0; $index--){
                         $key .= '.parentNode';
                         if($index === 0){
                             $storage->data($key, clone $rootNode);
@@ -408,10 +407,6 @@ class Parse {
                 $this->object()->logger()->debug('test: template run', [ $string ]);
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
-                }
-                $depth = $this->depth();
-                if($depth === 0){
-                    $this->depth = null;
                 }
                 $storage->data('delete', 'this');
             } else {
