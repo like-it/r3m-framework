@@ -289,6 +289,8 @@ class Parse {
             if($rootNode && is_object($rootNode)){
                 $storage->data('this.rootNode', clone $rootNode);
                 d($depth);
+                $parentNode = $this->local($depth-1);
+                d($parentNode);
                 /*
                 if($depth > 0){
                     $key = 'this';
