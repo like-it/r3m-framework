@@ -228,6 +228,14 @@ class Parse {
             }
         }
         elseif(is_object($string)){
+            $depth = $this->depth();
+            if($depth === null){
+                $depth = 0;
+            } else {
+                $depth++;
+            }
+            $this->depth($depth);
+            $this->local($depth, $string);
             foreach($string as $key => $value){
                 if(
                     in_array(
@@ -241,18 +249,9 @@ class Parse {
                     continue;
                 }
                 try {
-                    $depth = $this->depth();
-                    if($depth === null){
-                        $depth = 0;
-                    } else {
-                        $depth++;
-                    }
-                    $this->depth($depth);
 //                    $storage->set('r3m.io.parse.depth', $depth);
-                    $this->local($depth, clone $string);
                     $value = $this->compile($value, $storage->data(), $storage, $is_debug);
                     $string->$key = $value;
-                    $this->local($depth, clone $string);
                 } catch (Exception | ParseError $exception){
                     ddd($exception);
                 }
