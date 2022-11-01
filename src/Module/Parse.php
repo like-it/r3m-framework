@@ -295,9 +295,10 @@ class Parse {
                         if($index === 0){
                             $storage->data($key, clone $rootNode);
                         } else {
-                            d($index);
-                            d($string);
                             $storage->data($key, $this->local($index));
+                            if($index === 1){
+                                return $string;
+                            }
                         }
                     }
                 }
