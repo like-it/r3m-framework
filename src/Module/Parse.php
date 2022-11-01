@@ -230,11 +230,12 @@ class Parse {
         elseif(is_object($string)){
             if($depth === null){
                 $depth = 0;
+                $this->local($depth, clone $string);
             } else {
                 $depth++;
+                $this->local($depth, $string);
             }
 //            $this->depth($depth);
-            $this->local($depth, $string);
             foreach($string as $key => $value){
                 if(
                     in_array(
@@ -287,10 +288,10 @@ class Parse {
             $storage->data('this', $this->local($depth));
             $rootNode = $this->local(0);
             if($rootNode && is_object($rootNode)){
-                $storage->data('this.rootNode', clone $rootNode);
+//                $storage->data('this.rootNode', clone $rootNode);
                 d($depth);
-                $parentNode = $this->local($depth-1);
-                d($parentNode);
+//                $parentNode = $this->local($depth-1);
+//                d($parentNode);
                 /*
                 if($depth > 0){
                     $key = 'this';
