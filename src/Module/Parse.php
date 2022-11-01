@@ -407,13 +407,10 @@ class Parse {
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
                 }
-                /*
                 $depth = $this->depth();
                 if($depth === 0){
                     $this->depth = null;
                 }
-                */
-                d($storage->data('this'));
                 $storage->data('delete', 'this');
             } else {
                 //add phpstan error report on class in /tmp/r3m/io/parse/error/...
