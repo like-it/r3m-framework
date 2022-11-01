@@ -405,6 +405,7 @@ class Parse {
                 }
                 $storage->data('delete', 'this');
             } else {
+                //add phpstan error report on class in /tmp/r3m/io/parse/error/...
                 throw new Exception('Class ('. $class .') doesn\'t exist');
 
             }
