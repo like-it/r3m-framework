@@ -296,6 +296,7 @@ class Parse {
                             $storage->data($key, clone $rootNode);
                         } else {
                             d($index);
+                            d($string);
                             $storage->data($key, $this->local($index));
                         }
                     }
