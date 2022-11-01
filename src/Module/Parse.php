@@ -297,7 +297,6 @@ class Parse {
                 //cache file                   
                 $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
                 $template = new $class(new Parse($this->object()), $storage);
-                $this->object()->logger()->debug('test: halt literal', [ $this->halt_literal() ]);
                 if(empty($this->halt_literal())){
                     $string = Literal::apply($storage, $string);
                 }                
