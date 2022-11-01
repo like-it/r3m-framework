@@ -278,7 +278,7 @@ class Parse {
             $storage->data('this', $this->local($this->depth()));
             if($this->depth() > 0){
                 $key = 'this';
-                for($index = $this->depth() - 1; $index >= 0; $index++){
+                for($index = $this->depth() - 1; $index >= 0; $index--){
                     $key .= '.parentNode';
                     $storage->data($key, $this->local($index));
                 }
