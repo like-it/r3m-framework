@@ -77,6 +77,7 @@ class Parse {
         }
         $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
         $this->cache_dir($cache_dir);
+        $this->depth = null;
     }
 
     public function object($object=null){
@@ -289,7 +290,7 @@ class Parse {
                 $key = 'this';
                 for($index = $this->depth() - 1; $index >= 0; $index--){
                     $key .= '.parentNode';
-//                    $storage->data($key, $this->local($index));
+                    $storage->data($key, $this->local($index));
                 }
             }
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
@@ -397,6 +398,10 @@ class Parse {
                 $this->object()->logger()->debug('test: template run', [ $string ]);
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
+                }
+                $depth = $this->depth();
+                if($depth === 0){
+                    $this->depth = null;
                 }
                 $storage->data('delete', 'this');
             } else {
