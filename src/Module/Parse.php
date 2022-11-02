@@ -77,7 +77,7 @@ class Parse {
         }
         $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
         $this->cache_dir($cache_dir);
-        $this->useThis(true);
+        $this->useThis(false);
     }
 
     public function useThis($useThis=null){
