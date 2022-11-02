@@ -80,6 +80,8 @@ class Parse {
         $use_this = $config->data('parse.read.object.use_this');
         if(is_bool($use_this)){
             $this->useThis($use_this);
+        } else {
+            $this->useThis(false);
         }
     }
 
