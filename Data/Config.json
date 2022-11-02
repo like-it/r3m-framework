@@ -135,7 +135,10 @@
     },
     "parse": {
         "read" : {
-            "parser" : "{{R3M}}"
+            "parser" : "{{R3M}}",
+            "object" : {
+                "use_this" : true
+            }
         },
         "plugin": {
             "multi_line": [
