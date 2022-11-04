@@ -770,11 +770,13 @@ class Core {
                 header("Access-Control-Allow-Origin: {$origin}");
             }
         }
+        elseif(array_key_exists('REFERER', $_SERVER)) {
+            d($_SERVER);
+        }
         if (
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
             $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
         ) {
-            d($_SERVER);
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
             //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
