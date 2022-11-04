@@ -722,12 +722,53 @@ class Core {
         return implode($delimiter, $explode);
     }
 
+    private static function cors_is_allowed(App $object, $origin=''): bool
+    {
+        $host_list = $object->config('server.cors');
+        if(is_array($host_list)){
+            foreach($host_list as $host){
+                $explode = explode('.', $host);
+                $count_explode = count($explode);
+                if($count_explode === 3){
+                    if($explode[0] === '*'){
+                        $temp = explode('.', $origin);
+                        if(count($temp) === 3){
+                            $explode[0] = '';
+                            $temp[0] = '';
+                            $host = implode('.', $explode);
+                            $match = implode('.', $temp);
+                            if($host === $match){
+                                return true;
+                            }
+                        }
+                    }
+                }
+                elseif($count_explode === 2){
+                    $temp = explode('://', $origin);
+                    if(array_key_exists(1, $temp)){
+                        $temp = explode('.', $temp[1]);
+                        if(count($temp) === 2){
+                            $host = implode('.', $explode);
+                            $match = implode('.', $temp);
+                            if($host === $match){
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public static function cors(App $object){
         header("HTTP/1.1 200 OK");
         header("Access-Control-Allow-Origin: *");
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
-            header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-            d($_SERVER);
+            $origin = $_SERVER['HTTP_ORIGIN'];
+            if(Core::cors_is_allowed($object, $origin)){
+                header("Access-Control-Allow-Origin: {$origin}");
+            }
         }
         if (
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
