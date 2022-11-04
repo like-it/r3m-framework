@@ -766,7 +766,6 @@ class Core {
         header("Access-Control-Allow-Origin: *");
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
             $origin = $_SERVER['HTTP_ORIGIN'];
-            d(Core::cors_is_allowed($object, $origin));
             if(Core::cors_is_allowed($object, $origin)){
                 header("Access-Control-Allow-Origin: {$origin}");
             }
