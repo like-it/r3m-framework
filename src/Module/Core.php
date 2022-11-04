@@ -770,9 +770,6 @@ class Core {
                 header("Access-Control-Allow-Origin: {$origin}");
             }
         }
-        elseif(array_key_exists('REFERER', $_SERVER)) {
-            d($_SERVER);
-        }
         if (
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
             $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
