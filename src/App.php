@@ -103,7 +103,7 @@ class App extends Data {
      */
     public static function run(App $object){
         if(App::is_cli() === false){
-            Core::cors();
+            Core::cors($object);
         }
         //Config::configure($object); //@moved to construct
         Handler::request_configure($object);

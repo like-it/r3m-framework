@@ -722,7 +722,7 @@ class Core {
         return implode($delimiter, $explode);
     }
 
-    public static function cors(){
+    public static function cors(App $object){
         header("HTTP/1.1 200 OK");
         header("Access-Control-Allow-Origin: *");
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
@@ -732,6 +732,7 @@ class Core {
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
             $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
         ) {
+            ddd($_SERVER);
             header('Access-Control-Allow-Credentials: true');
             header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
             //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
