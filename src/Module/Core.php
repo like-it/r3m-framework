@@ -769,6 +769,8 @@ class Core {
             if(Core::cors_is_allowed($object, $origin)){
                 header("Access-Control-Allow-Origin: {$origin}");
             }
+        } else {
+            d($_SERVER);
         }
         if (
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
