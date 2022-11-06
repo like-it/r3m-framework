@@ -162,10 +162,12 @@ class FileRequest {
                     Handler::header('Cache-Control: public');
                     $allow = $object->config('server.origin.allow');
                     d($allow);
+                    d($extension);
                     $parse = new Parse($object);
-                    ddd($_SERVER);
+//                    ddd($_SERVER);
 
                     $allow = $parse->compile($allow, $object->data());
+                    d($allow);
                     if($allow){
                         Handler::header('Access-Control-Allow-Origin: ' . $allow);
                     }
