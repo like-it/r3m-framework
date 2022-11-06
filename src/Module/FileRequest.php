@@ -162,14 +162,11 @@ class FileRequest {
                     Handler::header('Cache-Control: public');
 
                     if(array_key_exists('HTTP_REFERER', $_SERVER)){
-                        $origin = $_SERVER['HTTP_REFERER'];
+                        $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
                         if(Core::cors_is_allowed($object, $origin)){
                             header("Access-Control-Allow-Origin: {$origin}");
                         }
                     }
-                }
-                if($extension === 'json'){
-                    ddd($url);
                 }
                 return File::read($url);
             }
