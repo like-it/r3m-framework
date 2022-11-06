@@ -160,17 +160,12 @@ class FileRequest {
                     Handler::header('Content-Type: ' . $contentType);
                     Handler::header('ETag: ' . $etag . '-' . $gm);
                     Handler::header('Cache-Control: public');
-                    $allow = $object->config('server.origin.allow');
-                    $parse = new Parse($object);
 
-                    $allow = $parse->compile($allow, $object->data());
-                    if($extension === 'js' && rand(0,1) === 1){
-                        d($allow);
-                        d($_SERVER);
-                    }
-
-                    if($allow){
-                        Handler::header('Access-Control-Allow-Origin: ' . $allow);
+                    if(array_key_exists('HTTP_REFERER', $_SERVER)){
+                        $origin = $_SERVER['HTTP_REFERER'];
+                        if(Core::cors_is_allowed($object, $origin)){
+                            header("Access-Control-Allow-Origin: {$origin}");
+                        }
                     }
                 }
                 return File::read($url);

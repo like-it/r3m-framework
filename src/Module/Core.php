@@ -722,7 +722,7 @@ class Core {
         return implode($delimiter, $explode);
     }
 
-    private static function cors_is_allowed(App $object, $origin=''): bool
+    public static function cors_is_allowed(App $object, $origin=''): bool
     {
         $host_list = $object->config('server.cors');
         if(is_array($host_list)){
