@@ -27,7 +27,7 @@ class FileRequest {
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
             $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
         ) {
-            Core::cors();
+            Core::cors($object);
         }
         if(
             $object->config('server.http.upgrade_insecure') === true &&
@@ -160,11 +160,12 @@ class FileRequest {
                     Handler::header('Content-Type: ' . $contentType);
                     Handler::header('ETag: ' . $etag . '-' . $gm);
                     Handler::header('Cache-Control: public');
-                    $allow = $object->config('server.origin.allow');
-                    $parse = new Parse($object);
-                    $allow = $parse->compile($allow, $object->data());
-                    if($allow){
-                        Handler::header('Access-Control-Allow-Origin: ' . $allow);
+
+                    if(array_key_exists('HTTP_REFERER', $_SERVER)){
+                        $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
+                        if(Core::cors_is_allowed($object, $origin)){
+                            header("Access-Control-Allow-Origin: {$origin}");
+                        }
                     }
                 }
                 return File::read($url);

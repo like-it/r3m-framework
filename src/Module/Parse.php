@@ -35,9 +35,9 @@ class Parse {
     private $limit;
     private $cache_dir;
     private $local;
-    private $depth;
     private $is_assign;
     private $halt_literal;
+    private $use_this;
 
     public function __construct($object, $storage=null){
         $this->object($object);
@@ -77,6 +77,19 @@ class Parse {
         }
         $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
         $this->cache_dir($cache_dir);
+        $use_this = $config->data('parse.read.object.use_this');
+        if(is_bool($use_this)){
+            $this->useThis($use_this);
+        } else {
+            $this->useThis(false);
+        }
+    }
+
+    public function useThis($useThis=null){
+        if($useThis !== null){
+            $this->use_this = $useThis;
+        }
+        return $this->use_this;
     }
 
     public function object($object=null){
@@ -146,14 +159,6 @@ class Parse {
         return $this->cache_dir;
     }
 
-    public function depth($depth=null){
-        if($depth !== null){
-            $this->depth = $depth;
-        }
-        return $this->depth;
-
-    }
-
     public function local($depth=0, $local=null){
         if($this->local === null){
             $this->local = [];
@@ -165,7 +170,7 @@ class Parse {
             $depth !== null &&
             array_key_exists($depth, $this->local)
         ){
-            return $this->local[$depth];
+            return clone $this->local[$depth];
         }
         return null;
     }
@@ -212,7 +217,7 @@ class Parse {
      * @throws FileWriteException
      * @throws Exception
      */
-    public function compile($string='', $data=[], $storage=null, $is_debug=false){
+    public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
         if($storage === null){            
             $storage = $this->storage(new Data());
         }
@@ -223,30 +228,38 @@ class Parse {
         }
         if(is_array($string)){
             foreach($string as $key => $value){
-                $string[$key] = $this->compile($value, $storage->data(), $storage, $is_debug);
+                $string[$key] = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
             }
         }
         elseif(is_object($string)){
+            if($this->useThis() === true){
+                if($depth === null){
+                    $depth = 0;
+                    $this->local($depth, $string);
+                } else {
+                    $depth++;
+                    $this->local($depth, $string);
+                }
+            }
             foreach($string as $key => $value){
-                if($key === 'parentNode'){
+                if(
+                    $this->useThis() === true &&
+                    in_array(
+                        $key,
+                        [
+                            'parentNode',
+                            'rootNode'
+                        ]
+                    )
+                ){
                     continue;
                 }
                 try {
-                    $depth = $this->depth();
-                    if($depth === null){
-                        $depth = 0;
-                    } else {
-                        $depth++;
-                    }
-                    $this->depth($depth);
-//                    $storage->set('r3m.io.parse.depth', $depth);
-                    $this->local($depth, $string);
-                    $value = $this->compile($value, $storage->data(), $storage, $is_debug);
+                    $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
                     ddd($exception);
                 }
-
             }            
             return $string;
         }
@@ -275,13 +288,16 @@ class Parse {
             $string = str_replace('{{ /literal }}', '{/literal}', $string);
             $string = str_replace('{{/literal}}', '{/literal}', $string);
             $storage->data('r3m.io.parse.compile.url', $url);
-            $storage->data('this', $this->local($this->depth()));
-            $storage->data('this.rootNode', $this->local(0));
-            if($this->depth() > 0){
-                $key = 'this';
-                for($index = $this->depth() - 1; $index >= 0; $index--){
-                    $key .= '.parentNode';
-                    $storage->data($key, $this->local($index));
+            if($this->useThis() === true){
+                $storage->data('this', $this->local($depth));
+                $rootNode = $this->local(0);
+                if($rootNode && is_object($rootNode)){
+                    $storage->data('this.rootNode', $rootNode);
+                    $key = 'this';
+                    for($index = $depth - 1; $index >= 0; $index--){
+                        $key .= '.parentNode';
+                        $storage->data($key, $this->local($index));
+                    }
                 }
             }
             $mtime = $storage->data('r3m.io.parse.view.mtime');            
@@ -289,7 +305,6 @@ class Parse {
                 //cache file                   
                 $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
                 $template = new $class(new Parse($this->object()), $storage);
-                $this->object()->logger()->debug('test: halt literal', [ $this->halt_literal() ]);
                 if(empty($this->halt_literal())){
                     $string = Literal::apply($storage, $string);
                 }                
@@ -391,8 +406,11 @@ class Parse {
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
                 }
-                $storage->data('delete', 'this');
+                if($this->useThis() === true){
+                    $storage->data('delete', 'this');
+                }
             } else {
+                //add phpstan error report on class in /tmp/r3m/io/parse/error/...
                 throw new Exception('Class ('. $class .') doesn\'t exist');
 
             }
