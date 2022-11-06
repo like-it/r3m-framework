@@ -737,10 +737,14 @@ class Core {
                             $temp[0] = '';
                             $host = implode('.', $explode);
                             $match = implode('.', $temp);
+                            d($host);
+                            d($match);
                             if($host === $match){
                                 return true;
                             }
                         }
+                    } else {
+                      //do magic
                     }
                 }
                 elseif($count_explode === 2){
