@@ -168,6 +168,9 @@ class FileRequest {
                         }
                     }
                 }
+                if($extension === 'json'){
+                    ddd($url);
+                }
                 return File::read($url);
             }
         }
