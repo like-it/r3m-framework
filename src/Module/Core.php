@@ -763,7 +763,7 @@ class Core {
 
     public static function cors(App $object){
         header("HTTP/1.1 200 OK");
-        header("Access-Control-Allow-Origin: *");
+        //header("Access-Control-Allow-Origin: *");
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
             $origin = $_SERVER['HTTP_ORIGIN'];
             if(Core::cors_is_allowed($object, $origin)){
