@@ -161,13 +161,14 @@ class FileRequest {
                     Handler::header('ETag: ' . $etag . '-' . $gm);
                     Handler::header('Cache-Control: public');
                     $allow = $object->config('server.origin.allow');
-                    d($allow);
-                    d($extension);
                     $parse = new Parse($object);
-//                    ddd($_SERVER);
 
                     $allow = $parse->compile($allow, $object->data());
-                    ddd($allow);
+                    if($extension === 'js'){
+                        d($allow);
+                        ddd($_SERVER);
+                    }
+
                     if($allow){
                         Handler::header('Access-Control-Allow-Origin: ' . $allow);
                     }
