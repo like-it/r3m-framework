@@ -167,7 +167,7 @@ class FileRequest {
 //                    ddd($_SERVER);
 
                     $allow = $parse->compile($allow, $object->data());
-                    d($allow);
+                    ddd($allow);
                     if($allow){
                         Handler::header('Access-Control-Allow-Origin: ' . $allow);
                     }
