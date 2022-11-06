@@ -724,6 +724,13 @@ class Core {
 
     public static function cors_is_allowed(App $object, $origin=''): bool
     {
+        $origin = rtrim($origin, '/');
+        $origin = explode('://', $origin);
+        if(array_key_exists(1, $origin)){
+            $origin = $origin[1];
+        } else {
+            return false;
+        }
         $host_list = $object->config('server.cors');
         if(is_array($host_list)){
             foreach($host_list as $host){
