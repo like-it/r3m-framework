@@ -161,7 +161,10 @@ class FileRequest {
                     Handler::header('ETag: ' . $etag . '-' . $gm);
                     Handler::header('Cache-Control: public');
                     $allow = $object->config('server.origin.allow');
+                    d($allow);
                     $parse = new Parse($object);
+                    ddd($_SERVER);
+
                     $allow = $parse->compile($allow, $object->data());
                     if($allow){
                         Handler::header('Access-Control-Allow-Origin: ' . $allow);
