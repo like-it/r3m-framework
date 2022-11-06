@@ -749,20 +749,14 @@ class Core {
                             }
                         }
                     } else {
-                      //do magic
+                        if($host === $origin){
+                            return true;
+                        }
                     }
                 }
                 elseif($count_explode === 2){
-                    $temp = explode('://', $origin);
-                    if(array_key_exists(1, $temp)){
-                        $temp = explode('.', $temp[1]);
-                        if(count($temp) === 2){
-                            $host = implode('.', $explode);
-                            $match = implode('.', $temp);
-                            if($host === $match){
-                                return true;
-                            }
-                        }
+                    if($host === $origin){
+                        return true;
                     }
                 }
             }
