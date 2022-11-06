@@ -166,7 +166,7 @@ class FileRequest {
                     $allow = $parse->compile($allow, $object->data());
                     if($extension === 'js' && rand(0,1) === 1){
                         d($allow);
-                        ddd($_SERVER);
+                        d($_SERVER);
                     }
 
                     if($allow){
