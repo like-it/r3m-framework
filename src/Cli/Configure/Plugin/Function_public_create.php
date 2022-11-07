@@ -43,6 +43,11 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
                 $source = $object->config('controller.dir.data') . '.htaccess';
                 File::copy($source, $destination);
             }
+            $destination = $public_html . '.user.ini';
+            if(!File::exist($destination)){
+                $source = $object->config('controller.dir.data') . '.user.ini';
+                File::copy($source, $destination);
+            }
             $destination = $public_html . 'index.php';
             if(!File::exist($destination)){
                 $source = $object->config('controller.dir.data') . 'index.php';
