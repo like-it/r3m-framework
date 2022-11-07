@@ -759,6 +759,11 @@ class Core {
                         return true;
                     }
                 }
+                elseif($count_explode === 1){
+                    if($host === '*'){
+                        return true;
+                    }
+                }
             }
         }
         return false;
