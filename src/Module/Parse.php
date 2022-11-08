@@ -92,14 +92,14 @@ class Parse {
         return $this->use_this;
     }
 
-    public function object($object=null){
+    public function object(App $object=null){
         if($object !== null){
             $this->setObject($object);
         }
         return $this->getObject();
     }
 
-    private function setObject($object=null){
+    private function setObject(App $object=null){
         $this->object= $object;
     }
 
