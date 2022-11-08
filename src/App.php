@@ -132,6 +132,7 @@ class App extends Data {
                         return Response::output($object, $response);
                     } else {
                         $route = Route::wildcard($object);
+                        d($route);
                         if($route === false){
                             $object->logger(App::LOGGER_NAME)->error('Couldn\'t determine route (wildcard) (' . $object->request('request') .')...');
                             $response = new Response(
