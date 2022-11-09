@@ -245,6 +245,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             return $exception->getMessage() . "\n";
         }
     }
+    Core::execute('chown www-data:www-data -R ' . $host_dir_root);
     Core::execute('chmod 777 -R ' . $host_dir_root);
 }
 
