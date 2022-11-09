@@ -4,6 +4,8 @@
 use R3m\Io\App;
 use R3m\Io\Module\View;
 
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
@@ -17,7 +19,7 @@ class Index extends View {
             $url = Index::locate($object, $name);
             return Index::response($object, $url);
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception->getMessage() . "\n";
+            return $exception;
         }
     }
 }
