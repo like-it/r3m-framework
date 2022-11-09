@@ -43,6 +43,11 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
                 $source = $object->config('controller.dir.data') . '.htaccess';
                 File::copy($source, $destination);
             }
+            $destination = $public_html . '.user.ini';
+            if(!File::exist($destination)){
+                $source = $object->config('controller.dir.data') . '.user.ini';
+                File::copy($source, $destination);
+            }
             $destination = $public_html . 'index.php';
             if(!File::exist($destination)){
                 $source = $object->config('controller.dir.data') . 'index.php';
@@ -56,10 +61,15 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
         $source = $object->config('controller.dir.data') . '.htaccess';
         $destination = $public_html . '.htaccess';
         File::copy($source, $destination);
+        $source = $object->config('controller.dir.data') . '.user.ini';
+        $destination = $public_html . '.user.ini';
+        File::copy($source, $destination);
         $source = $object->config('controller.dir.data') . 'index.php';
         $destination = $public_html . 'index.php';
         File::copy($source, $destination);
     }
+    Core::execute('chown 1000:1000 ' . $public_html . ' -R');
+    Core::execute('chmod 777 ' . $public_html);
     $read->data('server.public', $public_html);
     $write = '';
     try {
