@@ -69,6 +69,7 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
         File::copy($source, $destination);
     }
     Core::execute('chown 1000:1000 ' . $public_html . ' -R');
+    Core::execute('chmod 777 ' . $public_html);
     $read->data('server.public', $public_html);
     $write = '';
     try {
