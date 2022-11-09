@@ -61,10 +61,14 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
         $source = $object->config('controller.dir.data') . '.htaccess';
         $destination = $public_html . '.htaccess';
         File::copy($source, $destination);
+        $source = $object->config('controller.dir.data') . '.user.ini';
+        $destination = $public_html . '.user.ini';
+        File::copy($source, $destination);
         $source = $object->config('controller.dir.data') . 'index.php';
         $destination = $public_html . 'index.php';
         File::copy($source, $destination);
     }
+    Core::execute('chown 1000:1000 ' . $public_html . ' -R');
     $read->data('server.public', $public_html);
     $write = '';
     try {
