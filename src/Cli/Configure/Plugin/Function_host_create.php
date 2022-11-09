@@ -36,6 +36,10 @@ function function_host_create(Parse $parse, Data $data, $host='', $public_html='
     $output = [];
     Core::execute('a2enmod rewrite', $output);
     $output = [];
+    $host_dir_root = $object->config(Config::DATA_PROJECT_DIR_ROOT) . 'Host' . $object->config('ds');
+    Core::execute('chown www-data:www-data -R ' . $host_dir_root);
+    Core::execute('chmod 777 -R ' . $host_dir_root);
     Core::execute('service apache2 restart', $output);
+
 }
 
