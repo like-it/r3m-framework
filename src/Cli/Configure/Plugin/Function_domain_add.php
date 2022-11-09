@@ -189,6 +189,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             if(!File::exist($url)){
                 File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
             }
+            Core::execute('chmod 755 ' . $host_dir_data);
         } catch (Exception | FileWriteException | ObjectException $exception){
             return $exception->getMessage() . PHP_EOL;
         }
