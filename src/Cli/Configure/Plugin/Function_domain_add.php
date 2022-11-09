@@ -124,6 +124,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         );
         try {
             File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+            File::chmod($url, 0666);
         } catch (Exception | FileWriteException | ObjectException $exception){
             return $exception->getMessage() . PHP_EOL;
         }
@@ -239,9 +240,11 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         );
         try {
             File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+            File::chmod($url, 0666);
         } catch (Exception | FileWriteException | ObjectException $exception){
             return $exception->getMessage() . "\n";
         }
     }
+    Core::execute('chmod 777 -R ' . $host_dir_root);
 }
 
