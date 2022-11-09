@@ -1112,7 +1112,6 @@ class Route extends Data{
             $result->data($key, $record);
         }
         $write = Core::object($result->data(), Core::OBJECT_JSON);
-        d($cache_dir);
         Dir::create($cache_dir, Dir::CHMOD);
         $byte =  File::write($cache_url, $write);
         $time = strtotime(date('Y-m-d H:i:00'));
