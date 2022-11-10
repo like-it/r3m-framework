@@ -1,6 +1,10 @@
 {{R3M}}
-{{$module = 'Index'}}
+{{if(
+$controler.dir.data &&
+$module
+)}}
 {{$use = json.select($controller.dir.data + '/Controller/' + $module + '.json', $module + '.use')}}
+{{/if}}
 <?php
 {{if(!is.empty($subdomain))}}namespace Host\{{$subdomain}}\{{$domain}}\{{$extension}}\Controller;{{else}}namespace Host\{{$domain}}\{{$extension}}\Controller;{{/if}}
 

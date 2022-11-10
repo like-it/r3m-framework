@@ -100,6 +100,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $url = $object->config('controller.dir.data') . 'Controller/Index.tpl';
         $controller_read = File::read($url);
         $controller_data = new Data();
+        $controller_data->data('module', 'Index');
         $controller_data->data('domain', ucfirst($domain));
         $controller_data->data('extension', ucfirst($extension));
         $controller_data->data('controller', $data->get('controller'));
