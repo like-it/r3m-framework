@@ -12,6 +12,18 @@ use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\ObjectException;
 
 function function_public_create(Parse $parse, Data $data, $public_html=''){
+    $id = posix_geteuid();
+    if(
+        !in_array(
+            $id,
+            [
+                0,
+                33
+            ]
+        )
+    ){
+        throw new Exception('Only root and after that www-data can configure host create...');
+    }
     $object = $parse->object();
     if(empty($public_html)){
         $public_html = $object->config('project.dir.public');
@@ -54,7 +66,7 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
                 File::copy($source, $destination);
             }
         } catch (Exception | FileMoveException $exception){
-            return $exception->getMessage() . PHP_EOL;
+            return $exception;
         }
     } else {
         Dir::create($public_html);
@@ -68,15 +80,16 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
         $destination = $public_html . 'index.php';
         File::copy($source, $destination);
     }
-    Core::execute('chown 1000:1000 ' . $public_html . ' -R');
-    Core::execute('chmod 777 ' . $public_html);
+    if($id === 0){
+        Core::execute('chown www-data:www-data ' . $public_html . ' -R');
+        Core::execute('chmod 777 ' . $public_html);
+    }
     $read->data('server.public', $public_html);
     $write = '';
     try {
         $write = File::write($url, Core::object($read->data(), Core::OBJECT_JSON));
     } catch (Exception | FileWriteException | ObjectException $exception){
-        return $exception->getMessage() . PHP_EOL;
+        return $exception;
     }
     return 'Bytes written: ' . $write . PHP_EOL;
 }
-

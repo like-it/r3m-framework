@@ -9,7 +9,7 @@ function function_config_read(Parse $parse, Data $data, $attribute=''){
     $url = $object->config('project.dir.data') . 'Config.json';
     $read = $object->data_read($url);
     if(!empty($read)){
-        return $read->data($attribute);
+        return $read->get($attribute);
     }
 }
 

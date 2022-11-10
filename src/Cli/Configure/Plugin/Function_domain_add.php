@@ -10,7 +10,24 @@ use Exception;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\ObjectException;
 
+/**
+ * @throws ObjectException
+ * @throws FileWriteException
+ * @throws Exception
+ */
 function function_domain_add(Parse $parse, Data $data, $domain=''){
+    $id = posix_geteuid();
+    if(
+        !in_array(
+            $id,
+            [
+                0,
+                33
+            ]
+        )
+    ){
+        throw new Exception('Only root & www-data can configure domain add...');
+    }
     $object = $parse->object();
     $domain = strtolower($domain);
     $explode = explode('.', $domain);
@@ -124,9 +141,27 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         );
         try {
             File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
-            File::chmod($url, 0666);
+            $id = posix_geteuid();
+            if($id === 0){
+                File::chmod($url, 0666);
+                Core::execute('chown www-data:www-data -R ' . $object->config('project.dir.host'));
+                Core::execute('chmod 777 -R ' . $object->config('project.dir.host'));
+                Core::execute('chown www-data:www-data -R ' . $project_dir_data);
+                if(File::exist($project_dir_data . 'Cache/0/')){
+                    Core::execute('chown root:root -R ' . $project_dir_data . 'Cache/0/');
+                }
+                if(File::exist($project_dir_data . 'Compile/0/')){
+                    Core::execute('chown root:root -R ' . $project_dir_data . 'Compile/0/');
+                }
+                if(File::exist($project_dir_data . 'Cache/1000/')){
+                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
+                }
+                if(File::exist($project_dir_data . 'Compile/1000/')){
+                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
+                }
+            }
         } catch (Exception | FileWriteException | ObjectException $exception){
-            return $exception->getMessage() . PHP_EOL;
+            return $exception;
         }
     } else {
         $host_dir_root = $object->config('project.dir.host') .
@@ -165,12 +200,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             $object->config('ds') .
             ucfirst($extension) .
             $object->config('ds');
-        Dir::change($dir);
-        //$exec = 'rm ' . ucfirst($extension);
-        //$output = [];
-        //Core::execute($exec, $output);
         Dir::change($cwd);
-
         $route = new Data();
         $route->data($subdomain . '-' . $domain . '-' . $extension . '-index.path', '/');
         $route->data($subdomain . '-' . $domain . '-' . $extension . '-index.host', [ $subdomain . '.' . $domain . '.' .  $extension]);
@@ -191,9 +221,9 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                 File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
             }
         } catch (Exception | FileWriteException | ObjectException $exception){
-            return $exception->getMessage() . PHP_EOL;
+            return $exception;
         }
-        $url = $object->config('controller.dir.data') . 'Index.tpl';
+        $url = $object->config('controller.dir.data') . 'Controller/Index.tpl';
         $controller_read = File::read($url);
         $controller_data = new Data();
         $controller_data->data('subdomain', ucfirst($subdomain));
@@ -208,9 +238,9 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                 File::write($url, $write);
             }
         } catch (Exception | FileWriteException $exception){
-            return $exception->getMessage() . PHP_EOL;
+            return $exception;
         }
-        $source = $object->config('controller.dir.data') . 'Overview.tpl';
+        $source = $object->config('controller.dir.data') . 'View/Overview.tpl';
         $destination = $host_dir_view . 'Overview.tpl';
         if(!File::exist($destination)){
             File::copy($source, $destination);
@@ -240,9 +270,27 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         );
         try {
             File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
-            File::chmod($url, 0666);
+            $id = posix_geteuid();
+            if($id === 0){
+                File::chmod($url, 0666);
+                Core::execute('chown www-data:www-data -R ' . $object->config('project.dir.host'));
+                Core::execute('chmod 777 -R ' . $object->config('project.dir.host'));
+                Core::execute('chown www-data:www-data -R ' . $project_dir_data);
+                if(File::exist($project_dir_data . 'Cache/0/')){
+                    Core::execute('chown root:root -R ' . $project_dir_data . 'Cache/0/');
+                }
+                if(File::exist($project_dir_data . 'Compile/0/')){
+                    Core::execute('chown root:root -R ' . $project_dir_data . 'Compile/0/');
+                }
+                if(File::exist($project_dir_data . 'Cache/1000/')){
+                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
+                }
+                if(File::exist($project_dir_data . 'Compile/1000/')){
+                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
+                }
+            }
         } catch (Exception | FileWriteException | ObjectException $exception){
-            return $exception->getMessage() . "\n";
+            return $exception;
         }
     }
 }

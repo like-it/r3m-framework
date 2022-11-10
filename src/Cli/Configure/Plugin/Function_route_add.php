@@ -1,17 +1,29 @@
 <?php
 
 use R3m\Io\App;
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\File;
 
-
+use Exception;
+/**
+ * @throws Exception
+ */
 function function_route_add(Parse $parse, Data $data, $add=''){
+    $id = posix_geteuid();
+    if(
+        !in_array(
+            $id,
+            [
+                0,
+                33
+            ]
+        )
+    ){
+        throw new Exception('Only root and www-data can configure route add...');
+    }
     $object = $parse->object();
-//    $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
-//    $read = $object->parse_read($url);
-    $read = $object->data(App::ROUTE);
-    d($read);
+    $read = $object->get(App::ROUTE);
     $has_route = false;
     if($read){
         foreach($read->data() as $key => $route){
@@ -31,6 +43,9 @@ function function_route_add(Parse $parse, Data $data, $add=''){
             unset($add->name);
             $read->data($key, $add);
             $read->write($has_route->resource);
+            if($id === 0){
+                Core::execute('chmod 666 ' . $has_route->resource);
+            }
             return 'Route: ' . $key . ' added' . PHP_EOL;
         } else {
             $error[] = 'Resource not found, available resources:';

@@ -30,6 +30,7 @@ class Restore extends View {
     const INFO = '{{binary()}} restore                        | Restore system files';
 
     const FILE = [
+        '.user.ini',
         '.htaccess',
         'index.php'
     ];
