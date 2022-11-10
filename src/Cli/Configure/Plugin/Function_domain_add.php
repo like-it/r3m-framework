@@ -95,23 +95,22 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                 File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
             }
         } catch (Exception | FileWriteException | ObjectException $exception){
-            return $exception->getMessage() . "\n";
+            return $exception;
         }
-        $url = $object->config('controller.dir.data') . 'Index.tpl';
+        $url = $object->config('controller.dir.data') . 'Controller/Index.tpl';
         $controller_read = File::read($url);
         $controller_data = new Data();
         $controller_data->data('domain', ucfirst($domain));
         $controller_data->data('extension', ucfirst($extension));
         $controller_parse = new Parse($object);
         $write = $controller_parse->compile($controller_read, $controller_data->data());
-
         try {
             $url = $host_dir_controller . 'Index' . $object->config('extension.php');
             if(!File::exist($url)){
                 File::write($url, $write);
             }
         } catch (Exception | FileWriteException $exception){
-            return $exception->getMessage() . PHP_EOL;
+            return $exception;
         }
         $source = $object->config('controller.dir.data') . 'Overview.tpl';
         $destination = $host_dir_view . 'Overview.tpl';
