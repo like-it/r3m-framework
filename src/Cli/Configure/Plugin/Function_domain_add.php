@@ -102,7 +102,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $controller_data = new Data();
         $controller_data->data('domain', ucfirst($domain));
         $controller_data->data('extension', ucfirst($extension));
-        dd($data->get('controller'));
+        $controller_data->data('controller', $data->get('controller'));
         $controller_parse = new Parse($object);
         $write = $controller_parse->compile($controller_read, $controller_data->data());
         try {
