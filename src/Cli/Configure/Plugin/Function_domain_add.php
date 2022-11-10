@@ -113,7 +113,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         } catch (Exception | FileWriteException $exception){
             return $exception;
         }
-        $source = $object->config('controller.dir.data') . 'Overview.tpl';
+        $source = $object->config('controller.dir.data') . 'View/Overview.tpl';
         $destination = $host_dir_view . 'Overview.tpl';
         if(!File::exist($destination)){
             File::copy($source, $destination);
