@@ -11,7 +11,8 @@ use {{$useage}};
 {{/if}}
 
 class {{$module}} extends View {
-    const DIR = __DIR__ . DIRECTORY_SEPARATOR;    
+
+    const DIR = __DIR__ . DIRECTORY_SEPARATOR;
 
     {{literal}}/**
      * @throws LocateException
@@ -21,6 +22,7 @@ class {{$module}} extends View {
      * @throws FileWriteException
      */{{/literal}}
      public static function overview(App $object){
+
         $name = {{$module}}::name(__FUNCTION__);
         $url = {{$module}}::locate($object, $name);
         return {{$module}}::response($object, $url);
