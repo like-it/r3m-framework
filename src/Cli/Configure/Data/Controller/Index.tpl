@@ -27,4 +27,5 @@ class {{$module}} extends View {
         $url = {{$module}}::locate($object, $name);
         return {{$module}}::response($object, $url);
      }
+     
 }
