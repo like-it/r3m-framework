@@ -1,5 +1,6 @@
 {{R3M}}
 {{$module = 'Index'}}
+{{dd($controller.dir.data )}}
 {{$use = json.select($controller.dir.data + '/Controller/' + $module + '.json', $module + '.use')}}
 {{dd($use)}}
 <?php
