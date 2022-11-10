@@ -49,6 +49,7 @@ function function_host_create(Parse $parse, Data $data, $host='', $public_html='
     Core::execute(Core::binary() . ' configure public create ' . $public_html, $output);
     $output = [];
     Core::execute(Core::binary() . ' configure domain add ' . $host, $output);
+    d($output);
     if($id === 0){
         $output = [];
         Core::execute(Core::binary() . ' configure site enable ' . $host, $output);
