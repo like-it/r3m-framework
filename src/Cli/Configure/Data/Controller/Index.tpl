@@ -16,7 +16,7 @@ class {{$module}} extends View {
 
     {{literal}}/**
      * @throws LocateException
-     * @throws ObjectException;
+     * @throws ObjectException
      * @throws UrlEmptyException
      * @throws UrlNotExistException
      * @throws FileWriteException
