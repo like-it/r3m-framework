@@ -3,6 +3,7 @@
 {{$use = json.select($controller.dir.data + '/Controller/' + $module + '.json', $module + '.use')}}
 <?php
 {{if(!is.empty($subdomain))}}namespace Host\{{$subdomain}}\{{$domain}}\{{$extension}}\Controller;{{else}}namespace Host\{{$domain}}\{{$extension}}\Controller;{{/if}}
+
 {{if(is.array($use))}}
 {{for.each($use as $useage)}}
 use {{$useage}};
