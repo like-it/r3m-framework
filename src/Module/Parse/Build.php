@@ -493,6 +493,7 @@ class Build {
                         $temp = trim($explode[0]);
                         if(empty($temp)){
                             $record['value'] = $explode[1];
+                            d($record['value']);
                         }
                     }
                     $remove_newline = false;
