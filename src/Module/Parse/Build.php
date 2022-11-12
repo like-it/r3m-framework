@@ -473,6 +473,7 @@ class Build {
         $skip_nr = null;
         $is_control = false;
         $remove_newline = false;
+        ddd($tree);
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -493,7 +494,6 @@ class Build {
                         $temp = trim($explode[0]);
                         if(empty($temp)){
                             $record['value'] = $explode[1];
-                            d($record['value']);
                         }
                     }
                     $remove_newline = false;
@@ -586,7 +586,7 @@ class Build {
                                 foreach($list as $list_nr => $list_value){
                                     if(
                                         $list_value['trait'] === $trait['trait'] &&
-                                        $list_value['namepace'] === $trait['namespace']
+                                        $list_value['namespace'] === $trait['namespace']
                                     ){
                                         $is_found = true;
                                         break;
