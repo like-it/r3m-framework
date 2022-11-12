@@ -473,7 +473,7 @@ class Build {
         $skip_nr = null;
         $is_control = false;
         $remove_newline = false;
-        ddd($tree);
+        d($tree);
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
