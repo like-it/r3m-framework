@@ -493,6 +493,7 @@ class Build {
                         $temp = trim($explode[0]);
                         $temp2 = trim($explode[1]);
                         if(empty($temp) && empty($temp2)){
+                            d($explode[1]);
                             continue; //clear out empty lines
                         }
                         elseif(empty($temp)){
