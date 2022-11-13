@@ -503,6 +503,7 @@ class Build {
                             continue; //clear out empty lines
                         }
                         elseif(empty($temp)){
+                            d($explode[1]);
                             $record['value'] = "\n" . $explode[1];
                         }
                     }
