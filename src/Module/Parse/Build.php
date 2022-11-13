@@ -499,6 +499,7 @@ class Build {
                             $record['value'] = "\n" . $explode[1];
                         }
                     }
+                    d($record['value']);
                     $remove_newline = false;
                 }
                 $run[] = $this->indent() .
