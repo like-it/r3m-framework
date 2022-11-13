@@ -11,8 +11,7 @@ Welcome to R3m.io                             {{cli.color('blue')}}(c) Remco van
 'info' => 'ASC'
 ])}}
 {{for.each($route as $nr => $record)}}
-{{if(is.array($record.info))}}
-{{$info = implode("\n", $record.info)}}
+{{if(is.array($record.info))}}{{$info = implode("\n", $record.info)}}
 {{parse.string($info)}}
 
 {{elseif(!is.empty($record.info))}}
