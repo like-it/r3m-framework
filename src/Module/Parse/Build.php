@@ -490,7 +490,7 @@ class Build {
             ){
                 if($is_close && $record['value'] === "\n"){
                     $is_close = false;
-                    continue;
+//                    continue;
                 } else {
                     $is_close = false;
                 }
@@ -499,7 +499,7 @@ class Build {
                     if(count($explode) == 2){
                         $temp = trim($explode[0]);
                         if(empty($temp) && strlen($explode[1]) === 0){
-//                            continue; //clear out empty lines
+                            continue; //clear out empty lines
                         }
                         elseif(empty($temp)){
                             $record['value'] = "\n" . $explode[1];
