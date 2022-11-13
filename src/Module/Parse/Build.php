@@ -474,7 +474,6 @@ class Build {
         $is_control = false;
         $remove_newline = false;
         $is_close_tag = false;
-//        d($tree);
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -496,7 +495,6 @@ class Build {
                     $is_close_tag = false;
                 }
                 if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
-                    d($record['value']);
                     $explode = explode("\n", $record['value'], 2);
                     if(count($explode) == 2){
                         $temp = trim($explode[0]);
