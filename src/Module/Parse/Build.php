@@ -490,6 +490,7 @@ class Build {
             ){
                 if($is_close){
                     d($record['value']);
+                    $is_close = false;
                 }
                 if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
                     $explode = explode("\n", $record['value'], 2);
