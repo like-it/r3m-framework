@@ -490,6 +490,7 @@ class Build {
             ){
                 if($is_close && $record['value'] === "\n"){
                     $is_close = false;
+                    $run[] = 'echo "---";';
                     continue;
                 } else {
                     $is_close = false;
