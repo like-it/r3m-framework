@@ -493,13 +493,12 @@ class Build {
                         $temp = trim($explode[0]);
                         $temp2 = trim($explode[1]);
                         if(empty($temp) && empty($temp2)){
-                            continue;
+                            continue; //clear out empty lines
                         }
                         elseif(empty($temp)){
                             $record['value'] = "\n" . $explode[1];
                         }
                     }
-                    d($record['value']);
                     $remove_newline = false;
                 }
                 $run[] = $this->indent() .
