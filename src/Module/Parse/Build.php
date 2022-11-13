@@ -473,6 +473,7 @@ class Build {
         $skip_nr = null;
         $is_control = false;
         $remove_newline = false;
+        $is_close = false;
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -487,6 +488,9 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
+                if($is_close){
+                    d($record['value']);
+                }
                 if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
                     $explode = explode("\n", $record['value'], 2);
                     if(count($explode) == 2){
@@ -539,6 +543,7 @@ class Build {
                         } else {
                             throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') . ' ' . $record['value']);
                         }
+                    break;
                     case Token::TYPE_IS_MINUS_MINUS :
                     case Token::TYPE_IS_PLUS_PLUS :
                         $selection = Variable::is_count($this, $storage, $selection);
@@ -655,16 +660,10 @@ class Build {
                             $this->indent($this->indent-1);
                             $run[] = $this->indent() . '}';
                         }
-                        $run[] = 'echo "tag_close";';
+                        $is_close = true;
                         $remove_newline = true;
                     break;
                     case Build::DOC_COMMENT :
-//                      $run[] = $this->indent() .
-                        /*
-                        if($type !== null){
-                            throw new Exception('type (' . $type . ') undefined');
-                        }
-                        */
                     break;
                     default:
                         if($type !== null){
