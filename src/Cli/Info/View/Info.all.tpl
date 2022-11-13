@@ -13,7 +13,9 @@ Welcome to R3m.io                             {{cli.color('blue')}}(c) Remco van
 {{if(is.array($record.info))}}
 {{$info = implode("\n", $record.info)}}
 {{parse.string($info)}}
+/*
 {{elseif(!is.empty($record.info))}}
 {{parse.string($record.info)}}-
+*/
 {{/if}}
 {{/for.each}}
