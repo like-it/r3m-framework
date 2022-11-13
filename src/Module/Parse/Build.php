@@ -491,8 +491,11 @@ class Build {
                     $explode = explode("\n", $record['value'], 2);
                     if(count($explode) == 2){
                         $temp = trim($explode[0]);
-                        d($record['value']);
-                        if(empty($temp)){
+                        $temp2 = trim($explode[1]);
+                        if(empty($temp) && empty($temp2)){
+                            $record['value'] = $explode[1];
+                        }
+                        elseif(empty($temp)){
                             $record['value'] = "\n" . $explode[1];
                         }
                     }
