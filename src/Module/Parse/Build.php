@@ -496,6 +496,7 @@ class Build {
                     $is_close_tag = false;
                 }
                 if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
+                    d($record['value']);
                     $explode = explode("\n", $record['value'], 2);
                     if(count($explode) == 2){
                         $temp = trim($explode[0]);
