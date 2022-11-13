@@ -502,8 +502,10 @@ class Build {
                         if(empty($temp) && strlen($explode[1]) === 0){
                             continue; //clear out empty lines
                         }
+                        if(empty($temp) && $explode[1] === "\n"){
+                            continue; //clear out empty lines
+                        }
                         elseif(empty($temp)){
-                            d($explode[1]);
                             $record['value'] = "\n" . $explode[1];
                         }
                     }
