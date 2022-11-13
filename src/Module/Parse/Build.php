@@ -473,7 +473,6 @@ class Build {
         $skip_nr = null;
         $is_control = false;
         $remove_newline = false;
-        d($tree);
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -493,7 +492,7 @@ class Build {
                     if(count($explode) == 2){
                         $temp = trim($explode[0]);
                         if(empty($temp)){
-                            $record['value'] = $explode[1];
+                            $record['value'] = "\n" . $explode[1];
                         }
                     }
                     $remove_newline = false;
