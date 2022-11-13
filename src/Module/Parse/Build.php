@@ -489,7 +489,6 @@ class Build {
                 $record['type'] == Token::TYPE_STRING
             ){
                 if($is_close && $record['value'] === "\n"){
-                    d('yeah baby');
                     $is_close = false;
                     continue;
                 } else {
@@ -527,22 +526,26 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING
             ){
+                d('yeah baby');
                 $is_close = false;
                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
                 $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage());';
                 $run[] =  $this->indent() .  'echo \'"\' . $string . \'"\';';
             }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
+                d('yeah baby');
                 $is_close = false;
                 $is_tag = true;
                 continue;
             }
             elseif($record['type'] == Token::TYPE_DOC_COMMENT){
+                d('yeah baby');
                 $is_close = false;
                 $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
                 $run[] = '';
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
+                d('yeah baby');
                 $is_close = false;
                 switch($type){
                     case Token::TYPE_STRING :
