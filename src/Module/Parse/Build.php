@@ -537,7 +537,6 @@ class Build {
                         if($select['value'] == 'if'){
                             throw new Exception('if must be a method, use {if()} on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
                         } else {
-                            d($select);
                             throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') . ' ' . $record['value']);
                         }
                     case Token::TYPE_IS_MINUS_MINUS :
@@ -656,6 +655,7 @@ class Build {
                             $this->indent($this->indent-1);
                             $run[] = $this->indent() . '}';
                         }
+                        $run[] = 'echo "tag_close";';
                         $remove_newline = true;
                     break;
                     case Build::DOC_COMMENT :
