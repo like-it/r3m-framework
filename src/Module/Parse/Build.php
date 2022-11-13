@@ -489,6 +489,7 @@ class Build {
                 $record['type'] == Token::TYPE_STRING
             ){
                 if($is_close && $record['value'] === "\n"){
+                    d('yeah baby');
                     $is_close = false;
                     continue;
                 } else {
