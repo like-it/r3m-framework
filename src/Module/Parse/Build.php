@@ -474,7 +474,7 @@ class Build {
         $is_control = false;
         $remove_newline = false;
         $is_close_tag = false;
-        d($tree);
+//        d($tree);
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -503,7 +503,7 @@ class Build {
                             continue; //clear out empty lines
                         }
                         elseif(empty($temp)){
-                            $record['value'] = "\n" . $explode[1];
+                            $record['value'] = $explode[1];
                         }
                     }
                     $remove_newline = false;
