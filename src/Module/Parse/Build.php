@@ -496,13 +496,14 @@ class Build {
                     $is_close = false;
                 }
                 if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
+                    d($record['value']);
                     $explode = explode("\n", $record['value'], 2);
                     if(count($explode) == 2){
                         $temp = trim($explode[0]);
                         if(empty($temp) && strlen($explode[1]) === 0){
                             continue; //clear out empty lines
                         }
-                        if(empty($temp) && $explode[1] === "\n"){
+                        elseif(empty($temp) && $explode[1] === "\n"){
                             d('yes');
                             continue; //clear out empty lines
                         }
