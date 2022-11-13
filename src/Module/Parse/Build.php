@@ -473,7 +473,8 @@ class Build {
         $skip_nr = null;
         $is_control = false;
         $remove_newline = false;
-        $is_close = false;
+        $is_close_tag = false;
+        d($tree);
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -485,33 +486,26 @@ class Build {
                 continue;
             }
             if(
-                $is_tag === false &&
+                $is_close_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
-                if($is_close && $record['value'] === "\n"){
-                    $is_close = false;
-                    $run[] = 'echo "---";';
+                if($is_close_tag && $record['value'] === "\n"){
+                    $is_close_tag = false;
                     continue;
                 } else {
-                    $is_close = false;
+                    $is_close_tag = false;
                 }
                 if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
-                    d($record['value']);
                     $explode = explode("\n", $record['value'], 2);
                     if(count($explode) == 2){
                         $temp = trim($explode[0]);
                         if(empty($temp) && strlen($explode[1]) === 0){
                             continue; //clear out empty lines
                         }
-                        elseif(empty($temp) && $explode[1] === "\n"){
-                            d('yes');
-                            continue; //clear out empty lines
-                        }
                         elseif(empty($temp)){
                             $record['value'] = "\n" . $explode[1];
                         }
                     }
-//                    d($record['value']);
                     $remove_newline = false;
                 }
                 $run[] = $this->indent() .
@@ -533,23 +527,23 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING
             ){
-                $is_close = false;
+                $is_close_tag = false;
                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
                 $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage());';
                 $run[] =  $this->indent() .  'echo \'"\' . $string . \'"\';';
             }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
-                $is_close = false;
+                $is_close_tag = false;
                 $is_tag = true;
                 continue;
             }
             elseif($record['type'] == Token::TYPE_DOC_COMMENT){
-                $is_close = false;
+                $is_close_tag = false;
                 $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
                 $run[] = '';
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
-                $is_close = false;
+                $is_close_tag = false;
                 switch($type){
                     case Token::TYPE_STRING :
                         if($select['value'] == 'if'){
@@ -674,7 +668,7 @@ class Build {
                             $this->indent($this->indent-1);
                             $run[] = $this->indent() . '}';
                         }
-                        $is_close = true;
+                        $is_close_tag = true;
                         $remove_newline = true;
                     break;
                     case Build::DOC_COMMENT :
