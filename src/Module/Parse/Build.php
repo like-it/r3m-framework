@@ -493,7 +493,7 @@ class Build {
                         $temp = trim($explode[0]);
                         $temp2 = trim($explode[1]);
                         if(empty($temp) && empty($temp2)){
-                            $record['value'] = $explode[1];
+                            $record['value'] = '';
                         }
                         elseif(empty($temp)){
                             $record['value'] = "\n" . $explode[1];
