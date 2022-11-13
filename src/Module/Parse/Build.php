@@ -503,6 +503,7 @@ class Build {
                             continue; //clear out empty lines
                         }
                         if(empty($temp) && $explode[1] === "\n"){
+                            d('yes');
                             continue; //clear out empty lines
                         }
                         elseif(empty($temp)){
