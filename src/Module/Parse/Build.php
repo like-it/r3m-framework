@@ -76,7 +76,7 @@ class Build {
         if(empty($config)){
             d($this->object());
             throw new Exception('Config not found in object');
-        }        
+        }
         $this->storage(new Data());
         $this->storage()->data('time.start', microtime(true));
         $this->storage()->data('placeholder.generation.time', '// R3M-IO-' . Core::uuid());
@@ -159,7 +159,7 @@ class Build {
         $storage = $this->storage();
         $key = $storage->data('key');
         //$class = $config->data('dictionary.template') . '_' . $key;
-        $class = $this->storage()->data('class');        
+        $class = $this->storage()->data('class');
         $document[] = $this->indent(0) . 'class ' . $class . ' extends Main {';
         $document[] = '';
         $document[] = $this->indent(0) . $storage->data('placeholder.traituse');
@@ -413,7 +413,7 @@ class Build {
             $document[] = '{';
             $document[] = "\t" . 'throw new Exception(\'Plugin not found: ./Plugin/' . $file . '\');';
             $document[] = '}';
-        }        
+        }
         return $document;
     }
 
@@ -473,7 +473,6 @@ class Build {
         $skip_nr = null;
         $is_control = false;
         $remove_newline = false;
-        $is_close_tag = false;
         foreach($tree as $nr => $record){
             if(
                 $skip_nr !== null &&
@@ -485,23 +484,14 @@ class Build {
                 continue;
             }
             if(
-                $is_close_tag === false &&
+                $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING
             ){
-                if($is_close_tag && $record['value'] === "\n"){
-                    $is_close_tag = false;
-                    continue;
-                } else {
-                    $is_close_tag = false;
-                }
                 if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
                     $explode = explode("\n", $record['value'], 2);
                     if(count($explode) == 2){
                         $temp = trim($explode[0]);
-                        if(empty($temp) && strlen($explode[1]) === 0){
-                            continue; //clear out empty lines
-                        }
-                        elseif(empty($temp)){
+                        if(empty($temp)){
                             $record['value'] = $explode[1];
                         }
                     }
@@ -526,31 +516,27 @@ class Build {
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING
             ){
-                $is_close_tag = false;
                 $run[] =  $this->indent() . '$string = \'' . str_replace('\'', '\\\'', substr($record['value'], 1, -1)). '\';';
                 $run[] =  $this->indent() . '$string = $this->parse()->compile($string, [], $this->storage());';
                 $run[] =  $this->indent() .  'echo \'"\' . $string . \'"\';';
             }
             elseif($record['type'] == Token::TYPE_CURLY_OPEN){
-                $is_close_tag = false;
                 $is_tag = true;
                 continue;
             }
             elseif($record['type'] == Token::TYPE_DOC_COMMENT){
-                $is_close_tag = false;
                 $run[] = $this->indent() . 'echo \'' . str_replace('\'', '\\\'', $record['value']) . '\';';
                 $run[] = '';
             }
             elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
-                $is_close_tag = false;
                 switch($type){
                     case Token::TYPE_STRING :
                         if($select['value'] == 'if'){
                             throw new Exception('if must be a method, use {if()} on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
                         } else {
+                            d($select);
                             throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') . ' ' . $record['value']);
                         }
-                    break;
                     case Token::TYPE_IS_MINUS_MINUS :
                     case Token::TYPE_IS_PLUS_PLUS :
                         $selection = Variable::is_count($this, $storage, $selection);
@@ -558,34 +544,34 @@ class Build {
                         $run[] = $this->indent() . Variable::count_assign($this, $storage, $selection, false) . ';';
                         $run[] = $this->indent() . '$this->parse()->is_assign(false);';
                         $remove_newline = true;
-                    break;
-                    case Build::VARIABLE_ASSIGN : 
+                        break;
+                    case Build::VARIABLE_ASSIGN :
                         $run[] = $this->indent() . '$this->parse()->is_assign(true);';
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                         $run[] = $this->indent() . '$this->parse()->is_assign(false);';
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::VARIABLE_DEFINE :
                         $run[] = $this->indent() . '$variable = ' . Variable::define($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'else { echo $variable; } ';
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::METHOD :
                         $run[] = $this->indent() . '$method = ' . Method::create($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($method)){ return $method; }';
                         $run[] = $this->indent() . 'elseif (is_array($method)){ return $method; }';
                         $run[] = $this->indent() . 'else { echo $method; }';
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::METHOD_CONTROL :
                         $multi_line = Build::getPluginMultiline($this->object());
                         if(
                             in_array(
                                 $select['method']['name'],
                                 $multi_line
-                                //capture.append
+                            //capture.append
                             )
                         ){
                             $selection = Method::capture_selection($this, $storage, $tree, $selection);
@@ -645,13 +631,13 @@ class Build {
                             $control = null;
                             $remove_newline = true;
                         }
-                    break;
+                        break;
                     case Build::ELSE :
                         $this->indent($this->indent-1);
                         $run[] = $this->indent() . '} else {';
                         $this->indent($this->indent+1);
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::TAG_CLOSE :
                         $multi_line = Build::getPluginMultiline($this->object());
                         foreach($multi_line as $nr => $plugin){
@@ -661,17 +647,22 @@ class Build {
                             !in_array(
                                 $select['tag']['name'],
                                 $multi_line
-                                //'/capture.append'
+                            //'/capture.append'
                             )
                         ){
                             $this->indent($this->indent-1);
                             $run[] = $this->indent() . '}';
                         }
-                        $is_close_tag = true;
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::DOC_COMMENT :
-                    break;
+//                      $run[] = $this->indent() .
+                        /*
+                        if($type !== null){
+                            throw new Exception('type (' . $type . ') undefined');
+                        }
+                        */
+                        break;
                     default:
                         if($type !== null){
                             d($selection);
@@ -814,31 +805,31 @@ class Build {
         $this->storage()->data('namespace', $namespace);
         $key = $this->storage()->data('key');
         $name = '';
-        if(isset($options['parent'])){            
+        if(isset($options['parent'])){
             $name .= str_replace(
-                [                    
-                    '.',
-                    '-',
-                ], 
-                [                    
-                    '_',
-                    '_'
-                ], 
-                basename($options['parent'])
-            ) . '_';            
+                    [
+                        '.',
+                        '-',
+                    ],
+                    [
+                        '_',
+                        '_'
+                    ],
+                    basename($options['parent'])
+                ) . '_';
         }
-        if(isset($options['source'])){            
+        if(isset($options['source'])){
             $name .= str_replace(
-                [
-                    '.',
-                    '-'
-                ],
-                [
-                    '_',
-                    '_'
-                ],
-                basename($options['source'])
-            ) . '_';
+                    [
+                        '.',
+                        '-'
+                    ],
+                    [
+                        '_',
+                        '_'
+                    ],
+                    basename($options['source'])
+                ) . '_';
         }
         $name = str_replace('_tpl', '', $name);
         $class = $config->data('dictionary.template') . '_' . $name . $key;
@@ -943,32 +934,32 @@ class Build {
                 $autoload->register();
             }
             $name = '';
-            if(isset($options['parent'])){            
+            if(isset($options['parent'])){
                 $name .= str_replace(
-                    [                        
-                        '.',
-                        '-'
-                    ], 
-                    [                        
-                        '_',
-                        '_'
-                    ], 
-                    basename($options['parent'])
-                ) . '_';   
+                        [
+                            '.',
+                            '-'
+                        ],
+                        [
+                            '_',
+                            '_'
+                        ],
+                        basename($options['parent'])
+                    ) . '_';
             }
             if(isset($options['source'])){
                 $name .= str_replace(
-                    [
-                        '.',
-                        '-'
-                    ],
-                    [
-                        '_',
-                        '_'
-                    ],
-                    basename($options['source'])) . '_';
-            }        
-            $name = str_replace('_tpl', '', $name);    
+                        [
+                            '.',
+                            '-'
+                        ],
+                        [
+                            '_',
+                            '_'
+                        ],
+                        basename($options['source'])) . '_';
+            }
+            $name = str_replace('_tpl', '', $name);
             $url =
                 $dir .
                 $config->data('dictionary.template') .
@@ -976,7 +967,7 @@ class Build {
                 $name .
                 $key .
                 $config->data('extension.php')
-            ;            
+            ;
             $storage->data('url', $url);
             $storage->data('key', $key);
             if(!empty($options['parent'])){
@@ -998,10 +989,10 @@ class Build {
         switch($type){
             case 'function':
                 $tree = $this->requireFunction($tree);
-            break;
+                break;
             case 'modifier':
                 $tree = $this->requireModifier($tree);
-            break;
+                break;
             default:
                 throw new Exception('Add type not defined');
         }
