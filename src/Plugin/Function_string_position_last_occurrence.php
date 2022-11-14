@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_position_last_occurence(Parse $parse, Data $data, $haystack='', $needle='', $offset=0){
+function function_string_position_last_occurrence(Parse $parse, Data $data, $haystack='', $needle='', $offset=0){
     $result = strrpos($haystack, $needle, $offset);
     return $result;
 }

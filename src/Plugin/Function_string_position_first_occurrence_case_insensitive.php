@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_position_first_occurence_case_insensitive(Parse $parse, Data $data, $haystack='', $needle='', $offset=0){
+function function_string_position_first_occurrence_case_insensitive(Parse $parse, Data $data, $haystack='', $needle='', $offset=0){
     $result = stripos($haystack, $needle, $offset);
     return $result;
 }
