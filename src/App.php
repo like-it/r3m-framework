@@ -496,23 +496,20 @@ class App extends Data {
                 unset($data->{App::NAMESPACE});
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
                 $data = new Data($read);
-                $script = Parse::readback($this, $parse, App::SCRIPT);
-                if(!empty($script)){
-                    $script_old = $data->data('script');
-                    if(empty($script_old)){
-                        $script_old = [];
+                $readback = [
+                    'script',
+                    'link'
+                ];
+                foreach($readback as $name){
+                    $temp = Parse::readback($this, $parse, $name);
+                    if(!empty($temp)){
+                        $temp_old = $data->data($name);
+                        if(empty($temp_old)){
+                            $temp_old = [];
+                        }
+                        $temp = array_merge($temp_old, $temp);
+                        $data->data($name, $temp);
                     }
-                    $script = array_merge($script_old, $script);
-                    $data->data('script', $script);
-                }
-                $link = Parse::readback($this, $parse, App::LINK);
-                if(!empty($link)){
-                    $link_old = $data->data('link');
-                    if(empty($link_old)){
-                        $link_old = [];
-                    }
-                    $link = array_merge($link_old, $link);
-                    $data->data('link', $link);
                 }
             } else {
                 $data = new Data();
