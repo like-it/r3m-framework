@@ -443,6 +443,12 @@ class App extends Data {
         }
     }
 
+    public static function server($attribute){
+        if(array_key_exists($attribute, $_SERVER)){
+            return $_SERVER[$attribute];
+        }
+    }
+
     /**
      * @throws ObjectException
      */
@@ -529,12 +535,6 @@ class App extends Data {
             return Core::is_cli();
         } else {
             return true;
-        }
-    }
-
-    public static function server($attribute){
-        if(array_key_exists($attribute, $_SERVER)){
-            return $_SERVER[$attribute];
         }
     }
 
