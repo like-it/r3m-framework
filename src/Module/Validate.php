@@ -17,7 +17,8 @@ use R3m\Io\Config;
 
 class Validate {
 
-    public static function check($validate, $attribute=''){
+    public static function check($validate, $attribute=''): bool
+    {
         $is_valid = true;
         if(
             !empty($validate) &&
@@ -96,7 +97,18 @@ class Validate {
                                 }
                                 $test[$field][$function][] = $function($object, $value, $field, $argument);
                             } else {
-                                throw new Exception('validator (' . $url . ') not found');
+                                $url_2 = $object->config('project.dir.source') . 'Validator' . $object->config('ds') . ucfirst(str_replace('.', '_', $key) . $extension);
+                                ddd($url_2);
+                                if(File::exist($url_2)){
+                                    require_once $url_2;
+                                    $function = str_replace('.', '_', $key);
+                                    if(empty($test[$field][$function])){
+                                        $test[$field][$function] = [];
+                                    }
+                                    $test[$field][$function][] = $function($object, $value, $field, $argument);
+                                } else {
+                                    throw new Exception('validator (' . $url .  ',' . $url_2 . ') not found');
+                                }
                             }
                         }
                     }
