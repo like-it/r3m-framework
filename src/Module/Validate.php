@@ -97,8 +97,7 @@ class Validate {
                                 }
                                 $test[$field][$function][] = $function($object, $value, $field, $argument);
                             } else {
-                                $url_2 = $object->config('project.dir.source') . 'Validator' . $object->config('ds') . ucfirst(str_replace('.', '_', $key) . $extension);
-                                ddd($url_2);
+                                $url_2 = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . ucfirst(str_replace('.', '_', $key) . $extension);
                                 if(File::exist($url_2)){
                                     require_once $url_2;
                                     $function = str_replace('.', '_', $key);
