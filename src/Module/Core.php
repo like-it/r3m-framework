@@ -760,6 +760,10 @@ class Core {
                         if($host === $origin){
                             return true;
                         }
+                        $match = implode('.', $local);
+                        if($host === $match){
+                            return true;
+                        }
                     }
                 }
                 elseif($count_explode === 2){
