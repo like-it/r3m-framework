@@ -52,6 +52,8 @@ class Core {
     const OUTPUT_MODE_EXPLICIT = 'explicit';
     const OUTPUT_MODE_DEFAULT = Core::OUTPUT_MODE_EXPLICIT;
 
+    const LOCAL = 'local';
+
     const OUTPUT_MODE = [
             Core::OUTPUT_MODE_IMPLICIT,
             Core::OUTPUT_MODE_EXPLICIT,
@@ -105,7 +107,7 @@ class Core {
                     return false;
                 case 0 :
                     //in child process
-                    //create a seperate process to execute another process (async);
+                    //create a separate process to execute another process (async);
                     $descriptorspec = array(
                         0 => array("pipe", "r"),  // stdin
                         1 => array("pipe", "w"),  // stdout
@@ -735,8 +737,10 @@ class Core {
         if(is_array($host_list)){
             foreach($host_list as $host){
                 $explode = explode('.', $host);
+                $local = $explode;
                 $count_explode = count($explode);
                 if($count_explode === 3){
+                    $local[3] = Core::LOCAL;
                     if($explode[0] === '*'){
                         $temp = explode('.', $origin);
                         if(count($temp) === 3){
@@ -744,6 +748,10 @@ class Core {
                             $temp[0] = '';
                             $host = implode('.', $explode);
                             $match = implode('.', $temp);
+                            if($host === $match){
+                                return true;
+                            }
+                            $match = implode('.', $local);
                             if($host === $match){
                                 return true;
                             }
@@ -755,7 +763,12 @@ class Core {
                     }
                 }
                 elseif($count_explode === 2){
+                    $local[2] = Core::LOCAL;
                     if($host === $origin){
+                        return true;
+                    }
+                    $match = implode('.', $local);
+                    if($host === $match){
                         return true;
                     }
                 }
