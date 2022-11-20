@@ -10,6 +10,7 @@ function function_server_url(Parse $parse, Data $data, $name=''){
     $url =  $object->config('server.url.' . $name . '.' . $object->config('framework.environment'));
     if(substr($url, 0, 2) === '{{' && substr($url, -2, 2) === '}}'){
         d($data);
+        d($parse->data());
     }
     return $url;
 }
