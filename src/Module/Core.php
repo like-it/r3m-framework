@@ -761,7 +761,7 @@ class Core {
                             return true;
                         }
                         $host = implode('.', $local);
-                        if($host === $match){
+                        if($host === $origin){
                             return true;
                         }
                     }
@@ -772,7 +772,7 @@ class Core {
                         return true;
                     }
                     $host = implode('.', $local);
-                    if($host === $match){
+                    if($host === $origin){
                         return true;
                     }
                 }
