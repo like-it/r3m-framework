@@ -740,7 +740,7 @@ class Core {
                 $local = $explode;
                 $count_explode = count($explode);
                 if($count_explode === 3){
-                    $local[3] = Core::LOCAL;
+                    $local[2] = Core::LOCAL;
                     if($explode[0] === '*'){
                         $temp = explode('.', $origin);
                         if(count($temp) === 3){
@@ -768,7 +768,7 @@ class Core {
                     }
                 }
                 elseif($count_explode === 2){
-                    $local[2] = Core::LOCAL;
+                    $local[1] = Core::LOCAL;
                     if($host === $origin){
                         return true;
                     }
