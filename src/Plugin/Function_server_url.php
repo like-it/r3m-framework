@@ -7,5 +7,9 @@ use R3m\Io\Config;
 function function_server_url(Parse $parse, Data $data, $name=''){
     $object = $parse->object();
     $name = str_replace('.', '-', $name);
-    return $object->config('server.url.' . $name . '.' . $object->config('framework.environment'));
+    $url =  $object->config('server.url.' . $name . '.' . $object->config('framework.environment'));
+    if(substr($url, 0, 2) === '{{' && substr($url, -2, 2) === '}}'){
+        d($data);
+    }
+    return $url;
 }
