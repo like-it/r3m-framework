@@ -751,6 +751,7 @@ class Core {
                             if($host === $match){
                                 return true;
                             }
+                            $local[0] = '';
                             $host = implode('.', $local);
                             if($host === $match){
                                 return true;
