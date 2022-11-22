@@ -25,7 +25,6 @@ function function_server_admin(Parse $parse, Data $data, $email=''){
     ){
         throw new Exception('Only root and www-data can configure route add...');
     }
-    $email = escapeshellarg($email);
     if(empty($email)){
         throw new Exception('Server admin e-mail cannot be empty');
     }
@@ -35,7 +34,6 @@ function function_server_admin(Parse $parse, Data $data, $email=''){
     if(empty($read)){
         $read = new Data();
     }
-    $email = trim($email, '\'');
     $read->data('server.admin', $email);
     $write = '';
     try {

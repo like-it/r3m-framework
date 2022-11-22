@@ -23,8 +23,6 @@ function function_host_add(Parse $parse, Data $data, $ip='', $host=''){
     ){
         throw new Exception('Only root can configure host add...');
     }
-    $ip = escapeshellarg($ip);
-    $host = escapeshellarg($host);
     if(empty($ip)){
         $ip = '0.0.0.0';
     }
