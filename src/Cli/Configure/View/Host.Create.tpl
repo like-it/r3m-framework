@@ -13,7 +13,9 @@
 {{$server.admin = config.read('server.admin')}}
 {{while(is.empty($server.admin))}}
 {{$server.admin = terminal.readline('Server admin e-mail: ')}}
+{{if(!is.empty($server.admin))}}
 {{$write = server.admin($server.admin)}}
+{{/if}}
 {{/while}}
 {{else}}
 {{$write = server.admin($server.admin)}}
