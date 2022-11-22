@@ -35,7 +35,7 @@ function function_server_admin(Parse $parse, Data $data, $email=''){
     if(empty($read)){
         $read = new Data();
     }
-    d($email);
+    $email = trim($email, '\'');
     $read->data('server.admin', $email);
     $write = '';
     try {
