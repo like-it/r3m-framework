@@ -1,8 +1,8 @@
 {{R3M}}
 {{$host = parameter('create', 1)}}
-{{if(is.empty($host))}}
+{{while(is.empty($host))}}
 {{$host = terminal.readline('Hostname: ')}}
-{{/if}}
+{{/while}}
 {{$public_html = parameter('create', 2)}}
 {{$ip = parameter('create', 3)}}
 {{if(is.empty($ip))}}
