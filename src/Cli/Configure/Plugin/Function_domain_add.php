@@ -130,7 +130,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             $route = $object->data_read($url);
         }
         $route->data(Core::uuid() . '.resource',
-            '{$project.dir.host}' .
+            '{{$project.dir.host}}' .
             ucfirst($domain) .
             $object->config('ds') .
             ucfirst($extension) .
@@ -257,7 +257,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             $route = $object->data_read($url);
         }
         $route->data(Core::uuid() . '.resource',
-            '{$project.dir.host}' .
+            '{{$project.dir.host}}' .
             ucfirst($subdomain) .
             $object->config('ds') .
             ucfirst($domain) .
