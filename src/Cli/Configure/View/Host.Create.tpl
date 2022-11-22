@@ -11,10 +11,10 @@
 {{$server.admin = parameter('create', 4)}}
 {{if(is_empty($server.admin))}}
 {{$server.admin = config.read('server.admin')}}
-{{if(is.empty($server.admin))}}
+{{while(is.empty($server.admin))}}
 {{$server.admin = terminal.readline('Server admin e-mail: ')}}
 {{$write = server.admin($server.admin)}}
-{{/if}}
+{{/while}}
 {{else}}
 {{$write = server.admin($server.admin)}}
 {{/if}}
