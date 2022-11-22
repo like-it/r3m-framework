@@ -3,6 +3,7 @@
 $controler.dir.data &&
 $module
 )}}
+{{d($controller.dir.data + '/Controller/' + $module + '.json')}}
 {{$use = json.select($controller.dir.data + '/Controller/' + $module + '.json', $module + '.use')}}
 {{/if}}
 <?php
