@@ -23,6 +23,14 @@ function function_host_add(Parse $parse, Data $data, $ip='', $host=''){
     ){
         throw new Exception('Only root can configure host add...');
     }
+    $ip = escapeshellarg($ip);
+    $host = escapeshellarg($host);
+    if(empty($ip)){
+        $ip = '0.0.0.0';
+    }
+    if(empty($host)){
+        throw new Exception('Host cannot be empty...');
+    }
     $url = '/etc/hosts';
     $data = explode("\n", File::read($url));
     foreach($data as $nr => $row){

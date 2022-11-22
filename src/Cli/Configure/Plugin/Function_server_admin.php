@@ -25,6 +25,10 @@ function function_server_admin(Parse $parse, Data $data, $email=''){
     ){
         throw new Exception('Only root and www-data can configure route add...');
     }
+    $email = escapeshellarg($email);
+    if(empty($email)){
+        throw new Exception('Server admin e-mail cannot be empty');
+    }
     $object = $parse->object();
     $url = $object->config('project.dir.data') . 'Config.json';
     $read = $object->data_read($url);

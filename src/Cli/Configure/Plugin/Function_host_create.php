@@ -36,9 +36,17 @@ function function_host_create(Parse $parse, Data $data, $host='', $public_html='
         }
     }
     $host = escapeshellarg($host);
+    if(empty($host)){
+        throw new Exception('Host cannot be empty...');
+    }
     $public_html = escapeshellarg($public_html);
     $ip = escapeshellarg($ip);
     $email = escapeshellarg($email);
+    if(empty($email)){
+        throw new Exception('Server admin e-mail cannot be empty...');
+    }
+    $output = [];
+    Core::execute(Core::binary() . ' configure server admin ' . $email, $output);
     $output = [];
     Core::execute(Core::binary() . ' configure site create ' . $host . ' ' . $public_html, $output);
     if($id === 0) {

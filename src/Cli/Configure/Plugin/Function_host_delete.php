@@ -25,6 +25,10 @@ function function_host_delete(Parse $parse, Data $data){
     array_shift($attribute);
     array_shift($attribute);
     $host = array_shift($attribute);
+    $host = escapeshellarg($host);
+    if(empty($host)){
+        throw new Exception('Host cannot be empty...');
+    }
     $url = '/etc/hosts';
     $data = explode("\n", File::read($url));
     foreach($data as $nr => $row){
