@@ -35,10 +35,10 @@ function function_host_create(Parse $parse, Data $data, $host='', $public_html='
             $public_html = $object->config(Config::DATA_PROJECT_DIR_ROOT) . $public_html . $object->config('ds');
         }
     }
-    $host = escapeshellarg($host);
     if(empty($host)){
         throw new Exception('Host cannot be empty...');
     }
+    $host = escapeshellarg($host);
     $public_html = escapeshellarg($public_html);
     $ip = escapeshellarg($ip);
     $email = escapeshellarg($email);
