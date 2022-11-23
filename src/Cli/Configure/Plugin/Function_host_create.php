@@ -38,6 +38,10 @@ function function_host_create(Parse $parse, Data $data, $host='', $public_html='
     if(empty($host)){
         throw new Exception('Host cannot be empty...');
     }
+    $point = substr_count($host, '.');
+    if($point < 1 ){
+        throw new Exception('Invalid host...');
+    }
     $host = escapeshellarg($host);
     $public_html = escapeshellarg($public_html);
     $ip = escapeshellarg($ip);
