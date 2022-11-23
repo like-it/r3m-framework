@@ -10,6 +10,9 @@ use R3m\Io\Module\Core;
 
 function function_script(Parse $parse, Data $data, $name='script', $script=null){
     $object = $parse->object();
+    if(is_array($script)){
+        ddd($script);
+    }
     if($name === 'ready'){
         $name = 'script';
         $value = [];
