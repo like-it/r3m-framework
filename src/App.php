@@ -256,7 +256,8 @@ class App extends Data {
                     }
                     elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
                         $object->logger(App::LOGGER_NAME)->error($exception->getMessage());
-                        return App::exception_to_json($exception);
+                        fwrite(STDERR, App::exception_to_json($exception));
+                        return '';
                     } else {
                         $parse = new Module\Parse($object, $object->data());
                         $url = $object->config('server.http.error.500');
