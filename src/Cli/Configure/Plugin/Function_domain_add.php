@@ -243,7 +243,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         } catch (Exception | FileWriteException $exception){
             return $exception;
         }
-        $source = $object->config('controller.dir.data') . 'Main.json';
+        $source = $object->config('controller.dir.data') . 'View/Main/Main.json';
         $destination = $host_dir_data . 'Main.json';
         if(!File::exist($destination)){
             File::copy($source, $destination);
