@@ -45,15 +45,15 @@ function function_host_create(Parse $parse, Data $data, $host='', $public_html='
     if(empty($email)){
         throw new Exception('Server admin e-mail cannot be empty...');
     }
-    $output = [];
+    $output = '';
     Core::execute(Core::binary() . ' configure server admin ' . $email, $output);
-    $output = [];
+    $output = '';
     Core::execute(Core::binary() . ' configure site create ' . $host . ' ' . $public_html, $output);
     if($id === 0) {
-        $output = [];
+        $output = '';
         Core::execute(Core::binary() . ' configure host add ' . $ip . ' ' . $host, $output);
     }
-    $output = [];
+    $output = '';
     Core::execute(Core::binary() . ' configure public create ' . $public_html, $output);
     $output = '';
     $error = '';
@@ -66,17 +66,15 @@ function function_host_create(Parse $parse, Data $data, $host='', $public_html='
         return;
     }
     if($id === 0){
-        $output = [];
+        $output = '';
         Core::execute(Core::binary() . ' configure site enable ' . $host, $output);
-        $output = [];
+        $output = '';
         Core::execute('a2enmod rewrite', $output);
-        $output = [];
+        $output = '';
         $host_dir_root = $object->config(Config::DATA_PROJECT_DIR_ROOT) . 'Host' . $object->config('ds');
         Core::execute('chown www-data:www-data -R ' . $host_dir_root);
         Core::execute('chmod 777 -R ' . $host_dir_root);
         Core::execute('service apache2 restart', $output);
     }
-
-
 }
 
