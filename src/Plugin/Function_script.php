@@ -10,8 +10,8 @@ use R3m\Io\Module\Core;
 
 function function_script(Parse $parse, Data $data, $name='script', $script=null){
     $object = $parse->object();
-    if(is_array($script)){
-        ddd($script);
+    if(is_array($script) || is_object($script)){
+        return Core::object($script, Core::OBJECT_JSON);
     }
     if($name === 'ready'){
         $name = 'script';
