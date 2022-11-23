@@ -63,7 +63,8 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         Dir::create($host_dir_data);
         Dir::create($host_dir_controller);
         Dir::create($host_dir_view);
-        Dir::create($host_dir_view . 'Index/');
+        Dir::create($host_dir_view . 'Index');
+        Dir::create($host_dir_view . 'Main');
 
         $dir = $object->config('project.dir.host') .
             ucfirst($domain) .
@@ -115,8 +116,18 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         } catch (Exception | FileWriteException $exception){
             return $exception;
         }
-        $source = $object->config('controller.dir.data') . 'View/Overview.tpl';
+        $source = $object->config('controller.dir.data') . 'View/Index/Overview.tpl';
         $destination = $host_dir_view . 'Index/Overview.tpl';
+        if(!File::exist($destination)){
+            File::copy($source, $destination);
+        }
+        $source = $object->config('controller.dir.data') . 'View/Main/Main.json';
+        $destination = $host_dir_data . 'Main.tpl';
+        if(!File::exist($destination)){
+            File::copy($source, $destination);
+        }
+        $source = $object->config('controller.dir.data') . 'View/Main/Main.tpl';
+        $destination = $host_dir_view . 'Main/Main.tpl';
         if(!File::exist($destination)){
             File::copy($source, $destination);
         }
@@ -186,6 +197,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         Dir::create($host_dir_controller);
         Dir::create($host_dir_view);
         Dir::create($host_dir_view . 'Index');
+        Dir::create($host_dir_view . 'Main');
 
         $dir = $object->config('project.dir.host') .
             ucfirst($subdomain) .
@@ -253,7 +265,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         if(!File::exist($destination)){
             File::copy($source, $destination);
         }
-        $source = $object->config('controller.dir.data') . 'View/Overview.tpl';
+        $source = $object->config('controller.dir.data') . 'View/Index/Overview.tpl';
         $destination = $host_dir_view . 'Index/Overview.tpl';
         if(!File::exist($destination)){
             File::copy($source, $destination);

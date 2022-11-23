@@ -37,7 +37,7 @@ class {{$module}} extends View {
             $view = {{$module}}::response($object, $url);
         } else {
 
-        
+
             $url = {{$module}}::locate($object, $name);
             $view = {{$module}}::response($object, $url);
         }
