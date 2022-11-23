@@ -30,11 +30,14 @@ class {{$module}} extends View {
 
         $name = {{$module}}::name(__FUNCTION__, __CLASS__, '/');
         if(App::contentType($object) == App::CONTENT_TYPE_HTML){
+
             $url = {{$module}}::locate($object, 'Main/Main');
             $object->data('template.name', $name);
             $object->data('template.dir', {{$module}}::DIR);
             $view = {{$module}}::response($object, $url);
         } else {
+
+        
             $url = {{$module}}::locate($object, $name);
             $view = {{$module}}::response($object, $url);
         }
