@@ -8,6 +8,7 @@
 {{$data.controller = $controller}}
 {{$data.host = $host}}
 {{$data.r3m = $r3m}}
+{{$data.route.current = route.current()}}
 {{object($data, 'json')}}
 
 </pre>
