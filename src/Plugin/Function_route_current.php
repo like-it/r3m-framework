@@ -13,7 +13,5 @@ use R3m\Io\Module\Data;
 
 function function_route_current(Parse $parse, Data $data){
     $object = $parse->object();
-    ddd($object->route());
-    $url = $object->route();//find($object, $name, $options);
-    return $url;
+    return $object->route()->current();//find($object, $name, $options);
 }
