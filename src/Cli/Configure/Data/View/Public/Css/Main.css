@@ -1,0 +1,59 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.display-none {
+    display: none;
+}
+
+.display-block {
+    display: block;
+}
+
+.display-inline {
+    display: inline;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+section[name="main"] {
+    margin-top: 34px;
+}
+
+section[name="main"] h1,
+section[name="main"] h2,
+section[name="main"] h3,
+section[name="main"] h4,
+section[name="main"] h5,
+section[name="main"] h6,
+section[name="main"] pre,
+section[name="main"] p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+section[name="main"] h5,
+section[name="main"] h6 {
+    font-size: 100%;
+}
+
+section[name="main"] pre {
+    max-width: 100%;
+    overflow: auto;
+}
+
+section[name="main"] code {
+    font-size: 110%;
+}
+
+section[name="main"] blockquote {
+    background: rgba(245, 245, 245, 1);
+    border-left: 10px solid rgba(150, 200, 245, 1);
+    border-right: 10px solid rgba(225, 225, 225, 1);
+    margin: 10px;
+    padding: 10px;
+}
