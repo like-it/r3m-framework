@@ -122,7 +122,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             File::copy($source, $destination);
         }
         $source = $object->config('controller.dir.data') . 'View/Main/Main.json';
-        $destination = $host_dir_data . 'Main.tpl';
+        $destination = $host_dir_data . 'Main.json';
         if(!File::exist($destination)){
             File::copy($source, $destination);
         }
