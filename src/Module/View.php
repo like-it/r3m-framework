@@ -233,6 +233,15 @@ class View {
             ) .
             $config->data(Config::DS)
         );
+        $config->data(Config::DATA_CONTROLLER_DIR_EXECUTE,
+            $config->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::EXECUTE
+            ) .
+            $config->data(Config::DS)
+        );
         $config->data(Config::DATA_CONTROLLER_DIR_SERVICE,
             $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
             $config->data(
