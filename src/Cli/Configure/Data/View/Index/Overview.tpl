@@ -1,8 +1,14 @@
 {{R3M}}
 {{$meta.author = 'R3m.io'}}
+{{$meta.title = 'Installed: '}}
 {{import('Main.css')}}
-{{for.each(data() as $attribute => $value)}}
-<h3>{{$attribute}}</h3>
-{{d($value)}}
-{{/for.each}}
-Under construction...
+<section name="main">
+<pre>
+{{$data.contentType = $contentType}}
+{{$data.controller = $controller}}
+{{$data.host = $host}}
+{{$data.r3m = $r3m}}
+{{object($data, 'json')}}
+
+</pre>
+</section>
