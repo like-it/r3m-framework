@@ -40,7 +40,7 @@ class {{$module}} extends View {
             $url = {{$module}}::locate($object, $name);
             $view = {{$module}}::response($object, $url);
         }
-        
+
         return $view;
      }
 }
