@@ -11,7 +11,13 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_data(Parse $parse, Data $data, $attribute, $value=null){
-    $result = $data->data($attribute, $value);
-    return $result;
+function function_data(Parse $parse, Data $data, $attribute=null, $value=null){
+    if(
+        $attribute === null &&
+        $value === null
+    ){
+        return $data->data();
+    } else {
+        return $data->data($attribute, $value);
+    }
 }

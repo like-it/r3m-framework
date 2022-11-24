@@ -11,6 +11,6 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_data_get(Parse $parse, Data $data, $attribute){
+function function_data_get(Parse $parse, Data $data, $attribute=null){
     return $data->get($attribute);
 }
