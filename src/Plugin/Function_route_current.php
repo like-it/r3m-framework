@@ -11,7 +11,15 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_route_current(Parse $parse, Data $data){
+function function_route_current(Parse $parse, Data $data, $attribute=null){
     $object = $parse->object();
-    return $object->route()->current();//find($object, $name, $options);
+    if($attribute !== null){
+        $current = $object->route()->current();
+        if(property_exists($current, $attribute)){
+            return $current->{$attribute};
+        }
+    } else {
+        return $object->route()->current();
+    }
+
 }

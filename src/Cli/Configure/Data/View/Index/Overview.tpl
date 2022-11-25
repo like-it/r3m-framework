@@ -9,6 +9,7 @@
 {{$data.host = $host}}
 {{$data.r3m = $r3m}}
 {{$data.route.current = route.current()}}
+{{$data.route.current.url = route.get(route.current('name'))}}
 {{object($data, 'json')}}
 
 </pre>
