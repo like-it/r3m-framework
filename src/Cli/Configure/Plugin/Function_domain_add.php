@@ -138,13 +138,13 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         if(!File::exist($destination)){
             File::copy($source, $destination);
         }
-        $source = $object->config('controller.dir.data') . 'View/Public/Image/Detail-close.png';
-        $destination = $host_dir_view . 'Index/Public/Image/Detail-close.png';
+        $source = $object->config('controller.dir.data') . 'View/Public/Image/Details-close.png';
+        $destination = $host_dir_view . 'Index/Public/Image/Details-close.png';
         if(!File::exist($destination)){
             File::copy($source, $destination);
         }
-        $source = $object->config('controller.dir.data') . 'View/Public/Image/Detail-open.png';
-        $destination = $host_dir_view . 'Index/Public/Image/Detail-open.png';
+        $source = $object->config('controller.dir.data') . 'View/Public/Image/Details-open.png';
+        $destination = $host_dir_view . 'Index/Public/Image/Details-open.png';
         if(!File::exist($destination)){
             File::copy($source, $destination);
         }
@@ -294,13 +294,13 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         if(!File::exist($destination)){
             File::copy($source, $destination);
         }
-        $source = $object->config('controller.dir.data') . 'View/Public/Image/Detail-close.png';
-        $destination = $host_dir_view . 'Index/Public/Image/Detail-close.png';
+        $source = $object->config('controller.dir.data') . 'View/Public/Image/Details-close.png';
+        $destination = $host_dir_view . 'Index/Public/Image/Details-close.png';
         if(!File::exist($destination)){
             File::copy($source, $destination);
         }
-        $source = $object->config('controller.dir.data') . 'View/Public/Image/Detail-open.png';
-        $destination = $host_dir_view . 'Index/Public/Image/Detail-open.png';
+        $source = $object->config('controller.dir.data') . 'View/Public/Image/Details-open.png';
+        $destination = $host_dir_view . 'Index/Public/Image/Details-open.png';
         if(!File::exist($destination)){
             File::copy($source, $destination);
         }
