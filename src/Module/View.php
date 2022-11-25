@@ -243,7 +243,7 @@ class View {
             $config->data(Config::DS)
         );
         $config->data(Config::DATA_CONTROLLER_DIR_EXECUTE,
-            $config->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $config->data(Config::DATA_PROJECT_DIR_SOURCE) .
             $config->data(
                 Config::DICTIONARY .
                 '.' .
