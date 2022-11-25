@@ -432,13 +432,14 @@ class Route extends Data{
             return false;
         }
         $current = false;
-        foreach($data as $record){
+        foreach($data as $name => $record){
             if(property_exists($record, 'resource')){
                 continue;
             }
             $match = Route::is_match_cli($object, $record, $select);
             if($match === true){
                 $current = $record;
+                $current->name = $name;
                 break;
             }
         }
@@ -509,7 +510,7 @@ class Route extends Data{
             return $select;
         }
         $current = false;
-        foreach($data as $record){
+        foreach($data as $name => $record){
             if(property_exists($record, 'resource')){
                 continue;
             }
@@ -519,11 +520,12 @@ class Route extends Data{
             $match = Route::is_match($object, $record, $select);
             if($match === true){
                 $current = $record;
+                $current->name = $name;
                 break;
             }
         }
         if($match === false){
-            foreach($data as $record){
+            foreach($data as $name => $record){
                 if(property_exists($record, 'resource')){
                     continue;
                 }
@@ -533,6 +535,7 @@ class Route extends Data{
                 $match = Route::is_match_has_slash_in_attribute($object, $record, $select);
                 if($match === true){
                     $current = $record;
+                    $current->name = $name;
                     break;
                 }
             }
