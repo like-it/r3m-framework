@@ -90,8 +90,8 @@
     </details>
     {{data.delete('data')}}
     {{else}}
-    <p>
-        In development mode this will show all defined variables.
-    </p>
+    <blockquote>
+    In development mode this will show all defined variables.
+    </blockquote>
     {{/if}}
 </section>
