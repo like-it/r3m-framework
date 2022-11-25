@@ -1,6 +1,8 @@
 {{R3M}}
 {{$meta.author = 'R3m.io'}}
 {{$meta.title = 'Installed: '}}
+{{$meta.description = null}}
+{{$meta.keywords = null}}
 {{import('Main.css')}}
 <section name="main">
     {{if(config('framework.environment') === 'development')}}
