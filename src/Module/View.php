@@ -207,7 +207,7 @@ class View {
             $config->data(Config::DS)
         );
         $config->data(Config::DATA_HOST_DIR_PLUGIN_2,
-            Dir::name($config->data(Config::DATA_CONTROLLER_DIR_ROOT), 3) .
+            $config->data(Config::DATA_PROJECT_DIR_SOURCE) .
             $config->data(
                 Config::DICTIONARY .
                 '.' .
