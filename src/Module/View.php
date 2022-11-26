@@ -378,7 +378,7 @@ class View {
         if(empty($url)){
             throw new UrlEmptyException('Url is empty');
         }
-
+        ddd($object->data());
         $config = $object->data(App::CONFIG);
         $dir = Dir::name($url);
         $file = str_replace($dir, '', $url);
