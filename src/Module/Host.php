@@ -48,7 +48,7 @@ class Host {
             $sentence = Core::ucfirst_sentence(
                 $object->config('host.domain') .
                 $object->config('ds') .
-                $object->data('host.extension') .
+                $object->config('host.extension') .
                 $object->config('ds'),
                 $object->config('ds')
             );
