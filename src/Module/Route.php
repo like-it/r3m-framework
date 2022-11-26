@@ -102,8 +102,8 @@ class Route extends Data{
             }
         }
         $get = $route::add_localhost($object, $get);
-        if(!empty($object->data('host.url'))  && property_exists($get, 'host')){
-            $host = explode(':', $object->data('host.url'), 3);
+        if(!empty($object->config('host.url'))  && property_exists($get, 'host')){
+            $host = explode(':', $object->config('host.url'), 3);
             if(array_key_exists(2, $host)){
                 array_pop($host);
             }
