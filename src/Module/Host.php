@@ -25,87 +25,87 @@ class Host {
         }
         $key = 'host.url';
         $value = Host::url();
-        $object->data($key, $value);
+        $object->config($key, $value);
         $key = 'host.scheme';
         $value = Host::scheme();
-        $object->data($key, $value);
+        $object->config($key, $value);
         $key = 'host.extension';
         $value = Host::extension();
-        $object->data($key, $value);
+        $object->config($key, $value);
         $key = 'host.domain';
         $value = Host::domain();
-        $object->data($key, $value);
+        $object->config($key, $value);
         $key = 'host.subdomain';
         $subdomain = Host::subdomain();
-        $object->data($key, $subdomain);
+        $object->config($key, $subdomain);
         $key = 'host.port';
         $port = Host::port();
-        $object->data($key, $port);
+        $object->config($key, $port);
 
-        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
+//        $config = $object->data(App::NAMESPACE . '.' . Config::NAME);
         $key = 'host.dir.root';
         if(empty($subdomain)){
             $sentence = Core::ucfirst_sentence(
-                $object->data('host.domain') .
-                $config->data('ds') .
+                $object->config('host.domain') .
+                $object->config('ds') .
                 $object->data('host.extension') .
-                $config->data('ds'),
-                $config->data('ds')
+                $object->config('ds'),
+                $object->config('ds')
             );
             $sentence = ltrim($sentence, $object->config('ds'));
             $value =
-                $config->data('project.dir.root') .
-                $config->data(Config::DICTIONARY . '.' . Config::HOST) .
-                $config->data('ds') .
+                $object->config('project.dir.root') .
+                $object->config(Config::DICTIONARY . '.' . Config::HOST) .
+                $object->config('ds') .
                 $sentence;
         } else {
             $sentence = Core::ucfirst_sentence(
-                $object->data('host.subdomain') .
-                $config->data('ds') .
-                $object->data('host.domain') .
-                $config->data('ds') .
-                $object->data('host.extension') .
-                $config->data('ds'),
-                $config->data('ds')
+                $object->config('host.subdomain') .
+                $object->config('ds') .
+                $object->config('host.domain') .
+                $object->config('ds') .
+                $object->config('host.extension') .
+                $object->config('ds'),
+                $object->config('ds')
             );
             $sentence = ltrim($sentence, $object->config('ds'));
             $value =
-                $config->data('project.dir.root') .
-                $config->data(Config::DICTIONARY . '.' . Config::HOST) .
-                $config->data('ds') .
+                $object->config('project.dir.root') .
+                $object->config(Config::DICTIONARY . '.' . Config::HOST) .
+                $object->config('ds') .
                 $sentence;
         }
-        $config->data($key, $value);
+        $object->config($key, $value);
         $key = 'host.dir.data';
         $value =
-            $config->data('host.dir.root') .
-            $config->data(Config::DICTIONARY . '.' . Config::DATA) .
-            $config->data('ds');
-        $config->data($key, $value);
+            $object->config('host.dir.root') .
+            $object->config(Config::DICTIONARY . '.' . Config::DATA) .
+            $object->config('ds');
+        $object->config($key, $value);
         $key = 'host.dir.cache';
         $value =
-            Dir::name($config->data('framework.dir.cache'), 2) .
-            $config->data(Config::DICTIONARY . '.' . Config::HOST) .
-            $config->data('ds');
-        $config->data($key, $value);
+            Dir::name($object->config('framework.dir.cache'), 2) .
+            $object->config(Config::DICTIONARY . '.' . Config::HOST) .
+            $object->config('ds');
+        $object->config($key, $value);
         $key = 'host.dir.public';
         $value =
-            $config->data('host.dir.root') .
-            $config->data(Config::DICTIONARY . '.' . Config::PUBLIC) .
-            $config->data('ds');
-        $config->data($key, $value);
+            $object->config('host.dir.root') .
+            $object->config(Config::DICTIONARY . '.' . Config::PUBLIC) .
+            $object->config('ds');
+        $object->config($key, $value);
         $key = 'host.dir.source';
         $value =
-            $config->data('host.dir.root') .
-            $config->data(Config::DICTIONARY . '.' . Config::SOURCE) .
-            $config->data('ds');
-        $config->data($key, $value);
+            $object->config('host.dir.root') .
+            $object->config(Config::DICTIONARY . '.' . Config::SOURCE) .
+            $object->config('ds');
+        $object->config($key, $value);
         $key = 'host.dir.view';
         $value =
-            $config->data('host.dir.root') .
-            $config->data(Config::DICTIONARY . '.' . Config::VIEW) .
-            $config->data('ds');
-        $config->data($key, $value);
+            $object->config('host.dir.root') .
+            $object->config(Config::DICTIONARY . '.' . Config::VIEW) .
+            $object->config('ds');
+        $object->config($key, $value);
         return $object;
     }
 
