@@ -15,5 +15,6 @@ function function_route_get(Parse $parse, Data $data, $name=null, $options=[]){
     $object = $parse->object();
     d($name);
     $url = $object->route()::find($object, $name, $options);
+    d($url);
     return $url;
 }
