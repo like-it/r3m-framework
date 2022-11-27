@@ -42,6 +42,7 @@ function function_cors_disable(Parse $parse, Data $data, $host=''){
                 unset($list[$key]);
             }
         }
+        $list = array_values($list);
     }
     $config->set('server.cors', $list);
     $config->write($url);
