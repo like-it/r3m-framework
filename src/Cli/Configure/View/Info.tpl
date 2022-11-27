@@ -1,6 +1,8 @@
 {{R3M}}
 Info:
 
+{{binary()}} configure cors enable               | Enable host for cors requests
+{{binary()}} configure cors disable              | Disable host for cors requests
 {{binary()}} configure domain add                | Adds a domain to /project_dir/Host
 {{binary()}} configure environment toggle        | Toggle environment between production, staging & development
 {{binary()}} configure environment development   | Environment to development
