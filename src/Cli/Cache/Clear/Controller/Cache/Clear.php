@@ -74,6 +74,7 @@ class Clear extends View{
             $url = Clear::locate($object, $name);
             return Clear::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            d($exception);
             return 'Command undefined.' . PHP_EOL;
         }
     }
