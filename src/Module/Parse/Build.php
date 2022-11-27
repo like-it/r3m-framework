@@ -373,7 +373,7 @@ class Build {
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
                     if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
-                        Core::cors();
+                        Core::cors($this->object());
                         d($dir_plugin);
                         d($url_list);
                     }
