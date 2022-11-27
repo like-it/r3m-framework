@@ -1,12 +1,12 @@
-{{R3M}}
+W{{R3M}}
 {{$meta.author = 'R3m.io'}}
 {{$meta.title = 'Installed: '}}
 {{$meta.description = null}}
 {{$meta.keywords = null}}
 {{import('Main.css')}}
 <section name="main">
-    {{if(config('framework.environment') === 'development')}}
-    {{$data.contentType = $contentType}}
+{{if(config('framework.environment') === 'development')}}
+{{$data.contentType = $contentType}}
 <details>
 <summary>$contentType:</summary>
 <pre>
@@ -14,17 +14,17 @@
 </pre>
 </details>
 {{data.delete('data')}}
-{{$data.controller = $controller}}
+{{$data.controller = config('controller')}}
 <details>
-<summary>$controller:</summary>
+<summary>$controller (through config):</summary>
 <pre>
 {{object($data, 'json')}}
 </pre>
 </details>
 {{data.delete('data')}}
-{{$data.host = $host}}
+{{$data.host = config('host')}}
 <details>
-<summary>$host:</summary>
+<summary>$host (through config):</summary>
 <pre>
 {{object($data, 'json')}}
 </pre>
@@ -94,6 +94,14 @@
 {{$data.session = session()}}
 <details>
 <summary>$session (through function):</summary>
+<pre>
+{{object($data, 'json')}}
+</pre>
+</details>
+{{data.delete('data')}}
+{{$data.template = $template}}
+<details>
+<summary>$template (through controller):</summary>
 <pre>
 {{object($data, 'json')}}
 </pre>
