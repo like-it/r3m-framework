@@ -13,9 +13,6 @@ namespace R3m\Io\Module;
 use stdClass;
 use R3m\Io\App;
 use R3m\Io\Config;
-use R3m\Io\Module\Handler;
-use R3m\Io\Module\File;
-use R3m\Io\Module\Core;
 
 use Exception;
 use R3m\Io\Exception\ObjectException;
@@ -1195,20 +1192,22 @@ class Route extends Data{
         $config = $object->data(App::CONFIG);
         $route = $object->data(App::ROUTE);
         $default_route = $config->data('framework.default.route');
-        foreach($default_route as $record){
-            $path = strtolower($record);
-            $control = File::ucfirst(str_replace(':', '.', $record) . '.control');
-            $control = substr($control, 0, -8);
-            $attribute = 'r3m-io-cli-' . $path;
-            $item = new stdClass();
-            $item->path = $path . '/';
-            $item->controller = 'R3m.Io.Cli.' . $control . '.Controller.' . $control . '.run';
-            $item->language = 'en';
-            $item->method = [
-                "CLI"
-            ];
-            $item->deep = 1;
-            $route->data($attribute, $item);
+        if(is_array($default_route) || is_object($default_route)){
+            foreach($default_route as $record){
+                $path = strtolower($record);
+                $control = File::ucfirst(str_replace(':', '.', $record) . '.control');
+                $control = substr($control, 0, -8);
+                $attribute = 'r3m-io-cli-' . $path;
+                $item = new stdClass();
+                $item->path = $path . '/';
+                $item->controller = 'R3m.Io.Cli.' . $control . '.Controller.' . $control . '.run';
+                $item->language = 'en';
+                $item->method = [
+                    "CLI"
+                ];
+                $item->deep = 1;
+                $route->data($attribute, $item);
+            }
         }
     }
 
