@@ -12,6 +12,7 @@ namespace R3m\Io;
 
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 
 class Config extends Data {
@@ -377,14 +378,9 @@ class Config extends Data {
 
         //project.route.url can be configured in index / cli
 
-        var_dump(Config::DIR);
-        die;
-        
+        $dir = Dir::name(Config::DIR);
         $key = Config::DATA_FRAMEWORK_DIR_ROOT;
-        $value =
-            $this->data(Config::DATA_PROJECT_DIR_VENDOR) .
-            $this->data(Config::DICTIONARY . '.' . Config::FRAMEWORK) .
-            $this->data(Config::DS);
+        $value = $dir;
         $this->data($key, $value);
 
         $key = Config::DATA_FRAMEWORK_DIR_SOURCE;
