@@ -198,6 +198,7 @@ class Config extends Data {
 
     public static function configure(App $object){
         $config = $object->data(App::CONFIG);
+        d($config);
         $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . Config::CONFIG;
         if(File::exist($url)){
             $read = Core::object(File::read($url));
