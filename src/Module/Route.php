@@ -1190,9 +1190,9 @@ class Route extends Data{
     }
 
     private static function framework($object){
-        $config = $object->data(App::CONFIG);
         $route = $object->data(App::ROUTE);
-        $default_route = $config->data('framework.default.route');
+        $default_route = $object->config('framework.default.route');
+        ddd($default_route);
         if(is_array($default_route) || is_object($default_route)){
             foreach($default_route as $record){
                 $path = strtolower($record);
