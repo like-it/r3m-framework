@@ -187,7 +187,8 @@ class Config extends Data {
         }
         $this->default();
         $url = $this->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
-        ddd($url);
+        var_dump($url);
+        die;
         if(File::exist($url)){
             $read = Core::object(File::read($url));
             $this->data(Core::object_merge($this->data(), $read));
