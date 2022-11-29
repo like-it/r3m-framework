@@ -1,8 +1,8 @@
 {{R3M}}
 {{$host = parameter('create', 1)}}
-{{if(is.empty($host))}}
+{{while(is.empty($host))}}
 {{$host = terminal.readline('Hostname: ')}}
-{{/if}}
+{{/while}}
 {{$public_html = parameter('create', 2)}}
 {{$ip = parameter('create', 3)}}
 {{if(is.empty($ip))}}
@@ -11,10 +11,12 @@
 {{$server.admin = parameter('create', 4)}}
 {{if(is_empty($server.admin))}}
 {{$server.admin = config.read('server.admin')}}
-{{if(is.empty($server.admin))}}
+{{while(is.empty($server.admin))}}
 {{$server.admin = terminal.readline('Server admin e-mail: ')}}
+{{if(!is.empty($server.admin))}}
 {{$write = server.admin($server.admin)}}
 {{/if}}
+{{/while}}
 {{else}}
 {{$write = server.admin($server.admin)}}
 {{/if}}

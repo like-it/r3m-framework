@@ -11,6 +11,6 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_position_first_occurence(Parse $parse, Data $data, $haystack='', $needle='', $offset=0){
+function function_string_position_first_occurrence(Parse $parse, Data $data, $haystack='', $needle='', $offset=0){
     return strpos($haystack, $needle, $offset);
 }

@@ -6,7 +6,6 @@
 {{$route = info_all_add($route)}}
 Welcome to R3m.io                             {{cli.color('blue')}}(c) Remco van der Velde {{cli.color('green')}}({{config('framework.version')}}){{cli.reset()}}
 
-
 {{$route = sort($route, [
 'info' => 'ASC'
 ])}}
@@ -20,6 +19,3 @@ Welcome to R3m.io                             {{cli.color('blue')}}(c) Remco van
 
 {{/if}}
 {{/for.each}}
-/*
-vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
-*/

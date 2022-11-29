@@ -13,6 +13,5 @@ use R3m\Io\Module\Data;
 
 function function_route_get(Parse $parse, Data $data, $name=null, $options=[]){
     $object = $parse->object();
-    $url = $object->route()::find($object, $name, $options);
-    return $url;
+    return $object->route()::find($object, $name, $options);
 }

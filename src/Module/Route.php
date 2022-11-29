@@ -101,8 +101,8 @@ class Route extends Data{
             }
         }
         $get = $route::add_localhost($object, $get);
-        if(!empty($object->data('host.url'))  && property_exists($get, 'host')){
-            $host = explode(':', $object->data('host.url'), 3);
+        if(!empty($object->config('host.url'))  && property_exists($get, 'host')){
+            $host = explode(':', $object->config('host.url'), 3);
             if(array_key_exists(2, $host)){
                 array_pop($host);
             }
@@ -145,9 +145,9 @@ class Route extends Data{
             $get->path = $old_path;
         }
         if($path == '/'){
-            $url = $object->data('host.url');
+            $url = $object->config('host.url');
         } else {
-            $url = $object->data('host.url') . $path;
+            $url = $object->config('host.url') . $path;
         }
         $object->logger()->debug('route:find.url:', [$url]);
         return $url;
@@ -432,13 +432,14 @@ class Route extends Data{
             return false;
         }
         $current = false;
-        foreach($data as $record){
+        foreach($data as $name => $record){
             if(property_exists($record, 'resource')){
                 continue;
             }
             $match = Route::is_match_cli($object, $record, $select);
             if($match === true){
                 $current = $record;
+                $current->name = $name;
                 break;
             }
         }
@@ -509,7 +510,7 @@ class Route extends Data{
             return $select;
         }
         $current = false;
-        foreach($data as $record){
+        foreach($data as $name => $record){
             if(property_exists($record, 'resource')){
                 continue;
             }
@@ -519,11 +520,12 @@ class Route extends Data{
             $match = Route::is_match($object, $record, $select);
             if($match === true){
                 $current = $record;
+                $current->name = $name;
                 break;
             }
         }
         if($match === false){
-            foreach($data as $record){
+            foreach($data as $name => $record){
                 if(property_exists($record, 'resource')){
                     continue;
                 }
@@ -533,6 +535,7 @@ class Route extends Data{
                 $match = Route::is_match_has_slash_in_attribute($object, $record, $select);
                 if($match === true){
                     $current = $record;
+                    $current->name = $name;
                     break;
                 }
             }

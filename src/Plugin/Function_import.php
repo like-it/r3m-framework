@@ -109,7 +109,7 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
                 if(!File::exist($location)){
                     //return;
                 }
-                $href = $data->data('host.url') .
+                $href = $object->config('host.url') .
                     ucfirst($controller) .
                     $object->config('ds') .
                     ucfirst($extension) .
@@ -123,7 +123,7 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
                 if(!File::exist($location)){
                     //return;
                 }
-                $href = $data->data('host.url') .
+                $href = $object->config('host.url') .
                     $object->config('controller.title') .
                     $object->config('ds') .
                     ucfirst($extension) .

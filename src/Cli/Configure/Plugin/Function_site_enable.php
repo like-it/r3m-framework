@@ -7,8 +7,21 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 
 
-
+/**
+ * @throws Exception
+ */
 function function_site_enable(Parse $parse, Data $data, $server=null){
+    $id = posix_geteuid();
+    if(
+        !in_array(
+            $id,
+            [
+                0
+            ]
+        )
+    ){
+        throw new Exception('Only root can configure site enable...');
+    }
     if(!empty($server) && is_object($server)){
         $url = '/etc/apache2/sites-available/';
         $url2 = '/etc/apache2/sites-enabled/';

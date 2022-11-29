@@ -6,9 +6,26 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use Exception;
+use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\FileWriteException;
 
+/**
+ * @throws ObjectException
+ * @throws FileWriteException
+ * @throws Exception
+ */
 function function_site_create(Parse $parse, Data $data){
-
+    $id = posix_geteuid();
+    if(
+        !in_array(
+            $id,
+            [
+                0
+            ]
+        )
+    ){
+        throw new Exception('Only root can configure site create...');
+    }
     $attribute = func_get_args();
 
     array_shift($attribute);

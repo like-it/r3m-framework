@@ -76,7 +76,7 @@ class Build {
         if(empty($config)){
             d($this->object());
             throw new Exception('Config not found in object');
-        }        
+        }
         $this->storage(new Data());
         $this->storage()->data('time.start', microtime(true));
         $this->storage()->data('placeholder.generation.time', '// R3M-IO-' . Core::uuid());
@@ -159,7 +159,7 @@ class Build {
         $storage = $this->storage();
         $key = $storage->data('key');
         //$class = $config->data('dictionary.template') . '_' . $key;
-        $class = $this->storage()->data('class');        
+        $class = $this->storage()->data('class');
         $document[] = $this->indent(0) . 'class ' . $class . ' extends Main {';
         $document[] = '';
         $document[] = $this->indent(0) . $storage->data('placeholder.traituse');
@@ -373,7 +373,7 @@ class Build {
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
                     if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
-                        Core::cors();
+                        Core::cors($this->object());
                         d($dir_plugin);
                         d($url_list);
                     }
@@ -413,7 +413,7 @@ class Build {
             $document[] = '{';
             $document[] = "\t" . 'throw new Exception(\'Plugin not found: ./Plugin/' . $file . '\');';
             $document[] = '}';
-        }        
+        }
         return $document;
     }
 
@@ -544,34 +544,34 @@ class Build {
                         $run[] = $this->indent() . Variable::count_assign($this, $storage, $selection, false) . ';';
                         $run[] = $this->indent() . '$this->parse()->is_assign(false);';
                         $remove_newline = true;
-                    break;
-                    case Build::VARIABLE_ASSIGN : 
+                        break;
+                    case Build::VARIABLE_ASSIGN :
                         $run[] = $this->indent() . '$this->parse()->is_assign(true);';
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                         $run[] = $this->indent() . '$this->parse()->is_assign(false);';
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::VARIABLE_DEFINE :
                         $run[] = $this->indent() . '$variable = ' . Variable::define($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'else { echo $variable; } ';
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::METHOD :
                         $run[] = $this->indent() . '$method = ' . Method::create($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($method)){ return $method; }';
                         $run[] = $this->indent() . 'elseif (is_array($method)){ return $method; }';
                         $run[] = $this->indent() . 'else { echo $method; }';
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::METHOD_CONTROL :
                         $multi_line = Build::getPluginMultiline($this->object());
                         if(
                             in_array(
                                 $select['method']['name'],
                                 $multi_line
-                                //capture.append
+                            //capture.append
                             )
                         ){
                             $selection = Method::capture_selection($this, $storage, $tree, $selection);
@@ -585,7 +585,7 @@ class Build {
                                 foreach($list as $list_nr => $list_value){
                                     if(
                                         $list_value['trait'] === $trait['trait'] &&
-                                        $list_value['namepace'] === $trait['namespace']
+                                        $list_value['namespace'] === $trait['namespace']
                                     ){
                                         $is_found = true;
                                         break;
@@ -631,13 +631,13 @@ class Build {
                             $control = null;
                             $remove_newline = true;
                         }
-                    break;
+                        break;
                     case Build::ELSE :
                         $this->indent($this->indent-1);
                         $run[] = $this->indent() . '} else {';
                         $this->indent($this->indent+1);
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::TAG_CLOSE :
                         $multi_line = Build::getPluginMultiline($this->object());
                         foreach($multi_line as $nr => $plugin){
@@ -647,14 +647,14 @@ class Build {
                             !in_array(
                                 $select['tag']['name'],
                                 $multi_line
-                                //'/capture.append'
+                            //'/capture.append'
                             )
                         ){
                             $this->indent($this->indent-1);
                             $run[] = $this->indent() . '}';
                         }
                         $remove_newline = true;
-                    break;
+                        break;
                     case Build::DOC_COMMENT :
 //                      $run[] = $this->indent() .
                         /*
@@ -662,7 +662,7 @@ class Build {
                             throw new Exception('type (' . $type . ') undefined');
                         }
                         */
-                    break;
+                        break;
                     default:
                         if($type !== null){
                             d($selection);
@@ -805,31 +805,31 @@ class Build {
         $this->storage()->data('namespace', $namespace);
         $key = $this->storage()->data('key');
         $name = '';
-        if(isset($options['parent'])){            
+        if(isset($options['parent'])){
             $name .= str_replace(
-                [                    
-                    '.',
-                    '-',
-                ], 
-                [                    
-                    '_',
-                    '_'
-                ], 
-                basename($options['parent'])
-            ) . '_';            
+                    [
+                        '.',
+                        '-',
+                    ],
+                    [
+                        '_',
+                        '_'
+                    ],
+                    basename($options['parent'])
+                ) . '_';
         }
-        if(isset($options['source'])){            
+        if(isset($options['source'])){
             $name .= str_replace(
-                [
-                    '.',
-                    '-'
-                ],
-                [
-                    '_',
-                    '_'
-                ],
-                basename($options['source'])
-            ) . '_';
+                    [
+                        '.',
+                        '-'
+                    ],
+                    [
+                        '_',
+                        '_'
+                    ],
+                    basename($options['source'])
+                ) . '_';
         }
         $name = str_replace('_tpl', '', $name);
         $class = $config->data('dictionary.template') . '_' . $name . $key;
@@ -934,32 +934,32 @@ class Build {
                 $autoload->register();
             }
             $name = '';
-            if(isset($options['parent'])){            
+            if(isset($options['parent'])){
                 $name .= str_replace(
-                    [                        
-                        '.',
-                        '-'
-                    ], 
-                    [                        
-                        '_',
-                        '_'
-                    ], 
-                    basename($options['parent'])
-                ) . '_';   
+                        [
+                            '.',
+                            '-'
+                        ],
+                        [
+                            '_',
+                            '_'
+                        ],
+                        basename($options['parent'])
+                    ) . '_';
             }
             if(isset($options['source'])){
                 $name .= str_replace(
-                    [
-                        '.',
-                        '-'
-                    ],
-                    [
-                        '_',
-                        '_'
-                    ],
-                    basename($options['source'])) . '_';
-            }        
-            $name = str_replace('_tpl', '', $name);    
+                        [
+                            '.',
+                            '-'
+                        ],
+                        [
+                            '_',
+                            '_'
+                        ],
+                        basename($options['source'])) . '_';
+            }
+            $name = str_replace('_tpl', '', $name);
             $url =
                 $dir .
                 $config->data('dictionary.template') .
@@ -967,7 +967,7 @@ class Build {
                 $name .
                 $key .
                 $config->data('extension.php')
-            ;            
+            ;
             $storage->data('url', $url);
             $storage->data('key', $key);
             if(!empty($options['parent'])){
@@ -989,10 +989,10 @@ class Build {
         switch($type){
             case 'function':
                 $tree = $this->requireFunction($tree);
-            break;
+                break;
             case 'modifier':
                 $tree = $this->requireModifier($tree);
-            break;
+                break;
             default:
                 throw new Exception('Add type not defined');
         }

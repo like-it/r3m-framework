@@ -207,7 +207,7 @@ class View {
             $config->data(Config::DS)
         );
         $config->data(Config::DATA_HOST_DIR_PLUGIN_2,
-            Dir::name($config->data(Config::DATA_CONTROLLER_DIR_ROOT), 2) .
+            $config->data(Config::DATA_PROJECT_DIR_ROOT) .
             $config->data(
                 Config::DICTIONARY .
                 '.' .
@@ -225,11 +225,29 @@ class View {
             $config->data(Config::DS)
         );
         $config->data(Config::DATA_CONTROLLER_DIR_ENTITY,
-            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+            $config->data(Config::DATA_PROJECT_DIR_SOURCE) .
             $config->data(
                 Config::DICTIONARY .
                 '.' .
                 Config::ENTITY
+            ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_CONTROLLER_DIR_REPOSITORY,
+            $config->data(Config::DATA_PROJECT_DIR_SOURCE) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::REPOSITORY
+            ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_CONTROLLER_DIR_EXECUTE,
+            $config->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::EXECUTE
             ) .
             $config->data(Config::DS)
         );
@@ -347,7 +365,7 @@ class View {
                 }
             }
         }
-        $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
+//        $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
     }
 
     /**
@@ -360,7 +378,6 @@ class View {
         if(empty($url)){
             throw new UrlEmptyException('Url is empty');
         }
-
         $config = $object->data(App::CONFIG);
         $dir = Dir::name($url);
         $file = str_replace($dir, '', $url);

@@ -77,6 +77,7 @@ class Cache extends View{
             $url = Cache::locate($object, $name);
             return Cache::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            d($exception);
             return 'Command undefined.' . PHP_EOL;
         }
     }

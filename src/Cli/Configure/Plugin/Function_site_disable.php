@@ -4,10 +4,25 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
+
 use Exception;
 
 
+/**
+ * @throws Exception
+ */
 function function_site_disable(Parse $parse, Data $data, $server=null){
+    $id = posix_geteuid();
+    if(
+        !in_array(
+            $id,
+            [
+                0
+            ]
+        )
+    ){
+        throw new Exception('Only root can configure site disable...');
+    }
     if(!empty($server) && is_object($server)){
         $url = '/etc/apache2/sites-enabled/';
         $dir = new Dir();
