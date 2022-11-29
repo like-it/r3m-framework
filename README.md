@@ -6,4 +6,4 @@ It has a powerful scripting language which syntax looks like Smarty.
 It enables to script in `.json` files.  
 It has a MVC pattern.  
 
-See http://universeorange.com for more information (documentation).
+See http://docs.r3m.io for more information (documentation).
