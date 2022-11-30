@@ -339,7 +339,7 @@ class App extends Data {
         $array['code'] = $exception->getCode();
         $array['previous'] = $exception->getPrevious();
         $array['trace'] = $exception->getTrace();
-        $array['trace_as_string'] = $exception->getTraceAsString();
+        //$array['trace_as_string'] = $exception->getTraceAsString(); //not needed is unclear...
         try {
             return Core::object($array, Core::OBJECT_JSON);
         } catch (ObjectException $objectException) {
@@ -360,7 +360,6 @@ class App extends Data {
         $output .= PHP_EOL;
         $output .= 'file: ' . $exception->getFile() . PHP_EOL;
         $output .= 'line: ' . $exception->getLine() . PHP_EOL;
-        $output .= PHP_EOL;
         $output .= chr(27) . "[0m";
         $output .= PHP_EOL;
         $output .= App::exception_to_json($exception);
@@ -378,7 +377,9 @@ class App extends Data {
     private static function result(App $object, $output){
         if($output instanceof Exception){
             if(App::is_cli()){
-                return App::exception_to_cli($output);
+                $object->logger(App::LOGGER_NAME)->error($output->getMessage());
+                fwrite(STDERR, App::exception_to_cli($output));
+                return '';
             } else {
                 if(!headers_sent()){
                     header('Content-Type: application/json');
