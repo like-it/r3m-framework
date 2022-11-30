@@ -41,6 +41,7 @@ class Bin extends View {
             $url = Bin::locate($object, $name);
             return Bin::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            d($exception);
             return 'Command undefined.' . PHP_EOL;
         }
     }
