@@ -257,7 +257,7 @@ class App extends Data {
                     }
                     elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
                         $object->logger(App::LOGGER_NAME)->error($exception->getMessage());
-                        fwrite(STDERR, App::exception_to_cli($exception));
+                        fwrite(STDERR, App::exception_to_cli($object, $exception));
                         return '';
                     } else {
                         $parse = new Module\Parse($object, $object->data());
@@ -347,7 +347,10 @@ class App extends Data {
         }
     }
 
-    public static function exception_to_cli(Exception $exception){
+    /**
+     * @throws Exception
+     */
+    public static function exception_to_cli(App $object, Exception $exception){
         $class = get_class($exception);
         $width = Cli::tput('width');
         $background = '200;0;0';
@@ -362,7 +365,9 @@ class App extends Data {
         $output .= 'line: ' . $exception->getLine() . PHP_EOL;
         $output .= chr(27) . "[0m";
         $output .= PHP_EOL;
-        $output .= App::exception_to_json($exception);
+        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+            $output .= App::exception_to_json($exception);
+        }
         return $output;
     }
 
@@ -378,7 +383,7 @@ class App extends Data {
         if($output instanceof Exception){
             if(App::is_cli()){
                 $object->logger(App::LOGGER_NAME)->error($output->getMessage());
-                fwrite(STDERR, App::exception_to_cli($output));
+                fwrite(STDERR, App::exception_to_cli($object, $output));
                 return '';
             } else {
                 if(!headers_sent()){
