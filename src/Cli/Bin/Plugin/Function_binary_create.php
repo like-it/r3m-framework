@@ -6,7 +6,18 @@ use R3m\Io\Config;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 
-function function_binary_create(Parse $parse, Data $data, $name=null){    
+function function_binary_create(Parse $parse, Data $data, $name=null){
+    $id = posix_geteuid();
+    if(
+        !in_array(
+            $id,
+            [
+                0
+            ]
+        )
+    ){
+        throw new Exception('Only root can execute bin...');
+    }
     if(empty($name)){
         $name = \R3m\Io\Cli\Bin\Controller\Bin::DEFAULT_NAME;
     }
@@ -33,4 +44,5 @@ function function_binary_create(Parse $parse, Data $data, $name=null){
     $content = implode(PHP_EOL, $content);
     File::write($url, $content);
     shell_exec('chmod +x ' . $url);
+    echo 'Binary created...' . PHP_EOL;
 }
