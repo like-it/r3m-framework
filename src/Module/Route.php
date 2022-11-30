@@ -417,7 +417,6 @@ class Route extends Data{
 
     private static function select_cli($object, $select){
         $route =  $object->data(App::ROUTE);
-        d($route);
         if(empty($route)){
             return false;
         }
