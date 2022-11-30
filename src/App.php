@@ -12,6 +12,7 @@ namespace R3m\Io;
 
 use R3m\Io\Exception\AuthorizationException;
 use R3m\Io\Module\Autoload;
+use R3m\Io\Module\Cli;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Database;
@@ -256,7 +257,7 @@ class App extends Data {
                     }
                     elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
                         $object->logger(App::LOGGER_NAME)->error($exception->getMessage());
-                        fwrite(STDERR, App::exception_to_json($exception));
+                        fwrite(STDERR, App::exception_to_cli($exception));
                         return '';
                     } else {
                         $parse = new Module\Parse($object, $object->data());
@@ -344,6 +345,27 @@ class App extends Data {
         } catch (ObjectException $objectException) {
             throw $exception;
         }
+    }
+
+    public static function exception_to_cli(Exception $exception){
+        $class = get_class($exception);
+        $width = Cli::tput('width');
+        $background = '200;0;0';
+        $output = chr(27) . '[48;2;' . $background . 'm';
+        $output .= str_repeat(' ', $width);
+        $output .= chr(27) . "[0m";
+        $output .= PHP_EOL;
+        $output .= $class . PHP_EOL;
+        $output .= PHP_EOL;
+        $output .= $exception->getMessage() . PHP_EOL;
+        $output .= PHP_EOL;
+        $output .= 'file: ' . $exception->getFile() . PHP_EOL;
+        $output .= 'line: ' . $exception->getLine() . PHP_EOL;
+        $output .= chr(27) . '[48;2;' . $background . 'm';
+        $output .= str_repeat(' ', $width);
+        $output .= chr(27) . "[0m";
+        $output .= PHP_EOL;
+        return $output;
     }
 
     public static function response_output(App $object, $output=App::CONTENT_TYPE_HTML){
