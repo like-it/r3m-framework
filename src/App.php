@@ -355,17 +355,15 @@ class App extends Data {
         $output .= str_repeat(' ', $width);
         $output .= PHP_EOL;
         $output .= $class . PHP_EOL;
-        $output .= chr(27) . "[0m";
         $output .= PHP_EOL;
         $output .= $exception->getMessage() . PHP_EOL;
         $output .= PHP_EOL;
         $output .= 'file: ' . $exception->getFile() . PHP_EOL;
         $output .= 'line: ' . $exception->getLine() . PHP_EOL;
-        $output .= chr(27) . '[48;2;' . $background . 'm';
-        $output .= str_repeat(' ', $width);
-        $output .= str_repeat(' ', $width);
+        $output .= PHP_EOL;
         $output .= chr(27) . "[0m";
         $output .= PHP_EOL;
+        $output .= App::exception_to_json($exception);
         return $output;
     }
 
