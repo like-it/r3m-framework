@@ -1,5 +1,5 @@
 {{R3M}}
-{{$url = "{config('framework.dir.root')}LICENSE"}}
+{{$url = config('framework.dir.root') + 'LICENSE'}}
 {{if (file.exist($url))}}
 {{file.read($url)}}
 {{else}}
