@@ -103,7 +103,6 @@ class App extends Data {
      * @throws LocateException
      */
     public static function run(App $object){
-        d('shit he');
         if(App::is_cli() === false){
             Core::cors($object);
         }
