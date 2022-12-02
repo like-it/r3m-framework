@@ -22,6 +22,7 @@ function function_route_resource(Parse $parse, Data $data, $resource=''){
     ){
         throw new Exception('Only root and www-data can configure route add...');
     }
+    ddd($resource);
     $object = $parse->object();
     $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
     $read = $object->data_read($url);
