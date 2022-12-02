@@ -58,7 +58,8 @@ function function_route_resource(Parse $parse, Data $data, $resource=''){
             }
         }
         return 'Route resource: ' . $resource . ' added' . PHP_EOL;
+    } else {
+        return 'Route resource already exists...' . PHP_EOL;
     }
-
 }
 
