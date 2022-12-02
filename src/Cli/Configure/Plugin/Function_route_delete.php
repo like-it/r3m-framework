@@ -1,5 +1,6 @@
 <?php
 
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
@@ -31,6 +32,7 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
                 stristr($route->resource, $resource) !== false
             ){
                 $read->data('delete', $key);
+                echo 'Route delete: deleting resource: ' . $route->resource . PHP_EOL;
             }
         }
         $read->write($url);
@@ -53,4 +55,3 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
         }
     }
 }
-

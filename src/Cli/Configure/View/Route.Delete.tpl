@@ -1,6 +1,6 @@
 {{R3M}}
 {{$resource = parameter('delete', 1)}}
-{{if(is.empty($resource))}}
+{{while(is.empty($resource))}}
 {{$resource = terminal.readline('Resource: ')}}
-{{/if}}
+{{/while}}
 {{route.delete($resource)}}
