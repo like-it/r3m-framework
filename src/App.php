@@ -70,7 +70,6 @@ class App extends Data {
      * @throws Exception
      */
     public function __construct($autoload, $config){
-        ddd('shit he');
         $this->data(App::AUTOLOAD_COMPOSER, $autoload);
         $this->data(App::CONFIG, $config);
         App::is_cli();
@@ -104,6 +103,7 @@ class App extends Data {
      * @throws LocateException
      */
     public static function run(App $object){
+        ddd('shit he');
         if(App::is_cli() === false){
             Core::cors($object);
         }
