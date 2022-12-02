@@ -73,7 +73,7 @@ class Parse extends View{
             $url = Parse::locate($object, $name);
             return Parse::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . PHP_EOL;
+            return $exception;
         }
     }
 
@@ -83,7 +83,7 @@ class Parse extends View{
             $url = Parse::locate($object, $name);
             return Parse::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . PHP_EOL;
+            return $exception;
         }
     }
 

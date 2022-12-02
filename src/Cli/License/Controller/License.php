@@ -35,6 +35,9 @@ class License extends View{
 
     const INFO = '{{binary()}} license                        | R3m/framework license';
 
+    /**
+     * @throws Exception
+     */
     public static function run($object){
         $command = $object->parameter($object, License::NAME, 1);
 
@@ -59,7 +62,7 @@ class License extends View{
             $url = License::locate($object, $name);
             return License::response($object, $url);
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
-            return 'Command undefined.' . PHP_EOL;
+            return $exception;
         }
     }
 }

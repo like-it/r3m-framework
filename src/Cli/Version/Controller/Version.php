@@ -58,6 +58,9 @@ class Version extends View{
     const EXCEPTION_COMMAND_PARAMETER = '{$command}';
     const EXCEPTION_COMMAND = 'invalid command (' . Version::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
+    /**
+     * @throws Exception
+     */
     public static function run($object){
         $command = $object->parameter($object, Version::NAME, 1);
         if($command === null){
@@ -81,8 +84,7 @@ class Version extends View{
             $url = Version::locate($object, $name);
             return Version::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            d($exception);
-            return 'Command undefined.' . PHP_EOL;;
+            return $exception;
         }
     }
 
@@ -117,7 +119,7 @@ class Version extends View{
             $url = Version::locate($object, $name);
             echo Version::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            echo 'Command undefined.' . PHP_EOL;;
+            return $exception;
         }
         $parse = new Parse($object);
         $command = Version::UPDATE_COMMAND;

@@ -37,6 +37,9 @@ class Openssl extends View{
 
     const INFO = '{{binary()}} openssl                        | Open SSL Self-signed Certificate creation';
 
+    /**
+     * @throws Exception
+     */
     public static function run($object){
         $command = $object->parameter($object, Openssl::NAME, 1);
 
@@ -61,7 +64,7 @@ class Openssl extends View{
             $url = Openssl::locate($object, $name);
             return Openssl::response($object, $url);
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
-            return 'Command undefined.' . PHP_EOL;
+            return $exception;
         }
     }
 
@@ -71,7 +74,7 @@ class Openssl extends View{
             $url = Openssl::locate($object, $name);
             return Openssl::response($object, $url);
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
-            return 'Command undefined.' . PHP_EOL;
+            return $exception;
         }
     }
 }
