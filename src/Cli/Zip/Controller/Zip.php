@@ -41,7 +41,7 @@ class Zip extends View {
             }
             throw new Exception('Command undefined.' . PHP_EOL);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . PHP_EOL;;
+            return $exception;
         }
     }
 }

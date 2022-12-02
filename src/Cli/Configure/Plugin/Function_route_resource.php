@@ -1,5 +1,6 @@
 <?php
 
+use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Core;
@@ -58,6 +59,8 @@ function function_route_resource(Parse $parse, Data $data, $resource=''){
             }
         }
         return 'Route resource: ' . $resource . ' added' . PHP_EOL;
+    } else {
+        return 'Route already defined...' . PHP_EOL;
     }
 
 }
