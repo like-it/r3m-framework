@@ -63,7 +63,7 @@ class Clear extends View{
             $url = Clear::locate($object, $name);
             return Clear::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception;
+            return 'Command undefined.' . PHP_EOL;
         }
 
     }
@@ -74,7 +74,8 @@ class Clear extends View{
             $url = Clear::locate($object, $name);
             return Clear::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception;
+            d($exception);
+            return 'Command undefined.' . PHP_EOL;
         }
     }
 }

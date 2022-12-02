@@ -27,7 +27,7 @@ class Uuid extends View {
             $url = Uuid::locate($object, $name);
             return Uuid::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception;
+            return 'Command undefined.' . PHP_EOL;;
         }
     }
 }

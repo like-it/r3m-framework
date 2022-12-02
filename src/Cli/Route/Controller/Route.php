@@ -58,7 +58,7 @@ class Route extends View{
             $url = Route::locate($object, $name);
             return Route::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception;
+            return 'Command undefined.' . PHP_EOL;
         }
     }
 
@@ -69,7 +69,7 @@ class Route extends View{
             $url = Route::locate($object, $name);
             return Route::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception;
+            return 'Command undefined.' . PHP_EOL;;
         }
     }
 }

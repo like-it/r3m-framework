@@ -32,7 +32,7 @@ class Doctrine extends View {
             $url = Doctrine::locate($object, $name);
             return Doctrine::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception;
+            return 'Command undefined.' . PHP_EOL;;
         }
     }
 }

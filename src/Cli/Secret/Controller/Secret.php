@@ -60,7 +60,7 @@ class Secret extends View {
                 $url = Secret::locate($object, $name);
                 return Secret::response($object, $url);
             } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-                return $exception;
+                return 'Command undefined.' . PHP_EOL;
             }
         }
         $url =

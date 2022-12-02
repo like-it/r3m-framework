@@ -56,6 +56,14 @@ class Configure extends View {
             return Configure::response($object, $url);
         } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
             return $exception;
+            /*
+            if($exception->getMessage() === 'Invalid domain'){
+                return $exception;
+            }
+            d($exception);
+            return 'Action undefined.' . PHP_EOL;
+            */
         }
+
     }
 }

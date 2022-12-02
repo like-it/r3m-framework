@@ -81,14 +81,11 @@ class Version extends View{
             $url = Version::locate($object, $name);
             return Version::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception;
+            d($exception);
+            return 'Command undefined.' . PHP_EOL;;
         }
     }
 
-    /**
-     * @throws \R3m\Io\Exception\ObjectException
-     * @throws \R3m\Io\Exception\FileWriteException
-     */
     private static function update($object){
         $config = $object->data(App::CONFIG);
         $config_url = $config->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
@@ -120,7 +117,7 @@ class Version extends View{
             $url = Version::locate($object, $name);
             echo Version::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception;
+            echo 'Command undefined.' . PHP_EOL;;
         }
         $parse = new Parse($object);
         $command = Version::UPDATE_COMMAND;

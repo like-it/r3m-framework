@@ -61,7 +61,7 @@ class Openssl extends View{
             $url = Openssl::locate($object, $name);
             return Openssl::response($object, $url);
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
-            return $exception;
+            return 'Command undefined.' . PHP_EOL;
         }
     }
 
@@ -71,7 +71,7 @@ class Openssl extends View{
             $url = Openssl::locate($object, $name);
             return Openssl::response($object, $url);
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
-            return $exception;
+            return 'Command undefined.' . PHP_EOL;
         }
     }
 }
