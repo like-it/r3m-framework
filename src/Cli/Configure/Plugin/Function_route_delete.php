@@ -28,6 +28,7 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
     $has_deleted = false;
     if($read){
         foreach($read->data() as $key => $route){
+            d($route);
             if(
                 property_exists($route, 'resource') &&
                 stristr($route->resource, $resource) !== false
