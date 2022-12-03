@@ -172,7 +172,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             foreach($route->get() as $record){
                 if(
                     property_exists($record, 'resource') &&
-                    stristr($route->resource, $resource) !== false
+                    stristr($record->resource, $resource) !== false
                 ){
                     $is_found = true;
                 }
@@ -340,7 +340,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             foreach($route->get() as $record) {
                 if (
                     property_exists($record, 'resource') &&
-                    stristr($route->resource, $resource) !== false
+                    stristr($record->resource, $resource) !== false
                 ) {
                     $is_found = true;
                     break;
