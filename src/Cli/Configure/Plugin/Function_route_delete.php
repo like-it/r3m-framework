@@ -24,7 +24,6 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
     }
     $object = $parse->object();
     $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
-    ddd($resource);
     $read = $object->data_read($url);
     if($read){
         foreach($read->data() as $key => $route){
