@@ -1,5 +1,6 @@
 <?php
 
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
@@ -24,13 +25,17 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
     $object = $parse->object();
     $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
     $read = $object->data_read($url);
+    $has_deleted = false;
     if($read){
         foreach($read->data() as $key => $route){
+            d($route);
             if(
                 property_exists($route, 'resource') &&
                 stristr($route->resource, $resource) !== false
             ){
                 $read->data('delete', $key);
+                $has_deleted = true;
+                echo 'Route delete: deleting resource: ' . $route->resource . PHP_EOL;
             }
         }
         $read->write($url);
@@ -51,6 +56,8 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
                 Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
             }
         }
+        if($has_deleted === false){
+            throw new Exception('Couldn\'t find resource: ' . $resource);
+        }
     }
 }
-

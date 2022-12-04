@@ -43,7 +43,7 @@ class Restore extends View {
                 $url = Restore::locate($object, $name);
                 return Restore::response($object, $url);
             } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-                return 'Command undefined.' . PHP_EOL;
+                return $exception;
             }
         }
         $dir =

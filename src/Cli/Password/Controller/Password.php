@@ -27,7 +27,7 @@ class Password extends View {
             $url = Password::locate($object, $name);
             return Password::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . "\n";
+            return $exception;
         }
     }
 }

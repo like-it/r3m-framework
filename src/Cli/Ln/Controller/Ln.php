@@ -28,7 +28,7 @@ class Ln extends View {
             $url = Ln::locate($object, $name);
             return Ln::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . PHP_EOL;;
+            return $exception;
         }
     }
 }

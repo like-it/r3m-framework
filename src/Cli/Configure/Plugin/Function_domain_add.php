@@ -158,8 +158,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         } else {
             $route = $object->data_read($url);
         }
-        $route->data(Core::uuid() . '.resource',
-            '{{$project.dir.host}}' .
+        $resource = '{{$project.dir.host}}' .
             ucfirst($domain) .
             $object->config('ds') .
             ucfirst($extension) .
@@ -167,31 +166,44 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             $object->config('dictionary.data') .
             $object->config('ds') .
             'Route' .
-            $object->config('extension.json')
-        );
-        try {
-            File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+            $object->config('extension.json');
+        if($route){
+            $is_found = false;
+            foreach($route->get() as $record){
+                if(
+                    property_exists($record, 'resource') &&
+                    stristr($record->resource, $resource) !== false
+                ){
+                    $is_found = true;
+                }
+            }
+            if(!$is_found) {
+                $route->data(Core::uuid() . '.resource', $resource);
+                try {
+                    File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+                } catch (Exception|FileWriteException|ObjectException $exception) {
+                    return $exception;
+                }
+            }
             $id = posix_geteuid();
-            if($id === 0){
+            if ($id === 0) {
                 File::chmod($url, 0666);
                 Core::execute('chown www-data:www-data -R ' . $object->config('project.dir.host'));
                 Core::execute('chmod 777 -R ' . $object->config('project.dir.host'));
                 Core::execute('chown www-data:www-data -R ' . $project_dir_data);
-                if(File::exist($project_dir_data . 'Cache/0/')){
+                if (File::exist($project_dir_data . 'Cache/0/')) {
                     Core::execute('chown root:root -R ' . $project_dir_data . 'Cache/0/');
                 }
-                if(File::exist($project_dir_data . 'Compile/0/')){
+                if (File::exist($project_dir_data . 'Compile/0/')) {
                     Core::execute('chown root:root -R ' . $project_dir_data . 'Compile/0/');
                 }
-                if(File::exist($project_dir_data . 'Cache/1000/')){
+                if (File::exist($project_dir_data . 'Cache/1000/')) {
                     Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
                 }
-                if(File::exist($project_dir_data . 'Compile/1000/')){
+                if (File::exist($project_dir_data . 'Compile/1000/')) {
                     Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
                 }
             }
-        } catch (Exception | FileWriteException | ObjectException $exception){
-            return $exception;
         }
     } else {
         $host_dir_root = $object->config('project.dir.host') .
@@ -314,21 +326,34 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         } else {
             $route = $object->data_read($url);
         }
-        $route->data(Core::uuid() . '.resource',
-            '{{$project.dir.host}}' .
-            ucfirst($subdomain) .
-            $object->config('ds') .
-            ucfirst($domain) .
-            $object->config('ds') .
-            ucfirst($extension) .
-            $object->config('ds') .
-            $object->config('dictionary.data') .
-            $object->config('ds') .
-            'Route' .
-            $object->config('extension.json')
-        );
-        try {
-            File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+        if($route){
+            $resource = '{{$project.dir.host}}' .
+                ucfirst($domain) .
+                $object->config('ds') .
+                ucfirst($extension) .
+                $object->config('ds') .
+                $object->config('dictionary.data') .
+                $object->config('ds') .
+                'Route' .
+                $object->config('extension.json');
+            $is_found = false;
+            foreach($route->get() as $record) {
+                if (
+                    property_exists($record, 'resource') &&
+                    stristr($record->resource, $resource) !== false
+                ) {
+                    $is_found = true;
+                    break;
+                }
+            }
+            if(!$is_found){
+                $route->data(Core::uuid() . '.resource', $resource);
+                try {
+                    File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+                } catch (Exception|FileWriteException|ObjectException $exception) {
+                    return $exception;
+                }
+            }
             $id = posix_geteuid();
             if($id === 0){
                 File::chmod($url, 0666);
@@ -348,8 +373,6 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                     Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
                 }
             }
-        } catch (Exception | FileWriteException | ObjectException $exception){
-            return $exception;
         }
     }
 }

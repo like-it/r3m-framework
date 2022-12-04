@@ -44,6 +44,9 @@ class Cache extends View{
 
     const INFO = '{{binary()}} cache clear                    | Clears the app cache';
 
+    /**
+     * @throws Exception
+     */
     public static function run($object){
         $command = $object->parameter($object, Cache::NAME, 1);
         if($command === null){
@@ -66,7 +69,7 @@ class Cache extends View{
             $url = Cache::locate($object, $name);
             return Cache::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . PHP_EOL;
+            return $exception;
         }
 
     }
@@ -77,8 +80,7 @@ class Cache extends View{
             $url = Cache::locate($object, $name);
             return Cache::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            d($exception);
-            return 'Command undefined.' . PHP_EOL;
+            return $exception;
         }
     }
 }

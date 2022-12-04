@@ -35,6 +35,9 @@ class Route extends View{
     const EXCEPTION_COMMAND_PARAMETER = '{{$command}}';
     const EXCEPTION_COMMAND = 'invalid command (' . Route::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
+    /**
+     * @throws Exception
+     */
     public static function run($object){
         $command = $object->parameter($object, Route::NAME, 1);
 
@@ -58,7 +61,7 @@ class Route extends View{
             $url = Route::locate($object, $name);
             return Route::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . PHP_EOL;
+            return $exception;
         }
     }
 
@@ -69,7 +72,7 @@ class Route extends View{
             $url = Route::locate($object, $name);
             return Route::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return 'Command undefined.' . PHP_EOL;;
+            return $exception;
         }
     }
 }

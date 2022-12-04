@@ -1,14 +1,14 @@
 {{R3M}}
 {{$node.name = parameter('url', 1)}}
-{{if(is.empty($node.name))}}
+{{while(is.empty($node.name))}}
 {{$node.name = terminal.readline('Name: ')}}
-{{/if}}
+{{/while}}
 {{$node.environment = parameter('url', 2)}}
-{{if(is.empty($node.environment))}}
+{{while(is.empty($node.environment))}}
 {{$node.environment = terminal.readline('Environment (development, staging, production): ')}}
-{{/if}}
+{{/while}}
 {{$node.url = parameter('url', 3)}}
-{{if(is.empty($node.url))}}
+{{while(is.empty($node.url))}}
 {{$node.url = terminal.readline('Url: ')}}
-{{/if}}
+{{/while}}
 {{server.url.add($node)}}
