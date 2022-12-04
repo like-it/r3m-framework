@@ -13,6 +13,7 @@ Info:
 {{binary()}} configure host delete               | Delete a host from /etc/host
 {{binary()}} configure public create             | Creates the public html directory
 {{binary()}} configure server admin              | Set the server admin
+{{binary()}} configure server url                | Sets an url for different environments
 {{binary()}} configure site create               | Create an apache2 site file
 {{binary()}} configure site delete               | Delete an apache2 site file
 {{binary()}} configure site disable              | Disable an apache2 site

@@ -35,6 +35,7 @@ class Configure extends View {
         '{{binary()}} configure route resource       | Add a main route based on resource',
         '{{binary()}} configure route delete         | Delete a main route based on resource',
         '{{binary()}} configure server admin         | Set the server admin',
+        '{{binary()}} configure server url           | Sets an url for different environments',
         '{{binary()}} configure site create          | Create an apache2 site file',
         '{{binary()}} configure site delete          | Delete an apache2 site file',
         '{{binary()}} configure site disable         | Disable an apache2 site',

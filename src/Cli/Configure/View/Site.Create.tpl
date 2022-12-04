@@ -1,7 +1,7 @@
 {{R3M}}
 {{$server.name = parameter('create', 1)}}
-{{if(is.empty($server.name))}}
+{{while(is.empty($server.name))}}
 {{$server.name = terminal.readline('Domain name: ')}}
-{{/if}}
+{{/while}
 {{$server.root = parameter('create', 2)}}
 {{site.create($server)}}
