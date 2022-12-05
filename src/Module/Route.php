@@ -491,6 +491,7 @@ class Route extends Data{
             if(property_exists($current, 'controller')){
                 $current = Route::controller($current);
             }
+            Route::add_request($object, $current);
             return $current;
         }
         return false;
