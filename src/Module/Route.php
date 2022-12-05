@@ -162,6 +162,9 @@ class Route extends Data{
         return $input;
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function add_request($object, $request){
         if(empty($request)){
             return $object;
@@ -175,7 +178,11 @@ class Route extends Data{
         return $object;
     }
 
-    private static function select_info($object, $record){
+    /**
+     * @throws Exception
+     */
+    private static function select_info($object, $record): stdClass
+    {
         $select = new stdClass();
         $select->parameter = new stdClass();
         $select->attribute = [];
@@ -491,6 +498,8 @@ class Route extends Data{
             if(property_exists($current, 'controller')){
                 $current = Route::controller($current);
             }
+            d($select);
+            ddd($current);
             Route::add_request($object, $current);
             return $current;
         }
