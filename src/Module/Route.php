@@ -510,8 +510,6 @@ class Route extends Data{
             if(property_exists($current, 'controller')){
                 $current = Route::controller($current);
             }
-            d($select);
-            ddd($current);
             Route::add_request($object, $current);
             return $current;
         }
