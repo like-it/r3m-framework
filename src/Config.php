@@ -198,12 +198,25 @@ class Config extends Data {
         }
     }
 
+    /**
+     * @throws Exception\ObjectException
+     * @throws Exception\FileWriteException
+     */
     public static function configure(App $object){
         $config = $object->data(App::CONFIG);
         $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . Config::CONFIG;
         if(File::exist($url)){
             $read = Core::object(File::read($url));
             $config->data(Core::object_merge($config->data(), $read));
+            $contentType = $config->data('contentType');
+            if(
+                substr($contentType, 0, 2) === '{{' &&
+                substr($contentType, -2, 2) === '}}'
+            ){
+                $parse = new Module\Parse($object, $object->data());
+                $contentType = $parse->compile($contentType, $object->data());
+                $config->data('contentType', $contentType);
+            }
         }
     }
 
