@@ -179,7 +179,7 @@ class App extends Data {
                             File::read($route->url),
                             Response::TYPE_FILE,
                         );
-                        $contentType = $object->config('contentType.') . strtolower($extension);
+                        $contentType = $object->config('contentType.' . strtolower($extension));
                         if($contentType){
                             $response->header([
                                 'Content-Type: ' . $contentType
