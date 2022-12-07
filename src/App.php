@@ -173,18 +173,19 @@ class App extends Data {
                         );
                         return Response::output($object, $response);
                     } else {
-                        $response = new Response(
-                            File::read($route->url),
-                            Response::TYPE_FILE,
-                        );
                         $extension = File::extension($route->url);
                         $contentType = $object->config('contentType.' . strtolower($extension));
                         if($contentType){
+                            $response = new Response(
+                                File::read($route->url),
+                                Response::TYPE_FILE,
+                            );
                             $response->header([
                                 'Content-Type: ' . $contentType
                             ]);
+                            return Response::output($object, $response);
                         }
-                        return Response::output($object, $response);
+                        throw new Exception('ContentType (' . $contentType . ')not supported...');
                     }
                 } else {
                     App::contentType($object);
