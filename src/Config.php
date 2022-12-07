@@ -213,7 +213,7 @@ class Config extends Data {
                 substr($contentType, 0, 2) === '{{' &&
                 substr($contentType, -2, 2) === '}}'
             ){
-                $parse = new Module\Parse($object, $object->data());
+                $parse = new Module\Parse($object);
                 $contentType = $parse->compile($contentType, $object->data());
                 $config->data('contentType', $contentType);
             }
