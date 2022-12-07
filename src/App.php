@@ -185,7 +185,7 @@ class App extends Data {
                             ]);
                             return Response::output($object, $response);
                         }
-                        throw new Exception('ContentType (' . $contentType . ')not supported...');
+                        throw new Exception('ContentType (' . $contentType . ') not supported...');
                     }
                 } else {
                     App::contentType($object);
