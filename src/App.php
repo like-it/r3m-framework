@@ -173,12 +173,11 @@ class App extends Data {
                         );
                         return Response::output($object, $response);
                     } else {
-                        $extension = File::extension($route->url);
-
                         $response = new Response(
                             File::read($route->url),
                             Response::TYPE_FILE,
                         );
+                        $extension = File::extension($route->url);
                         $contentType = $object->config('contentType.' . strtolower($extension));
                         if($contentType){
                             $response->header([
