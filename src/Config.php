@@ -14,6 +14,7 @@ use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
+use R3m\Io\Module\Parse;
 
 class Config extends Data {
     const DIR = __DIR__ . '/';
@@ -435,5 +436,22 @@ class Config extends Data {
         $key = Config::DATA_FRAMEWORK_ENVIRONMENT;
         $value = $this->data(Config::DICTIONARY . '.' . Config::ENVIRONMENT);
         $this->data($key, $value);
+    }
+
+    /**
+     * @throws Exception\ObjectException
+     * @throws Exception\FileWriteException
+     */
+    static public function contentType(App $object){
+        $contentType = $object->config('contentType');
+        if(
+            $contentType &&
+            substr($contentType, 0, 2) === '{{' &&
+            substr($contentType, -2, 2) === '}}'
+        ){
+            $parse = new Parse($object);
+            $contentType = $parse->compile($contentType, $object->data());
+            $object->config('contentType', $contentType);
+        }
     }
 }

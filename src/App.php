@@ -212,6 +212,7 @@ class App extends Data {
                         );
                         return Response::output($object, $response);
                     }
+                    Config::contentType($object);
                     $functions = [];
                     if(in_array('controller', $methods)){
                         $functions[] = 'controller';
