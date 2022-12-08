@@ -445,7 +445,7 @@ class Config extends Data {
     static public function contentType(App $object){
         $contentType = $object->config('contentType');
         if(
-            $contentType &&
+            is_string($contentType) &&
             substr($contentType, 0, 2) === '{{' &&
             substr($contentType, -2, 2) === '}}'
         ){
