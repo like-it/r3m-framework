@@ -178,7 +178,7 @@ class App extends Data {
                         if(
                             $contentType &&
                             substr($contentType, 0, 2) === '{{' &&
-                            substr($contentType, -3, 2) === '}}'
+                            substr($contentType, -2, 2) === '}}'
                         ){
                             $parse = new Parse($object);
                             $contentType = $parse->compile($contentType, $object->data());
