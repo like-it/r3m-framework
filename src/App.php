@@ -174,6 +174,16 @@ class App extends Data {
                         return Response::output($object, $response);
                     } else {
                         $extension = File::extension($route->url);
+                        $contentType = $object->config('contentType');
+                        if(
+                            $contentType &&
+                            substr($contentType, 0, 2) === '{{' &&
+                            substr($contentType, -3, 2) === '}}'
+                        ){
+                            $parse = new Parse($object);
+                            $contentType = $parse->compile($contentType, $object->data());
+                            $object->config('contentType', $contentType);
+                        }
                         $contentType = $object->config('contentType.' . strtolower($extension));
                         if($contentType){
                             $response = new Response(
