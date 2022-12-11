@@ -399,7 +399,6 @@ class Parse {
             }
             $id = posix_geteuid();
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
-            d($class);
             $exists = class_exists($class);
             if($exists){
                 $template = new $class(new Parse($this->object()), $storage);
