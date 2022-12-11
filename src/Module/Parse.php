@@ -398,7 +398,7 @@ class Parse {
                 }
             }
             $id = posix_geteuid();
-            $class = $build->storage()->data('namespace') . '\\' . $id . '\\' . $build->storage()->data('class');
+            $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
             $exists = class_exists($class);
             if($exists){
                 $template = new $class(new Parse($this->object()), $storage);
