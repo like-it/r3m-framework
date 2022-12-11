@@ -453,5 +453,6 @@ class Config extends Data {
             $contentType = $parse->compile($contentType, $object->data());
             $object->config('contentType', $contentType);
         }
+        return $object->config('contentType');
     }
 }

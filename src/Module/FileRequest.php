@@ -143,20 +143,8 @@ class FileRequest {
             if(File::exist($url)){
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
-                $contentType = $config->data('contentType');
-                if($contentType){
-                    if(
-                        substr($contentType, 0, 2) === '{{' &&
-                        substr($contentType, -2,2) === '}}'
-                    ){
-                        $parse = new Parse($object);
-                        $contentType = $parse->compile($contentType, $object->data());
-                        $config->data('contentType', $contentType);
-                    }
-                    $contentType = $config->data('contentType.' . $extension);
-                } else {
-                    $contentType = $config->data('contentType.' . $extension);
-                }
+                Config::contentType($object);
+                $contentType = $object->config('contentType.' . $extension);
                 if(empty($contentType)){
                     Handler::header('HTTP/1.0 415 Unsupported Media Type', 415);
                     if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
