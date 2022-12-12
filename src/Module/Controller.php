@@ -50,6 +50,7 @@ class Controller {
     public static function locate(App $object, $template=null){
         $temp = $object->data('template');
         $called = '';
+        $is_controller_dir = false;
         if($template === null && $temp !== null && property_exists($temp, 'dir')){
             $dir = $temp->dir;
         }
@@ -64,7 +65,8 @@ class Controller {
         else {
             $called = get_called_class();
             if(defined($called .'::DIR')){
-                $dir = $called::DIR;    
+                $dir = $called::DIR;
+                $is_controller_dir = true;
             } else {
                 $dir = '/';
             }
@@ -83,6 +85,7 @@ class Controller {
         $explode = explode($config->data('ds'), $dir);
         array_pop($explode);
         $explode[] = $config->data('dictionary.view');
+        ddd($explode);
         $max = count($explode);
         $list = [];
         $temp = explode('\\', $called);
