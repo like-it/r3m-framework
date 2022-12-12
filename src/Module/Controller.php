@@ -48,6 +48,7 @@ class Controller {
      * @throws ObjectException
      */
     public static function locate(App $object, $template=null){
+        ddd($template);
         $temp = $object->data('template');
         $called = '';
         $is_controller_dir = false;
