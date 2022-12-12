@@ -117,6 +117,7 @@ class Controller {
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
         }
+        $list[] = $object->config('host.dir.view');
         ddd($list);
         $url = false;
         foreach($list as $file){
