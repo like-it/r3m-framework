@@ -85,7 +85,6 @@ class Controller {
         $explode = explode($config->data('ds'), $dir);
         array_pop($explode);
         $explode[] = $config->data('dictionary.view');
-        ddd($explode);
         $max = count($explode);
         $list = [];
         $temp = explode('\\', $called);
@@ -117,7 +116,8 @@ class Controller {
             array_pop($explode);
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
-        }        
+        }
+        ddd($list);
         $url = false;
         foreach($list as $file){
             if(File::exist($file)){
