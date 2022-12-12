@@ -105,6 +105,7 @@ class Controller {
                 $template = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
             }
         }
+        $list[] = $object->config('host.dir.view') . $template . $config->data('extension.tpl');
         for($i = $max; $i > $minimum; $i--){
             $url = implode($config->data('ds'), $explode) . $config->data('ds');
             $list[] = str_replace(
@@ -124,8 +125,7 @@ class Controller {
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
         }
-        $list[] = $object->config('host.dir.view');
-        ddd($list);
+
         $url = false;
         foreach($list as $file){
             if(File::exist($file)){
