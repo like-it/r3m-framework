@@ -178,13 +178,16 @@ class Core {
     }
 
     public static function interactive(){
-        return Core::output_mode(Core::MODE_INTERACTIVE);
+        Core::output_mode(Core::MODE_INTERACTIVE);
     }
 
     public static function passive(){
-        return Core::output_mode(Core::MODE_PASSIVE);
+        Core::output_mode(Core::MODE_PASSIVE);
     }
 
+    /**
+     * @throws UrlEmptyException
+     */
     public static function redirect($url=''){
         if(empty($url)){
             throw new UrlEmptyException('url is empty...');
