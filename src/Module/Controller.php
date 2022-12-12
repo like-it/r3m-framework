@@ -71,7 +71,11 @@ class Controller {
                 $dir = '/';
             }
         }
-        if($temp !== null && property_exists($temp, 'name')){
+        if(
+            $temp !== null &&
+            is_object($temp) &&
+            property_exists($temp, 'name')
+        ){
             $template = $temp->name;
         }
         $config = $object->data(App::CONFIG);
@@ -91,6 +95,9 @@ class Controller {
         if(empty($template)){
             $template = array_pop($temp);
         } else {
+            if(is_object($template) && property_exists($template, 'name')){
+                $template = $template->name;
+            }
             $template_explode = explode('.', $template);
             if(count($template_explode) > 2){
                 $dotted_last = array_pop($template_explode);
