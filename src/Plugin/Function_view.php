@@ -12,7 +12,7 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_view(Parse $parse, Data $data, $template=null, $storage=[]){
-    $url = \R3m\Io\Module\View::locate($parse->object(), $template);
+    $url = \R3m\Io\Module\Controller::locate($parse->object(), $template);
     $read = \R3m\Io\Module\File::read($url);
     $mtime = \R3m\Io\Module\File::mtime($url);
     if(empty($storage)){
