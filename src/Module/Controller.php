@@ -127,7 +127,7 @@ class Controller {
             foreach($list as $nr => $file){
                 $result[] = $file;
             }
-            ddd($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT));
+            ddd($result);
             if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) === Config::MODE_DEVELOPMENT){
                 throw new LocateException('Cannot find view file', $result, 1);
             } else {
