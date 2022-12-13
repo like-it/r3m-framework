@@ -109,6 +109,84 @@ class Data {
         return trim($result);
     }
 
+    public static function flags($data){
+        $result = null;
+        $value = null;
+        ddd($data);
+        /*
+        if(is_string($parameter) && stristr($parameter, '\\')){
+            //classname adjustment
+            $parameter = basename(str_replace('\\', '//', $parameter));
+        }
+        if(is_numeric($parameter) && is_object($data)){
+            if(property_exists($data, $parameter)){
+                $param = ltrim($data->{$parameter}, '-');
+                $result = $param;
+            } else {
+                $result = null;
+            }
+        } else {
+            if(
+                is_array($data) ||
+                is_object($data)
+            ){
+                foreach($data as $key => $param){
+                    if(is_numeric($key)){
+                        $param = ltrim($param, '-');
+                        $param = rtrim($param);
+                        $tmp = explode('=', $param);
+                        if(count($tmp) > 1){
+                            $param = array_shift($tmp);
+                            $value = implode('=', $tmp);
+                        }
+                        if(strtolower($param) == strtolower($parameter)){
+                            if($offset !== 0){
+                                if(property_exists($data, ($key + $offset))){
+                                    $value = rtrim(ltrim($data->{($key + $offset)}, '-'));
+                                } else {
+                                    $result = null;
+                                    break;
+                                }
+                            }
+                            if(isset($value) && $value !== null){
+                                $result = $value;
+                            } else {
+                                $result = true;
+                                return $result;
+                            }
+                            break;
+                        }
+                        $value = null;
+                    }
+                    elseif($key == $parameter){
+                        if($offset < 0){
+                            while($offset < 0){
+                                $param = prev($data);
+                                $offset++;
+                            }
+                            return $param;
+                        }
+                        elseif($offset == 0){
+                            return $param;
+                        } else {
+                            while($offset > 0){
+                                $param = next($data);
+                                $offset--;
+                            }
+                            return $param;
+                        }
+                    }
+                    $pointer = next($data);
+                }
+            }
+        }
+        if($result === null || is_bool($result)){
+            return $result;
+        }
+        return trim($result);
+        */
+    }
+
     public function get($attribute=''){
         return $this->data('get', $attribute);
     }
