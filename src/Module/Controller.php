@@ -13,6 +13,8 @@ namespace R3m\Io\Module;
 use R3m\Io\App;
 use R3m\Io\Config;
 
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
@@ -46,11 +48,11 @@ class Controller {
      * @throws LocateException
      * @throws FileWriteException
      * @throws ObjectException
+     * @throws Exception
      */
     public static function locate(App $object, $template=null){
         $temp = $object->data('template');
         $called = '';
-        $is_controller_dir = false;
         $url = false;
         if(
             !empty($template) &&
@@ -59,40 +61,44 @@ class Controller {
         ){
             $url = $template->url;
         }
-        elseif(
-            empty($template) &&
+        if(
+            $template === null &&
             !empty($temp) &&
             is_object($temp) &&
-            property_exists($temp, 'url')
+            property_exists($temp, 'dir')
         ){
-            $url = $temp->url;
-        }
-        if($template === null && $temp !== null && property_exists($temp, 'dir')){
             $dir = $temp->dir;
-        }
-        elseif(
-            is_object($template) &&
-            property_exists($template, 'name') &&
-            property_exists($template, 'dir')
-        ){
-            $dir = $template->dir;
-            $template = $template->name;
-        }
-        else {
-            $called = get_called_class();
-            if(defined($called .'::DIR')){
-                $dir = $called::DIR;
-                $is_controller_dir = true;
-            } else {
-                $dir = '/';
-            }
+            $url = false;
         }
         if(
-            $temp !== null &&
+            $template === null &&
+            !empty($temp) &&
             is_object($temp) &&
             property_exists($temp, 'name')
         ){
-            $template = $temp->name;
+            $name = $temp->name;
+            $url = false;
+        }
+        if(
+            !empty($template) &&
+            is_object($template) &&
+            property_exists($template, 'name')
+        ){
+            $name = $template->name;
+        }
+        if(
+            !empty($template) &&
+            is_object($template) &&
+            property_exists($template, 'dir')
+        ){
+            $dir = $template->dir;
+        } else {
+            $called = get_called_class();
+            if(defined($called .'::DIR')){
+                $dir = $called::DIR;
+            } else {
+                throw new Exception('Please define const DIR = __DIR__ . DIRECTORY_SEPARATOR; in the controller.');
+            }
         }
         if($url){
             $list = [];
@@ -112,20 +118,17 @@ class Controller {
             $max = count($explode);
             $list = [];
             $temp = explode('\\', $called);
-            if(empty($template)){
-                $template = array_pop($temp);
+            if(empty($name)){
+                $name = array_pop($temp);
             } else {
-                if(is_object($template) && property_exists($template, 'name')){
-                    $template = $template->name;
-                }
-                $template_explode = explode('.', $template);
+                $template_explode = explode('.', $name);
                 if(count($template_explode) > 2){
                     $dotted_last = array_pop($template_explode);
                     $dotted_first = array_pop($template_explode);
-                    $template = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
+                    $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
                 }
             }
-            $list[] = $object->config('host.dir.view') . $template . $config->data('extension.tpl');
+            $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
                 $list[] = str_replace(
@@ -139,7 +142,7 @@ class Controller {
                         '.',
                         '-'
                     ],
-                    $url . $template . $config->data('extension.tpl')
+                    $url . $name . $config->data('extension.tpl')
                 );
                 array_pop($explode);
                 array_pop($explode);
