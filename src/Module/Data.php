@@ -130,6 +130,28 @@ class Data {
         return $flags;
     }
 
+    public static function options($data): array
+    {
+        $options = [];
+        foreach($data as $nr => $parameter){
+            if(
+                substr($parameter, 0, 2) !== '--' &&
+                substr($parameter, 0, 1) === '-'
+            ){
+                $parameter = substr($parameter, 1);
+                $tmp = explode('=', $parameter);
+                if(count($tmp) > 1){
+                    $parameter = array_shift($tmp);
+                    $value = implode('=', $tmp);
+                } else {
+                    $value = true;
+                }
+                $options[$parameter] = $value;
+            }
+        }
+        return $options;
+    }
+
     public function get($attribute=''){
         return $this->data('get', $attribute);
     }

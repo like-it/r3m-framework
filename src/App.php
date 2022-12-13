@@ -462,6 +462,11 @@ class App extends Data {
         return parent::flags($object->data(App::REQUEST)->data());
     }
 
+    public static function options($object): array
+    {
+        return parent::options($object->data(App::REQUEST)->data());
+    }
+
     /**
      * @throws Exception
      */
