@@ -219,6 +219,7 @@ class App extends Data {
                     }
                     if(in_array($route->function, $methods)){
                         $functions[] = $route->function;
+                        $object->config('controller.function', $route->function);
                         $result = $route->controller::{$route->function}($object);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
