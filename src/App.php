@@ -457,7 +457,8 @@ class App extends Data {
         return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
-    public static function flags($object){
+    public static function flags($object): array
+    {
         return parent::flags($object->data(App::REQUEST)->data());
     }
 
