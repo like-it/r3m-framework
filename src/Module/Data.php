@@ -117,7 +117,7 @@ class Data {
         foreach($data as $nr => $parameter){
             if(substr($parameter, 0, 2) === '--'){
                 $parameter = substr($parameter, 2);
-                $tmp = explode('=', $param);
+                $tmp = explode('=', $parameter);
                 if(count($tmp) > 1){
                     $parameter = array_shift($tmp);
                     $value = implode('=', $tmp);
