@@ -55,7 +55,9 @@ class Data {
             ){
                 foreach($data as $key => $param){
                     if(is_numeric($key)){
-                        $param = ltrim($param, '-');
+                        if(substr($param, 0, 2) === '-'){
+                            continue;
+                        }
                         $param = rtrim($param);
                         $tmp = explode('=', $param);
                         if(count($tmp) > 1){
@@ -109,82 +111,23 @@ class Data {
         return trim($result);
     }
 
-    public static function flags($data){
-        $result = null;
-        $value = null;
-        ddd($data);
-        /*
-        if(is_string($parameter) && stristr($parameter, '\\')){
-            //classname adjustment
-            $parameter = basename(str_replace('\\', '//', $parameter));
-        }
-        if(is_numeric($parameter) && is_object($data)){
-            if(property_exists($data, $parameter)){
-                $param = ltrim($data->{$parameter}, '-');
-                $result = $param;
-            } else {
-                $result = null;
-            }
-        } else {
-            if(
-                is_array($data) ||
-                is_object($data)
-            ){
-                foreach($data as $key => $param){
-                    if(is_numeric($key)){
-                        $param = ltrim($param, '-');
-                        $param = rtrim($param);
-                        $tmp = explode('=', $param);
-                        if(count($tmp) > 1){
-                            $param = array_shift($tmp);
-                            $value = implode('=', $tmp);
-                        }
-                        if(strtolower($param) == strtolower($parameter)){
-                            if($offset !== 0){
-                                if(property_exists($data, ($key + $offset))){
-                                    $value = rtrim(ltrim($data->{($key + $offset)}, '-'));
-                                } else {
-                                    $result = null;
-                                    break;
-                                }
-                            }
-                            if(isset($value) && $value !== null){
-                                $result = $value;
-                            } else {
-                                $result = true;
-                                return $result;
-                            }
-                            break;
-                        }
-                        $value = null;
-                    }
-                    elseif($key == $parameter){
-                        if($offset < 0){
-                            while($offset < 0){
-                                $param = prev($data);
-                                $offset++;
-                            }
-                            return $param;
-                        }
-                        elseif($offset == 0){
-                            return $param;
-                        } else {
-                            while($offset > 0){
-                                $param = next($data);
-                                $offset--;
-                            }
-                            return $param;
-                        }
-                    }
-                    $pointer = next($data);
+    public static function flags($data): array
+    {
+        $flags = [];
+        foreach($data as $nr => $parameter){
+            if(substr($parameter, 0, 2) === '--'){
+                $parameter = substr($parameter, 2);
+                $tmp = explode('=', $param);
+                if(count($tmp) > 1){
+                    $parameter = array_shift($tmp);
+                    $value = implode('=', $tmp);
+                } else {
+                    $value = true;
                 }
+                $flags[$parameter] = $value;
             }
         }
-        if($result === null || is_bool($result)){
-            return $result;
-        }
-        return trim($result);
-        */
+        return $flags;
     }
 
     public function get($attribute=''){
