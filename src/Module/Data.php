@@ -43,7 +43,7 @@ class Data {
         }
         if(is_numeric($parameter) && is_object($data)){
             if(property_exists($data, $parameter)){
-                $param = ltrim($data->{$parameter}, '-');
+                $param = $data->{$parameter};
                 $result = $param;
             } else {
                 $result = null;
