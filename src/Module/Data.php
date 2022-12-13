@@ -67,7 +67,7 @@ class Data {
                         if(strtolower($param) == strtolower($parameter)){
                             if($offset !== 0){
                                 if(property_exists($data, ($key + $offset))){
-                                    $value = rtrim(ltrim($data->{($key + $offset)}, '-'));
+                                    $value = trim($data->{($key + $offset)});
                                 } else {
                                     $result = null;
                                     break;
