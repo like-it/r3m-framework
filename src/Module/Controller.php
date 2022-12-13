@@ -51,6 +51,7 @@ class Controller {
         $temp = $object->data('template');
         $called = '';
         $is_controller_dir = false;
+        $url = false;
         if(
             !empty($template) &&
             is_object($template) &&
