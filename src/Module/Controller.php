@@ -432,4 +432,16 @@ class Controller {
         Parse::readback($object, $parse, App::LINK);
         return $read;
     }
+
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
+    public static function parse_read(App $object, $url): void
+    {
+        $read = $object->parse_read($url, sha1($url));
+        if($read){
+            $object->data($read->get());
+        }
+    }
 }
