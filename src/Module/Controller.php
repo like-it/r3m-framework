@@ -51,6 +51,21 @@ class Controller {
         $temp = $object->data('template');
         $called = '';
         $is_controller_dir = false;
+        if(
+            !empty($template) &&
+            is_object($template) &&
+            property_exists($template, 'url')
+        ){
+            $url = $template->url;
+        }
+        elseif(
+            empty($template) &&
+            !empty($temp) &&
+            is_object($temp) &&
+            property_exists($temp, 'url')
+        ){
+            $url = $temp->url;
+        }
         if($template === null && $temp !== null && property_exists($temp, 'dir')){
             $dir = $temp->dir;
         }
@@ -78,54 +93,58 @@ class Controller {
         ){
             $template = $temp->name;
         }
-        $config = $object->data(App::CONFIG);
-        if(substr($dir, -1) != $config->data('ds')){
-            $dir .= $config->data('ds');
-        }
-        $root = $config->data(Config::DATA_PROJECT_DIR_ROOT);
-        $explode = explode($config->data('ds'), $root);
-        array_pop($explode);
-        $minimum = count($explode);
-        $explode = explode($config->data('ds'), $dir);
-        array_pop($explode);
-        $explode[] = $config->data('dictionary.view');
-        $max = count($explode);
-        $list = [];
-        $temp = explode('\\', $called);
-        if(empty($template)){
-            $template = array_pop($temp);
+        if($url){
+            $list = [];
+            $list[] = $url;
         } else {
-            if(is_object($template) && property_exists($template, 'name')){
-                $template = $template->name;
+            $config = $object->data(App::CONFIG);
+            if(substr($dir, -1) != $config->data('ds')){
+                $dir .= $config->data('ds');
             }
-            $template_explode = explode('.', $template);
-            if(count($template_explode) > 2){
-                $dotted_last = array_pop($template_explode);
-                $dotted_first = array_pop($template_explode);
-                $template = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
-            }
-        }
-        $list[] = $object->config('host.dir.view') . $template . $config->data('extension.tpl');
-        for($i = $max; $i > $minimum; $i--){
-            $url = implode($config->data('ds'), $explode) . $config->data('ds');
-            $list[] = str_replace(
-                [
-                    '\\', 
-                    ':',
-                    '='
-                ],
-                [
-                    '/', 
-                    '.',
-                    '-'
-                ],
-                $url . $template . $config->data('extension.tpl')
-            );
+            $root = $config->data(Config::DATA_PROJECT_DIR_ROOT);
+            $explode = explode($config->data('ds'), $root);
             array_pop($explode);
+            $minimum = count($explode);
+            $explode = explode($config->data('ds'), $dir);
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
+            $max = count($explode);
+            $list = [];
+            $temp = explode('\\', $called);
+            if(empty($template)){
+                $template = array_pop($temp);
+            } else {
+                if(is_object($template) && property_exists($template, 'name')){
+                    $template = $template->name;
+                }
+                $template_explode = explode('.', $template);
+                if(count($template_explode) > 2){
+                    $dotted_last = array_pop($template_explode);
+                    $dotted_first = array_pop($template_explode);
+                    $template = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
+                }
+            }
+            $list[] = $object->config('host.dir.view') . $template . $config->data('extension.tpl');
+            for($i = $max; $i > $minimum; $i--){
+                $url = implode($config->data('ds'), $explode) . $config->data('ds');
+                $list[] = str_replace(
+                    [
+                        '\\',
+                        ':',
+                        '='
+                    ],
+                    [
+                        '/',
+                        '.',
+                        '-'
+                    ],
+                    $url . $template . $config->data('extension.tpl')
+                );
+                array_pop($explode);
+                array_pop($explode);
+                $explode[] = $config->data('dictionary.view');
+            }
         }
-
         $url = false;
         foreach($list as $file){
             if(File::exist($file)){
@@ -135,10 +154,9 @@ class Controller {
         }
         if(empty($url)){
             $result = [];
-            foreach($list as $nr => $file){
+            foreach($list as $file){
                 $result[] = $file;
             }
-            ddd($list);
             if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) === Config::MODE_DEVELOPMENT){
                 throw new LocateException('Cannot find view file', $result, 1);
             } else {
