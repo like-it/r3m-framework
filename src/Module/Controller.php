@@ -459,4 +459,8 @@ class Controller {
     public static function redirect($url=''){
         Core::redirect($url);
     }
+
+    public static function route_get(App $object, $name, $options=[]){
+        return $object->route()::find($object, $name, $options);
+    }
 }
