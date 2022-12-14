@@ -28,6 +28,16 @@ class Controller {
     const CONFIG = 'Config';
     const CACHE = 'Cache';
 
+    const LDELIM = '{';
+    const RDELIM = '}';
+
+    const PROPERTY_LDELIM = 'ldelim';
+    const PROPERTY_RDELIM = 'rdelim';
+    const PROPERTY_VIEW_URL = 'r3m.io.parse.view.url';
+    const PROPERTY_VIEW_MTIME = 'r3m.io.parse.view.mtime';
+
+    const DATA_CLASS = 'R3m\Io\Module\Data';
+
     public static function name($name='', $before=null, $delimiter='.'): string
     {
         if(
@@ -411,29 +421,31 @@ class Controller {
         $read = File::read($url);
         $mtime = File::mtime($url);
         $parse = new Parse($object);
-        $parse->storage()->data('r3m.io.parse.view.url', $url);
-        $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
-        $object->data('ldelim', '{');
-        $object->data('rdelim', '}');
+        $parse->storage()->data(Controller::PROPERTY_VIEW_URL, $url);
+        $parse->storage()->data(Controller::PROPERTY_VIEW_MTIME, $mtime);
         if(empty($data)){
+            $object->data(Controller::PROPERTY_LDELIM, Controller::LDELIM);
+            $object->data(Controller::PROPERTY_RDELIM, Controller::RDELIM);
             $data = clone $object->data();
             unset($data->{App::NAMESPACE});
         }
         elseif(is_array($data)){
-            if(!array_key_exists('ldelim', $data)){
-                $data['ldelim'] = '{';
+            if(!array_key_exists(Controller::PROPERTY_LDELIM, $data)){
+                $data[Controller::PROPERTY_LDELIM] = Controller::LDELIM;
             }
-            if(!array_key_exists('rdelim', $data)){
-                $data['rdelim'] = '}';
+            if(!array_key_exists(Controller::PROPERTY_RDELIM, $data)){
+                $data[Controller::PROPERTY_RDELIM] = Controller::RDELIM;
             }
         }
         elseif(is_object($data)){
-            ddd(get_class($data));
-            if(!property_exists($data, 'ldelim')){
-                $data->ldelim = '{';
+            if(get_class($data) === Controller::DATA_CLASS){
+                $data = $data->data();
             }
-            if(!property_exists($data, 'rdelim')){
-                $data->rdelim = '}';
+            if(!property_exists($data, Controller::PROPERTY_LDELIM)){
+                $data->ldelim = Controller::LDELIM;
+            }
+            if(!property_exists($data, Controller::PROPERTY_RDELIM)){
+                $data->rdelim = Controller::RDELIM;
             }
         }
         $read = $parse->compile($read, $data, $parse->storage());
