@@ -86,6 +86,8 @@ class Route extends Data{
         }
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
+        d($name);
+        ddd($get);
         if(empty($get)){
             return;
         }
