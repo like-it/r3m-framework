@@ -18,7 +18,7 @@ use Exception;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\UrlEmptyException;
 
-class Route extends Data{
+class Route extends Data {
     const NAMESPACE = __NAMESPACE__;
     const NAME = 'Route';
     const SELECT = 'Route_select';

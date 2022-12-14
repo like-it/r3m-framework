@@ -460,7 +460,7 @@ class Controller {
         Core::redirect($url);
     }
 
-    public static function route_get(App $object, $name, $options=[]){
+    public static function url(App $object, $name, $options=[]){
         return $object->route()::find($object, $name, $options);
     }
 }
