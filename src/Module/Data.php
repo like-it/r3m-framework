@@ -16,9 +16,13 @@ use Exception;
 class Data {
     private $data;
     private $do_not_nest_key;
-    
+
     public function __construct($data=null){
-        if(get_class($data) === Data::CLASS){
+        if(
+            !empty($data) &&
+            is_object($data) &&
+            get_class($data) === Data::CLASS
+        ){
             $this->data($data->data());
         } else {
             $this->data($data);
