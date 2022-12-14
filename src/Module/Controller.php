@@ -400,7 +400,7 @@ class Controller {
      * @throws UrlNotExistException
      * @throws FileWriteException
      */
-    public static function response(App $object, $url, $data=[]): string
+    public static function response(App $object, $url, $data=null): string
     {
         if(empty($url)){
             throw new UrlEmptyException('Url is empty');
@@ -428,6 +428,7 @@ class Controller {
             }
         }
         elseif(is_object($data)){
+            ddd(get_class($data));
             if(!property_exists($data, 'ldelim')){
                 $data->ldelim = '{';
             }
