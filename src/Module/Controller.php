@@ -392,7 +392,6 @@ class Controller {
                 }
             }
         }
-//        $object->data(CONFIG::DATA_CONTROLLER, $config->data(CONFIG::DATA_CONTROLLER));
     }
 
     /**
@@ -401,19 +400,11 @@ class Controller {
      * @throws UrlNotExistException
      * @throws FileWriteException
      */
-    public static function response(App $object, $url): string
+    public static function response(App $object, $url, $data=[]): string
     {
         if(empty($url)){
             throw new UrlEmptyException('Url is empty');
         }
-        $config = $object->data(App::CONFIG);
-        $dir = Dir::name($url);
-        $file = str_replace($dir, '', $url);
-        $dir_template = $dir;
-        $dir_base = Dir::name($dir);
-        $dir_config = $dir_base . $config->data(Config::DICTIONARY . '.' . Config::DATA) . $config->data('ds');
-        $dir_compile = $config->data('parse.dir.compile');
-        $dir_cache = $config->data('parse.dir.cache');
         if(File::exist($url) === false){
             throw new UrlNotExistException('Url (' . $url .') doesn\'t exist');
         }
@@ -424,10 +415,27 @@ class Controller {
         $parse->storage()->data('r3m.io.parse.view.mtime', $mtime);
         $object->data('ldelim', '{');
         $object->data('rdelim', '}');
-        $data = clone $object->data();
-        unset($data->{App::NAMESPACE});
+        if(empty($data)){
+            $data = clone $object->data();
+            unset($data->{App::NAMESPACE});
+        }
+        elseif(is_array($data)){
+            if(!array_key_exists('ldelim', $data)){
+                $data['ldelim'] = '{';
+            }
+            if(!array_key_exists('rdelim', $data)){
+                $data['rdelim'] = '}';
+            }
+        }
+        elseif(is_object($data)){
+            if(!property_exists($data, 'ldelim')){
+                $data->ldelim = '{';
+            }
+            if(!property_exists($data, 'rdelim')){
+                $data->rdelim = '}';
+            }
+        }
         $read = $parse->compile($read, $data, $parse->storage());
-
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
         return $read;
@@ -443,5 +451,12 @@ class Controller {
         if($read){
             $object->data($read->get());
         }
+    }
+
+    /**
+     * @throws UrlEmptyException
+     */
+    public static function redirect($url=''){
+        Core::redirect($url);
     }
 }
