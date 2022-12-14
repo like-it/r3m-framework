@@ -36,8 +36,6 @@ class Controller {
     const PROPERTY_VIEW_URL = 'r3m.io.parse.view.url';
     const PROPERTY_VIEW_MTIME = 'r3m.io.parse.view.mtime';
 
-    const DATA_CLASS = 'R3m\Io\Module\Data';
-
     public static function name($name='', $before=null, $delimiter='.'): string
     {
         if(
@@ -438,7 +436,7 @@ class Controller {
             }
         }
         elseif(is_object($data)){
-            if(get_class($data) === Controller::DATA_CLASS){
+            if(get_class($data) === Data::CLASS){
                 $data = $data->data();
             }
             if(!property_exists($data, Controller::PROPERTY_LDELIM)){
