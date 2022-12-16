@@ -410,6 +410,7 @@ class Parse {
                     $storage->data('delete', 'this');
                 }
             } else {
+                d($write);
                 d($string);
                 d($build);
                 //add phpstan error report on class in /tmp/r3m/io/parse/error/...
