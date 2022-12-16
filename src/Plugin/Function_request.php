@@ -13,6 +13,8 @@ use R3m\Io\Module\Data;
 
 function function_request(Parse $parse, Data $data, $attribute=null, $value=null){
     $object = $parse->object();
+    d($attribute);
+    ddd($value);
     if(!empty($parse->is_assign())){
         return $object->request($attribute, $value);
     } else {
