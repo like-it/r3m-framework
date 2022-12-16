@@ -218,6 +218,8 @@ class Variable {
         while(Operator::has($operator)){            
             $statement = Operator::get($operator);
             if($statement === false){
+                $debug = debug_backtrace(true);
+                d($debug);
                 ddd($operator);
             }
             $operator = Operator::remove($operator, $statement);
