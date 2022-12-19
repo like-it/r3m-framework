@@ -18,15 +18,7 @@ class Data {
     private $do_not_nest_key;
 
     public function __construct($data=null){
-        if(
-            !empty($data) &&
-            is_object($data) &&
-            get_class($data) === Data::CLASS
-        ){
-            $this->data($data->data());
-        } else {
-            $this->data($data);
-        }
+        $this->data($data);
     }
 
     /**
@@ -220,7 +212,12 @@ class Data {
             } else {
                 if(is_string($attribute)){
                     return Core::object_get($attribute, $this->data());
-                } else {
+                }
+                elseif(is_object($attribute) && get_class($attribute) === Data::class){
+                    $this->setData($attribute->data());
+                    return $this->getData();
+                }
+                else {
                     $this->setData($attribute);
                     return $this->getData();
                 }

@@ -150,6 +150,9 @@ class Variable {
         ){
             foreach($variable['variable']['modifier'] as $nr => $modifier_list){
                 foreach($modifier_list as $modifier_nr => $modifier){
+                    if(!array_key_exists('php_name', $modifier)){
+                        ddd($modifier);
+                    }
                     $define_modifier .= '$this->' . $modifier['php_name'] . '($this->parse(), $this->storage(), ' . $define . ', ';
                     if(!empty($modifier['has_attribute'])){
                         foreach($modifier['attribute'] as $attribute){
