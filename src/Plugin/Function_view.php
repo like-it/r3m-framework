@@ -53,6 +53,5 @@ function function_view(Parse $parse, Data $data, $template=null, $storage=[]){
             $data->data('link', array_merge($link, $data_link));
         }
     }
-    ddd($data);
     return $read;
 }
