@@ -32,6 +32,11 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
                 $data->data('script', $data_script);
             }
             elseif(!empty($data_script && !empty($script))){
+                foreach($script as $nr => $value){
+                    if(in_array($value, $data_script)){
+                        unset($script[$nr]);
+                    }
+                }
                 $data->data('script', array_merge($script, $data_script));
             }
             $data_link = $data_data->data('link');
@@ -40,6 +45,11 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
                 $data->data('link', $data_link);
             }
             elseif(!empty($data_link && !empty($link))){
+                foreach($link as $nr => $value){
+                    if(in_array($value, $data_link)){
+                        unset($link[$nr]);
+                    }
+                }
                 $data->data('link', array_merge($link, $data_link));
             }
             return $compile;
