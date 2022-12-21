@@ -257,9 +257,11 @@ class Parse {
                 try {
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
+                    /*
                     if($depth === 0){
                         $storage->set($key, $value);
                     }
+                    */
                 } catch (Exception | ParseError $exception){
                     ddd($exception);
                 }
