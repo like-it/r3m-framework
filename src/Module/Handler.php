@@ -73,7 +73,7 @@ class Handler {
             Handler::NAME_INPUT,
             Handler::request_input()
         );
-        ddd($object->get(
+        d($object->get(
             App::NAMESPACE . '.' .
             Handler::NAME_REQUEST . '.' .
             Handler::NAME_INPUT));
