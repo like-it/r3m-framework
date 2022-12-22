@@ -220,6 +220,17 @@ class App extends Data {
                     if(in_array($route->function, $methods)){
                         $functions[] = $route->function;
                         $object->config('controller.function', $route->function);
+                        $request = Core::deep_clone(
+                            $object->get(
+                                App::NAMESPACE . '.' .
+                                Handler::NAME_REQUEST . '.' .
+                                Handler::NAME_INPUT
+                            )->data()
+                        );
+                        $object->config(
+                            'request',
+                            $request
+                        );
                         $result = $route->controller::{$route->function}($object);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(

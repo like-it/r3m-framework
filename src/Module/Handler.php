@@ -73,6 +73,7 @@ class Handler {
             Handler::NAME_INPUT,
             Handler::request_input()
         );
+        /*
         $request = Core::deep_clone(
             $object->get(
                 App::NAMESPACE . '.' .
@@ -84,6 +85,7 @@ class Handler {
             'request',
             $request
         );
+        */
         $object->data(
             App::NAMESPACE . '.' .
             Handler::NAME_REQUEST . '.' .
