@@ -80,7 +80,7 @@ class Handler {
                 Handler::NAME_INPUT
             )->data()
         );
-        ddd($request);
+        d($request);
         $object->config(
             'request',
             $request
