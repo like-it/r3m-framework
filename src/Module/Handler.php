@@ -73,19 +73,17 @@ class Handler {
             Handler::NAME_INPUT,
             Handler::request_input()
         );
-        d($object->get(
-            App::NAMESPACE . '.' .
-            Handler::NAME_REQUEST . '.' .
-            Handler::NAME_INPUT));
+        $request = Core::deep_clone(
+            $object->get(
+                App::NAMESPACE . '.' .
+                Handler::NAME_REQUEST . '.' .
+                Handler::NAME_INPUT
+            )->data()
+        );
+        ddd($request);
         $object->config(
             'request',
-            Core::deep_clone(
-                $object->get(
-                    App::NAMESPACE . '.' .
-                    Handler::NAME_REQUEST . '.' .
-                    Handler::NAME_INPUT
-                )->data()
-            )
+            $request
         );
         $object->data(
             App::NAMESPACE . '.' .
