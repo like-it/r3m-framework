@@ -14,7 +14,7 @@ use R3m\Io\Module\Handler;
 function function_request_reset(Parse $parse, Data $data){
     $object = $parse->object();
     $request = $object->request();
-    $config = clone $object->config('request');
+    $config = Core::deep_clone($object->config('request'));
     foreach($request as $key => $value){
         $object->request('delete', $key);
     }

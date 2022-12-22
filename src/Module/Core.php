@@ -811,4 +811,14 @@ class Core {
             exit(0);
         }
     }
+
+    public static function deep_clone($object){
+        $clone = clone $object;
+        foreach($object as $key => $value){
+            if(is_object($value)){
+                $clone->$key = Core::deep_clone($value);
+            }
+        }
+        return $clone;
+    }
 }
