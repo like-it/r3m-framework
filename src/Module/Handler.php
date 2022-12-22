@@ -85,6 +85,7 @@ class Handler {
                 Handler::NAME_INPUT
             )
         );
+        d($object->config('request'));
         $object->data(
             App::NAMESPACE . '.' .
             Handler::NAME_REQUEST . '.' .
