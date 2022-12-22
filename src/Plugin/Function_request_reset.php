@@ -18,6 +18,6 @@ function function_request_reset(Parse $parse, Data $data){
         $object->request('delete', $key);
     }
     $request = $object->config('request');
-    ddd($request);
+    ddd($request->data());
     $object->request($request);
 }
