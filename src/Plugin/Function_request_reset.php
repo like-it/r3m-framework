@@ -20,4 +20,5 @@ function function_request_reset(Parse $parse, Data $data){
         $object->request('delete', $key);
     }
     $object->request($config);
+    d($object->request());
 }
