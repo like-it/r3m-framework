@@ -73,6 +73,14 @@ class Handler {
             Handler::NAME_INPUT,
             Handler::request_input()
         );
+        $object->config(
+            'request',
+            clone $object->get(
+                App::NAMESPACE . '.' .
+                Handler::NAME_REQUEST . '.' .
+                Handler::NAME_INPUT
+            )
+        );
         $object->data(
             App::NAMESPACE . '.' .
             Handler::NAME_REQUEST . '.' .
