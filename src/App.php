@@ -120,6 +120,7 @@ class App extends Data {
         if($file === false){
             try {
                 $route = Route::request($object);
+                ddd($route);
                 if($route === false){
                     if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
                         $object->logger(App::LOGGER_NAME)->error('Couldn\'t determine route (' . $object->request('request') .')...');
