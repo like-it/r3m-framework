@@ -19,8 +19,9 @@ class FileRequest {
     const REQUEST = 'Request';
 
 
-    private static function get_default_location(App $object, $dir, $file){
-        $location;
+    private static function get_default_location(App $object, $dir, $file): array
+    {
+        $location = [];
         $explode = explode('/', $dir);
         $controller = array_shift($explode);
         $view = $explode;
@@ -62,9 +63,9 @@ class FileRequest {
             $location[] = $object->config('host.dir.root') .
                 $dir_type .
                 'Public' .
-                $config->data('ds') .
+                $object->config('ds') .
                 $type .
-                $config->data('ds') .
+                $object->config('ds') .
                 $file;
         }
         $location[] = $object->config('host.dir.root') .
