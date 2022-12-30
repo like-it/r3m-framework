@@ -74,15 +74,19 @@ class FileRequest {
         $config = $object->data(App::CONFIG);
         Config::server_fileRequest_local($object);
         if($subdomain){
-            $location = $object->config('server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension . '.location');
+            $attribute = 'server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension;
+            $fileRequest = $object->config('server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension);
+//            $location = $object->config('server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension . '.location');
         } else {
-            $location = $object->config('server.fileRequest.' . $domain . '-' . $extension . '.location');
+            $attribute = 'server.fileRequest.' . $domain . '-' . $extension;
+            $fileRequest = $object->config('server.fileRequest.' . $domain . '-' . $extension);
+//            $location = $object->config('server.fileRequest.' . $domain . '-' . $extension . '.location');
         }
-        if(empty($location)){
-            $location = $object->config('server.fileRequest.location');
+        if(empty($fileRequest)){
+            $fileRequest = $object->config('server.fileRequest');
         }
-        if(empty($location)) {
-            $location = [];
+        $location = [];
+        if(empty($fileRequest)) {
             $explode = explode('/', $dir);
             $controller = array_shift($explode);
             $view = $explode;
@@ -154,21 +158,28 @@ class FileRequest {
                 $dir .
                 $file;
         }
-        elseif(is_array($location)) {
+        elseif(
+            is_object($fileRequest) &&
+            property_exists($fileRequest, 'location')
+        ) {
             $object->config('file.name', $file);
             $object->config('file.extension', $file_extension);
             $parse = new Parse($object);
-            $location = $parse->compile($location, $object->data());
+            $fileRequest = $parse->compile($fileRequest, $object->data());
+            $location = $fileRequest->location;
         }
         elseif(
-            is_string($location) &&
-            substr($location, 0, 2) === '{{' &&
-            substr($location, -2, 2) === '}}'
+            is_object($fileRequest) &&
+            property_exists($fileRequest, 'location') &&
+            is_string($fileRequest->location) &&
+            substr($fileRequest->location, 0, 2) === '{{' &&
+            substr($fileRequest->location, -2, 2) === '}}'
         ){
             $object->config('file.name', $file);
             $object->config('file.extension', $file_extension);
             $parse = new Parse($object);
-            $location = $parse->compile($location, $object->data());
+            $fileRequest = $parse->compile($fileRequest, $object->data());
+            $location = $fileRequest->location;
         }
         foreach($location as $url){
             if(File::exist($url)){
