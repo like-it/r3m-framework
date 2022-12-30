@@ -22,25 +22,26 @@ class FileRequest {
      * @throws LocateException
      * @throws Exception
      */
-    public static function get(App $object){
+    public static function get(App $object)
+    {
         if (
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
             $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
         ) {
             Core::cors($object);
         }
-        if(
+        if (
             $object->config('server.http.upgrade_insecure') === true &&
             array_key_exists('REQUEST_SCHEME', $_SERVER) &&
             array_key_exists('REQUEST_URI', $_SERVER) &&
             $_SERVER['REQUEST_SCHEME'] === Host::SCHEME_HTTP &&
             $object->config('framework.environment') !== Config::MODE_DEVELOPMENT &&
             Host::isIp4Address() === false
-        ){
+        ) {
             $subdomain = Host::subdomain();
             $domain = Host::domain();
             $extension = Host::extension();
-            if($subdomain){
+            if ($subdomain) {
                 $url = Host::SCHEME_HTTPS . '://' . $subdomain . '.' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
             } else {
                 $url = Host::SCHEME_HTTPS . '://' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
@@ -49,9 +50,9 @@ class FileRequest {
         }
         $request = $object->data(App::REQUEST);
         $input = $request->data('request');
-        $dir = str_replace(['../','..'], '', Dir::name($input));
-        $file = str_replace($dir,'', $input);
-        if(
+        $dir = str_replace(['../', '..'], '', Dir::name($input));
+        $file = str_replace($dir, '', $input);
+        if (
             (
                 substr($file, 0, 3) === '%7B' &&
                 substr($file, -3, 3) === '%7D'
@@ -60,85 +61,93 @@ class FileRequest {
                 substr($file, 0, 1) === '[' &&
                 substr($file, -1, 1) === ']'
             )
-        ){
+        ) {
             return false;
         }
         $extension = File::extension($file);
-        if(empty($extension)){
+        if (empty($extension)) {
             return false;
         }
         $config = $object->data(App::CONFIG);
-        $location = [];
-        $explode = explode('/', $dir);
-        $controller = array_shift($explode);
-        $view = $explode;
-        array_unshift($explode, 'Public');
-        if(!empty($controller)) {
-            array_unshift($explode, $controller);
-        }
-        array_unshift($view, 'Public');
-        $view_2 = $view;
-        array_unshift($view, 'View');
-        if(!empty($controller)){
-            array_unshift($view, $controller);
-            array_unshift($view_2, $controller);
-        }
-        array_unshift($view_2, 'View');
-        $location[] = $config->data('host.dir.root') .
-            rtrim(implode($config->data('ds'), $view), '/') .
-            $config->data('ds') .
-            $file;
-        $location[] = $config->data('host.dir.root') .
-            rtrim(implode($config->data('ds'), $view_2), '/') .
-            $config->data('ds') .
-            $file;
-        $location[] = $config->data('host.dir.root') .
-            rtrim(implode($config->data('ds'), $explode), '/') .
-            $config->data('ds') .
-            $file;
-        $location[] = $config->data('host.dir.root') .
-            $dir .
-            'Public' .
-            $config->data('ds') .
-            $file;
-        $explode = explode('/', $dir);
-        array_pop($explode);
-        $type = array_pop($explode);
-        array_push($explode, '');
-        $dir_type = implode('/', $explode);
-        if($type){
+        $location = $object->config('server.fileRequest.location');
+        ddd($location);
+        if(empty($location)) {
+            $location = [];
+            $explode = explode('/', $dir);
+            $controller = array_shift($explode);
+            $view = $explode;
+            array_unshift($explode, 'Public');
+            if (!empty($controller)) {
+                array_unshift($explode, $controller);
+            }
+            array_unshift($view, 'Public');
+            $view_2 = $view;
+            array_unshift($view, 'View');
+            if (!empty($controller)) {
+                array_unshift($view, $controller);
+                array_unshift($view_2, $controller);
+            }
+            array_unshift($view_2, 'View');
             $location[] = $config->data('host.dir.root') .
-                $dir_type .
-                'Public' .
-                $config->data('ds') .
-                $type .
+                rtrim(implode($config->data('ds'), $view), '/') .
                 $config->data('ds') .
                 $file;
-        }
-        $location[] = $config->data('host.dir.root') .
-            'View' .
-            $config->data('ds') .
-            $dir .
-            'Public' .
-            $config->data('ds') .
-            $file;
-        if($type){
+            $location[] = $config->data('host.dir.root') .
+                rtrim(implode($config->data('ds'), $view_2), '/') .
+                $config->data('ds') .
+                $file;
+            $location[] = $config->data('host.dir.root') .
+                rtrim(implode($config->data('ds'), $explode), '/') .
+                $config->data('ds') .
+                $file;
+            $location[] = $config->data('host.dir.root') .
+                $dir .
+                'Public' .
+                $config->data('ds') .
+                $file;
+            $explode = explode('/', $dir);
+            array_pop($explode);
+            $type = array_pop($explode);
+            array_push($explode, '');
+            $dir_type = implode('/', $explode);
+            if ($type) {
+                $location[] = $config->data('host.dir.root') .
+                    $dir_type .
+                    'Public' .
+                    $config->data('ds') .
+                    $type .
+                    $config->data('ds') .
+                    $file;
+            }
             $location[] = $config->data('host.dir.root') .
                 'View' .
                 $config->data('ds') .
-                $dir_type .
+                $dir .
                 'Public' .
                 $config->data('ds') .
-                $type .
-                $config->data('ds') .
                 $file;
+            if ($type) {
+                $location[] = $config->data('host.dir.root') .
+                    'View' .
+                    $config->data('ds') .
+                    $dir_type .
+                    'Public' .
+                    $config->data('ds') .
+                    $type .
+                    $config->data('ds') .
+                    $file;
+            }
+            $location[] = $config->data('host.dir.public') .
+                $dir .
+                $file;
+            $location[] = $config->data('project.dir.public') .
+                $dir .
+                $file;
+        } elseif(is_array($location)) {
+            foreach($location as $nr => $dir){
+                $location[$nr] = $dir . $file;
+            }
         }
-        $location[] = $config->data('host.dir.public') .
-            $dir .
-            $file;
-        $location[] = $config->data('project.dir.public') .
-            $dir .
-            $file;
         foreach($location as $url){
             if(File::exist($url)){
                 $etag = sha1($url);
