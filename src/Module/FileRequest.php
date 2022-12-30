@@ -30,6 +30,9 @@ class FileRequest {
         ) {
             Core::cors($object);
         }
+        $subdomain = false;
+        $domain = false;
+        $extension = false;
         if (
             $object->config('server.http.upgrade_insecure') === true &&
             array_key_exists('REQUEST_SCHEME', $_SERVER) &&
@@ -69,8 +72,11 @@ class FileRequest {
             return false;
         }
         $config = $object->data(App::CONFIG);
-        $location = $object->config('server.fileRequest.docs-r3m-io.location');
-        ddd($location);
+        if($subdomain){
+            $location = $object->config('server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension . '.location');
+        } else {
+            $location = $object->config('server.fileRequest.' . $domain . '-' . $extension . '.location');
+        }
         if(empty($location)){
             $location = $object->config('server.fileRequest.location');
         }
@@ -146,12 +152,22 @@ class FileRequest {
             $location[] = $config->data('project.dir.public') .
                 $dir .
                 $file;
-        } elseif(is_array($location)) {
+        }
+        elseif(is_array($location)) {
+            $object->set('file', $file);
+            $object->set('extension', $extension);
             $parse = new Parse($object);
             $location = $parse->compile($location, $object->data());
-            foreach($location as $nr => $dir){
-                $location[$nr] = $dir . $file;
-            }
+        }
+        elseif(
+            is_string($location) &&
+            substr($location, 0, 2) === '{{' &&
+            substr($location, -2, 2) === '}}'
+        ){
+            $object->set('file', $file);
+            $object->set('extension', $extension);
+            $parse = new Parse($object);
+            $location = $parse->compile($location, $object->data());
         }
         foreach($location as $url){
             if(File::exist($url)){
