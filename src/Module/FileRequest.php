@@ -185,7 +185,7 @@ class FileRequest {
             if(File::exist($url)){
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
-                $contentType = Config::contentType($object);
+                Config::contentType($object);
                 $contentType = $object->config('contentType.' . $extension);
                 if(empty($contentType)){
                     Handler::header('HTTP/1.0 415 Unsupported Media Type', 415);
