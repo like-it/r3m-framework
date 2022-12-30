@@ -148,7 +148,6 @@ class FileRequest {
             foreach($location as $nr => $dir){
                 $location[$nr] = $dir . $file;
             }
-            ddd($location);
         }
         foreach($location as $url){
             if(File::exist($url)){
