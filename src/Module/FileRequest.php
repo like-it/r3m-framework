@@ -72,6 +72,7 @@ class FileRequest {
             return false;
         }
         $config = $object->data(App::CONFIG);
+        Config::server_fileRequest_local($object);
         if($subdomain){
             $location = $object->config('server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension . '.location');
         } else {

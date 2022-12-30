@@ -455,4 +455,18 @@ class Config extends Data {
         }
         return $object->config('contentType');
     }
+
+    static public function server_fileRequest_local(App $object){
+        $fileRequest = $object->config('server.fileRequest');
+        foreach($fileRequest as $name => $node){
+            $explode = explode('-', $name, 3);
+            $count = count($explode);
+            if($count > 1){
+                $extension = $explode[$count - 1];
+                $explode[$count - 1] = 'local';
+                $name = implode('-', $explode);
+                $fileRequest->{$name} = $node;
+            }
+        }
+    }
 }
