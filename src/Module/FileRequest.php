@@ -70,7 +70,6 @@ class FileRequest {
         }
         $config = $object->data(App::CONFIG);
         $location = $object->config('server.fileRequest.location');
-        ddd($location);
         if(empty($location)) {
             $location = [];
             $explode = explode('/', $dir);
@@ -144,9 +143,12 @@ class FileRequest {
                 $dir .
                 $file;
         } elseif(is_array($location)) {
+            $parse = new Parse($object);
+            $location = $parse->compile($location, $object->data());
             foreach($location as $nr => $dir){
                 $location[$nr] = $dir . $file;
             }
+            ddd($location);
         }
         foreach($location as $url){
             if(File::exist($url)){
