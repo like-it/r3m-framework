@@ -69,7 +69,11 @@ class FileRequest {
             return false;
         }
         $config = $object->data(App::CONFIG);
-        $location = $object->config('server.fileRequest.location');
+        $location = $object->config('server.fileRequest.docs-r3m-io.location');
+        ddd($location);
+        if(empty($location)){
+            $location = $object->config('server.fileRequest.location');
+        }
         if(empty($location)) {
             $location = [];
             $explode = explode('/', $dir);
