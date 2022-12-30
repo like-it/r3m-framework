@@ -30,9 +30,6 @@ class FileRequest {
         ) {
             Core::cors($object);
         }
-        $subdomain = false;
-        $domain = false;
-        $extension = false;
         if (
             $object->config('server.http.upgrade_insecure') === true &&
             array_key_exists('REQUEST_SCHEME', $_SERVER) &&
@@ -67,8 +64,11 @@ class FileRequest {
         ) {
             return false;
         }
-        $extension = File::extension($file);
-        if (empty($extension)) {
+        $subdomain = Host::subdomain();
+        $domain = Host::domain();
+        $extension = Host::extension();
+        $file_extension = File::extension($file);
+        if (empty($file_extension)) {
             return false;
         }
         $config = $object->data(App::CONFIG);
