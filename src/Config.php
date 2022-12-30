@@ -458,6 +458,12 @@ class Config extends Data {
 
     static public function server_fileRequest_local(App $object){
         $fileRequest = $object->config('server.fileRequest');
+        if(empty($fileRequest)){
+            return false;
+        }
+        if(!is_object($fileRequest)){
+            return;
+        }
         foreach($fileRequest as $name => $node){
             $explode = explode('-', $name, 3);
             $count = count($explode);

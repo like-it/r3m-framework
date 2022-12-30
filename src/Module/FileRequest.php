@@ -64,13 +64,13 @@ class FileRequest {
         ) {
             return false;
         }
-        $subdomain = Host::subdomain();
-        $domain = Host::domain();
-        $extension = Host::extension();
         $file_extension = File::extension($file);
         if (empty($file_extension)) {
             return false;
         }
+        $subdomain = Host::subdomain();
+        $domain = Host::domain();
+        $extension = Host::extension();
         $config = $object->data(App::CONFIG);
         Config::server_fileRequest_local($object);
         if($subdomain){
@@ -155,8 +155,8 @@ class FileRequest {
                 $file;
         }
         elseif(is_array($location)) {
-            $object->set('file', $file);
-            $object->set('extension', $extension);
+            $object->config('file.name', $file);
+            $object->config('file.extension', $file_extension);
             $parse = new Parse($object);
             $location = $parse->compile($location, $object->data());
         }
@@ -165,8 +165,8 @@ class FileRequest {
             substr($location, 0, 2) === '{{' &&
             substr($location, -2, 2) === '}}'
         ){
-            $object->set('file', $file);
-            $object->set('extension', $extension);
+            $object->config('file.name', $file);
+            $object->config('file.extension', $file_extension);
             $parse = new Parse($object);
             $location = $parse->compile($location, $object->data());
         }
