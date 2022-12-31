@@ -147,6 +147,7 @@ class FileRequest {
             $location = FileRequest::get_default_location($object, $dir);
             $has_location = true;
         } else {
+            d($object->config());
             ddd($fileRequest);
         }
 
