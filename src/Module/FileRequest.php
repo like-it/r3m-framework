@@ -140,6 +140,18 @@ class FileRequest {
         $extension = Host::extension();
         $config = $object->data(App::CONFIG);
         Config::server_fileRequest_local($object);
+        $fileRequest = $object->config('server.fileRequest');
+        $has_location = false;
+        Config::contentType($object);
+        if(empty($fileRequest)){
+            $location = FileRequest::get_default_location($object, $dir);
+            $has_location = true;
+        } else {
+            ddd($fileRequest);
+        }
+
+
+        /*
         $node = false;
         if($subdomain){
             $attribute = 'server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension;
@@ -212,6 +224,7 @@ class FileRequest {
                 }
             }
         }
+        */
         if($has_location === false){
             $location = FileRequest::get_default_location($object, $dir);
         }
