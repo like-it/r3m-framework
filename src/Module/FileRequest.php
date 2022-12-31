@@ -18,7 +18,6 @@ use R3m\Io\Exception\LocateException;
 class FileRequest {
     const REQUEST = 'Request';
 
-
     private static function get_default_location(App $object, $dir, $file): array
     {
         $location = [];
@@ -153,11 +152,9 @@ class FileRequest {
         if($subdomain){
             $attribute = 'server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension;
             $fileRequest = $object->config('server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension);
-//            $location = $object->config('server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension . '.location');
         } else {
             $attribute = 'server.fileRequest.' . $domain . '-' . $extension;
             $fileRequest = $object->config('server.fileRequest.' . $domain . '-' . $extension);
-//            $location = $object->config('server.fileRequest.' . $domain . '-' . $extension . '.location');
         }
         if(empty($fileRequest)){
             $fileRequest = $object->config('server.fileRequest');
