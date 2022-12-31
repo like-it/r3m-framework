@@ -214,6 +214,7 @@ class FileRequest {
         if($has_location === false){
             $location = FileRequest::get_default_location($object, $dir);
         }
+        ddd($location);
         foreach($location as $url){
             if(substr($url, -1, 1) !== $object->config('ds')){
                 $url .= $object->config('ds');
