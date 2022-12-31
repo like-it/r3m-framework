@@ -153,6 +153,7 @@ class FileRequest {
         $location = [];
         $has_location = false;
         Config::contentType($object);
+        ddd($fileRequest);
         if(empty($fileRequest)) {
             $location = FileRequest::get_default_location($object, $dir);
             $has_location = true;
