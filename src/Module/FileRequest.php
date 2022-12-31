@@ -18,7 +18,7 @@ use R3m\Io\Exception\LocateException;
 class FileRequest {
     const REQUEST = 'Request';
 
-    private static function get_default_location(App $object, $dir, $file): array
+    private static function get_default_location(App $object, $dir): array
     {
         $location = [];
         $explode = explode('/', $dir);
@@ -38,21 +38,17 @@ class FileRequest {
         array_unshift($view_2, 'View');
         $location[] = $object->config('host.dir.root') .
             rtrim(implode($object->config('ds'), $view), '/') .
-            $object->config('ds') .
-            $file;
+            $object->config('ds');
         $location[] = $object->config('host.dir.root') .
             rtrim(implode($object->config('ds'), $view_2), '/') .
-            $object->config('ds') .
-            $file;
+            $object->config('ds');
         $location[] = $object->config('host.dir.root') .
             rtrim(implode($object->config('ds'), $explode), '/') .
-            $object->config('ds') .
-            $file;
+            $object->config('ds');
         $location[] = $object->config('host.dir.root') .
             $dir .
             'Public' .
-            $object->config('ds') .
-            $file;
+            $object->config('ds');
         $explode = explode('/', $dir);
         array_pop($explode);
         $type = array_pop($explode);
@@ -64,16 +60,14 @@ class FileRequest {
                 'Public' .
                 $object->config('ds') .
                 $type .
-                $object->config('ds') .
-                $file;
+                $object->config('ds');
         }
         $location[] = $object->config('host.dir.root') .
             'View' .
             $object->config('ds') .
             $dir .
             'Public' .
-            $object->config('ds') .
-            $file;
+            $object->config('ds');
         if ($type) {
             $location[] = $object->config('host.dir.root') .
                 'View' .
@@ -82,15 +76,12 @@ class FileRequest {
                 'Public' .
                 $object->config('ds') .
                 $type .
-                $object->config('ds') .
-                $file;
+                $object->config('ds');
         }
         $location[] = $object->config('host.dir.public') .
-            $dir .
-            $file;
+            $dir;
         $location[] = $object->config('project.dir.public') .
-            $dir .
-            $file;
+            $dir;
         return $location;
     }
 
@@ -151,26 +142,25 @@ class FileRequest {
         Config::server_fileRequest_local($object);
         if($subdomain){
             $attribute = 'server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension;
-            $fileRequest = $object->config('server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension);
+            $fileRequest = $object->config($attribute);
         } else {
             $attribute = 'server.fileRequest.' . $domain . '-' . $extension;
-            $fileRequest = $object->config('server.fileRequest.' . $domain . '-' . $extension);
+            $fileRequest = $object->config($attribute);
         }
         if(empty($fileRequest)){
             $fileRequest = $object->config('server.fileRequest');
         }
         $location = [];
         $has_location = false;
+        Config::contentType($object);
         if(empty($fileRequest)) {
-            $location = FileRequest::get_default_location($object, $dir, $file);
+            $location = FileRequest::get_default_location($object, $dir);
             $has_location = true;
         }
         elseif(
             is_object($fileRequest) &&
             property_exists($fileRequest, 'location')
         ) {
-            $object->config('file.name', $file);
-            $object->config('file.extension', $file_extension);
             $parse = new Parse($object);
             $fileRequest = $parse->compile($fileRequest, $object->data());
             $location = $fileRequest->location;
@@ -183,23 +173,20 @@ class FileRequest {
             substr($fileRequest->location, 0, 2) === '{{' &&
             substr($fileRequest->location, -2, 2) === '}}'
         ){
-            $object->config('file.name', $file);
-            $object->config('file.extension', $file_extension);
             $parse = new Parse($object);
             $fileRequest = $parse->compile($fileRequest, $object->data());
             $location = $fileRequest->location;
             $has_location = true;
         }
         elseif(is_object($fileRequest)){
-            $object->config('file.name', $file);
-            $object->config('file.extension', $file_extension);
+            ddd($object->config());
+            $parse = new Parse($object);
+            $fileRequest = $parse->compile($fileRequest, $object->data());
             foreach($fileRequest as $host => $node){
                 $explode = explode('-', $host, 3);
                 $count = count($explode);
                 if($count === 3){
                     if($subdomain . '-' . $domain . '-' . $extension === $host){
-                        $parse = new Parse($object);
-                        $fileRequest = $parse->compile($fileRequest, $object->data());
                         if(
                             property_exists($fileRequest, $host) &&
                             property_exists($fileRequest->$host, 'location')
@@ -212,8 +199,6 @@ class FileRequest {
                 }
                 elseif($count === 2){
                     if($domain . '-' . $extension === $host){
-                        $parse = new Parse($object);
-                        $fileRequest = $parse->compile($fileRequest, $object->data());
                         if(
                             property_exists($fileRequest, $host) &&
                             property_exists($fileRequest->$host, 'location')
@@ -224,17 +209,19 @@ class FileRequest {
                         }
                     }
                 }
-
             }
         }
         if($has_location === false){
-            $location = FileRequest::get_default_location($object, $dir, $file);
+            $location = FileRequest::get_default_location($object, $dir);
         }
         foreach($location as $url){
+            if(substr($url, -1, 1) !== $object->config('ds')){
+                $url .= $object->config('ds');
+            }
+            $url .= $file;
             if(File::exist($url)){
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
-                Config::contentType($object);
                 $contentType = $object->config('contentType.' . $file_extension);
                 if(empty($contentType)){
                     Handler::header('HTTP/1.0 415 Unsupported Media Type', 415);
