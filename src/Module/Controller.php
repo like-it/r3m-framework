@@ -129,6 +129,7 @@ class Controller {
             $max = count($explode);
             $list = [];
             $temp = explode('\\', $called);
+            ddd($name);
             if(empty($name)){
                 $name = array_pop($temp);
             } else {
