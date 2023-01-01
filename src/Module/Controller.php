@@ -111,6 +111,7 @@ class Controller {
                 throw new Exception('Please define const DIR = __DIR__ . DIRECTORY_SEPARATOR; in the controller (' . $called . ').');
             }
         }
+        d($called);
         ddd($url);
         if($url){
             $list = [];
@@ -351,7 +352,7 @@ class Controller {
                 ) .
                 $config->data(Config::DS)
         ;
-        $config->data($key, $value);  
+        $config->data($key, $value);
 
         $config->data(Config::DATA_CONTROLLER_CLASS, get_called_class());
         $config->data(Config::DATA_CONTROLLER_NAME, strtolower(File::basename($config->data(Config::DATA_CONTROLLER_CLASS))));
