@@ -56,7 +56,7 @@ class LocateException extends Exception {
     {
         $object = $this->object();
         if($object){
-            $object->config('exception.locate', '{{config(\'project.dir.host\'}}{{string.uppercase.first(host.subdomain())}}/{{string.uppercase.first(host.domain())}}/{{string.uppercase.first(host.extension())}/View/Exception/Locate.tpl');
+            $object->config('exception.locate', '{{config(\'project.dir.host\')}}{{string.uppercase.first(host.subdomain())}}/{{string.uppercase.first(host.domain())}}/{{string.uppercase.first(host.extension())}/View/Exception/Locate.tpl');
             $parse = new Parse($object);
             $object->set('exception.message', $this->getMessage());
             $object->set('exception.code', $this->getCode());
