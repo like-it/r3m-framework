@@ -147,6 +147,29 @@ class FileRequest {
             $location = FileRequest::get_default_location($object, $dir);
             $has_location = true;
         } else {
+            $config_mtime = false;
+            $config_url = $object->config('project.data.dir') . 'Config' . $object->config('extension.json');
+            $cache_mtime = false;
+            $cache_url = $object->config('framework.dir.cache') . 'FileRequest' . $object->config('extension.json');
+            if(File::exist($config_url)){
+                $config_mtime = File::mtime($config_url);
+            }
+            if(File::exist($cache_url)){
+                $cache_mtime = File::mtime($cache_url);
+                if($cache_mtime === $config_mtime){
+                    //read cache_url
+                } else {
+                    //write cache_url
+                }
+            } else {
+                //write cache_url
+                $parse = new Parse($object);
+                $fileRequest = $parse->compile($fileRequest, $object->data());
+                dd($fileRequest);
+
+
+            }
+
             d($object->config());
             ddd($fileRequest);
         }
