@@ -157,8 +157,10 @@ class FileRequest {
             if(File::exist($cache_url)){
                 $cache_mtime = File::mtime($cache_url);
                 if($cache_mtime === $config_mtime){
+                    ddd('read');
                     //read cache_url
                 } else {
+                    ddd('write');
                     //write cache_url
                 }
             } else {
