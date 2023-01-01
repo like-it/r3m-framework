@@ -232,6 +232,7 @@ class App extends Data {
                             $request
                         );
                         $result = $route->controller::{$route->function}($object);
+                        d($result);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
                             'Controller (' .
