@@ -165,7 +165,10 @@ class FileRequest {
                 //write cache_url
                 $parse = new Parse($object);
                 $fileRequest = $parse->compile($fileRequest, $object->data());
-                dd($fileRequest);
+                $data = new Data($fileRequest);
+
+                
+                dd($data);
 
 
             }
