@@ -148,7 +148,7 @@ class FileRequest {
             $has_location = true;
         } else {
             $config_mtime = false;
-            $config_url = $object->config('project.data.dir') . 'Config' . $object->config('extension.json');
+            $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
             $cache_mtime = false;
             $cache_url = $object->config('framework.dir.cache') . 'FileRequest' . $object->config('extension.json');
             if(File::exist($config_url)){
