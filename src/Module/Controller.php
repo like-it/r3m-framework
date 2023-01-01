@@ -60,6 +60,8 @@ class Controller {
      */
     public static function locate(App $object, $template=null){
         $temp = $object->data('template');
+        d($temp);
+        d($template);
         $called = '';
         $url = false;
         if(
