@@ -233,7 +233,7 @@ class App extends Data {
                         );
                         $result = $route->controller::{$route->function}($object);
                         $debug = debug_backtrace(true);
-                        d($debug);
+                        ddd($debug);
                         ddd($result);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
