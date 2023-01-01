@@ -160,6 +160,8 @@ class FileRequest {
                     ddd('read');
                     //read cache_url
                 } else {
+                    d($cache_mtime);
+                    d($config_mtime);
                     ddd('write');
                     //write cache_url
                 }
