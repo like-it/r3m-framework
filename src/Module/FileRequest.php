@@ -18,7 +18,7 @@ use R3m\Io\Exception\LocateException;
 class FileRequest {
     const REQUEST = 'Request';
 
-    private static function get_default_location(App $object, $dir): array
+    private static function location(App $object, $dir): array
     {
         $location = [];
         $explode = explode('/', $dir);
@@ -85,6 +85,26 @@ class FileRequest {
         return $location;
     }
 
+    public static function local(App $object){
+        $fileRequest = $object->config('server.fileRequest');
+        if(empty($fileRequest)){
+            return false;
+        }
+        if(!is_object($fileRequest)){
+            return false;
+        }
+        foreach($fileRequest as $name => $node){
+            $explode = explode('-', $name, 3);
+            $count = count($explode);
+            if($count > 1){
+                $extension = $explode[$count - 1];
+                $explode[$count - 1] = 'local';
+                $name = implode('-', $explode);
+                $fileRequest->{$name} = $node;
+            }
+        }
+    }
+
     /**
      * @throws LocateException
      * @throws Exception
@@ -139,12 +159,11 @@ class FileRequest {
         $domain = Host::domain();
         $extension = Host::extension();
         $config = $object->data(App::CONFIG);
-        Config::server_fileRequest_local($object);
+        FileRequest::local($object);
         $fileRequest = $object->config('server.fileRequest');
-        $has_location = false;
         Config::contentType($object);
         if(empty($fileRequest)){
-            $location = FileRequest::get_default_location($object, $dir);
+            $location = FileRequest::location($object, $dir);
         } else {
             $config_mtime = false;
             $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
@@ -183,10 +202,9 @@ class FileRequest {
                 $location = $data->get('location');
             }
             if(empty($location)){
-                $location = FileRequest::get_default_location($object, $dir);
+                $location = FileRequest::location($object, $dir);
             }
         }
-        ddd($location);
         foreach($location as $url){
             if(substr($url, -1, 1) !== $object->config('ds')){
                 $url .= $object->config('ds');
@@ -201,6 +219,8 @@ class FileRequest {
                     if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
                         $json = [];
                         $json['message'] = 'HTTP/1.0 415 Unsupported Media Type';
+                        $json['file'] = $file;
+                        $json['extension'] = $file_extension;
                         $json['available'] = $config->data('contentType');
                         echo Core::object($json, Core::OBJECT_JSON);
                     }

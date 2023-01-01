@@ -442,7 +442,7 @@ class Config extends Data {
      * @throws Exception\ObjectException
      * @throws Exception\FileWriteException
      */
-    static public function contentType(App $object){
+     public static function contentType(App $object){
         $contentType = $object->config('contentType');
         if(
             is_string($contentType) &&
@@ -454,25 +454,5 @@ class Config extends Data {
             $object->config('contentType', $contentType);
         }
         return $object->config('contentType');
-    }
-
-    static public function server_fileRequest_local(App $object){
-        $fileRequest = $object->config('server.fileRequest');
-        if(empty($fileRequest)){
-            return false;
-        }
-        if(!is_object($fileRequest)){
-            return;
-        }
-        foreach($fileRequest as $name => $node){
-            $explode = explode('-', $name, 3);
-            $count = count($explode);
-            if($count > 1){
-                $extension = $explode[$count - 1];
-                $explode[$count - 1] = 'local';
-                $name = implode('-', $explode);
-                $fileRequest->{$name} = $node;
-            }
-        }
     }
 }
