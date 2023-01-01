@@ -103,6 +103,18 @@ class Controller {
         ){
             $dir = $template->dir;
         }
+        elseif(
+            !empty($template) &&
+            is_string($template)
+        ){
+            $called = get_called_class();
+            if(defined($called .'::DIR')){
+                $dir = $called::DIR;
+            } else {
+                throw new Exception('Please define const DIR = __DIR__ . DIRECTORY_SEPARATOR; in the controller (' . $called . ').');
+            }
+            $name = $template;
+        }
         elseif(empty($url)) {
             $called = get_called_class();
             if(defined($called .'::DIR')){
@@ -129,7 +141,6 @@ class Controller {
             $max = count($explode);
             $list = [];
             $temp = explode('\\', $called);
-            ddd($name);
             if(empty($name)){
                 $name = array_pop($temp);
             } else {
