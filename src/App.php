@@ -300,6 +300,7 @@ class App extends Data {
                             $data['exception']['className'] = get_class($exception);
                             return $parse->compile($read, $data);
                         } else {
+                            d('here');
                             echo $exception;
                         }
                     }
