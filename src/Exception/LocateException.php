@@ -10,10 +10,13 @@
  */
 namespace R3m\Io\Exception;
 
-use Exception;
-use R3m\Io\Module\Parse;
-use Throwable;
 use R3m\Io\App;
+use R3m\Io\Module\File;
+use R3m\Io\Module\Parse;
+
+use Throwable;
+
+use Exception;
 
 class LocateException extends Exception {
 
