@@ -145,11 +145,9 @@ class FileRequest {
         Config::contentType($object);
         if(empty($fileRequest)){
             $location = FileRequest::get_default_location($object, $dir);
-            $has_location = true;
         } else {
             $config_mtime = false;
             $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
-            $cache_mtime = false;
             $cache_url = $object->config('framework.dir.cache') . 'FileRequest' . $object->config('extension.json');
             if(File::exist($config_url)){
                 $config_mtime = File::mtime($config_url);
@@ -157,13 +155,15 @@ class FileRequest {
             if(File::exist($cache_url)){
                 $cache_mtime = File::mtime($cache_url);
                 if($cache_mtime === $config_mtime){
-                    ddd('read');
                     //read cache_url
+                    $data = $object->data_read($cache_url);
                 } else {
-                    d($cache_mtime);
-                    d($config_mtime);
-                    ddd('write');
                     //write cache_url
+                    $parse = new Parse($object);
+                    $fileRequest = $parse->compile($fileRequest, $object->data());
+                    $data = new Data($fileRequest);
+                    $data->write($cache_url);
+                    File::touch($cache_url, $config_mtime);
                 }
             } else {
                 //write cache_url
@@ -173,88 +173,18 @@ class FileRequest {
                 $data->write($cache_url);
                 File::touch($cache_url, $config_mtime);
             }
-
-            d($object->config());
-            ddd($fileRequest);
-        }
-
-
-        /*
-        $node = false;
-        if($subdomain){
-            $attribute = 'server.fileRequest.' . $subdomain . '-' . $domain . '-' . $extension;
-            $node = $object->config($attribute);
-        } else {
-            $attribute = 'server.fileRequest.' . $domain . '-' . $extension;
-            $node = $object->config($attribute);
-        }
-        if(empty($node)){
-            $fileRequest = $object->config('server.fileRequest');
-        }
-        $location = [];
-        $has_location = false;
-        Config::contentType($object);
-        if(empty($node) && empty($fileRequest)) {
-            $location = FileRequest::get_default_location($object, $dir);
-            $has_location = true;
-        }
-        elseif(
-            is_object($fileRequest) &&
-            property_exists($fileRequest, 'location')
-        ) {
-            $parse = new Parse($object);
-            $fileRequest = $parse->compile($fileRequest, $object->data());
-            $location = $fileRequest->location;
-            $has_location = true;
-        }
-        elseif(
-            is_object($fileRequest) &&
-            property_exists($fileRequest, 'location') &&
-            is_string($fileRequest->location) &&
-            substr($fileRequest->location, 0, 2) === '{{' &&
-            substr($fileRequest->location, -2, 2) === '}}'
-        ){
-            $parse = new Parse($object);
-            $fileRequest = $parse->compile($fileRequest, $object->data());
-            $location = $fileRequest->location;
-            $has_location = true;
-        }
-        elseif(is_object($fileRequest)){
-            ddd($object->config());
-            $parse = new Parse($object);
-            $fileRequest = $parse->compile($fileRequest, $object->data());
-            foreach($fileRequest as $host => $node){
-                $explode = explode('-', $host, 3);
-                $count = count($explode);
-                if($count === 3){
-                    if($subdomain . '-' . $domain . '-' . $extension === $host){
-                        if(
-                            property_exists($fileRequest, $host) &&
-                            property_exists($fileRequest->$host, 'location')
-                        ){
-                            $location = $fileRequest->$host->location;
-                            $has_location = true;
-                            break;
-                        }
-                    }
-                }
-                elseif($count === 2){
-                    if($domain . '-' . $extension === $host){
-                        if(
-                            property_exists($fileRequest, $host) &&
-                            property_exists($fileRequest->$host, 'location')
-                        ){
-                            $location = $fileRequest->$host->location;
-                            $has_location = true;
-                            break;
-                        }
-                    }
-                }
+            if($subdomain){
+                $attribute = $subdomain . '-' . $domain . '-' . $extension . '.location';
+            } else {
+                $attribute = $domain . '-' . $extension. '.location';
             }
-        }
-        */
-        if($has_location === false){
-            $location = FileRequest::get_default_location($object, $dir);
+            $location = $data->get($attribute);
+            if(empty($location)){
+                $location = $data->get('location');
+            }
+            if(empty($location)){
+                $location = FileRequest::get_default_location($object, $dir);
+            }
         }
         ddd($location);
         foreach($location as $url){
