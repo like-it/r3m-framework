@@ -35,7 +35,7 @@ class LocateException extends Exception {
     }
 
     private function getObject(){
-        return this->object;
+        return $this->object;
     }
 
     public function getLocation(){
