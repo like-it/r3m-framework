@@ -140,7 +140,7 @@ class Controller {
                 }
             }
             $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
-            dddd($list);
+            ddd($list);
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
                 $list[] = str_replace(
