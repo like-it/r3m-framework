@@ -111,8 +111,6 @@ class Controller {
                 throw new Exception('Please define const DIR = __DIR__ . DIRECTORY_SEPARATOR; in the controller (' . $called . ').');
             }
         }
-        d($called);
-        ddd($url);
         if($url){
             $list = [];
             $list[] = $url;
@@ -142,6 +140,7 @@ class Controller {
                 }
             }
             $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
+            dddd($list);
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
                 $list[] = str_replace(
