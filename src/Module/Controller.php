@@ -60,8 +60,6 @@ class Controller {
      */
     public static function locate(App $object, $template=null){
         $temp = $object->data('template');
-        d($temp);
-        d($template);
         $called = '';
         $url = false;
         if(
@@ -155,7 +153,6 @@ class Controller {
                 }
             }
             $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
-            ddd($list);
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
                 $list[] = str_replace(
