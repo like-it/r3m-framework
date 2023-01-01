@@ -166,11 +166,8 @@ class FileRequest {
                 $parse = new Parse($object);
                 $fileRequest = $parse->compile($fileRequest, $object->data());
                 $data = new Data($fileRequest);
-
-                
-                dd($data);
-
-
+                $data->write($cache_url);
+                File::touch($cache_url, $config_mtime);
             }
 
             d($object->config());
