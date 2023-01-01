@@ -165,12 +165,8 @@ class Controller {
             }
         }
         if(empty($url)){
-            $result = [];
-            foreach($list as $file){
-                $result[] = $file;
-            }
             if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) === Config::MODE_DEVELOPMENT){
-                throw new LocateException('Cannot find view file', $list, 1);
+                throw new LocateException('Cannot find view file', $list);
             } else {
                 throw new LocateException('Cannot find view file');
             }
