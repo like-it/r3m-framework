@@ -102,7 +102,8 @@ class Controller {
             property_exists($template, 'dir')
         ){
             $dir = $template->dir;
-        } elseif(empty($url)) {
+        }
+        elseif(empty($url)) {
             $called = get_called_class();
             if(defined($called .'::DIR')){
                 $dir = $called::DIR;
@@ -110,6 +111,7 @@ class Controller {
                 throw new Exception('Please define const DIR = __DIR__ . DIRECTORY_SEPARATOR; in the controller (' . $called . ').');
             }
         }
+        ddd($url);
         if($url){
             $list = [];
             $list[] = $url;
