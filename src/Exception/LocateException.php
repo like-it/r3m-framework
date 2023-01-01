@@ -15,7 +15,7 @@ use Throwable;
 
 class LocateException extends Exception {
 
-    protected $location;
+    public $location;
 
     public function __construct($message = "", $location=[], $code = 0, Throwable $previous = null) {
         $this->setLocation($location);
