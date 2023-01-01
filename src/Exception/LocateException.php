@@ -39,6 +39,10 @@ class LocateException extends Exception {
         foreach($location as $value){
             $string .= $value . PHP_EOL;
         }
-        return $string;
+        $output = [];
+        $output[] = '<pre>';
+        $output[] = $string;
+        $output[] = '</pre>';
+        return implode(PHP_EOL, $output);
     }
 }
