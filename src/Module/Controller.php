@@ -138,6 +138,9 @@ class Controller {
                     $dotted_first = array_pop($template_explode);
                     $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
                 }
+                elseif(count($template_explode) === 2){
+                    ddd($template_explode);
+                }
             }
             $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
             ddd($list);
