@@ -470,7 +470,6 @@ class Controller {
      */
     public static function parse_read(App $object, $url): void
     {
-        d($url);
         $read = $object->parse_read($url, sha1($url));
         if($read){
             $object->data($read->get());
