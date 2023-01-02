@@ -71,7 +71,8 @@ class LocateException extends Exception {
             $parse = new Parse($object, $object->data());
             $url = $parse->compile($object->config('exception.locate'), $object->data());
             if(File::exist($url)){
-
+                $read = File::read($url);
+                return $parse->compile($read, $object->data());
             } else {
                 throw new Exception('Exception file (' . $url . ') not found...');
             }
