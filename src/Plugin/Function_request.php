@@ -11,16 +11,19 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_request(Parse $parse, Data $data, $attribute=null, $value=null){
+function function_request(Parse $parse, Data $data, $attribute=null, $value=null, $type=null){
     $object = $parse->object();
     if(!empty($parse->is_assign())){
-        return $object->request($attribute, $value);
+        return $object->request($attribute, $value, $type);
     } else {
         if($attribute !== null){
             if($value === null){
                 return $object->request($attribute);
-            } else {
+            }
+            elseif($type === null) {
                 $object->request($attribute, $value);
+            } else {
+                return $object->request($attribute, $value, $type);
             }
         } else {
             return $object->request();

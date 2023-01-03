@@ -461,8 +461,8 @@ class App extends Data {
         return $this->data(App::CONFIG)->data($attribute, $value);
     }
 
-    public function request($attribute=null, $value=null){                
-        return $this->data(App::REQUEST)->data($attribute, $value);        
+    public function request($attribute=null, $value=null, $type=null){
+        return $this->data(App::REQUEST)->data($attribute, $value, $type=null);
     }
 
     public static function parameter($object, $parameter='', $offset=0){
