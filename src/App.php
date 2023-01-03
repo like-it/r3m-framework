@@ -378,7 +378,7 @@ class App extends Data {
      */
     public static function exception_to_cli(App $object, Exception $exception){
         $class = get_class($exception);
-        $width = Cli::tput('width');
+        $width = (int) Cli::tput('width');
         $background = '200;0;0';
         $output = chr(27) . '[48;2;' . $background . 'm';
         $output .= str_repeat(' ', $width);
