@@ -7,6 +7,7 @@
  * @version         1.0
  * @changeLog
  *  -    all
+ * @deprecated use Controller as base.
  */
 namespace R3m\Io\Module;
 

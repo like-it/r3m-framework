@@ -18,29 +18,117 @@ use R3m\Io\Exception\LocateException;
 class FileRequest {
     const REQUEST = 'Request';
 
+    private static function location(App $object, $dir): array
+    {
+        $location = [];
+        $explode = explode('/', $dir);
+        $controller = array_shift($explode);
+        $view = $explode;
+        array_unshift($explode, 'Public');
+        if (!empty($controller)) {
+            array_unshift($explode, $controller);
+        }
+        array_unshift($view, 'Public');
+        $view_2 = $view;
+        array_unshift($view, 'View');
+        if (!empty($controller)) {
+            array_unshift($view, $controller);
+            array_unshift($view_2, $controller);
+        }
+        array_unshift($view_2, 'View');
+        $location[] = $object->config('host.dir.root') .
+            rtrim(implode($object->config('ds'), $view), '/') .
+            $object->config('ds');
+        $location[] = $object->config('host.dir.root') .
+            rtrim(implode($object->config('ds'), $view_2), '/') .
+            $object->config('ds');
+        $location[] = $object->config('host.dir.root') .
+            rtrim(implode($object->config('ds'), $explode), '/') .
+            $object->config('ds');
+        $location[] = $object->config('host.dir.root') .
+            $dir .
+            'Public' .
+            $object->config('ds');
+        $explode = explode('/', $dir);
+        array_pop($explode);
+        $type = array_pop($explode);
+        array_push($explode, '');
+        $dir_type = implode('/', $explode);
+        if ($type) {
+            $location[] = $object->config('host.dir.root') .
+                $dir_type .
+                'Public' .
+                $object->config('ds') .
+                $type .
+                $object->config('ds');
+        }
+        $location[] = $object->config('host.dir.root') .
+            'View' .
+            $object->config('ds') .
+            $dir .
+            'Public' .
+            $object->config('ds');
+        if ($type) {
+            $location[] = $object->config('host.dir.root') .
+                'View' .
+                $object->config('ds') .
+                $dir_type .
+                'Public' .
+                $object->config('ds') .
+                $type .
+                $object->config('ds');
+        }
+        $location[] = $object->config('host.dir.public') .
+            $dir;
+        $location[] = $object->config('project.dir.public') .
+            $dir;
+        return $location;
+    }
+
+    public static function local(App $object){
+        $fileRequest = $object->config('server.fileRequest');
+        if(empty($fileRequest)){
+            return false;
+        }
+        if(!is_object($fileRequest)){
+            return false;
+        }
+        foreach($fileRequest as $name => $node){
+            $explode = explode('-', $name, 3);
+            $count = count($explode);
+            if($count > 1){
+                $extension = $explode[$count - 1];
+                $explode[$count - 1] = 'local';
+                $name = implode('-', $explode);
+                $fileRequest->{$name} = $node;
+            }
+        }
+    }
+
     /**
      * @throws LocateException
      * @throws Exception
      */
-    public static function get(App $object){
+    public static function get(App $object)
+    {
         if (
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
             $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
         ) {
             Core::cors($object);
         }
-        if(
+        if (
             $object->config('server.http.upgrade_insecure') === true &&
             array_key_exists('REQUEST_SCHEME', $_SERVER) &&
             array_key_exists('REQUEST_URI', $_SERVER) &&
             $_SERVER['REQUEST_SCHEME'] === Host::SCHEME_HTTP &&
             $object->config('framework.environment') !== Config::MODE_DEVELOPMENT &&
             Host::isIp4Address() === false
-        ){
+        ) {
             $subdomain = Host::subdomain();
             $domain = Host::domain();
             $extension = Host::extension();
-            if($subdomain){
+            if ($subdomain) {
                 $url = Host::SCHEME_HTTPS . '://' . $subdomain . '.' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
             } else {
                 $url = Host::SCHEME_HTTPS . '://' . $domain . '.' . $extension . $_SERVER['REQUEST_URI'];
@@ -49,9 +137,9 @@ class FileRequest {
         }
         $request = $object->data(App::REQUEST);
         $input = $request->data('request');
-        $dir = str_replace(['../','..'], '', Dir::name($input));
-        $file = str_replace($dir,'', $input);
-        if(
+        $dir = str_replace(['../', '..'], '', Dir::name($input));
+        $file = str_replace($dir, '', $input);
+        if (
             (
                 substr($file, 0, 3) === '%7B' &&
                 substr($file, -3, 3) === '%7D'
@@ -60,95 +148,79 @@ class FileRequest {
                 substr($file, 0, 1) === '[' &&
                 substr($file, -1, 1) === ']'
             )
-        ){
+        ) {
             return false;
         }
-        $extension = File::extension($file);
-        if(empty($extension)){
+        $file_extension = File::extension($file);
+        if (empty($file_extension)) {
             return false;
         }
+        $subdomain = Host::subdomain();
+        $domain = Host::domain();
+        $extension = Host::extension();
         $config = $object->data(App::CONFIG);
-        $location = [];
-        $explode = explode('/', $dir);
-        $controller = array_shift($explode);
-        $view = $explode;
-        array_unshift($explode, 'Public');
-        if(!empty($controller)) {
-            array_unshift($explode, $controller);
+        FileRequest::local($object);
+        $fileRequest = $object->config('server.fileRequest');
+        Config::contentType($object);
+        if(empty($fileRequest)){
+            $location = FileRequest::location($object, $dir);
+        } else {
+            $config_mtime = false;
+            $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
+            $cache_url = $object->config('framework.dir.cache') . 'FileRequest' . $object->config('extension.json');
+            if(File::exist($config_url)){
+                $config_mtime = File::mtime($config_url);
+            }
+            if(File::exist($cache_url)){
+                $cache_mtime = File::mtime($cache_url);
+                if($cache_mtime === $config_mtime){
+                    //read cache_url
+                    $data = $object->data_read($cache_url);
+                } else {
+                    //write cache_url
+                    $parse = new Parse($object);
+                    $fileRequest = $parse->compile($fileRequest, $object->data());
+                    $data = new Data($fileRequest);
+                    $data->write($cache_url);
+                    File::touch($cache_url, $config_mtime);
+                }
+            } else {
+                //write cache_url
+                $parse = new Parse($object);
+                $fileRequest = $parse->compile($fileRequest, $object->data());
+                $data = new Data($fileRequest);
+                $data->write($cache_url);
+                File::touch($cache_url, $config_mtime);
+            }
+            if($subdomain){
+                $attribute = $subdomain . '-' . $domain . '-' . $extension . '.location';
+            } else {
+                $attribute = $domain . '-' . $extension. '.location';
+            }
+            $location = $data->get($attribute);
+            if(empty($location)){
+                $location = $data->get('location');
+            }
+            if(empty($location)){
+                $location = FileRequest::location($object, $dir);
+            }
         }
-        array_unshift($view, 'Public');
-        $view_2 = $view;
-        array_unshift($view, 'View');
-        if(!empty($controller)){
-            array_unshift($view, $controller);
-            array_unshift($view_2, $controller);
-        }
-        array_unshift($view_2, 'View');
-        $location[] = $config->data('host.dir.root') .
-            rtrim(implode($config->data('ds'), $view), '/') .
-            $config->data('ds') .
-            $file;
-        $location[] = $config->data('host.dir.root') .
-            rtrim(implode($config->data('ds'), $view_2), '/') .
-            $config->data('ds') .
-            $file;
-        $location[] = $config->data('host.dir.root') .
-            rtrim(implode($config->data('ds'), $explode), '/') .
-            $config->data('ds') .
-            $file;
-        $location[] = $config->data('host.dir.root') .
-            $dir .
-            'Public' .
-            $config->data('ds') .
-            $file;
-        $explode = explode('/', $dir);
-        array_pop($explode);
-        $type = array_pop($explode);
-        array_push($explode, '');
-        $dir_type = implode('/', $explode);
-        if($type){
-            $location[] = $config->data('host.dir.root') .
-                $dir_type .
-                'Public' .
-                $config->data('ds') .
-                $type .
-                $config->data('ds') .
-                $file;
-        }
-        $location[] = $config->data('host.dir.root') .
-            'View' .
-            $config->data('ds') .
-            $dir .
-            'Public' .
-            $config->data('ds') .
-            $file;
-        if($type){
-            $location[] = $config->data('host.dir.root') .
-                'View' .
-                $config->data('ds') .
-                $dir_type .
-                'Public' .
-                $config->data('ds') .
-                $type .
-                $config->data('ds') .
-                $file;
-        }
-        $location[] = $config->data('host.dir.public') .
-            $dir .
-            $file;
-        $location[] = $config->data('project.dir.public') .
-            $dir .
-            $file;
         foreach($location as $url){
+            if(substr($url, -1, 1) !== $object->config('ds')){
+                $url .= $object->config('ds');
+            }
+            $url .= $file;
             if(File::exist($url)){
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
-                $contentType = $config->data('contentType.' . $extension);
+                $contentType = $object->config('contentType.' . $file_extension);
                 if(empty($contentType)){
                     Handler::header('HTTP/1.0 415 Unsupported Media Type', 415);
                     if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
                         $json = [];
                         $json['message'] = 'HTTP/1.0 415 Unsupported Media Type';
+                        $json['file'] = $file;
+                        $json['extension'] = $file_extension;
                         $json['available'] = $config->data('contentType');
                         echo Core::object($json, Core::OBJECT_JSON);
                     }

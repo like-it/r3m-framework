@@ -18,7 +18,7 @@ use Exception;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\UrlEmptyException;
 
-class Route extends Data{
+class Route extends Data {
     const NAMESPACE = __NAMESPACE__;
     const NAME = 'Route';
     const SELECT = 'Route_select';
@@ -162,20 +162,38 @@ class Route extends Data{
         return $input;
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function add_request($object, $request){
         if(empty($request)){
             return $object;
         }
-        $object->data(App::REQUEST)->data(
-            Core::object_merge(
-                $object->data(App::REQUEST)->data(),
-                $request->request->data()
-            )
-        );
+        if(get_class($request->request) === 'stdClass'){
+            $object->request(
+                Core::object_merge(
+                    $object->request(),
+                    $request->request
+                )
+            );
+        } else {
+            $object->request(
+                Core::object_merge(
+                    $object->request(),
+                    $request->request->data()
+                )
+            );
+        }
+
+
         return $object;
     }
 
-    private static function select_info($object, $record){
+    /**
+     * @throws Exception
+     */
+    private static function select_info($object, $record): stdClass
+    {
         $select = new stdClass();
         $select->parameter = new stdClass();
         $select->attribute = [];
@@ -491,6 +509,7 @@ class Route extends Data{
             if(property_exists($current, 'controller')){
                 $current = Route::controller($current);
             }
+            Route::add_request($object, $current);
             return $current;
         }
         return false;

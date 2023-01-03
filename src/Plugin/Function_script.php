@@ -30,8 +30,7 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
         $value[] = '<script type="module">';
         $value[] = $script;
         $value[] = "\t\t\t" . '</script>';
-    }
-    else {
+    } else {
         $value = [];
         $value[] = '<script type="text/javascript">';
         $value[] = $script;

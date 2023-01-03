@@ -17,7 +17,6 @@ class Data {
     private $data;
     private $do_not_nest_key;
 
-
     public function __construct($data=null){
         $this->data($data);
     }
@@ -43,7 +42,7 @@ class Data {
         }
         if(is_numeric($parameter) && is_object($data)){
             if(property_exists($data, $parameter)){
-                $param = ltrim($data->{$parameter}, '-');
+                $param = $data->{$parameter};
                 $result = $param;
             } else {
                 $result = null;
@@ -55,7 +54,9 @@ class Data {
             ){
                 foreach($data as $key => $param){
                     if(is_numeric($key)){
-                        $param = ltrim($param, '-');
+                        if(substr($param, 0, 2) === '-'){
+                            continue;
+                        }
                         $param = rtrim($param);
                         $tmp = explode('=', $param);
                         if(count($tmp) > 1){
@@ -65,7 +66,7 @@ class Data {
                         if(strtolower($param) == strtolower($parameter)){
                             if($offset !== 0){
                                 if(property_exists($data, ($key + $offset))){
-                                    $value = rtrim(ltrim($data->{($key + $offset)}, '-'));
+                                    $value = trim($data->{($key + $offset)});
                                 } else {
                                     $result = null;
                                     break;
@@ -107,6 +108,47 @@ class Data {
             return $result;
         }
         return trim($result);
+    }
+
+    public static function flags($data): array
+    {
+        $flags = [];
+        foreach($data as $nr => $parameter){
+            if(substr($parameter, 0, 2) === '--'){
+                $parameter = substr($parameter, 2);
+                $tmp = explode('=', $parameter);
+                if(count($tmp) > 1){
+                    $parameter = array_shift($tmp);
+                    $value = implode('=', $tmp);
+                } else {
+                    $value = true;
+                }
+                $flags[$parameter] = $value;
+            }
+        }
+        return $flags;
+    }
+
+    public static function options($data): array
+    {
+        $options = [];
+        foreach($data as $nr => $parameter){
+            if(
+                substr($parameter, 0, 2) !== '--' &&
+                substr($parameter, 0, 1) === '-'
+            ){
+                $parameter = substr($parameter, 1);
+                $tmp = explode('=', $parameter);
+                if(count($tmp) > 1){
+                    $parameter = array_shift($tmp);
+                    $value = implode('=', $tmp);
+                } else {
+                    $value = true;
+                }
+                $options[$parameter] = $value;
+            }
+        }
+        return $options;
     }
 
     public function get($attribute=''){
@@ -170,7 +212,12 @@ class Data {
             } else {
                 if(is_string($attribute)){
                     return Core::object_get($attribute, $this->data());
-                } else {
+                }
+                elseif(is_object($attribute) && get_class($attribute) === Data::class){
+                    $this->setData($attribute->data());
+                    return $this->getData();
+                }
+                else {
                     $this->setData($attribute);
                     return $this->getData();
                 }

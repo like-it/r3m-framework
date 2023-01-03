@@ -178,13 +178,16 @@ class Core {
     }
 
     public static function interactive(){
-        return Core::output_mode(Core::MODE_INTERACTIVE);
+        Core::output_mode(Core::MODE_INTERACTIVE);
     }
 
     public static function passive(){
-        return Core::output_mode(Core::MODE_PASSIVE);
+        Core::output_mode(Core::MODE_PASSIVE);
     }
 
+    /**
+     * @throws UrlEmptyException
+     */
     public static function redirect($url=''){
         if(empty($url)){
             throw new UrlEmptyException('url is empty...');
@@ -807,5 +810,15 @@ class Core {
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
             exit(0);
         }
+    }
+
+    public static function deep_clone($object){
+        $clone = clone $object;
+        foreach($object as $key => $value){
+            if(is_object($value)){
+                $clone->$key = Core::deep_clone($value);
+            }
+        }
+        return $clone;
     }
 }

@@ -173,7 +173,20 @@ class App extends Data {
                         );
                         return Response::output($object, $response);
                     } else {
-                        return File::read($route->url);
+                        $extension = File::extension($route->url);
+                        Config::contentType($object);
+                        $contentType = $object->config('contentType.' . strtolower($extension));
+                        if($contentType){
+                            $response = new Response(
+                                File::read($route->url),
+                                Response::TYPE_FILE,
+                            );
+                            $response->header([
+                                'Content-Type: ' . $contentType
+                            ]);
+                            return Response::output($object, $response);
+                        }
+                        throw new Exception('Extension (' . $extension . ') not supported...');
                     }
                 } else {
                     App::contentType($object);
@@ -190,6 +203,7 @@ class App extends Data {
                         );
                         return Response::output($object, $response);
                     }
+                    Config::contentType($object);
                     $functions = [];
                     if(in_array('controller', $methods)){
                         $functions[] = 'controller';
@@ -205,6 +219,18 @@ class App extends Data {
                     }
                     if(in_array($route->function, $methods)){
                         $functions[] = $route->function;
+                        $object->config('controller.function', $route->function);
+                        $request = Core::deep_clone(
+                            $object->get(
+                                App::NAMESPACE . '.' .
+                                Handler::NAME_REQUEST . '.' .
+                                Handler::NAME_INPUT
+                            )->data()
+                        );
+                        $object->config(
+                            'request',
+                            $request
+                        );
                         $result = $route->controller::{$route->function}($object);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
@@ -239,7 +265,7 @@ class App extends Data {
                     $result = App::result($object, $result);
                     if(in_array('after_result', $methods)){
                         $functions[] = 'after_result';
-                        $route->controller::after_result($object);
+                        $result = $route->controller::after_result($object, $result);
                     }
                     $object->logger(App::LOGGER_NAME)->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
                     return $result;
@@ -381,6 +407,7 @@ class App extends Data {
      */
     private static function result(App $object, $output){
         if($output instanceof Exception){
+            ddd('yes');
             if(App::is_cli()){
                 $object->logger(App::LOGGER_NAME)->error($output->getMessage());
                 fwrite(STDERR, App::exception_to_cli($object, $output));
@@ -442,6 +469,16 @@ class App extends Data {
         return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
+    public static function flags($object): array
+    {
+        return parent::flags($object->data(App::REQUEST)->data());
+    }
+
+    public static function options($object): array
+    {
+        return parent::options($object->data(App::REQUEST)->data());
+    }
+
     /**
      * @throws Exception
      */
@@ -471,7 +508,7 @@ class App extends Data {
         }
     }
 
-    public static function server($attribute){
+    public function server($attribute){
         if(array_key_exists($attribute, $_SERVER)){
             return $_SERVER[$attribute];
         }

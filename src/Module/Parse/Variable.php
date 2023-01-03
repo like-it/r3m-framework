@@ -150,6 +150,9 @@ class Variable {
         ){
             foreach($variable['variable']['modifier'] as $nr => $modifier_list){
                 foreach($modifier_list as $modifier_nr => $modifier){
+                    if(!array_key_exists('php_name', $modifier)){
+                        continue;
+                    }
                     $define_modifier .= '$this->' . $modifier['php_name'] . '($this->parse(), $this->storage(), ' . $define . ', ';
                     if(!empty($modifier['has_attribute'])){
                         foreach($modifier['attribute'] as $attribute){
@@ -217,6 +220,11 @@ class Variable {
         $operator = $token;
         while(Operator::has($operator)){            
             $statement = Operator::get($operator);
+            if($statement === false){
+                $debug = debug_backtrace(true);
+                ddd($debug);
+                ddd($operator);
+            }
             $operator = Operator::remove($operator, $statement);
             $statement = Operator::create($build, $storage, $statement);
             if(empty($statement)){

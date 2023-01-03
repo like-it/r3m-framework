@@ -397,6 +397,7 @@ class Parse {
                     }
                 }
             }
+            $id = posix_geteuid();
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
             $exists = class_exists($class);
             if($exists){
@@ -409,6 +410,9 @@ class Parse {
                     $storage->data('delete', 'this');
                 }
             } else {
+                d($write);
+                d($string);
+                d($build);
                 //add phpstan error report on class in /tmp/r3m/io/parse/error/...
                 throw new Exception('Class ('. $class .') doesn\'t exist');
 
