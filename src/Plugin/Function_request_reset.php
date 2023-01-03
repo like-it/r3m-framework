@@ -10,11 +10,12 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Handler;
+use R3m\Io\Module\Core;
+
 function function_request_reset(Parse $parse, Data $data){
     $object = $parse->object();
     $request = $object->request();
-    $config = $object->config('request');
+    $config = Core::deep_clone($object->config('request'));
     foreach($request as $key => $value){
         $object->request('delete', $key);
     }
