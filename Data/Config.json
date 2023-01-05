@@ -65,8 +65,8 @@
         "ppt" : "application\/vnd.ms-powerpoint",
         "xlsx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "docx" : "application\/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "pptx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-
+        "pptx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "xml": "application/xml"
     },
     "extension": {
         "txt": ".txt",
@@ -106,7 +106,8 @@
         "docx" : ".docx",
         "pptx" : ".pptx",
         "mov" :  ".mov",
-        "wmv" : ".wmv"
+        "wmv" : ".wmv",
+        "xml": ".xml"
     },
     "error" : {
         "extension" : {

@@ -22,6 +22,7 @@ class Response {
     const TYPE_OBJECT = 'object';
     const TYPE_OBJECT_LINE = 'object-line';
     const TYPE_FILE = 'file';
+    const TYPE_XML = 'xml';
 
     const STATUS_OK = 200;
     const STATUS_ERROR = 400;
@@ -65,6 +66,9 @@ class Response {
                         break;
                     case Response::TYPE_HTML :
                         Handler::header('Content-Type: text/html', null, true);
+                        break;
+                    case Response::TYPE_XML :
+                        Handler::header('Content-Type: application/xml', null, true);
                         break;
                     case Response::TYPE_FILE :
                         break;
@@ -145,6 +149,7 @@ class Response {
                 return null;
             case Response::TYPE_FILE :
             case Response::TYPE_HTML :
+            case Response::TYPE_XML :
                 return $response->data();
         }
     }
