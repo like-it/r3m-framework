@@ -406,7 +406,6 @@ class App extends Data {
      * @throws Exception
      */
     private static function result(App $object, $output){
-        d($output);
         if($output instanceof Exception){
             if(App::is_cli()){
                 $object->logger(App::LOGGER_NAME)->error($output->getMessage());
