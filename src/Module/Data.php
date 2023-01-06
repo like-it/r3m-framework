@@ -314,7 +314,9 @@ class Data {
         switch($type){
             case Data::TYPE_REQUEST :
                 $this->clear();
-                $this->data($this->copy);
+                if($this->copy){
+                    $this->data($this->copy);
+                }
             break;
             default:
                 $this->clear();
