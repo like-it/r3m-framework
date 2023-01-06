@@ -220,7 +220,9 @@ class App extends Data {
                     if(in_array($route->function, $methods)){
                         $functions[] = $route->function;
                         $object->config('controller.function', $route->function);
-                        $object->get(App::REQUEST)->copy();
+                        if($object->config('request.copy') !== false){
+                            $object->get(App::REQUEST)->copy();
+                        }
                         $result = $route->controller::{$route->function}($object);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
