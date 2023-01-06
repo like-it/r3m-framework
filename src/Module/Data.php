@@ -306,19 +306,15 @@ class Data {
     }
 
     public function copy(){
-        if(empty($this->copy)){
-            $this->copy = Core::deep_clone($this->data());
-        }
-        return $this->copy;
+        $this->copy = Core::deep_clone($this->data());
     }
 
     public function reset(){
         $type = $this->type();
         switch($type){
             case Data::TYPE_REQUEST :
-                $copy = Core::deep_clone($this->copy());
                 $this->clear();
-                $this->data($copy);
+                $this->data($this->copy);
             break;
             default:
                 $this->clear();
