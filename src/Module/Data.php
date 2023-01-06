@@ -316,7 +316,7 @@ class Data {
         $type = $this->type();
         switch($type){
             case Data::TYPE_REQUEST :
-                $copy = $this->copy();
+                $copy = Core::deep_clone($this->copy());
                 $this->clear();
                 $this->data($copy);
             break;
