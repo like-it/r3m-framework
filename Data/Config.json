@@ -169,7 +169,7 @@
             "R3m\\Io\\Module\\Route",
             "R3m\\Io\\Module\\Sort",
             "R3m\\Io\\Module\\Validate",
-            "R3m\\Io\\Module\\View",
+            "R3m\\Io\\Module\\Controller",
             "R3m\\Io\\Module\\Template\\Main",
             "Exception",
             "R3m\\Io\\Exception\\AuthenticationException",
