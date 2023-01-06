@@ -10,7 +10,6 @@
  */
 namespace R3m\Io\Module;
 
-
 use stdClass;
 use R3m\Io\App;
 use DateTimeImmutable;
@@ -246,9 +245,13 @@ class Handler {
         return $result;
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function request_input(): Data
     {
         $data = new Data();
+        $data->type(Data::TYPE_REQUEST);
         if(defined('IS_CLI')){
             global $argc, $argv;
             $temp = $argv;

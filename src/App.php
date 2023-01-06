@@ -220,6 +220,9 @@ class App extends Data {
                     if(in_array($route->function, $methods)){
                         $functions[] = $route->function;
                         $object->config('controller.function', $route->function);
+
+                        ddd($object->get(App::REQUEST)->copy());
+
                         $request = Core::deep_clone(
                             $object->get(
                                 App::NAMESPACE . '.' .

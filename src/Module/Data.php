@@ -14,10 +14,18 @@ use stdClass;
 use Exception;
 
 class Data {
+    const TYPE_DATA = 'data';
+    const TYPE_REQUEST = 'request';
+
     private $data;
     private $do_not_nest_key;
 
+
+    private $type;
+    private $copy;
+
     public function __construct($data=null){
+        $this->type(Data::TYPE_DATA);
         $this->data($data);
     }
 
@@ -273,6 +281,47 @@ class Data {
             return true;
         }
         return false;
+    }
+
+    public function clear(){
+        $data = $this->data();
+        foreach($data as $key => $unused){
+            $this->data('delete', $key);
+        }
+    }
+
+    public function type($type=null){
+        if($type !== null){
+            $this->setType($type);
+        }
+        return $this->getType();
+    }
+
+    private function setType($type=null){
+        $this->type = $type;
+    }
+
+    private function getType(){
+        return $this->type;
+    }
+
+    public function copy(){
+        if(empty($this->copy)){
+            $this->copy = Core::deep_clone($this->data());
+        }
+        return $this->copy;
+    }
+
+    public function reset(){
+        $type = $this->type();
+        switch($type){
+            case Data::TYPE_REQUEST :
+                $this->clear();
+                //$config = Core::deep_clone($object->config('request'));
+            break;
+            default:
+                $this->clear();
+        }
     }
 
     public function do_not_nest_key($do_not_nest_key=null){
