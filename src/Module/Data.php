@@ -10,6 +10,8 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\FileWriteException;
+use R3m\Io\Exception\ObjectException;
 use stdClass;
 use Exception;
 
@@ -273,7 +275,10 @@ class Data {
 
     public function is_empty(){
         $data = $this->data();
-        if(Core::object_is_empty($data)){
+        if(empty($data) && is_array($data)){
+            return true;
+        }
+        elseif(Core::object_is_empty($data)){
             return true;
         }
         return false;
@@ -287,7 +292,12 @@ class Data {
     }
 
     public function copy(){
-        $this->copy = Core::deep_clone($this->data());
+        $data = $this->data();
+        if(is_array($data)){
+            $this->copy = $data;
+        } else {
+            $this->copy = Core::deep_clone($data);
+        }
     }
 
     public function reset(){
@@ -304,6 +314,10 @@ class Data {
         return $this->do_not_nest_key;
     }
 
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
     public function write($url=''){
         $dir = Dir::name($url);
         Dir::create($dir);
