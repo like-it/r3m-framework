@@ -60,7 +60,6 @@ class Response {
                 Handler::header('Status: ' . $status, $status, true);
             }
             if(!Handler::header('has', 'Content-Type')){
-                ddd($type);
                 switch($type){
                     case Response::TYPE_OBJECT :
                     case Response::TYPE_JSON :
