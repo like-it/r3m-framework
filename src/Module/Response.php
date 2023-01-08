@@ -66,6 +66,7 @@ class Response {
                         Handler::header('Content-Type: application/json', null, true);
                         break;
                     case Response::TYPE_HTML :
+                        ddd('yes');
                         Handler::header('Content-Type: text/html', null, true);
                         break;
                     case Response::TYPE_XML :
