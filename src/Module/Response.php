@@ -76,7 +76,6 @@ class Response {
                 }
             }
             $contentType = Handler::header('get', 'Content-Type');
-            d($contentType);
             $header = $object->config('response.' . $contentType .'.header');
             if(
                 !empty($header) &&
