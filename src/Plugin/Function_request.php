@@ -20,6 +20,7 @@ function function_request(Parse $parse, Data $data, $attribute=null, $value=null
         substr($attribute, -1, 1) === '}'
     ){
         $attribute = Core::object($attribute, Core::OBJECT_OBJECT);
+        ddd($attribute);
     }
     if(!empty($parse->is_assign())){
         return $object->request($attribute, $value, $type);
