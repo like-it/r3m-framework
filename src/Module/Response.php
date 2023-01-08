@@ -66,8 +66,6 @@ class Response {
                         break;
                     case Response::TYPE_HTML :
                         Handler::header('Content-Type: text/html', null, true);
-                        $header = $object->config('response.text/html.header');
-                        ddd($header);
                         break;
                     case Response::TYPE_XML :
                         Handler::header('Content-Type: application/xml', null, true);
@@ -76,6 +74,8 @@ class Response {
                         break;
                 }
             }
+            $header = $object->config('response.text/html.header');
+            ddd($header);
             $header = $response->header();
             if(is_array($header)){
                 foreach($header as $value){
