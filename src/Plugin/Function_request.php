@@ -10,9 +10,17 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Core;
 
 function function_request(Parse $parse, Data $data, $attribute=null, $value=null, $type=null){
     $object = $parse->object();
+    if(
+        is_string($attribute) &&
+        substr($attribute, 0, 1) === '{' &&
+        substr($attribute, -1, 1) === '}'
+    ){
+        $attribute = Core::object($attribute, Core::OBJECT_OBJECT);
+    }
     if(!empty($parse->is_assign())){
         return $object->request($attribute, $value, $type);
     } else {
