@@ -75,7 +75,7 @@ class Response {
                         break;
                 }
             }
-            $contentType = Handler::header('get', 'Content-Type');
+            $contentType = Handler::header('get', 'Content-type');
             d(headers_list());
             d($contentType);
             $header = $object->config('response.' . $contentType .'.header');
