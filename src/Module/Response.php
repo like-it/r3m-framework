@@ -76,7 +76,6 @@ class Response {
                 }
             }
             $header = $object->config('response.' . $type .'.header');
-            ddd($header);
             if(
                 !empty($header) &&
                 is_array($header)
