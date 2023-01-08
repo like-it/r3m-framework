@@ -16,13 +16,13 @@ use Exception;
 use R3m\Io\Exception\ObjectException;
 
 class Response {
-    const TYPE_CLI = 'cli';
-    const TYPE_JSON = 'json';
-    const TYPE_HTML = 'html';
-    const TYPE_OBJECT = 'object';
-    const TYPE_OBJECT_LINE = 'object-line';
-    const TYPE_FILE = 'file';
-    const TYPE_XML = 'xml';
+    const TYPE_CLI = 'text/cli';
+    const TYPE_JSON = 'application/json';
+    const TYPE_HTML = 'text/html';
+    const TYPE_OBJECT = 'text/object';
+    const TYPE_OBJECT_LINE = 'application/object';
+    const TYPE_FILE = 'bin/file';
+    const TYPE_XML = 'application/xml';
 
     const STATUS_OK = 200;
     const STATUS_ERROR = 400;
@@ -75,10 +75,7 @@ class Response {
                         break;
                 }
             }
-            $contentType = Handler::header('get', 'Content-type');
-            d(headers_list());
-            d($contentType);
-            $header = $object->config('response.' . $contentType .'.header');
+            $header = $object->config('response.' . $type .'.header');
             ddd($header);
             if(
                 !empty($header) &&
