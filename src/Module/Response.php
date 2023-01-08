@@ -76,12 +76,13 @@ class Response {
                 }
             }
             $contentType = Handler::header('get', 'Content-Type');
+            d($contentType);
             $header = $object->config('response.' . $contentType .'.header');
+            ddd($header);
             if(
                 !empty($header) &&
                 is_array($header)
             ){
-                ddd($header);
                 foreach($header as $value){
                     Handler::header($value,null, true);
                 }
