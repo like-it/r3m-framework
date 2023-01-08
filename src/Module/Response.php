@@ -44,7 +44,6 @@ class Response {
      * @throws Exception
      */
     public static function output(App $object, Response $response){
-        d('fuck');
         $type = $response->type();
         if($type === null &&  $object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
             $type = Response::TYPE_OBJECT;
