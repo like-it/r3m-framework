@@ -75,8 +75,16 @@ class Response {
                         break;
                 }
             }
-            $header = $object->config('response.text/html.header');
-            ddd($header);
+            $header = $object->config('response.' . $type .'.header');
+            if(
+                !empty($header) &&
+                is_array($header)
+            ){
+                ddd($header);
+                foreach($header as $value){
+                    Handler::header($value,null, true);
+                }
+            }
             $header = $response->header();
             if(is_array($header)){
                 foreach($header as $value){
