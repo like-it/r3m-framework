@@ -149,7 +149,7 @@ class Handler {
             if(array_key_exists($http_response_code, $header_list)){
                 return $header_list[$http_response_code];
             }
-            return;
+            return null;
         }
         elseif($http_response_code !== null){
             if(!headers_sent()){
