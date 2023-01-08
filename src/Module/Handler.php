@@ -139,7 +139,6 @@ class Handler {
             is_string($http_response_code)
         ){
             $list = headers_list();
-            ddd($list);
             $header_list = [];
             foreach($list as $nr => $record){
                 $tmp = explode(':', $record, 2);
