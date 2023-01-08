@@ -19,6 +19,7 @@ function function_request(Parse $parse, Data $data, $attribute=null, $value=null
         substr($attribute, 0, 1) === '{' &&
         substr($attribute, -1, 1) === '}'
     ){
+        ddd($attribute);
         $attribute = Core::object($attribute, Core::OBJECT_OBJECT);
         ddd($attribute);
     }
