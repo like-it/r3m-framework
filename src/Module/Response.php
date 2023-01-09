@@ -66,6 +66,8 @@ class Response {
                         break;
                     case Response::TYPE_HTML :
                         Handler::header('Content-Type: text/html', null, true);
+                        Handler::header('delete', 'Expires');
+                        Handler::header('delete', 'Pragma');
                         break;
                     case Response::TYPE_XML :
                         Handler::header('Content-Type: application/xml', null, true);
@@ -74,8 +76,6 @@ class Response {
                         break;
                 }
             }
-            Handler::header('delete', 'Expires');
-            Handler::header('delete', 'Pragma');
             $header = $object->config('response.' . $type .'.header');
             if(
                 !empty($header) &&
