@@ -74,6 +74,8 @@ class Response {
                         break;
                 }
             }
+            Handler::header('delete', 'Expires');
+            Handler::header('delete', 'Pragma');
             $header = $object->config('response.' . $type .'.header');
             if(
                 !empty($header) &&
