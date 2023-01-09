@@ -458,7 +458,10 @@ class Controller {
                 $data->rdelim = Controller::RDELIM;
             }
         }
-        $object->config('response.output', Response::TYPE_HTML);
+        $response_output = $object->config('response.output');
+        if(empty($response_output)){
+            $object->config('response.output', Response::TYPE_HTML);
+        }
         $read = $parse->compile($read, $data, $parse->storage());
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
