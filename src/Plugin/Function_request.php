@@ -21,7 +21,6 @@ function function_request(Parse $parse, Data $data, $attribute=null, $value=null
     ){
         $attribute = str_replace(['{$ldelim}', '{$rdelim}'], ['{', '}'], $attribute);
         $attribute = Core::object($attribute, Core::OBJECT_OBJECT);
-        ddd($attribute);
     }
     if(!empty($parse->is_assign())){
         return $object->request($attribute, $value, $type);
