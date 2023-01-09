@@ -420,7 +420,7 @@ class Controller {
      * @throws UrlNotExistException
      * @throws FileWriteException
      */
-    public static function response(App $object, $url, $data=null): string
+    public static function response(App $object, $url, $data=null)
     {
         if(empty($url)){
             throw new UrlEmptyException('Url is empty');
