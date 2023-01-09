@@ -758,7 +758,6 @@ class Handler {
                         }
                 }
             }
-
         } else {
             return $_SESSION;
         }
