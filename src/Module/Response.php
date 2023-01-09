@@ -161,7 +161,6 @@ class Response {
             case Response::TYPE_FILE :
             case Response::TYPE_HTML :
             case Response::TYPE_XML :
-                ddd(headers_list());
                 return $response->data();
         }
     }
