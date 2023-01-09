@@ -20,7 +20,6 @@ function function_request(Parse $parse, Data $data, $attribute=null, $value=null
         substr($attribute, -1, 1) === '}'
     ){
         $attribute = str_replace(['{$ldelim}', '{$rdelim}'], ['{', '}'], $attribute);
-        ddd($attribute);
         $attribute = Core::object($attribute, Core::OBJECT_OBJECT);
         ddd($attribute);
     }
