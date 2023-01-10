@@ -50,9 +50,9 @@ class Linefeed extends View {
                         $explode[$nr] = substr($line, 0, -1);
                     }
                 }
-                ddd($explode);
+                $write = implode("\n", $explode);
+                File::write($file->url, $write);
             }
-            ddd($list);
         }
     }
 }
