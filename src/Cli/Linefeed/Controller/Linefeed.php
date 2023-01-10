@@ -10,6 +10,9 @@
  */
 namespace R3m\Io\Cli\Linefeed\Controller;
 
+use R3m\Io\App;
+use R3m\Io\Module\Cli;
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\View;
 use Exception;
 use R3m\Io\Exception\LocateException;
@@ -20,18 +23,25 @@ class Linefeed extends View {
     const DIR = __DIR__;
     const NAME = 'Linefeed';
     const INFO = '{{binary()}} linefeed                       | Linefeed';
-    
-    public static function run($object){
-        try {
-            $url = $object->config('controller.dir.data') . 'Linefeed' . $object->config('extension.json');
-            $config = $object->data_read($url, sha1($url));
-            ddd($config);
 
-            $name = Linefeed::name(__FUNCTION__,Linefeed::NAME);
-            $url = Linefeed::locate($object, $name);
-            return Linefeed::response($object, $url);
-        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            return $exception;
+    /**
+     * @throws Exception
+     */
+    public static function run($object){
+
+        $url = $object->config('controller.dir.data') . 'Linefeed' . $object->config('extension.json');
+        $config = $object->data_read($url, sha1($url));
+        if($config){
+            $directory = App::parameter($object, Linefeed::NAME, 1);
+            while(empty($directory)){
+                $directory = Cli::read('input', 'Input directory: ');
+            }
+            if(!Dir::is($directory)){
+                throw new Exception('Not a directory.');
+            }
+            $dir = new Dir();
+            $list = $dir->read($directory, true);
+            ddd($list);
         }
     }
 }
