@@ -9,6 +9,7 @@
                 "cache",
                 "cache:clear",
                 "license",
+                "linefeed",
                 "ln",
                 "version",
                 "uuid",
