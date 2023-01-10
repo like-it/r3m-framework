@@ -234,6 +234,7 @@ class FileRequest {
                     Handler::header('Cache-Control: public');
 
                     if(array_key_exists('HTTP_REFERER', $_SERVER)){
+                        $object->logger()->debug('server', [ $_SERVER]);
                         $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
                         if(Core::cors_is_allowed($object, $origin)){
                             header("Access-Control-Allow-Origin: {$origin}");
