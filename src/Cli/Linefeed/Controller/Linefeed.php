@@ -8,29 +8,28 @@
  * @changeLog
  *  -    all
  */
-namespace R3m\Io\Cli\Doctrine\Controller;
+namespace R3m\Io\Cli\Linefeed\Controller;
 
-use R3m\Io\App;
 use R3m\Io\Module\View;
 use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Doctrine extends View {
+class Linefeed extends View {
     const DIR = __DIR__;
-    const NAME = 'Doctrine';
-    const INFO = '{{binary()}} doctrine orm:generate-proxies  | Generate proxies & adjust owner';
-    const INFO_RUN = [
-        '{{binary()}} doctrine orm:generate-proxies  | Generate proxies & adjust owner'
-    ];
+    const NAME = 'Uuid';
+    const INFO = '{{binary()}} uuid                           | Uuid generation';
     
     public static function run($object){
         try {
-            $command = App::parameter($object, 'doctrine', 1);
-            $name = Doctrine::name($command, Doctrine::NAME);
-            $url = Doctrine::locate($object, $name);
-            return Doctrine::response($object, $url);
+            $url = $object->config('controller.dir.data') . 'Linefeed' . $object->config('extension.json');
+            $config = $object->data_read($url, sha1($url));
+            ddd($config);
+
+            $name = Linefeed::name(__FUNCTION__,Linefeed::NAME);
+            $url = Linefeed::locate($object, $name);
+            return Linefeed::response($object, $url);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return $exception;
         }

@@ -1,0 +1,24 @@
+{
+  "extension" : [
+    "php",
+    "json",
+    "html",
+    "tpl",
+    "css",
+    "js",
+    "md",
+    "r3m",
+    "txt",
+    "xml"
+  ],
+  "search" : {
+    "end" : [
+      "\r\n"
+    ]
+  },
+  "replace" : {
+    "end" : [
+    "\n"
+    ]
+  }
+}
