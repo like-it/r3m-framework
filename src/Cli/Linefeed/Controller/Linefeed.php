@@ -13,6 +13,7 @@ namespace R3m\Io\Cli\Linefeed\Controller;
 use R3m\Io\App;
 use R3m\Io\Module\Cli;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\File;
 use R3m\Io\Module\View;
 use Exception;
 use R3m\Io\Exception\LocateException;
@@ -41,6 +42,10 @@ class Linefeed extends View {
             }
             $dir = new Dir();
             $list = $dir->read($directory, true);
+            foreach($list as $file){
+                $read = File::read($file->url);
+                ddd($read);
+            }
             ddd($list);
         }
     }
