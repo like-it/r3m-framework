@@ -43,6 +43,8 @@ class Linefeed extends View {
             $dir = new Dir();
             $list = $dir->read($directory, true);
             foreach($list as $file){
+                $extension = File::extension($file->url);
+                ddd($extension);
                 $read = File::read($file->url);
                 $explode = explode("\n", $read);
                 foreach($explode as $nr => $line){
