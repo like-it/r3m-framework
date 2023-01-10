@@ -45,6 +45,11 @@ class Linefeed extends View {
             foreach($list as $file){
                 $read = File::read($file->url);
                 $explode = explode("\n", $read);
+                foreach($explode as $nr => $line){
+                    if(substr($line, -2, 2) === "\r"){
+                        $explode[$nr] = substr($line, 0, -2);
+                    }
+                }
                 ddd($explode);
             }
             ddd($list);
