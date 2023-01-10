@@ -44,19 +44,25 @@ class Linefeed extends View {
             $list = $dir->read($directory, true);
             foreach($list as $file){
                 $extension = File::extension($file->url);
-                ddd($extension);
-                $read = File::read($file->url);
-                $explode = explode("\n", $read);
-                $is_write = false;
-                foreach($explode as $nr => $line){
-                    if(substr($line, -1, 1) === "\r"){
-                        $explode[$nr] = substr($line, 0, -1);
-                        $is_write = true;
+                if(
+                    in_array(
+                        $extension,
+                        $config->get('extension')
+                    )
+                ){
+                    $read = File::read($file->url);
+                    $explode = explode("\n", $read);
+                    $is_write = false;
+                    foreach($explode as $nr => $line){
+                        if(substr($line, -1, 1) === "\r"){
+                            $explode[$nr] = substr($line, 0, -1);
+                            $is_write = true;
+                        }
                     }
-                }
-                if($is_write){
-                    $write = implode("\n", $explode);
-                    File::write($file->url, $write);
+                    if($is_write){
+                        $write = implode("\n", $explode);
+                        File::write($file->url, $write);
+                    }
                 }
             }
         }

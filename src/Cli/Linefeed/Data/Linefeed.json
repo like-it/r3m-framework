@@ -10,15 +10,5 @@
     "r3m",
     "txt",
     "xml"
-  ],
-  "search" : {
-    "end" : [
-      "\r\n"
-    ]
-  },
-  "replace" : {
-    "end" : [
-    "\n"
-    ]
-  }
+  ]
 }
