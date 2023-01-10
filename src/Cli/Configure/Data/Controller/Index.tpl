@@ -14,7 +14,7 @@ use {{$useage}};
 {{/for.each}}
 {{/if}}
 
-class {{$module}} extends View {
+class {{$module}} extends Controller {
 
     const DIR = __DIR__ . DIRECTORY_SEPARATOR;
 

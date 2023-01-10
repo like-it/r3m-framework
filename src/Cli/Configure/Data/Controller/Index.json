@@ -2,7 +2,7 @@
   "Index" : {
     "use" : [
       "R3m\\Io\\App",
-      "R3m\\Io\\Module\\View",
+      "R3m\\Io\\Module\\Controller",
       "Exception",
       "R3m\\Io\\Exception\\FileWriteException",
       "R3m\\Io\\Exception\\LocateException",
