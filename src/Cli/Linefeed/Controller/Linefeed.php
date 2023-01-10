@@ -18,8 +18,8 @@ use R3m\Io\Exception\UrlNotExistException;
 
 class Linefeed extends View {
     const DIR = __DIR__;
-    const NAME = 'Uuid';
-    const INFO = '{{binary()}} uuid                           | Uuid generation';
+    const NAME = 'Linefeed';
+    const INFO = '{{binary()}} linefeed                       | Linefeed';
     
     public static function run($object){
         try {
