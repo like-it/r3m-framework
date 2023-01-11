@@ -809,6 +809,14 @@ class Core {
             header('Access-Control-Allow-Headers: Origin, Cache-Control, Content-Type, Authorization, X-Requested-With');
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
             $object->session('start');
+            $object->cookie('PHPSESSID', $object->session('id'), [
+                'expires' => 0,
+                'path' => '/',
+                'domain' => Host::domain() . '.' . Host::extension(),
+                'secure' => true,
+                'httponly' => true,
+                'samesite' => 'Strict'
+            ]);
             exit(0);
         }
     }
