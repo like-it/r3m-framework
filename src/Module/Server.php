@@ -10,10 +10,7 @@
  */
 namespace R3m\Io\Module;
 
-use stdClass;
-use Exception;
 use R3m\Io\App;
-use R3m\Io\Config;
 
 class Server {
 
