@@ -367,14 +367,20 @@ class Handler {
             ){
                 foreach($attribute as $key => $value){
                     Handler::session($key, $value);
-                    if(isset($_SESSION)){
-                        return $_SESSION;
-                    }
+                }
+                if(isset($_SESSION)){
+                    return $_SESSION;
                 }
             } else {
                 $tmp = explode('.', $attribute);
                 if($value !== null){
-                    if($attribute == Handler::SESSION_DELETE && $value == Handler::SESSION){
+                    if($attribute === 'id'){
+                        return session_id($value);
+                    }
+                    if(
+                        $attribute === Handler::SESSION_DELETE &&
+                        $value === Handler::SESSION
+                    ){
                         $unset = session_unset();
                         if($unset === false){
                             throw new Exception('Could not unset session');
@@ -586,6 +592,9 @@ class Handler {
                                 break;
                         }
                     }
+                }
+                if($attribute === 'id'){
+                    return session_id();
                 }
                 switch(count($tmp)){
                     case 1 :
