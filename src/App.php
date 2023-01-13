@@ -492,6 +492,11 @@ class App extends Data {
     }
 
     public function cookie($attribute=null, $value=null, $duration=null){
+        if($attribute === 'http'){
+            $cookie = $this->server('HTTP_COOKIE');
+            $cookie = explode('; ', $cookie);
+            return $cookie;
+        }
         return Handler::cookie($attribute, $value, $duration);
     }
 
