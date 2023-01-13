@@ -32,6 +32,7 @@ use Exception;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\LocateException;
+use R3m\Io\Module\Server;
 
 class App extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -116,7 +117,10 @@ class App extends Data {
         Host::configure($object);
         $options = $object->config('server.http.cookie');
         if(property_exists($options, 'domain') && $options->domain === true){
-            $options->domain = Host::domain() . Host::extension();
+            $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());
+            if(!$options->domain){
+                $options->domain = Host::domain() . '.' . Host::extension();
+            }
             Handler::session_set_cookie_params($options);
         }
 
