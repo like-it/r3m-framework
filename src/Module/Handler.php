@@ -334,8 +334,17 @@ class Handler {
         throw new Exception('Method undefined');
     }
 
-    public static function session_set_cookie_params($options=[]){
-        ddd($options);
+    /**
+     * @throws ObjectException
+     */
+    public static function session_set_cookie_params($options=[]): bool
+    {
+        if(
+            !empty($options) &&
+            is_object($options)
+        ){
+            $options = Core::object($options, Core::OBJECT_ARRAY);
+        }
         return session_set_cookie_params($options);
     }
 
