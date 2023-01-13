@@ -334,6 +334,10 @@ class Handler {
         throw new Exception('Method undefined');
     }
 
+    public static function session_set_cookie_params($options=[]){
+        return session_set_cookie_params($options);
+    }
+
     /**
      * @throws Exception
      */

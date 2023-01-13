@@ -20,7 +20,6 @@ class Data {
     private $data;
     private $do_not_nest_key;
 
-
     private $copy;
 
     public function __construct($data=null){

@@ -808,6 +808,7 @@ class Core {
             header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
             //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
             header('Access-Control-Allow-Headers: Origin, Cache-Control, Content-Type, Authorization, X-Requested-With');
+            header('Access-Control-Expose-Headers: Cache-Control, Content-Language, Content-Length, Content-Type, Expires, Last-Modified, Pragma');
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
             exit(0);
         }
