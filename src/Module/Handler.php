@@ -822,9 +822,9 @@ class Handler {
                             Handler::cookie($key, $value->value);
                         }
                     }
-                    if(isset($_COOKIE)){
-                        return $_COOKIE;
-                    }
+                }
+                if(isset($_COOKIE)){
+                    return $_COOKIE;
                 }
             } else {
                 if ($value !== null) {

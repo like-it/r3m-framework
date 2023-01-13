@@ -513,7 +513,10 @@ class App extends Data {
         }
     }
 
-    public function server($attribute){
+    public function server($attribute=null){
+        if($attribute===null){
+            return $_SERVER;
+        }
         if(array_key_exists($attribute, $_SERVER)){
             return $_SERVER[$attribute];
         }
