@@ -121,6 +121,10 @@ class App extends Data {
             if(!$options->domain){
                 $options->domain = Host::domain() . '.' . Host::extension();
             }
+            $options->secure = null;
+            if(Host::scheme() === Host::SCHEME_HTTPS){
+                $options->secure = true;
+            }
             Handler::session_set_cookie_params($options);
         }
 
