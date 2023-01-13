@@ -119,7 +119,7 @@ class App extends Data {
             $options->domain = Host::domain() . Host::extension();
             Handler::session_set_cookie_params($options);
         }
-        
+
         //Autoload::configure($object); //@moved to construct
         Route::configure($object);
         $file = FileRequest::get($object);

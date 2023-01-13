@@ -335,6 +335,7 @@ class Handler {
     }
 
     public static function session_set_cookie_params($options=[]){
+        ddd($options);
         return session_set_cookie_params($options);
     }
 
