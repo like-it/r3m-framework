@@ -95,7 +95,7 @@ class App extends Data {
                     ){
                         $this->config('logger.default.name', $name);
                     }
-                    $logger = new Logger();
+                    $logger = new Logger($name);
                     $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . $record->name, $level));
                     $this->logger($logger->getName(), $logger);
                 }
