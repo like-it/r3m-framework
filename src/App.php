@@ -85,8 +85,9 @@ class App extends Data {
                     property_exists($record, 'url') &&
                     property_exists($record, 'level')
                 ){
+                    $level = $record->level;
                     d($record->level);
-                    $level = Logger::$record->level;
+                    $level = Logger::$level;
                     ddd($level);
                 }
             }
