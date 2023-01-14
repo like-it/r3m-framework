@@ -76,6 +76,11 @@ class App extends Data {
         App::is_cli();
         require_once 'Debug.php';
         require_once 'Error.php';
+        Config::configure($this);
+
+        $logger_config = $this->config('logger');
+        ddd($logger_config);
+
         $logger = new Logger(App::LOGGER_NAME);
         $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . 'app.log', Logger::DEBUG));
         $uuid = posix_geteuid();
@@ -94,7 +99,7 @@ class App extends Data {
             }
         }
         $this->logger($logger->getName(), $logger);
-        Config::configure($this);
+
         Autoload::configure($this);
     }
 
