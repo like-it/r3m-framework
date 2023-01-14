@@ -82,37 +82,26 @@ class App extends Data {
         if(is_object($logger_config)){
             foreach($logger_config as $name => $record){
                 if(
-                    property_exists($record, 'url') &&
+                    property_exists($record, 'name') &&
                     property_exists($record, 'level')
                 ){
-                    $level = $record->level;
-                    d($record->level);
-                    $level = constant('Monolog\\Logger::' . $level);
-                    ddd($level);
+                    if(is_string($record->level)){
+                        $level = constant('Monolog\\Logger::' . strtoupper($record->level));
+                    } else {
+                        $level = (int) $record->level;
+                    }
+                    $logger = new Logger($name);
+                    $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . $record->name, $level));
+                    $this->logger($logger->getName(), $logger);
                 }
             }
         }
-        ddd($logger_config);
-
-        $logger = new Logger(App::LOGGER_NAME);
-        $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . 'app.log', Logger::DEBUG));
         $uuid = posix_geteuid();
         if(empty($uuid)){
-            $url = $this->config('project.dir.log') . 'app.log';
-            if(File::exist($url)) {
-                File::chown($url, File::USER_WWW, File::USER_WWW);
-            }
-            $url = $this->config('project.dir.log') . 'access.log';
-            if(File::exist($url)){
-                File::chown($url, File::USER_WWW, File::USER_WWW);
-            }
-            $url = $this->config('project.dir.log') . 'error.log';
-            if(File::exist($url)){
-                File::chown($url, File::USER_WWW, File::USER_WWW);
-            }
+            $dir = $this->config('project.dir.log');
+            $command = 'chown www-data:www-data ' . $dir . ' -R';
+            Core::execute($command);
         }
-        $this->logger($logger->getName(), $logger);
-
         Autoload::configure($this);
     }
 
