@@ -87,7 +87,7 @@ class App extends Data {
                 ){
                     $level = $record->level;
                     d($record->level);
-                    $level = constant('Logger::' . $level);
+                    $level = Logger::$level;
                     ddd($level);
                 }
             }
