@@ -79,6 +79,17 @@ class App extends Data {
         Config::configure($this);
 
         $logger_config = $this->config('logger');
+        if(is_object($logger_config)){
+            foreach($logger_config as $name => $record){
+                if(
+                    property_exists($record, 'url') &&
+                    property_exists($record, 'level')
+                ){
+                    $level = constant($record->level);
+                    ddd($level);
+                }
+            }
+        }
         ddd($logger_config);
 
         $logger = new Logger(App::LOGGER_NAME);
