@@ -42,7 +42,7 @@ class Database {
     const NAME = 'Database';
     const FETCH = PDO::FETCH_OBJ;
 
-    const LOGGER_DOCTRINE = 'Doctrine';
+    const LOGGER = 'Doctrine';
 
     /**
      * @throws Exception
@@ -128,11 +128,17 @@ class Database {
         if($config){
             $connection = (array) $config->get('doctrine.' . $name . '.' . $environment);
             if(empty($connection)){
-                $logger = new Logger(Database::LOGGER_DOCTRINE);
-                $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
-                $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
-                $object->logger($logger->getName(), $logger);
-                $logger->error('Error: No connection string...');
+                $is_init = $object->config('logger.' . Database::LOGGER);
+                if(empty($is_init)){
+                    $is_init = $object->config('logger.' . lcfirst(Database::LOGGER));
+                }
+                if(empty($is_init)){
+                    $logger = new Logger(Database::LOGGER);
+                    $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
+                    $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
+                    $object->logger($logger->getName(), $logger);
+                }
+                $object->logger(Database::LOGGER)->error('Error: No connection string...');
                 return null;
             }
             $paths = $config->get('doctrine.paths');
@@ -140,10 +146,17 @@ class Database {
             $cache = null;
             $config = ORMSetup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, $cache);
             if(!empty($connection['logging'])){
-                $logger = new Logger(Database::LOGGER_DOCTRINE);
-                $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
-                $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
-                $object->logger($logger->getName(), $logger);
+                $is_init = $object->config('logger.' . Database::LOGGER);
+                if(empty($is_init)){
+                    $is_init = $object->config('logger.' . lcfirst(Database::LOGGER));
+                }
+                if(empty($is_init)){
+                    $logger = new Logger(Database::LOGGER);
+                    $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
+                    $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
+                    $object->logger($logger->getName(), $logger);
+                }
+                $logger = $object->logger(Database::LOGGER);
                 $logger->info('Logger initialized...');
                 $config->setMiddlewares([new Logging\Middleware($logger)]);
             }

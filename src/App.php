@@ -10,6 +10,7 @@
  */
 namespace R3m\Io;
 
+use Monolog\Processor\PsrLogMessageProcessor;
 use R3m\Io\Exception\AuthorizationException;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Cli;
@@ -97,6 +98,17 @@ class App extends Data {
                     }
                     $logger = new Logger($name);
                     $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . $record->name, $level));
+                    if(property_exists($record, 'processor')){
+                        $dateFormat = null;
+                        $removeUsedContextFields = true;
+                        if(property_exists($record->processor, 'dateFormat')){
+                            $dateFormat = $record->processor->dateFormat;
+                        }
+                        if(property_exists($record->processor, 'removeUsedContextFields')){
+                            $removeUsedContextFields = $record->processor->removeUsedContextFields;
+                        }
+                        $logger->pushProcessor(new PsrLogMessageProcessor($dateFormat, $removeUsedContextFields));
+                    }
                     $this->logger($logger->getName(), $logger);
                 }
             }
