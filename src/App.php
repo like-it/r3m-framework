@@ -101,10 +101,16 @@ class App extends Data {
                     if(property_exists($record, 'processor')){
                         $dateFormat = null;
                         $removeUsedContextFields = true;
-                        if(property_exists($record->processor, 'dateFormat')){
+                        if(
+                            is_object($record->processor) &&
+                            property_exists($record->processor, 'dateFormat')
+                        ){
                             $dateFormat = $record->processor->dateFormat;
                         }
-                        if(property_exists($record->processor, 'removeUsedContextFields')){
+                        if(
+                            is_object($record->processor) &&
+                            property_exists($record->processor, 'removeUsedContextFields')
+                        ){
                             $removeUsedContextFields = $record->processor->removeUsedContextFields;
                         }
                         $logger->pushProcessor(new PsrLogMessageProcessor($dateFormat, $removeUsedContextFields));
