@@ -15,7 +15,7 @@ function function_export_translation(Parse $parse, Data $data, $type='object'){
     $url = $object->config('controller.dir.data') . $object->config('dictionary.translation') . $object->config('ds');
     $dir = new Dir();
     $read = $dir->read($url);
-    $object->logger(App::LOGGER_NAME)->info('export translation directory: ' . $url);
+    $object->logger($object->config('logger.default.name'))->info('export translation directory: ' . $url);
     $export = new Data();
     if($read){
         foreach($read as $nr => $file){
