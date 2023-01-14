@@ -86,7 +86,7 @@ class App extends Data {
                     property_exists($record, 'level')
                 ){
                     d($record->level);
-                    $level = constant($record->level);
+                    $level = constant("{$record->level}");
                     ddd($level);
                 }
             }
