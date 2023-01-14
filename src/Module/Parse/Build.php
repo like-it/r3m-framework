@@ -435,7 +435,10 @@ class Build {
         Core::execute($command, $output, $error);
         if($error){
             $url_write_error = $this->object()->config('dictionary.cache') . 'parse/error/' . File::basename($url);
-            $this->object()->logger()->error($error, [ $url_write_error ]);
+            $name = $this->object()->config('logger.default.name');
+            if($name){
+                $this->object()->logger($name)->error($error, [ $url_write_error ]);
+            }
             $dir = Dir::name($url_write_error);
             Dir::create($dir);
             File::move($url, $url_write_error, true);

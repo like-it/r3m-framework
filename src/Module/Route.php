@@ -146,7 +146,6 @@ class Route extends Data {
         } else {
             $url = $object->config('host.url') . $path;
         }
-        $object->logger()->debug('route:find.url:', [$url]);
         return $url;
     }
 
