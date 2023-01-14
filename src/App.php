@@ -90,7 +90,7 @@ class App extends Data {
                     } else {
                         $level = (int) $record->level;
                     }
-                    $logger = new Logger($name);
+                    $logger = new Logger(ucfirst($name));
                     $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . $record->name, $level));
                     $this->logger($logger->getName(), $logger);
                 }
