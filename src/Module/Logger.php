@@ -25,7 +25,6 @@ class Logger {
         $object->config('project.log.file', File::TYPE);
         foreach($monolog as $name => $record){
             $name = ucfirst($name);
-//            Logger::debug('nma', [ $name]);
             if(
                 property_exists($record, 'default') &&
                 !empty($record->default)
@@ -44,6 +43,7 @@ class Logger {
                 ){
                     //use constants in config & replace them here
                     $parameters = $record->parameters;
+                    $parameters = Config::parameters($object, $parameters);
                 } else {
                     $parameters = [];
                     $parameters[] = $name;
@@ -89,6 +89,7 @@ class Logger {
                                     ){
                                         //use constants in config & replace them here
                                         $parameters = $handler->formatter->parameters;
+                                        $parameters = Config::parameters($object, $parameters);
                                     } else {
                                         $parameters = [];
                                     }
@@ -160,7 +161,7 @@ class Logger {
     public static function alert($message=null, $context=[], $name=''){
         $object = App::instance();
         if(empty($name)){
-            $name = $object->config('logger.default.name');
+            $name = $object->config('project.log.name');
         }
         $object->logger($name)->alert($message, $context);
     }
@@ -171,7 +172,7 @@ class Logger {
     public static function critical($message=null, $context=[], $name=''){
         $object = App::instance();
         if(empty($name)){
-            $name = $object->config('logger.default.name');
+            $name = $object->config('project.log.name');
         }
         $object->logger($name)->critical($message, $context);
     }
@@ -182,7 +183,7 @@ class Logger {
     public static function debug($message=null, $context=[], $name=''){
         $object = App::instance();
         if(empty($name)){
-            $name = $object->config('logger.default.name');
+            $name = $object->config('project.log.name');
         }
         $object->logger($name)->debug($message, $context);
     }
@@ -193,7 +194,7 @@ class Logger {
     public static function emergency($message=null, $context=[], $name=''){
         $object = App::instance();
         if(empty($name)){
-            $name = $object->config('logger.default.name');
+            $name = $object->config('project.log.name');
         }
         $object->logger($name)->emergency($message, $context);
     }
@@ -204,7 +205,7 @@ class Logger {
     public static function error($message=null, $context=[], $name=''){
         $object = App::instance();
         if(empty($name)){
-            $name = $object->config('logger.default.name');
+            $name = $object->config('project.log.name');
         }
         $object->logger($name)->error($message, $context);
     }
@@ -215,7 +216,7 @@ class Logger {
     public static function info($message=null, $context=[], $name=''){
         $object = App::instance();
         if(empty($name)){
-            $name = $object->config('logger.default.name');
+            $name = $object->config('project.log.name');
         }
         $object->logger($name)->info($message, $context);
     }
@@ -226,7 +227,7 @@ class Logger {
     public static function notice($message=null, $context=[], $name=''){
         $object = App::instance();
         if(empty($name)){
-            $name = $object->config('logger.default.name');
+            $name = $object->config('project.log.name');
         }
         $object->logger($name)->notice($message, $context);
     }
@@ -237,7 +238,7 @@ class Logger {
     public static function warning($message=null, $context=[], $name=''){
         $object = App::instance();
         if(empty($name)){
-            $name = $object->config('logger.default.name');
+            $name = $object->config('project.log.name');
         }
         $object->logger($name)->warning($message, $context);
     }
