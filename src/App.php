@@ -26,6 +26,8 @@ use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
 use R3m\Io\Module\Logger;
 
+use Monolog\Logger as Monolog;
+
 //use Monolog\Logger;
 
 //use Monolog\Handler\StreamHandler;
@@ -423,7 +425,7 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public function logger($name='App', $logger=null): Logger
+    public function logger($name='App', $logger=null): Monolog
     {
         if($logger !== null){
             $this->setLogger($name, $logger);
@@ -431,15 +433,17 @@ class App extends Data {
         return $this->getLogger($name);
     }
 
-    private function setLogger($name='App', Logger $logger=null){
+    private function setLogger($name='App', Monolog $logger=null){
+        $name = ucfirst($name);
         $this->logger[$name] = $logger;
     }
 
     /**
      * @throws Exception
      */
-    private function getLogger($name='App'): Logger
+    private function getLogger($name='App'): Monolog
     {
+        $name = ucfirst($name);
         if(array_key_exists($name, $this->logger)){
             return $this->logger[$name];
         }
