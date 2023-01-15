@@ -25,7 +25,7 @@ class Logger {
         $object->config('project.log.file', File::TYPE);
         foreach($monolog as $name => $record){
             $name = ucfirst($name);
-            Logger::debug('nma', [ $name]);
+//            Logger::debug('nma', [ $name]);
             if(
                 property_exists($record, 'default') &&
                 !empty($record->default)
