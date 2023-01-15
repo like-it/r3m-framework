@@ -391,7 +391,12 @@ class Handler {
                     if($attribute === 'id'){
                         return session_id($value);
                     }
-                    if(
+                    elseif($attribute === 'extract'){
+                        $get = Handler::session($value);
+                        Handler::session('delete', $value);
+                        return $get;
+                    }
+                    elseif(
                         $attribute === Handler::SESSION_DELETE &&
                         $value === Handler::SESSION
                     ){

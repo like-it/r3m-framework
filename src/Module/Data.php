@@ -172,6 +172,12 @@ class Data {
         return Core::object_has($attribute, $this->data());
     }
 
+    public function extract($attribute=''){
+        $get = $this->get($attribute);
+        $this->delete($attribute);
+        return $get;
+    }
+
     public function data($attribute=null, $value=null, $type=null){
         if($attribute !== null){
             if($attribute == 'set'){

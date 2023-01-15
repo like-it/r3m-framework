@@ -17,6 +17,18 @@ use Exception;
 
 class Logger {
 
+    public static function configure(App $object){
+        ddd($object->config('monolog'));
+
+        $uuid = posix_geteuid();
+        if(empty($uuid)){
+            $dir = $object->config('project.dir.log');
+            $command = 'chown www-data:www-data ' . $dir . ' -R';
+            Core::execute($command);
+        }
+    }
+
+
     /**
      * @throws Exception
      */

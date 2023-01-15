@@ -10,8 +10,7 @@
  */
 namespace R3m\Io;
 
-use Monolog\Processor\PsrLogMessageProcessor;
-use R3m\Io\Exception\AuthorizationException;
+
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Cli;
 use R3m\Io\Module\Core;
@@ -25,9 +24,15 @@ use R3m\Io\Module\Host;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
+use R3m\Io\Module\Logger;
 
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+//use Monolog\Logger;
+
+//use Monolog\Handler\StreamHandler;
+
+//use Monolog\Processor\PsrLogMessageProcessor;
+
+
 
 use Exception;
 use R3m\Io\Exception\ObjectException;
@@ -76,7 +81,9 @@ class App extends Data {
         require_once 'Debug.php';
         require_once 'Error.php';
         Config::configure($this);
+        Logger::configure($this);
 
+        /*
         $logger_config = $this->config('logger');
         if(is_object($logger_config)){
             foreach($logger_config as $name => $record){
@@ -119,12 +126,7 @@ class App extends Data {
                 }
             }
         }
-        $uuid = posix_geteuid();
-        if(empty($uuid)){
-            $dir = $this->config('project.dir.log');
-            $command = 'chown www-data:www-data ' . $dir . ' -R';
-            Core::execute($command);
-        }
+        */
         Autoload::configure($this);
     }
 
