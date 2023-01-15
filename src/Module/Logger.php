@@ -129,6 +129,7 @@ class Logger {
                             $push = new $processor->class(...$parameters);
                             if(method_exists($logger, 'pushProcessor')){
                                 $logger->pushProcessor($push);
+                                ddd('yes');
                             }
                         }
                     }
