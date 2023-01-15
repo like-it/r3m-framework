@@ -161,6 +161,8 @@ class Logger {
         $object = App::instance();
         if(empty($name)){
             $name = $object->config('project.log.name');
+        } else {
+            $name = ucfirst($name);
         }
         $object->logger($name)->alert($message, $context);
     }
@@ -172,6 +174,8 @@ class Logger {
         $object = App::instance();
         if(empty($name)){
             $name = $object->config('project.log.name');
+        } else {
+            $name = ucfirst($name);
         }
         $object->logger($name)->critical($message, $context);
     }
@@ -183,6 +187,8 @@ class Logger {
         $object = App::instance();
         if(empty($name)){
             $name = $object->config('project.log.name');
+        } else {
+            $name = ucfirst($name);
         }
         $object->logger($name)->debug($message, $context);
     }
@@ -194,6 +200,8 @@ class Logger {
         $object = App::instance();
         if(empty($name)){
             $name = $object->config('project.log.name');
+        } else {
+            $name = ucfirst($name);
         }
         $object->logger($name)->emergency($message, $context);
     }
@@ -205,6 +213,8 @@ class Logger {
         $object = App::instance();
         if(empty($name)){
             $name = $object->config('project.log.name');
+        } else {
+            $name = ucfirst($name);
         }
         $object->logger($name)->error($message, $context);
     }
@@ -216,6 +226,8 @@ class Logger {
         $object = App::instance();
         if(empty($name)){
             $name = $object->config('project.log.name');
+        } else {
+            $name = ucfirst($name);
         }
         $object->logger($name)->info($message, $context);
     }
@@ -227,6 +239,8 @@ class Logger {
         $object = App::instance();
         if(empty($name)){
             $name = $object->config('project.log.name');
+        } else {
+            $name = ucfirst($name);
         }
         $object->logger($name)->notice($message, $context);
     }
@@ -238,6 +252,8 @@ class Logger {
         $object = App::instance();
         if(empty($name)){
             $name = $object->config('project.log.name');
+        } else {
+            $name = ucfirst($name);
         }
         $object->logger($name)->warning($message, $context);
     }
