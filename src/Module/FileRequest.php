@@ -263,9 +263,9 @@ class FileRequest {
                     //let's parse this tpl
                     $data = new Data();
                     $data->set('file', $file);
-                    $data->set('extension', $extension);
+                    $data->set('extension', $file_extension);
                     $data->set('location', $location);
-                    $contentType = $config->data('contentType.' . $extension);
+                    $contentType = $config->data('contentType.' . $file_extension);
                     $data->set('contentType', $contentType);
                     $parse = new Parse($object, $data);
                     $compile = $parse->compile(File::read($parse->compile($config->data('server.http.error.404'), $data->get())), $data->get());
@@ -274,7 +274,7 @@ class FileRequest {
             }
             elseif(
                 in_array(
-                    $extension,
+                    $file_extension,
                     $config->get('error.extension.text')
                 )
             ){
@@ -284,7 +284,7 @@ class FileRequest {
             }
             elseif(
                 in_array(
-                    $extension,
+                    $file_extension,
                     $config->get('error.extension.js')
                 )
             ){
@@ -294,7 +294,7 @@ class FileRequest {
             }
             elseif(
                 in_array(
-                    $extension,
+                    $file_extension,
                     $config->get('error.extension.json')
                 )
             ){
@@ -302,7 +302,7 @@ class FileRequest {
                 Handler::header('Content-Type: ' . $contentType, null, true);
                 echo '{
     "file" : "' . $file . '",
-    "extension" : "' . $extension . '",
+    "extension" : "' . $file_extension . '",
     "contentType" : "' . $contentType . '",
     "message" : "Error: cannot find file."
 }';
