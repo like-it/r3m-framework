@@ -82,51 +82,6 @@ class App extends Data {
         require_once 'Error.php';
         Config::configure($this);
         Logger::configure($this);
-
-        /*
-        $logger_config = $this->config('logger');
-        if(is_object($logger_config)){
-            foreach($logger_config as $name => $record){
-                $name = ucfirst($name);
-                if(
-                    property_exists($record, 'name') &&
-                    property_exists($record, 'level')
-                ){
-                    if(is_string($record->level)){
-                        $level = constant('Monolog\\Logger::' . strtoupper($record->level));
-                    } else {
-                        $level = (int) $record->level;
-                    }
-                    if(
-                        property_exists($record, 'default') &&
-                        $record->default === true
-                    ){
-                        $this->config('logger.default.name', $name);
-                    }
-                    $logger = new Logger($name);
-                    $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . $record->name, $level));
-                    if(property_exists($record, 'processor')){
-                        $dateFormat = null;
-                        $removeUsedContextFields = true;
-                        if(
-                            is_object($record->processor) &&
-                            property_exists($record->processor, 'dateFormat')
-                        ){
-                            $dateFormat = $record->processor->dateFormat;
-                        }
-                        if(
-                            is_object($record->processor) &&
-                            property_exists($record->processor, 'removeUsedContextFields')
-                        ){
-                            $removeUsedContextFields = $record->processor->removeUsedContextFields;
-                        }
-                        $logger->pushProcessor(new PsrLogMessageProcessor($dateFormat, $removeUsedContextFields));
-                    }
-                    $this->logger($logger->getName(), $logger);
-                }
-            }
-        }
-        */
         Autoload::configure($this);
     }
 

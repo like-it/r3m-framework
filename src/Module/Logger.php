@@ -17,9 +17,128 @@ use Exception;
 
 class Logger {
 
+    /**
+     * @throws Exception
+     */
     public static function configure(App $object){
-        ddd($object->config('monolog'));
+        ddd($object->config('log'));
 
+        $monolog = $object->config('log');
+        foreach($monolog as $name => $record){
+            $name = ucfirst($name);
+            if(
+                property_exists($record, 'class') &&
+                !empty($record->class) &&
+                is_string($record->class)
+            ){
+                if(
+                    property_exists($record, 'parameters') &&
+                    !empty($record->parameters) &&
+                    is_array($record->parameters)
+                ){
+                    //use constants in config & replace them here
+                    $parameters = $record->parameters;
+                } else {
+                    $parameters = [];
+                    $parameters[] = $name;
+                }
+                $logger = new $record->class(...$parameters);
+                if(
+                    property_exists($record, 'handler') &&
+                    !empty($record->handler) &&
+                    is_array($record->handler)
+                ){
+                    foreach($record->handler as $handler){
+                        if(
+                            property_exists($handler, 'class') &&
+                            !empty($handler->class) &&
+                            is_string($handler->class)
+                        ){
+                            if(
+                                property_exists($handler, 'parameters') &&
+                                !empty($handler->parameters) &&
+                                is_array($handler->parameters)
+                            ){
+                                //use constants in config & replace them here
+                                $parameters = $handler->parameters;
+                            } else {
+                                $parameters = [];
+                            }
+                            $push = new $handler->class(...$parameters);
+                            if(
+                                property_exists($handler, 'formatter') &&
+                                !empty($handler->formatter) &&
+                                is_object($handler->formatter)
+                            ){
+                                if(
+                                    property_exists($handler->formatter, 'class') &&
+                                    !empty($handler->formatter->class) &&
+                                    is_string($handler->formatter->class)
+                                ){
+                                    if(
+                                        property_exists($handler->formatter, 'parameters') &&
+                                        !empty($handler->formatter->parameters) &&
+                                        is_array($handler->formatter->parameters)
+                                    ){
+                                        //use constants in config & replace them here
+                                        $parameters = $handler->formatter->parameters;
+                                    } else {
+                                        $parameters = [];
+                                    }
+                                    if(method_exists($push, 'setFormatter')){
+                                        $formatter = new $handler->formatter->class(...$parameters);
+                                        $push->setFormatter($formatter);
+                                    }
+                                }
+                            }
+                            if(method_exists($logger, 'pushHandler')){
+                                $logger->pushHandler($push);
+                            }
+                        }
+                    }
+                }
+                if(
+                    property_exists($record, 'processor') &&
+                    !empty($record->processor) &&
+                    is_array($record->processor)
+                ){
+                    foreach($record->processor as $processor){
+                        if(
+                            property_exists($processor, 'class') &&
+                            !empty($processor->class) &&
+                            is_string($processor->class)
+                        ){
+                            if(
+                                property_exists($processor, 'parameters') &&
+                                !empty($processor->parameters) &&
+                                is_array($processor->parameters)
+                            ){
+                                //use constants in config & replace them here
+                                $parameters = $processor->parameters;
+                            } else {
+                                $parameters = [];
+                            }
+                            $push = new $processor->class(...$parameters);
+                            if(method_exists($logger, 'pushProcessor')){
+                                $logger->pushProcessor($push);
+                            }
+                        }
+                    }
+                }
+                $object->logger($logger->getName(), $logger);
+                if(
+                    property_exists($record, 'channel') &&
+                    !empty($record->channel) &&
+                    is_array($record->channel)
+                ){
+                    foreach($record->channel as $withName){
+                        $channel = clone($logger);
+                        $channel->withName($withName);
+                        $object->logger($channel->getName(), $channel);
+                    }
+                }
+            }
+        }
         $uuid = posix_geteuid();
         if(empty($uuid)){
             $dir = $object->config('project.dir.log');
@@ -27,7 +146,6 @@ class Logger {
             Core::execute($command);
         }
     }
-
 
     /**
      * @throws Exception
