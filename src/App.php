@@ -75,6 +75,7 @@ class App extends Data {
         require_once 'Debug.php';
         require_once 'Error.php';
         Config::configure($this);
+        Host::configure($this);
         Logger::configure($this);
         Autoload::configure($this);
     }
@@ -92,11 +93,10 @@ class App extends Data {
         Handler::request_configure($object);
         ddd($object->config());
         if(empty($object->request('request'))){
-            $object->logger($object->config('logger.default.name'))->info('Logger: App initialized and enabling cors');
+            $object->logger($object->config('project.log.name'))->info('Logger: App initialized and enabling cors');
         } else {
-            $object->logger($object->config('logger.default.name'))->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
+            $object->logger($object->config('project.log.name'))->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
         }
-        Host::configure($object);
         $options = $object->config('server.http.cookie');
         if(property_exists($options, 'domain') && $options->domain === true){
             $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());

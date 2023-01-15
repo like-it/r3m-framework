@@ -24,6 +24,7 @@ class Logger {
         $monolog = $object->config('log');
         foreach($monolog as $name => $record){
             $name = ucfirst($name);
+            ddd($record);
             if(
                 property_exists($record, 'class') &&
                 !empty($record->class) &&
