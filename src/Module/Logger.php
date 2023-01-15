@@ -21,8 +21,6 @@ class Logger {
      * @throws Exception
      */
     public static function configure(App $object){
-        ddd($object->config('log'));
-
         $monolog = $object->config('log');
         foreach($monolog as $name => $record){
             $name = ucfirst($name);
@@ -38,6 +36,7 @@ class Logger {
                 ){
                     //use constants in config & replace them here
                     $parameters = $record->parameters;
+                    ddd($parameters);
                 } else {
                     $parameters = [];
                     $parameters[] = $name;

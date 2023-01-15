@@ -96,6 +96,7 @@ class App extends Data {
         }
         //Config::configure($object); //@moved to construct
         Handler::request_configure($object);
+        ddd($object->config());
         if(empty($object->request('request'))){
             $object->logger($object->config('logger.default.name'))->info('Logger: App initialized and enabling cors');
         } else {
