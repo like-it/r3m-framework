@@ -143,6 +143,7 @@ class Logger {
                         $channel = clone($logger);
                         $channel->withName($withName);
                         $object->logger($channel->getName(), $channel);
+                        d($channel);
                     }
                 }
             }
