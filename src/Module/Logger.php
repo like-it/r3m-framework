@@ -66,6 +66,7 @@ class Logger {
                             ){
                                 //use constants in config & replace them here
                                 $parameters = $handler->parameters;
+                                ddd($parameters);
                             } else {
                                 $parameters = [];
                             }
