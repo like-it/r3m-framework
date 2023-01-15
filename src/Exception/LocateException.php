@@ -54,8 +54,8 @@ class LocateException extends Exception {
             $object->set('exception.previous', $this->getPrevious());
             $object->set('exception.location', $this->getLocation());
             $parse = new Parse($object, $object->data());
-            ddd($object->config('exception.locate'));
             $url = $parse->compile($object->config('exception.locate'), $object->data());
+            ddd($url);
             if(File::exist($url)){
                 $read = File::read($url);
                 return $parse->compile($read, $object->data());
