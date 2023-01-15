@@ -139,7 +139,7 @@ class Logger {
                     !empty($record->channel) &&
                     is_array($record->channel)
                 ){
-                    foreach($record->channel as $withName => $unused){
+                    foreach($record->channel as $withName){
                         d($withName);
                         $channel = clone($logger);
                         $channel->withName($withName);
