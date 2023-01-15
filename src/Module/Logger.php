@@ -22,6 +22,7 @@ class Logger {
      */
     public static function configure(App $object){
         $monolog = $object->config('log');
+        $object->config('project.log.file', File::TYPE);
         foreach($monolog as $name => $record){
             $name = ucfirst($name);
             if(
