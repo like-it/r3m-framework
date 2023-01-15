@@ -28,6 +28,21 @@ class LocateException extends Exception {
         parent::__construct($message, $code, $previous);
     }
 
+    public function object($object=null){
+        if($object !== null){
+            $this->setObject($object);
+        }
+        return $this->getObject();
+    }
+
+    private function setObject(App $object){
+        $this->object = $object;
+    }
+
+    private function getObject(){
+        return $this->object;
+    }
+
     public function getLocation(){
         return $this->location;
     }
@@ -43,7 +58,7 @@ class LocateException extends Exception {
      */
     public function __toString()
     {
-        $object = App::instance();
+        $object = $this->object();
         if($object){
             $object->config('exception.locate', '{{config(\'project.dir.host\')}}{{string.uppercase.first(host.subdomain())}}/{{string.uppercase.first(host.domain())}}/{{string.uppercase.first(host.extension())}}/View/Exception/Locate.tpl');
             $object->set('exception.message', $this->getMessage());
@@ -55,7 +70,6 @@ class LocateException extends Exception {
             $object->set('exception.location', $this->getLocation());
             $parse = new Parse($object, $object->data());
             $url = $parse->compile($object->config('exception.locate'), $object->data());
-            ddd($url);
             if(File::exist($url)){
                 $read = File::read($url);
                 return $parse->compile($read, $object->data());
