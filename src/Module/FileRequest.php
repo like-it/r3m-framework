@@ -253,7 +253,7 @@ class FileRequest {
         } else {
             if(
                 in_array(
-                    $extension,
+                    $file_extension,
                     $config->get('error.extension.tpl')
                 )
             ){
