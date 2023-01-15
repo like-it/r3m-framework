@@ -113,12 +113,16 @@ class App extends Data {
         //Autoload::configure($object); //@moved to construct
         Route::configure($object);
         $file = FileRequest::get($object);
-        if($file === false){
+        if($file){
+            $object->logger($object->config('project.log.name'))->info('File request: ' . $object->request('request') . ' called...');
+            return $file;
+        }
+        elseif($file === false){
             try {
                 $route = Route::request($object);
                 if($route === false){
                     if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-                        $object->logger($object->config('logger.default.name'))->error('Couldn\'t determine route (' . $object->request('request') .')...');
+                        $object->logger($object->config('project.log.name'))->error('Couldn\'t determine route (' . $object->request('request') .')...');
                         $response = new Response(
                             App::exception_to_json(new Exception(
                                 'Couldn\'t determine route (' . $object->request('request') .')...'
@@ -130,7 +134,7 @@ class App extends Data {
                     } else {
                         $route = Route::wildcard($object);
                         if($route === false){
-                            $object->logger($object->config('logger.default.name'))->error('Couldn\'t determine route (wildcard) (' . $object->request('request') .')...');
+                            $object->logger($object->config('project.log.name'))->error('Couldn\'t determine route (wildcard) (' . $object->request('request') .')...');
                             $response = new Response(
                                 "Website is not configured...",
                                 Response::TYPE_HTML
@@ -147,14 +151,14 @@ class App extends Data {
                         $route->method
                     )
                 ) {
-                    $object->logger($object->config('logger.default.name'))->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . implode(', ', $route->method));
+                    $object->logger($object->config('project.log.name'))->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . implode(', ', $route->method));
                     Core::redirect($route->redirect);
                 }
                 elseif(
                     property_exists($route, 'redirect') &&
                     !property_exists($route, 'method')
                 ){
-                    $object->logger($object->config('logger.default.name'))->info('Redirect: ' . $route->redirect);
+                    $object->logger($object->config('project.log.name'))->info('Redirect: ' . $route->redirect);
                     Core::redirect($route->redirect);
                 }
                 elseif(
@@ -189,7 +193,7 @@ class App extends Data {
                     App::controller($object, $route);
                     $methods = get_class_methods($route->controller);
                     if(empty($methods)){
-                        $object->logger($object->config('logger.default.name'))->error('Couldn\'t determine controller (' . $route->controller .') with request (' . $object->request('request') .')');
+                        $object->logger($object->config('project.log.name'))->error('Couldn\'t determine controller (' . $route->controller .') with request (' . $object->request('request') .')');
                         $response = new Response(
                             App::exception_to_json(new Exception(
                         'Couldn\'t determine controller (' . $route->controller .')'
@@ -221,7 +225,7 @@ class App extends Data {
                         }
                         $result = $route->controller::{$route->function}($object);
                     } else {
-                        $object->logger($object->config('logger.default.name'))->error(
+                        $object->logger($object->config('project.log.name'))->error(
                             'Controller (' .
                             $route->controller .
                             ') function (' .
@@ -255,7 +259,7 @@ class App extends Data {
                         $functions[] = 'after_result';
                         $result = $route->controller::after_result($object, $result);
                     }
-                    $object->logger($object->config('logger.default.name'))->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
+                    $object->logger($object->config('project.log.name'))->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
                     return $result;
                 }
 
@@ -266,11 +270,11 @@ class App extends Data {
                             header('Status: 500');
                             header('Content-Type: application/json');
                         }
-                        $object->logger($object->config('logger.default.name'))->error($exception->getMessage());
+                        $object->logger($object->config('project.log.name'))->error($exception->getMessage());
                         return App::exception_to_json($exception);
                     }
                     elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
-                        $object->logger($object->config('logger.default.name'))->error($exception->getMessage());
+                        $object->logger($object->config('project.log.name'))->error($exception->getMessage());
                         fwrite(STDERR, App::exception_to_cli($object, $exception));
                         return '';
                     } else {
@@ -295,9 +299,6 @@ class App extends Data {
                     return $exception;
                 }
             }
-        } else {
-            $object->logger($object->config('logger.default.name'))->info('File request: ' . $object->request('request') . ' called...');
-            return $file;
         }
     }
 
