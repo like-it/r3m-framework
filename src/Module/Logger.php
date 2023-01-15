@@ -140,9 +140,7 @@ class Logger {
                     is_array($record->channel)
                 ){
                     foreach($record->channel as $withName){
-                        d($withName);
-                        $channel = clone($logger);
-                        $channel->withName($withName);
+                        $channel = $logger->withName($withName);
                         $object->logger($channel->getName(), $channel);
                         ddd($channel);
                     }
