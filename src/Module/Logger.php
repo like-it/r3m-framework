@@ -21,9 +21,9 @@ class Logger {
      * @throws Exception
      */
     public static function configure(App $object){
-        $monolog = $object->config('log');
+        $interface = $object->config('log');
         $object->config('project.log.file', File::TYPE);
-        foreach($monolog as $name => $record){
+        foreach($interface as $name => $record){
             $name = ucfirst($name);
             if(
                 property_exists($record, 'default') &&

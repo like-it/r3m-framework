@@ -235,10 +235,11 @@ class FileRequest {
                     Handler::header('Cache-Control: public');
 
                     if(array_key_exists('HTTP_REFERER', $_SERVER)){
+                        $object->logger()->debug('server', [ $_SERVER]);
                         $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
                         if(Core::cors_is_allowed($object, $origin)){
-                            header("Access-Control-Allow-Origin: {$origin}");
-//                            Handler::header("Access-Control-Allow-Origin: *");
+                            //header("Access-Control-Allow-Origin: {$origin}");
+                            Handler::header("Access-Control-Allow-Origin: *");
                         }
                     }
                 }
@@ -304,11 +305,7 @@ class FileRequest {
 }';
             }
         }
-        $name = $object->config('project.log.file');
-        ddd($name);
-        if($name){
-            $object->logger($name)->error('HTTP/1.0 404 Not Found', $location);
-        }
+        $object->logger(File::TYPE)->error('HTTP/1.0 404 Not Found', $location);
         exit();
     }
 
