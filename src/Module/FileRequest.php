@@ -16,6 +16,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 
 class FileRequest {
+    const NAME = 'FileRequest';
     const REQUEST = 'Request';
 
     private static function location(App $object, $dir): array
@@ -305,7 +306,7 @@ class FileRequest {
 }';
             }
         }
-        $object->logger(File::TYPE)->error('HTTP/1.0 404 Not Found', $location);
+        $object->logger(FileRequest::NAME)->error('HTTP/1.0 404 Not Found', $location);
         exit();
     }
 
