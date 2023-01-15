@@ -237,6 +237,7 @@ class Autoload {
         $load = ltrim($load, '\\');
         $prefixList = $this->getPrefixList();
         $fileList = [];
+        Logger::debug('prefixlist', [ $load, $prefixList, $url]);
         if(!empty($prefixList)){
             foreach($prefixList as $item){
                 if(empty($item['prefix'])){
