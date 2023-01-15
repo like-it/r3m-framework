@@ -306,6 +306,9 @@ class FileRequest {
 }';
             }
         }
+        foreach($location as $nr => $record){
+            $location[$nr] = $record . $file;
+        }
         $object->logger(FileRequest::NAME)->error('HTTP/1.0 404 Not Found', $location);
         exit();
     }
