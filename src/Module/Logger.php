@@ -142,7 +142,6 @@ class Logger {
                     foreach($record->channel as $withName){
                         $channel = $logger->withName($withName);
                         $object->logger($channel->getName(), $channel);
-                        ddd($channel);
                     }
                 }
             }
