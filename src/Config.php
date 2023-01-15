@@ -212,6 +212,19 @@ class Config extends Data {
         }
     }
 
+    public static function parameters(App $object, $parameters=[]){
+        if(empty($parameters)){
+            return $parameters;
+        }
+        if(!is_array($parameters)){
+            return [];
+        }
+        foreach($parameters as $nr => $parameter){
+            $tree = Parse\Token::tree($parameter);
+            ddd($tree);
+        }
+    }
+
     public function default(){
         $key = Config::DICTIONARY . '.' . Config::DATA;
         $value = Config::VALUE_DATA;

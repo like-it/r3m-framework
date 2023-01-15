@@ -26,15 +26,7 @@ use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
 use R3m\Io\Module\Logger;
 
-use Monolog\Logger as Monolog;
-
-//use Monolog\Logger;
-
-//use Monolog\Handler\StreamHandler;
-
-//use Monolog\Processor\PsrLogMessageProcessor;
-
-
+use Psr\Log\LoggerInterface;
 
 use Exception;
 use R3m\Io\Exception\ObjectException;
@@ -425,7 +417,7 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public function logger($name='App', $logger=null): Monolog
+    public function logger($name='App', $logger=null): LoggerInterface
     {
         if($logger !== null){
             $this->setLogger($name, $logger);
@@ -433,7 +425,7 @@ class App extends Data {
         return $this->getLogger($name);
     }
 
-    private function setLogger($name='App', Monolog $logger=null){
+    private function setLogger($name='App', LoggerInterface $logger=null){
         $name = ucfirst($name);
         $this->logger[$name] = $logger;
     }
@@ -441,7 +433,7 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    private function getLogger($name='App'): Monolog
+    private function getLogger($name='App'): LoggerInterface
     {
         $name = ucfirst($name);
         if(array_key_exists($name, $this->logger)){
