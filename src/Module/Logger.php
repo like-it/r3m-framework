@@ -129,7 +129,6 @@ class Logger {
                             $push = new $processor->class(...$parameters);
                             if(method_exists($logger, 'pushProcessor')){
                                 $logger->pushProcessor($push);
-                                ddd('yes');
                             }
                         }
                     }
@@ -144,7 +143,7 @@ class Logger {
                         $channel = clone($logger);
                         $channel->withName($withName);
                         $object->logger($channel->getName(), $channel);
-                        d($channel);
+                        ddd($channel);
                     }
                 }
             }
