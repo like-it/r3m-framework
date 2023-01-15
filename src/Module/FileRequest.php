@@ -305,6 +305,7 @@ class FileRequest {
             }
         }
         $name = $object->config('project.log.file');
+        ddd($name);
         if($name){
             $object->logger($name)->error('HTTP/1.0 404 Not Found', $location);
         }
