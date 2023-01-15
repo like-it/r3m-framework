@@ -162,6 +162,7 @@ class FileRequest {
         FileRequest::local($object);
         $fileRequest = $object->config('server.fileRequest');
         Config::contentType($object);
+        ddd('test');
         Logger::configure($object);
         if(empty($fileRequest)){
             $location = FileRequest::location($object, $dir);
