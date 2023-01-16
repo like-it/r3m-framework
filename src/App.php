@@ -106,7 +106,11 @@ class App extends Data {
             $object->logger($object->config('project.log.name'))->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
         }
         $options = $object->config('server.http.cookie');
-        if(property_exists($options, 'domain') && $options->domain === true){
+        if(
+            is_object($options) &&
+            property_exists($options, 'domain') &&
+            $options->domain === true
+        ){
             $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());
             if(!$options->domain){
                 $options->domain = Host::domain() . '.' . Host::extension();
