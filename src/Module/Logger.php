@@ -17,12 +17,13 @@ use Exception;
 
 class Logger {
 
+    const FILEREQUEST = 'FileRequest';
     /**
      * @throws Exception
      */
     public static function configure(App $object){
         $interface = $object->config('log');
-        $object->config('project.log.file', File::TYPE);
+        $object->config('project.log.fileRequest', Logger::FILEREQUEST);
         if($interface){
             foreach($interface as $name => $record){
                 $name = ucfirst($name);
