@@ -129,7 +129,7 @@ class App extends Data {
             if($object->config('project.log.name')){
                 d($object->config('project.log'));
                 die;
-                $object->logger($object->config('project.log.file'))->info('File request: ' . $object->request('request') . ' called...');
+                $object->logger($object->config('project.log.fileRequest'))->info('File request: ' . $object->request('request') . ' called...');
             }
             return $file;
         }
