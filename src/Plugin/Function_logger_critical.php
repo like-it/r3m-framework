@@ -9,7 +9,7 @@ use R3m\Io\Module\Data;
 function function_logger_critical(Parse $parse, Data $data, $message=null, $context=[], $name=''){
     $object = $parse->object();
     if(empty($name)){
-        $name = $object->config('logger.default.name');
+        $name = $object->config('project.log.name');
     }
     $object->logger($name)->critical($message, $context);
 }

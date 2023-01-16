@@ -198,11 +198,14 @@ class Data {
                     }
                 }
             }
-            elseif($attribute == 'get'){
+            elseif($attribute === 'get'){
                 return Core::object_get($value, $this->data());
             }
-            elseif($attribute == 'has'){
+            elseif($attribute === 'has'){
                 return Core::object_has($value, $this->data());
+            }
+            elseif($attribute === 'extract'){
+                return $this->extract($value);
             }
             if($value !== null){
                 if(
