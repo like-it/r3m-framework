@@ -151,6 +151,10 @@ class Logger {
                         foreach($record->channel as $withName){
                             $withName = ucfirst($withName);
                             $channel = $logger->withName($withName);
+                            $logName = strtolower($withName);
+                            if($logName !== 'name'){
+                                $object->config('project.log.' . $logName, $withName);
+                            }
                             $object->logger($channel->getName(), $channel);
                         }
                     }
