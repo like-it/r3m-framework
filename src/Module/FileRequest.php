@@ -239,8 +239,8 @@ class FileRequest {
                         $object->logger()->debug('server', [ $_SERVER]);
                         $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
                         if(Core::cors_is_allowed($object, $origin)){
-                            header("Access-Control-Allow-Origin: {$origin}");
-//                            Handler::header("Access-Control-Allow-Origin: *");
+//                            header("Access-Control-Allow-Origin: {$origin}"); //redirect referer bug
+                            Handler::header("Access-Control-Allow-Origin: *");
                         }
                     }
                 }
