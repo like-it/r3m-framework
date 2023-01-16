@@ -796,8 +796,8 @@ class Core {
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
             $origin = $_SERVER['HTTP_ORIGIN'];
             if(Core::cors_is_allowed($object, $origin)){
-                $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
-                header("Access-Control-Allow-Origin: {$origin}");
+//                header("Access-Control-Allow-Origin: {$origin}");
+                header("Access-Control-Allow-Origin: *");
                 header('Access-Control-Allow-Credentials: true');
             }
         }
