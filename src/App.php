@@ -86,26 +86,26 @@ class App extends Data {
      * @throws LocateException
      */
     public static function run(App $object){
+        $info = 'Logger: App initialized';
         if(App::is_cli() === false){
             $domains = $object->config('server.cors.domains');
-            ddd($domains);
-            Core::cors($object);
+            if(!empty($domains)){
+                $info .= ' and enabling cors';
+                Core::cors($object);
+            }
         }
         //Config::configure($object); //@moved to construct
         Handler::request_configure($object);
-
-
-
         if(
             !empty($object->config('project.log.name')) &&
             empty($object->request('request'))
         ){
-            $object->logger($object->config('project.log.name'))->info('Logger: App initialized and enabling cors');
+            $object->logger($object->config('project.log.name'))->info($info);
         }
         elseif(
             !empty($object->config('project.log.name'))
         ) {
-            $object->logger($object->config('project.log.name'))->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
+            $object->logger($object->config('project.log.name'))->info($info . ' with request: ' . $object->request('request'));
         }
         $options = $object->config('server.http.cookie');
         if(
