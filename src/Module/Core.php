@@ -736,7 +736,7 @@ class Core {
         } else {
             return false;
         }
-        $host_list = $object->config('server.cors');
+        $host_list = $object->config('server.cors.domains');
         if(is_array($host_list)){
             foreach($host_list as $host){
                 $explode = explode('.', $host);
@@ -806,11 +806,40 @@ class Core {
             $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
         ) {
 //            header('Access-Control-Allow-Credentials: true');
-            header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
-            //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
-            header('Access-Control-Allow-Headers: Origin, Cache-Control, Content-Type, Authorization, X-Requested-With');
-            header('Access-Control-Expose-Headers: Cache-Control, Content-Language, Content-Length, Content-Type, Expires, Last-Modified, Pragma');
-            header('Access-Control-Max-Age: 86400');    // cache for 1 day
+            $methods = $object->config('server.cors.methods');
+            if(
+                $methods &&
+                is_array($methods)
+            ){
+                header('Access-Control-Allow-Methods: ' . implode(', ', $methods));
+            }
+            $allow = $object->config('server.cors.headers.allow');
+            if(
+                $allow &&
+                is_array($allow)
+            ){
+                header('Access-Control-Allow-Headers: ' . implode(', ', $allow));
+            } else {
+                header('Access-Control-Allow-Headers: Origin, Cache-Control, Content-Type, Authorization, X-Requested-With');
+            }
+            $expose = $object->config('server.cors.headers.expose');
+            if(
+                $expose &&
+                is_array($expose)
+            ){
+                header('Access-Control-Expose-Headers: ' . implode(', ', $expose));
+            } else {
+                header('Access-Control-Expose-Headers: Cache-Control, Content-Language, Content-Length, Content-Type, Expires, Last-Modified, Pragma');
+            }
+            $max_age = $object->config('server.cors.max-age');
+            if(
+                $max_age &&
+                is_int($max_age)
+            ){
+                header('Access-Control-Max-Age: ' . $max_age);
+            } else {
+                header('Access-Control-Max-Age: 86400');    // cache for 1 day
+            }
             exit(0);
         }
     }
