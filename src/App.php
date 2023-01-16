@@ -127,7 +127,8 @@ class App extends Data {
         $file = FileRequest::get($object);
         if($file){
             if($object->config('project.log.name')){
-                ddd($object->config('project.log'));
+                d($object->config('project.log'));
+                die;
                 $object->logger($object->config('project.log.file'))->info('File request: ' . $object->request('request') . ' called...');
             }
             return $file;
