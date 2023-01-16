@@ -126,7 +126,7 @@ class App extends Data {
         Route::configure($object);
         $file = FileRequest::get($object);
         if($file){
-            if($object->config('project.log.file')){
+            if($object->config('project.log.name')){
                 $object->logger($object->config('project.log.file'))->info('File request: ' . $object->request('request') . ' called...');
             }
             return $file;
