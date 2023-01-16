@@ -247,6 +247,14 @@ class FileRequest {
                 return File::read($url);
             }
         }
+        if(
+            !empty($location) &&
+            is_array($location)
+        ){
+            foreach($location as $nr => $record){
+                $location[$nr] = $record . $file;
+            }
+        }
         Handler::header('HTTP/1.0 404 Not Found', 404);
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
             throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
@@ -305,9 +313,6 @@ class FileRequest {
     "message" : "Error: cannot find file."
 }';
             }
-        }
-        foreach($location as $nr => $record){
-            $location[$nr] = $record . $file;
         }
         $object->logger(FileRequest::NAME)->error('HTTP/1.0 404 Not Found', $location);
         exit();

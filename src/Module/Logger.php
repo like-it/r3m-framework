@@ -99,6 +99,13 @@ class Logger {
                                     }
                                 }
                             }
+                            elseif(
+                                !property_exists($handler, 'formatter') &&
+                                method_exists($push, 'setFormatter')
+                            ){
+                                $formatter =new Monolog\Formatter\LineFormatter();
+                                $push->setFormatter($formatter);
+                            }
                             if(method_exists($logger, 'pushHandler')){
                                 $logger->pushHandler($push);
                             }
