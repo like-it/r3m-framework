@@ -241,8 +241,14 @@ class FileRequest {
                             $object->logger('App')->debug('cors is allowed for: ', [ $origin ]);
                             header("Access-Control-Allow-Origin: *");
 //                            header("Access-Control-Allow-Origin: {$origin}");
+                        } else {
+                            $object->logger('App')->debug('cors is not allowed for: ', [ $origin ]);
                         }
+                    } else {
+                        $object->logger('App')->debug('No HTTP_REFERER');
                     }
+                } else {
+                    $object->logger('App')->debug('Headers sent');
                 }
                 return File::read($url);
             }
