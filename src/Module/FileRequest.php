@@ -233,11 +233,12 @@ class FileRequest {
                     Handler::header('ETag: ' . $etag . '-' . $gm);
                     Handler::header('Cache-Control: public');
 
-                    $object->logger('App')->debug('server', $_SERVER);
+                    //$object->logger('App')->debug('server', $_SERVER);
 
                     if(array_key_exists('HTTP_REFERER', $_SERVER)){
                         $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
                         if(Core::cors_is_allowed($object, $origin)){
+                            $object->logger('App')->debug('cors is allowed for: ', [ $origin ]);
                             header("Access-Control-Allow-Origin: *");
 //                            header("Access-Control-Allow-Origin: {$origin}");
                         }
