@@ -736,6 +736,7 @@ class Core {
         } else {
             return false;
         }
+        $object->logger()->debug('cors_is_allowed', [ $origin]);
         $host_list = $object->config('server.cors');
         if(is_array($host_list)){
             foreach($host_list as $host){
@@ -751,20 +752,24 @@ class Core {
                             $temp[0] = '';
                             $host = implode('.', $explode);
                             $match = implode('.', $temp);
+                            $object->logger()->debug('host & match: ', [ $host, $match]);
                             if($host === $match){
                                 return true;
                             }
                             $local[0] = '';
                             $host = implode('.', $local);
+                            $object->logger()->debug('host & match: ', [ $host, $match]);
                             if($host === $match){
                                 return true;
                             }
                         }
                     } else {
+                        $object->logger()->debug('host & origin: ', [ $host, $origin]);
                         if($host === $origin){
                             return true;
                         }
                         $host = implode('.', $local);
+                        $object->logger()->debug('host & origin: ', [ $host, $origin]);
                         if($host === $origin){
                             return true;
                         }
@@ -772,21 +777,25 @@ class Core {
                 }
                 elseif($count_explode === 2){
                     $local[1] = Core::LOCAL;
+                    $object->logger()->debug('host & origin: ', [ $host, $origin]);
                     if($host === $origin){
                         return true;
                     }
                     $host = implode('.', $local);
+                    $object->logger()->debug('host & origin: ', [ $host, $origin]);
                     if($host === $origin){
                         return true;
                     }
                 }
                 elseif($count_explode === 1){
                     if($host === '*'){
+                        $object->logger()->debug('host: ', [ $host]);
                         return true;
                     }
                 }
             }
         }
+        $object->logger()->debug('Cors rejected...');
         return false;
     }
 
