@@ -251,7 +251,7 @@ class FileRequest {
                     $object->logger('App')->debug('Headers sent');
                 }
                 return File::read($url);
-            } 
+            }
         }
         $object->logger('App')->debug('File doesn\'t exists', [ $url ]);
         Handler::header('HTTP/1.0 404 Not Found', 404);

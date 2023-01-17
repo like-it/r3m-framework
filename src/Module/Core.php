@@ -806,6 +806,7 @@ class Core {
         //header("Access-Control-Allow-Origin: *");
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
             $origin = $_SERVER['HTTP_ORIGIN'];
+            $object->logger()->debug('HTTP_ORIGIN: ', [ $origin]);
             if(Core::cors_is_allowed($object, $origin)){
                 header('Access-Control-Allow-Credentials: true');
                 header("Access-Control-Allow-Origin: {$origin}");
