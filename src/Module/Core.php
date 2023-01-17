@@ -736,8 +736,8 @@ class Core {
         } else {
             return false;
         }
-        $object->logger()->debug('cors_is_allowed', [ $origin]);
         $host_list = $object->config('server.cors');
+        $object->logger()->debug('cors_is_allowed', [ $origin, $host_list]);
         if(is_array($host_list)){
             foreach($host_list as $host){
                 $explode = explode('.', $host);
