@@ -798,14 +798,14 @@ class Core {
             if(Core::cors_is_allowed($object, $origin)){
                 header("Access-Control-Allow-Origin: {$origin}");
 //                header("Access-Control-Allow-Origin: *");
-//                header('Access-Control-Allow-Credentials: true');
+                header('Access-Control-Allow-Credentials: true');
             }
         }
         if (
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
             $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
         ) {
-//            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Allow-Credentials: true');
             $methods = $object->config('server.cors.methods');
             if(
                 $methods &&
