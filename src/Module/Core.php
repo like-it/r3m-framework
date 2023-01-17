@@ -733,6 +733,8 @@ class Core {
         $origin = explode('://', $origin);
         if(array_key_exists(1, $origin)){
             $origin = $origin[1];
+            $explode = explode('/', $origin);    //bugfix samsung browser ?
+            $origin = $explode[0];
         } else {
             return false;
         }
