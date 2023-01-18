@@ -215,6 +215,7 @@ class FileRequest {
                 $mtime = File::mtime($url);
                 $contentType = $object->config('contentType.' . $file_extension);
                 if(empty($contentType)){
+                    $object->logger('App')->info('HTTP/1.0 415 Unsupported Media Type', [ $file, $file_extension]);
                     Handler::header('HTTP/1.0 415 Unsupported Media Type', 415);
                     if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
                         $json = [];
@@ -234,12 +235,9 @@ class FileRequest {
                     Handler::header('ETag: ' . $etag . '-' . $gm);
                     Handler::header('Cache-Control: public');
 
-                    //$object->logger('App')->debug('server', $_SERVER);
-
                     if(array_key_exists('HTTP_REFERER', $_SERVER)){
                         $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
                         if(Core::cors_is_allowed($object, $origin)){
-                            $object->logger('App')->debug('cors is allowed for: ', [ $origin ]);
                             header("Access-Control-Allow-Origin: *");
 //                            header("Access-Control-Allow-Origin: {$origin}");
                         } else {

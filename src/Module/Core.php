@@ -20,6 +20,7 @@ use R3m\Io\App;
 use Defuse\Crypto\Exception\BadFormatException;
 use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
 
+use Exception;
 use ReflectionException;
 
 use R3m\Io\Exception\UrlEmptyException;
@@ -727,6 +728,9 @@ class Core {
         return implode($delimiter, $explode);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function cors_is_allowed(App $object, $origin=''): bool
     {
         $origin = rtrim($origin, '/');
@@ -739,7 +743,6 @@ class Core {
             return false;
         }
         $host_list = $object->config('server.cors');
-        $object->logger()->debug('cors:', [ $origin, $host_list]);
         if(is_array($host_list)){
             foreach($host_list as $host){
                 $explode = explode('.', $host);
@@ -754,24 +757,20 @@ class Core {
                             $temp[0] = '';
                             $host = implode('.', $explode);
                             $match = implode('.', $temp);
-                            $object->logger()->debug('host & match: ', [ $host, $match]);
                             if($host === $match){
                                 return true;
                             }
                             $local[0] = '';
                             $host = implode('.', $local);
-                            $object->logger()->debug('host & match: ', [ $host, $match]);
                             if($host === $match){
                                 return true;
                             }
                         }
                     } else {
-                        $object->logger()->debug('host & origin: ', [ $host, $origin]);
                         if($host === $origin){
                             return true;
                         }
                         $host = implode('.', $local);
-                        $object->logger()->debug('host & origin: ', [ $host, $origin]);
                         if($host === $origin){
                             return true;
                         }
@@ -779,25 +778,22 @@ class Core {
                 }
                 elseif($count_explode === 2){
                     $local[1] = Core::LOCAL;
-                    $object->logger()->debug('host & origin: ', [ $host, $origin]);
                     if($host === $origin){
                         return true;
                     }
                     $host = implode('.', $local);
-                    $object->logger()->debug('host & origin: ', [ $host, $origin]);
                     if($host === $origin){
                         return true;
                     }
                 }
                 elseif($count_explode === 1){
                     if($host === '*'){
-                        $object->logger()->debug('host: ', [ $host]);
                         return true;
                     }
                 }
             }
         }
-        $object->logger()->debug('Cors rejected...');
+        $object->logger('App')->debug('Cors rejected...');
         return false;
     }
 
