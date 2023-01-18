@@ -107,13 +107,14 @@ class App extends Data {
         if(App::is_cli() === false){
             Core::cors($object);
         }
+        Host::configure($object);
         //Config::configure($object); //@moved to construct
         if(empty($object->request('request'))){
             $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors');
         } else {
-            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'), [ $_SERVER ]);
+            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'), [ Host::subdomain() ]);
         }
-        Host::configure($object);
+
         //Autoload::configure($object); //@moved to construct
         Route::configure($object);
         $file = FileRequest::get($object);
