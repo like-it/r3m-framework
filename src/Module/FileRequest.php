@@ -238,8 +238,8 @@ class FileRequest {
                     if(array_key_exists('HTTP_REFERER', $_SERVER)){
                         $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
                         if(Core::cors_is_allowed($object, $origin)){
-                            header("Access-Control-Allow-Origin: *");
-//                            header("Access-Control-Allow-Origin: {$origin}");
+//                            header("Access-Control-Allow-Origin: *");
+                            header("Access-Control-Allow-Origin: {$origin}");
                         } else {
                             $object->logger('App')->debug('cors is not allowed for: ', [ $origin ]);
                         }
