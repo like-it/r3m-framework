@@ -235,6 +235,8 @@ class FileRequest {
                     Handler::header('ETag: ' . $etag . '-' . $gm);
                     Handler::header('Cache-Control: public');
 
+                    $object->logger()->debug('SERVER', [ $_SERVER ]);
+
                     if(array_key_exists('HTTP_REFERER', $_SERVER)){
                         $origin = $_SERVER['HTTP_REFERER'];
                         $origin = explode('://', $origin, 2);
