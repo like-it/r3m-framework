@@ -804,6 +804,7 @@ class Core {
     public static function cors(App $object){
         header("HTTP/1.1 200 OK");
         //header("Access-Control-Allow-Origin: *");
+        $object->logger('App')->debug('user agent', [$_SERVER['HTTP_USER_AGENT']]);
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
             $origin = $_SERVER['HTTP_ORIGIN'];
             $object->logger('App')->debug('HTTP_ORIGIN: ', [ $origin]);
@@ -811,6 +812,7 @@ class Core {
                 header('Access-Control-Allow-Credentials: true');
                 //header("Access-Control-Allow-Origin: {$origin}");
                 header("Access-Control-Allow-Origin: * ");
+                $object->logger('App')->debug('Make Access');
             }
         }
         if (
@@ -824,8 +826,6 @@ class Core {
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
             $object->logger('App')->debug('REQUEST_METHOD: options');
             exit(0);
-        } else {
-            $object->logger('App')->debug('SERVER: ', [ $_SERVER]);
         }
     }
 
