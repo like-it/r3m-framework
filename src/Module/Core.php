@@ -824,6 +824,8 @@ class Core {
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
             $object->logger('App')->debug('REQUEST_METHOD: options');
             exit(0);
+        } else {
+            $object->logger('App')->debug('SERVER: ', [ $_SERVER]);
         }
     }
 
