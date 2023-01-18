@@ -234,10 +234,16 @@ class FileRequest {
                     Handler::header('Content-Type: ' . $contentType);
                     Handler::header('ETag: ' . $etag . '-' . $gm);
                     Handler::header('Cache-Control: public');
-
-                    $object->logger()->debug('SERVER', [ $_SERVER ]);
-
-                    if(array_key_exists('HTTP_REFERER', $_SERVER)){
+                    if(array_key_exists('HTTP_ORIGIN', $_SERVER)){
+                        $origin = $_SERVER['HTTP_ORIGIN'];
+                        if(Core::cors_is_allowed($object, $origin)){
+//                            header("Access-Control-Allow-Origin: *");
+                            header("Access-Control-Allow-Origin: {$origin}");
+                        } else {
+                            $object->logger('App')->debug('cors is not allowed for: ', [ $origin ]);
+                        }
+                    }
+                    elseif(array_key_exists('HTTP_REFERER', $_SERVER)){
                         $origin = $_SERVER['HTTP_REFERER'];
                         $origin = explode('://', $origin, 2);
                         if(array_key_exists(1, $origin)){
@@ -254,7 +260,7 @@ class FileRequest {
                             $object->logger('App')->debug('cors is not allowed for: ', [ $origin ]);
                         }
                     } else {
-                        $object->logger('App')->debug('No HTTP_REFERER');
+                        $object->logger('App')->debug('No HTTP_REFERER & HTTP_ORIGIN');
                     }
                 } else {
                     $object->logger('App')->debug('Headers sent');
