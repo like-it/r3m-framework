@@ -264,6 +264,7 @@ class FileRequest {
                 } else {
                     $object->logger('App')->debug('Headers sent');
                 }
+                $object->logger('App')->debug('FileRequest read url:', [ $url ]);
                 return File::read($url);
             }
         }
