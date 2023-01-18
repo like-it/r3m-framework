@@ -103,11 +103,11 @@ class App extends Data {
      * @throws LocateException
      */
     public static function run(App $object){
+        Handler::request_configure($object);
         if(App::is_cli() === false){
             Core::cors($object);
         }
         //Config::configure($object); //@moved to construct
-        Handler::request_configure($object);
         if(empty($object->request('request'))){
             $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors');
         } else {
