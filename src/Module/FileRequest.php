@@ -236,7 +236,15 @@ class FileRequest {
                     Handler::header('Cache-Control: public');
 
                     if(array_key_exists('HTTP_REFERER', $_SERVER)){
-                        $origin = rtrim($_SERVER['HTTP_REFERER'], '/');
+                        $origin = $_SERVER['HTTP_REFERER'];
+                        $origin = explode('://', $origin, 2);
+                        if(array_key_exists(1, $origin)){
+                            $explode = explode('/', $origin[1], 2);    //bugfix samsung browser ?
+                            $origin = $origin[0] . '://' . $explode[0];
+                        } else {
+                            $object->logger('App')->debug('Wrong HTTP_REFERER', [ $origin ]);
+                            exit();
+                        }
                         if(Core::cors_is_allowed($object, $origin)){
 //                            header("Access-Control-Allow-Origin: *");
                             header("Access-Control-Allow-Origin: {$origin}");
