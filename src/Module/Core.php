@@ -824,6 +824,9 @@ class Core {
             $object->logger('App')->debug('REQUEST_METHOD: options');
             exit(0);
         }
+        if(array_key_exists('REQUEST_METHOD', $_SERVER)){
+            $object->logger('App')->debug('REQUEST_METHOD: ', $_SERVER['REQUEST_METHOD']);
+        }
     }
 
     public static function deep_clone($object){
