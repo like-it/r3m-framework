@@ -827,8 +827,7 @@ class Core {
         if(array_key_exists('REQUEST_METHOD', $_SERVER)){
             $object->logger('App')->debug('REQUEST_METHOD: ', [ $_SERVER['REQUEST_METHOD'] ]);
         }
-        ddd($object->request());
-//        $object->logger('App')->debug('REQUEST: ', [ Core::object($object->request(), Core::OBJECT_ARRAY) ]);
+        $object->logger('App')->debug('REQUEST: ', [ Core::object($object->request(), Core::OBJECT_ARRAY) ]);
     }
 
     public static function deep_clone($object){
