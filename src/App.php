@@ -111,7 +111,7 @@ class App extends Data {
         if(empty($object->request('request'))){
             $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors');
         } else {
-            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
+            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'), [ $_SERVER ]);
         }
         Host::configure($object);
         //Autoload::configure($object); //@moved to construct
