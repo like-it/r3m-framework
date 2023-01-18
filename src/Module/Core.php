@@ -823,7 +823,6 @@ class Core {
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
             $object->logger('App')->debug('REQUEST_METHOD: ', [ $_SERVER['REQUEST_METHOD'] ]);
             $object->logger('App')->debug('REQUEST: ', [ Core::object($object->request(), Core::OBJECT_ARRAY) ]);
-            $object->logger('App')->debug('SERVER: ', [ $_SERVER ]);
             exit(0);
         }
         if(array_key_exists('REQUEST_METHOD', $_SERVER)){
