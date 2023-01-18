@@ -227,6 +227,7 @@ class FileRequest {
                     exit();
                 }
                 if(!headers_sent()){
+                    Handler::header("HTTP/1.1 200 OK");
                     $gm = gmdate('D, d M Y H:i:s T', $mtime);
                     Handler::header('Last-Modified: '. $gm);
                     Handler::header('Content-Type: ' . $contentType);

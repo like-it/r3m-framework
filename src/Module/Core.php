@@ -822,6 +822,7 @@ class Core {
             //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
             header('Access-Control-Allow-Headers: Origin, Cache-Control, Content-Type, Authorization, X-Requested-With');
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
+            $object->logger('App')->debug('REQUEST_METHOD: options');
             exit(0);
         }
     }
