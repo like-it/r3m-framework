@@ -240,7 +240,7 @@ class FileRequest {
                     Handler::header('Cache-Control: public');
                     if(array_key_exists('HTTP_ORIGIN', $_SERVER)){
                         $origin = $_SERVER['HTTP_ORIGIN'];
-                        if(Core::cors_is_allowed($object, $origin)){
+                        if(Server::cors_is_allowed($object, $origin)){
                             header("Access-Control-Allow-Origin: {$origin}");
                         } elseif($logger){
                             $object->logger($logger)->debug('Cors is not allowed for: ', [ $origin ]);
@@ -258,7 +258,7 @@ class FileRequest {
                             }
                             exit();
                         }
-                        if(Core::cors_is_allowed($object, $origin)){
+                        if(Server::cors_is_allowed($object, $origin)){
                             header("Access-Control-Allow-Origin: {$origin}");
                         }
                         elseif($logger){
