@@ -219,7 +219,9 @@ class FileRequest {
                 $mtime = File::mtime($url);
                 $contentType = $object->config('contentType.' . $file_extension);
                 if(empty($contentType)){
-                    $object->logger('App')->info('HTTP/1.0 415 Unsupported Media Type', [ $file, $file_extension]);
+                    if($logger){
+                        $object->logger($logger)->info('HTTP/1.0 415 Unsupported Media Type', [ $file, $file_extension]);
+                    }
                     Handler::header('HTTP/1.0 415 Unsupported Media Type', 415);
                     if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
                         $json = [];
@@ -254,7 +256,7 @@ class FileRequest {
                             $origin = $origin[0] . '://' . $explode[0];
                         } else {
                             if($logger){
-                                $object->logger($logger)->debug('Wrong HTTP_REFERER', [ $origin ]);
+                                $object->logger($logger)->error('Wrong HTTP_REFERER', [ $origin ]);
                             }
                             exit();
                         }
@@ -262,18 +264,18 @@ class FileRequest {
                             header("Access-Control-Allow-Origin: {$origin}");
                         }
                         elseif($logger){
-                            $object->logger($logger)->debug('Cors is not allowed for: ', [ $origin ]);
+                            $object->logger($logger)->info('Cors is not allowed for: ', [ $origin ]);
                         }
                     }
                     elseif($logger){
-                        $object->logger($logger)->debug('No HTTP_REFERER & HTTP_ORIGIN');
+                        $object->logger($logger)->info('No HTTP_REFERER & HTTP_ORIGIN');
                     }
                 }
                 elseif($logger) {
-                    $object->logger($logger)->debug('Headers sent');
+                    $object->logger($logger)->info('Headers sent');
                 }
                 if($logger){
-                    $object->logger($logger)->debug('FileRequest read url:', [ $url ]);
+                    $object->logger($logger)->info('FileRequest read url:', [ $url ]);
                 }
                 return File::read($url);
             }
@@ -281,7 +283,6 @@ class FileRequest {
         if($logger){
             $object->logger($logger)->debug('File doesn\'t exists', [ $url ]);
         }
-
         Handler::header('HTTP/1.0 404 Not Found', 404);
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
             throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
