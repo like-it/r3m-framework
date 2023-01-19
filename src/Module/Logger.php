@@ -157,6 +157,7 @@ class Logger {
                                 $object->config('project.log.' . $logName, $withName);
                             }
                             $object->logger($channel->getName(), $channel);
+                            $object->logger($channel->getName())->info('Channel initialised.', [$withName]);
                         }
                     }
                 }
