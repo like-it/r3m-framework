@@ -115,7 +115,7 @@ class FileRequest {
             array_key_exists('REQUEST_METHOD', $_SERVER) &&
             $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
         ) {
-            Core::cors($object);
+            Server::cors($object);
         }
         if (
             $object->config('server.http.upgrade_insecure') === true &&

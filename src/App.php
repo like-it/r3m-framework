@@ -92,7 +92,7 @@ class App extends Data {
             $domains = $object->config('server.cors.domains');
             if(!empty($domains)){
                 $info .= ' and enabling cors';
-                Core::cors($object);
+                Server::cors($object);
             }
         }
         if(
@@ -424,7 +424,6 @@ class App extends Data {
      */
     private static function result(App $object, $output){
         if($output instanceof Exception){
-            ddd('yes');
             if(App::is_cli()){
                 $object->logger(App::LOGGER_NAME)->error($output->getMessage());
                 fwrite(STDERR, App::exception_to_cli($object, $output));
