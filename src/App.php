@@ -27,8 +27,7 @@ use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
 use R3m\Io\Module\Server;
 
-//use Monolog\Handler\StreamHandler;
-//use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 use Exception;
 use R3m\Io\Exception\ObjectException;
@@ -448,7 +447,7 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public function logger($name='App', $logger=null): Logger
+    public function logger($name='', $logger=null): LoggerInterface
     {
         if($logger !== null){
             $this->setLogger($name, $logger);
@@ -456,15 +455,29 @@ class App extends Data {
         return $this->getLogger($name);
     }
 
-    private function setLogger($name='App', Logger $logger=null){
+    private function setLogger($name='', LoggerInterface $logger=null){
+        if(empty($name)){
+            $name = $this->config('project.log.name');
+        }
+        if(empty($name)){
+            throw new Exception('PLease configure project.log.name or provide a name');
+        }
+        $name = ucfirst($name);
         $this->logger[$name] = $logger;
     }
 
     /**
      * @throws Exception
      */
-    private function getLogger($name='App'): Logger
+    private function getLogger($name=''): LoggerInterface
     {
+        if(empty($name)){
+            $name = $this->config('project.log.name');
+        }
+        if(empty($name)){
+            throw new Exception('PLease configure project.log.name or provide a name');
+        }
+        $name = ucfirst($name);
         if(array_key_exists($name, $this->logger)){
             return $this->logger[$name];
         }
@@ -505,6 +518,10 @@ class App extends Data {
     }
 
     public function cookie($attribute=null, $value=null, $duration=null){
+        if($attribute === 'http'){
+            $cookie = $this->server('HTTP_COOKIE');
+            return explode('; ', $cookie);
+        }
         return Handler::cookie($attribute, $value, $duration);
     }
 
@@ -527,6 +544,9 @@ class App extends Data {
     }
 
     public function server($attribute){
+        if($attribute===null){
+            return $_SERVER;
+        }
         if(array_key_exists($attribute, $_SERVER)){
             return $_SERVER[$attribute];
         }

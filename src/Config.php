@@ -233,8 +233,8 @@ class Config extends Data {
                         array_key_exists('method', $record) &&
                         array_key_exists('attribute', $record['method'])
                     ){
-                        foreach($record['method']['attribute'] as $attribute_nr => $attrbute_list){
-                            foreach($attrbute_list as $attribute){
+                        foreach($record['method']['attribute'] as $attribute_nr => $attribute_list){
+                            foreach($attribute_list as $attribute){
                                 $parameters[$parameter_nr] .= $object->config($attribute['execute']);
                             }
                         }
