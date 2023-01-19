@@ -275,13 +275,13 @@ class FileRequest {
                     $object->logger($logger)->info('Headers sent');
                 }
                 if($logger){
-                    $object->logger($logger)->info('FileRequest read url:', [ $url ]);
+                    $object->logger($logger)->info('Url:', [ $url ]);
                 }
                 return File::read($url);
             }
         }
         if($logger){
-            $object->logger($logger)->debug('File doesn\'t exists', [ $url ]);
+            $object->logger($logger)->error('File doesn\'t exists', [ $url ]);
         }
         Handler::header('HTTP/1.0 404 Not Found', 404);
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
