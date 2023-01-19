@@ -135,6 +135,10 @@ class FileRequest {
             }
             Core::redirect($url);
         }
+        $logger = $object->config('project.log.fileRequest');
+        if(empty($logger)){
+            $logger = $object->config('project.log.name');
+        }
         $request = $object->data(App::REQUEST);
         $input = $request->data('request');
         $dir = str_replace(['../', '..'], '', Dir::name($input));
@@ -238,8 +242,8 @@ class FileRequest {
                         $origin = $_SERVER['HTTP_ORIGIN'];
                         if(Core::cors_is_allowed($object, $origin)){
                             header("Access-Control-Allow-Origin: {$origin}");
-                        } else {
-                            $object->logger('App')->debug('cors is not allowed for: ', [ $origin ]);
+                        } elseif($logger){
+                            $object->logger($logger)->debug('Cors is not allowed for: ', [ $origin ]);
                         }
                     }
                     elseif(array_key_exists('HTTP_REFERER', $_SERVER)){
@@ -249,26 +253,35 @@ class FileRequest {
                             $explode = explode('/', $origin[1], 2);    //bugfix samsung browser ?
                             $origin = $origin[0] . '://' . $explode[0];
                         } else {
-                            $object->logger('App')->debug('Wrong HTTP_REFERER', [ $origin ]);
+                            if($logger){
+                                $object->logger($logger)->debug('Wrong HTTP_REFERER', [ $origin ]);
+                            }
                             exit();
                         }
                         if(Core::cors_is_allowed($object, $origin)){
-//                            header("Access-Control-Allow-Origin: *");
                             header("Access-Control-Allow-Origin: {$origin}");
-                        } else {
-                            $object->logger('App')->debug('cors is not allowed for: ', [ $origin ]);
                         }
-                    } else {
-                        $object->logger('App')->debug('No HTTP_REFERER & HTTP_ORIGIN');
+                        elseif($logger){
+                            $object->logger($logger)->debug('Cors is not allowed for: ', [ $origin ]);
+                        }
                     }
-                } else {
-                    $object->logger('App')->debug('Headers sent');
+                    elseif($logger){
+                        $object->logger($logger)->debug('No HTTP_REFERER & HTTP_ORIGIN');
+                    }
                 }
-                $object->logger('App')->debug('FileRequest read url:', [ $url ]);
+                elseif($logger) {
+                    $object->logger($logger)->debug('Headers sent');
+                }
+                if($logger){
+                    $object->logger($logger)->debug('FileRequest read url:', [ $url ]);
+                }
                 return File::read($url);
             }
         }
-        $object->logger('App')->debug('File doesn\'t exists', [ $url ]);
+        if($logger){
+            $object->logger($logger)->debug('File doesn\'t exists', [ $url ]);
+        }
+
         Handler::header('HTTP/1.0 404 Not Found', 404);
         if($config->data('framework.environment') === Config::MODE_DEVELOPMENT){
             throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
@@ -328,7 +341,9 @@ class FileRequest {
 }';
             }
         }
-        $object->logger()->error('HTTP/1.0 404 Not Found', $location);
+        if($logger){
+            $object->logger($logger)->error('HTTP/1.0 404 Not Found', $location);
+        }
         exit();
     }
 
