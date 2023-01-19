@@ -32,7 +32,7 @@ function function_cors_disable(Parse $parse, Data $data, $host=''){
     if(!$config){
         $config = new Data();
     }
-    $list = $config->get('server.cors');
+    $list = $config->get('server.cors.domains');
     if(empty($list)){
         $list = [];
     }
@@ -44,7 +44,7 @@ function function_cors_disable(Parse $parse, Data $data, $host=''){
         }
         $list = array_values($list);
     }
-    $config->set('server.cors', $list);
+    $config->set('server.cors.domains', $list);
     $config->write($url);
     return 'Cors disabled for host: ' . $host . PHP_EOL;
 }

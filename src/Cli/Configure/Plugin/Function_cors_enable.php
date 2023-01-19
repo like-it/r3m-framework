@@ -32,13 +32,13 @@ function function_cors_enable(Parse $parse, Data $data, $host=''){
     if(!$config){
         $config = new Data();
     }
-    $list = $config->get('server.cors');
+    $list = $config->get('server.cors.domains');
     if(empty($list)){
         $list = [];
     }
     $list[] = $host;
     $list = array_unique($list);
-    $config->set('server.cors', $list);
+    $config->set('server.cors.domains', $list);
     $config->write($url);
     return 'Cors enabled for host: ' . $host . PHP_EOL;
 }
