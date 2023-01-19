@@ -731,6 +731,7 @@ class Core {
     /**
      * @throws Exception
      */
+    /*
     public static function cors_is_allowed(App $object, $origin=''): bool
     {
         $origin = rtrim($origin, '/');
@@ -796,10 +797,12 @@ class Core {
         $object->logger('App')->debug('Cors rejected...');
         return false;
     }
+    */
 
     /**
      * @throws Exception
      */
+    /*
     public static function cors(App $object){
         header("HTTP/1.1 200 OK");
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
@@ -830,6 +833,7 @@ class Core {
         }
         $object->logger('App')->debug('REQUEST: ', [ Core::object($object->request(), Core::OBJECT_ARRAY) ]);
     }
+    */
 
     public static function deep_clone($object){
         $clone = clone $object;
