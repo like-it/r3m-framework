@@ -6,7 +6,10 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_logger_critical(Parse $parse, Data $data, $message=null, $context=[], $name=App::LOGGER_NAME){
+function function_logger_critical(Parse $parse, Data $data, $message=null, $context=[], $name=''){
     $object = $parse->object();
+    if(empty($name)){
+        $name = $object->config('project.log.name');
+    }
     $object->logger($name)->critical($message, $context);
 }

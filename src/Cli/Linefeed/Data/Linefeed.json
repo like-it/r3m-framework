@@ -1,0 +1,14 @@
+{
+  "extension" : [
+    "php",
+    "json",
+    "html",
+    "tpl",
+    "css",
+    "js",
+    "md",
+    "r3m",
+    "txt",
+    "xml"
+  ]
+}

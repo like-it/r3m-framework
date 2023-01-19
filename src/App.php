@@ -21,17 +21,20 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\FileRequest;
 use R3m\Io\Module\Handler;
 use R3m\Io\Module\Host;
+use R3m\Io\Module\Logger;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
+use R3m\Io\Module\Server;
 
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+//use Monolog\Handler\StreamHandler;
+//use Monolog\Logger;
 
 use Exception;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\LocateException;
+
 
 class App extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -75,26 +78,51 @@ class App extends Data {
         App::is_cli();
         require_once 'Debug.php';
         require_once 'Error.php';
-        $logger = new Logger(App::LOGGER_NAME);
-        $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . 'app.log', Logger::DEBUG));
-        $uuid = posix_geteuid();
-        if(empty($uuid)){
-            $url = $this->config('project.dir.log') . 'app.log';
-            if(File::exist($url)) {
-                File::chown($url, File::USER_WWW, File::USER_WWW);
-            }
-            $url = $this->config('project.dir.log') . 'access.log';
-            if(File::exist($url)){
-                File::chown($url, File::USER_WWW, File::USER_WWW);
-            }
-            $url = $this->config('project.dir.log') . 'error.log';
-            if(File::exist($url)){
-                File::chown($url, File::USER_WWW, File::USER_WWW);
+        Config::configure($this);
+        Host::configure($this);
+        Logger::configure($this);
+        Autoload::configure($this);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function configure(App $object){
+        $info = 'Logger: App initialized';
+        if(App::is_cli() === false){
+            $domains = $object->config('server.cors.domains');
+            if(!empty($domains)){
+                $info .= ' and enabling cors';
+                Core::cors($object);
             }
         }
-        $this->logger($logger->getName(), $logger);
-        Config::configure($this);
-        Autoload::configure($this);
+        if(
+            !empty($object->config('project.log.name')) &&
+            empty($object->request('request'))
+        ){
+            $object->logger($object->config('project.log.name'))->info($info, [Host::subdomain()]);
+        }
+        elseif(
+            !empty($object->config('project.log.name'))
+        ) {
+            $object->logger($object->config('project.log.name'))->info($info . ' with request: ' . $object->request('request'), [Host::subdomain()]);
+        }
+        $options = $object->config('server.http.cookie');
+        if(
+            is_object($options) &&
+            property_exists($options, 'domain') &&
+            $options->domain === true
+        ){
+            $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());
+            if(!$options->domain){
+                $options->domain = Host::domain() . '.' . Host::extension();
+            }
+            $options->secure = null;
+            if(Host::scheme() === Host::SCHEME_HTTPS){
+                $options->secure = true;
+            }
+            Handler::session_set_cookie_params($options);
+        }
     }
 
     /**
@@ -104,18 +132,7 @@ class App extends Data {
      */
     public static function run(App $object){
         Handler::request_configure($object);
-        if(App::is_cli() === false){
-            Core::cors($object);
-        }
-        Host::configure($object);
-        //Config::configure($object); //@moved to construct
-        if(empty($object->request('request'))){
-            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors');
-        } else {
-            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'), [ Host::subdomain()]);
-        }
-
-        //Autoload::configure($object); //@moved to construct
+        App::configure($object);
         Route::configure($object);
         $file = FileRequest::get($object);
         if($file === false){

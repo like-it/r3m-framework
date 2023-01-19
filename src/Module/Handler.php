@@ -333,10 +333,25 @@ class Handler {
     }
 
     /**
+     * @throws ObjectException
+     */
+    public static function session_set_cookie_params($options=[]): bool
+    {
+        if(
+            !empty($options) &&
+            is_object($options)
+        ){
+            $options = Core::object($options, Core::OBJECT_ARRAY);
+        }
+        return session_set_cookie_params($options);
+    }
+
+
+    /**
      * @throws Exception
      */
     public static function session($attribute=null, $value=null){
-        if($attribute == Handler::SESSION_HAS){
+        if($attribute == Handler::SESSION_HAS && $value === null){
             return isset($_SESSION);
         }
         elseif($attribute == Handler::SESSION_CLOSE){
@@ -372,7 +387,26 @@ class Handler {
             } else {
                 $tmp = explode('.', $attribute);
                 if($value !== null){
-                    if($attribute == Handler::SESSION_DELETE && $value == Handler::SESSION){
+                    if($attribute === 'id'){
+                        return session_id($value);
+                    }
+                    elseif($attribute === 'has'){
+                        $get = Handler::session($value);
+                        if($get === null){
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                    elseif($attribute === 'extract'){
+                        $get = Handler::session($value);
+                        Handler::session('delete', $value);
+                        return $get;
+                    }
+                    elseif(
+                        $attribute == Handler::SESSION_DELETE &&
+                        $value == Handler::SESSION
+                    ){
                         $unset = session_unset();
                         if($unset === false){
                             throw new Exception('Could not unset session');

@@ -17,6 +17,8 @@ class Data {
     private $data;
     private $do_not_nest_key;
 
+    private $copy;
+
     public function __construct($data=null){
         $this->data($data);
     }
@@ -167,6 +169,13 @@ class Data {
         return Core::object_has($attribute, $this->data());
     }
 
+    public function extract($attribute=''){
+        //add first & last
+        $get = $this->get($attribute);
+        $this->delete($attribute);
+        return $get;
+    }
+
     public function data($attribute=null, $value=null, $type=null){
         if($attribute !== null){
             if($attribute == 'set'){
@@ -192,6 +201,9 @@ class Data {
             }
             elseif($attribute == 'has'){
                 return Core::object_has($value, $this->data());
+            }
+            elseif($attribute === 'extract'){
+                return $this->extract($value);
             }
             if($value !== null){
                 if(
@@ -273,6 +285,29 @@ class Data {
             return true;
         }
         return false;
+    }
+
+    public function clear(){
+        $data = $this->data();
+        foreach($data as $key => $unused){
+            $this->data('delete', $key);
+        }
+    }
+
+    public function copy(){
+        $data = $this->data();
+        if(is_array($data)){
+            $this->copy = $data;
+        } else {
+            $this->copy = Core::deep_clone($data);
+        }
+    }
+
+    public function reset(){
+        $this->clear();
+        if($this->copy){
+            $this->data($this->copy);
+        }
     }
 
     public function do_not_nest_key($do_not_nest_key=null){

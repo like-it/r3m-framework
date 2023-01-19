@@ -6,7 +6,10 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_logger_error(Parse $parse, Data $data, $message=null, $context=[], $name=App::LOGGER_NAME){
+function function_logger_info(Parse $parse, Data $data, $message=null, $context=[], $name=''){
     $object = $parse->object();
-    $object->logger($name)->error($message, $context);
+    if(empty($name)){
+        $name = $object->config('project.log.name');
+    }
+    $object->logger($name)->info($message, $context);
 }
