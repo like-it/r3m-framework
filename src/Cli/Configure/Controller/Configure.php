@@ -29,7 +29,7 @@ class Configure extends View {
         '{{binary()}} configure domain add           | Adds a domain to /project_dir/Host',
         '{{binary()}} configure environment toggle   | Toggle environment between development, staging & production',
         '{{binary()}} configure host add             | Adds a host to /etc/host',
-        '{{binary()}} configure host create          | Create and setup an apache2 site',
+        '{{binary()}} configure host setup           | Setup an apache2 site',
         '{{binary()}} configure host delete          | Delete a host from /etc/host',
         '{{binary()}} configure public create        | Creates the public html directory',
         '{{binary()}} configure route resource       | Add a main route based on resource',
