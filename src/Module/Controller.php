@@ -178,6 +178,7 @@ class Controller {
             $list[] = $object->config('host.dir.view' . str_replace('.', $object->config('ds') , $name) . $config->data('extension.tpl'));
         }
         $url = false;
+        ddd($list);
         foreach($list as $file){
             if(File::exist($file)){
                 $url = $file;
