@@ -10,7 +10,7 @@ use R3m\Io\Exception\FileAppendException;
 /**
  * @throws Exception
  */
-function function_cors_disable(Parse $parse, Data $data, $host=''){
+function function_cors_enable_domain(Parse $parse, Data $data, $host=''){
     $id = posix_geteuid();
     if(
         !in_array(
@@ -36,16 +36,10 @@ function function_cors_disable(Parse $parse, Data $data, $host=''){
     if(empty($list)){
         $list = [];
     }
-    if(in_array($host, $list)){
-        foreach($list as $key => $value){
-            if($value === $host){
-                unset($list[$key]);
-            }
-        }
-        $list = array_values($list);
-    }
+    $list[] = $host;
+    $list = array_unique($list);
     $config->set('server.cors.domains', $list);
     $config->write($url);
-    return 'Cors disabled for host: ' . $host . PHP_EOL;
+    return 'Cors enabled for host: ' . $host . PHP_EOL;
 }
 
