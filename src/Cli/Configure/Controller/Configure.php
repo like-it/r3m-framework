@@ -50,11 +50,14 @@ class Configure extends View {
         $sub_module = $object->parameter($object, 'configure', 2);
         $command = $object->parameter($object, 'configure', 3);
         try {
-            if(!empty($command) && !emptY($sub_module)){
-                $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module ) . '.' . ucfirst($command));
+            if(
+                !empty($command) &&
+                !empty($sub_module)
+            ){
+                $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module) . '.' . ucfirst($command));
             }
-            if(!empty($sub_module )){
-                $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module ));
+            elseif(!empty($sub_module)){
+                $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module));
             } else {
                 $url = Configure::locate($object, ucfirst($module));
             }
