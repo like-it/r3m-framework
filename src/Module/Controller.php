@@ -172,7 +172,7 @@ class Controller {
                 array_pop($explode);
                 $explode[] = $config->data('dictionary.view');
             }
-            $list[] = $object->config('host.dir.view' . str_replace('.', $object->config('ds') , $name) . $config->data('extension.tpl');
+            $list[] = $object->config('host.dir.view' . str_replace('.', $object->config('ds') , $name) . $config->data('extension.tpl'));
         }
         $url = false;
         foreach($list as $file){
