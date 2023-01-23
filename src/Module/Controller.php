@@ -154,8 +154,9 @@ class Controller {
                     $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
                 }
             }
+            ddd($object->config('host.dir.view'));
             $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
-            $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'),$name ). $config->data('extension.tpl');
+            $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name ). $config->data('extension.tpl');
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
                 $list[] = str_replace(
