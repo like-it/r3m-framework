@@ -47,12 +47,16 @@ class Configure extends View {
         if(empty($module)){
             $module = Configure::MODULE_INFO;
         }
-        $action = $object->parameter($object, 'configure', 2);
+        $sub_module = $object->parameter($object, 'configure', 2);
+        $command = $object->parameter($object, 'configure', 3);
         try {
-            if(!empty($action)){
-                $url = Configure::locate($object, ucfirst(strtolower($module)) . '.' . ucfirst(strtolower($action)));
+            if(!empty($command) && !emptY($sub_module)){
+                $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module ) . '.' . ucfirst($command));
+            }
+            if(!empty($sub_module )){
+                $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module ));
             } else {
-                $url = Configure::locate($object, ucfirst(strtolower($module)));
+                $url = Configure::locate($object, ucfirst($module));
             }
             return Configure::response($object, $url);
         } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
