@@ -3,4 +3,4 @@
 {{if(is.empty($host))}}
 {{$host = terminal.readline('Hostname: ')}}
 {{/if}}
-{{cors.enable.domains($host)}}
+{{cors.domain.enable($host)}}
