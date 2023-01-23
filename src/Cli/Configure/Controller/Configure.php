@@ -15,9 +15,9 @@ use R3m\Io\App;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
-use R3m\Io\Module\View;
+use R3m\Io\Module\Controller;
 
-class Configure extends View {
+class Configure extends Controller {
     const DIR = __DIR__;
     const NAME = 'Configure';
     const MODULE_INFO = 'Info';
