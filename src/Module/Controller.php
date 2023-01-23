@@ -141,7 +141,9 @@ class Controller {
             $temp = explode('\\', $called);
             if(empty($name)){
                 $name = array_pop($temp);
+                ddd($name);
             } else {
+                ddd($name);
                 $template_explode = explode('.', $name);
                 if(count($template_explode) > 2){
                     $dotted_last = array_pop($template_explode);
@@ -159,7 +161,6 @@ class Controller {
                 $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name ). $config->data('extension.tpl');
             }
             for($i = $max; $i > $minimum; $i--){
-                d($explode);
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
                 $list[] = str_replace(
                     [
