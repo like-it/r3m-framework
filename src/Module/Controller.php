@@ -171,6 +171,19 @@ class Controller {
                     ],
                     $url . $name . $config->data('extension.tpl')
                 );
+                $list[] = str_replace(
+                    [
+                        '\\',
+                        ':',
+                        '='
+                    ],
+                    [
+                        '/',
+                        '.',
+                        '-'
+                    ],
+                    $url . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl')
+                );
                 array_pop($explode);
                 array_pop($explode);
                 $explode[] = $config->data('dictionary.view');
