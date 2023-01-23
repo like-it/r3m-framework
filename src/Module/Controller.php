@@ -121,11 +121,11 @@ class Controller {
                 throw new Exception('Please define const DIR = __DIR__ . DIRECTORY_SEPARATOR; in the controller (' . $called . ').');
             }
         }
+        $config = $object->data(App::CONFIG);
         if($url){
             $list = [];
             $list[] = $url;
         } else {
-            $config = $object->data(App::CONFIG);
             if(substr($dir, -1) != $config->data('ds')){
                 $dir .= $config->data('ds');
             }
@@ -147,6 +147,7 @@ class Controller {
                     $dotted_last = array_pop($template_explode);
                     $dotted_first = array_pop($template_explode);
                     $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
+                    $list[] = $object->config('host.dir.view') . implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '/' . $dotted_last . $config->data('extension.tpl');
                 }
                 elseif(count($template_explode) === 2){
                     ddd($template_explode);
