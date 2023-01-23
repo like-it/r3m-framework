@@ -24,8 +24,7 @@ class Configure extends Controller {
     const INFO = '{{binary()}} configure                      | App configuration commands';
     const INFO_RUN = [
         '{{binary()}} configure                      | App configuration commands',
-        '{{binary()}} configure cors enable          | Enable host for cors requests',
-        '{{binary()}} configure cors disable         | Disable host for cors requests',
+        '{{binary()}} configure cors info            | Cors requests information',
         '{{binary()}} configure domain add           | Adds a domain to /project_dir/Host',
         '{{binary()}} configure environment toggle   | Toggle environment between development, staging & production',
         '{{binary()}} configure host add             | Adds a host to /etc/host',
