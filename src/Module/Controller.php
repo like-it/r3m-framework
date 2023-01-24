@@ -170,7 +170,7 @@ class Controller {
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
                 if($i <= ($max - 2)){
-                    $list[] = str_replace(
+                    $location = str_replace(
                         [
                             '\\',
                             ':',
@@ -181,27 +181,17 @@ class Controller {
                             '.',
                             '-'
                         ],
-                        $url . $name . $config->data('extension.tpl')
+                        $url . $name
                     );
-                    $list[] = str_replace(
-                        [
-                            '\\',
-                            ':',
-                            '='
-                        ],
-                        [
-                            '/',
-                            '.',
-                            '-'
-                        ],
-                        $url . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl')
-                    );
+                    $list[] = str_replace('.', $object->config('ds'), $location) . $config->data('extension.tpl');
+                    $list[] = $location . $config->data('extension.tpl');
                 }
                 array_pop($explode);
                 array_pop($explode);
                 $explode[] = $config->data('dictionary.view');
             }
         }
+        ddd($list);
         $url = false;
         foreach($list as $file){
             if(File::exist($file)){
