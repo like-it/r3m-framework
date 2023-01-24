@@ -199,13 +199,6 @@ class Controller {
                 array_pop($explode);
                 $explode[] = $config->data('dictionary.view');
             }
-            if(!empty($object->config('host.dir.view'))){
-                $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds') , $name) . $config->data('extension.tpl');
-            }
-            elseif(!empty($object->config('controller.dir.view'))){
-                $list[] = $object->config('controller.dir.view') . str_replace('.', $object->config('ds') , $name) . $config->data('extension.tpl');
-            }
-
         }
         $url = false;
         ddd($list);
