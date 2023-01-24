@@ -144,7 +144,6 @@ class Controller {
             } else {
                 $template_explode = explode('.', $name);
                 $count = count($template_explode);
-                $count = 1;
                 if($count > 2){
                     $dotted_last = array_pop($template_explode);
                     $dotted_first = array_pop($template_explode);
