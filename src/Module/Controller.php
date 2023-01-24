@@ -152,11 +152,11 @@ class Controller {
                 elseif($count === 2){
                     $dotted_last = array_pop($template_explode);
                     $dotted_first = array_pop($template_explode);
-                    $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
+                    $name = $dotted_first . '.' . $dotted_last;
                 }
                 elseif($count === 1){
                     $dotted = array_pop($template_explode);
-                    $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted;
+                    $name = $dotted;
                 }
             }
             if(!empty($object->config('host.dir.view'))){
@@ -169,9 +169,6 @@ class Controller {
             }
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
-                d($url);
-                d($count);
-                ddd($name);
                 $list[] = str_replace(
                     [
                         '\\',
