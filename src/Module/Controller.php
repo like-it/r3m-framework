@@ -169,7 +169,6 @@ class Controller {
             }
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
-                //dont need first 2 options.
                 if($i <= ($max - 2)){
                     $list[] = str_replace(
                         [
@@ -204,7 +203,6 @@ class Controller {
             }
         }
         $url = false;
-        ddd($list);
         foreach($list as $file){
             if(File::exist($file)){
                 $url = $file;
