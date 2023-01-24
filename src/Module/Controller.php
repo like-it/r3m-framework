@@ -164,6 +164,10 @@ class Controller {
                 $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
                 $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name ). $config->data('extension.tpl');
             }
+            elseif(!empty($object->config('controller.dir.view'))){
+                $list[] = $object->config('controller.dir.view') . $name . $config->data('extension.tpl');
+                $list[] = $object->config('controller.dir.view') . str_replace('.', $object->config('ds'), $name ). $config->data('extension.tpl');
+            }
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
                 $list[] = str_replace(
@@ -196,7 +200,13 @@ class Controller {
                 array_pop($explode);
                 $explode[] = $config->data('dictionary.view');
             }
-            $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds') , $name) . $config->data('extension.tpl');
+            if(!empty($object->config('host.dir.view'))){
+                $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds') , $name) . $config->data('extension.tpl');
+            }
+            elseif(!empty($object->config('controller.dir.view'))){
+                $list[] = $object->config('controller.dir.view') . str_replace('.', $object->config('ds') , $name) . $config->data('extension.tpl');
+            }
+
         }
         $url = false;
         ddd($list);
