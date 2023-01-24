@@ -136,7 +136,7 @@ class Controller {
             $explode = explode($config->data('ds'), $dir);
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
-            $max = count($explode) - 2; //don't want to have first 2 options
+            $max = count($explode);
             $list = [];
             $temp = explode('\\', $called);
             if(empty($name)){
@@ -169,32 +169,35 @@ class Controller {
             }
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
-                $list[] = str_replace(
-                    [
-                        '\\',
-                        ':',
-                        '='
-                    ],
-                    [
-                        '/',
-                        '.',
-                        '-'
-                    ],
-                    $url . $name . $config->data('extension.tpl')
-                );
-                $list[] = str_replace(
-                    [
-                        '\\',
-                        ':',
-                        '='
-                    ],
-                    [
-                        '/',
-                        '.',
-                        '-'
-                    ],
-                    $url . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl')
-                );
+                //dont need first 2 options.
+                if($i < ($max - 2)){
+                    $list[] = str_replace(
+                        [
+                            '\\',
+                            ':',
+                            '='
+                        ],
+                        [
+                            '/',
+                            '.',
+                            '-'
+                        ],
+                        $url . $name . $config->data('extension.tpl')
+                    );
+                    $list[] = str_replace(
+                        [
+                            '\\',
+                            ':',
+                            '='
+                        ],
+                        [
+                            '/',
+                            '.',
+                            '-'
+                        ],
+                        $url . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl')
+                    );
+                }
                 array_pop($explode);
                 array_pop($explode);
                 $explode[] = $config->data('dictionary.view');
