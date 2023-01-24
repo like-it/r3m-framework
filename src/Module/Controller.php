@@ -136,7 +136,7 @@ class Controller {
             $explode = explode($config->data('ds'), $dir);
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
-            $max = count($explode);
+            $max = count($explode) - 2; //don't want to have first 2 options
             $list = [];
             $temp = explode('\\', $called);
             if(empty($name)){
