@@ -191,7 +191,6 @@ class Controller {
                 $explode[] = $config->data('dictionary.view');
             }
         }
-        ddd($list);
         $url = false;
         foreach($list as $file){
             if(File::exist($file)){
