@@ -169,6 +169,8 @@ class Controller {
             }
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
+                d($url);
+                ddd($name);
                 $list[] = str_replace(
                     [
                         '\\',
