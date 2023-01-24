@@ -158,7 +158,6 @@ class Controller {
                 elseif($count === 1){
                     $dotted = array_pop($template_explode);
                     $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted;
-                    ddd($name);
                 }
             }
             if(!empty($object->config('host.dir.view'))){
