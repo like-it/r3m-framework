@@ -143,15 +143,22 @@ class Controller {
                 $name = array_pop($temp);
             } else {
                 $template_explode = explode('.', $name);
-                if(count($template_explode) > 2){
+                $count = count($template_explode);
+                $count = 1;
+                if($count > 2){
                     $dotted_last = array_pop($template_explode);
                     $dotted_first = array_pop($template_explode);
                     $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
                 }
-                elseif(count($template_explode) === 2){
+                elseif($count === 2){
                     $dotted_last = array_pop($template_explode);
                     $dotted_first = array_pop($template_explode);
                     $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
+                }
+                elseif($count === 1){
+                    $dotted = array_pop($template_explode);
+                    $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted;
+                    ddd($name);
                 }
             }
             if(!empty($object->config('host.dir.view'))){
