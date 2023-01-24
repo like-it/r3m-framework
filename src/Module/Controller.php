@@ -141,9 +141,7 @@ class Controller {
             $temp = explode('\\', $called);
             if(empty($name)){
                 $name = array_pop($temp);
-                ddd($name);
             } else {
-                ddd($name);
                 $template_explode = explode('.', $name);
                 if(count($template_explode) > 2){
                     $dotted_last = array_pop($template_explode);
