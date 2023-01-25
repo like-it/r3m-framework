@@ -1167,11 +1167,14 @@ class Token {
                                         count($token[$variable_nr]['variable']['array'][$variable_array_level])
                                     );
                                     d($token[$variable_nr]['variable']['array']);
-                                    d($prepare);
                                     $prepare = Token::define($prepare);
+                                    d($prepare);
                                     $prepare = Token::group($prepare, $is_debug);
+                                    d($prepare);
                                     $prepare = Token::cast($prepare);
+                                    d($prepare);
                                     $prepare = Token::method($prepare, $is_debug);
+                                    d($prepare);
                                     $token[$variable_nr]['variable']['array'][$variable_array_level] = $prepare;
                                     $variable_array_level++;
                                     unset($token[$i]);
