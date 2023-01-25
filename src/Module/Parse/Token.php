@@ -1166,6 +1166,7 @@ class Token {
                                         $token[$variable_nr]['variable']['array'][$variable_array_level],
                                         count($token[$variable_nr]['variable']['array'][$variable_array_level])
                                     );
+                                    d($prepare);
                                     d($token[$variable_nr]['variable']['array']);
                                     $prepare = Token::define($prepare);
                                     d($prepare);
