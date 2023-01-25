@@ -1161,12 +1161,11 @@ class Token {
                                 $node = $token[$i];
                                 if($node['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
                                     unset($token[$i]);
-                                    continue;
                                 }
                                 elseif($node['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
+                                    ddd($node);
                                     $variable_array_level++;
                                     unset($token[$i]);
-                                    continue;
                                 } else {
                                     $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
                                     unset($token[$i]);
