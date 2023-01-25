@@ -480,8 +480,7 @@ class Controller {
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
         if(is_array($read)){
-            $debug = debug_backtrace(true);
-            ddd($debug);
+            ddd($read);
         }
         return $read;
     }
