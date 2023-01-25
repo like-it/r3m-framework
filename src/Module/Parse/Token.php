@@ -922,12 +922,12 @@ class Token {
         $attribute_nr = 0;
         $variable_nr = 0;
         foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_METHOD){
+            if($record['type'] === Token::TYPE_METHOD){
                 $is_method = $nr;
                 $depth = $record['depth'];
             }
             elseif($is_method !== null){
-                if($record['value'] == '(' && $record['depth'] == $depth + 1){
+                if($record['value'] === '(' && $record['depth'] === $depth + 1){
                     if(!empty($method)){
                         foreach($method as $unset => $item){
                             $token[$is_method]['value'] .= $item['value'];
@@ -939,13 +939,13 @@ class Token {
                     $depth = null;
                     continue;
                 }
-                if($record['type'] == Token::TYPE_WHITESPACE){
+                if($record['type'] === Token::TYPE_WHITESPACE){
                     continue;
                 }
                 $method[$nr] = $record;
             }
             elseif(
-                $record['type'] == Token::TYPE_VARIABLE &&
+                $record['type'] === Token::TYPE_VARIABLE &&
                 key_exists('variable', $record) &&
                 key_exists('has_modifier', $record['variable']) &&
                 $record['variable']['has_modifier'] === true
@@ -953,19 +953,19 @@ class Token {
                 $is_variable = $nr;
             }
             elseif($is_variable !== null){
-                if($record['type'] == Token::TYPE_WHITESPACE){
+                if($record['type'] === Token::TYPE_WHITESPACE){
                     unset($token[$nr]);
                     continue;
                 }
-                elseif($record['type'] == Token::TYPE_PARENTHESE_CLOSE){
+                elseif($record['type'] === Token::TYPE_PARENTHESE_CLOSE){
                     continue;
                 }
-                elseif($record['type'] == Token::TYPE_PIPE){
+                elseif($record['type'] === Token::TYPE_PIPE){
                     $variable_nr++;
                     unset($token[$nr]);
                     continue;
                 }
-                elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
+                elseif($record['type'] === Token::TYPE_CURLY_CLOSE){
                     $variable = Token::modifier($variable);                    
                     $token[$is_variable]['variable']['modifier'] = $variable;
                     $token[$is_variable]['parse'] = $token[$is_variable]['value'];
@@ -1166,6 +1166,9 @@ class Token {
                                         $token[$variable_nr]['variable']['array'][$variable_array_level],
                                         count($token[$variable_nr]['variable']['array'][$variable_array_level])
                                     );
+                                    $prepare[] = [
+                                        "type" => Token::TYPE_CURLY_CLOSE
+                                    ];
                                     d($prepare);
                                     d($token[$variable_nr]['variable']['array']);
                                     $prepare = Token::define($prepare);
