@@ -1163,10 +1163,10 @@ class Token {
                                     unset($token[$i]);
                                 }
                                 elseif($node['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
-                                    ddd($node);
                                     $variable_array_level++;
                                     unset($token[$i]);
                                 } else {
+                                    d($variable_array_level);
                                     $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
                                     unset($token[$i]);
                                 }
