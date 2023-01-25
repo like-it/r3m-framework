@@ -639,7 +639,7 @@ class Token {
             $prepare[] = $record;
             unset($token[$nr]);
         }
-        ddd($prepare);
+        d($prepare);
         return $prepare;
     }
 
