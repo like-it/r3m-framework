@@ -1162,10 +1162,11 @@ class Token {
                                     unset($token[$i]);
                                 }
                                 elseif($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
-                                    $token[$variable_nr]['variable']['array'][$variable_array_level] = Token::prepare(
+                                    $prepare = Token::prepare(
                                         $token[$variable_nr]['variable']['array'][$variable_array_level],
                                         count($token[$variable_nr]['variable']['array'][$variable_array_level])
                                     );
+                                    $token[$variable_nr]['variable']['array'][$variable_array_level] = reset($prepare);
                                     $variable_array_level++;
                                     unset($token[$i]);
                                 } else {
