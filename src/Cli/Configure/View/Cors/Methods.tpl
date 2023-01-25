@@ -2,6 +2,7 @@
 {{$method = object(parameter('methods', 1), 'array')}}
 {{if(is.empty($method))}}
 {{$method = []}}
+{{dd($method)}}
 {{while(true)}}
 {{$method[] = terminal.readline('Method: ')}}
 {{if(is.empty(array.end($method)))}}
