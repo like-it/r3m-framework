@@ -46,7 +46,15 @@ class Variable {
     }
 
     private static function getArrayAttribute($variable=[]){
-
+        $execute = '';
+        if(array_key_exists('array', $variable['variable'])){
+            foreach($variable['variable']['array'] as $nr => $record){
+                if(array_key_exists('execute', $record)){
+                    $execute = $record['execute'];
+                }
+            }
+        }
+        return $execute;
     }
 
     /**
