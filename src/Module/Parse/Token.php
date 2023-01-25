@@ -1159,6 +1159,10 @@ class Token {
                                 $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
                             }
                         }
+                        //empty array
+                        if(!array_key_exists('array', $token[$variable_nr]['variable'])){
+                            $token[$variable_nr]['variable']['array'][$variable_array_level][] = null;
+                        }
                         $variable_array_start = null;
                         $variable_array_level++;
                     }
