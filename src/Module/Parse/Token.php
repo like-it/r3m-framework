@@ -1166,6 +1166,7 @@ class Token {
                         $variable_array_start = null;
                         $variable_array_level++;
                     }
+                    continue;
                 }
                 elseif(
                     $variable_array_depth > 0 &&
