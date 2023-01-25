@@ -78,7 +78,7 @@ class Variable {
             $assign .= $attribute . '\', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
             $assign .= $value . ')';
-            ddd($assign);
+            d($assign);
             return $assign;
         } else {
             switch($variable['variable']['operator']){
