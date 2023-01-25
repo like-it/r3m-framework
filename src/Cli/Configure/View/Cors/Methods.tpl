@@ -1,10 +1,11 @@
 {{R3M}}
 {{$method = object(parameter('methods', 1), 'array')}}
 {{if(is.empty($method))}}
-{{$nr = 0}}
+{{$method = []}}
 {{while(true)}}
-{{$method.$nr = terminal.readline('Method: ')}}
-{{if(is.empty($method.$nr))}}
+{{$method[] = terminal.readline('Method: ')}}
+{{if(is.empty(array.end($method)))}}
+    {{array.pop($method)}}
     {{break()}}
 {{/if}}
 {{/while}}
