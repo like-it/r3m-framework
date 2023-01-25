@@ -343,7 +343,10 @@ class Handler {
         ){
             $options = Core::object($options, Core::OBJECT_ARRAY);
         }
-        return session_set_cookie_params($options);
+        if(!headers_sent()){
+            return session_set_cookie_params($options);
+        }
+        return false;
     }
 
 
