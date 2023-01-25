@@ -1009,6 +1009,7 @@ class Token {
         $previous_nr = null;
         $method_nr = null;
         $variable_nr = null;
+        $variable_array_value = null;
         $variable_array_start = null;
         $variable_array_depth = 0;
         $variable_array_level = 0;
@@ -1138,8 +1139,8 @@ class Token {
                     if($variable_array_depth === 0){
                         $variable_array_start = $nr;
                     }
+                    $variable_array_value .= $record['value'];
                     $variable_array_depth++;
-                    $token[$variable_nr]['parse'] .= $record['value'];
                     continue;
                 }
                 elseif(
@@ -1167,7 +1168,7 @@ class Token {
                         $variable_array_start = null;
                         $variable_array_level++;
                     }
-                    $token[$variable_nr]['parse'] .= $record['value'];
+                    $variable_array_value .= $record['value'];
                     continue;
                 }
                 elseif(
@@ -1175,7 +1176,7 @@ class Token {
                     $quote_double_toggle === false &&
                     $quote_single_toggle === false
                 ){
-                    $token[$variable_nr]['parse'] .= $record['value'];
+                    $variable_array_value .= $record['value'];
                     continue;
                 }
                 if(
@@ -1223,6 +1224,9 @@ class Token {
                         )
                     ){
                         $value .= $record['value'];
+                        if($variable_array_value){
+                            $value .= $variable_array_value;
+                        }
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         $token[$variable_nr]['variable']['is_assign'] = true;
@@ -1355,9 +1359,9 @@ class Token {
                 $variable_nr = $nr;
                 $token[$variable_nr]['variable']['name'] = $record['value'];
                 $token[$variable_nr]['variable']['attribute'] = substr($record['value'], 1);
-                $token[$variable_nr]['variable']['is_assign'] = false;                
+                $token[$variable_nr]['variable']['is_assign'] = false;
                 $value = $record['value'];
-                //next = []
+                $variable_array_value = '';
                 continue;
             }
             elseif(
