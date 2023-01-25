@@ -479,6 +479,9 @@ class Controller {
         $read = $parse->compile($read, $data, $parse->storage());
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
+        if(is_array($read)){
+            ddd($read);
+        }
         return $read;
     }
 
