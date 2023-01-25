@@ -1743,7 +1743,6 @@ class Token {
             }
             $previous_nr = $nr;
         }
-        d($token);
         return $token;
     }
 
