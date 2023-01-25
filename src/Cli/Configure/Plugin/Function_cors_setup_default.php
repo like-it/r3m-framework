@@ -33,6 +33,7 @@ function function_cors_setup_default(Parse $parse, Data $data, $host=''){
     }
     $list = [];
     $list[] = $host;
+    $config->delete('server.cors');
     $config->set('server.cors.allow_credentials', true);
     $config->set('server.cors.methods', [
         "GET",
