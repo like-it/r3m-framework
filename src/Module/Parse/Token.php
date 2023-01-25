@@ -1139,6 +1139,7 @@ class Token {
                         $variable_array_start = $nr;
                     }
                     $variable_array_depth++;
+                    $token[$variable_nr]['parse'] .= $record['value'];
                     continue;
                 }
                 elseif(
@@ -1166,6 +1167,7 @@ class Token {
                         $variable_array_start = null;
                         $variable_array_level++;
                     }
+                    $token[$variable_nr]['parse'] .= $record['value'];
                     continue;
                 }
                 elseif(
@@ -1173,6 +1175,7 @@ class Token {
                     $quote_double_toggle === false &&
                     $quote_single_toggle === false
                 ){
+                    $token[$variable_nr]['parse'] .= $record['value'];
                     continue;
                 }
                 if(
