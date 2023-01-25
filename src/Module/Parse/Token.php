@@ -1158,16 +1158,18 @@ class Token {
                         $token[$variable_nr]['variable']['is_array'] = true;
                         for($i = $variable_array_start; $i <= $nr; $i++){
                             if(array_key_exists($i, $token)){
-                                $node = $token[$i];
-                                if($node['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
+                                if($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
                                     unset($token[$i]);
                                 }
-                                elseif($node['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
+                                elseif($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
+                                    $token[$variable_nr]['variable']['array'][$variable_array_level] = Token::prepare(
+                                        $token[$variable_nr]['variable']['array'][$variable_array_level],
+                                        count($token[$variable_nr]['variable']['array'][$variable_array_level])
+                                    );
                                     $variable_array_level++;
                                     unset($token[$i]);
                                 } else {
-                                    d($variable_array_level);
-                                    $token[$variable_nr]['variable']['array'][$variable_array_level][] = $node;
+                                    $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
                                     unset($token[$i]);
                                 }
                             }
