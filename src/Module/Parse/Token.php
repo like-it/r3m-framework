@@ -1009,6 +1009,9 @@ class Token {
         $previous_nr = null;
         $method_nr = null;
         $variable_nr = null;
+        $variable_array_start = null;
+        $variable_array_depth = 0;
+        $variable_array_level = 0;
         $value = null;
         $comment_open_nr = null;
         $doc_comment_open_nr = null;
@@ -1120,6 +1123,52 @@ class Token {
                     )
                 ){
                     $variable_nr = null;
+                    $variable_array_level = 0;
+                }
+                if(
+                    $quote_double_toggle === false &&
+                    $quote_single_toggle === false &&
+                    in_array(
+                        $record['type'],
+                        [
+                            Token::TYPE_BRACKET_SQUARE_OPEN
+                        ]
+                    )
+                ){
+                    if($variable_array_depth === 0){
+                        $variable_array_start = $nr;
+                    }
+                    $variable_array_depth++;
+                    continue;
+                }
+                elseif(
+                    $quote_double_toggle === false &&
+                    $quote_single_toggle === false &&
+                    in_array(
+                        $record['type'],
+                        [
+                            Token::TYPE_BRACKET_SQUARE_CLOSE
+                        ]
+                    )
+                ){
+                    $variable_array_depth--;
+                    if($variable_array_depth === 0){
+                        $token[$variable_nr]['variable']['is_array'] = true;
+                        for($i = $variable_array_start + 1; $i < $nr; $i++){
+                            if(array_key_exists($i, $token)){
+                                $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
+                            }
+                        }
+                        $variable_array_start = null;
+                        $variable_array_level++;
+                    }
+                }
+                elseif(
+                    $variable_array_depth > 0 &&
+                    $quote_double_toggle === false &&
+                    $quote_single_toggle === false
+                ){
+                    continue;
                 }
                 if(
                     $next !== null &&
@@ -1153,6 +1202,7 @@ class Token {
                         }
                         $token[$variable_nr]['value'] = $value;
                         $variable_nr = null;
+                        $variable_array_level = 0;
                         $skip += 1;
                         unset($token[$nr]);
                         $previous_nr = $nr;
@@ -1173,7 +1223,8 @@ class Token {
                         $token[$variable_nr]['parse'] = $value . ' ' . $token[$variable_nr]['variable']['operator'] . ' ';
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
-                        $skip_unset += 1; //was skip
+                        $variable_array_level = 0;
+                        $skip_unset += 1;
                         unset($token[$nr]);
                         $previous_nr = $nr;
                         continue;
@@ -1184,6 +1235,7 @@ class Token {
                         $token[$variable_nr]['value'] = $value;                        
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
+                        $variable_array_level = 0;
                         $skip += 1;
                         unset($token[$nr]);
                         $previous_nr = $nr;
@@ -1222,6 +1274,7 @@ class Token {
                         }
                         $token[$variable_nr]['value'] = $value;
                         $variable_nr = null;
+                        $variable_array_level = 0;
                         $skip += 1;
                         unset($token[$nr]);
                         $previous_nr = $nr;
@@ -1243,6 +1296,7 @@ class Token {
                         $token[$variable_nr]['parse'] = $value . ' ' . $token[$variable_nr]['variable']['operator'] . ' ';
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
+                        $variable_array_level = 0;
                         $skip_unset += 2;
                         unset($token[$nr]);
                         $previous_nr = $nr;
@@ -1254,6 +1308,7 @@ class Token {
                         $token[$variable_nr]['value'] = $value;                        
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
+                        $variable_array_level = 0;
                         $skip += 2;
                         unset($token[$nr]);
                         $previous_nr = $nr;
@@ -1272,6 +1327,7 @@ class Token {
                     $quote_single_toggle === false
                 ){
                     $variable_nr = null;
+                    $variable_array_level = 0;
                 }
                 elseif($variable_nr !== null) {
                     $token[$variable_nr]['variable']['name'] .= $record['value'];
@@ -1293,8 +1349,6 @@ class Token {
                 $token[$variable_nr]['variable']['attribute'] = substr($record['value'], 1);
                 $token[$variable_nr]['variable']['is_assign'] = false;                
                 $value = $record['value'];
-                d($next);
-                d($next_next);
                 //next = []
                 continue;
             }
