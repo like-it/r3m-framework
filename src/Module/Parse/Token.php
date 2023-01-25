@@ -1223,7 +1223,9 @@ class Token {
                             Token::TYPE_ASSIGN
                         )
                     ){
-                        $value .= $record['value'];
+                        if($record['type'] !== Token::TYPE_WHITESPACE){
+                            $value .= $record['value'];
+                        }
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         $token[$variable_nr]['variable']['is_assign'] = true;
