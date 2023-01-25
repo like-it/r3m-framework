@@ -10,7 +10,7 @@ use R3m\Io\Exception\FileAppendException;
 /**
  * @throws Exception
  */
-function function_cors_disable_domain(Parse $parse, Data $data, $host=''){
+function function_cors_domain_disable(Parse $parse, Data $data, $host=''){
     $id = posix_geteuid();
     if(
         !in_array(
