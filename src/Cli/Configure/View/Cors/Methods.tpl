@@ -10,4 +10,5 @@
 {{/if}}
 {{/while}}
 {{/if}}
+{{dd($method)}}
 {{cors.methods($method)}}
