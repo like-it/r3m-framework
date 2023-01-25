@@ -639,6 +639,7 @@ class Token {
             $prepare[] = $record;
             unset($token[$nr]);
         }
+        ddd($prepare);
         return $prepare;
     }
 
@@ -953,7 +954,6 @@ class Token {
                 $is_variable = $nr;
             }
             elseif($is_variable !== null){
-                d($record);
                 if($record['type'] == Token::TYPE_WHITESPACE){
                     unset($token[$nr]);
                     continue;
