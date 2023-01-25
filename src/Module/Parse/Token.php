@@ -1225,9 +1225,12 @@ class Token {
                     ){
                         if($record['type'] !== Token::TYPE_WHITESPACE){
                             $value .= $record['value'];
+                            $token[$variable_nr]['variable']['name'] .= $record['value'];
+                            $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         }
-                        $token[$variable_nr]['variable']['name'] .= $record['value'];
-                        $token[$variable_nr]['variable']['attribute'] .= $record['value'];
+                        if($variable_array_value){
+                            $value .= $variable_array_value;
+                        }
                         $token[$variable_nr]['variable']['is_assign'] = true;
                         $token[$variable_nr]['variable']['operator'] = $token[$next]['value'];
                         $token[$variable_nr]['value'] = $value;
