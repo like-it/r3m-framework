@@ -55,6 +55,7 @@ class Variable {
             return '';
         }        
         $token = Variable::addAssign($token);
+        d($token);
         switch($variable['variable']['operator']){
             case '=' :
                 $assign = '$this->storage()->set(\'';
