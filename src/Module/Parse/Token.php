@@ -1224,9 +1224,6 @@ class Token {
                         )
                     ){
                         $value .= $record['value'];
-                        if($variable_array_value){
-                            $value .= $variable_array_value;
-                        }
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         $token[$variable_nr]['variable']['is_assign'] = true;
