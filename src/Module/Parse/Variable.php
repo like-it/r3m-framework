@@ -45,6 +45,10 @@ class Variable {
         }        
     }
 
+    private static function getArrayAttribute($variable=[]){
+
+    }
+
     /**
      * @throws Exception
      */
@@ -56,59 +60,73 @@ class Variable {
         }        
         $token = Variable::addAssign($token);
         d($variable);
-        switch($variable['variable']['operator']){
-            case '=' :
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $value = Variable::getValue($build, $storage, $token, $is_result);                
-                $assign .= $value . ')';
-                return $assign;
-            case '+=' :                
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_plus_equal(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\'), ';
-                $value = Variable::getValue($build, $storage, $token, $is_result);
-                $assign .= $value . '))';
-                return $assign;
-            case '-=' :                
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_min_equal(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\'), ';
-                $value = Variable::getValue($build, $storage, $token, $is_result);
-                $assign .= $value . '))';
-                return $assign;
-            case '.=' :                
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_dot_equal(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\'), ';
-                $value = Variable::getValue($build, $storage, $token, $is_result);
-                $assign .= $value . '))';
-                return $assign;
-            case '++' :
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_plus_plus(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\')';
-                $assign .= '))';
-                return $assign;
-            case '--' :                
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_min_min(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\')';
-                $assign .= '))';
-                return $assign;
-            default:
-                throw new Exception('Variable operator not defined');
+        if(
+            array_key_exists('is_array', $variable['variable']) &&
+            $variable['variable']['is_array'] === true &&
+            array_key_exists('array', $variable['variable'])
+        ){
+            $attribute = Variable::getArrayAttribute($variable);
+            $assign = '$this->storage()->set(\'';
+            $assign .= $attribute . '\', ';
+            $value = Variable::getValue($build, $storage, $token, $is_result);
+            $assign .= $value . ')';
+            ddd($assign);
+            return $assign;
+        } else {
+            switch($variable['variable']['operator']){
+                case '=' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $value = Variable::getValue($build, $storage, $token, $is_result);
+                    $assign .= $value . ')';
+                    return $assign;
+                case '+=' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_plus_equal(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\'), ';
+                    $value = Variable::getValue($build, $storage, $token, $is_result);
+                    $assign .= $value . '))';
+                    return $assign;
+                case '-=' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_min_equal(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\'), ';
+                    $value = Variable::getValue($build, $storage, $token, $is_result);
+                    $assign .= $value . '))';
+                    return $assign;
+                case '.=' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_dot_equal(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\'), ';
+                    $value = Variable::getValue($build, $storage, $token, $is_result);
+                    $assign .= $value . '))';
+                    return $assign;
+                case '++' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_plus_plus(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\')';
+                    $assign .= '))';
+                    return $assign;
+                case '--' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_min_min(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\')';
+                    $assign .= '))';
+                    return $assign;
+                default:
+                    throw new Exception('Variable operator not defined');
 
+            }
         }
     }
 

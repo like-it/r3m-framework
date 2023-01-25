@@ -966,6 +966,7 @@ class Token {
                     continue;
                 }
                 elseif($record['type'] === Token::TYPE_CURLY_CLOSE){
+                    $token[$is_variable]['type'] = Token::TYPE_VARIABLE;
                     $variable = Token::modifier($variable);                    
                     $token[$is_variable]['variable']['modifier'] = $variable;
                     $token[$is_variable]['parse'] = $token[$is_variable]['value'];
