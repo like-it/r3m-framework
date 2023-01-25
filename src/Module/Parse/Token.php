@@ -1243,7 +1243,7 @@ class Token {
                         $token[$variable_nr]['parse'] = $value . ' ' . $token[$variable_nr]['variable']['operator'] . ' ';
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
-                        $skip_unset += 2; //was skip
+                        $skip_unset += 2;
                         unset($token[$nr]);
                         $previous_nr = $nr;
                         continue;
@@ -1293,6 +1293,9 @@ class Token {
                 $token[$variable_nr]['variable']['attribute'] = substr($record['value'], 1);
                 $token[$variable_nr]['variable']['is_assign'] = false;                
                 $value = $record['value'];
+                d($next);
+                d($next_next);
+                //next = []
                 continue;
             }
             elseif(
