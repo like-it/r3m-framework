@@ -5,7 +5,6 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 
 use Exception;
-use R3m\Io\Exception\FileAppendException;
 
 /**
  * @throws Exception
@@ -62,6 +61,9 @@ function function_cors_setup_default(Parse $parse, Data $data, $host=''){
     $config->set('server.cors.domains', $list);
     $config->set('server.cors.max-age', 86400);
     $config->write($url);
+    if($id === 0){
+        File::chown($url, 'www-data', 'www-data');
+    }
     return 'Cors setup default for host: ' . $host . PHP_EOL;
 }
 
