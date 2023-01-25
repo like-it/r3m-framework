@@ -1156,9 +1156,21 @@ class Token {
                     $variable_array_depth--;
                     if($variable_array_depth === 0){
                         $token[$variable_nr]['variable']['is_array'] = true;
-                        for($i = $variable_array_start + 1; $i < $nr; $i++){
+                        for($i = $variable_array_start; $i <= $nr; $i++){
                             if(array_key_exists($i, $token)){
-                                $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
+                                $node = $token[$i];
+                                if($node['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
+                                    unset($token[$i]);
+                                    continue;
+                                }
+                                elseif($node['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
+                                    $variable_array_level++;
+                                    unset($token[$i]);
+                                    continue;
+                                } else {
+                                    $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
+                                    unset($token[$i]);
+                                }
                             }
                         }
                         //empty array
@@ -1166,7 +1178,7 @@ class Token {
                             $token[$variable_nr]['variable']['array'][$variable_array_level][] = null;
                         }
                         $variable_array_start = null;
-                        $variable_array_level++;
+                        $variable_array_level = 0;
                     }
                     $variable_array_value .= $record['value'];
                     continue;
