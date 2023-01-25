@@ -1167,7 +1167,7 @@ class Token {
                                     unset($token[$i]);
                                 } else {
                                     d($variable_array_level);
-                                    $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
+                                    $token[$variable_nr]['variable']['array'][$variable_array_level][] = $node;
                                     unset($token[$i]);
                                 }
                             }
@@ -1177,7 +1177,6 @@ class Token {
                             $token[$variable_nr]['variable']['array'][$variable_array_level][] = null;
                         }
                         $variable_array_start = null;
-                        $variable_array_level = 0;
                     }
                     $variable_array_value .= $record['value'];
                     continue;
