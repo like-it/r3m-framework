@@ -642,6 +642,9 @@ class Token {
         return $prepare;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function tree($string='', $is_debug=false): array
     {
         $prepare = Token::tree_prepare($string, $count);
@@ -950,6 +953,7 @@ class Token {
                 $is_variable = $nr;
             }
             elseif($is_variable !== null){
+                d($record);
                 if($record['type'] == Token::TYPE_WHITESPACE){
                     unset($token[$nr]);
                     continue;
