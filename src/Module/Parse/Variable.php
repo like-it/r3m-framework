@@ -70,9 +70,9 @@ class Variable {
         $result = '';
         foreach($execute as $nr => $record){
             if(substr($record, 0, 1) === '$'){
-                $result .= '.\' . ' . $record . ' . ';
+                $result .= '. . ' . $record . ' . ';
             } else {
-                $result .= '\'.' . $record . '\'';
+                $result .= '.' . $record;
             }
         }
         if(substr($result, 0, 2) === '\'.'){
