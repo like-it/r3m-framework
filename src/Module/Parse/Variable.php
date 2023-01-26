@@ -212,6 +212,7 @@ class Variable {
         }
         $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         $define_modifier = '';
+        d($variable);
         if(
             array_key_exists('has_modifier', $variable['variable']) &&
             $variable['variable']['has_modifier'] === true
