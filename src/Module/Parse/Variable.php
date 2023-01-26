@@ -102,6 +102,7 @@ class Variable {
     public static function assign($build, Data $storage, $token=[], $is_result=false): string
     {
         $variable = array_shift($token);
+        d($variable);
         if(!array_key_exists('variable', $variable)){
             return '';
         }        
