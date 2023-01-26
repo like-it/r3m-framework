@@ -1175,6 +1175,9 @@ class Token {
                                     $prepare = Token::cast($prepare);
                                     $prepare = Token::method($prepare, $is_debug);
                                     $token[$variable_nr]['variable']['array'][$variable_array_level] = reset($prepare);
+                                    if(array_key_exists('variable', $token[$variable_nr]['variable']['array'][$variable_array_level])){
+                                        $token[$variable_nr]['variable']['array'][$variable_array_level]['type'] = Token::TYPE_VARIABLE;
+                                    }
                                     $variable_array_level++;
                                     unset($token[$i]);
                                 } else {
