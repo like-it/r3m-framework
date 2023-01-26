@@ -569,10 +569,10 @@ class Core {
                         property_exists($object, $key) &&
                         is_array($object->{$key})
                     ){
-                        //intended
-                        d($value);
-                        d($key);
-                        ddd($attribute);
+                        foreach($attribute as $index => $unused){
+                            $object->{$key}[$index] = $value;
+                        }
+                        return $object->{$key};
                     } else {
                         $object->{$key} = new stdClass();
                     }
