@@ -56,7 +56,7 @@ class Variable {
                     $extra = [];
                     $extra[] = '$count = count($this->storage(\'' . $variable['variable']['attribute']  . '\'));';
                     $extra = implode(PHP_EOL, $extra);
-                    $result = '\'' . $variable['variable']['attribute'] . '\'. $count';
+                    $result = '\'' . $variable['variable']['attribute'] . '.\' . $count';
                     return $result;
                 }
                 if(array_key_exists('execute', $record)){
@@ -132,9 +132,15 @@ class Variable {
             $variable['variable']['operator'] === '=' &&
             array_key_exists('array', $variable['variable'])
         ){
-            $attribute = Variable::getArrayAttribute($variable, $build, $storage);
-            d($attribute);
-            $assign = '$this->storage()->set(';
+            $attribute = Variable::getArrayAttribute($variable, $build, $storage, $extra);
+            if($extra){
+                $assign = $extra;
+                $assign .= PHP_EOL;
+                $assign .= $build->indent();
+                $assign .= '$this->storage()->set(';
+            } else {
+                $assign = '$this->storage()->set(';
+            }
             $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
             $assign .= $value . ')';
