@@ -5,7 +5,6 @@
 {{$method[] = terminal.readline('Method: ')}}
 {{while(true)}}
 {{$method[] = terminal.readline('Method: ')}}
-{{dd($method)}}
 {{if(is.empty(array.end('method')))}}
     {{array.pop('method')}}
     {{break()}}
