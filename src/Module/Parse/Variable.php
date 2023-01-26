@@ -68,15 +68,35 @@ class Variable {
             }
         }
         $result = '';
+        $quote_add = false;
         foreach($execute as $nr => $record){
             if(substr($record, 0, 1) === '$'){
-                $result .= '.\' . ' . $record . ' . ';
+                if($nr === 0){
+                    $result .= $record . ' . ';
+                } else {
+                    $result .= '.\' . ' . $record . ' . ';
+                }
+                $quote_add = true;
             } else {
-                $result .= '.' . $record;
+                if($quote_add === true){
+                    $result .= '\'.' . $record;
+                    $quote_add = false;
+                } else {
+                    if($nr === 0){
+                        $result .= '\'' . $record;
+                    } else {
+                        $result .= '.' . $record;
+                    }
+                }
             }
         }
-        if(substr($result, 0, 1) === '.'){
-            $result = '\'' . substr($result, 1);
+        if(
+            !empty($record) &&
+            substr($record, 0, 1) === '$'
+        ){
+            $result = substr($result, 0, -3);
+        } else {
+            $result .= '\'';
         }
         d($result);
         return $result;
