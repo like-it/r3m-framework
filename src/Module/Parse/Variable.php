@@ -48,10 +48,17 @@ class Variable {
     /**
      * @throws Exception
      */
-    private static function getArrayAttribute($variable=[], $build, Data $storage){
+    private static function getArrayAttribute($variable=[], $build, Data $storage, &$extra=''){
         $execute = [];
         if(array_key_exists('array', $variable['variable'])){
             foreach($variable['variable']['array'] as $nr => $record){
+                if($record === null){
+                    $extra = [];
+                    $extra[] = '$count = count($this->storage(\'' . $variable['variable']['attribute']  . '\'));';
+                    $extra = implode(PHP_EOL, $extra);
+                    $result = '\'' . $variable['variable']['attribute'] . '\'. $count';
+                    return $result;
+                }
                 if(array_key_exists('execute', $record)){
                     $execute[] = $record['execute'];
                 } else {
@@ -67,7 +74,7 @@ class Variable {
                         $tree = $build->require('function', $tree);
                         $execute[] = Value::get($build, $storage, reset($tree));
                     }
-                    $result = [];
+
                 }
             }
         }
