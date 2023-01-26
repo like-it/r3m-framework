@@ -1,6 +1,4 @@
 {{R3M}}
-{{$method = []}}
-{{$method[] = terminal.readline('Method: ')}}
 {{$method = object(parameter('methods', 1), 'array')}}
 {{if(is.empty($method))}}
 {{$method = []}}
