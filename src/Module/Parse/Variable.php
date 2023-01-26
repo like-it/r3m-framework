@@ -55,6 +55,7 @@ class Variable {
 
         }
         $execute = substr($execute, 1);
+        d($execute);
         return $execute;
     }
 
