@@ -54,11 +54,11 @@ class Variable {
             foreach($variable['variable']['array'] as $nr => $record){
                 if($record === null){
                     $extra = [];
-                    $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\')) || is_object($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
-                    $extra[] = '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
-                    $extra[] = '} else {';
-                    $extra[] = '$count = 0;';
-                    $extra[] = '}';
+                    $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
+                    $extra[] = $build->indent() . '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
+                    $extra[] = $build->indent() . '} else {';
+                    $extra[] = $build->indent() . '$count = 0;';
+                    $extra[] = $build->indent() . '}';
                     $extra = implode(PHP_EOL, $extra);
                     $result = '\'' . $variable['variable']['attribute'] . '.\' . $count';
                     return $result;
