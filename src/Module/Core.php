@@ -565,7 +565,12 @@ class Core {
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 }
                 elseif(is_object($attribute)){
-                    if(!is_array($object->{$key})){
+                    if(
+                        property_exists($object, $key) &&
+                        is_array($object->{$key})
+                    ){
+                        //intended
+                    } else {
                         $object->{$key} = new stdClass();
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
