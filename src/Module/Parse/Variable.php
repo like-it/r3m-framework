@@ -93,7 +93,6 @@ class Variable {
         } else {
             $result .= '\'';
         }
-        d($result);
         return $result;
     }
 
@@ -113,8 +112,8 @@ class Variable {
             $variable['variable']['operator'] === '=' &&
             array_key_exists('array', $variable['variable'])
         ){
-            //use parse
             $attribute = Variable::getArrayAttribute($variable, $build, $storage);
+            ddd($attribute);
             $assign = '$this->storage()->set(';
             $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
