@@ -55,9 +55,9 @@ class Variable {
                 if(array_key_exists('execute', $record)){
                     $execute .= '.' . $record['execute'];
                 } else {
-                    $debug = debug_backtrace(true);
-                    ddd($debug);
-                    ddd($record);
+                    $token = [];
+                    $token[] = $record;
+                    $execute .= '.' . Variable::define($build, $storage, $token);
                 }
             }
         }
