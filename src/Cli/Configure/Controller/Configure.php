@@ -48,7 +48,18 @@ class Configure extends Controller {
         }
         $sub_module = $object->parameter($object, 'configure', 2);
         $command = $object->parameter($object, 'configure', 3);
-        ddd($command);
+        if(
+            substr($command, 0, 1) === '[' &&
+            substr($command, -1, 1) === ']'
+        ){
+            $command = null;
+        }
+        elseif(
+            substr($command, 0, 1) === '{' &&
+            substr($command, -1, 1) === '}'
+        ){
+            $command = null;
+        }
         try {
             if(
                 !empty($command) &&
