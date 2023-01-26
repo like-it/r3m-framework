@@ -70,13 +70,13 @@ class Variable {
         $result = '';
         foreach($execute as $nr => $record){
             if(substr($record, 0, 1) === '$'){
-                $result .= '. . ' . $record . ' . ';
+                $result .= '\'. . ' . $record . ' . ';
             } else {
                 $result .= '.' . $record;
             }
         }
-        if(substr($result, 0, 2) === '\'.'){
-            $result = '\'' . substr($result, 2);
+        if(substr($result, 0, 1) === '.'){
+            $result = '\'' . substr($result, 1);
         }
         d($result);
         return $result;
