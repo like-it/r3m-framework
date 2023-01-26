@@ -54,13 +54,16 @@ class Variable {
             foreach($variable['variable']['array'] as $nr => $record){
                 if($record === null){
                     $extra = [];
+                    $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
+                    /*
                     $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
                     $extra[] = $build->indent() . '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
                     $extra[] = $build->indent() . '} else {';
                     $extra[] = $build->indent() . '$count = 0;';
                     $extra[] = $build->indent() . '}';
+                    */
                     $extra = implode(PHP_EOL, $extra);
-                    $result = '\'' . $variable['variable']['attribute'] . '.\' . $count';
+                    $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
                     return $result;
                 }
                 if(array_key_exists('execute', $record)){

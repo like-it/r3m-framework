@@ -310,6 +310,21 @@ class Data {
         }
     }
 
+    public function index($attribute=null): int
+    {
+        $get = $this->get($attribute);
+        $index = 0;
+        foreach($get as $nr => $unused){
+            if(is_numeric($nr)){
+                $index = $nr + 1;
+            } else {
+                $index++;
+            }
+        }
+        return $index;
+    }
+
+
     public function do_not_nest_key($do_not_nest_key=null){
         if($do_not_nest_key !== null){
             $this->do_not_nest_key = $do_not_nest_key;
