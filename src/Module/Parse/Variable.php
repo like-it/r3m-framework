@@ -51,8 +51,9 @@ class Variable {
     private static function getArrayAttribute($variable=[], $build, Data $storage){
         $execute = '';
         if(array_key_exists('array', $variable['variable'])){
-            $execute .= '.' . Variable::getValue($build, $storage, $variable['variable']['array'], true);
-
+            foreach($variable['variable']['array'] as $nr => $record){
+                $execute .= '.' . Value::get($build, $storage, $record);
+            }
         }
         $execute = substr($execute, 1);
         d($execute);
