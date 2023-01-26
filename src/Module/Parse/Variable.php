@@ -45,15 +45,14 @@ class Variable {
         }        
     }
 
-    private static function getArrayAttribute($variable=[]){
+    /**
+     * @throws Exception
+     */
+    private static function getArrayAttribute($variable=[], $build, Data $storage){
         $execute = '';
         if(array_key_exists('array', $variable['variable'])){
-            foreach($variable['variable']['array'] as $nr => $record){
-//                $execute .= '.' . Variable::getValue($build, $storage, $token, $is_result);
-                if(array_key_exists('execute', $record)){
-                    $execute .= '.' . $record['execute'];
-                }
-            }
+            $execute .= '.' . Variable::getValue($build, $storage, $variable['variable']['array'], false);
+
         }
         $execute = substr($execute, 1);
         return $execute;
@@ -69,14 +68,12 @@ class Variable {
             return '';
         }        
         $token = Variable::addAssign($token);
-        d($token);
-        d($variable);
         if(
             array_key_exists('is_array', $variable['variable']) &&
             $variable['variable']['is_array'] === true &&
             array_key_exists('array', $variable['variable'])
         ){
-            $attribute = Variable::getArrayAttribute($variable);
+            $attribute = Variable::getArrayAttribute($variable, $build, $storage);
             $assign = '$this->storage()->set(\'';
             $assign .= $attribute . '\', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
