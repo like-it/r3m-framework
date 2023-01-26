@@ -63,7 +63,7 @@ class Variable {
                         array_key_exists('attribute', $record['variable'])
                     ){
                         $value = Value::get($build, $storage, $record);
-ddd($value);
+d($value);
 //                        $temp = $storage->data($record['variable']['attribute']);
 
 //                        ddd($temp);
