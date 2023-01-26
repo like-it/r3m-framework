@@ -75,8 +75,11 @@ class Variable {
                 $result .= '\'.' . $record . '\'';
             }
         }
+        if(substr($result, 0, 2) === '\'.'){
+            $result = '\'' . substr($result, 2);
+        }
 //        $execute = substr($execute, 1);
-        ddd($result);
+        d($result);
         return $execute;
     }
 
