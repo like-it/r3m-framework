@@ -50,13 +50,11 @@ class Variable {
      */
     private static function getArrayAttribute($variable=[], $build, Data $storage){
         $execute = [];
-        ddd($variable);
         if(array_key_exists('array', $variable['variable'])){
             foreach($variable['variable']['array'] as $nr => $record){
                 if(array_key_exists('execute', $record)){
                     $execute[] = $record['execute'];
                 } else {
-//                    ddd($record);
                     if(
                         array_key_exists('type', $record) &&
                         $record['type'] === Token::TYPE_VARIABLE &&
@@ -68,7 +66,7 @@ class Variable {
                 }
             }
         }
-        $result = '';
+        $result = $variable['variable']['attribute'] . '.';
         $quote_add = false;
         foreach($execute as $nr => $record){
             if(substr($record, 0, 1) === '$'){
