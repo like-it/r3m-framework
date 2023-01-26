@@ -67,7 +67,7 @@ class Variable {
                         $temp = $storage->data($record['variable']['attribute']);
 
                         ddd($temp);
-                        $execute .= '.'
+//                        $execute .= '.'
                     }
 //                     . Variable::define($build, $storage, $token);
                 }
