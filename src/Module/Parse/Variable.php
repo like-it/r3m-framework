@@ -55,6 +55,7 @@ class Variable {
                 if(array_key_exists('execute', $record)){
                     $execute .= '.' . $record['execute'];
                 } else {
+                    ddd($record);
                     $token = [];
                     $token[] = $record;
                     $execute .= '.' . Variable::define($build, $storage, $token);
