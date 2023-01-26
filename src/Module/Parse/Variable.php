@@ -62,14 +62,8 @@ class Variable {
                         array_key_exists('variable', $record) &&
                         array_key_exists('attribute', $record['variable'])
                     ){
-                        $value = Value::get($build, $storage, $record);
-d($value);
-//                        $temp = $storage->data($record['variable']['attribute']);
-
-//                        ddd($temp);
-//                        $execute .= '.'
+                        $execute .= '.' . Value::get($build, $storage, $record);
                     }
-//                     . Variable::define($build, $storage, $token);
                 }
             }
         }
