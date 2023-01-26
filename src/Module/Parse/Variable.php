@@ -58,7 +58,18 @@ class Variable {
                     ddd($record);
                     $token = [];
                     $token[] = $record;
-                    $execute .= '.' . Variable::define($build, $storage, $token);
+                    if(
+                        array_key_exists('type', $record) &&
+                        $record['type'] === Token::TYPE_VARIABLE &&
+                        array_key_exists('variable', $record) &&
+                        array_key_exists('attribute', $record['variable'])
+                    ){
+                        $temp = $storage->data($record['variable']['attribute']);
+
+                        ddd($temp);
+                        $execute .= '.'
+                    }
+//                     . Variable::define($build, $storage, $token);
                 }
             }
         }
