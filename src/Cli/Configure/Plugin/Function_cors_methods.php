@@ -31,15 +31,7 @@ function function_cors_methods(Parse $parse, Data $data, $method=''){
     if(!$config){
         $config = new Data();
     }
-    ddd($method);
-    $config->set('server.cors.methods', [
-        "GET",
-        "POST",
-        "PATCH",
-        "PUT",
-        "DELETE",
-        "OPTIONS"
-    ]);
+    $config->set('server.cors.methods', $method);
     $config->write($url);
     if($id === 0){
         File::chown($url, 'www-data', 'www-data');
