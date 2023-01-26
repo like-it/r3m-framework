@@ -6,8 +6,8 @@
 {{while(true)}}
 {{$method[] = terminal.readline('Method: ')}}
 {{if(is.empty(array.end('method')))}}
-    {{array.pop('method')}}
-    {{break()}}
+{{array.pop('method')}}
+{{break()}}
 {{/if}}
 {{/while}}
 {{/if}}
