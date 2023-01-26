@@ -90,8 +90,8 @@ class Variable {
         ){
             //use parse
             $attribute = Variable::getArrayAttribute($variable, $build, $storage);
-            $assign = '$this->storage()->set(\'';
-            $assign .= $attribute . '\', ';
+            $assign = '$this->storage()->set(';
+            $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
             $assign .= $value . ')';
             d($assign);
