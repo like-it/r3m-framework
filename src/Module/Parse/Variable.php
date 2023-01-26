@@ -64,6 +64,7 @@ class Variable {
                         $tree = [];
                         $tree[]= $record;
                         $tree = $build->require('modifier', $tree);
+                        $tree = $build->require('function', $tree);
                         $execute[] = Value::get($build, $storage, reset($tree));
                     }
                 }
