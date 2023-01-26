@@ -74,15 +74,22 @@ class Variable {
         }
         $result = '\'' . $variable['variable']['attribute'];
         $quote_add = false;
+        $add_quote = false;
         foreach($execute as $nr => $record){
             if(substr($record, 0, 1) === '$'){
                 if($nr === 0){
                     $result .= $record . ' . ';
                 } else {
-                    $result .= '.\' . ' . $record . ' . ';
+                    if($add_quote === true){
+                        $result .= '.\' . ' . $record . ' . ';
+                        $add_quote = false;
+                    } else {
+                        $result .= $record . ' . ';
+                    }
                 }
                 $quote_add = true;
             } else {
+                $add_quote = true;
                 if($quote_add === true){
                     $result .= '\'.' . $record;
                     $quote_add = false;
