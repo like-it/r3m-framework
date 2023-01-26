@@ -114,7 +114,7 @@ class Variable {
             array_key_exists('array', $variable['variable'])
         ){
             $attribute = Variable::getArrayAttribute($variable, $build, $storage);
-            ddd($attribute);
+            d($attribute);
             $assign = '$this->storage()->set(';
             $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
