@@ -61,7 +61,10 @@ class Variable {
                         array_key_exists('variable', $record) &&
                         array_key_exists('attribute', $record['variable'])
                     ){
-                        $execute[] = Value::get($build, $storage, $record);
+                        $tree = [];
+                        $tree[]= $record;
+                        $tree = $build->require('modifier', $tree);
+                        $execute[] = Value::get($build, $storage, reset($tree));
                     }
                 }
             }
