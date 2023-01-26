@@ -52,7 +52,11 @@ class Variable {
         $execute = '';
         if(array_key_exists('array', $variable['variable'])){
             foreach($variable['variable']['array'] as $nr => $record){
-                $execute .= '.' . Value::get($build, $storage, $record);
+                if(array_key_exists('execute', $record)){
+                    $execute .= '.' . $record['execute'];
+                } else {
+                    ddd($record);
+                }
             }
         }
         $execute = substr($execute, 1);
