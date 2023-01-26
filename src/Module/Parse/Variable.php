@@ -55,9 +55,7 @@ class Variable {
                 if(array_key_exists('execute', $record)){
                     $execute .= '.' . $record['execute'];
                 } else {
-                    ddd($record);
-                    $token = [];
-                    $token[] = $record;
+//                    ddd($record);
                     if(
                         array_key_exists('type', $record) &&
                         $record['type'] === Token::TYPE_VARIABLE &&
