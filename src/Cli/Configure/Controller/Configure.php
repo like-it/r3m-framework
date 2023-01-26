@@ -61,7 +61,6 @@ class Configure extends Controller {
                 $url = Configure::locate($object, ucfirst($module));
             }
             $response = Configure::response($object, $url);
-            ddd($response);
             return $response;
         } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
             return $exception;
