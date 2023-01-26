@@ -550,13 +550,6 @@ class Core {
         }
         if(!empty($attributeList)){
             foreach($attributeList as $key => $attribute){
-                if(is_array($object)){
-                    d($value);
-                    d($key);
-                    d($attribute);
-                    d($return);
-                    dd($attributeList);
-                }
                 if(isset($object->{$key}) && is_object($object->{$key})){
                     if(empty($attribute) && is_object($value)){
                         foreach($value as $value_key => $value_value){
@@ -577,6 +570,9 @@ class Core {
                         is_array($object->{$key})
                     ){
                         //intended
+                        d($value);
+                        d($key);
+                        ddd($attribute);
                     } else {
                         $object->{$key} = new stdClass();
                     }
