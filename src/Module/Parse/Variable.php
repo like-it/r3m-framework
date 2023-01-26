@@ -62,9 +62,11 @@ class Variable {
                         array_key_exists('variable', $record) &&
                         array_key_exists('attribute', $record['variable'])
                     ){
-                        $temp = $storage->data($record['variable']['attribute']);
+                        $value = Value::get($build, $storage, $record);
+ddd($value);
+//                        $temp = $storage->data($record['variable']['attribute']);
 
-                        ddd($temp);
+//                        ddd($temp);
 //                        $execute .= '.'
                     }
 //                     . Variable::define($build, $storage, $token);
@@ -89,8 +91,10 @@ class Variable {
         if(
             array_key_exists('is_array', $variable['variable']) &&
             $variable['variable']['is_array'] === true &&
+            $variable['variable']['operator'] === '=' &&
             array_key_exists('array', $variable['variable'])
         ){
+            //use parse
             $attribute = Variable::getArrayAttribute($variable, $build, $storage);
             $assign = '$this->storage()->set(\'';
             $assign .= $attribute . '\', ';
@@ -203,7 +207,7 @@ class Variable {
                         foreach($modifier['attribute'] as $attribute){
                             switch($attribute['type']){
                                 case Token::TYPE_METHOD :
-                                    dd($attribute);
+                                    ddd($attribute);
                                 break;
                                 case Token::TYPE_VARIABLE:
                                     $temp = [];
