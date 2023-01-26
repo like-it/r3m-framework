@@ -550,6 +550,13 @@ class Core {
         }
         if(!empty($attributeList)){
             foreach($attributeList as $key => $attribute){
+                if(is_array($object)){
+                    d($value);
+                    d($key);
+                    d($attribute);
+                    d($return);
+                    dd($attributeList);
+                }
                 if(isset($object->{$key}) && is_object($object->{$key})){
                     if(empty($attribute) && is_object($value)){
                         foreach($value as $value_key => $value_value){
@@ -575,12 +582,7 @@ class Core {
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 }
-                elseif(isset($object->{$key}) && is_array($object->{$key})){
-                    d($key);
-                    d($attribute);
-                    d($value);
-                    ddd($object);
-                } else {
+                 else {
                     $object->{$key} = $value;
                 }
             }
