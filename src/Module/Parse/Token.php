@@ -1178,6 +1178,12 @@ class Token {
                                     $variable_array_level++;
                                     unset($token[$i]);
                                 } else {
+                                    if(
+                                        array_key_exists('variable', $token[$i]) &&
+                                        $token[$i]['type'] !== Token::TYPE_VARIABLE
+                                    ){
+                                        $token[$i]['type'] = Token::TYPE_VARIABLE;
+                                    }
                                     $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
                                     unset($token[$i]);
                                 }
