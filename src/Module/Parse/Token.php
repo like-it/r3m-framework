@@ -1180,8 +1180,12 @@ class Token {
                                         if(array_key_exists('variable', $token[$variable_nr]['variable']['array'][$variable_array_level])){
                                             $token[$variable_nr]['variable']['array'][$variable_array_level]['type'] = Token::TYPE_VARIABLE;
                                         }
-                                    } else {
-                                        ddd($token[$variable_nr]);
+                                    }
+                                    elseif(
+                                        array_key_exists('is_array', $token[$variable_nr]['variable']) &&
+                                        $token[$variable_nr]['variable']['is_array'] === true
+                                    ) {
+                                        d($token[$variable_nr]);
 //                                        $token[$variable_nr]['variable']['array'][]
                                     }
 
