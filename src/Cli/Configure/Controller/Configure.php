@@ -48,6 +48,7 @@ class Configure extends Controller {
         }
         $sub_module = $object->parameter($object, 'configure', 2);
         $command = $object->parameter($object, 'configure', 3);
+        ddd($command);
         try {
             if(
                 !empty($command) &&
