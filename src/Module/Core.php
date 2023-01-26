@@ -564,15 +564,15 @@ class Core {
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 }
+                elseif(is_object($attribute)){
+                    $object->{$key} = new stdClass();
+                    return Core::object_set($attribute, $value, $object->{$key}, $return);
+                }
                 elseif(isset($object->{$key}) && is_array($object->{$key})){
                     d($key);
                     d($attribute);
                     d($value);
                     ddd($object);
-                }
-                elseif(is_object($attribute)){
-                    $object->{$key} = new stdClass();
-                    return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } else {
                     $object->{$key} = $value;
                 }
