@@ -54,8 +54,8 @@ class Variable {
             foreach($variable['variable']['array'] as $nr => $record){
                 if($record === null){
                     $extra = [];
-                    $extra[] = 'if(is_array($this->storage(\'' . $variable['variable']['attribute']  . '\')) || is_object($this->storage(\'' . $variable['variable']['attribute']  . '\'))){';
-                    $extra[] = '$count = count($this->storage(\'' . $variable['variable']['attribute']  . '\'));';
+                    $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\')) || is_object($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
+                    $extra[] = '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
                     $extra[] = '} else {';
                     $extra[] = '$count = 0;';
                     $extra[] = '}';
