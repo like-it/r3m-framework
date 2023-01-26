@@ -49,11 +49,11 @@ class Variable {
      * @throws Exception
      */
     private static function getArrayAttribute($variable=[], $build, Data $storage){
-        $execute = '';
+        $execute = [];
         if(array_key_exists('array', $variable['variable'])){
             foreach($variable['variable']['array'] as $nr => $record){
                 if(array_key_exists('execute', $record)){
-                    $execute .= '.' . $record['execute'];
+                    $execute[] = $record['execute'];
                 } else {
 //                    ddd($record);
                     if(
@@ -62,13 +62,21 @@ class Variable {
                         array_key_exists('variable', $record) &&
                         array_key_exists('attribute', $record['variable'])
                     ){
-                        $execute .= '.' . Value::get($build, $storage, $record);
+                        $execute[] = Value::get($build, $storage, $record);
                     }
                 }
             }
         }
-        $execute = substr($execute, 1);
-        d($execute);
+        $result = '';
+        foreach($execute as $nr => $record){
+            if(substr($record, 0, 1) === '$'){
+                $result .= '.' . $record;
+            } else {
+                $result .= '\'.' . $record . '\'';
+            }
+        }
+//        $execute = substr($execute, 1);
+        ddd($result);
         return $execute;
     }
 
