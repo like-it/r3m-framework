@@ -51,7 +51,7 @@ class Variable {
     private static function getArrayAttribute($variable=[], $build, Data $storage){
         $execute = '';
         if(array_key_exists('array', $variable['variable'])){
-            $execute .= '.' . Variable::getValue($build, $storage, $variable['variable']['array'], false);
+            $execute .= '.' . Variable::getValue($build, $storage, $variable['variable']['array'], true);
 
         }
         $execute = substr($execute, 1);
