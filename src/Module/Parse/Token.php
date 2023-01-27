@@ -846,13 +846,19 @@ class Token {
                 continue;
             }
             if(is_int($is_outside)){
-                if($record['type'] == Token::TYPE_QUOTE_DOUBLE_STRING){
+                if(
+                    in_array(
+                        $record['type'],
+                        [
+                            Token::TYPE_QUOTE_DOUBLE_STRING,
+                            Token::TYPE_WHITESPACE
+                        ]
+                    )
+                ){
                     $is_outside = true;
                     continue;
                 }
                 else {
-                    d($record);
-                    d($token[$is_outside]);
                     $token[$is_outside]['type'] = Token::TYPE_STRING;
                     $token[$is_outside]['is_operator'] = false;
                     unset($token[$is_outside]['direction']);
