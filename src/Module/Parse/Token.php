@@ -650,10 +650,11 @@ class Token {
         $prepare = Token::tree_prepare($string, $count);
         $prepare = Token::prepare($prepare, $count, $is_debug);
         $token = Token::define($prepare);
+        d($token);
         $token = Token::group($token, $is_debug);
         $token = Token::cast($token);
         $token = Token::method($token, $is_debug);
-        d($prepare);
+
         return $token;
     }
 
