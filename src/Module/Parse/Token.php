@@ -651,7 +651,6 @@ class Token {
         $prepare = Token::prepare($prepare, $count, $is_debug);
         $token = Token::define($prepare);
         $token = Token::group($token, $is_debug);
-        d($token);
         $token = Token::cast($token);
         $token = Token::method($token, $is_debug);
 
