@@ -852,6 +852,8 @@ class Token {
                     continue;
                 }
                 else {
+                    d($record);
+                    d($token[$is_outside]);
                     $token[$is_outside]['type'] = Token::TYPE_STRING;
                     $token[$is_outside]['is_operator'] = false;
                     unset($token[$is_outside]['direction']);
@@ -861,12 +863,12 @@ class Token {
                             !empty($record['variable']['is_assign'])
                         ){
                             if(isset($record['variable']['operator_whitespace'])){
-                                $token[$is_outside]['value'].= $record['value'] . $record['variable']['operator_whitespace']['value'] . $record['variable']['operator'];
+                                $token[$is_outside]['value'] .= $record['value'] . $record['variable']['operator_whitespace']['value'] . $record['variable']['operator'];
                             } else {
-                                $token[$is_outside]['value'].= $record['value'] . $record['variable']['operator'];
+                                $token[$is_outside]['value'] .= $record['value'] . $record['variable']['operator'];
                             }                                                                                    
                         } else {
-                            $token[$is_outside]['value'].= $record['value'];
+                            $token[$is_outside]['value'] .= $record['value'];
                         }
                         
                         unset($token[$nr]);
