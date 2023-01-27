@@ -36,6 +36,6 @@ function function_cors_methods(Parse $parse, Data $data, $method=''){
     if($id === 0){
         File::chown($url, 'www-data', 'www-data');
     }
-    return 'Cors methods.' . PHP_EOL;
+    return 'Cors methods updated.' . PHP_EOL;
 }
 

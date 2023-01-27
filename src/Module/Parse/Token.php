@@ -851,7 +851,7 @@ class Token {
                         $record['type'],
                         [
                             Token::TYPE_QUOTE_DOUBLE_STRING,
-                            Token::TYPE_WHITESPACE
+//                            Token::TYPE_WHITESPACE
                         ]
                     )
                 ){
