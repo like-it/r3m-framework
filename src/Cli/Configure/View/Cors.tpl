@@ -1,2 +1,2 @@
 {{R3M}}
-{{require($controller.dir.view + 'Cors/Info.tpl')}}
+{{require(config('controller.dir.view') + 'Cors/Info.tpl')}}
