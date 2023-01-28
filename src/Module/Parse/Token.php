@@ -1191,11 +1191,11 @@ class Token {
                                             ]
 
                                         ];
-                                        ddd($prepare);
                                         $prepare = Token::define($prepare);
                                         $prepare = Token::group($prepare, $is_debug);
                                         $prepare = Token::cast($prepare);
                                         $prepare = Token::method($prepare, $is_debug);
+                                        ddd($prepare);
                                         d($prepare);
                                         $token[$variable_nr]['variable']['array'][$variable_array_level] = reset($prepare);
                                         if(array_key_exists('variable', $token[$variable_nr]['variable']['array'][$variable_array_level])){
