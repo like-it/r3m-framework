@@ -69,7 +69,11 @@ class Variable {
                     }
                     if(array_key_exists('execute', $record)){
                         $execute[] = $record['execute'];
-                    } else {
+                    }
+                    elseif($record['is_operator'] === true){
+                        $execute[] = $record['value'];
+                    }
+                    else {
                         if(
                             array_key_exists('type', $record) &&
                             $record['type'] === Token::TYPE_VARIABLE &&
