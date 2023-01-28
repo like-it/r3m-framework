@@ -94,9 +94,6 @@ class Variable {
                             $tree = $build->require('function', $tree);
                             $execute[] = Value::get($build, $storage, reset($tree));
                         }
-                        else {
-                            d($record);
-                        }
                     }
                 }
             }
@@ -104,7 +101,6 @@ class Variable {
         $result = '\'' . $variable['variable']['attribute'];
         $quote_add = false;
         $add_quote = false;
-        ddd($execute);
         foreach($execute as $nr => $record){
             if(substr($record, 0, 1) === '$'){
                 if($nr === 0){
@@ -136,6 +132,7 @@ class Variable {
         } else {
             $result .= '\'';
         }
+        ddd($result);
         return $result;
     }
 
