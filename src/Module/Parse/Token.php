@@ -1198,7 +1198,8 @@ class Token {
                                         $prepare = Token::cast($prepare);
                                         $prepare = Token::method($prepare, $is_debug);
                                         array_shift($prepare); // remove curly_open
-                                        $token[$variable_nr]['variable']['array'][$variable_array_level] = current($prepare);
+                                        array_pop($prepare); //remove curly_close
+                                        $token[$variable_nr]['variable']['array'][$variable_array_level] = $prepare;
                                     }
                                     $variable_array_level++;
                                     unset($token[$i]);
