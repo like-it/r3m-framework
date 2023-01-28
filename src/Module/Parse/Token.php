@@ -670,9 +670,9 @@ class Token {
                 ]) &&
                 $previous_nr !== null &&
                 $previous_previous_nr !== null &&
-                $record['value'] == ')' &&
-                $token[$previous_previous_nr]['value'] == '(' &&
-                $token[$previous_nr]['type'] == Token::TYPE_STRING
+                $record['value'] === ')' &&
+                $token[$previous_previous_nr]['value'] === '(' &&
+                $token[$previous_nr]['type'] === Token::TYPE_STRING
             ){
                 $token[$previous_nr]['type'] = Token::TYPE_CAST;
                 --$token[$previous_nr]['depth'];
