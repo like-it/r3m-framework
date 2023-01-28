@@ -3,14 +3,14 @@
 {{if($allow == 'false')}}
 {{$allow = false}}
 {{else.if($allow == 'true')}}
-{$allow = true}}
+{{$allow = true}}
 {{/if}}
 {{if($allow === null)}}
 {{$allow = terminal.readline('True/false: ')}}
 {{if($allow == 'false')}}
 {{$allow = false}}
 {{else.if($allow == 'true')}}
-{$allow = true}}
+{{$allow = true}}
 {{/if}}
 {{/if}}
 {{cors.allow.credentials($allow)}}
