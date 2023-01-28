@@ -1134,6 +1134,8 @@ class Token {
                         ]
                     )
                 ){
+                    d($record);
+                    d($token[$variable_nr]);
                     $variable_nr = null;
                     $variable_array_level = 0;
                 }
