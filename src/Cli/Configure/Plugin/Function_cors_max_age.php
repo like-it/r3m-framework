@@ -23,14 +23,13 @@ function function_cors_max_age(Parse $parse, Data $data, $age=null){
     ){
         throw new Exception('Only root & www-data can configure cors enable...');
     }
-    ddd($age);
     $object = $parse->object();
     $url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
     $config = $object->data_read($url);
     if(!$config){
         $config = new Data();
     }
-    if($age === 'false') {
+    if($age === false) {
         $config->delete('server.cors.max-age');
         $config->write($url);
         return 'Cors max-age deleted.' . PHP_EOL;
