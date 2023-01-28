@@ -373,11 +373,6 @@ class Build {
                 }
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
-                    if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
-                        Server::cors($this->object());
-                        d($dir_plugin);
-                        d($url_list);
-                    }
                     throw new PluginNotFoundException('Function not found: ' . $text);
                 }
             } elseif(array_key_exists('function', $limit)) {
