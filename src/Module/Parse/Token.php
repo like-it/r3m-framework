@@ -664,6 +664,10 @@ class Token {
         $previous_previous_nr = null;
         foreach($token as $nr => $record){
             if(
+                !in_array($record['type'],[
+                    Token::TYPE_CURLY_OPEN,
+                    Token::TYPE_CURLY_CLOSE
+                ]) &&
                 $previous_nr !== null &&
                 $previous_previous_nr !== null &&
                 $record['value'] == ')' &&
