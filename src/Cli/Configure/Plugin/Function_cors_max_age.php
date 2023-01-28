@@ -30,15 +30,14 @@ function function_cors_max_age(Parse $parse, Data $data, $age=null){
     if(!$config){
         $config = new Data();
     }
-    if($age ===)
-    $config->set('server.cors.max-age', $age);
-    $config->write($url);
-    return 'Cors max-age set.' . PHP_EOL;
-
-
-        $config->delete('server.cors.allow_credentials');
+    if($age === 'false') {
+        $config->delete('server.cors.max-age');
         $config->write($url);
-        return 'Cors allow credentials disabled.' . PHP_EOL;
+        return 'Cors max-age deleted.' . PHP_EOL;
+    } else {
+        $config->set('server.cors.max-age', $age);
+        $config->write($url);
+        return 'Cors max-age set.' . PHP_EOL;
     }
 }
 
