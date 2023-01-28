@@ -1137,8 +1137,6 @@ class Token {
                         ]
                     )
                 ){
-                    d($record);
-                    d($token[$variable_nr]);
                     $variable_nr = null;
                     $variable_array_level = 0;
                 }
@@ -1186,6 +1184,7 @@ class Token {
                                         $prepare[] = [
                                             "type" => Token::TYPE_CURLY_CLOSE
                                         ];
+                                        ddd($prepare);
                                         $prepare = Token::define($prepare);
                                         $prepare = Token::group($prepare, $is_debug);
                                         $prepare = Token::cast($prepare);
