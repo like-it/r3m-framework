@@ -1181,8 +1181,15 @@ class Token {
                                             $token[$variable_nr]['variable']['array'][$variable_array_level],
                                             count($token[$variable_nr]['variable']['array'][$variable_array_level])
                                         );
-                                        $prepare[] = [
-                                            "type" => Token::TYPE_CURLY_CLOSE
+                                        $prepare = [
+                                            [
+                                                "type" => Token::TYPE_CURLY_OPEN
+                                            ],
+                                            ...$prepare,
+                                            [
+                                                "type" => Token::TYPE_CURLY_CLOSE
+                                            ]
+
                                         ];
                                         ddd($prepare);
                                         $prepare = Token::define($prepare);
