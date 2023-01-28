@@ -8,6 +8,7 @@
                 "parse",
                 "cache",
                 "cache:clear",
+                "linefeed",
                 "license",
                 "ln",
                 "version",
