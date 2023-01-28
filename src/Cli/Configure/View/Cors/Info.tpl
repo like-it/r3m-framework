@@ -5,6 +5,7 @@ Info:
 {{binary()}} configure cors info                 | Cors information
 {{binary()}} configure cors setup                | Setup cors requests
 {{binary()}} configure cors setup default        | Setup cors requests with defaults
+{{binary()}} configure cors allow credentials    | Enable cookies/session for cors requests
 {{binary()}} configure cors domain enable        | Enable host for cors requests
 {{binary()}} configure cors domain disable       | Disable host for cors requests
 {{binary()}} configure cors methods              | cors requests methods
