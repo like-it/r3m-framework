@@ -80,6 +80,8 @@ class Variable {
                         $tree = $build->require('modifier', $tree);
                         $tree = $build->require('function', $tree);
                         $execute[] = Value::get($build, $storage, reset($tree));
+                    } else {
+                        d($record);
                     }
 
                 }
