@@ -51,39 +51,40 @@ class Variable {
     private static function getArrayAttribute($variable=[], $build, Data $storage, &$extra=''){
         $execute = [];
         if(array_key_exists('array', $variable['variable'])){
-            foreach($variable['variable']['array'] as $nr => $record){
-                if($record === null){
-                    $extra = [];
-                    $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
-                    /*
-                    $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
-                    $extra[] = $build->indent() . '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
-                    $extra[] = $build->indent() . '} else {';
-                    $extra[] = $build->indent() . '$count = 0;';
-                    $extra[] = $build->indent() . '}';
-                    */
-                    $extra = implode(PHP_EOL, $extra);
-                    $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
-                    return $result;
-                }
-                if(array_key_exists('execute', $record)){
-                    $execute[] = $record['execute'];
-                } else {
-                    if(
-                        array_key_exists('type', $record) &&
-                        $record['type'] === Token::TYPE_VARIABLE &&
-                        array_key_exists('variable', $record) &&
-                        array_key_exists('attribute', $record['variable'])
-                    ){
-                        $tree = [];
-                        $tree[]= $record;
-                        $tree = $build->require('modifier', $tree);
-                        $tree = $build->require('function', $tree);
-                        $execute[] = Value::get($build, $storage, reset($tree));
-                    } else {
-                        d($record);
+            foreach($variable['variable']['array'] as $nr => $list){
+                foreach ($list as $record){
+                    if($record === null){
+                        $extra = [];
+                        $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
+                        /*
+                        $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
+                        $extra[] = $build->indent() . '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
+                        $extra[] = $build->indent() . '} else {';
+                        $extra[] = $build->indent() . '$count = 0;';
+                        $extra[] = $build->indent() . '}';
+                        */
+                        $extra = implode(PHP_EOL, $extra);
+                        $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
+                        return $result;
                     }
-
+                    if(array_key_exists('execute', $record)){
+                        $execute[] = $record['execute'];
+                    } else {
+                        if(
+                            array_key_exists('type', $record) &&
+                            $record['type'] === Token::TYPE_VARIABLE &&
+                            array_key_exists('variable', $record) &&
+                            array_key_exists('attribute', $record['variable'])
+                        ){
+                            $tree = [];
+                            $tree[]= $record;
+                            $tree = $build->require('modifier', $tree);
+                            $tree = $build->require('function', $tree);
+                            $execute[] = Value::get($build, $storage, reset($tree));
+                        } else {
+                            d($record);
+                        }
+                    }
                 }
             }
         }
