@@ -664,10 +664,6 @@ class Token {
         $previous_previous_nr = null;
         foreach($token as $nr => $record){
             if(
-                !in_array($record['type'],[
-                    Token::TYPE_CURLY_OPEN,
-                    Token::TYPE_CURLY_CLOSE
-                ]) &&
                 $previous_nr !== null &&
                 $previous_previous_nr !== null &&
                 $record['value'] === ')' &&
@@ -1184,11 +1180,13 @@ class Token {
                                         $prepare = $token[$variable_nr]['variable']['array'][$variable_array_level];
                                         $prepare = [
                                             [
-                                                "type" => Token::TYPE_CURLY_OPEN
+                                                'type' => Token::TYPE_CURLY_OPEN,
+                                                'value' => '{'
                                             ],
                                             ...$prepare,
                                             [
-                                                "type" => Token::TYPE_CURLY_CLOSE
+                                                'type' => Token::TYPE_CURLY_CLOSE,
+                                                'value' => '}'
                                             ]
                                         ];
                                         $prepare = Token::prepare(
