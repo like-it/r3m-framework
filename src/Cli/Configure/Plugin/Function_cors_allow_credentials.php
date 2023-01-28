@@ -30,12 +30,12 @@ function function_cors_allow_credentials(Parse $parse, Data $data, $allow=null){
         $config = new Data();
     }
     if($allow === true){
-        $config->set('server.cors.allow.credentials', $allow);
+        $config->set('server.cors.allow_credentials', $allow);
         $config->write($url);
         return 'Cors allow credentials enabled.' . PHP_EOL;
     }
     elseif($allow === false){
-        $config->delete('server.cors.allow.credentials');
+        $config->delete('server.cors.allow_credentials');
         $config->write($url);
         return 'Cors allow credentials disabled.' . PHP_EOL;
     }
