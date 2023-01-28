@@ -2,8 +2,9 @@
 {{$age = parameter('max-age', 1)}}
 {{if($age === null)}}
 {{$age = terminal.readline('Max-age: ')}}
-{{/if}}
-{{if($age === 'false')}}
+{{else.if($age === 'false')}}
 {{$age = false}}
+{{else}}
+{{$age = (int) $age}}
 {{/if}}
 {{cors.max.age($age)}}
