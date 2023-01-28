@@ -132,7 +132,6 @@ class Variable {
         } else {
             $result .= '\'';
         }
-        ddd($result);
         return $result;
     }
 
