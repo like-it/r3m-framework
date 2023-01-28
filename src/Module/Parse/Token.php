@@ -1181,10 +1181,7 @@ class Token {
                                 }
                                 elseif($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
                                     if(array_key_exists('array', $token[$variable_nr]['variable'])){
-                                        $prepare = Token::prepare(
-                                            $token[$variable_nr]['variable']['array'][$variable_array_level],
-                                            count($token[$variable_nr]['variable']['array'][$variable_array_level])
-                                        );
+                                        $prepare = $token[$variable_nr]['variable']['array'][$variable_array_level];
                                         $prepare = [
                                             [
                                                 "type" => Token::TYPE_CURLY_OPEN
@@ -1193,8 +1190,11 @@ class Token {
                                             [
                                                 "type" => Token::TYPE_CURLY_CLOSE
                                             ]
-
                                         ];
+                                        $prepare = Token::prepare(
+                                            $prepare,
+                                            count($prepare)
+                                        );
                                         $prepare = Token::define($prepare);
                                         $prepare = Token::group($prepare, $is_debug);
                                         $prepare = Token::cast($prepare);
