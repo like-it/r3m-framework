@@ -15,10 +15,8 @@ use R3m\Io\Module\Cli;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Controller;
+
 use Exception;
-use R3m\Io\Exception\LocateException;
-use R3m\Io\Exception\UrlEmptyException;
-use R3m\Io\Exception\UrlNotExistException;
 
 class Linefeed extends Controller {
     const DIR = __DIR__;
