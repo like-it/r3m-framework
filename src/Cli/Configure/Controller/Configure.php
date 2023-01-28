@@ -49,8 +49,19 @@ class Configure extends Controller {
         $sub_module = $object->parameter($object, 'configure', 2);
         $command = $object->parameter($object, 'configure', 3);
         if(
-            substr($command, 0, 1) === '[' &&
-            substr($command, -1, 1) === ']'
+            (
+                substr($command, 0, 1) === '[' &&
+                substr($command, -1, 1) === ']'
+            ) ||
+            is_numeric($command) ||
+            in_array(
+                $command,
+                [
+                    'true',
+                    'false',
+                    'null'
+                ]
+            )
         ){
             $command = null;
         }
