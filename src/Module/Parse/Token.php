@@ -1123,6 +1123,9 @@ class Token {
             }
             elseif($variable_nr !== null){
                 if(
+                    $quote_double_toggle === false &&
+                    $quote_single_toggle === false &&
+                    $variable_array_depth ===0 &&
                     in_array(
                         $record['type'],
                         [
