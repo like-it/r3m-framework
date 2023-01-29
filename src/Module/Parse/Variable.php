@@ -135,6 +135,7 @@ class Variable {
         } else {
             $result .= '\'';
         }
+        d($result);
         return $result;
     }
 
