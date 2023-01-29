@@ -93,7 +93,7 @@ class Variable {
                             } else {
                                 $attribute .= '\'';
                             }
-                            ddd($attribute);
+                            $extra[] = '$index = $this->storage()->index(' . $attribute  . ');';
                         } else {
                             $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
                         }
