@@ -314,11 +314,16 @@ class Data {
     {
         $get = $this->get($attribute);
         $index = 0;
-        foreach($get as $nr => $unused){
-            if(is_numeric($nr)){
-                $index = $nr + 1;
-            } else {
-                $index++;
+        if(
+            is_array($get) ||
+            is_object($get)
+        ){
+            foreach($get as $nr => $unused){
+                if(is_numeric($nr)){
+                    $index = $nr + 1;
+                } else {
+                    $index++;
+                }
             }
         }
         return $index;
