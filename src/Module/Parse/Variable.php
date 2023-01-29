@@ -53,7 +53,10 @@ class Variable {
         if(array_key_exists('array', $variable['variable'])){
             foreach($variable['variable']['array'] as $nr => $list){
                 foreach ($list as $record){
-                    if($record['execute'] === null){
+                    if(
+                        array_key_exists('execute', $record) &&
+                        $record['execute'] === null
+                    ){
                         $extra = [];
                         $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
                         /*
