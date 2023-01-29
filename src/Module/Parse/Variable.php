@@ -70,7 +70,7 @@ class Variable {
                         $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
                         return $result;
                     }
-                    if(array_key_exists('execute', $record)){
+                    elseif(array_key_exists('execute', $record)){
                         $execute[] = $record['execute'];
                     }
                     else {
