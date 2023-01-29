@@ -1200,13 +1200,12 @@ class Token {
                                             array_pop($prepare); //remove curly_close
                                             $token[$variable_nr]['variable']['array'][$variable_array_level] = $prepare;
                                         } else {
-                                            d($record);
-                                            d($token[$i]);
-                                            d($nr);
-                                            d($i);
-                                            ddd($token[$variable_nr]);
+                                            $token[$variable_nr]['variable']['array'][$variable_array_level][] = [
+                                                'type' => Token::TYPE_NULL,
+                                                'value' => 'null',
+                                                'execute' => null
+                                            ];
                                         }
-
                                     }
                                     $variable_array_level++;
                                     unset($token[$i]);
