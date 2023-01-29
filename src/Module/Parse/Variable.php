@@ -68,7 +68,7 @@ class Variable {
                         */
                         $extra = implode(PHP_EOL, $extra);
 //                        $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
-                        $execute[] = '.\' . $index';
+                        $execute[] = '$index';
                     }
                     elseif(array_key_exists('execute', $record)){
                         $execute[] = $record['execute'];
@@ -101,7 +101,7 @@ class Variable {
                 }
             }
         }
-        $result = '\'' . $variable['variable']['attribute'] . '.';
+        $result = '\'' . $variable['variable']['attribute'];
         $quote_add = false;
         $add_quote = false;
         foreach($execute as $nr => $record){
