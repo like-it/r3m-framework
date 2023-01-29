@@ -1,4 +1,2 @@
 {{R3M}}
-{{$method['test'][server.url('docs.r3m.io')][] = terminal.readline('Method: ')}}
-{{$method['test'][server.url('docs.r3m.io')][] = terminal.readline('Method: ')}}
-{{dd('{{$this}}')}}
+{{require(config('controller.dir.view') + 'Cors/Info.tpl')}}
