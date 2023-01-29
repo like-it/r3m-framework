@@ -1175,29 +1175,34 @@ class Token {
                                 }
                                 elseif($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
                                     if(array_key_exists('array', $token[$variable_nr]['variable'])){
-                                        $prepare = $token[$variable_nr]['variable']['array'][$variable_array_level];
-                                        $prepare = [
-                                            [
-                                                'type' => Token::TYPE_CURLY_OPEN,
-                                                'value' => '{'
-                                            ],
-                                            ...$prepare,
-                                            [
-                                                'type' => Token::TYPE_CURLY_CLOSE,
-                                                'value' => '}'
-                                            ]
-                                        ];
-                                        $prepare = Token::prepare(
-                                            $prepare,
-                                            count($prepare)
-                                        );
-                                        $prepare = Token::define($prepare);
-                                        $prepare = Token::group($prepare, $is_debug);
-                                        $prepare = Token::cast($prepare);
-                                        $prepare = Token::method($prepare, $is_debug);
-                                        array_shift($prepare); // remove curly_open
-                                        array_pop($prepare); //remove curly_close
-                                        $token[$variable_nr]['variable']['array'][$variable_array_level] = $prepare;
+                                        if(array_key_exists($variable_array_level, $token[$variable_nr]['variable']['array'])){
+                                            $prepare = $token[$variable_nr]['variable']['array'][$variable_array_level];
+                                            $prepare = [
+                                                [
+                                                    'type' => Token::TYPE_CURLY_OPEN,
+                                                    'value' => '{'
+                                                ],
+                                                ...$prepare,
+                                                [
+                                                    'type' => Token::TYPE_CURLY_CLOSE,
+                                                    'value' => '}'
+                                                ]
+                                            ];
+                                            $prepare = Token::prepare(
+                                                $prepare,
+                                                count($prepare)
+                                            );
+                                            $prepare = Token::define($prepare);
+                                            $prepare = Token::group($prepare, $is_debug);
+                                            $prepare = Token::cast($prepare);
+                                            $prepare = Token::method($prepare, $is_debug);
+                                            array_shift($prepare); // remove curly_open
+                                            array_pop($prepare); //remove curly_close
+                                            $token[$variable_nr]['variable']['array'][$variable_array_level] = $prepare;
+                                        } else {
+                                            ddd($token[$variable_nr]);
+                                        }
+
                                     }
                                     $variable_array_level++;
                                     unset($token[$i]);
