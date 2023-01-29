@@ -10,15 +10,17 @@
  */
 namespace R3m\Io\Cli\Info\Controller;
 
-use Exception;
 use R3m\Io\App;
-use R3m\Io\Config;
+use R3m\Io\Module\Controller;
+
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
-use R3m\Io\Module\View;
 
-class Info extends View {
+
+class Info extends Controller {
     const DIR = __DIR__;
     const NAME = 'Info';
     const INFO = '{{binary()}} info                           | Info shortlist';
@@ -27,7 +29,7 @@ class Info extends View {
         '{{binary()}} info all                       | This info'
     ];
 
-    public static function run($object){
+    public static function run(App $object){
         $command = $object::parameter($object, Info::NAME, 1);
         try {
             if(empty($command)){
