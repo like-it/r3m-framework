@@ -1,3 +1,3 @@
 {{R3M}}
-{{$method[server.url('r3m.io')]['test'] = terminal.readline('Method: ')}}
+{{$method[server.url('docs.r3m.io' + '.test']['test'] = terminal.readline('Method: ')}}
 {{dd('{{$this}}')}}
