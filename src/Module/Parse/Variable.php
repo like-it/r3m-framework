@@ -85,6 +85,14 @@ class Variable {
                                     }
                                 }
                             }
+                            if(
+                                !empty($part_record) &&
+                                substr($part_record, 0, 1) === '$'
+                            ){
+                                $attribute = substr($attribute, 0, -3);
+                            } else {
+                                $attribute .= '\'';
+                            }
                             ddd($attribute);
                         } else {
                             $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
@@ -165,7 +173,6 @@ class Variable {
         } else {
             $result .= '\'';
         }
-        d($result);
         return $result;
     }
 
