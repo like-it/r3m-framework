@@ -67,8 +67,8 @@ class Variable {
                         $extra[] = $build->indent() . '}';
                         */
                         $extra = implode(PHP_EOL, $extra);
-                        $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
-                        return $result;
+//                        $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
+                        $execute[] = '.\' . $index';
                     }
                     elseif(array_key_exists('execute', $record)){
                         $execute[] = $record['execute'];
