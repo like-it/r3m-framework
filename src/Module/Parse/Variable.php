@@ -58,6 +58,7 @@ class Variable {
                         $record['execute'] === null
                     ){
                         $extra = [];
+                        d($variable);
                         $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
                         /*
                         $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
