@@ -298,7 +298,7 @@ class Variable {
             array_key_exists('is_array', $variable['variable']) &&
             $variable['variable']['is_array'] === true
         ){
-            $variable['variable']['attribute'] .= '\'';
+            $variable['variable']['attribute'] .= '.\'';
             foreach($variable['variable']['array'] as $nr => $array){
                 $variable['variable']['attribute'] .= ' . ';
                 $variable['variable']['array'][$nr] = Variable::define($build, $storage, $array);
