@@ -442,7 +442,10 @@ class App extends Data {
     private static function result(App $object, $output){
         if($output instanceof Exception){
             if(App::is_cli()){
-                $object->logger(App::LOGGER_NAME)->error($output->getMessage());
+                $logger = $object->config('project.log.name');
+                if($logger){
+                    $object->logger($logger)->error($output->getMessage());
+                }
                 fwrite(STDERR, App::exception_to_cli($object, $output));
                 return '';
             } else {
@@ -497,8 +500,6 @@ class App extends Data {
         if(array_key_exists($name, $this->logger)){
             return $this->logger[$name];
         }
-        $debug = debug_backtrace(true);
-        d($debug);
         throw new Exception('Logger with name: ' . $name . ' not initialised.');
 
     }
