@@ -893,6 +893,7 @@ class Token {
 
     private static function modifier($token=[]): array
     {
+        d($token);
         foreach($token as $token_nr => $modifier_list){
             $modifier = null;
             $is_attribute = 0;
