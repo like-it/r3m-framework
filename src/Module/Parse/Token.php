@@ -981,6 +981,10 @@ class Token {
                     unset($token[$nr]);
                     continue;
                 }
+                elseif($record['is_operator'] === true){
+                    d($token);
+                    ddd($record);
+                }
                 elseif($record['type'] === Token::TYPE_CURLY_CLOSE){
                     $token[$is_variable]['type'] = Token::TYPE_VARIABLE;
                     $variable = Token::modifier($variable);                    
