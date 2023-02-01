@@ -347,7 +347,7 @@ class Variable {
                                 Token::TYPE_AS_OPERATOR
                             )
                         ){
-                            $extra .= ' ' . $record . ' ';
+                            $extra .= $record . ' ';
                         }
                         elseif(is_numeric($record)) {
                             $extra .= $record;
