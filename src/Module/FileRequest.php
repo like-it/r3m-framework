@@ -277,7 +277,9 @@ class FileRequest {
                 if($logger){
                     $object->logger($logger)->info('Url:', [ $url ]);
                 }
-                return File::read($url);
+                $read = File::read($url);
+                d($read);
+                return $read;
             }
         }
         if($logger){
