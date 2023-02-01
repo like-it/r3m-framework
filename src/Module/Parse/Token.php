@@ -193,6 +193,14 @@ class Token {
         '|='
     ];
 
+    const TYPE_AS_OPERATOR = [
+        '+',
+        '-',
+        '/',
+        '*',
+        '%'
+    ];
+
     public static function split($string='', $length=1, $encoding='UTF-8'): array
     {
         $array = [];

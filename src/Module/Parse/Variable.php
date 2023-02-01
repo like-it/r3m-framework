@@ -312,22 +312,33 @@ class Variable {
                         case Token::TYPE_VARIABLE:
                             $temp = [];
                             $temp[] = $record;
-                            $variable['variable']['array'][$nr][$array_nr] = Variable::define($build, $storage, $temp);
+                            $array[$array_nr] = Variable::define($build, $storage, $temp);
                             break;
                         default :
-                            $variable['variable']['array'][$nr][$array_nr] = Value::get($build, $storage, $record) . ', ';
+                            $array[$array_nr] = Value::get($build, $storage, $record);
+                    }
+                }
+                foreach($array as $array_nr => $record){
+                    if(substr($record, 0, 1) === '$'){
+                        $variable['variable']['attribute'] .= $record;
+                    }
+                    elseif(
+                        in_array(
+                            $record,
+                            Token::TYPE_AS_OPERATOR
+                        )
+                    ){
+                        $variable['variable']['attribute'] .= $record;
+                    }
+                    elseif(is_numeric($record)) {
+                        $variable['variable']['attribute'] .= $record;
+                    } else {
+                        $variable['variable']['attribute'] .= '\'' . $record . '\'';
                     }
                 }
                 d( $variable['variable']['attribute']);
                 ddd($variable['variable']['array'][$nr]);
-                if(substr($variable['variable']['array'][$nr], 0, 1) === '$'){
-                    $variable['variable']['attribute'] .= $variable['variable']['array'][$nr];
-                }
-                elseif(is_numeric($variable['variable']['array'][$nr])) {
-                    $variable['variable']['attribute'] .= $variable['variable']['array'][$nr];
-                } else {
-                    $variable['variable']['attribute'] .= '\'' . $variable['variable']['array'][$nr] . '\'';
-                }
+
                 $variable['variable']['attribute'] .= ' . \'.\'';
             }
             ddd($variable);
