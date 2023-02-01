@@ -298,11 +298,12 @@ class Variable {
             array_key_exists('is_array', $variable['variable']) &&
             $variable['variable']['is_array'] === true
         ){
-            $variable['variable']['attribute'] .= '.';
             foreach($variable['variable']['array'] as $nr => $array){
+                $variable['variable']['attribute'] .= ' . ';
                 $variable['variable']['array'][$nr] = Variable::define($build, $storage, $array);
                 $variable['variable']['attribute'] .= $variable['variable']['array'][$nr];
             }
+            $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -3);
         }
         $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         $define_modifier = '';
