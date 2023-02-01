@@ -170,7 +170,7 @@ class Controller {
                 $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl');
                 $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
             }
-            dd($list);
+            ddd($list);
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
                 if($i <= ($max - 2)){
