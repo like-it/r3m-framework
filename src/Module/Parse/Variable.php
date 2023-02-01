@@ -310,9 +310,9 @@ class Variable {
                 } else {
                     $variable['variable']['attribute'] .= '\'' . $variable['variable']['array'][$nr] . '\'';
                 }
-                $variable['variable']['attribute'] .= '\'.\'';
+                $variable['variable']['attribute'] .= ' . \'.\'';
             }
-            $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -3);
+            $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
         } else {
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
