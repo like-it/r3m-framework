@@ -385,9 +385,8 @@ class File {
         try {
             $file = file_get_contents($url);
             if(is_array($file)){
-
+                var_dump($file);
             }
-            var_dump($file);
             return $file;
         } catch (Exception $exception){
             return '';
