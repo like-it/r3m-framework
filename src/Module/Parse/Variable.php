@@ -312,6 +312,7 @@ class Variable {
                 }
                 $variable['variable']['attribute'] .= ' . \'.\'';
             }
+            ddd($variable);
             $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
         } else {
@@ -364,7 +365,6 @@ class Variable {
         $operator_max = 1024;
         $operator_counter = 0;
         $set = null;
-        d($token);
         while(Set::has($token)){
             $set = Set::get($token);
             while(Operator::has($set)){
