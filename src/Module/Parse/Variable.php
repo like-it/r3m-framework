@@ -288,6 +288,9 @@ class Variable {
         return $token;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function define($build, Data $storage, $token=[]): string
     {
         $variable = array_shift($token);
@@ -301,7 +304,18 @@ class Variable {
             $variable['variable']['attribute'] .= '.\'';
             foreach($variable['variable']['array'] as $nr => $array){
                 $variable['variable']['attribute'] .= ' . ';
-                $variable['variable']['array'][$nr] = Variable::define($build, $storage, $array);
+                switch($array['type']){
+                    case Token::TYPE_METHOD :
+                        ddd($array);
+                        break;
+                    case Token::TYPE_VARIABLE:
+                        $temp = [];
+                        $temp[] = $array;
+                        $variable['variable']['array'][$nr] = Variable::define($build, $storage, $array);
+                        break;
+                    default :
+                        $variable['variable']['array'][$nr] = Value::get($build, $storage, $array) . ', ';
+                }
                 d($array);
                 d($variable['variable']['array'][$nr]);
                 if(substr($variable['variable']['array'][$nr], 0, 1) === '$'){
