@@ -377,6 +377,7 @@ class Variable {
             array_key_exists('has_modifier', $variable['variable']) &&
             $variable['variable']['has_modifier'] === true
         ){
+            ddd($variable);
             foreach($variable['variable']['modifier'] as $nr => $modifier_list){
                 foreach($modifier_list as $modifier_nr => $modifier){
                     if(!array_key_exists('php_name', $modifier)){
