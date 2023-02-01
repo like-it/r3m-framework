@@ -318,32 +318,54 @@ class Variable {
                             $array[$array_nr] = Value::get($build, $storage, $record);
                     }
                 }
+                $extra = '';
                 foreach($array as $array_nr => $record){
-                    if(substr($record, 0, 1) === '$'){
-                        $variable['variable']['attribute'] .= $record;
-                    }
-                    elseif(
-                        in_array(
-                            $record,
-                            Token::TYPE_AS_OPERATOR
-                        )
-                    ){
-                        $variable['variable']['attribute'] .= $record;
-                    }
-                    elseif(is_numeric($record)) {
-                        $variable['variable']['attribute'] .= $record;
+                    if($array_nr === 0) {
+                        if(substr($record, 0, 1) === '$'){
+                            $variable['variable']['attribute'] .= $record;
+                        }
+                        elseif(
+                            in_array(
+                                $record,
+                                Token::TYPE_AS_OPERATOR
+                            )
+                        ){
+                            $variable['variable']['attribute'] .= $record;
+                        }
+                        elseif(is_numeric($record)) {
+                            $variable['variable']['attribute'] .= $record;
+                        } else {
+                            $variable['variable']['attribute'] .= '\'' . $record . '\'';
+                        }
                     } else {
-                        $variable['variable']['attribute'] .= '\'' . $record . '\'';
+                        if(substr($record, 0, 1) === '$'){
+                            $extra .= $record;
+                        }
+                        elseif(
+                            in_array(
+                                $record,
+                                Token::TYPE_AS_OPERATOR
+                            )
+                        ){
+                            $extra .= ' ' . $record . ' ';
+                        }
+                        elseif(is_numeric($record)) {
+                            $extra .= $record;
+                        } else {
+                            $extra .= '\'' . $record . '\'';
+                        }
                     }
-                }
-                d( $variable['variable']['attribute']);
-                ddd($variable['variable']['array'][$nr]);
 
+                }
                 $variable['variable']['attribute'] .= ' . \'.\'';
             }
-            ddd($variable);
             $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
-            $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
+            if($extra){
+                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ') ' . $extra;
+            } else {
+                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
+            }
+
         } else {
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         }
