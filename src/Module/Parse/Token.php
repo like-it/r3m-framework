@@ -983,24 +983,14 @@ class Token {
                     continue;
                 }
                 elseif(
-                    $record['is_operator'] === true &&
-                    $record['type'] !== Token::TYPE_COLON
+                    (
+                        $record['type'] === Token::TYPE_CURLY_CLOSE
+                    ) ||
+                    (
+                        $record['is_operator'] === true &&
+                        $record['type'] !== Token::TYPE_COLON
+                    )
                 ){
-                    $token[$is_variable]['type'] = Token::TYPE_VARIABLE;
-                    $variable = Token::modifier($variable);
-                    $token[$is_variable]['variable']['modifier'] = $variable;
-                    $token[$is_variable]['parse'] = $token[$is_variable]['value'];
-                    foreach($token[$is_variable]['variable']['modifier'] as $modifier_nr => $modifier_list){
-                        foreach($modifier_list as $modifier_key => $modifier){
-                            $token[$is_variable]['parse'] .= $token[$is_variable]['variable']['operator'] . $modifier['parse'];
-                        }
-                    }
-                    $is_variable = null;
-                    $variable_nr = 0;
-                    $variable = [];
-                    continue;
-                }
-                elseif($record['type'] === Token::TYPE_CURLY_CLOSE){
                     $token[$is_variable]['type'] = Token::TYPE_VARIABLE;
                     $variable = Token::modifier($variable);                    
                     $token[$is_variable]['variable']['modifier'] = $variable;
