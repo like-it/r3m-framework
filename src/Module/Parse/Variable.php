@@ -306,15 +306,13 @@ class Variable {
                 $variable['variable']['attribute'] .= ' . ';
                 foreach($array as $array_nr => $record){
                     switch($record['type']){
-                        case Token::TYPE_METHOD :
-                            ddd($record);
-                            break;
                         case Token::TYPE_VARIABLE:
                             $temp = [];
                             $temp[] = $record;
                             $array[$array_nr] = Variable::define($build, $storage, $temp);
                             break;
                         default :
+                            //Token::TYPE_METHOD
                             $array[$array_nr] = Value::get($build, $storage, $record);
                     }
                 }
