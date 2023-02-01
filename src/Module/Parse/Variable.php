@@ -192,6 +192,7 @@ class Variable {
             $variable['variable']['operator'] === '=' &&
             array_key_exists('array', $variable['variable'])
         ){
+            ddd($variable);
             $attribute = Variable::getArrayAttribute($variable, $build, $storage, $extra);
             if($extra){
                 $assign = $extra;
