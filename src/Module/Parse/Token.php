@@ -1240,7 +1240,6 @@ class Token {
                     $variable_array_value .= $record['value'];
                     continue;
                 }
-                d($token[$next]);
                 if(
                     $next !== null &&
                     $variable_nr !== null &&
