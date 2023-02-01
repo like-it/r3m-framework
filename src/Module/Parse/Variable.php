@@ -294,7 +294,6 @@ class Variable {
         if(!array_key_exists('variable', $variable)){
             return '';
         }
-        d($variable);
         if(
             array_key_exists('is_array', $variable['variable']) &&
             $variable['variable']['is_array'] === true
@@ -302,10 +301,9 @@ class Variable {
             $variable['variable']['attribute'] .= '.';
             foreach($variable['variable']['array'] as $nr => $array){
                 $variable['variable']['array'][$nr] = Variable::define($build, $storage, $array);
+                $variable['variable']['attribute'] .= $variable['variable']['array'][$nr];
             }
-            ddd($variable);
         }
-
         $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         $define_modifier = '';
         if(
