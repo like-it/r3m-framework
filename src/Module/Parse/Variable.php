@@ -294,6 +294,7 @@ class Variable {
         if(!array_key_exists('variable', $variable)){
             return '';
         }
+        d($variable);
         if(
             array_key_exists('is_array', $variable['variable']) &&
             $variable['variable']['is_array'] === true
