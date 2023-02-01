@@ -981,7 +981,10 @@ class Token {
                     unset($token[$nr]);
                     continue;
                 }
-                elseif($record['is_operator'] === true){
+                elseif(
+                    $record['is_operator'] === true &&
+                    $record['type'] !== Token::TYPE_COLON
+                ){
                     d($token);
                     ddd($record);
                 }
