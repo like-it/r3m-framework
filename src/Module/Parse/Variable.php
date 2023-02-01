@@ -294,6 +294,17 @@ class Variable {
         if(!array_key_exists('variable', $variable)){
             return '';
         }
+        if(
+            array_key_exists('is_array', $variable['variable']) &&
+            $variable['variable']['is_array'] === true
+        ){
+            $variable['variable']['attribute'] .= '.';
+            foreach($variable['variable']['array'] as $nr => $array){
+                $variable['variable']['array'][$nr] = Variable::define($build, $storage, $array);
+            }
+            ddd($variable);
+        }
+
         $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         $define_modifier = '';
         if(
@@ -417,7 +428,6 @@ class Variable {
                 }
                 $selection[] = $record;
             }
-            d($record);
             if($record['type'] == Token::TYPE_CURLY_OPEN){
                 $selection = [];
                 $is_collect = true;
