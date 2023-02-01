@@ -383,7 +383,9 @@ class File {
             return '';
         }
         try {
-            return file_get_contents($url);
+            $file = file_get_contents($url);
+            d($file);
+            return $file;
         } catch (Exception $exception){
             return '';
         }
