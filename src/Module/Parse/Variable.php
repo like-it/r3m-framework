@@ -298,14 +298,24 @@ class Variable {
             array_key_exists('is_array', $variable['variable']) &&
             $variable['variable']['is_array'] === true
         ){
-            $variable['variable']['attribute'] = '\'';
+            $variable['variable']['attribute'] .= '\'';
             foreach($variable['variable']['array'] as $nr => $array){
                 $variable['variable']['attribute'] .= ' . ';
                 $variable['variable']['array'][$nr] = Variable::define($build, $storage, $array);
-                $variable['variable']['attribute'] .= $variable['variable']['array'][$nr];
+                if(substr($variable['variable']['array'][$nr], 0, 1) === '$'){
+                    $variable['variable']['attribute'] .= $variable['variable']['array'][$nr];
+                }
+                elseif(is_numeric($variable['variable']['array'][$nr])) {
+                    $variable['variable']['attribute'] .= $variable['variable']['array'][$nr];
+                } else {
+                    $variable['variable']['attribute'] .= '\'' . $variable['variable']['array'][$nr] . '\'';
+                }
             }
+            $define = '$this->storage()->data(' . $variable['variable']['attribute'] . ')';
+        } else {
+            $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         }
-        $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
+
         $define_modifier = '';
         if(
             array_key_exists('has_modifier', $variable['variable']) &&
