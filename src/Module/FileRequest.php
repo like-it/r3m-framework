@@ -278,7 +278,9 @@ class FileRequest {
                     $object->logger($logger)->info('Url:', [ $url ]);
                 }
                 $read = File::read($url);
-                d($read);
+                if(is_array($read)){
+                    ddd($read);
+                }
                 return $read;
             }
         }
