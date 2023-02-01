@@ -302,6 +302,7 @@ class Variable {
             $variable['variable']['is_array'] === true
         ){
             $variable['variable']['attribute'] .= '.\'';
+            ddd($variable['variable']['array');
             foreach($variable['variable']['array'] as $nr => $array){
                 $variable['variable']['attribute'] .= ' . ';
                 switch($array['type']){
