@@ -387,7 +387,11 @@ class Variable {
                         foreach($modifier['attribute'] as $attribute){
                             switch($attribute['type']){
                                 case Token::TYPE_METHOD :
-                                    ddd($attribute);
+                                    $tree = [];
+                                    $tree[]= $attribute;
+                                    $tree = $build->require('modifier', $tree);
+                                    $tree = $build->require('function', $tree);
+                                    $define_modifier .= Value::get($build, $storage, reset($tree)) . ', ';
                                 break;
                                 case Token::TYPE_VARIABLE:
                                     $temp = [];
