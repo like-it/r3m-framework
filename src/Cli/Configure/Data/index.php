@@ -15,10 +15,10 @@ use R3m\Io\Exception\ObjectException;
 
 $dir = __DIR__;
 $dir_vendor =
-dirname($dir, 1) .
-DIRECTORY_SEPARATOR .
-'vendor' .
-DIRECTORY_SEPARATOR;
+    dirname($dir, 1) .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR;
 
 $autoload = $dir_vendor . 'autoload.php';
 $autoload = require $autoload;
@@ -29,7 +29,11 @@ $config = new Config(
 );
 $app = new App($autoload, $config);
 try {
-    echo App::run($app);
+    $run = App::run($app);
+    if(is_array($run)) {
+        $run = implode(PHP_EOL, $run);
+    }
+    echo $run;
 } catch (Exception | LocateException | ObjectException $e) {
     echo $e;
 }
