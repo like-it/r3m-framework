@@ -311,7 +311,7 @@ class Variable {
                     $variable['variable']['attribute'] .= '\'' . $variable['variable']['array'][$nr] . '\'';
                 }
             }
-            $define = '$this->storage()->data(' . $variable['variable']['attribute'] . ')';
+            $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
         } else {
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         }
