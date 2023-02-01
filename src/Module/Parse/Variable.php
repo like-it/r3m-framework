@@ -318,6 +318,7 @@ class Variable {
                             $variable['variable']['array'][$nr][$array_nr] = Value::get($build, $storage, $record) . ', ';
                     }
                 }
+                d( $variable['variable']['attribute']);
                 ddd($variable['variable']['array'][$nr]);
                 if(substr($variable['variable']['array'][$nr], 0, 1) === '$'){
                     $variable['variable']['attribute'] .= $variable['variable']['array'][$nr];
