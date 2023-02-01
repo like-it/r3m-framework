@@ -312,7 +312,6 @@ class Variable {
                             $tree = $build->require('modifier', $tree);
                             $tree = $build->require('function', $tree);
                             $array[$array_nr] = Value::get($build, $storage, reset($tree));
-                            ddd($array);
                             break;
                         case Token::TYPE_VARIABLE:
                             $temp = [];
