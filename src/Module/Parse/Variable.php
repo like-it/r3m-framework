@@ -361,15 +361,13 @@ class Variable {
             }
             $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
             if($extra){
-                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ') ' . $extra;
+                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . $extra . ') ';
             } else {
                 $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
             }
-
         } else {
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         }
-
         $define_modifier = '';
         if(
             array_key_exists('has_modifier', $variable['variable']) &&
