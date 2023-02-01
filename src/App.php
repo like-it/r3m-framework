@@ -497,7 +497,10 @@ class App extends Data {
         if(array_key_exists($name, $this->logger)){
             return $this->logger[$name];
         }
+        $debug = debug_backtrace(true);
+        d($debug);
         throw new Exception('Logger with name: ' . $name . ' not initialised.');
+
     }
 
     public function route(){
