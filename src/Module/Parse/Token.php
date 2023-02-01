@@ -1180,12 +1180,14 @@ class Token {
                                             $prepare = [
                                                 [
                                                     'type' => Token::TYPE_CURLY_OPEN,
-                                                    'value' => '{'
+                                                    'value' => '{',
+                                                    'is_operator' => false
                                                 ],
                                                 ...$prepare,
                                                 [
                                                     'type' => Token::TYPE_CURLY_CLOSE,
-                                                    'value' => '}'
+                                                    'value' => '}',
+                                                    'is_operator' => false
                                                 ]
                                             ];
                                             $prepare = Token::prepare(
