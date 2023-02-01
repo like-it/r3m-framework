@@ -417,6 +417,7 @@ class Variable {
                 }
                 $selection[] = $record;
             }
+            d($record);
             if($record['type'] == Token::TYPE_CURLY_OPEN){
                 $selection = [];
                 $is_collect = true;
