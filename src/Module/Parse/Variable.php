@@ -302,6 +302,7 @@ class Variable {
             foreach($variable['variable']['array'] as $nr => $array){
                 $variable['variable']['attribute'] .= ' . ';
                 $variable['variable']['array'][$nr] = Variable::define($build, $storage, $array);
+                d($variable['variable']['array'][$nr]);
                 if(substr($variable['variable']['array'][$nr], 0, 1) === '$'){
                     $variable['variable']['attribute'] .= $variable['variable']['array'][$nr];
                 }
