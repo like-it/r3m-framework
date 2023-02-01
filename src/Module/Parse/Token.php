@@ -1185,7 +1185,6 @@ class Token {
                                     if(array_key_exists('array', $token[$variable_nr]['variable'])){
                                         if(array_key_exists($variable_array_level, $token[$variable_nr]['variable']['array'])){
                                             $prepare = $token[$variable_nr]['variable']['array'][$variable_array_level];
-                                            d($prepare);
                                             $prepare = [
                                                 [
                                                     'type' => Token::TYPE_CURLY_OPEN,
