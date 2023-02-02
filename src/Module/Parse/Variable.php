@@ -291,7 +291,7 @@ class Variable {
     /**
      * @throws Exception
      */
-    public static function define($build, Data $storage, $token=[], &$extra): string
+    public static function define($build, Data $storage, $token=[]): string
     {
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
@@ -316,7 +316,7 @@ class Variable {
                         case Token::TYPE_VARIABLE:
                             $temp = [];
                             $temp[] = $record;
-                            $array[$array_nr] = Variable::define($build, $storage, $temp, $extra);
+                            $array[$array_nr] = Variable::define($build, $storage, $temp);
                             break;
                         default :
                             $array[$array_nr] = Value::get($build, $storage, $record);
@@ -365,8 +365,9 @@ class Variable {
             }
             $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
             if($extra){
-                $extra = '$attribute = ' . $extra . ';';
-                $define = '$this->storage()->data($attribute)'; //no more extra, too complicated to realise
+//                $extra = '$attribute = ' . $extra . ';';
+//                $define = '$this->storage()->data($attribute)'; //no more extra, too complicated to realise
+                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
             } else {
                 $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
             }
@@ -397,7 +398,7 @@ class Variable {
                                 case Token::TYPE_VARIABLE:
                                     $temp = [];
                                     $temp[] = $attribute;
-                                    $define_modifier .= Variable::define($build, $storage, $temp, $extra) . ', ';
+                                    $define_modifier .= Variable::define($build, $storage, $temp) . ', ';
                                 break;
                                 default :
                                     $define_modifier .= Value::get($build, $storage, $attribute) . ', ';
