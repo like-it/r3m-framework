@@ -18,7 +18,7 @@ class Code {
     /**
      * @throws Exception
      */
-    public static function result(Build $build, Data $storage, $type='', $selection=[]){
+    public static function result(Build $build, Data $storage, $type='', $selection=[], &$extra=''){
         $result = '';
         switch($type){
             case Build::VARIABLE_ASSIGN :

@@ -365,7 +365,8 @@ class Variable {
             }
             $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
             if($extra){
-                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ') '; //no more extra, too complicated to realise
+                $define = $build->indent() . '$attribute = ' . $variable['variable']['attribute'] . $extra . ';' . PHP_EOL;
+                $define .= '$this->storage()->data($attribute)'; //no more extra, too complicated to realise
             } else {
                 $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
             }
