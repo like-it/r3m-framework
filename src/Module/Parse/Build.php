@@ -548,7 +548,12 @@ class Build {
                         $remove_newline = true;
                         break;
                     case Build::VARIABLE_DEFINE :
-                        $run[] = $this->indent() . '$variable = ' . Variable::define($this, $storage, $selection) . ';';
+                        $extra = '';
+                        $define = Variable::define($this, $storage, $selection, $extra);
+                        if($extra){
+                            $run[] = $this->indent() . $extra . PHP_EOL;
+                        }
+                        $run[] = $this->indent() . '$variable = ' . $define . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'else { echo $variable; } ';

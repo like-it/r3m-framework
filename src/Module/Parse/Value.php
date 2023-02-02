@@ -119,7 +119,7 @@ class Value {
                 //adding modifiers
                 $token = [];
                 $token[] = $record;
-                return Variable::define($build, $storage, $token);
+                return Variable::define($build, $storage, $token, $extra);
             case Token::TYPE_METHOD :
                 $method = Method::get($build, $storage, $record);
                 if($method['type'] == Token::TYPE_CODE){
