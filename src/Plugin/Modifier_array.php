@@ -11,6 +11,6 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function modifier_boolean(Parse $parse, Data $data, $value){
+function modifier_array(Parse $parse, Data $data, $value){
     return Core::object($value, Core::OBJECT_ARRAY);
 }
