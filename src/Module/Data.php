@@ -294,6 +294,9 @@ class Data {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function copy(){
         $data = $this->data();
         if(is_array($data)){
@@ -303,9 +306,12 @@ class Data {
         }
     }
 
-    public function reset(){
+    public function reset($to_empty=false){
         $this->clear();
-        if($this->copy){
+        if(
+            $to_empty === false &&
+            $this->copy
+        ){
             $this->data($this->copy);
         }
     }
