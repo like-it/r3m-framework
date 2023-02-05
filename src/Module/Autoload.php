@@ -93,9 +93,8 @@ class Autoload {
                 if(
                     array_key_exists('prefix', $parameters) &&
                     array_key_exists('directory', $parameters) &&
-                    array_key_exists('extension', $parameters) &&
+                    array_key_exists('extension', $parameters)
                 ){
-
                     $autoload->addPrefix($parameters['prefix'],  $parameters['directory'], $parameters['extension']);
                 }
                 elseif(
