@@ -24,6 +24,7 @@ use R3m\Io\Exception\ObjectException;
 /**
  * @deprecated
  * @replacement R3m\Io\Module\Controller.php
+ * @use Controller as View;
  */
 class View {
     const PARSE = 'Parse';
