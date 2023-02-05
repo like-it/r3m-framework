@@ -295,11 +295,16 @@ class Method {
                             $in_list = true;
                             break;
                         }
-                        d($record);
-                        $name = str_replace('.', '_', $record['name']);
-                        $namespace = str_replace('.', '\\', $record['namespace']);
-                        if(substr($namespace, -1 ,1) !== '\\'){
-                            $namespace .= '\\';
+                        if(
+                            array_key_exists('method', $record) &&
+                            array_key_exists('name', $record['method']) &&
+                            array_key_exists('namespace', $record['method'])
+                        ){
+                            $name = str_replace('.', '_', $record['method']['name']);
+                            $namespace = str_replace('.', '\\', $record['method']['namespace']);
+                            if(substr($namespace, -1 ,1) !== '\\'){
+                                $namespace .= '\\';
+                            }
                         }
                     }
                     if(!$in_list){
