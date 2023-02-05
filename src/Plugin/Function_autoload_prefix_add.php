@@ -17,5 +17,5 @@ function function_autoload_prefix_add(Parse $parse, Data $data, $prefix='',$dire
     $object = $parse->object();
     $autoload = $object->data(App::AUTOLOAD_R3M);
     $autoload->addPrefix($prefix, $directory, $extension);
-    ddd($autoload);
+    d($autoload);
 }
