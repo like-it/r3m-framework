@@ -35,18 +35,44 @@ class Autoload {
     public $environment = 'production';
 
     public static function configure(App $object){
-        $config = $object->data(App::CONFIG);
         $autoload = new Autoload();
-        $autoload->addPrefix('Host',  $config->data(Config::DATA_PROJECT_DIR_HOST));        
-        $autoload->addPrefix('Source',  $config->data(Config::DATA_PROJECT_DIR_SOURCE));
-        $cache_dir =
-            $config->data(Config::DATA_FRAMEWORK_DIR_CACHE) .
-            Autoload::NAME .
-            $config->data(Config::DS)
-        ;
+        $prefix = $object->config('autoload.prefix');
+        if(
+            !empty($prefix) &&
+            is_array($prefix)
+        ){
+            foreach($prefix as $record){
+                if(
+                    property_exists($record, 'prefix') &&
+                    property_exists($record, 'directory') &&
+                    property_exists($record, 'extension')
+                ){
+                    ddd($record);
+                    $autoload->addPrefix($record->prefix,  $record->directory, $record->extension);
+                }
+                elseif(
+                    property_exists($record, 'prefix') &&
+                    property_exists($record, 'directory')
+                ){
+                    ddd($record);
+                    $autoload->addPrefix($record->prefix,  $record->directory);
+                }
+            }
+        } else {
+            $autoload->addPrefix('Host',  $object->config(Config::DATA_PROJECT_DIR_HOST));
+            $autoload->addPrefix('Source',  $object->config(Config::DATA_PROJECT_DIR_SOURCE));
+        }
+        $cache_dir = $object->config('autoload.cache.dir');
+        if(empty($cache_dir)){
+            $cache_dir =
+                $object->config(Config::DATA_FRAMEWORK_DIR_CACHE) .
+                Autoload::NAME .
+                $object->config(Config::DS)
+            ;
+        }
         $autoload->cache_dir($cache_dir);
         $autoload->register();
-        $autoload->environment($config->data('framework.environment'));
+        $autoload->environment($object->config('framework.environment'));
         $object->data(App::AUTOLOAD_R3M, $autoload);        
     }
 
