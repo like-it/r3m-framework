@@ -419,7 +419,7 @@ class App extends Data {
         $output .= PHP_EOL;
         $output .= $class . PHP_EOL;
         $output .= PHP_EOL;
-        $output .= $exception->getMessage() . PHP_EOL;
+        $output .= (string) $exception . PHP_EOL;
         $output .= PHP_EOL;
         $output .= 'file: ' . $exception->getFile() . PHP_EOL;
         $output .= 'line: ' . $exception->getLine() . PHP_EOL;
