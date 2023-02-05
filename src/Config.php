@@ -220,13 +220,13 @@ class Config extends Data {
         if(!is_array($parameters)){
             return [];
         }
-        foreach($parameters as $parameter_nr => $parameter){
+        foreach($parameters as $key => $parameter){
             $tree = Parse\Token::tree($parameter);
             if(
                 !empty($tree) &&
                 is_array($tree)
             ){
-                $parameters[$parameter_nr]  = '';
+                $parameters[$key]  = '';
                 foreach($tree as $tree_nr => $record){
                     if(
                         $record['type'] === Token::TYPE_METHOD &&
@@ -235,12 +235,12 @@ class Config extends Data {
                     ){
                         foreach($record['method']['attribute'] as $attribute_nr => $attribute_list){
                             foreach($attribute_list as $attribute){
-                                $parameters[$parameter_nr] .= $object->config($attribute['execute']);
+                                $parameters[$key] .= $object->config($attribute['execute']);
                             }
                         }
                     }
                     if($record['type'] === Token::TYPE_STRING){
-                        $parameters[$parameter_nr] .= $record['value'];
+                        $parameters[$key] .= $record['value'];
                     }
                 }
             }

@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\ObjectException;
 use stdClass;
 use Exception;
 use R3m\Io\App;
@@ -34,6 +35,9 @@ class Autoload {
     public $prefixList = array();
     public $environment = 'production';
 
+    /**
+     * @throws ObjectException
+     */
     public static function configure(App $object){
         $autoload = new Autoload();
         $prefix = $object->config('autoload.prefix');
@@ -47,6 +51,8 @@ class Autoload {
                     property_exists($record, 'directory') &&
                     property_exists($record, 'extension')
                 ){
+                    $parameters = Core::object($record, 'array');
+                    d($parameters);
                     ddd($record);
                     $autoload->addPrefix($record->prefix,  $record->directory, $record->extension);
                 }
