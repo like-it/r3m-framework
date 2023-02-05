@@ -295,6 +295,7 @@ class Method {
                             $in_list = true;
                             break;
                         }
+                        d($record);
                         $name = str_replace('.', '_', $record['name']);
                         $namespace = str_replace('.', '\\', $record['namespace']);
                         if(substr($namespace, -1 ,1) !== '\\'){
