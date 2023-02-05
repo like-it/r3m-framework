@@ -313,11 +313,10 @@ class Build {
     {
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
-        $dir_plugin = $storage->data('plugin');
-
-        d($config->get('parse.dir.plugin'));
-        d($dir_plugin);
-
+        $dir_plugin = $config->get('parse.dir.plugin');
+        if(empty($dir_plugin)){
+            $dir_plugin = $storage->data('plugin');
+        }
         $data = $storage->data($type);
         if(empty($data)){
             return $document;
