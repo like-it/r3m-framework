@@ -7,10 +7,12 @@ use R3m\Io\App;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_logger_alert(Parse $parse, Data $data, $message=null, $context=[], $name=''){
+function function_logger_alert(Parse $parse, Data $data, $message=null, $context=[], $channel=''){
     $object = $parse->object();
-    if(empty($name)){
-        $name = $object->config('project.log.name');
+    if(empty($channel)){
+        $channel = $object->config('project.log.name');
     }
-    $object->logger($name)->alert($message, $context);
+    if($channel){
+        $object->logger($channel)->alert($message, $context);
+    }
 }

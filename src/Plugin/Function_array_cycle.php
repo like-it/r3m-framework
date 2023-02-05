@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_cycle(Parse $parse, Data $data, $name, $arguments=[]){
+function function_array_cycle(Parse $parse, Data $data, $name, $arguments=[]){
     $name = 'r3m.io.cycle.' . $name;
     $array = $parse->object()->data($name);
     if(

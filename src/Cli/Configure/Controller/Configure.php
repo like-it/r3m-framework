@@ -10,12 +10,14 @@
  */
 namespace R3m\Io\Cli\Configure\Controller;
 
-use Exception;
 use R3m\Io\App;
+use R3m\Io\Module\Controller;
+
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
-use R3m\Io\Module\Controller;
 
 class Configure extends Controller {
     const DIR = __DIR__;

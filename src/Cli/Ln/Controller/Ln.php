@@ -11,13 +11,15 @@
 namespace R3m\Io\Cli\Ln\Controller;
 
 use R3m\Io\App;
-use R3m\Io\Module\View;
+use R3m\Io\Module\Controller;
+
 use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Ln extends View {
+class Ln extends Controller {
     const DIR = __DIR__;
     const NAME = 'Ln';
     const INFO = '{{binary()}} ln                             | ln creates a symlink if not exist';

@@ -10,17 +10,16 @@
  */
 namespace R3m\Io\Cli\Cache\Clear\Controller\Cache;
 
-use Exception;
 use R3m\Io\App;
-use R3m\Io\Module\Core;
-use R3m\Io\Module\Dir;
-use R3m\Io\Module\View;
-use R3m\Io\Module\Parse;
+use R3m\Io\Module\Controller;
+
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Clear extends View{
+class Clear extends Controller {
     const NAME = 'Cache';
     const DIR = __DIR__;
 
@@ -47,7 +46,7 @@ class Clear extends View{
     /**
      * @throws Exception
      */
-    public static function run($object){
+    public static function run(App $object){
         $command = Clear::COMMAND_CLEAR;
         if(!in_array($command, Clear::COMMAND)){
             $exception = str_replace(
@@ -60,7 +59,7 @@ class Clear extends View{
         return Clear::{$command}($object);
     }
 
-    private static function info($object){
+    private static function info(App $object){
         try {
             $name = Clear::name(__FUNCTION__, Clear::NAME);
             $url = Clear::locate($object, $name);
@@ -71,7 +70,7 @@ class Clear extends View{
 
     }
 
-    private static function clear($object){
+    private static function clear(App $object){
         try {
             $name = Clear::name(__FUNCTION__, Clear::NAME);
             $url = Clear::locate($object, $name);

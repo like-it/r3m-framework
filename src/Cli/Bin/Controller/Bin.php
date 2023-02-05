@@ -10,17 +10,16 @@
  */
 namespace R3m\Io\Cli\Bin\Controller;
 
-use Exception;
 use R3m\Io\App;
-use R3m\Io\Config;
-use R3m\Io\Module\File;
-use R3m\Io\Module\Dir;
-use R3m\Io\Module\View;
+use R3m\Io\Module\Controller;
+
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Bin extends View {
+class Bin extends Controller {
     const DIR = __DIR__;
     const NAME = 'Bin';
 
@@ -30,7 +29,7 @@ class Bin extends View {
 
     const INFO = '{{binary()}} bin                            | Creates binary';
 
-    public static function run($object){
+    public static function run(App $object){
         $name = $object->parameter($object, Bin::NAME, 1);
         if(empty($name)){
             $name = Bin::DEFAULT_NAME;

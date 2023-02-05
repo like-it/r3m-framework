@@ -10,18 +10,19 @@
  */
 namespace R3m\Io\Cli\Restore\Controller;
 
-use Exception;
+
 use R3m\Io\App;
-use R3m\Io\Config;
+use R3m\Io\Module\Controller;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
-use R3m\Io\Module\Dir;
-use R3m\Io\Module\View;
+
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Restore extends View {
+class Restore extends Controller {
     const DIR = __DIR__;
     const NAME = 'Restore';
 

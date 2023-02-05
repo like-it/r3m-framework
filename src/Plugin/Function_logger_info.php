@@ -6,10 +6,12 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_logger_info(Parse $parse, Data $data, $message=null, $context=[], $name=''){
+function function_logger_info(Parse $parse, Data $data, $message=null, $context=[], $channel=''){
     $object = $parse->object();
-    if(empty($name)){
-        $name = $object->config('project.log.name');
+    if(empty($channel)){
+        $channel = $object->config('project.log.name');
     }
-    $object->logger($name)->info($message, $context);
+    if($channel){
+        $object->logger($channel)->info($message, $context);
+    }
 }

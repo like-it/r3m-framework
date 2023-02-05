@@ -8,11 +8,9 @@
  * @changeLog
  *     -            all
  */
-
-use R3m\Io\Module\Cli;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_cli_reset(Parse $parse, Data $data){
-    echo Cli::tput('reset');
+function function_terminal_default(Parse $parse, Data $data){
+    return \R3m\Io\Module\Cli::default();
 }

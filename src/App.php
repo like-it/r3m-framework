@@ -87,7 +87,7 @@ class App extends Data {
      * @throws Exception
      */
     public static function configure(App $object){
-        $info = 'Logger: App initialized';
+        $info = 'Logger: App initialised.';
         if(App::is_cli() === false){
             $domains = $object->config('server.cors.domains');
             if(!empty($domains)){

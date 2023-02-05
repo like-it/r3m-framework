@@ -14,17 +14,16 @@ use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Core;
-use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\View;
+use R3m\Io\Module\Controller;
 use R3m\Io\Module\Parse;
 
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Version extends View{
+class Version extends Controller {
     const NAME = 'Version';
     const DIR = __DIR__;
 
@@ -61,7 +60,7 @@ class Version extends View{
     /**
      * @throws Exception
      */
-    public static function run($object){
+    public static function run(App $object){
         $command = $object->parameter($object, Version::NAME, 1);
         if($command === null){
             $command = Version::DEFAULT_COMMAND;
@@ -78,7 +77,7 @@ class Version extends View{
         return Version::{$command}($object);
     }
 
-    private static function info($object){
+    private static function info(App $object){
         try {
             $name = Version::name(__FUNCTION__    , Version::NAME);
             $url = Version::locate($object, $name);
@@ -88,7 +87,7 @@ class Version extends View{
         }
     }
 
-    private static function update($object){
+    private static function update(App $object){
         $config = $object->data(App::CONFIG);
         $config_url = $config->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
         if(File::exist($config_url)){
@@ -126,11 +125,11 @@ class Version extends View{
 
         foreach($command as $record){
             $execute = $parse->compile($record);
-            echo 'Executing: ' . $execute . "...\n";
+            echo 'Executing: ' . $execute . '...' . PHP_EOL;
             $output = [];
             Core::execute($execute, $output);
             $output[] = '';
-            echo implode("\n", $output);
+            echo implode(PHP_EOL, $output);
         }
     }
 }

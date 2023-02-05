@@ -11,14 +11,15 @@
 namespace R3m\Io\Cli\Zip\Controller;
 
 use R3m\Io\App;
-use R3m\Io\Module\Logger;
-use R3m\Io\Module\View;
+use R3m\Io\Module\Controller;
+
 use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Zip extends View {
+class Zip extends Controller {
     const DIR = __DIR__;
     const NAME = 'Zip';
     const INFO = [
@@ -33,7 +34,9 @@ class Zip extends View {
     public static function run(App $object){
         try {
             $command = App::parameter($object, 'zip', 1);
-            Logger::info('Command: ' . $command, [], $object->config('logger.default.name'));
+            if($object->config('logger.default.name')){
+                $object->logger($object->config('logger.default.name'))->info('Command: . ' . $command);
+            }
             if(in_array($command, Zip::COMMAND)) {
                 $name = Zip::name($command, Zip::NAME);
                 $url = Zip::locate($object, $name);

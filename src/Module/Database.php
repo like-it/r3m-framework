@@ -144,7 +144,7 @@ class Database {
                 $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
                 $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
                 $object->logger($logger->getName(), $logger);
-                $logger->info('Logger initialized...');
+                $logger->info('Logger initialised.');
                 $config->setMiddlewares([new Logging\Middleware($logger)]);
             }
             $connection = DriverManager::getConnection($connection, $config, new EventManager());

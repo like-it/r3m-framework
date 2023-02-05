@@ -1,7 +1,7 @@
 <?php
 /**
  * @author          Remco van der Velde
- * @since           2020-09-13
+ * @since           2020-09-20
  * @copyright       Remco van der Velde
  * @license         MIT
  * @version         1.0
@@ -11,7 +11,9 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_server(Parse $parse, Data $data, $attribute=null){
-    $object = $parse->object();
-    return $object->server($attribute);
+function function_math_fdiv(Parse $parse, Data $data, $x=null, $y=null){
+    if(function_exists('fdiv')){
+        $result = fdiv($x, $y);
+        return $result;
+    }
 }

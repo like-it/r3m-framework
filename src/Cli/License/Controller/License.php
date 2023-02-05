@@ -10,17 +10,16 @@
  */
 namespace R3m\Io\Cli\License\Controller;
 
-use Exception;
 use R3m\Io\App;
-use R3m\Io\Module\Core;
-use R3m\Io\Module\Dir;
-use R3m\Io\Module\View;
-use R3m\Io\Module\Parse;
+use R3m\Io\Module\Controller;
+
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class License extends View{
+class License extends Controller {
     const NAME = 'License';
     const DIR = __DIR__;
 
@@ -38,7 +37,7 @@ class License extends View{
     /**
      * @throws Exception
      */
-    public static function run($object){
+    public static function run(App $object){
         $command = $object->parameter($object, License::NAME, 1);
 
         if($command === null){
@@ -55,7 +54,7 @@ class License extends View{
         return License::{$command}($object);
     }
 
-    private static function info($object)
+    private static function info(App $object)
     {
         try {
             $name = License::name(__FUNCTION__, License::NAME);

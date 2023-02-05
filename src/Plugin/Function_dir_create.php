@@ -8,10 +8,10 @@
  * @changeLog
  *     -            all
  */
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_server(Parse $parse, Data $data, $attribute=null){
-    $object = $parse->object();
-    return $object->server($attribute);
+function function_dir_create(Parse $parse, Data $data, $url='', $chmod=''){
+    return Dir::create($url, $chmod);
 }

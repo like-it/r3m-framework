@@ -10,17 +10,17 @@
  */
 namespace R3m\Io\Cli\Cache\Controller;
 
-use Exception;
+
 use R3m\Io\App;
-use R3m\Io\Module\Core;
-use R3m\Io\Module\Dir;
-use R3m\Io\Module\View;
-use R3m\Io\Module\Parse;
+use R3m\Io\Module\Controller;
+
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Cache extends View{
+class Cache extends Controller {
     const NAME = 'Cache';
     const DIR = __DIR__;
 
@@ -47,7 +47,7 @@ class Cache extends View{
     /**
      * @throws Exception
      */
-    public static function run($object){
+    public static function run(App $object){
         $command = $object->parameter($object, Cache::NAME, 1);
         if($command === null){
             $command = Cache::DEFAULT_COMMAND;
@@ -63,7 +63,7 @@ class Cache extends View{
         return Cache::{$command}($object);
     }
 
-    private static function info($object){
+    private static function info(App $object){
         try {
             $name = Cache::name(__FUNCTION__, Cache::NAME);
             $url = Cache::locate($object, $name);
@@ -74,7 +74,7 @@ class Cache extends View{
 
     }
 
-    private static function clear($object){
+    private static function clear(App $object){
         try {
             $name = Cache::name(__FUNCTION__, Cache::NAME);
             $url = Cache::locate($object, $name);

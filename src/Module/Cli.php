@@ -53,6 +53,10 @@ class Cli {
         return $input;
     }
 
+    public static function default(){
+        echo chr(27) . "[0m";
+    }
+
     public static function tput($tput='', $arguments=[]): string
     {
         if(!is_array($arguments)){

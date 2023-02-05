@@ -11,15 +11,14 @@
 namespace R3m\Io\Cli\Route\Controller;
 
 use R3m\Io\App;
-use R3m\Io\Config;
-use R3m\Io\Module\File;
-use R3m\Io\Module\View;
+
 use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Route extends View{
+class Route extends Controller {
     const NAME = 'Route';
     const DIR = __DIR__;
 
@@ -38,7 +37,7 @@ class Route extends View{
     /**
      * @throws Exception
      */
-    public static function run($object){
+    public static function run(App $object){
         $command = $object->parameter($object, Route::NAME, 1);
 
         if($command === null){
@@ -55,7 +54,7 @@ class Route extends View{
         return Route::{$command}($object);
     }
 
-    private static function info($object){
+    private static function info(App $object){
         try {
             $name = Route::name(__FUNCTION__, Route::NAME);
             $url = Route::locate($object, $name);
@@ -66,7 +65,7 @@ class Route extends View{
     }
 
 
-    private static function restart($object){
+    private static function restart(App $object){
         try {
             $name = Route::name(__FUNCTION__    , Route::NAME);
             $url = Route::locate($object, $name);

@@ -10,20 +10,19 @@
  */
 namespace R3m\Io\Cli\Parse\Controller;
 
-use Exception;
 use R3m\Io\App;
 use R3m\Io\Module\Core;
-use R3m\Io\Module\Data;
-use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
-use R3m\Io\Module\Response;
-use R3m\Io\Module\View;
+use R3m\Io\Module\Controller;
 use R3m\Io\Module\Parse as Parser;
+
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Parse extends View{
+class Parse extends Controller {
     const NAME = 'Parse';
     const DIR = __DIR__;
 
@@ -110,18 +109,6 @@ class Parse extends View{
                 }
                 if ($read) {
                     $mtime = File::mtime($template_url);
-                    //first read state then data
-                    /*
-                    if($state_url){
-                        $state = $object->parse_read($state_url);
-                        if($state){
-                            $object->config(Core::object_merge($object->config(), $state->get('config')));
-                            $state->delete('config');
-                            $object->data(Core::object_merge($object->data(), $state->data()));
-                            $object->data('controller', $object->config('controller'));
-                        }
-                    }
-                    */
                     $data = $object->parse_read($data_url);
                     $object->data('ldelim', '{');
                     $object->data('rdelim', '}');

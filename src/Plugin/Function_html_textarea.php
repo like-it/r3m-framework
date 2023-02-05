@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_textarea(Parse $parse, Data $data, $options=[]){
+function function_html_textarea(Parse $parse, Data $data, $options=[]){
     $label = '';
     $textarea = '';
     $class = '';
