@@ -314,6 +314,9 @@ class Build {
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
         $dir_plugin = $storage->data('plugin');
+
+        ddd($storage);
+
         $data = $storage->data($type);
         if(empty($data)){
             return $document;
