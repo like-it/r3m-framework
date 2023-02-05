@@ -244,7 +244,7 @@ class Config extends Data {
                     }
                 }
             } else {
-                ddd($parameters);
+                d($parameters);
                 d($tree);
             }
             return $parameters;
