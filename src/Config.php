@@ -17,6 +17,8 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Parse\Token;
 
+use Exception;
+
 class Config extends Data {
     const DIR = __DIR__ . '/';
     const NAME = 'Config';
@@ -213,7 +215,11 @@ class Config extends Data {
         }
     }
 
-    public static function parameters(App $object, $parameters=[]){
+    /**
+     * @throws Exception
+     */
+    public static function parameters(App $object, $parameters=[]): array
+    {
         if(empty($parameters)){
             return $parameters;
         }
@@ -222,7 +228,6 @@ class Config extends Data {
         }
         foreach($parameters as $key => $parameter){
             $tree = Parse\Token::tree($parameter);
-            d($tree);
             if(
                 !empty($tree) &&
                 is_array($tree)
@@ -245,12 +250,9 @@ class Config extends Data {
                     }
                 }
             } else {
-                d($parameters);
-                d($tree);
             }
         }
         return $parameters;
-        ddd($parameters);
     }
 
     public function default(){
