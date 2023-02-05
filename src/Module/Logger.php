@@ -172,104 +172,122 @@ class Logger {
     /**
      * @throws Exception
      */
-    public static function alert($message=null, $context=[], $name=''){
+    public static function alert($message=null, $context=[], $channel=''){
         $object = App::instance();
-        if(empty($name)){
-            $name = $object->config('project.log.name');
+        if(empty($channel)){
+            $channel = $object->config('project.log.name');
         } else {
-            $name = ucfirst($name);
+            $channel = ucfirst($channel);
         }
-        $object->logger($name)->alert($message, $context);
+        if($channel){
+            $object->logger($channel)->alert($message, $context);
+        }
+
     }
 
     /**
      * @throws Exception
      */
-    public static function critical($message=null, $context=[], $name=''){
+    public static function critical($message=null, $context=[], $channel=''){
         $object = App::instance();
-        if(empty($name)){
-            $name = $object->config('project.log.name');
+        if(empty($channel)){
+            $channel = $object->config('project.log.name');
         } else {
-            $name = ucfirst($name);
+            $channel = ucfirst($channel);
         }
-        $object->logger($name)->critical($message, $context);
+        if($channel){
+            $object->logger($channel)->critical($message, $context);
+        }
+
     }
 
     /**
      * @throws Exception
      */
-    public static function debug($message=null, $context=[], $name=''){
+    public static function debug($message=null, $context=[], $channel=''){
         $object = App::instance();
-        if(empty($name)){
-            $name = $object->config('project.log.name');
+        if(empty($channel)){
+            $channel = $object->config('project.log.name');
         } else {
-            $name = ucfirst($name);
+            $channel = ucfirst($channel);
         }
-        $object->logger($name)->debug($message, $context);
+        if($channel){
+            $object->logger($channel)->debug($message, $context);
+        }
     }
 
     /**
      * @throws Exception
      */
-    public static function emergency($message=null, $context=[], $name=''){
+    public static function emergency($message=null, $context=[], $channel=''){
         $object = App::instance();
-        if(empty($name)){
-            $name = $object->config('project.log.name');
+        if(empty($channel)){
+            $channel = $object->config('project.log.name');
         } else {
-            $name = ucfirst($name);
+            $channel = ucfirst($channel);
         }
-        $object->logger($name)->emergency($message, $context);
+        if($channel){
+            $object->logger($channel)->emergency($message, $context);
+        }
     }
 
     /**
      * @throws Exception
      */
-    public static function error($message=null, $context=[], $name=''){
+    public static function error($message=null, $context=[], $channel=''){
         $object = App::instance();
         if(empty($name)){
-            $name = $object->config('project.log.name');
+            $channel = $object->config('project.log.name');
         } else {
-            $name = ucfirst($name);
+            $channel = ucfirst($channel);
         }
-        $object->logger($name)->error($message, $context);
+        if($channel){
+            $object->logger($channel)->error($message, $context);
+        }
     }
 
     /**
      * @throws Exception
      */
-    public static function info($message=null, $context=[], $name=''){
+    public static function info($message=null, $context=[], $channel=''){
         $object = App::instance();
-        if(empty($name)){
-            $name = $object->config('project.log.name');
+        if(empty($channel)){
+            $channel = $object->config('project.log.name');
         } else {
-            $name = ucfirst($name);
+            $channel = ucfirst($channel);
         }
-        $object->logger($name)->info($message, $context);
+        if($channel){
+            $object->logger($channel)->info($message, $context);
+        }
     }
 
     /**
      * @throws Exception
      */
-    public static function notice($message=null, $context=[], $name=''){
+    public static function notice($message=null, $context=[], $channel=''){
         $object = App::instance();
-        if(empty($name)){
-            $name = $object->config('project.log.name');
+        if(empty($channel)){
+            $channel = $object->config('project.log.name');
         } else {
-            $name = ucfirst($name);
+            $channel = ucfirst($channel);
         }
-        $object->logger($name)->notice($message, $context);
+        if($channel){
+            $object->logger($channel)->notice($message, $context);
+        }
     }
 
     /**
      * @throws Exception
      */
-    public static function warning($message=null, $context=[], $name=''){
+    public static function warning($message=null, $context=[], $channel=''){
         $object = App::instance();
-        if(empty($name)){
-            $name = $object->config('project.log.name');
+        if(empty($channel)){
+            $channel = $object->config('project.log.name');
         } else {
-            $name = ucfirst($name);
+            $channel = ucfirst($channel);
         }
-        $object->logger($name)->warning($message, $context);
+        if($channel){
+            $object->logger($channel)->warning($message, $context);
+        }
     }
 }

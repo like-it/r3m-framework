@@ -321,7 +321,7 @@ class Method {
      */
     public static function get_trait(Build $build, Data $storage, $record=[], $is_debug=false): array
     {
-        if($record['type'] != Token::TYPE_METHOD){
+        if($record['type'] !== Token::TYPE_METHOD){
             return $record;
         }
         $attribute = [];
