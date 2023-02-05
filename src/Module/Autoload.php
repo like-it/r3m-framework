@@ -141,6 +141,58 @@ class Autoload {
         $this->setPrefixList($list);
     }
 
+    public function prependPrefix($prefix='', $directory='', $extension=''){
+        $prefix = trim($prefix, '\\\/'); //.'\\';
+        $directory = str_replace('\\\/', DIRECTORY_SEPARATOR, rtrim($directory,'\\\/')) . DIRECTORY_SEPARATOR; //see File::dir()
+        $list = $this->getPrefixList();
+        $prepend = [];
+        if(empty($list)){
+            $list = [];
+        }
+        if(empty($extension)){
+            $found = false;
+            foreach($list as $record){
+                if(
+                    $record['prefix'] == $prefix &&
+                    $record['directory'] == $directory
+                ){
+                    $found = true;
+                    break;
+                }
+            }
+            if(!$found){
+                $prepend[]  = array(
+                    'prefix' => $prefix,
+                    'directory' => $directory
+                );
+            }
+        } else {
+            $found = false;
+            foreach($list as $record){
+                if(
+                    $record['prefix'] == $prefix &&
+                    $record['directory'] == $directory &&
+                    !empty($record['extension']) &&
+                    $record['extension'] == $extension
+                ){
+                    $found = true;
+                    break;
+                }
+            }
+            if(!$found){
+                $prepend[]  = array(
+                    'prefix' => $prefix,
+                    'directory' => $directory,
+                    'extension' => $extension
+                );
+            }
+        }
+        foreach($list as $record){
+            $prepend[] = $record;
+        }
+        $this->setPrefixList($prepend);
+    }
+
     private function setPrefixList($list = array()){
         $this->prefixList = $list;
     }
