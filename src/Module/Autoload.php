@@ -45,7 +45,6 @@ class Autoload {
     public static function configure(App $object){
         $autoload = new Autoload();
         $prefix = $object->config('autoload.prefix');
-        ddd($prefix);
         if(
             !empty($prefix) &&
             is_array($prefix)
@@ -57,7 +56,12 @@ class Autoload {
                     property_exists($record, 'extension')
                 ){
                     $parameters = Core::object($record, 'array');
+                    d($parameters);
                     $parameters = Config::parameters($object, $parameters);
+                    ddd($parameters);
+
+
+
                     d($parameters);
                     ddd($record);
                     $autoload->addPrefix($record->prefix,  $record->directory, $record->extension);
