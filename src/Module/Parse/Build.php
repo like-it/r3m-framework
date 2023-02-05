@@ -373,7 +373,7 @@ class Build {
                 }
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
-                    throw new PluginNotFoundException('Function not found: ' . $text);
+                    throw new PluginNotFoundException('Function not found: ' . $text, $url_list);
                 }
             } elseif(array_key_exists('function', $limit)) {
                 throw new PluginNotAllowedException('Function (' . $name . ') not allowed, allowed: ' . implode(',', $limit['function']));
