@@ -316,7 +316,7 @@ class Build {
         $dir_plugin = $storage->data('plugin');
 
         d($config->get('parse.dir.plugin'));
-        d($storage);
+        d($dir_plugin);
 
         $data = $storage->data($type);
         if(empty($data)){
