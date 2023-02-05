@@ -57,6 +57,46 @@ class Autoload {
                 ){
                     $parameters = Core::object($record, 'array');
                     d($parameters);
+                    $uuid = Core::uuid();
+                    foreach($parameters as $nr => $parameter){
+                        $parameter = str_replace(
+                            [
+                                '{',
+                                '}',
+                            ],
+                            [
+                                '[$ldelim-' . $uuid . ']',
+                                '[$rdelim-' . $uuid . ']',
+                            ],
+                            $parameter
+                        );
+                        $parameter = str_replace(
+                            [
+                                '[$ldelim-' . $uuid . ']',
+                                '[$rdelim-' . $uuid . ']',
+                            ],
+                            [
+                                '{$ldelim}',
+                                '{$rdelim}',
+                            ],
+                            $parameter
+                        );
+                        $parameter = str_replace(
+                            [
+                                '{$ldelim}{$ldelim}',
+                                '{$rdelim}{$rdelim}',
+                            ],
+                            [
+                                '{',
+                                '}',
+                            ],
+                            $parameter
+                        );
+                        $parameters[$nr] = $parameter;
+                    }
+
+                    d($parameters);
+
                     $parameters = Config::parameters($object, $parameters);
                     ddd($parameters);
 
