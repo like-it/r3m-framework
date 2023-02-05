@@ -41,6 +41,7 @@ class Autoload {
 
     /**
      * @throws ObjectException
+     * @throws Exception
      */
     public static function configure(App $object){
         $autoload = new Autoload();
@@ -50,68 +51,58 @@ class Autoload {
             is_array($prefix)
         ){
             foreach($prefix as $record){
+                $parameters = Core::object($record, 'array');
+                $uuid = Core::uuid();
+                foreach($parameters as $nr => $parameter){
+                    $parameter = str_replace(
+                        [
+                            '{',
+                            '}',
+                        ],
+                        [
+                            '[$ldelim-' . $uuid . ']',
+                            '[$rdelim-' . $uuid . ']',
+                        ],
+                        $parameter
+                    );
+                    $parameter = str_replace(
+                        [
+                            '[$ldelim-' . $uuid . ']',
+                            '[$rdelim-' . $uuid . ']',
+                        ],
+                        [
+                            '{$ldelim}',
+                            '{$rdelim}',
+                        ],
+                        $parameter
+                    );
+                    $parameter = str_replace(
+                        [
+                            '{$ldelim}{$ldelim}',
+                            '{$rdelim}{$rdelim}',
+                        ],
+                        [
+                            '{',
+                            '}',
+                        ],
+                        $parameter
+                    );
+                    $parameters[$nr] = $parameter;
+                }
+                $parameters = Config::parameters($object, $parameters);
                 if(
-                    property_exists($record, 'prefix') &&
-                    property_exists($record, 'directory') &&
-                    property_exists($record, 'extension')
+                    array_key_exists('prefix', $parameters) &&
+                    array_key_exists('directory', $parameters) &&
+                    array_key_exists('extension', $parameters) &&
                 ){
-                    $parameters = Core::object($record, 'array');
-                    d($parameters);
-                    $uuid = Core::uuid();
-                    foreach($parameters as $nr => $parameter){
-                        $parameter = str_replace(
-                            [
-                                '{',
-                                '}',
-                            ],
-                            [
-                                '[$ldelim-' . $uuid . ']',
-                                '[$rdelim-' . $uuid . ']',
-                            ],
-                            $parameter
-                        );
-                        $parameter = str_replace(
-                            [
-                                '[$ldelim-' . $uuid . ']',
-                                '[$rdelim-' . $uuid . ']',
-                            ],
-                            [
-                                '{$ldelim}',
-                                '{$rdelim}',
-                            ],
-                            $parameter
-                        );
-                        $parameter = str_replace(
-                            [
-                                '{$ldelim}{$ldelim}',
-                                '{$rdelim}{$rdelim}',
-                            ],
-                            [
-                                '{',
-                                '}',
-                            ],
-                            $parameter
-                        );
-                        $parameters[$nr] = $parameter;
-                    }
 
-                    d($parameters);
-
-                    $parameters = Config::parameters($object, $parameters);
-                    ddd($parameters);
-
-
-
-                    d($parameters);
-                    ddd($record);
-                    $autoload->addPrefix($record->prefix,  $record->directory, $record->extension);
+                    $autoload->addPrefix($parameters['prefix'],  $parameters['directory'], $parameters['extension']);
                 }
                 elseif(
-                    property_exists($record, 'prefix') &&
-                    property_exists($record, 'directory')
+                    array_key_exists('prefix', $parameters) &&
+                    array_key_exists('directory', $parameters)
                 ){
-                    ddd($record);
-                    $autoload->addPrefix($record->prefix,  $record->directory);
+                    $autoload->addPrefix($parameters['prefix'],  $parameters['directory']);
                 }
             }
         } else {
