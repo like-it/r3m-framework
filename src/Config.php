@@ -214,10 +214,14 @@ class Config extends Data {
     }
 
     public static function parameters(App $object, $parameters=[]){
+        d('test');
         if(empty($parameters)){
+            d('test1');
             return $parameters;
         }
+        d('test');
         if(!is_array($parameters)){
+            d('test2');
             return [];
         }
         foreach($parameters as $key => $parameter){
@@ -243,6 +247,8 @@ class Config extends Data {
                         $parameters[$key] .= $record['value'];
                     }
                 }
+            } else {
+                d($tree);
             }
             return $parameters;
         }
