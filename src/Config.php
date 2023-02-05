@@ -222,6 +222,7 @@ class Config extends Data {
         }
         foreach($parameters as $key => $parameter){
             $tree = Parse\Token::tree($parameter);
+            d($tree);
             if(
                 !empty($tree) &&
                 is_array($tree)
