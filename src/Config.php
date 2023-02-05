@@ -248,8 +248,8 @@ class Config extends Data {
                 d($parameters);
                 d($tree);
             }
-            return $parameters;
         }
+        return $parameters;
         ddd($parameters);
     }
 
