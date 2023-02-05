@@ -246,6 +246,7 @@ class Config extends Data {
             }
             return $parameters;
         }
+        ddd($parameters);
     }
 
     public function default(){
