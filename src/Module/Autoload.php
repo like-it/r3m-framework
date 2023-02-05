@@ -52,6 +52,7 @@ class Autoload {
                     property_exists($record, 'extension')
                 ){
                     $parameters = Core::object($record, 'array');
+                    $parameters = Config::parameters($object, $parameters);
                     d($parameters);
                     ddd($record);
                     $autoload->addPrefix($record->prefix,  $record->directory, $record->extension);
