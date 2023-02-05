@@ -17,5 +17,6 @@ function function_plugin_prepend(Parse $parse, Data $data, $url=null){
     $plugin = $config->data('parse.dir.plugin');
     array_unshift($plugin, $url);
     $config->data('parse.dir.plugin', $plugin);
+    d('prepended: ' .  $url);
     return '';
 }
