@@ -10,11 +10,15 @@
  */
 namespace R3m\Io\Module;
 
-use R3m\Io\Exception\ObjectException;
+
 use stdClass;
-use Exception;
+
 use R3m\Io\App;
 use R3m\Io\Config;
+
+use Exception;
+
+use R3m\Io\Exception\ObjectException;
 
 class Autoload {
     const DIR = __DIR__;
@@ -41,6 +45,7 @@ class Autoload {
     public static function configure(App $object){
         $autoload = new Autoload();
         $prefix = $object->config('autoload.prefix');
+        ddd($prefix);
         if(
             !empty($prefix) &&
             is_array($prefix)
