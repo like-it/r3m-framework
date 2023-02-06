@@ -33,6 +33,7 @@ class Filter extends Data{
                 Core::object_is_empty($list)){
                 return [];
             }
+            ddd($where);
             foreach($list as $uuid => $node){
                 foreach($where as $attribute => $record){
                     if(array_key_exists('exist', $record)){
