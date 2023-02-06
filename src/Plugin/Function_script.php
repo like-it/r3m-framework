@@ -11,8 +11,6 @@ use R3m\Io\Module\Core;
 function function_script(Parse $parse, Data $data, $name='script', $script=null){
     $object = $parse->object();
     if(is_array($script) || is_object($script)){
-        d($name);
-        ddd($script);
         return Core::object($script, Core::OBJECT_JSON);
     }
     if($name === 'ready'){
@@ -38,9 +36,7 @@ function function_script(Parse $parse, Data $data, $name='script', $script=null)
     }
     $list = $data->data($name);
     if(is_string($list)){
-        d($list);
-        d($data->data());
-        dd($name);
+        $list = [];
     }
     if(empty($list)){
         $list = [];

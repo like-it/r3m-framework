@@ -10,12 +10,9 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-
-function function_sentences(Parse $parse, Data $data, $array=[], $glue="<br>"){
-    if(is_array($array)){
-        return implode($glue, $array);
-    } else {
-        return $array;
-    }
-
+use R3m\Io\Module\Handler;
+function function_request_copy(Parse $parse, Data $data){
+    $object = $parse->object();
+    $request = $object->request();
+    $request->copy();
 }

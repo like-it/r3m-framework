@@ -45,11 +45,14 @@ class Sort extends Data{
                             if(is_scalar($node->$attribute)){
                                 $result[$node->$attribute][] = $node;
                             } else if (is_array($node->$attribute)){
+                                $attr = '';
                                 foreach($node->$attribute as $node_attribute){
                                     if(is_scalar($node_attribute)){
-                                        $result[$node_attribute][] = $node;
+                                        $attr .= '.' . $node_attribute;
                                     }
                                 }
+                                $attr = substr($attr, 1);
+                                $result[$attr][] = $node;
                             }
                         } else {
                             $result[''][] = $node;                            
@@ -97,11 +100,14 @@ class Sort extends Data{
                             if(is_scalar($node->$attribute)){
                                 $result[$node->$attribute][] = $node;
                             } else if (is_array($node->$attribute)){
+                                $attr = '';
                                 foreach($node->$attribute as $node_attribute){
                                     if(is_scalar($node_attribute)){
-                                        $result[$node_attribute][] = $node;
+                                        $attr .= '.' . $node_attribute;
                                     }
                                 }
+                                $attr = substr($attr, 1);
+                                $result[$attr][] = $node;
                             }
                         } else {
                             $result[''][] = $node;                            
