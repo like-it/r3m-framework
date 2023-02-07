@@ -51,8 +51,9 @@ class Install extends Controller {
                     $object->config('dictionary.data') .
                     'Route' .
                     $object->config('extension.json');
+                d($url);
                 if(File::exist($url)){
-                    dd('add route');
+                    ddd('add route');
                 }
             break;
             default:
