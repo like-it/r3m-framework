@@ -299,7 +299,7 @@ class Filter extends Data{
                             case 'partial' :
                                 if(
                                     property_exists($node, $attribute) &&
-                                    is_string($node->$attribute) &&
+
                                     is_string($record['value'])
                                 ){
                                     if(is_array($node->$attribute)){
@@ -310,8 +310,10 @@ class Filter extends Data{
                                             }
                                         }
                                     }
-                                    if(stristr($node->$attribute, $record['value']) !== false) {
-                                        $skip = true;
+                                    elseif(is_string($node->$attribute)){
+                                        if(stristr($node->$attribute, $record['value']) !== false) {
+                                            $skip = true;
+                                        }
                                     }
                                 }
                             break;
@@ -431,7 +433,6 @@ class Filter extends Data{
                             'operator' => 'partial',
                             'value' => $record
                         ];
-                        d($list);
                         d($attribute);
                         d($where);
                         $list = Filter::list($list)->where($where);
