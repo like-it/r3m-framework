@@ -422,7 +422,7 @@ class Filter extends Data{
                     } else {
                         $where = [];
                         $where[$attribute] = [
-                            'operator' => '===',
+                            'operator' => 'partial',
                             'value' => $record
                         ];
                         $list = Filter::list($list)->where($where);
