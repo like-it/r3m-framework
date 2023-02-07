@@ -469,7 +469,6 @@ class Filter extends Data{
                             case 'not-start' :
                                 if(
                                     property_exists($node, $attribute) &&
-                                    is_string($node->$attribute) &&
                                     is_string($record['value'])
                                 ){
                                     if(
@@ -607,10 +606,7 @@ class Filter extends Data{
                             'operator' => 'partial',
                             'value' => $record
                         ];
-                        d($attribute);
-                        d($where);
                         $list = Filter::list($list)->where($where);
-                        ddd($list);
                     }
                 }
             }
