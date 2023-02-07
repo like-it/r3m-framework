@@ -302,6 +302,14 @@ class Filter extends Data{
                                     is_string($node->$attribute) &&
                                     is_string($record['value'])
                                 ){
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute  as $key => $value){
+                                            if(stristr($value, $record['value']) !== false) {
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
                                     if(stristr($node->$attribute, $record['value']) !== false) {
                                         $skip = true;
                                     }
