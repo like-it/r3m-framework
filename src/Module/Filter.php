@@ -260,6 +260,8 @@ class Filter extends Data{
                                     } else {
                                         throw new Exception('Cannot calculate: before');
                                     }
+                                    d($node_date);
+                                    d($record_date);
                                     if(
                                         $node_date <
                                         $record_date
