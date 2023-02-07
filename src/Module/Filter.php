@@ -423,6 +423,8 @@ class Filter extends Data{
                             'operator' => 'partial',
                             'value' => $record
                         ];
+                        d($list);
+                        d($where);
                         $list = Filter::list($list)->where($where);
                         ddd($list);
                     }
