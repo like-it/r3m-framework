@@ -431,7 +431,7 @@ class File {
 
     public static function extension($url=''): string
     {
-        if(substr($url, -1) == '/'){
+        if(substr($url, -1) === '/'){
             return '';
         }
         $url = basename($url);

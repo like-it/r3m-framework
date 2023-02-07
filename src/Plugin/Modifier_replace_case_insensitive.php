@@ -11,13 +11,13 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function modifier_replace(Parse $parse, Data $data, $value, $search='', $replace=''){
+function modifier_replace_case_insensitive(Parse $parse, Data $data, $value, $search='', $replace=''){
     if(is_array($value)){
         foreach($value as $key => $record){
-            $value[$key] = str_replace($search, $replace, $record);
+            $value[$key] = str_ireplace($search, $replace, $record);
         }
         return $value;
     } else {
-        return str_replace($search, $replace, $value);
+        return str_ireplace($search, $replace, $value);
     }
 }

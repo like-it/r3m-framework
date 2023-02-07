@@ -11,6 +11,7 @@
 namespace R3m\Io\Cli\Route\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Module\Controller;
 
 use Exception;
 
