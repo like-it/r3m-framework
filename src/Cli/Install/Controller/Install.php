@@ -37,6 +37,7 @@ class Install extends Controller {
                 Core::execute($command, $output, $error);
                 if($output){
                     echo $output;
+                    die('add route to config');
                 }
                 if($error){
                     echo $error;
