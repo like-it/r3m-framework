@@ -404,8 +404,10 @@ class Filter extends Data{
                                 unset($list->$uuid);
                             }
                         }
-                    } else {
-                        ddd($where);
+                    } elseif(is_array($record)) {
+                        foreach($record as $key => $value){
+                            $list = Filter::list($list)->where($value);
+                        }
                     }
                 }
             }
