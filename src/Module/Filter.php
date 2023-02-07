@@ -424,6 +424,7 @@ class Filter extends Data{
                             'value' => $record
                         ];
                         d($list);
+                        d($attribute);
                         d($where);
                         $list = Filter::list($list)->where($where);
                         ddd($list);
