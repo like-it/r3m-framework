@@ -37,10 +37,21 @@ class Install extends Controller {
                 Core::execute($command, $output, $error);
                 if($output){
                     echo $output;
-                    die('add route to config');
                 }
                 if($error){
                     echo $error;
+                }
+                $url =
+                    $object->config('project.dir.vendor') .
+                    'r3m-io' .
+                    $object->config('ds') .
+                    'priya' .
+                    $object->config('ds') .
+                    $object->config('dictionary.data') .
+                    'Route' .
+                    $object->config('extension.json');
+                if(File::exist($url)){
+                    dd('add route');
                 }
             break;
             default:
