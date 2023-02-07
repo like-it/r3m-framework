@@ -11,6 +11,8 @@
 namespace R3m\Io\Cli\Configure\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Exception\FileWriteException;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
 
 use Exception;
@@ -43,6 +45,13 @@ class Configure extends Controller {
         '{{binary()}} configure site enable          | Enable an apache2 site'
     ];
 
+    /**
+     * @throws LocateException
+     * @throws ObjectException
+     * @throws FileWriteException
+     * @throws UrlEmptyException
+     * @throws UrlNotExistException
+     */
     public static function run(App $object){
         $module = $object->parameter($object, 'configure', 1);
         if(empty($module)){
@@ -51,6 +60,14 @@ class Configure extends Controller {
         $sub_module = $object->parameter($object, 'configure', 2);
         $command = $object->parameter($object, 'configure', 3);
         if(
+            $module === 'route' &&
+            $sub_module === 'resource'
+        ){
+            $url = Configure::locate($object, ucfirst($module));
+            $response = Configure::response($object, $url);
+            return $response;
+        }
+        elseif(
             (
                 substr($command, 0, 1) === '[' &&
                 substr($command, -1, 1) === ']'
