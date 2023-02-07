@@ -35,9 +35,12 @@ class Install extends Controller {
             case 'r3m-io/priya' :
                 $command = 'composer require ' . $package;
                 Core::execute($command, $output, $error);
-                d($output);
-                d($error);
-                ddd('priya');
+                if($output){
+                    echo $output;
+                }
+                if($error){
+                    echo $error;
+                }
             break;
             default:
                 throw new Exception('Cannot install package: ' . $package);
