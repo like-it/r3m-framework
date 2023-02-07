@@ -58,7 +58,10 @@ class Filter extends Data{
                 foreach($where as $attribute => $record){
                     d($record);
                     d($attribute);
-                    if(array_key_exists('exist', $record)){
+                    if(
+                        is_array($record) &&
+                        array_key_exists('exist', $record)
+                    ){
                         if(!empty($record['exist'])){
                             if(is_object($node) && !property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
@@ -71,7 +74,10 @@ class Filter extends Data{
                             }
                         }
                     } 
-                    if(array_key_exists('exists', $record)){
+                    if(
+                        is_array($record) &&
+                        array_key_exists('exists', $record)
+                    ){
                         if(!empty($record['exists'])){
                             if(!property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
@@ -85,6 +91,7 @@ class Filter extends Data{
                         }
                     }
                     if(
+                        is_array($record) &&
                         array_key_exists('operator', $record) && 
                         array_key_exists('value', $record)                     
                     ){
@@ -410,10 +417,10 @@ class Filter extends Data{
                         foreach($record as $key => $value){
                             $where = [];
                             $where[$attribute] = $value;
-                            d($where);
                             $list = Filter::list($list)->where($where);
-                            d($list);
                         }
+                    } else {
+                        ddd($record);
                     }
                 }
             }
