@@ -404,6 +404,8 @@ class Filter extends Data{
                                 unset($list->$uuid);
                             }
                         }
+                    } else {
+                        ddd($where);
                     }
                 }
             }
