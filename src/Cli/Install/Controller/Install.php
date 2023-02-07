@@ -20,6 +20,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Module\Parse;
 
 class Install extends Controller {
     const DIR = __DIR__;
@@ -52,8 +53,11 @@ class Install extends Controller {
                     $object->config('ds') .
                     'Route' .
                     $object->config('extension.json');
-                d($url);
                 if(File::exist($url)){
+                    $command = '{{binary()}} configure route resource ' . $url;
+                    $parse = new Parse($object, $object->data());
+                    $command = $parse->compile($command, $object->data());
+                    d($command);
                     ddd('add route');
                 }
             break;
