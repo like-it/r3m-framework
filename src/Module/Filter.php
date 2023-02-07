@@ -420,7 +420,13 @@ class Filter extends Data{
                             $list = Filter::list($list)->where($where);
                         }
                     } else {
-                        ddd($record);
+                        $where = [];
+                        $where[$attribute] = [
+                            'operator' => '===',
+                            'value' => $record
+                        ];
+                        $list = Filter::list($list)->where($where);
+                        ddd($list);
                     }
                 }
             }
