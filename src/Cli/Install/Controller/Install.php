@@ -21,7 +21,7 @@ use R3m\Io\Exception\UrlNotExistException;
 
 class Install extends Controller {
     const DIR = __DIR__;
-    const NAME = 'Uuid';
+    const NAME = 'Install';
     const INFO = '{{binary()}} install                        | Install packages';
 
     /**
