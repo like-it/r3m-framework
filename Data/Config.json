@@ -165,6 +165,7 @@
             "R3m\\Io\\Module\\Filter",
             "R3m\\Io\\Module\\Handler",
             "R3m\\Io\\Module\\Host",
+            "R3m\\Io\\Module\\Limit",
             "R3m\\Io\\Module\\Parse",
             "R3m\\Io\\Module\\Response",
             "R3m\\Io\\Module\\Route",
