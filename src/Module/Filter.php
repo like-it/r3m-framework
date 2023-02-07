@@ -409,6 +409,7 @@ class Filter extends Data{
                             $where = [];
                             $where[$attribute] = $value;
                             $list = Filter::list($list)->where($where);
+                            d($list);
                         }
                     }
                 }
