@@ -49,6 +49,7 @@ class Install extends Controller {
                     'priya' .
                     $object->config('ds') .
                     $object->config('dictionary.data') .
+                    $object->config('ds') .
                     'Route' .
                     $object->config('extension.json');
                 d($url);
