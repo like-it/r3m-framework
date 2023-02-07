@@ -408,6 +408,7 @@ class Filter extends Data{
                         foreach($record as $key => $value){
                             $where = [];
                             $where[$attribute] = $value;
+                            d($where);
                             $list = Filter::list($list)->where($where);
                             d($list);
                         }
