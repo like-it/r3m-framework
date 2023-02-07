@@ -406,7 +406,9 @@ class Filter extends Data{
                         }
                     } elseif(is_array($record)) {
                         foreach($record as $key => $value){
-                            $list = Filter::list($list)->where($value);
+                            $where = [];
+                            $where[$attribute] = $value;
+                            $list = Filter::list($list)->where($where);
                         }
                     }
                 }
