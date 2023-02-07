@@ -56,6 +56,8 @@ class Filter extends Data{
             }
             foreach($list as $uuid => $node){
                 foreach($where as $attribute => $record){
+                    d($record);
+                    d($attribute);
                     if(array_key_exists('exist', $record)){
                         if(!empty($record['exist'])){
                             if(is_object($node) && !property_exists($node, $attribute)){
@@ -260,8 +262,6 @@ class Filter extends Data{
                                     } else {
                                         throw new Exception('Cannot calculate: before');
                                     }
-                                    d($node_date);
-                                    d($record_date);
                                     if(
                                         $node_date <
                                         $record_date
