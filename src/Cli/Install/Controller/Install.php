@@ -33,7 +33,7 @@ class Install extends Controller {
 
         switch($package){
             case 'r3m-io/priya' :
-                $command = 'composer install ' . $package;
+                $command = 'composer require ' . $package;
                 Core::execute($command, $output, $error);
                 d($output);
                 d($error);
