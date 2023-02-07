@@ -11,6 +11,7 @@
 namespace R3m\Io\Cli\Install\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Controller;
 
 use Exception;
@@ -32,6 +33,10 @@ class Install extends Controller {
 
         switch($package){
             case 'r3m-io/priya' :
+                $command = 'composer install ' . $package;
+                Core::execute($command, $output, $error);
+                d($output);
+                d($error);
                 ddd('priya');
             break;
             default:
