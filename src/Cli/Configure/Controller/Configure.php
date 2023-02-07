@@ -63,7 +63,7 @@ class Configure extends Controller {
             $module === 'route' &&
             $sub_module === 'resource'
         ){
-            $url = Configure::locate($object, ucfirst($module));
+            $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module));
             $response = Configure::response($object, $url);
             return $response;
         }
