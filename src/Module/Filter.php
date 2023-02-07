@@ -56,8 +56,6 @@ class Filter extends Data{
             }
             foreach($list as $uuid => $node){
                 foreach($where as $attribute => $record){
-                    d($record);
-                    d($attribute);
                     if(
                         is_array($record) &&
                         array_key_exists('exist', $record)
