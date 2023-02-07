@@ -847,6 +847,9 @@ class Core {
     */
 
     public static function deep_clone($object){
+        if(is_array($object)){
+            ddd($object);
+        }
         $clone = clone $object;
         foreach($object as $key => $value){
             if(is_object($value)){
