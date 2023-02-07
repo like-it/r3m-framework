@@ -57,6 +57,7 @@ class Install extends Controller {
                     $command = '{{binary()}} configure route resource "' . $url . '"';
                     $parse = new Parse($object, $object->data());
                     $command = $parse->compile($command, $object->data());
+                    d($command);
                     Core::execute($command, $output, $error);
                     if($output){
                         echo $output;
