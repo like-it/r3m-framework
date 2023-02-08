@@ -20,6 +20,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Module\Dir;
 
 class Configure extends Controller {
     const DIR = __DIR__;
@@ -47,7 +48,15 @@ class Configure extends Controller {
 
     private static function parameters(App $object){
         $url = $object->config('controller.dir.view');
-        ddd($url);
+        $dir = new Dir();
+        $read = $dir->read($url, true);
+        if(!$read){
+            return;
+        }
+        foreach($read as $nr => $file){
+
+        }
+        ddd($read);
     }
 
     /**
