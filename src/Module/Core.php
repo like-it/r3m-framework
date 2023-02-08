@@ -478,7 +478,7 @@ class Core {
                 }
             }
         }
-        var_dump($attributeList);
+//        var_dump($attributeList);
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
         }        
@@ -489,8 +489,9 @@ class Core {
             if($key === null || $key === ''){
                 continue;
             }
-            echo $key . PHP_EOL;
+            echo '#' . $key . PHP_EOL;
             if(isset($object->{$key})){
+                echo $attributeList->{$key} . PHP_EOL;
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }                       
         }
