@@ -208,6 +208,8 @@ class Autoload {
     }
 
     public function addPrefix($prefix='', $directory='', $extension=''){
+        echo $prefix . PHP_EOL;
+        echo $directory . PHP_EOL;
         $prefix = trim($prefix, '\\\/'); //.'\\';
         $directory = str_replace('\\\/', DIRECTORY_SEPARATOR, rtrim($directory,'\\\/')) . DIRECTORY_SEPARATOR; //see File::dir()
         $list = $this->getPrefixList();
