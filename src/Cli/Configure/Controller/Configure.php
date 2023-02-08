@@ -71,28 +71,28 @@ class Configure extends Controller {
             $subcommand = false;
 
             if(array_key_exists(1, $explode)){
-                $module = $explode[0];
+                $module = strtolower($explode[0]);
                 $temp = explode('.', $explode[1]);
                 array_pop($temp);
-                $submodule = $temp[0];
+                $submodule = strtolower($temp[0]);
                 if(array_key_exists(1, $temp)){
-                    $command = $temp[1];
+                    $command = strtolower($temp[1]);
                 }
                 if(array_key_exists(2, $temp)){
-                    $subcommand = $temp[1];
+                    $subcommand = strtolower($temp[1]);
                 }
             } else {
                 $temp = explode('.', $explode[0]);
                 array_pop($temp);
-                $module = $temp[0];
+                $module = strtolower($temp[0]);
                 if(array_key_exists(1, $temp)){
-                    $submodule = $temp[1];
+                    $submodule = strtolower($temp[1]);
                 }
                 if(array_key_exists(2, $temp)){
-                    $command = $temp[1];
+                    $command = strtolower($temp[1]);
                 }
                 if(array_key_exists(3, $temp)){
-                    $subcommand = $temp[1];
+                    $subcommand = strtolower($temp[1]);
                 }
             }
             if(
@@ -143,58 +143,85 @@ class Configure extends Controller {
      */
     public static function run(App $object){
         $scan = Configure::scan($object);
-        ddd($scan);
         $module = $object->parameter($object, 'configure', 1);
-        if(empty($module)){
+        if(!in_array($module, $scan['module'])){
             $module = Configure::MODULE_INFO;
         }
-        $sub_module = $object->parameter($object, 'configure', 2);
-        $command = $object->parameter($object, 'configure', 3);
+        $submodule = $object->parameter($object, 'configure', 2);
         if(
-            $module === 'route' &&
-            $sub_module === 'resource'
-        ){
-            $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module));
-            $response = Configure::response($object, $url);
-            return $response;
-        }
-        elseif(
-            (
-                substr($command, 0, 1) === '[' &&
-                substr($command, -1, 1) === ']'
-            ) ||
-            is_numeric($command) ||
-            in_array(
-                $command,
-                [
-                    'true',
-                    'false',
-                    'null'
-                ]
+            !in_array(
+                $submodule,
+                $scan['submodule']
             )
         ){
-            $command = null;
+            if($module === Configure::MODULE_INFO){
+                $submodule = false;
+            } else {
+                $submodule = Configure::MODULE_INFO;
+            }
         }
-        elseif(
-            substr($command, 0, 1) === '{' &&
-            substr($command, -1, 1) === '}'
+        $command = $object->parameter($object, 'configure', 3);
+        if(
+            !in_array(
+                $command,
+                $scan['command']
+            )
         ){
-            $command = null;
+            $command = false;
+        }
+        $subcommand = $object->parameter($object, 'configure', 3);
+        if(
+            !in_array(
+                $subcommand,
+                $scan['subcommand']
+            )
+        ){
+            $subcommand = false;
         }
         try {
             if(
+                !empty($submodule) &&
                 !empty($command) &&
-                !empty($sub_module)
+                !empty($subcommand)
             ){
-                $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module) . '.' . ucfirst($command));
+                $url = Configure::locate(
+                    $object,
+                    ucfirst($module) .
+                    '.' .
+                    ucfirst($submodule) .
+                    '.' .
+                    ucfirst($command) .
+                    '.' .
+                    ucfirst($subcommand)
+                );
             }
-            elseif(!empty($sub_module)){
-                $url = Configure::locate($object, ucfirst($module) . '.' . ucfirst($sub_module));
+            elseif(
+                !empty($submodule) &&
+                !empty($command)
+            ){
+                $url = Configure::locate(
+                    $object,
+                    ucfirst($module) .
+                    '.' .
+                    ucfirst($submodule) .
+                    '.' .
+                    ucfirst($command)
+                );
+            }
+            elseif(!empty($submodule)){
+                $url = Configure::locate(
+                    $object,
+                    ucfirst($module) .
+                    '.' .
+                    ucfirst($submodule)
+                );
             } else {
-                $url = Configure::locate($object, ucfirst($module));
+                $url = Configure::locate(
+                    $object,
+                    ucfirst($module)
+                );
             }
-            $response = Configure::response($object, $url);
-            return $response;
+            return Configure::response($object, $url);
         } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
             return $exception;
         }
