@@ -447,19 +447,22 @@ class Core {
     }
 
     public static function object_get($attributeList=[], $object=''){
+        echo $attributeList . PHP_EOL;
         if(Core::object_is_empty($object)){        	
             if(empty($attributeList)){
                 return $object;
             }
             if(is_array($object)){
-            	foreach($attributeList as $key => $attribute){
-            		if($key === null || $key === ''){
-            			continue;
-            		}
-            		if(array_key_exists($key, $object)){
-            			return Core::object_get($attributeList->{$key}, $object[$key]);
-            		}
-            	}            	
+                if(is_array($attributeList)){
+                    foreach($attributeList as $key => $attribute){
+                        if($key === null || $key === ''){
+                            continue;
+                        }
+                        if(array_key_exists($key, $object)){
+                            return Core::object_get($attributeList->{$key}, $object[$key]);
+                        }
+                    }
+                }
             }            
             return null;
         }
