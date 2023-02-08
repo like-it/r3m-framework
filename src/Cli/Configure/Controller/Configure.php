@@ -47,19 +47,24 @@ class Configure extends Controller {
         '{{binary()}} configure site enable          | Enable an apache2 site'
     ];
 
-    private static function scan(App $object){
-        $url = $object->config('controller.dir.view');
-        $dir = new Dir();
-        $read = $dir->read($url, true);
-        if(!$read){
-            return;
-        }
+    private static function scan(App $object): array
+    {
         $scan = [
             'module' => [],
             'submodule' => [],
             'command' => [],
             'subcommand' => []
         ];
+        $url = $object->config('controller.dir.view');
+        if(!Dir::exist($url)){
+            return $scan;
+        }
+        $dir = new Dir();
+        $read = $dir->read($url, true);
+        if(!$read){
+            return $scan;
+        }
+
         foreach($read as $nr => $file){
             if($file->type !== File::TYPE){
                 continue;
@@ -165,7 +170,9 @@ class Configure extends Controller {
             !in_array(
                 $command,
                 $scan['command']
-            )
+            ) ||
+            $module === Configure::MODULE_INFO ||
+            $submodule === Configure::MODULE_INFO
         ){
             $command = false;
         }
@@ -174,7 +181,9 @@ class Configure extends Controller {
             !in_array(
                 $subcommand,
                 $scan['subcommand']
-            )
+            ) ||
+            $module === Configure::MODULE_INFO ||
+            $submodule === Configure::MODULE_INFO
         ){
             $subcommand = false;
         }
