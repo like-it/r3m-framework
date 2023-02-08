@@ -54,7 +54,12 @@ class Configure extends Controller {
         if(!$read){
             return;
         }
-        $scan = [];
+        $scan = [
+            'module' => [],
+            'submodule' => [],
+            'command' => [],
+            'subcommand' => []
+        ];
         foreach($read as $nr => $file){
             if($file->type !== File::TYPE){
                 continue;
@@ -90,14 +95,39 @@ class Configure extends Controller {
                     $subcommand = $temp[1];
                 }
             }
-            $scan['module'][] = $module;
-            if($submodule){
+            if(
+                !in_array(
+                    $module,
+                    $scan['module']
+                )
+            ){
+                $scan['module'][] = $module;
+            }
+            if(
+                $submodule &&
+                !in_array(
+                    $submodule,
+                    $scan['submodule']
+                )
+            ){
                 $scan['submodule'][] = $submodule;
             }
-            if($command){
+            if(
+                $command  &&
+                !in_array(
+                    $command,
+                    $scan['command']
+                )
+            ){
                 $scan['command'][] = $command;
             }
-            if($subcommand){
+            if(
+                $subcommand &&
+                !in_array(
+                    $subcommand,
+                    $scan['subcommand']
+                )
+            ){
                 $scan['subcommand'][] = $subcommand;
             }
         }
