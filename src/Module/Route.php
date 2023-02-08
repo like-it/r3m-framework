@@ -344,9 +344,7 @@ class Route extends Data {
             }
             $select->method = Handler::method();
             $select->host = [];
-            d($select);
             $request = Route::select_cli($object, $select);
-            dd($request);
             if($request === false){
                 $select = Route::select_info($object, $select);
                 $request = Route::select_cli($object, $select);
@@ -737,7 +735,6 @@ class Route extends Data {
         }
         $explode = explode('/', $route->path);
         array_pop($explode);
-        d($explode);
         $attribute = $select->attribute;
         if(empty($attribute)){
             return true;
@@ -757,8 +754,6 @@ class Route extends Data {
             if(array_key_exists($nr, $attribute) === false){
                 return false;
             }
-            d($part);
-            d($attribute[$nr]);
             if(strtolower($part) != strtolower($attribute[$nr])){
                 return false;
             }
