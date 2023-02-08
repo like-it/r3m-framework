@@ -30,13 +30,13 @@ try {
             'dir.vendor' => $dir_vendor
         ]
     );
-    // $config->data('framework.environment', R3m\Io\Config::MODE_DEVELOPMENT);
     $app = new App($autoload, $config);
     $result = App::run($app);
-    if(is_array($result)){
-        echo implode(PHP_EOL, $result);
-    } elseif(is_scalar($result)){
+    if(is_scalar($result)){
         echo $result;
+    }
+    elseif(is_array($result)){
+        echo implode(PHP_EOL, $result);
     }
 } catch (Exception | LocateException | ObjectException $e) {
     echo $e;
