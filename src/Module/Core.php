@@ -447,7 +447,6 @@ class Core {
     }
 
     public static function object_get($attributeList=[], $object=''){
-        var_dump($attributeList);
         if(Core::object_is_empty($object)){
             var_dump($object);
             if(empty($attributeList) && !is_scalar($attributeList)){
@@ -490,6 +489,7 @@ class Core {
             if($key === null || $key === ''){
                 continue;
             }
+            echo $key . PHP_EOL;
             if(isset($object->{$key})){
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }                       
