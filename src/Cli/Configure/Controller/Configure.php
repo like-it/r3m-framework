@@ -21,6 +21,7 @@ use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\File;
 
 class Configure extends Controller {
     const DIR = __DIR__;
@@ -53,10 +54,16 @@ class Configure extends Controller {
         if(!$read){
             return;
         }
+        $parameters = [];
         foreach($read as $nr => $file){
-
+            if($file->type !== File::TYPE){
+                continue;
+            }
+            $part = substr($file->url, strlen($url));
+            d($part);
         }
-        ddd($read);
+        dd('end');
+//        ddd($read);
     }
 
     /**
