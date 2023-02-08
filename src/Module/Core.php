@@ -448,7 +448,6 @@ class Core {
 
     public static function object_get($attributeList=[], $object=''){
         if(Core::object_is_empty($object)){
-            var_dump($object);
             if(empty($attributeList) && !is_scalar($attributeList)){
                 return $object;
             }
@@ -471,7 +470,7 @@ class Core {
             return null;
         }
         if(is_scalar($attributeList)){
-            echo $attributeList . PHP_EOL;
+            echo '->' . $attributeList . PHP_EOL;
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
             foreach($attributeList as $nr => $attribute){
                 if($attribute === null || $attribute === ''){
