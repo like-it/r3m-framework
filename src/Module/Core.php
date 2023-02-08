@@ -388,8 +388,8 @@ class Core {
     }
 
     public static function object_delete($attributeList=[], $object='', $parent='', $key=null){
-        if(is_string($attributeList)){
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, $attributeList);
+        if(is_scalar($attributeList)){
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
         }
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
@@ -417,8 +417,8 @@ class Core {
             }
             return false;
         }
-        if(is_string($attributeList)){
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, $attributeList);
+        if(is_scalar($attributeList)){
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
             foreach($attributeList as $nr => $attribute){
                 if(empty($attribute)){
                     unset($attributeList[$nr]);
@@ -453,7 +453,7 @@ class Core {
             }
             if(is_array($object)){
             	foreach($attributeList as $key => $attribute){
-            		if(empty($key) && $key != 0){
+            		if($key === null || $key === ''){
             			continue;
             		}
             		if(array_key_exists($key, $object)){
@@ -463,10 +463,10 @@ class Core {
             }            
             return null;
         }
-        if(is_string($attributeList)){
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, $attributeList);
+        if(is_scalar($attributeList)){
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
             foreach($attributeList as $nr => $attribute){
-                if(empty($attribute) && $attribute != '0'){
+                if($attribute === null || $attribute === ''){
                     unset($attributeList[$nr]);
                 }
             }
@@ -478,7 +478,7 @@ class Core {
             return $object;
         }
         foreach($attributeList as $key => $attribute){
-            if(empty($key) && $key != 0){
+            if($key === null || $key === ''){
                 continue;
             }
             if(isset($object->{$key})){
@@ -535,15 +535,15 @@ class Core {
         if(empty($object)){
             return;
         }
-        if(is_string($return) && $return != 'child'){
-            if($return == 'root'){
+        if(is_string($return) && $return !== 'child'){
+            if($return === 'root'){
                 $return = $object;
             } else {
                 $return = Core::object_get($return, $object);
             }
         }
-        if(is_string($attributeList)){
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, $attributeList);
+        if(is_scalar($attributeList)){
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
         }
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
@@ -637,7 +637,7 @@ class Core {
         } else {
             $last = array_pop($verticalArray);
         }
-        if(empty($last) && $last != '0'){
+        if($last === null || $last === ''){
             return false;
         }
         foreach($verticalArray as $attribute){

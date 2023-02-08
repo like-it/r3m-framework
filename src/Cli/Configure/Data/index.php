@@ -22,18 +22,21 @@ $dir_vendor =
 
 $autoload = $dir_vendor . 'autoload.php';
 $autoload = require $autoload;
-$config = new Config(
-    [
-        'dir.vendor' => $dir_vendor
-    ]
-);
-$app = new App($autoload, $config);
+
 try {
-    $run = App::run($app);
-    if(is_array($run)) {
-        $run = implode(PHP_EOL, $run);
+    $config = new Config(
+        [
+            'dir.vendor' => $dir_vendor
+        ]
+    );
+    $app = new App($autoload, $config);
+    $result = App::run($app);
+    if(is_scalar($result)){
+        echo $result;
     }
-    echo $run;
+    elseif(is_array($result)) {
+        echo implode(PHP_EOL, $result);
+    }
 } catch (Exception | LocateException | ObjectException $e) {
     echo $e;
 }
