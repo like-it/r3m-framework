@@ -448,7 +448,8 @@ class Core {
 
     public static function object_get($attributeList=[], $object=''){
         var_dump($attributeList);
-        if(Core::object_is_empty($object)){        	
+        if(Core::object_is_empty($object)){
+            echo 'true' . PHP_EOL;
             if(empty($attributeList)){
                 return $object;
             }
