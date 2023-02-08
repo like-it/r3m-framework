@@ -483,6 +483,8 @@ class Core {
             $attributeList = Core::object_horizontal($attributeList);
         }        
         if(empty($attributeList)){
+            echo 'empty attributeList';
+            var_dump($attributeList);
             return $object;
         }
         foreach($attributeList as $key => $attribute){
@@ -491,7 +493,6 @@ class Core {
             }
             echo '#' . $key . PHP_EOL;
             if(isset($object->{$key})){
-                echo $attributeList->{$key} . PHP_EOL;
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }                       
         }
