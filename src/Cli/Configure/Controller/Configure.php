@@ -45,6 +45,11 @@ class Configure extends Controller {
         '{{binary()}} configure site enable          | Enable an apache2 site'
     ];
 
+    private static function parameters(App $object){
+        $url = $object->config('controller.dir.view');
+        ddd($url);
+    }
+
     /**
      * @throws LocateException
      * @throws ObjectException
@@ -53,6 +58,7 @@ class Configure extends Controller {
      * @throws UrlNotExistException
      */
     public static function run(App $object){
+        Configure::parameters($object);
         $module = $object->parameter($object, 'configure', 1);
         if(empty($module)){
             $module = Configure::MODULE_INFO;
