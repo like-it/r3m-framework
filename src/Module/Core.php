@@ -447,6 +447,9 @@ class Core {
     }
 
     public static function object_get($attributeList=[], $object=''){
+        if(is_scalar($attributeList)){
+            echo '$' . $attributeList . PHP_EOL;
+        }
         if(Core::object_is_empty($object)){
             if(empty($attributeList) && !is_scalar($attributeList)){
                 return $object;
