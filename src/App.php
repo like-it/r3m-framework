@@ -21,17 +21,19 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\FileRequest;
 use R3m\Io\Module\Handler;
 use R3m\Io\Module\Host;
+use R3m\Io\Module\Logger;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
+use R3m\Io\Module\Server;
 
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 use Exception;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\LocateException;
+
 
 class App extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -75,26 +77,51 @@ class App extends Data {
         App::is_cli();
         require_once 'Debug.php';
         require_once 'Error.php';
-        $logger = new Logger(App::LOGGER_NAME);
-        $logger->pushHandler(new StreamHandler($this->config('project.dir.log') . 'app.log', Logger::DEBUG));
-        $uuid = posix_geteuid();
-        if(empty($uuid)){
-            $url = $this->config('project.dir.log') . 'app.log';
-            if(File::exist($url)) {
-                File::chown($url, File::USER_WWW, File::USER_WWW);
-            }
-            $url = $this->config('project.dir.log') . 'access.log';
-            if(File::exist($url)){
-                File::chown($url, File::USER_WWW, File::USER_WWW);
-            }
-            $url = $this->config('project.dir.log') . 'error.log';
-            if(File::exist($url)){
-                File::chown($url, File::USER_WWW, File::USER_WWW);
+        Config::configure($this);
+        Host::configure($this);
+        Logger::configure($this);
+        Autoload::configure($this);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function configure(App $object){
+        $info = 'Logger: App initialised.';
+        if(App::is_cli() === false){
+            $domains = $object->config('server.cors.domains');
+            if(!empty($domains)){
+                $info .= ' and enabling cors';
+                Server::cors($object);
             }
         }
-        $this->logger($logger->getName(), $logger);
-        Config::configure($this);
-        Autoload::configure($this);
+        if(
+            !empty($object->config('project.log.name')) &&
+            empty($object->request('request'))
+        ){
+            $object->logger($object->config('project.log.name'))->info($info, [Host::subdomain()]);
+        }
+        elseif(
+            !empty($object->config('project.log.name'))
+        ) {
+            $object->logger($object->config('project.log.name'))->info($info . ' with request: ' . $object->request('request'), [Host::subdomain()]);
+        }
+        $options = $object->config('server.http.cookie');
+        if(
+            is_object($options) &&
+            property_exists($options, 'domain') &&
+            $options->domain === true
+        ){
+            $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());
+            if(!$options->domain){
+                $options->domain = Host::domain() . '.' . Host::extension();
+            }
+            $options->secure = null;
+            if(Host::scheme() === Host::SCHEME_HTTPS){
+                $options->secure = true;
+            }
+            Handler::session_set_cookie_params($options);
+        }
     }
 
     /**
@@ -103,29 +130,22 @@ class App extends Data {
      * @throws LocateException
      */
     public static function run(App $object){
-        if(App::is_cli() === false){
-            Core::cors($object);
-        }
-        //Config::configure($object); //@moved to construct
         Handler::request_configure($object);
-        if(empty($object->request('request'))){
-            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors');
-        } else {
-            $object->logger(App::LOGGER_NAME)->info('Logger: App initialized and enabling cors with request: ' . $object->request('request'));
-        }
-        Host::configure($object);
-        //Autoload::configure($object); //@moved to construct
+        App::configure($object);
         Route::configure($object);
-        $file = FileRequest::get($object);
-        if($file === false){
-            try {
+        $logger = $object->config('project.log.name');
+        try {
+            $file = FileRequest::get($object);
+            if ($file === false) {
                 $route = Route::request($object);
-                if($route === false){
-                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-                        $object->logger(App::LOGGER_NAME)->error('Couldn\'t determine route (' . $object->request('request') .')...');
+                if ($route === false) {
+                    if ($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
+                        if($logger){
+                            $object->logger($logger)->error('Couldn\'t determine route (' . $object->request('request') . ')...');
+                        }
                         $response = new Response(
                             App::exception_to_json(new Exception(
-                                'Couldn\'t determine route (' . $object->request('request') .')...'
+                                'Couldn\'t determine route (' . $object->request('request') . ')...'
                             )),
                             Response::TYPE_JSON,
                             Response::STATUS_ERROR
@@ -133,8 +153,10 @@ class App extends Data {
                         return Response::output($object, $response);
                     } else {
                         $route = Route::wildcard($object);
-                        if($route === false){
-                            $object->logger(App::LOGGER_NAME)->error('Couldn\'t determine route (wildcard) (' . $object->request('request') .')...');
+                        if ($route === false) {
+                            if($logger){
+                                $object->logger($logger)->error('Couldn\'t determine route (wildcard) (' . $object->request('request') . ')...');
+                            }
                             $response = new Response(
                                 "Website is not configured...",
                                 Response::TYPE_HTML
@@ -143,7 +165,7 @@ class App extends Data {
                         }
                     }
                 }
-                if(
+                if (
                     property_exists($route, 'redirect') &&
                     property_exists($route, 'method') &&
                     in_array(
@@ -151,22 +173,24 @@ class App extends Data {
                         $route->method
                     )
                 ) {
-                    $object->logger(App::LOGGER_NAME)->info('Request (' . $object->request('request') .') Redirect: ' . $route->redirect . ' Method: ' . implode(', ', $route->method));
+                    if($logger){
+                        $object->logger($logger)->info('Request (' . $object->request('request') . ') Redirect: ' . $route->redirect . ' Method: ' . implode(', ', $route->method));
+                    }
                     Core::redirect($route->redirect);
-                }
-                elseif(
+                } elseif (
                     property_exists($route, 'redirect') &&
                     !property_exists($route, 'method')
-                ){
-                    $object->logger(App::LOGGER_NAME)->info('Redirect: ' . $route->redirect);
+                ) {
+                    if($logger){
+                        $object->logger($logger)->info('Redirect: ' . $route->redirect);
+                    }
                     Core::redirect($route->redirect);
-                }
-                elseif(
+                } elseif (
                     property_exists($route, 'url')
-                ){
+                ) {
                     $parse = new Parse($object, $object->data());
                     $route->url = $parse->compile($route->url, $object->data());
-                    if(File::extension($route->url) === $object->config('extension.json')){
+                    if (File::extension($route->url) === $object->config('extension.json')) {
                         $response = new Response(
                             File::read($route->url),
                             Response::TYPE_JSON,
@@ -176,7 +200,7 @@ class App extends Data {
                         $extension = File::extension($route->url);
                         Config::contentType($object);
                         $contentType = $object->config('contentType.' . strtolower($extension));
-                        if($contentType){
+                        if ($contentType) {
                             $response = new Response(
                                 File::read($route->url),
                                 Response::TYPE_FILE,
@@ -192,11 +216,13 @@ class App extends Data {
                     App::contentType($object);
                     App::controller($object, $route);
                     $methods = get_class_methods($route->controller);
-                    if(empty($methods)){
-                        $object->logger(App::LOGGER_NAME)->error('Couldn\'t determine controller (' . $route->controller .') with request (' . $object->request('request') .')');
+                    if (empty($methods)) {
+                        if($logger){
+                            $object->logger($logger)->error('Couldn\'t determine controller (' . $route->controller . ') with request (' . $object->request('request') . ')');
+                        }
                         $response = new Response(
                             App::exception_to_json(new Exception(
-                        'Couldn\'t determine controller (' . $route->controller .')'
+                                'Couldn\'t determine controller (' . $route->controller . ')'
                             )),
                             Response::TYPE_JSON,
                             Response::STATUS_ERROR
@@ -205,19 +231,19 @@ class App extends Data {
                     }
                     Config::contentType($object);
                     $functions = [];
-                    if(in_array('controller', $methods)){
+                    if (in_array('controller', $methods)) {
                         $functions[] = 'controller';
                         $route->controller::controller($object);
                     }
-                    if(in_array('configure', $methods)){
+                    if (in_array('configure', $methods)) {
                         $functions[] = 'configure';
                         $route->controller::configure($object);
                     }
-                    if(in_array('before_run', $methods)){
+                    if (in_array('before_run', $methods)) {
                         $functions[] = 'before_run';
                         $route->controller::before_run($object);
                     }
-                    if(in_array($route->function, $methods)){
+                    if (in_array($route->function, $methods)) {
                         $functions[] = $route->function;
                         $object->config('controller.function', $route->function);
                         $request = Core::deep_clone(
@@ -242,7 +268,7 @@ class App extends Data {
                         );
                         $response = new Response(
                             App::exception_to_json(new Exception(
-                        'Controller (' .
+                                'Controller (' .
                                 $route->controller .
                                 ') function (' .
                                 $route->function .
@@ -253,63 +279,71 @@ class App extends Data {
                         );
                         return Response::output($object, $response);
                     }
-                    if(in_array('after_run', $methods)){
+                    if (in_array('after_run', $methods)) {
                         $functions[] = 'after_run';
                         $route->controller::after_run($object);
                     }
-                    if(in_array('before_result', $methods)){
+                    if (in_array('before_result', $methods)) {
                         $functions[] = 'before_result';
                         $route->controller::before_result($object);
                     }
                     $functions[] = 'result';
                     $result = App::result($object, $result);
-                    if(in_array('after_result', $methods)){
+                    if (in_array('after_result', $methods)) {
                         $functions[] = 'after_result';
                         $result = $route->controller::after_result($object, $result);
                     }
-                    $object->logger(App::LOGGER_NAME)->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
+                    if($logger){
+                        $object->logger($logger)->info('Functions: [' . implode(', ', $functions) . '] called in controller: ' . $route->controller);
+                    }
                     return $result;
                 }
-
-            } catch (Exception $exception) {
-                try {
-                    if($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
-                        if(!headers_sent()){
-                            header('Status: 500');
-                            header('Content-Type: application/json');
-                        }
-                        $object->logger(App::LOGGER_NAME)->error($exception->getMessage());
-                        return App::exception_to_json($exception);
-                    }
-                    elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
-                        $object->logger(App::LOGGER_NAME)->error($exception->getMessage());
-                        fwrite(STDERR, App::exception_to_cli($object, $exception));
-                        return '';
-                    } else {
-                        $parse = new Module\Parse($object, $object->data());
-                        $url = $object->config('server.http.error.500');
-                        $url = $parse->compile($url, $object->data());
-                        if(!headers_sent()){
-                            header('Status: 500');
-                        }
-                        if(File::exist($url)){
-                            $parse = new Module\Parse($object, $object->data());
-                            $read = File::read($url);
-                            $data = [];
-                            $data['exception'] = Core::object_array($exception);
-                            $data['exception']['className'] = get_class($exception);
-                            return $parse->compile($read, $data);
-                        } else {
-                            echo $exception;
-                        }
-                    }
-                } catch (ObjectException $exception){
-                    return $exception;
+            }  else {
+                if($logger){
+                    $object->logger($logger)->info('File request: ' . $object->request('request') . ' called...');
                 }
+                return $file;
             }
-        } else {
-            $object->logger(App::LOGGER_NAME)->info('File request: ' . $object->request('request') . ' called...');
-            return $file;
+        }
+        catch (Exception | LocateException $exception) {
+            try {
+                if($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_JSON){
+                    if(!headers_sent()){
+                        header('Status: 500');
+                        header('Content-Type: application/json');
+                    }
+                    if($logger){
+                        $object->logger($logger)->error($exception->getMessage());
+                    }
+                    return App::exception_to_json($exception);
+                }
+                elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
+                    if($logger){
+                        $object->logger($logger)->error($exception->getMessage());
+                    }
+                    fwrite(STDERR, App::exception_to_cli($object, $exception));
+                    return '';
+                } else {
+                    $parse = new Module\Parse($object, $object->data());
+                    $url = $object->config('server.http.error.500');
+                    $url = $parse->compile($url, $object->data());
+                    if(!headers_sent()){
+                        header('Status: 500');
+                    }
+                    if(File::exist($url)){
+                        $parse = new Module\Parse($object, $object->data());
+                        $read = File::read($url);
+                        $data = [];
+                        $data['exception'] = Core::object_array($exception);
+                        $data['exception']['className'] = get_class($exception);
+                        return $parse->compile($read, $data);
+                    } else {
+                        echo $exception;
+                    }
+                }
+            } catch (ObjectException $exception){
+                return $exception;
+            }
         }
     }
 
@@ -358,7 +392,7 @@ class App extends Data {
         $array['class'] = $class;
         $array['message'] = $exception->getMessage();
         if(stristr($class, 'locateException') !== false){
-            $array = $exception->toArray($array);
+            $array['location'] = $exception->getLocation($array);
         }
         $array['line'] = $exception->getLine();
         $array['file'] = $exception->getFile();
@@ -385,11 +419,11 @@ class App extends Data {
         $output .= PHP_EOL;
         $output .= $class . PHP_EOL;
         $output .= PHP_EOL;
-        $output .= $exception->getMessage() . PHP_EOL;
-        $output .= PHP_EOL;
         $output .= 'file: ' . $exception->getFile() . PHP_EOL;
         $output .= 'line: ' . $exception->getLine() . PHP_EOL;
         $output .= chr(27) . "[0m";
+        $output .= PHP_EOL;
+        $output .= (string) $exception . PHP_EOL;
         $output .= PHP_EOL;
         if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
             $output .= App::exception_to_json($exception);
@@ -407,9 +441,11 @@ class App extends Data {
      */
     private static function result(App $object, $output){
         if($output instanceof Exception){
-            ddd('yes');
             if(App::is_cli()){
-                $object->logger(App::LOGGER_NAME)->error($output->getMessage());
+                $logger = $object->config('project.log.name');
+                if($logger){
+                    $object->logger($logger)->error($output->getMessage());
+                }
                 fwrite(STDERR, App::exception_to_cli($object, $output));
                 return '';
             } else {
@@ -430,7 +466,7 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public function logger($name='App', $logger=null): Logger
+    public function logger($name='', $logger=null): LoggerInterface
     {
         if($logger !== null){
             $this->setLogger($name, $logger);
@@ -438,19 +474,34 @@ class App extends Data {
         return $this->getLogger($name);
     }
 
-    private function setLogger($name='App', Logger $logger=null){
+    private function setLogger($name='', LoggerInterface $logger=null){
+        if(empty($name)){
+            $name = $this->config('project.log.name');
+        }
+        if(empty($name)){
+            throw new Exception('PLease configure project.log.name or provide a name');
+        }
+        $name = ucfirst($name);
         $this->logger[$name] = $logger;
     }
 
     /**
      * @throws Exception
      */
-    private function getLogger($name='App'): Logger
+    private function getLogger($name=''): LoggerInterface
     {
+        if(empty($name)){
+            $name = $this->config('project.log.name');
+        }
+        if(empty($name)){
+            throw new Exception('PLease configure project.log.name or provide a name');
+        }
+        $name = ucfirst($name);
         if(array_key_exists($name, $this->logger)){
             return $this->logger[$name];
         }
         throw new Exception('Logger with name: ' . $name . ' not initialised.');
+
     }
 
     public function route(){
@@ -487,6 +538,10 @@ class App extends Data {
     }
 
     public function cookie($attribute=null, $value=null, $duration=null){
+        if($attribute === 'http'){
+            $cookie = $this->server('HTTP_COOKIE');
+            return explode('; ', $cookie);
+        }
         return Handler::cookie($attribute, $value, $duration);
     }
 
@@ -509,6 +564,9 @@ class App extends Data {
     }
 
     public function server($attribute){
+        if($attribute===null){
+            return $_SERVER;
+        }
         if(array_key_exists($attribute, $_SERVER)){
             return $_SERVER[$attribute];
         }

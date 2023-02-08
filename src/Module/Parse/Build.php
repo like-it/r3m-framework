@@ -11,6 +11,7 @@
 
 namespace R3m\Io\Module\Parse;
 
+use R3m\Io\Module\Server;
 use stdClass;
 
 use R3m\Io\App;
@@ -306,12 +307,16 @@ class Build {
     /**
      * @throws PluginNotFoundException
      * @throws PluginNotAllowedException
+     * @throws Exception
      */
     private function createRequireContent($type='', $document=[]): array
     {
         $config = $this->object()->data(App::CONFIG);
         $storage = $this->storage();
-        $dir_plugin = $storage->data('plugin');
+        $dir_plugin = $config->get('parse.dir.plugin');
+        if(empty($dir_plugin)){
+            $dir_plugin = $storage->data('plugin');
+        }
         $data = $storage->data($type);
         if(empty($data)){
             return $document;
@@ -371,12 +376,7 @@ class Build {
                 }
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
-                    if($config->data(Config::DATA_FRAMEWORK_ENVIRONMENT) == Config::MODE_DEVELOPMENT) {
-                        Core::cors($this->object());
-                        d($dir_plugin);
-                        d($url_list);
-                    }
-                    throw new PluginNotFoundException('Function not found: ' . $text);
+                    throw new PluginNotFoundException('Function not found: ' . $text, $dir_plugin);
                 }
             } elseif(array_key_exists('function', $limit)) {
                 throw new PluginNotAllowedException('Function (' . $name . ') not allowed, allowed: ' . implode(',', $limit['function']));
@@ -551,7 +551,12 @@ class Build {
                         $remove_newline = true;
                         break;
                     case Build::VARIABLE_DEFINE :
-                        $run[] = $this->indent() . '$variable = ' . Variable::define($this, $storage, $selection) . ';';
+                        $extra = '';
+                        $define = Variable::define($this, $storage, $selection, $extra);
+                        if($extra){
+                            $run[] = $this->indent() . $extra . PHP_EOL;
+                        }
+                        $run[] = $this->indent() . '$variable = ' . $define . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'else { echo $variable; } ';

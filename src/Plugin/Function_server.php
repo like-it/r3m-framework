@@ -12,11 +12,6 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_server(Parse $parse, Data $data, $attribute=null){
-    if($attribute === null){
-        return $_SERVER;
-    } else {
-        if(array_key_exists($attribute, $_SERVER)){
-            return $_SERVER[$attribute];
-        }
-    }
+    $object = $parse->object();
+    return $object->server($attribute);
 }

@@ -139,6 +139,10 @@ class Value {
             case Token::TYPE_CURLY_CLOSE :
             case Token::TYPE_CURLY_OPEN :
                 return;
+            case Token::TYPE_NUMBER :
+                $debug = debug_backtrace(true);
+                d($debug);
+                ddd($record);
             default:
                 d($record);
                 throw new Exception('Variable value type ' .  $record['type'] . ' not defined');

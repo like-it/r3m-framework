@@ -10,10 +10,15 @@
  */
 namespace R3m\Io\Module;
 
+
 use stdClass;
-use Exception;
+
 use R3m\Io\App;
 use R3m\Io\Config;
+
+use Exception;
+
+use R3m\Io\Exception\ObjectException;
 
 class Autoload {
     const DIR = __DIR__;
@@ -34,19 +39,128 @@ class Autoload {
     public $prefixList = array();
     public $environment = 'production';
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
     public static function configure(App $object){
-        $config = $object->data(App::CONFIG);
         $autoload = new Autoload();
-        $autoload->addPrefix('Host',  $config->data(Config::DATA_PROJECT_DIR_HOST));        
-        $autoload->addPrefix('Source',  $config->data(Config::DATA_PROJECT_DIR_SOURCE));
-        $cache_dir =
-            $config->data(Config::DATA_FRAMEWORK_DIR_CACHE) .
-            Autoload::NAME .
-            $config->data(Config::DS)
-        ;
+        $prefix = $object->config('autoload.prefix');
+        if(
+            !empty($prefix) &&
+            is_array($prefix)
+        ){
+            foreach($prefix as $record){
+                $parameters = Core::object($record, 'array');
+                $uuid = Core::uuid();
+                foreach($parameters as $nr => $parameter){
+                    $parameter = str_replace(
+                        [
+                            '{',
+                            '}',
+                        ],
+                        [
+                            '[$ldelim-' . $uuid . ']',
+                            '[$rdelim-' . $uuid . ']',
+                        ],
+                        $parameter
+                    );
+                    $parameter = str_replace(
+                        [
+                            '[$ldelim-' . $uuid . ']',
+                            '[$rdelim-' . $uuid . ']',
+                        ],
+                        [
+                            '{$ldelim}',
+                            '{$rdelim}',
+                        ],
+                        $parameter
+                    );
+                    $parameter = str_replace(
+                        [
+                            '{$ldelim}{$ldelim}',
+                            '{$rdelim}{$rdelim}',
+                        ],
+                        [
+                            '{',
+                            '}',
+                        ],
+                        $parameter
+                    );
+                    $parameters[$nr] = $parameter;
+                }
+                $parameters = Config::parameters($object, $parameters);
+                if(
+                    array_key_exists('prefix', $parameters) &&
+                    array_key_exists('directory', $parameters) &&
+                    array_key_exists('extension', $parameters)
+                ){
+                    $autoload->addPrefix($parameters['prefix'],  $parameters['directory'], $parameters['extension']);
+                }
+                elseif(
+                    array_key_exists('prefix', $parameters) &&
+                    array_key_exists('directory', $parameters)
+                ){
+                    $autoload->addPrefix($parameters['prefix'],  $parameters['directory']);
+                }
+            }
+        } else {
+            $autoload->addPrefix('Host',  $object->config(Config::DATA_PROJECT_DIR_HOST));
+            $autoload->addPrefix('Source',  $object->config(Config::DATA_PROJECT_DIR_SOURCE));
+        }
+        $cache_dir = $object->config('autoload.cache.dir');
+        if(empty($cache_dir)){
+            $cache_dir =
+                $object->config(Config::DATA_FRAMEWORK_DIR_CACHE) .
+                Autoload::NAME .
+                $object->config(Config::DS)
+            ;
+        } else {
+            $parameters = [];
+            $parameters['cache'] = $cache_dir;
+            $uuid = Core::uuid();
+            foreach($parameters as $nr => $parameter){
+                $parameter = str_replace(
+                    [
+                        '{',
+                        '}',
+                    ],
+                    [
+                        '[$ldelim-' . $uuid . ']',
+                        '[$rdelim-' . $uuid . ']',
+                    ],
+                    $parameter
+                );
+                $parameter = str_replace(
+                    [
+                        '[$ldelim-' . $uuid . ']',
+                        '[$rdelim-' . $uuid . ']',
+                    ],
+                    [
+                        '{$ldelim}',
+                        '{$rdelim}',
+                    ],
+                    $parameter
+                );
+                $parameter = str_replace(
+                    [
+                        '{$ldelim}{$ldelim}',
+                        '{$rdelim}{$rdelim}',
+                    ],
+                    [
+                        '{',
+                        '}',
+                    ],
+                    $parameter
+                );
+                $parameters[$nr] = $parameter;
+            }
+            $parameters = Config::parameters($object, $parameters);
+            $cache_dir = $parameters['cache'];
+        }
         $autoload->cache_dir($cache_dir);
         $autoload->register();
-        $autoload->environment($config->data('framework.environment'));
+        $autoload->environment($object->config('framework.environment'));
         $object->data(App::AUTOLOAD_R3M, $autoload);        
     }
 
@@ -94,6 +208,8 @@ class Autoload {
     }
 
     public function addPrefix($prefix='', $directory='', $extension=''){
+        echo $prefix . PHP_EOL;
+        echo $directory . PHP_EOL;
         $prefix = trim($prefix, '\\\/'); //.'\\';
         $directory = str_replace('\\\/', DIRECTORY_SEPARATOR, rtrim($directory,'\\\/')) . DIRECTORY_SEPARATOR; //see File::dir()
         $list = $this->getPrefixList();
@@ -139,6 +255,58 @@ class Autoload {
             }
         }
         $this->setPrefixList($list);
+    }
+
+    public function prependPrefix($prefix='', $directory='', $extension=''){
+        $prefix = trim($prefix, '\\\/'); //.'\\';
+        $directory = str_replace('\\\/', DIRECTORY_SEPARATOR, rtrim($directory,'\\\/')) . DIRECTORY_SEPARATOR; //see File::dir()
+        $list = $this->getPrefixList();
+        $prepend = [];
+        if(empty($list)){
+            $list = [];
+        }
+        if(empty($extension)){
+            $found = false;
+            foreach($list as $record){
+                if(
+                    $record['prefix'] == $prefix &&
+                    $record['directory'] == $directory
+                ){
+                    $found = true;
+                    break;
+                }
+            }
+            if(!$found){
+                $prepend[]  = array(
+                    'prefix' => $prefix,
+                    'directory' => $directory
+                );
+            }
+        } else {
+            $found = false;
+            foreach($list as $record){
+                if(
+                    $record['prefix'] == $prefix &&
+                    $record['directory'] == $directory &&
+                    !empty($record['extension']) &&
+                    $record['extension'] == $extension
+                ){
+                    $found = true;
+                    break;
+                }
+            }
+            if(!$found){
+                $prepend[]  = array(
+                    'prefix' => $prefix,
+                    'directory' => $directory,
+                    'extension' => $extension
+                );
+            }
+        }
+        foreach($list as $record){
+            $prepend[] = $record;
+        }
+        $this->setPrefixList($prepend);
     }
 
     private function setPrefixList($list = array()){
@@ -304,7 +472,8 @@ class Autoload {
         //$this->environment('development'); //needed, should be gone @ home
         if($this->environment() == 'development' || !empty($this->expose())){
             if(empty($this->expose())){
-                d($this->fileList);
+                Logger::debug('Autoload prefixList: ', [ $prefixList ]);
+                Logger::debug('Autoload error: ', [ $fileList ]);
                 throw new Exception('Autoload error, cannot load (' . $load .') class.');
             }
             $object = new stdClass();

@@ -383,7 +383,8 @@ class File {
             return '';
         }
         try {
-            return file_get_contents($url);
+            $file = file_get_contents($url);
+            return $file;
         } catch (Exception $exception){
             return '';
         }
@@ -430,7 +431,7 @@ class File {
 
     public static function extension($url=''): string
     {
-        if(substr($url, -1) == '/'){
+        if(substr($url, -1) === '/'){
             return '';
         }
         $url = basename($url);

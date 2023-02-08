@@ -13,5 +13,8 @@ use R3m\Io\Module\Data;
 
 function function_extension_content_type(Parse $parse, Data $data, $extension=''){
     $object = $parse->object();
+    if(substr($extension,0, 1) === '.'){
+        $extension = substr($extension, 1);
+    }
     return $object->config('contentType.' . $extension);
 }

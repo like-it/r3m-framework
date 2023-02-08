@@ -48,6 +48,137 @@ class Variable {
     /**
      * @throws Exception
      */
+    private static function getArrayAttribute($variable=[], $build, Data $storage, &$extra=''){
+        $execute = [];
+        if(array_key_exists('array', $variable['variable'])){
+            foreach($variable['variable']['array'] as $nr => $list){
+                foreach ($list as $record){
+                    if(
+                        array_key_exists('execute', $record) &&
+                        $record['execute'] === null
+                    ){
+                        $extra = [];
+                        if(!empty($execute)){
+                            $add_quote = false;
+                            $quote_add = false;
+                            $attribute = '\'' . $variable['variable']['attribute'];
+                            foreach($execute as $part_nr => $part_record){
+                                if(substr($part_record, 0, 1) === '$'){
+                                    if($part_nr === 0){
+                                        $attribute .= '\' . ' . $part_record . ' . ';
+                                    } else {
+                                        if($add_quote === true){
+                                            $attribute .= '.\' . ' . $part_record . ' . ';
+                                            $add_quote = false;
+                                        } else {
+                                            $attribute .= ' \'.\' . ' . $part_record . ' . ';
+                                        }
+                                    }
+                                    $quote_add = true;
+                                } else {
+                                    $add_quote = true;
+                                    if($quote_add === true){
+                                        $attribute .= '\'.' . $part_record;
+                                        $quote_add = false;
+                                    } else {
+                                        $attribute .= '.' . $part_record;
+                                    }
+                                }
+                            }
+                            if(
+                                !empty($part_record) &&
+                                substr($part_record, 0, 1) === '$'
+                            ){
+                                $attribute = substr($attribute, 0, -3);
+                            } else {
+                                $attribute .= '\'';
+                            }
+                            $extra[] = '$index = $this->storage()->index(' . $attribute  . ');';
+                        } else {
+                            $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
+                        }
+                        /*
+                        $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
+                        $extra[] = $build->indent() . '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
+                        $extra[] = $build->indent() . '} else {';
+                        $extra[] = $build->indent() . '$count = 0;';
+                        $extra[] = $build->indent() . '}';
+                        */
+                        $extra = implode(PHP_EOL, $extra);
+//                        $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
+                        $execute[] = '$index';
+                    }
+                    elseif(array_key_exists('execute', $record)){
+                        $execute[] = $record['execute'];
+                    }
+                    else {
+                        if(
+                            array_key_exists('type', $record) &&
+                            $record['type'] === Token::TYPE_VARIABLE &&
+                            array_key_exists('variable', $record) &&
+                            array_key_exists('attribute', $record['variable'])
+                        ){
+                            $tree = [];
+                            $tree[]= $record;
+                            $tree = $build->require('modifier', $tree);
+                            $tree = $build->require('function', $tree);
+                            $execute[] = Value::get($build, $storage, reset($tree));
+                        }
+                        elseif(
+                            array_key_exists('type', $record) &&
+                            $record['type'] === Token::TYPE_METHOD &&
+                            array_key_exists('method', $record)
+                        ){
+                            $tree = [];
+                            $tree[]= $record;
+                            $tree = $build->require('modifier', $tree);
+                            $tree = $build->require('function', $tree);
+                            $execute[] = Value::get($build, $storage, reset($tree));
+                        }
+                    }
+                }
+            }
+        }
+        $result = '\'' . $variable['variable']['attribute'];
+        $quote_add = false;
+        $add_quote = false;
+        foreach($execute as $nr => $record){
+            if(substr($record, 0, 1) === '$'){
+                if($nr === 0){
+                    $result .= '\' . ' . $record . ' . ';
+                } else {
+                    if($add_quote === true){
+                        $result .= '.\' . ' . $record . ' . ';
+                        $add_quote = false;
+                    } else {
+                        $result .= ' \'.\' . ' . $record . ' . ';
+                    }
+                }
+                $quote_add = true;
+            } else {
+                $add_quote = true;
+                if($quote_add === true){
+                    $result .= '\'.' . $record;
+                    $quote_add = false;
+                } else {
+                    $result .= '.' . $record;
+                }
+            }
+        }
+        if(
+            !empty($record) &&
+            substr($record, 0, 1) === '$'
+        ){
+            $result = substr($result, 0, -3);
+        } else {
+            $result .= '\'';
+        }
+        return $result;
+    }
+
+    /**
+     * @throws Exception
+     */
     public static function assign($build, Data $storage, $token=[], $is_result=false): string
     {
         $variable = array_shift($token);
@@ -55,59 +186,80 @@ class Variable {
             return '';
         }        
         $token = Variable::addAssign($token);
-        switch($variable['variable']['operator']){
-            case '=' :
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $value = Variable::getValue($build, $storage, $token, $is_result);                
-                $assign .= $value . ')';
-                return $assign;
-            case '+=' :                
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_plus_equal(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\'), ';
-                $value = Variable::getValue($build, $storage, $token, $is_result);
-                $assign .= $value . '))';
-                return $assign;
-            case '-=' :                
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_min_equal(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\'), ';
-                $value = Variable::getValue($build, $storage, $token, $is_result);
-                $assign .= $value . '))';
-                return $assign;
-            case '.=' :                
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_dot_equal(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\'), ';
-                $value = Variable::getValue($build, $storage, $token, $is_result);
-                $assign .= $value . '))';
-                return $assign;
-            case '++' :
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_plus_plus(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\')';
-                $assign .= '))';
-                return $assign;
-            case '--' :                
-                $assign = '$this->storage()->set(\'';
-                $assign .= $variable['variable']['attribute'] . '\', ';
-                $assign .= '$this->assign_min_min(' ;
-                $assign .= '$this->storage()->data(\'';
-                $assign .= $variable['variable']['attribute'] . '\')';
-                $assign .= '))';
-                return $assign;
-            default:
-                throw new Exception('Variable operator not defined');
+        if(
+            array_key_exists('is_array', $variable['variable']) &&
+            $variable['variable']['is_array'] === true &&
+            $variable['variable']['operator'] === '=' &&
+            array_key_exists('array', $variable['variable'])
+        ){
+            $attribute = Variable::getArrayAttribute($variable, $build, $storage, $extra);
+            if($extra){
+                $assign = $extra;
+                $assign .= PHP_EOL;
+                $assign .= $build->indent();
+                $assign .= '$this->storage()->set(';
+            } else {
+                $assign = '$this->storage()->set(';
+            }
+            $assign .= $attribute . ', ';
+            $value = Variable::getValue($build, $storage, $token, $is_result);
+            $assign .= $value . ')';
+            return $assign;
+        } else {
+            switch($variable['variable']['operator']){
+                case '=' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $value = Variable::getValue($build, $storage, $token, $is_result);
+                    $assign .= $value . ')';
+                    return $assign;
+                case '+=' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_plus_equal(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\'), ';
+                    $value = Variable::getValue($build, $storage, $token, $is_result);
+                    $assign .= $value . '))';
+                    return $assign;
+                case '-=' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_min_equal(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\'), ';
+                    $value = Variable::getValue($build, $storage, $token, $is_result);
+                    $assign .= $value . '))';
+                    return $assign;
+                case '.=' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_dot_equal(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\'), ';
+                    $value = Variable::getValue($build, $storage, $token, $is_result);
+                    $assign .= $value . '))';
+                    return $assign;
+                case '++' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_plus_plus(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\')';
+                    $assign .= '))';
+                    return $assign;
+                case '--' :
+                    $assign = '$this->storage()->set(\'';
+                    $assign .= $variable['variable']['attribute'] . '\', ';
+                    $assign .= '$this->assign_min_min(' ;
+                    $assign .= '$this->storage()->data(\'';
+                    $assign .= $variable['variable']['attribute'] . '\')';
+                    $assign .= '))';
+                    return $assign;
+                default:
+                    throw new Exception('Variable operator not defined');
 
+            }
         }
     }
 
@@ -136,13 +288,92 @@ class Variable {
         return $token;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function define($build, Data $storage, $token=[]): string
     {
         $variable = array_shift($token);
         if(!array_key_exists('variable', $variable)){
             return '';
         }
-        $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
+        if(
+            array_key_exists('is_array', $variable['variable']) &&
+            $variable['variable']['is_array'] === true
+        ){
+            $variable['variable']['attribute'] .= '.\'';
+            foreach($variable['variable']['array'] as $nr => $array){
+                $variable['variable']['attribute'] .= ' . ';
+                foreach($array as $array_nr => $record){
+                    switch($record['type']){
+                        case Token::TYPE_METHOD :
+                            $tree = [];
+                            $tree[]= $record;
+                            $tree = $build->require('modifier', $tree);
+                            $tree = $build->require('function', $tree);
+                            $array[$array_nr] = Value::get($build, $storage, reset($tree));
+                            break;
+                        case Token::TYPE_VARIABLE:
+                            $temp = [];
+                            $temp[] = $record;
+                            $array[$array_nr] = Variable::define($build, $storage, $temp);
+                            break;
+                        default :
+                            $array[$array_nr] = Value::get($build, $storage, $record);
+                    }
+                }
+                $extra = '';
+                foreach($array as $array_nr => $record){
+                    if($array_nr === 0) {
+                        if(substr($record, 0, 1) === '$'){
+                            $variable['variable']['attribute'] .= $record;
+                        }
+                        elseif(
+                            in_array(
+                                $record,
+                                Token::TYPE_AS_OPERATOR
+                            )
+                        ){
+                            $variable['variable']['attribute'] .= $record;
+                        }
+                        elseif(is_numeric($record)) {
+                            $variable['variable']['attribute'] .= $record;
+                        } else {
+                            $variable['variable']['attribute'] .= '\'' . $record . '\'';
+                        }
+                    } else {
+                        if(substr($record, 0, 1) === '$'){
+                            $extra .= $record;
+                        }
+                        elseif(
+                            in_array(
+                                $record,
+                                Token::TYPE_AS_OPERATOR
+                            )
+                        ){
+                            $extra .= $record . ' ';
+                        }
+                        elseif(is_numeric($record)) {
+                            $extra .= $record;
+                        } else {
+                            $extra .= '\'' . $record . '\'';
+                        }
+                    }
+
+                }
+                $variable['variable']['attribute'] .= ' . \'.\'';
+            }
+            $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
+            if($extra){
+//                $extra = '$attribute = ' . $extra . ';';
+//                $define = '$this->storage()->data($attribute)'; //no more extra, too complicated to realise
+                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
+            } else {
+                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
+            }
+        } else {
+            $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
+        }
         $define_modifier = '';
         if(
             array_key_exists('has_modifier', $variable['variable']) &&
@@ -158,7 +389,11 @@ class Variable {
                         foreach($modifier['attribute'] as $attribute){
                             switch($attribute['type']){
                                 case Token::TYPE_METHOD :
-                                    dd($attribute);
+                                    $tree = [];
+                                    $tree[]= $attribute;
+                                    $tree = $build->require('modifier', $tree);
+                                    $tree = $build->require('function', $tree);
+                                    $define_modifier .= Value::get($build, $storage, reset($tree)) . ', ';
                                 break;
                                 case Token::TYPE_VARIABLE:
                                     $temp = [];

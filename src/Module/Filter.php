@@ -22,6 +22,27 @@ class Filter extends Data{
         return new Filter($list);
     }
 
+    /**
+     * @throws Exception
+     */
+    private static function date($record=[]){
+        if(array_key_exists('value', $record)){
+            if(is_string($record['value'])){
+                $record_date = strtotime($record['value']);
+            }
+            elseif(is_int($record['value'])){
+                $record_date = $record['value'];
+            } else {
+                throw new Exception('Not a date.');
+            }
+            return $record_date;
+        }
+        throw new Exception('Date: no value.');
+    }
+
+    /**
+     * @throws Exception
+     */
     public function where($where=[]){
         $list = $this->data();
         if(
@@ -35,7 +56,10 @@ class Filter extends Data{
             }
             foreach($list as $uuid => $node){
                 foreach($where as $attribute => $record){
-                    if(array_key_exists('exist', $record)){
+                    if(
+                        is_array($record) &&
+                        array_key_exists('exist', $record)
+                    ){
                         if(!empty($record['exist'])){
                             if(is_object($node) && !property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
@@ -48,7 +72,10 @@ class Filter extends Data{
                             }
                         }
                     } 
-                    if(array_key_exists('exists', $record)){
+                    if(
+                        is_array($record) &&
+                        array_key_exists('exists', $record)
+                    ){
                         if(!empty($record['exists'])){
                             if(!property_exists($node, $attribute)){
                                 $this->data('delete', $uuid);
@@ -62,74 +89,501 @@ class Filter extends Data{
                         }
                     }
                     if(
+                        is_array($record) &&
                         array_key_exists('operator', $record) && 
                         array_key_exists('value', $record)                     
                     ){
                         $skip = false;
                         switch($record['operator']){
                             case '===' :
+                            case 'strictly-exact' :
                                 if(
-                                    property_exists($node, $attribute) &&
-                                    $node->$attribute === $record['value']
+                                    property_exists($node, $attribute)
+
                                 ){
-                                    $skip = true;
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if($value === $record['value']){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    } elseif($node->$attribute === $record['value']){
+                                        $skip = true;
+                                    }
                                 }
                             break;
                             case '!==' :
+                            case 'not-strictly-exact' :
                                 if(
-                                    property_exists($node, $attribute) &&
-                                    $node->$attribute !== $record['value']
+                                    property_exists($node, $attribute)
+
                                 ){
-                                    $skip = true;
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if($value !== $record['value']){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    } elseif($node->$attribute !== $record['value']){
+                                        $skip = true;
+                                    }
                                 }
                             break;
                             case '==' :
+                            case 'exact' :
                                 if(
-                                    property_exists($node, $attribute) && 
-                                    $node->$attribute == $record['value']
+                                    property_exists($node, $attribute)
+
                                 ){
-                                    $skip = true;
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if($value == $record['value']){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    } elseif($node->$attribute == $record['value']){
+                                        $skip = true;
+                                    }
                                 }
                             break;
                             case '!=' :
+                            case 'not-exact' :
                                 if(
-                                    property_exists($node, $attribute) && 
-                                    $node->$attribute != $record['value']
+                                    property_exists($node, $attribute)
+
                                 ){
-                                    $skip = true;
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if($value != $record['value']){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    } elseif($node->$attribute != $record['value']){
+                                        $skip = true;
+                                    }
                                 }                                
                             break;
                             case '>' :
+                            case 'gt' :
                                 if(
-                                    property_exists($node, $attribute) && 
-                                    $node->$attribute > $record['value']
+                                    property_exists($node, $attribute)
                                 ){
-                                    $skip = true;
-                                }                                
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if($value > $record['value']){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    elseif($node->$attribute > $record['value']){
+                                        $skip = true;
+                                    }
+                                }
                             break;
                             case '>=' :
+                            case 'gte' :
                                 if(
-                                    property_exists($node, $attribute) && 
-                                    $node->$attribute >= $record['value']
+                                    property_exists($node, $attribute)
                                 ){
-                                    $skip = true;
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if($value >= $record['value']){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    elseif($node->$attribute >= $record['value']){
+                                        $skip = true;
+                                    }
                                 }                                
                             break;
                             case '<' :
+                            case 'lt' :
                                 if(
-                                    property_exists($node, $attribute) && 
-                                    $node->$attribute < $record['value']
+                                    property_exists($node, $attribute)
                                 ){
-                                    $skip = true;
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if($value < $record['value']){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    elseif($node->$attribute < $record['value']){
+                                        $skip = true;
+                                    }
                                 }                                
                             break;
                             case '<=' :
+                            case 'lte' :
                                 if(
-                                    property_exists($node, $attribute) && 
-                                    $node->$attribute <= $record['value']
+                                    property_exists($node, $attribute)
                                 ){
-                                    $skip = true;
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if($value <= $record['value']){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    elseif($node->$attribute <= $record['value']){
+                                        $skip = true;
+                                    }
                                 }                                
+                            break;
+                            case '> <' :
+                            case 'between' :
+                                if(
+                                    property_exists($node, $attribute)
+                                ){
+                                    $explode = explode('..', $record['value'], 2);
+                                    if(array_key_exists(1, $explode)){
+                                        if(is_numeric($explode[0])){
+                                            $explode[0] += 0;
+                                        }
+                                        if(is_numeric($explode[1])){
+                                            $explode[1] += 0;
+                                        }
+                                        if(is_array($node->$attribute)){
+                                            foreach($node->$attribute as $key => $value){
+                                                if(
+                                                    $value > $explode[0] &&
+                                                    $value < $explode[1]
+                                                ){
+                                                    $skip = true;
+                                                    break;
+                                                }
+                                            }
+                                        } elseif(
+                                            $node->$attribute > $explode[0] &&
+                                            $node->$attribute < $explode[1]
+                                        ){
+                                            $skip = true;
+                                        }
+                                    } else {
+                                        throw new Exception('Value is range: ?..?');
+                                    }
+                                }
+                            break;
+                            case '>=<' :
+                            case 'between-equals' :
+                                if(
+                                    property_exists($node, $attribute)
+                                ){
+                                    $explode = explode('..', $record['value'], 2);
+                                    if(array_key_exists(1, $explode)){
+                                        if(is_numeric($explode[0])){
+                                            $explode[0] += 0;
+                                        }
+                                        if(is_numeric($explode[1])){
+                                            $explode[1] += 0;
+                                        }
+                                        if(is_array($node->$attribute)){
+                                            foreach($node->$attribute as $key => $value){
+                                                if(
+                                                    $value >= $explode[0] &&
+                                                    $value <= $explode[1]
+                                                ){
+                                                    $skip = true;
+                                                    break;
+                                                }
+                                            }
+                                        } elseif(
+                                            $node->$attribute >= $explode[0] &&
+                                            $node->$attribute <= $explode[1]
+                                        ){
+                                            $skip = true;
+                                        }
+                                    } else {
+                                        throw new Exception('Value is range: ?..?');
+                                    }
+                                }
+                            break;
+                            case 'before' :
+                                if(property_exists($node, $attribute)){
+                                    if(is_string($node->$attribute)){
+                                        $node_date = strtotime($node->$attribute);
+                                        $record_date = Filter::date($record);
+                                    }
+                                    elseif(is_int($node->$attribute)){
+                                        $node_date = $node->$attribute;
+                                        $record_date = Filter::date($record);
+                                    } else {
+                                        throw new Exception('Cannot calculate: before');
+                                    }
+                                    if(
+                                        $node_date <=
+                                        $record_date
+                                    ){
+                                        $skip = true;
+                                    }
+                                }
+                            break;
+                            case 'after' :
+                                if(property_exists($node, $attribute)){
+                                    if(is_string($node->$attribute)){
+                                        $node_date = strtotime($node->$attribute);
+                                        $record_date = Filter::date($record);
+                                    }
+                                    elseif(is_int($node->$attribute)){
+                                        $node_date = $node->$attribute;
+                                        $record_date = Filter::date($record);
+                                    } else {
+                                        throw new Exception('Cannot calculate: before');
+                                    }
+                                    if(
+                                        $node_date >=
+                                        $record_date
+                                    ){
+                                        $skip = true;
+                                    }
+                                }
+                            break;
+                            case 'strictly-before' :
+                                if(property_exists($node, $attribute)){
+                                    if(is_string($node->$attribute)){
+                                        $node_date = strtotime($node->$attribute);
+                                        $record_date = Filter::date($record);
+                                    }
+                                    elseif(is_int($node->$attribute)){
+                                        $node_date = $node->$attribute;
+                                        $record_date = Filter::date($record);
+                                    } else {
+                                        throw new Exception('Cannot calculate: before');
+                                    }
+                                    if(
+                                        $node_date <
+                                        $record_date
+                                    ){
+                                        $skip = true;
+                                    }
+                                }
+                            break;
+                            case 'strictly-after' :
+                                if(property_exists($node, $attribute)){
+                                    if(is_string($node->$attribute)){
+                                        $node_date = strtotime($node->$attribute);
+                                        $record_date = Filter::date($record);
+
+                                    }
+                                    elseif(is_int($node->$attribute)){
+                                        $node_date = $node->$attribute;
+                                        $record_date = Filter::date($record);
+                                    } else {
+                                        throw new Exception('Cannot calculate: before');
+                                    }
+                                    if(
+                                        $node_date >
+                                        $record_date
+                                    ){
+                                        $skip = true;
+                                    }
+                                }
+                            break;
+                            case 'partial' :
+                                if(
+                                    property_exists($node, $attribute) &&
+
+                                    is_string($record['value'])
+                                ){
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute  as $key => $value){
+                                            if(stristr($value, $record['value']) !== false) {
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    elseif(is_string($node->$attribute)){
+                                        if(stristr($node->$attribute, $record['value']) !== false) {
+                                            $skip = true;
+                                        }
+                                    }
+                                }
+                            break;
+                            case 'not-partial' :
+                                if(
+                                    property_exists($node, $attribute) &&
+                                    is_string($record['value'])
+                                ){
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute  as $key => $value){
+                                            if(stristr($value, $record['value']) === false) {
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    elseif(is_string($node->$attribute)){
+                                        if(stristr($node->$attribute, $record['value']) === false) {
+                                            $skip = true;
+                                        }
+                                    }
+                                }
+                            break;
+                            case 'start' :
+                                if(
+                                    property_exists($node, $attribute) &&
+                                    is_string($record['value'])
+                                ){
+                                    if(
+                                        is_string($node->$attribute) &&
+                                        stristr(
+                                            substr(
+                                                $node->$attribute,
+                                                0,
+                                                strlen($record['value'])
+                                            ),
+                                            $record['value']
+                                        ) !== false
+                                    ) {
+                                        $skip = true;
+                                    }
+                                    elseif(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if(
+                                                is_string($value) &&
+                                                stristr(
+                                                    substr(
+                                                        $value,
+                                                        0,
+                                                        strlen($record['value'])
+                                                    ),
+                                                    $record['value']
+                                                ) !== false
+                                            ) {
+                                                $skip = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            break;
+                            case 'not-start' :
+                                if(
+                                    property_exists($node, $attribute) &&
+                                    is_string($record['value'])
+                                ){
+                                    if(
+                                        is_string($node->$attribute) &&
+                                        stristr(
+                                            substr(
+                                                $node->$attribute,
+                                                0,
+                                                strlen($record['value'])
+                                            ),
+                                            $record['value']
+                                        ) === false
+                                    ) {
+                                        $skip = true;
+                                    }
+                                    elseif(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            if(
+                                                is_string($value) &&
+                                                stristr(
+                                                    substr(
+                                                        $value,
+                                                        0,
+                                                        strlen($record['value'])
+                                                    ),
+                                                    $record['value']
+                                                ) === false
+                                            ) {
+                                                $skip = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            break;
+                            case 'end' :
+                                if(
+                                    property_exists($node, $attribute) &&
+                                    is_string($record['value'])
+                                ){
+                                    $length = strlen($record['value']);
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            $start = strlen($value) - $length;
+                                            if(
+                                                stristr(
+                                                    substr(
+                                                        $node->$attribute,
+                                                        $start,
+                                                        $length
+                                                    ),
+                                                    $record['value']
+                                                ) !== false
+                                            ) {
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    elseif(is_string($node->$attribute)){
+                                        $start = strlen($node->$attribute) - $length;
+                                        if(
+                                            stristr(
+                                                substr(
+                                                    $node->$attribute,
+                                                    $start,
+                                                    $length
+                                                ),
+                                                $record['value']
+                                            ) !== false
+                                        ) {
+                                            $skip = true;
+                                        }
+                                    }
+                                }
+                            break;
+                            case 'not-end' :
+                                if(
+                                    property_exists($node, $attribute) &&
+                                    is_string($record['value'])
+                                ){
+                                    $length = strlen($record['value']);
+                                    if(is_array($node->$attribute)){
+                                        foreach($node->$attribute as $key => $value){
+                                            $start = strlen($value) - $length;
+                                            if(
+                                                stristr(
+                                                    substr(
+                                                        $node->$attribute,
+                                                        $start,
+                                                        $length
+                                                    ),
+                                                    $record['value']
+                                                ) === false
+                                            ) {
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    elseif(is_string($node->$attribute)){
+                                        $start = strlen($node->$attribute) - $length;
+                                        if(
+                                            stristr(
+                                                substr(
+                                                    $node->$attribute,
+                                                    $start,
+                                                    $length
+                                                ),
+                                                $record['value']
+                                            ) === false
+                                        ) {
+                                            $skip = true;
+                                        }
+                                    }
+                                }
                             break;
                         }
                         if($skip === false){
@@ -140,6 +594,19 @@ class Filter extends Data{
                                 unset($list->$uuid);
                             }
                         }
+                    } elseif(is_array($record)) {
+                        foreach($record as $key => $value){
+                            $where = [];
+                            $where[$attribute] = $value;
+                            $list = Filter::list($list)->where($where);
+                        }
+                    } else {
+                        $where = [];
+                        $where[$attribute] = [
+                            'operator' => 'partial',
+                            'value' => $record
+                        ];
+                        $list = Filter::list($list)->where($where);
                     }
                 }
             }

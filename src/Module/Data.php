@@ -17,6 +17,8 @@ class Data {
     private $data;
     private $do_not_nest_key;
 
+    private $copy;
+
     public function __construct($data=null){
         $this->data($data);
     }
@@ -167,6 +169,13 @@ class Data {
         return Core::object_has($attribute, $this->data());
     }
 
+    public function extract($attribute=''){
+        //add first & last
+        $get = $this->get($attribute);
+        $this->delete($attribute);
+        return $get;
+    }
+
     public function data($attribute=null, $value=null, $type=null){
         if($attribute !== null){
             if($attribute == 'set'){
@@ -192,6 +201,9 @@ class Data {
             }
             elseif($attribute == 'has'){
                 return Core::object_has($value, $this->data());
+            }
+            elseif($attribute === 'extract'){
+                return $this->extract($value);
             }
             if($value !== null){
                 if(
@@ -274,6 +286,55 @@ class Data {
         }
         return false;
     }
+
+    public function clear(){
+        $data = $this->data();
+        foreach($data as $key => $unused){
+            $this->data('delete', $key);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function copy(){
+        $data = $this->data();
+        if(is_array($data)){
+            $this->copy = $data;
+        } else {
+            $this->copy = Core::deep_clone($data);
+        }
+    }
+
+    public function reset($to_empty=false){
+        $this->clear();
+        if(
+            $to_empty === false &&
+            $this->copy
+        ){
+            $this->data($this->copy);
+        }
+    }
+
+    public function index($attribute=null): int
+    {
+        $get = $this->get($attribute);
+        $index = 0;
+        if(
+            is_array($get) ||
+            is_object($get)
+        ){
+            foreach($get as $nr => $unused){
+                if(is_numeric($nr)){
+                    $index = $nr + 1;
+                } else {
+                    $index++;
+                }
+            }
+        }
+        return $index;
+    }
+
 
     public function do_not_nest_key($do_not_nest_key=null){
         if($do_not_nest_key !== null){

@@ -11,6 +11,9 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function modifier_json_decode(Parse $parse, Data $data, $value, $associative=false){
-    return json_decode($value, $associative);
+function modifier_json_decode(Parse $parse, Data $data, $value, $associative=false, $depth=512, $flags=0){
+    if(is_string($flags)){
+        $flags = constant($flags);
+    }
+    return json_decode($value, $associative, $depth, $flags);
 }

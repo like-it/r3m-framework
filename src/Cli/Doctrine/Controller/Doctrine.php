@@ -11,13 +11,15 @@
 namespace R3m\Io\Cli\Doctrine\Controller;
 
 use R3m\Io\App;
-use R3m\Io\Module\View;
+use R3m\Io\Module\Controller;
+
 use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Doctrine extends View {
+class Doctrine extends Controller {
     const DIR = __DIR__;
     const NAME = 'Doctrine';
     const INFO = '{{binary()}} doctrine orm:generate-proxies  | Generate proxies & adjust owner';
@@ -25,7 +27,7 @@ class Doctrine extends View {
         '{{binary()}} doctrine orm:generate-proxies  | Generate proxies & adjust owner'
     ];
     
-    public static function run($object){
+    public static function run(App $object){
         try {
             $command = App::parameter($object, 'doctrine', 1);
             $name = Doctrine::name($command, Doctrine::NAME);

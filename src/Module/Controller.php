@@ -121,11 +121,11 @@ class Controller {
                 throw new Exception('Please define const DIR = __DIR__ . DIRECTORY_SEPARATOR; in the controller (' . $called . ').');
             }
         }
+        $config = $object->data(App::CONFIG);
         if($url){
             $list = [];
             $list[] = $url;
         } else {
-            $config = $object->data(App::CONFIG);
             if(substr($dir, -1) != $config->data('ds')){
                 $dir .= $config->data('ds');
             }
@@ -143,31 +143,52 @@ class Controller {
                 $name = array_pop($temp);
             } else {
                 $template_explode = explode('.', $name);
-                if(count($template_explode) > 2){
+                $count = count($template_explode);
+                if($count > 2){
                     $dotted_last = array_pop($template_explode);
                     $dotted_first = array_pop($template_explode);
                     $name = implode($config->data('ds'), $template_explode) . $config->data('ds') . $dotted_first . '.' . $dotted_last;
                 }
-                elseif(count($template_explode) === 2){
-                    ddd($template_explode);
+                elseif($count === 2){
+                    $dotted_last = array_pop($template_explode);
+                    $dotted_first = array_pop($template_explode);
+                    $name = $dotted_first . '.' . $dotted_last;
+                }
+                elseif($count === 1){
+                    $dotted = array_pop($template_explode);
+                    $name = $dotted;
                 }
             }
-            $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
+            $basename = File::basename($name);
+            if(!empty($object->config('controller.dir.view'))){
+                $list[] = $object->config('controller.dir.view') . str_replace('.', $object->config('ds'), $name) . $object->config('ds') . $basename . $config->data('extension.tpl');
+                $list[] = $object->config('controller.dir.view') . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl');
+                $list[] = $object->config('controller.dir.view') . $name . $config->data('extension.tpl');
+            }
+            elseif(!empty($object->config('host.dir.view'))){
+                $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name) . $object->config('ds') . $basename . $config->data('extension.tpl');
+                $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl');
+                $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
+            }
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
-                $list[] = str_replace(
-                    [
-                        '\\',
-                        ':',
-                        '='
-                    ],
-                    [
-                        '/',
-                        '.',
-                        '-'
-                    ],
-                    $url . $name . $config->data('extension.tpl')
-                );
+                if($i <= ($max - 2)){
+                    $location = str_replace(
+                        [
+                            '\\',
+                            ':',
+                            '='
+                        ],
+                        [
+                            '/',
+                            '.',
+                            '-'
+                        ],
+                        $url . $name
+                    );
+                    $list[] = str_replace('.', $object->config('ds'), $location) . $config->data('extension.tpl');
+                    $list[] = $location . $config->data('extension.tpl');
+                }
                 array_pop($explode);
                 array_pop($explode);
                 $explode[] = $config->data('dictionary.view');
@@ -461,6 +482,9 @@ class Controller {
         $read = $parse->compile($read, $data, $parse->storage());
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
+        if(is_array($read)){
+            ddd($read);
+        }
         return $read;
     }
 

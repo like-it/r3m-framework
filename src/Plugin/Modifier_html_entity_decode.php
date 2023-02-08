@@ -12,5 +12,8 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function modifier_html_entity_decode(Parse $parse, Data $data, $string='', $flags = ENT_QUOTES | ENT_SUBSTITUTE, $encoding=null){
+    if(is_string($flags)){
+        $flags = constant($flags);
+    }
     return html_entity_decode($string, $flags, $encoding);
 }

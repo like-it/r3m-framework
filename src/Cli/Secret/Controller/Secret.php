@@ -10,26 +10,30 @@
  */
 namespace R3m\Io\Cli\Secret\Controller;
 
-use Exception;
-use Defuse\Crypto\Exception\BadFormatException;
-use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
-use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
+
 use R3m\Io\App;
 use R3m\Io\Module\Cli;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
-use R3m\Io\Module\View;
+use R3m\Io\Module\Controller;
+
+use Exception;
+
+use Defuse\Crypto\Exception\BadFormatException;
+use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
+use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\ObjectException;
 
-class Secret extends View {
+class Secret extends Controller {
     const DIR = __DIR__;
     const NAME = 'Secret';
 
@@ -44,6 +48,8 @@ class Secret extends View {
     const ACTION_LOCK = 'lock';
     const ACTION_UNLOCK = 'unlock';
     const ACTION_STATUS = 'status';
+
+    const SLEEP = 5;    //amount of seconds
 
     /**
      * @throws WrongKeyOrModifiedCiphertextException
@@ -100,17 +106,17 @@ class Secret extends View {
                                     !empty($session['unlock']['since'])
                                 ){
                                     echo Crypto::decrypt($get, $key) . PHP_EOL;
-                                    return;
+                                    return null;
                                 }
                             }
                         }
                     }
                     if($data->has('secret.username')){
                         echo "Secret is locked, unlock first..." . PHP_EOL;
-                        return;
+                        return null;
                     } else {
                         echo "Secret is locked, unlock first..." . PHP_EOL;
-                        return;
+                        return null;
                     }
                 }
             }
@@ -162,7 +168,7 @@ class Secret extends View {
                                 $command = 'chown www-data:www-data ' . $url;
                                 Core::execute($command);
                                 echo $attribute . PHP_EOL;
-                                return;
+                                return null;
                             }
                         }
                     }
@@ -195,7 +201,7 @@ class Secret extends View {
                 !$data->has('secret.uuid')
             ){
                 echo "Secret is locked, unlock first..." . PHP_EOL;
-                return;
+                return null;
             }
             if($data->has('secret.uuid')) {
                 $string = File::read($key_url);
@@ -233,7 +239,7 @@ class Secret extends View {
                     !$data->has('secret.uuid')
                 ){
                     echo "Secret is locked, unlock first..." . PHP_EOL;
-                    return;
+                    return null;
                 }
                 if($data->has('secret.uuid')){
                     $string = File::read($key_url);
@@ -253,13 +259,13 @@ class Secret extends View {
                                 $command = 'chown www-data:www-data ' . $url;
                                 Core::execute($command);
                                 echo 'Secret delete: ' . $attribute . PHP_EOL;
-                                return;
+                                return null;
                             }
                         }
                     }
                 }
                 echo 'Secret is locked...' . PHP_EOL;
-                return;
+                return null;
             }
         }
         elseif($action === Secret::ACTION_LOCK) {
@@ -314,7 +320,7 @@ class Secret extends View {
                         $command = 'chown www-data:www-data ' . $url;
                         Core::execute($command);
                         echo "Successfully locked with new username & password..." . PHP_EOL;
-                        return;
+                        return null;
                     }
                     if(File::exist($key_url)){
                         $string = File::read($key_url);
@@ -337,7 +343,7 @@ class Secret extends View {
                     $command = 'chown www-data:www-data ' . $url;
                     Core::execute($command);
                     echo "Successfully locked..." . PHP_EOL;
-                    return;
+                    return null;
                 } else {
                     if(
                         !empty($username) &&
@@ -387,7 +393,7 @@ class Secret extends View {
                             $command = 'chown www-data:www-data ' . $url;
                             Core::execute($command);
                             echo "Successfully locked..." . PHP_EOL;
-                            return;
+                            return null;
                         }
                     }
                 }
@@ -453,7 +459,7 @@ class Secret extends View {
                         !$data->has('secret.uuid')
                     ){
                         echo "Secret is locked, unlock first..." . PHP_EOL;
-                        return;
+                        return null;
                     }
                     if($data->has('secret.uuid')){
                         $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
@@ -508,7 +514,7 @@ class Secret extends View {
             if ($data) {
                 if($data->get('secret.uuid')){
                     echo "Already unlocked..." . PHP_EOL;
-                    return;
+                    return null;
                 }
                 $attribute = 'secret.username';
                 $get = $data->get($attribute);
@@ -541,11 +547,12 @@ class Secret extends View {
                             $command = 'chown www-data:www-data ' . $url;
                             Core::execute($command);
                             echo "Successfully unlocked..." . PHP_EOL;
-                            return;
+                            return null;
                         }
                     }
                 }
-                sleep(2);
+                //add 5 attempts and 15 minute break
+                sleep(Secret::SLEEP);
                 echo "Invalid username and / or password..." . PHP_EOL;
             }
         }
@@ -566,7 +573,7 @@ class Secret extends View {
                                 !empty($session['unlock']['since'])
                             ) {
                                 echo 'Session unlocked since: ' . date('Y-m-d H:i:s', $session['unlock']['since']) . '+00:00' . PHP_EOL;
-                                return;
+                                return null;
                             }
                         }
                     }

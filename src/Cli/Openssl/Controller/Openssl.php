@@ -10,17 +10,16 @@
  */
 namespace R3m\Io\Cli\Openssl\Controller;
 
-use Exception;
 use R3m\Io\App;
-use R3m\Io\Module\Core;
-use R3m\Io\Module\Dir;
-use R3m\Io\Module\View;
-use R3m\Io\Module\Parse;
+use R3m\Io\Module\Controller;
+
+use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Openssl extends View{
+class Openssl extends Controller {
     const NAME = 'OpenSsl';
     const DIR = __DIR__;
 
@@ -40,7 +39,7 @@ class Openssl extends View{
     /**
      * @throws Exception
      */
-    public static function run($object){
+    public static function run(App $object){
         $command = $object->parameter($object, Openssl::NAME, 1);
 
         if($command === null){
@@ -57,7 +56,7 @@ class Openssl extends View{
         return Openssl::{$command}($object);
     }
 
-    private static function info($object)
+    private static function info(App $object)
     {
         try {
             $name = Openssl::name(__FUNCTION__, Openssl::NAME);
@@ -68,7 +67,7 @@ class Openssl extends View{
         }
     }
 
-    private static function req($object){
+    private static function req(App $object){
         try {
             $name = Openssl::name(__FUNCTION__, Openssl::NAME);
             $url = Openssl::locate($object, $name);

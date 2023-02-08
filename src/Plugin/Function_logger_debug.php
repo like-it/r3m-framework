@@ -6,7 +6,13 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_logger_debug(Parse $parse, Data $data, $message=null, $context=[], $name=App::LOGGER_NAME){
+function function_logger_debug(Parse $parse, Data $data, $message=null, $context=[], $channel=''){
     $object = $parse->object();
-    $object->logger($name)->debug($message, $context);
+    if(empty($channel)){
+        $channel = $object->config('project.log.name');
+    }
+    if($channel){
+        $object->logger($channel)->debug($message, $context);
+    }
+
 }

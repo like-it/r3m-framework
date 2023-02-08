@@ -10,18 +10,21 @@
  */
 namespace R3m\Io\Cli\Uuid\Controller;
 
-use R3m\Io\Module\View;
+use R3m\Io\App;
+use R3m\Io\Module\Controller;
+
 use Exception;
+
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class Uuid extends View {
+class Uuid extends Controller {
     const DIR = __DIR__;
     const NAME = 'Uuid';
     const INFO = '{{binary()}} uuid                           | Uuid generation';
     
-    public static function run($object){
+    public static function run(App $object){
         try {
             $name = Uuid::name(__FUNCTION__    , Uuid::NAME);
             $url = Uuid::locate($object, $name);

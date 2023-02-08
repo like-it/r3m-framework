@@ -12,5 +12,12 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function modifier_replace(Parse $parse, Data $data, $value, $search='', $replace=''){
-    return str_replace($search, $replace, $value);
+    if(is_array($value)){
+        foreach($value as $key => $record){
+            $value[$key] = str_replace($search, $replace, $record);
+        }
+        return $value;
+    } else {
+        return str_replace($search, $replace, $value);
+    }
 }

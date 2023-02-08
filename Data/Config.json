@@ -8,7 +8,9 @@
                 "parse",
                 "cache",
                 "cache:clear",
+                "install",
                 "license",
+                "linefeed",
                 "ln",
                 "version",
                 "uuid",
@@ -65,8 +67,8 @@
         "ppt" : "application\/vnd.ms-powerpoint",
         "xlsx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "docx" : "application\/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "pptx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-
+        "pptx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "xml": "application/xml"
     },
     "extension": {
         "txt": ".txt",
@@ -106,7 +108,8 @@
         "docx" : ".docx",
         "pptx" : ".pptx",
         "mov" :  ".mov",
-        "wmv" : ".wmv"
+        "wmv" : ".wmv",
+        "xml": ".xml"
     },
     "error" : {
         "extension" : {
@@ -163,6 +166,7 @@
             "R3m\\Io\\Module\\Filter",
             "R3m\\Io\\Module\\Handler",
             "R3m\\Io\\Module\\Host",
+            "R3m\\Io\\Module\\Limit",
             "R3m\\Io\\Module\\Parse",
             "R3m\\Io\\Module\\Response",
             "R3m\\Io\\Module\\Route",

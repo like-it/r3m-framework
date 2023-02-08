@@ -20,6 +20,7 @@ use R3m\Io\App;
 use Defuse\Crypto\Exception\BadFormatException;
 use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
 
+use Exception;
 use ReflectionException;
 
 use R3m\Io\Exception\UrlEmptyException;
@@ -564,9 +565,20 @@ class Core {
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 }
                 elseif(is_object($attribute)){
-                    $object->{$key} = new stdClass();
+                    if(
+                        property_exists($object, $key) &&
+                        is_array($object->{$key})
+                    ){
+                        foreach($attribute as $index => $unused){
+                            $object->{$key}[$index] = $value;
+                        }
+                        return $object->{$key};
+                    } else {
+                        $object->{$key} = new stdClass();
+                    }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
-                } else {
+                }
+                 else {
                     $object->{$key} = $value;
                 }
             }
@@ -727,12 +739,18 @@ class Core {
         return implode($delimiter, $explode);
     }
 
+    /**
+     * @throws Exception
+     */
+    /*
     public static function cors_is_allowed(App $object, $origin=''): bool
     {
         $origin = rtrim($origin, '/');
         $origin = explode('://', $origin);
         if(array_key_exists(1, $origin)){
             $origin = $origin[1];
+            $explode = explode('/', $origin);    //bugfix samsung browser ?
+            $origin = $explode[0];
         } else {
             return false;
         }
@@ -787,16 +805,25 @@ class Core {
                 }
             }
         }
+        $object->logger('App')->debug('Cors rejected...');
         return false;
     }
+    */
 
+    /**
+     * @throws Exception
+     */
+    /*
     public static function cors(App $object){
         header("HTTP/1.1 200 OK");
-        //header("Access-Control-Allow-Origin: *");
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
             $origin = $_SERVER['HTTP_ORIGIN'];
+            $object->logger('App')->debug('HTTP_ORIGIN: ', [ $origin]);
             if(Core::cors_is_allowed($object, $origin)){
+                header('Access-Control-Allow-Credentials: true');
                 header("Access-Control-Allow-Origin: {$origin}");
+//                header("Access-Control-Allow-Origin: * ");
+                $object->logger('App')->debug('Make Access');
             }
         }
         if (
@@ -808,11 +835,26 @@ class Core {
             //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
             header('Access-Control-Allow-Headers: Origin, Cache-Control, Content-Type, Authorization, X-Requested-With');
             header('Access-Control-Max-Age: 86400');    // cache for 1 day
+            $object->logger('App')->debug('REQUEST_METHOD: ', [ $_SERVER['REQUEST_METHOD'] ]);
+            $object->logger('App')->debug('REQUEST: ', [ Core::object($object->request(), Core::OBJECT_ARRAY) ]);
             exit(0);
         }
+        if(array_key_exists('REQUEST_METHOD', $_SERVER)){
+            $object->logger('App')->debug('REQUEST_METHOD: ', [ $_SERVER['REQUEST_METHOD'] ]);
+        }
+        $object->logger('App')->debug('REQUEST: ', [ Core::object($object->request(), Core::OBJECT_ARRAY) ]);
     }
+    */
 
     public static function deep_clone($object){
+        if(is_array($object)){
+            foreach($object as $key => $value){
+                if(is_object($value)){
+                    $object[$key] = Core::deep_clone($value);
+                }
+            }
+            return $object;
+        }
         $clone = clone $object;
         foreach($object as $key => $value){
             if(is_object($value)){

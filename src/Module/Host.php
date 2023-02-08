@@ -167,6 +167,9 @@ class Host {
 
     public static function port($host=''){
         if(empty($host)){
+            if(isset($_SERVER['SERVER_PORT'])) {
+                return $_SERVER['SERVER_PORT'];
+            }
             if(isset($_SERVER['HTTP_HOST'])){
                 $host = $_SERVER['HTTP_HOST'];
             }
@@ -179,8 +182,6 @@ class Host {
             $string = array_pop($explode);
             $test = explode('?', $string);
             return $test[0];
-        } elseif(isset($_SERVER['SERVER_PORT'])) {
-            return $_SERVER['SERVER_PORT'];
         }
         return false;
     }

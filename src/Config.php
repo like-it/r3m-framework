@@ -15,6 +15,9 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
+use R3m\Io\Module\Parse\Token;
+
+use Exception;
 
 class Config extends Data {
     const DIR = __DIR__ . '/';
@@ -210,6 +213,46 @@ class Config extends Data {
             $read = Core::object(File::read($url));
             $config->data(Core::object_merge($config->data(), $read));
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function parameters(App $object, $parameters=[]): array
+    {
+        if(empty($parameters)){
+            return $parameters;
+        }
+        if(!is_array($parameters)){
+            return [];
+        }
+        foreach($parameters as $key => $parameter){
+            $tree = Parse\Token::tree($parameter);
+            if(
+                !empty($tree) &&
+                is_array($tree)
+            ){
+                $parameters[$key]  = '';
+                foreach($tree as $tree_nr => $record){
+                    if(
+                        $record['type'] === Token::TYPE_METHOD &&
+                        array_key_exists('method', $record) &&
+                        array_key_exists('attribute', $record['method'])
+                    ){
+                        foreach($record['method']['attribute'] as $attribute_nr => $attribute_list){
+                            foreach($attribute_list as $attribute){
+                                $parameters[$key] .= $object->config($attribute['execute']);
+                            }
+                        }
+                    }
+                    if($record['type'] === Token::TYPE_STRING){
+                        $parameters[$key] .= $record['value'];
+                    }
+                }
+            } else {
+            }
+        }
+        return $parameters;
     }
 
     public function default(){
@@ -442,7 +485,7 @@ class Config extends Data {
      * @throws Exception\ObjectException
      * @throws Exception\FileWriteException
      */
-     public static function contentType(App $object){
+    public static function contentType(App $object){
         $contentType = $object->config('contentType');
         if(
             is_string($contentType) &&

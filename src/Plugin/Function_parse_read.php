@@ -14,10 +14,14 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
 use R3m\Io\Exception\ObjectException;
 
-function function_parse_read(Parse $parse, Data $data, $url=''){
+function function_parse_read(Parse $parse, Data $data, $url='', $cache=true){
     if(File::exist($url)){
         $object = $parse->object();
-        $read = $object->parse_read($url, sha1($url));
+        if($cache){
+            $read = $object->parse_read($url, sha1($url));
+        } else {
+            $read = $object->parse_read($url);
+        }
         if($read){
             try {
                 $data->data(Core::object_merge($data->data(), $read->data()));

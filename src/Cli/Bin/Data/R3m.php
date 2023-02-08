@@ -23,6 +23,22 @@ $dir_vendor =
 
 $autoload = $dir_vendor . 'autoload.php';
 $autoload = require $autoload;
+
+if(file_exists($dir_vendor . 'r3m/framework/')){
+    /*
+     * r3m/framework -> rapid development
+     * r3m-io/framework ->production
+     */
+    $file_app = $dir_vendor . 'r3m/framework/src/App.php';
+    $file_config = $dir_vendor . 'r3m/framework/src/Config.php';
+    if(file_exists($file_app)){
+        require_once $file_app;
+    }
+    if(file_exists($file_app)){
+        require_once $file_config;
+    }
+}
+
 $config = new Config(
     [
         'dir.vendor' => $dir_vendor
@@ -31,7 +47,12 @@ $config = new Config(
 // $config->data('framework.environment', R3m\Io\Config::MODE_DEVELOPMENT);
 $app = new App($autoload, $config);
 try {
-    echo App::run($app);
+    $result = App::run($app);
+    if(is_array($result)){
+        echo implode(PHP_EOL, $result);
+    } elseif(is_scalar($result)){
+        echo $result;
+    }
 } catch (Exception | LocateException | ObjectException $e) {
     echo $e;
 }
