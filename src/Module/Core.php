@@ -450,7 +450,7 @@ class Core {
         var_dump($attributeList);
         if(Core::object_is_empty($object)){
             echo 'true' . PHP_EOL;
-            if(empty($attributeList)){
+            if(empty($attributeList) && !is_scalar($attributeList)){
                 return $object;
             }
             if(is_array($object)){
@@ -463,6 +463,10 @@ class Core {
                             return Core::object_get($attributeList->{$key}, $object[$key]);
                         }
                     }
+                }
+                elseif(is_scalar($attributeList)){
+                    var_dump($attributeList);
+                    die;
                 }
             }            
             return null;
