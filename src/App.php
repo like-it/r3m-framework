@@ -138,6 +138,7 @@ class App extends Data {
             $file = FileRequest::get($object);
             if ($file === false) {
                 $route = Route::request($object);
+                ddd($route);
                 if ($route === false) {
                     if ($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
                         if($logger){
