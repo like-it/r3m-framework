@@ -24,14 +24,14 @@ $dir_vendor =
 $autoload = $dir_vendor . 'autoload.php';
 $autoload = require $autoload;
 
-$config = new Config(
-    [
-        'dir.vendor' => $dir_vendor
-    ]
-);
-// $config->data('framework.environment', R3m\Io\Config::MODE_DEVELOPMENT);
-$app = new App($autoload, $config);
 try {
+    $config = new Config(
+        [
+            'dir.vendor' => $dir_vendor
+        ]
+    );
+    // $config->data('framework.environment', R3m\Io\Config::MODE_DEVELOPMENT);
+    $app = new App($autoload, $config);
     $result = App::run($app);
     if(is_array($result)){
         echo implode(PHP_EOL, $result);
