@@ -462,6 +462,7 @@ class Core {
                             continue;
                         }
                         if(array_key_exists($key, $object)){
+                            echo '%' . $key . PHP_EOL;
                             return Core::object_get($attributeList->{$key}, $object[$key]);
                         }
                     }
