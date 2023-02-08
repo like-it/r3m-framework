@@ -335,10 +335,11 @@ class Route extends Data {
             $select = new stdClass();
             $select->parameter = $input->data();
             $key = 0;
-            $select->attribute = [];
             if(property_exists($select->parameter, $key)){
-                $select->attribute[] = $select->parameter->{$key};
+                $select->attribute = explode($object->config('ds'), $select->parameter->{$key});
+
             } else {
+                $select->attribute =[];
                 $select->attribute[] = '';
             }
             $select->method = Handler::method();
