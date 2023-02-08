@@ -47,23 +47,61 @@ class Configure extends Controller {
         '{{binary()}} configure site enable          | Enable an apache2 site'
     ];
 
-    private static function parameters(App $object){
+    private static function scan(App $object){
         $url = $object->config('controller.dir.view');
         $dir = new Dir();
         $read = $dir->read($url, true);
         if(!$read){
             return;
         }
-        $parameters = [];
+        $scan = [];
         foreach($read as $nr => $file){
             if($file->type !== File::TYPE){
                 continue;
             }
             $part = substr($file->url, strlen($url));
-            d($part);
+            $explode = explode('/', $part, 2);
+            $submodule = false;
+            $command = false;
+            $subcommand = false;
+
+            if(array_key_exists(1, $explode)){
+                $module = $explode[0];
+                $temp = explode('.', $explode[1]);
+                array_pop($temp);
+                $submodule = $temp[0];
+                if(array_key_exists(1, $temp)){
+                    $command = $temp[1];
+                }
+                if(array_key_exists(2, $temp)){
+                    $subcommand = $temp[1];
+                }
+            } else {
+                $temp = explode('.', $explode[0]);
+                array_pop($temp);
+                $module = $temp[0];
+                if(array_key_exists(1, $temp)){
+                    $submodule = $temp[1];
+                }
+                if(array_key_exists(2, $temp)){
+                    $command = $temp[1];
+                }
+                if(array_key_exists(3, $temp)){
+                    $subcommand = $temp[1];
+                }
+            }
+            $scan['module'][] = $module;
+            if($submodule){
+                $scan['submodule'][] = $submodule;
+            }
+            if($command){
+                $scan['command'][] = $command;
+            }
+            if($subcommand){
+                $scan['subcommand'][] = $subcommand;
+            }
         }
-        dd('end');
-//        ddd($read);
+        return $scan;
     }
 
     /**
@@ -74,7 +112,8 @@ class Configure extends Controller {
      * @throws UrlNotExistException
      */
     public static function run(App $object){
-        Configure::parameters($object);
+        $scan = Configure::scan($object);
+        ddd($scan);
         $module = $object->parameter($object, 'configure', 1);
         if(empty($module)){
             $module = Configure::MODULE_INFO;
