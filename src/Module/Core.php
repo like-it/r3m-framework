@@ -462,6 +462,10 @@ class Core {
                         }
                     }
                 }
+                elseif(is_scalar($attributeList)){
+                    var_dump($attributeList);
+                    die;
+                }
             }            
             return null;
         }
@@ -476,13 +480,14 @@ class Core {
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
         }
-        if($attributeList === null){
-            return null;
+        if(empty($attributeList)){
+            return $object;
         }
         foreach($attributeList as $key => $attribute){
             if($key === null || $key === ''){
                 continue;
             }
+            echo '#' . $key . PHP_EOL;
             if(isset($object->{$key})){
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }                       
