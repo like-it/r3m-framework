@@ -874,6 +874,17 @@ class Core
     public static function object_select(Parse $parse, Data $data, $url = '', $select = null, $compile = false)
     {
         if (File::exist($url)) {
+            $object = $parse->object();
+            $data = new Data($object->data());
+            $parse = new Parse($object);
+            $read = File::read($url);
+            $read = Core::object($read);
+
+            $read = $parse->compile($read, $data);
+            ddd($read);
+            
+
+
             $read = File::read($url);
             $read = Core::object($read);
             if ($compile) {
