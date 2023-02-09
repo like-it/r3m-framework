@@ -185,6 +185,9 @@ class Data {
                 ){
                     $this->data = null;
                 } else {
+                    if(is_int($value)){
+                        $value = (string) $value;
+                    }
                     $do_not_nest_key = $this->do_not_nest_key();
                     if($do_not_nest_key){
                         $this->data->{$value} = $type;
@@ -217,11 +220,17 @@ class Data {
                 ){
                     return $this->deleteData($value);
                 } else {
+                    if(is_int($attribute)){
+                        $attribute = (string) $attribute;
+                    }
                     Core::object_delete($attribute, $this->data()); //for sorting an object
                     Core::object_set($attribute, $value, $this->data());
                     return;
                 }
             } else {
+                if(is_int($attribute)){
+                    $attribute = (string) $attribute;
+                }
                 if(is_string($attribute)){
                     return Core::object_get($attribute, $this->data());
                 }
@@ -253,6 +262,9 @@ class Data {
             }
         } else {
             if(is_object($this->data)){
+                if(is_int($attribute)){
+                    $attribute = (string) $attribute;
+                }
                 $this->data->{$attribute} = $value;
             }
             elseif(is_array($this->data)) {
