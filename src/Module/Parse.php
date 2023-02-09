@@ -256,9 +256,10 @@ class Parse {
                     continue;
                 }
                 try {
-                    $local = $this->local($depth);
-                    $local->key = $key;
-                    $this->local($depth, $local);
+//                    $local = $this->local($depth);
+//                    $local->key = $key;
+//                    $this->local($depth, $local);
+                    ddd($storage);
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
