@@ -487,7 +487,6 @@ class Core {
             if($key === null || $key === ''){
                 continue;
             }
-            echo '#' . $key . PHP_EOL;
             if(isset($object->{$key})){
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }                       
