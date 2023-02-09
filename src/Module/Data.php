@@ -223,7 +223,6 @@ class Data {
                 }
             } else {
                 if(is_scalar($attribute)){
-                    echo '-->' . $attribute . PHP_EOL;
                     return Core::object_get($attribute, $this->data());
                 }
                 elseif(is_object($attribute) && get_class($attribute) === Data::class){

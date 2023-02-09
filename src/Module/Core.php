@@ -447,12 +447,6 @@ class Core {
     }
 
     public static function object_get($attributeList=[], $object=''){
-        if(is_scalar($attributeList)){
-            echo '$' . $attributeList . PHP_EOL;
-            $debug = debug_backtrace(true);
-            var_dump($debug[0]);
-            var_dump($object);
-        }
         if(Core::object_is_empty($object)){
             if(empty($attributeList) && !is_scalar($attributeList)){
                 return $object;
@@ -464,20 +458,14 @@ class Core {
                             continue;
                         }
                         if(array_key_exists($key, $object)){
-                            echo '%' . $key . PHP_EOL;
                             return Core::object_get($attributeList->{$key}, $object[$key]);
                         }
                     }
-                }
-                elseif(is_scalar($attributeList)){
-                    var_dump($attributeList);
-                    die;
                 }
             }            
             return null;
         }
         if(is_scalar($attributeList)){
-            echo '->' . $attributeList . PHP_EOL;
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
             foreach($attributeList as $nr => $attribute){
                 if($attribute === null || $attribute === ''){
@@ -488,17 +476,11 @@ class Core {
 //        var_dump($attributeList);
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
-        }        
-        if(empty($attributeList)){
-            echo 'empty attributeList';
-            var_dump($attributeList);
-            return $object;
         }
         foreach($attributeList as $key => $attribute){
             if($key === null || $key === ''){
                 continue;
             }
-            echo '#' . $key . PHP_EOL;
             if(isset($object->{$key})){
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }                       
