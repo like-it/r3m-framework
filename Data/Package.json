@@ -1,13 +1,13 @@
 {
   "package" : {
     "r3m-io/priya" : {
-        "composer" : "composer require {{$this.parent.key}}",
+        "composer" : "composer require {{$this.parentNode.key}}",
         "route" : [
-          "{{config('project.dir.vendor') + $this.parent.key + 'Data/Route.json'}}"
+          "{{config('project.dir.vendor') + $this.parentNode.key + 'Data/Route.json'}}"
         ],
-        "installation" : "{{config('project.dir.data') + config('dictionary.package') + config('ds') + $this.parent.key + config('ds') + config('dictionary.installation') + config('extension.json')}}",
+        "installation" : "{{config('project.dir.data') + config('dictionary.package') + config('ds') + $this.parentNode.key + config('ds') + config('dictionary.installation') + config('extension.json')}}",
         "command" : [
-            "{{binary()}} {{$this.parent.key}} setup"
+            "{{binary()}} {{$this.parentNode.key}} setup"
         ]
     }
   }
