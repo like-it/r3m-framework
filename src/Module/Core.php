@@ -85,7 +85,7 @@ class Core {
         return Core::execute($command, $output, $error,Core::SHELL_PROCESS);
     }
 
-    public static function execute($command, &$output=[], &$error=[], $type=null){
+    public static function execute($command, &$output='', &$error='', $type=null){
         if($output === null){
             $output = [];
         }

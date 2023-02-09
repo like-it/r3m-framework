@@ -3,7 +3,8 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Core;
-use Exception;
+
+use R3m\Io\Exception\RouteExistException;
 
 /**
  * @throws Exception
@@ -60,5 +61,5 @@ function function_route_resource(Parse $parse, Data $data, $resource='')
         }
         return 'Route resource: ' . $resource . ' added' . PHP_EOL;
     }
-    throw new Exception('Route resource already exists...');
+    throw new RouteExistException('Route resource already exists...');
 }

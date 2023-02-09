@@ -14,13 +14,14 @@ use R3m\Io\App;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Controller;
 use R3m\Io\Module\File;
+use R3m\Io\Module\Parse;
 
 use Exception;
 
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
-use R3m\Io\Module\Parse;
+use R3m\Io\Exception\RouteExistException;
 
 class Install extends Controller {
     const DIR = __DIR__;
@@ -62,7 +63,7 @@ class Install extends Controller {
                         echo $output;
                     }
                     if($error){
-                        if(stristr($error, 'Route resource already exists...') === false) {
+                        if(stristr($error, RouteExistException::MESSAGE) === false) {
                             echo $error;
                         }
                     }
