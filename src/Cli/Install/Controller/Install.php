@@ -50,6 +50,9 @@ class Install extends Controller {
         }
         if(property_exists($package, 'composer')){
             Core::execute($package->composer, $output, $error);
+            if($output){
+                echo $output;
+            }
         }
         if(
             property_exists($package, 'route') &&
