@@ -33,7 +33,7 @@ class Install extends Controller {
      * @throws Exception
      */
     public static function run(App $object){
-        $package = App::parameter($object, 'install', 1);
+        $item = App::parameter($object, 'install', 1);
         $url = $object->config('framework.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
 
         $data = new Data($object->data());
@@ -42,35 +42,22 @@ class Install extends Controller {
             $parse,
             $data,
             $url,
-            'package.' . $package,
+            'package.' . $item,
             true
         );
-        ddd($package);
-        ddd($url);
-
-
-        switch($package){
-            case 'r3m-io/priya' :
-                $command = 'composer require ' . $package;
-                Core::execute($command, $output, $error);
-                if($output){
-                    echo $output;
-                }
-                if($error){
-                    echo $error;
-                }
-                $url =
-                    $object->config('project.dir.vendor') .
-                    'r3m-io' .
-                    $object->config('ds') .
-                    'priya' .
-                    $object->config('ds') .
-                    $object->config('dictionary.data') .
-                    $object->config('ds') .
-                    'Route' .
-                    $object->config('extension.json');
-                if(File::exist($url)){
-                    $command = '{{binary()}} configure route resource "' . $url . '"';
+        if(empty($package)){
+            throw new Exception('Package: ' . $item . PHP_EOL);
+        }
+        if(property_exists($package, 'composer')){
+            Core::execute($package->composer, $output, $error);
+        }
+        if(
+            property_exists($package, 'route') &&
+            is_array($package->route)
+        ){
+            foreach($package->route as $route){
+                if(File::exist($route)){
+                    $command = '{{binary()}} configure route resource "' . $route . '"';
                     $parse = new Parse($object, $object->data());
                     $command = $parse->compile($command, $object->data());
                     Core::execute($command, $output, $error);
@@ -82,11 +69,53 @@ class Install extends Controller {
                             echo $error;
                         }
                     }
-                    //execute '{{binary()}} r3m-io/priya setup "{{config('project.dir.data') + 'Package' + config('ds') + 'r3m-io/priya' + '.installation' + config('extension.json')}}"'
                 }
-            break;
-            default:
-                throw new Exception('Cannot install package: ' . $package);
+            }
+        }
+        elseif(
+            property_exists($package, 'route') &&
+            is_string($package->route)
+        ){
+            if(File::exist($package->route)){
+                $command = '{{binary()}} configure route resource "' . $package->route . '"';
+                $parse = new Parse($object, $object->data());
+                $command = $parse->compile($command, $object->data());
+                Core::execute($command, $output, $error);
+                if($output){
+                    echo $output;
+                }
+                if($error){
+                    if(stristr($error, RouteExistException::MESSAGE) === false) {
+                        echo $error;
+                    }
+                }
+            }
+        }
+        if(
+            property_exists($package, 'command') &&
+            is_array($package->command)
+        ){
+            foreach($package->command as $command){
+                Core::execute($command, $output, $error);
+                if($output){
+                    echo $output;
+                }
+                if($error){
+                    echo $error;
+                }
+            }
+        }
+        elseif(
+            property_exists($package, 'command') &&
+            is_string($package->command)
+        ){
+            Core::execute($package->command, $output, $error);
+            if($output){
+                echo $output;
+            }
+            if($error){
+                echo $error;
+            }
         }
     }
 }
