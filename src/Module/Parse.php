@@ -29,6 +29,13 @@ class Parse {
     const TEMPLATE = 'Template';
     const COMPILE = 'Compile';
 
+    const THIS_RESERVED_WORDS = [
+        '@parentNode',
+        '@rootNode',
+        '@key',
+        '@attribute'
+    ];
+
     private $object;
     private $storage;
     private $build;
@@ -251,12 +258,7 @@ class Parse {
                     $this->useThis() === true &&
                     in_array(
                         $key,
-                        [
-                            'parentNode',
-                            'rootNode',
-                            '@key',
-                            '@attribute'
-                        ]
+                        Parse::THIS_RESERVED_WORDS
                     )
                 ){
                     continue;
@@ -301,10 +303,10 @@ class Parse {
                 $storage->data('this', $this->local($depth));
                 $rootNode = $this->local(0);
                 if($rootNode && is_object($rootNode)){
-                    $storage->data('this.rootNode', $rootNode);
+                    $storage->data('this.@rootNode', $rootNode);
                     $key = 'this';
                     for($index = $depth - 1; $index >= 0; $index--){
-                        $key .= '.parentNode';
+                        $key .= '.@parentNode';
                         $storage->data($key, $this->local($index));
                     }
                 }
