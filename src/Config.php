@@ -84,6 +84,9 @@ class Config extends Data {
     const PACKAGE = 'package';
     const VALUE_PACKAGE = 'Package';
 
+    const INSTALLATION = 'installation';
+    const VALUE_INSTALLATION = 'Installation';
+
     const ENTITY = 'entity';
     const VALUE_ENTITY = 'Entity';
 
@@ -305,6 +308,10 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::PACKAGE;
         $value = Config::VALUE_PACKAGE;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::INSTALLATION;
+        $value = Config::VALUE_INSTALLATION;
         $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::SERVICE;
