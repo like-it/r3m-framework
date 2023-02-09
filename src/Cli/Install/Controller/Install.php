@@ -13,6 +13,7 @@ namespace R3m\Io\Cli\Install\Controller;
 use R3m\Io\App;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 
@@ -34,12 +35,9 @@ class Install extends Controller {
     public static function run(App $object){
         $package = App::parameter($object, 'install', 1);
         $url = $object->config('framework.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
-
-        ddd($object->data());
-
-//        $read = $object->data_read($url, sha1($url));
-        $parse = new Parse($object, $object->data());
-        $package = Core::object_select($parse, $object->data(), $url, 'package.' . $package);
+        $data = new Data($object->data());
+        $parse = new Parse($object, $data);
+        $package = Core::object_select($parse, $data, $url, 'package.' . $package);
 
         ddd($package);
         ddd($url);
