@@ -512,7 +512,10 @@ class App extends Data {
         return $this->data(App::CONFIG)->data($attribute, $value);
     }
 
-    public function request($attribute=null, $value=null){                
+    public function request($attribute=null, $value=null){
+        if(is_int($attribute)){
+            $attribute = (string) $attribute;
+        }
         return $this->data(App::REQUEST)->data($attribute, $value);        
     }
 

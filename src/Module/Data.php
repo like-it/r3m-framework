@@ -177,6 +177,9 @@ class Data {
     }
 
     public function data($attribute=null, $value=null, $type=null){
+        if(is_int($attribute)){
+            $attribute = (string) $attribute;
+        }
         if($attribute !== null){
             if($attribute == 'set'){
                 if(
