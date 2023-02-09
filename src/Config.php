@@ -81,6 +81,9 @@ class Config extends Data {
     const COMPONENT = 'component';
     const VALUE_COMPONENT = 'Component';
 
+    const PACKAGE = 'package';
+    const VALUE_PACKAGE = 'Package';
+
     const ENTITY = 'entity';
     const VALUE_ENTITY = 'Entity';
 
@@ -298,6 +301,10 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::COMPONENT;
         $value = Config::VALUE_COMPONENT;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::PACKAGE;
+        $value = Config::VALUE_PACKAGE;
         $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::SERVICE;

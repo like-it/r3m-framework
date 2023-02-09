@@ -33,6 +33,9 @@ class Install extends Controller {
      */
     public static function run(App $object){
         $package = App::parameter($object, 'install', 1);
+        $url = $object->config('project.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
+        ddd($url);
+
 
         switch($package){
             case 'r3m-io/priya' :
@@ -67,6 +70,7 @@ class Install extends Controller {
                             echo $error;
                         }
                     }
+                    //execute '{{binary()}} r3m-io/priya setup "{{config('project.dir.data') + 'Package' + config('ds') + 'r3m-io/priya' + '.installation' + config('extension.json')}}"'
                 }
             break;
             default:

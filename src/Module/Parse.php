@@ -248,13 +248,17 @@ class Parse {
                         $key,
                         [
                             'parentNode',
-                            'rootNode'
+                            'rootNode',
+                            'key'
                         ]
                     )
                 ){
                     continue;
                 }
                 try {
+                    $local = $this->local($depth);
+                    $local->key = $key;
+                    $this->local($depth, $local);
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
