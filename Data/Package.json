@@ -3,7 +3,7 @@
     "r3m-io/priya" : {
         "composer" : "composer require {{this.key}}",
         "route" : [
-          "{{config('project.dir.vendor') + this.key + 'Data/Route.json')}}"
+          "{{config('project.dir.vendor') + this.key + 'Data/Route.json'}}"
         ],
         "installation" : "{{config('project.dir.data') + config('dictionary.package') + config('ds') + this.key + config('ds') + config('dictionary.installation') + config('extension.json')}}",
         "command" : [
