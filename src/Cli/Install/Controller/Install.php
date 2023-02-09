@@ -35,11 +35,11 @@ class Install extends Controller {
         $package = App::parameter($object, 'install', 1);
         $url = $object->config('framework.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
 
-        $read = $object->data_read($url, sha1($url));
-        if($read){
-            $package = $read->get('package.' . $package);
-            ddd($package);
-        }
+//        $read = $object->data_read($url, sha1($url));
+        $parse = new Parse($object, $object->data());
+        $package = Core::object_select($parse, $object->data(), $url, 'package.' . $package);
+
+        ddd($package);
         ddd($url);
 
 

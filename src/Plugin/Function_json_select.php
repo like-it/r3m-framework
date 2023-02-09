@@ -18,6 +18,10 @@ use R3m\Io\Module\Core;
  * @throws \R3m\Io\Exception\FileWriteException
  */
 function function_json_select(Parse $parse, Data $data, $url, $select=null, $compile=false){
+    $object = $parse->object();
+    if($object->config('project.log.name')){
+        $object->logger($object->config('project.log.name'))->notice('Deprecated: plugin json.select, use object.select');
+    }
     if(File::exist($url)){
         $read = File::read($url);
         $read = Core::object($read);

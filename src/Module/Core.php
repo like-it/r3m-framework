@@ -27,7 +27,8 @@ use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\FileWriteException;
 
-class Core {
+class Core
+{
 
     const EXCEPTION_MERGE_ARRAY_OBJECT = 'Cannot merge an array with an object.';
     const EXCEPTION_OBJECT_OUTPUT = 'Unknown output in object.';
@@ -56,43 +57,47 @@ class Core {
     const LOCAL = 'local';
 
     const OUTPUT_MODE = [
-            Core::OUTPUT_MODE_IMPLICIT,
-            Core::OUTPUT_MODE_EXPLICIT,
+        Core::OUTPUT_MODE_IMPLICIT,
+        Core::OUTPUT_MODE_EXPLICIT,
     ];
 
     const MODE_INTERACTIVE = Core::OUTPUT_MODE_IMPLICIT;
     const MODE_PASSIVE = Core::OUTPUT_MODE_EXPLICIT;
 
-    public static function binary(){
-        if(array_key_exists('_', $_SERVER)){
+    public static function binary()
+    {
+        if (array_key_exists('_', $_SERVER)) {
             $dirname = Dir::name($_SERVER['_']);
             return str_replace($dirname, '', $_SERVER['_']);
         }
     }
 
-    public static function detach($command){
+    public static function detach($command)
+    {
         $output = [];
-        $error=[];
-        return Core::execute($command, $output, $error,Core::SHELL_DETACHED);
+        $error = [];
+        return Core::execute($command, $output, $error, Core::SHELL_DETACHED);
     }
 
-    public static function async($command){
-        if(stristr($command, '&') === false){
+    public static function async($command)
+    {
+        if (stristr($command, '&') === false) {
             $command .= ' &';
         }
         $output = [];
-        $error=[];
-        return Core::execute($command, $output, $error,Core::SHELL_PROCESS);
+        $error = [];
+        return Core::execute($command, $output, $error, Core::SHELL_PROCESS);
     }
 
-    public static function execute($command, &$output='', &$error='', $type=null){
-        if($output === null){
+    public static function execute($command, &$output = '', &$error = '', $type = null)
+    {
+        if ($output === null) {
             $output = [];
         }
         $result = [
             'pid' => getmypid()
         ];
-        if(
+        if (
             in_array(
                 $type,
                 [
@@ -100,9 +105,9 @@ class Core {
                     Core::SHELL_PROCESS
                 ]
             )
-        ){
+        ) {
             $pid = pcntl_fork();
-            switch($pid) {
+            switch ($pid) {
                 // fork errror
                 case -1 :
                     return false;
@@ -124,7 +129,7 @@ class Core {
                     proc_close($process);
                     exit();
                 default :
-                    if($type == Core::SHELL_PROCESS){
+                    if ($type == Core::SHELL_PROCESS) {
                         pcntl_waitpid(0, $status, WNOHANG);
                         $status = pcntl_wexitstatus($status);
                         $child = [
@@ -163,11 +168,12 @@ class Core {
         }
     }
 
-    public static function output_mode($mode = null){
-        if(!in_array($mode, Core::OUTPUT_MODE)){
+    public static function output_mode($mode = null)
+    {
+        if (!in_array($mode, Core::OUTPUT_MODE)) {
             $mode = Core::OUTPUT_MODE_DEFAULT;
         }
-        switch($mode){
+        switch ($mode) {
             case  Core::MODE_INTERACTIVE :
                 ob_implicit_flush(true);
                 @ob_end_flush();
@@ -178,41 +184,44 @@ class Core {
         }
     }
 
-    public static function interactive(){
+    public static function interactive()
+    {
         Core::output_mode(Core::MODE_INTERACTIVE);
     }
 
-    public static function passive(){
+    public static function passive()
+    {
         Core::output_mode(Core::MODE_PASSIVE);
     }
 
     /**
      * @throws UrlEmptyException
      */
-    public static function redirect($url=''){
-        if(empty($url)){
+    public static function redirect($url = '')
+    {
+        if (empty($url)) {
             throw new UrlEmptyException('url is empty...');
         }
         header('Location: ' . $url);
         exit;
     }
 
-    public static function is_array_nested($array=[]): bool
+    public static function is_array_nested($array = []): bool
     {
-        $array = (array) $array;
-        foreach($array as $value){
-            if(is_array($value)){
+        $array = (array)$array;
+        foreach ($array as $value) {
+            if (is_array($value)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static function array_object($array=[]): stdClass
+    public static function array_object($array = []): stdClass
     {
         $object = new stdClass();
-        foreach ($array as $key => $value){
-            if(is_array($value)){
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
                 $object->{$key} = Core::array_object($value);
             } else {
                 $object->{$key} = $value;
@@ -224,17 +233,17 @@ class Core {
     /**
      * @throws ReflectionException
      */
-    public static function object_array($object=null): array
+    public static function object_array($object = null): array
     {
         $list = [];
-        if($object === null){
+        if ($object === null) {
             return $list;
         }
         $reflection = new ReflectionObject($object);
         do {
             foreach ($reflection->getProperties() as $property) {
                 $property->setAccessible(true);
-                if(!array_key_exists($property->name, $list)){
+                if (!array_key_exists($property->name, $list)) {
                     $list[$property->name] = $property->getValue($object);
                 }
             }
@@ -242,32 +251,32 @@ class Core {
         return $list;
     }
 
-    public static function explode_multi($delimiter=[], $string='', $limit=[]): array
+    public static function explode_multi($delimiter = [], $string = '', $limit = []): array
     {
         $result = array();
-        if(!is_array($limit)){
+        if (!is_array($limit)) {
             $limit = explode(',', $limit);
             $value = reset($limit);
-            if(count($delimiter) > count($limit)){
-                for($i = count($limit); $i < count($delimiter); $i++){
+            if (count($delimiter) > count($limit)) {
+                for ($i = count($limit); $i < count($delimiter); $i++) {
                     $limit[$i] = $value;
                 }
             }
         }
-        foreach($delimiter as $nr => $delim){
-            if(isset($limit[$nr])){
+        foreach ($delimiter as $nr => $delim) {
+            if (isset($limit[$nr])) {
                 $tmp = explode($delim, $string, $limit[$nr]);
             } else {
                 $tmp = explode($delim, $string);
             }
-            if(count($tmp)==1){
+            if (count($tmp) == 1) {
                 continue;
             }
-            foreach ($tmp as $tmp_value){
+            foreach ($tmp as $tmp_value) {
                 $result[] = $tmp_value;
             }
         }
-        if(empty($result)){
+        if (empty($result)) {
             $result[] = $string;
         }
         return $result;
@@ -276,127 +285,114 @@ class Core {
     /**
      * @throws ObjectException
      */
-    public static function object($input='', $output=null, $type=null){
-        if($output === null){
+    public static function object($input = '', $output = null, $type = null)
+    {
+        if ($output === null) {
             $output = Core::OBJECT_OBJECT;
         }
-        if($type === null){
+        if ($type === null) {
             $type = Core::OBJECT_TYPE_ROOT;
         }
-        if(is_bool($input)){
-            if($output == Core::OBJECT_OBJECT || $output == Core::OBJECT_JSON){
+        if (is_bool($input)) {
+            if ($output == Core::OBJECT_OBJECT || $output == Core::OBJECT_JSON) {
                 $data = new stdClass();
-                if(empty($input)){
+                if (empty($input)) {
                     $data->false = false;
                 } else {
                     $data->true = true;
                 }
-                if($output == Core::OBJECT_JSON){
+                if ($output == Core::OBJECT_JSON) {
                     $data = json_encode($data);
                 }
                 return $data;
-            }
-            elseif($output == Core::OBJECT_ARRAY) {
+            } elseif ($output == Core::OBJECT_ARRAY) {
                 return array($input);
             } else {
                 throw new ObjectException(Core::EXCEPTION_OBJECT_OUTPUT);
             }
-        }
-        elseif(is_null($input)){
-            if($output == Core::OBJECT_OBJECT){
+        } elseif (is_null($input)) {
+            if ($output == Core::OBJECT_OBJECT) {
                 return new stdClass();
-            }
-            elseif($output == Core::OBJECT_ARRAY){
+            } elseif ($output == Core::OBJECT_ARRAY) {
                 return array();
-            }
-            elseif($output == Core::OBJECT_JSON){
+            } elseif ($output == Core::OBJECT_JSON) {
                 return '{}';
             }
-        }
-        elseif(is_object($input) && $output === Core::OBJECT_JSON){
-            $json = json_encode($input,JSON_PRETTY_PRINT);
-            if(json_last_error()){
-                throw new ObjectException(json_last_error_msg());
-            }
-            return $json;
-        }
-        elseif(is_array($input) && $output === Core::OBJECT_OBJECT){
-            return Core::array_object($input);
-        }
-        elseif(is_array($input) && $output === Core::OBJECT_JSON){
+        } elseif (is_object($input) && $output === Core::OBJECT_JSON) {
             $json = json_encode($input, JSON_PRETTY_PRINT);
-            if(json_last_error()){
+            if (json_last_error()) {
                 throw new ObjectException(json_last_error_msg());
             }
             return $json;
-        }
-        elseif(is_string($input)){
-            $input = trim($input);
-            if($output == Core::OBJECT_OBJECT){
-                if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
-                    $json = json_decode($input);
-                    if(json_last_error()){
-                        throw new ObjectException(json_last_error_msg());
-                    }
-                    return $json;
-                }
-                elseif(substr($input,0,1)=='[' && substr($input,-1,1)==']'){
-                    $json = json_decode($input);
-                    if(json_last_error()){
-                        throw new ObjectException(json_last_error_msg());
-                    }
-                    return $json;
-                }
+        } elseif (is_array($input) && $output === Core::OBJECT_OBJECT) {
+            return Core::array_object($input);
+        } elseif (is_array($input) && $output === Core::OBJECT_JSON) {
+            $json = json_encode($input, JSON_PRETTY_PRINT);
+            if (json_last_error()) {
+                throw new ObjectException(json_last_error_msg());
             }
-            elseif(stristr($output, Core::OBJECT_JSON) !== false){
-                if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
+            return $json;
+        } elseif (is_string($input)) {
+            $input = trim($input);
+            if ($output == Core::OBJECT_OBJECT) {
+                if (substr($input, 0, 1) == '{' && substr($input, -1, 1) == '}') {
+                    $json = json_decode($input);
+                    if (json_last_error()) {
+                        throw new ObjectException(json_last_error_msg());
+                    }
+                    return $json;
+                } elseif (substr($input, 0, 1) == '[' && substr($input, -1, 1) == ']') {
+                    $json = json_decode($input);
+                    if (json_last_error()) {
+                        throw new ObjectException(json_last_error_msg());
+                    }
+                    return $json;
+                }
+            } elseif (stristr($output, Core::OBJECT_JSON) !== false) {
+                if (substr($input, 0, 1) == '{' && substr($input, -1, 1) == '}') {
                     $input = json_decode($input);
                 }
-            }
-            elseif($output == Core::OBJECT_ARRAY){
-                if(substr($input,0,1)=='{' && substr($input,-1,1)=='}'){
+            } elseif ($output == Core::OBJECT_ARRAY) {
+                if (substr($input, 0, 1) == '{' && substr($input, -1, 1) == '}') {
                     return json_decode($input, true);
-                }
-                elseif(substr($input,0,1)=='[' && substr($input,-1,1)==']'){
+                } elseif (substr($input, 0, 1) == '[' && substr($input, -1, 1) == ']') {
                     return json_decode($input, true);
                 }
             }
         }
-        if(stristr($output, Core::OBJECT_JSON) !== false && stristr($output, 'data') !== false){
-            $data = str_replace('"', '&quot;',json_encode($input));
-        }
-        elseif(stristr($output, Core::OBJECT_JSON) !== false && stristr($output, 'line') !== false){
+        if (stristr($output, Core::OBJECT_JSON) !== false && stristr($output, 'data') !== false) {
+            $data = str_replace('"', '&quot;', json_encode($input));
+        } elseif (stristr($output, Core::OBJECT_JSON) !== false && stristr($output, 'line') !== false) {
             $data = json_encode($input);
         } else {
             $data = json_encode($input, JSON_PRETTY_PRINT);
         }
-        if($output == Core::OBJECT_OBJECT){
+        if ($output == Core::OBJECT_OBJECT) {
             return json_decode($data);
-        }
-        elseif(stristr($output, Core::OBJECT_JSON) !== false){
-            if($type==Core::OBJECT_TYPE_CHILD){
-                return substr($data,1,-1);
+        } elseif (stristr($output, Core::OBJECT_JSON) !== false) {
+            if ($type == Core::OBJECT_TYPE_CHILD) {
+                return substr($data, 1, -1);
             } else {
                 return $data;
             }
-        }
-        elseif($output == Core::OBJECT_ARRAY){
-            return json_decode($data,true);
+        } elseif ($output == Core::OBJECT_ARRAY) {
+            return json_decode($data, true);
         } else {
             throw new ObjectException(Core::EXCEPTION_OBJECT_OUTPUT);
         }
     }
 
-    public static function object_delete($attributeList=[], $object='', $parent='', $key=null){
-        if(is_scalar($attributeList)){
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
+    public static function object_delete($attributeList = [], $object = '', $parent = '', $key = null)
+    {
+        if (is_scalar($attributeList)) {
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
         }
-        if(is_array($attributeList)){
+        if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
-        if(!empty($attributeList) && is_object($attributeList)){
-            foreach($attributeList as $key => $attribute){
-                if(isset($object->{$key})){
+        if (!empty($attributeList) && is_object($attributeList)) {
+            foreach ($attributeList as $key => $attribute) {
+                if (isset($object->{$key})) {
                     return Core::object_delete($attribute, $object->{$key}, $object, $key);
                 } else {
                     unset($object->{$key}); //to delete nulls
@@ -409,35 +405,35 @@ class Core {
         }
     }
 
-    public static function object_has($attributeList=[], $object=''): bool
+    public static function object_has($attributeList = [], $object = ''): bool
     {
-        if(Core::object_is_empty($object)){
-            if(empty($attributeList)){
+        if (Core::object_is_empty($object)) {
+            if (empty($attributeList)) {
                 return true;
             }
             return false;
         }
-        if(is_scalar($attributeList)){
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
-            foreach($attributeList as $nr => $attribute){
-                if(empty($attribute)){
+        if (is_scalar($attributeList)) {
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
+            foreach ($attributeList as $nr => $attribute) {
+                if (empty($attribute)) {
                     unset($attributeList[$nr]);
                 }
             }
         }
-        if(is_array($attributeList)){
+        if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
-        if(empty($attributeList)){
+        if (empty($attributeList)) {
             return true;
         }
-        foreach($attributeList as $key => $attribute){
-            if(empty($key)){
+        foreach ($attributeList as $key => $attribute) {
+            if (empty($key)) {
                 continue;
             }
-            if(property_exists($object,$key)){
+            if (property_exists($object, $key)) {
                 $get = Core::object_has($attributeList->{$key}, $object->{$key});
-                if($get === false){
+                if ($get === false) {
                     return false;
                 }
                 return true;
@@ -446,50 +442,50 @@ class Core {
         return false;
     }
 
-    public static function object_get($attributeList=[], $object=''){
-        if(Core::object_is_empty($object)){
-            if(empty($attributeList) && !is_scalar($attributeList)){
+    public static function object_get($attributeList = [], $object = '')
+    {
+        if (Core::object_is_empty($object)) {
+            if (empty($attributeList) && !is_scalar($attributeList)) {
                 return $object;
             }
-            if(is_array($object)){
-                if(is_array($attributeList)){
-                    foreach($attributeList as $key => $attribute){
-                        if($key === null || $key === ''){
+            if (is_array($object)) {
+                if (is_array($attributeList)) {
+                    foreach ($attributeList as $key => $attribute) {
+                        if ($key === null || $key === '') {
                             continue;
                         }
-                        if(array_key_exists($key, $object)){
+                        if (array_key_exists($key, $object)) {
                             return Core::object_get($attributeList->{$key}, $object[$key]);
                         }
                     }
-                }
-                elseif(is_scalar($attributeList)){
+                } elseif (is_scalar($attributeList)) {
                     var_dump($attributeList);
                     die;
                 }
-            }            
+            }
             return null;
         }
-        if(is_scalar($attributeList)){
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
-            foreach($attributeList as $nr => $attribute){
-                if($attribute === null || $attribute === ''){
+        if (is_scalar($attributeList)) {
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
+            foreach ($attributeList as $nr => $attribute) {
+                if ($attribute === null || $attribute === '') {
                     unset($attributeList[$nr]);
                 }
             }
         }
-        if(is_array($attributeList)){
+        if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
-        if(empty($attributeList)){
+        if (empty($attributeList)) {
             return $object;
         }
-        foreach($attributeList as $key => $attribute){
-            if($key === null || $key === ''){
+        foreach ($attributeList as $key => $attribute) {
+            if ($key === null || $key === '') {
                 continue;
             }
-            if(isset($object->{$key})){
+            if (isset($object->{$key})) {
                 return Core::object_get($attributeList->{$key}, $object->{$key});
-            }                       
+            }
         }
         return null;
     }
@@ -497,35 +493,35 @@ class Core {
     /**
      * @throws ObjectException
      */
-    public static function object_merge(){
+    public static function object_merge()
+    {
         $objects = func_get_args();
         $main = array_shift($objects);
-        if(empty($main) && !is_array($main)){
+        if (empty($main) && !is_array($main)) {
             $main = new stdClass();
         }
-        foreach($objects as $nr => $object){
-            if(is_array($object)){
-                foreach($object as $key => $value){
-                    if(is_object($main)){
+        foreach ($objects as $nr => $object) {
+            if (is_array($object)) {
+                foreach ($object as $key => $value) {
+                    if (is_object($main)) {
                         throw new ObjectException(Core::EXCEPTION_MERGE_ARRAY_OBJECT);
                     }
-                    if(!isset($main[$key])){
+                    if (!isset($main[$key])) {
                         $main[$key] = $value;
                     } else {
-                        if(is_array($value) && is_array($main[$key])){
+                        if (is_array($value) && is_array($main[$key])) {
                             $main[$key] = Core::object_merge($main[$key], $value);
                         } else {
                             $main[$key] = $value;
                         }
                     }
                 }
-            }
-            elseif(is_object($object)){
-                foreach($object as $key => $value){
-                    if((!isset($main->{$key}))){
+            } elseif (is_object($object)) {
+                foreach ($object as $key => $value) {
+                    if ((!isset($main->{$key}))) {
                         $main->{$key} = $value;
                     } else {
-                        if(is_object($value) && is_object($main->{$key})){
+                        if (is_object($value) && is_object($main->{$key})) {
                             $main->{$key} = Core::object_merge(clone $main->{$key}, clone $value);
                         } else {
                             $main->{$key} = $value;
@@ -537,28 +533,29 @@ class Core {
         return $main;
     }
 
-    public static function object_set($attributeList=[], $value=null, $object='', $return='child'){
-        if(empty($object)){
+    public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child')
+    {
+        if (empty($object)) {
             return;
         }
-        if(is_string($return) && $return !== 'child'){
-            if($return === 'root'){
+        if (is_string($return) && $return !== 'child') {
+            if ($return === 'root') {
                 $return = $object;
             } else {
                 $return = Core::object_get($return, $object);
             }
         }
-        if(is_scalar($attributeList)){
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
+        if (is_scalar($attributeList)) {
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
         }
-        if(is_array($attributeList)){
+        if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
-        if(!empty($attributeList)){
-            foreach($attributeList as $key => $attribute){
-                if(isset($object->{$key}) && is_object($object->{$key})){
-                    if(empty($attribute) && is_object($value)){
-                        foreach($value as $value_key => $value_value){
+        if (!empty($attributeList)) {
+            foreach ($attributeList as $key => $attribute) {
+                if (isset($object->{$key}) && is_object($object->{$key})) {
+                    if (empty($attribute) && is_object($value)) {
+                        foreach ($value as $value_key => $value_value) {
                             /*
                             if(isset($object->$key->$value_key)){
                                 // unset($object->$key->$value_key);   //so sort will happen, @bug request will take forever and apache2 crashes needs reboot apache2
@@ -569,13 +566,12 @@ class Core {
                         return $object->{$key};
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
-                }
-                elseif(is_object($attribute)){
-                    if(
+                } elseif (is_object($attribute)) {
+                    if (
                         property_exists($object, $key) &&
                         is_array($object->{$key})
-                    ){
-                        foreach($attribute as $index => $unused){
+                    ) {
+                        foreach ($attribute as $index => $unused) {
                             $object->{$key}[$index] = $value;
                         }
                         return $object->{$key};
@@ -583,42 +579,41 @@ class Core {
                         $object->{$key} = new stdClass();
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
-                }
-                 else {
+                } else {
                     $object->{$key} = $value;
                 }
             }
         }
-        if($return == 'child'){
+        if ($return == 'child') {
             return $value;
         }
         return $return;
     }
 
-    public static function object_is_empty($object=null): bool
+    public static function object_is_empty($object = null): bool
     {
-        if(!is_object($object)){
+        if (!is_object($object)) {
             return true;
         }
         $is_empty = true;
-        foreach ($object as $value){
+        foreach ($object as $value) {
             $is_empty = false;
             break;
         }
         return $is_empty;
     }
 
-    public static function is_cli(){
-        if(isset($_SERVER['HTTP_HOST'])){
+    public static function is_cli()
+    {
+        if (isset($_SERVER['HTTP_HOST'])) {
             $domain = $_SERVER['HTTP_HOST'];
-        }
-        elseif(isset($_SERVER['SERVER_NAME'])){
+        } elseif (isset($_SERVER['SERVER_NAME'])) {
             $domain = $_SERVER['SERVER_NAME'];
         } else {
             $domain = '';
         }
-        if(empty($domain)){
-            if(!defined('IS_CLI')){
+        if (empty($domain)) {
+            if (!defined('IS_CLI')) {
                 define('IS_CLI', true);
                 return true;
             }
@@ -627,30 +622,31 @@ class Core {
         }
     }
 
-    public static function object_horizontal($verticalArray=[], $value=null, $return='object'){
-        if(empty($verticalArray)){
+    public static function object_horizontal($verticalArray = [], $value = null, $return = 'object')
+    {
+        if (empty($verticalArray)) {
             return false;
         }
         $object = new stdClass();
-        if(is_object($verticalArray)){
+        if (is_object($verticalArray)) {
             $attributeList = get_object_vars($verticalArray);
             $list = array_keys($attributeList);
             $last = array_pop($list);
-            if($value===null){
+            if ($value === null) {
                 $value = $verticalArray->$last;
             }
             $verticalArray = $list;
         } else {
             $last = array_pop($verticalArray);
         }
-        if($last === null || $last === ''){
+        if ($last === null || $last === '') {
             return false;
         }
-        foreach($verticalArray as $attribute){
-            if(empty($attribute)){
+        foreach ($verticalArray as $attribute) {
+            if (empty($attribute)) {
                 continue;
             }
-            if(!isset($deep)){
+            if (!isset($deep)) {
                 $object->{$attribute} = new stdClass();
                 $deep = $object->{$attribute};
             } else {
@@ -658,14 +654,14 @@ class Core {
                 $deep = $deep->{$attribute};
             }
         }
-        if(!isset($deep)){
+        if (!isset($deep)) {
             $object->$last = $value;
         } else {
             $deep->$last = $value;
         }
-        if($return=='array'){
+        if ($return == 'array') {
             $json = json_encode($object);
-            return json_decode($json,true);
+            return json_decode($json, true);
         } else {
             return $object;
         }
@@ -678,7 +674,7 @@ class Core {
      */
     public static function key($url): Key
     {
-        if(File::exist($url)){
+        if (File::exist($url)) {
             $string = File::read($url);
             $key = Key::loadFromAsciiSafeString($string);
         } else {
@@ -687,7 +683,7 @@ class Core {
             $dir = Dir::name($url);
             Dir::create($dir, Dir::CHMOD);
             File::write($url, $string);
-            if(posix_geteuid() === 0){
+            if (posix_geteuid() === 0) {
                 File::chown($dir, 'www-data', 'www-data', true);
             }
         }
@@ -736,10 +732,10 @@ class Core {
         return $variable;
     }
 
-    public static function ucfirst_sentence($string='', $delimiter='.'): string
+    public static function ucfirst_sentence($string = '', $delimiter = '.'): string
     {
         $explode = explode($delimiter, $string);
-        foreach($explode as $nr => $part){
+        foreach ($explode as $nr => $part) {
             $explode[$nr] = ucfirst(trim($part));
         }
         return implode($delimiter, $explode);
@@ -852,21 +848,41 @@ class Core {
     }
     */
 
-    public static function deep_clone($object){
-        if(is_array($object)){
-            foreach($object as $key => $value){
-                if(is_object($value)){
+    public static function deep_clone($object)
+    {
+        if (is_array($object)) {
+            foreach ($object as $key => $value) {
+                if (is_object($value)) {
                     $object[$key] = Core::deep_clone($value);
                 }
             }
             return $object;
         }
         $clone = clone $object;
-        foreach($object as $key => $value){
-            if(is_object($value)){
+        foreach ($object as $key => $value) {
+            if (is_object($value)) {
                 $clone->$key = Core::deep_clone($value);
             }
         }
         return $clone;
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
+    public static function object_select(Parse $parse, Data $data, $url = '', $select = null, $compile = false)
+    {
+        if (File::exist($url)) {
+            $read = File::read($url);
+            $read = Core::object($read);
+            if ($compile) {
+                $read = $parse->compile($read, [], $data);
+            }
+            $json = new Data();
+            $json->data($read);
+            return $json->get($select);
+        }
+        return '';
     }
 }
