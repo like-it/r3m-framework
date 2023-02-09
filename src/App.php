@@ -513,9 +513,6 @@ class App extends Data {
     }
 
     public function request($attribute=null, $value=null){
-        if(is_int($attribute)){
-            $attribute = (string) $attribute;
-        }
         return $this->data(App::REQUEST)->data($attribute, $value);        
     }
 
