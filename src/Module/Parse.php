@@ -39,6 +39,8 @@ class Parse {
     private $halt_literal;
     private $use_this;
 
+    private $key;
+
     public function __construct($object, $storage=null){
         $this->object($object);
         $this->configure();
@@ -233,6 +235,9 @@ class Parse {
         }
         elseif(is_object($string)){
             if($this->useThis() === true){
+                if($this->key){
+                    $string->key = $this->key;
+                }
                 if($depth === null){
                     $depth = 0;
                     $this->local($depth, $string);
@@ -256,10 +261,7 @@ class Parse {
                     continue;
                 }
                 try {
-//                    $local = $this->local($depth);
-//                    $local->key = $key;
-//                    $this->local($depth, $local);
-                    ddd($storage);
+                    $this->key = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
