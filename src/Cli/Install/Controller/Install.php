@@ -37,7 +37,7 @@ class Install extends Controller {
 
         $read = $object->data_read($url, sha1($url));
         if($read){
-            $package = $read->get($package);
+            $package = $read->get('package.' . $package);
             ddd($package);
         }
         ddd($url);
