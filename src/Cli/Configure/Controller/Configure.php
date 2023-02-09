@@ -176,7 +176,7 @@ class Configure extends Controller {
         ){
             $command = false;
         }
-        $subcommand = $object->parameter($object, 'configure', 3);
+        $subcommand = $object->parameter($object, 'configure', 4);
         if(
             !in_array(
                 $subcommand,
