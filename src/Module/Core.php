@@ -473,10 +473,11 @@ class Core {
                 }
             }
         }
-//        var_dump($attributeList);
+        var_dump($attributeList);
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
         }
+        var_dump($attributeList);
         foreach($attributeList as $key => $attribute){
             if($key === null || $key === ''){
                 continue;
