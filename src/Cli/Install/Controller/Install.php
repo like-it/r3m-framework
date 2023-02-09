@@ -34,6 +34,12 @@ class Install extends Controller {
     public static function run(App $object){
         $package = App::parameter($object, 'install', 1);
         $url = $object->config('framework.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
+
+        $read = $object->data_read($url, sha1($url));
+        if($read){
+            $package = $read->get($package);
+            ddd($package);
+        }
         ddd($url);
 
 
