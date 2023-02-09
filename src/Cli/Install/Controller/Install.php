@@ -38,14 +38,6 @@ class Install extends Controller {
 
         $data = new Data($object->data());
         $parse = new Parse($object);
-//        $read = File::read($url);
-//        $read = Core::object($read);
-
-//        $read = $parse->compile($read, $data);
-//        ddd($read);
-
-
-
         $package = Core::object_select(
             $parse,
             $data,
@@ -53,7 +45,6 @@ class Install extends Controller {
             'package.' . $package,
             true
         );
-
         ddd($package);
         ddd($url);
 
