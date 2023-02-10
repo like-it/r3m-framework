@@ -37,7 +37,7 @@ class Install extends Controller {
         $url = $object->config('framework.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
 
         $data = new Data($object->data());
-        $data->data('r3m.io.parse.view.source.url', $url);
+        $data->data('r3m.io.parse.view.url', $url);
         $parse = new Parse($object);
         $package = Core::object_select(
             $parse,
