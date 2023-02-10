@@ -18,6 +18,7 @@ function function_request(Parse $parse, Data $data, $attribute=null, $value=null
     } else {
         if($attribute !== null){
             if($value === null){
+                ddd($attribute);
                 return $object->request($attribute);
             } else {
                 $object->request($attribute, $value);
