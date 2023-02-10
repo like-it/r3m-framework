@@ -485,6 +485,9 @@ class Controller {
         if(is_array($read)){
             ddd($read);
         }
+        if(is_object($read)){
+            ddd($read);
+        }
         return $read;
     }
 
