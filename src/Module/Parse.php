@@ -277,6 +277,7 @@ class Parse {
                     $this->key = $key;
                     $attribute = 'this.' . $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.attribute');
                     $storage->data($attribute, $key);
+                    ddd($storage);
 //                    $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
