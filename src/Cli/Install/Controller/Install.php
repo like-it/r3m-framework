@@ -33,9 +33,8 @@ class Install extends Controller {
      * @throws Exception
      */
     public static function run(App $object){
-        $item = App::parameter($object, 'install', 1);
+        $key = App::parameter($object, 'install', 1);
         $url = $object->config('framework.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
-
         $data = clone $object->data();
         unset($data->{App::NAMESPACE});
         $data = new Data();
@@ -45,12 +44,12 @@ class Install extends Controller {
             $parse,
             $data,
             $url,
-            'package.' . $item,
+            'package.' . $key,
             true
         );
         ddd($package);
         if(empty($package)){
-            throw new Exception('Package: ' . $item . PHP_EOL);
+            throw new Exception('Package: ' . $key . PHP_EOL);
         }
         if(property_exists($package, 'composer')){
             Core::execute($package->composer, $output, $error);
