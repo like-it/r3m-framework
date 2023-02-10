@@ -30,10 +30,10 @@ class Parse {
     const COMPILE = 'Compile';
 
     const THIS_RESERVED_WORDS = [
-        '@parentNode',
-        '@rootNode',
-        '@key',
-        '@attribute'
+        '#parentNode',
+        '#rootNode',
+        '#key',
+        '#attribute'
     ];
 
     private $object;
@@ -277,7 +277,7 @@ class Parse {
                     $this->key = $key;
                     $attribute = 'this.' . $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.attribute');
                     $storage->data($attribute, $key);
-                    ddd($storage);
+                    d($storage);
 //                    $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
