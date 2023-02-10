@@ -248,9 +248,6 @@ class Parse {
                 } else {
                     $file = $storage->data('r3m.io.parse.view.source.url');
                 }
-                $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.url');
-//                $storage->data($key, $file);
-                $string->{$key} = $file;
                 if($this->key){
                     $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.key');
                     $string->{$key} = $this->key;
@@ -258,6 +255,8 @@ class Parse {
                 }
                 if($depth === null){
                     $depth = 0;
+                    $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.url');
+                    $string->{$key} = $file;
                     $this->local($depth, $string);
                 } else {
                     $depth++;
