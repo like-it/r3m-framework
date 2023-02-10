@@ -243,6 +243,8 @@ class Parse {
         elseif(is_object($string)){
             if($this->useThis() === true){
                 if($this->key){
+                    $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.key');
+                    ddd($key);
                     $string->{'@key'} = $this->key;
                 }
                 if($depth === null){

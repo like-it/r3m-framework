@@ -140,7 +140,14 @@
         "read" : {
             "parser" : "{{R3M}}",
             "object" : {
-                "use_this" : true
+                "use_this" : true,
+                "this" : {
+                    "prefix" : "#",
+                    "parentNode" : "parentNode",
+                    "rootNode" : "rootNode",
+                    "attribute" : "attribute",
+                    "key" : "key"
+                }
             }
         },
         "plugin": {
