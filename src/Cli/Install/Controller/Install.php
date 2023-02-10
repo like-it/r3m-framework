@@ -45,6 +45,7 @@ class Install extends Controller {
             'package.' . $item,
             true
         );
+        ddd($package);
         if(empty($package)){
             throw new Exception('Package: ' . $item . PHP_EOL);
         }
