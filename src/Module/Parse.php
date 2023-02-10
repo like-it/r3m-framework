@@ -242,10 +242,17 @@ class Parse {
         }
         elseif(is_object($string)){
             if($this->useThis() === true){
+                $source = $storage->data('r3m.io.parse.view.source');
+                if(empty($source)){
+                    $file = $storage->data('r3m.io.parse.view.url');
+                } else {
+                    $file = $storage->data('r3m.io.parse.view.source.url');
+                }
+                $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.file');
+                $string->{$key} = $file;
                 if($this->key){
                     $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.key');
-                    ddd($key);
-                    $string->{'@key'} = $this->key;
+                    $string->{$key} = $this->key;
                 }
                 if($depth === null){
                     $depth = 0;
@@ -267,7 +274,8 @@ class Parse {
                 }
                 try {
                     $this->key = $key;
-                    $string->{'@attribute'} = $key;
+                    $attribute = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.attribute');
+                    $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
@@ -305,10 +313,11 @@ class Parse {
                 $storage->data('this', $this->local($depth));
                 $rootNode = $this->local(0);
                 if($rootNode && is_object($rootNode)){
-                    $storage->data('this.@rootNode', $rootNode);
+                    $attribute = 'this.' . $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.rootNode');
+                    $storage->data($attribute, $rootNode);
                     $key = 'this';
                     for($index = $depth - 1; $index >= 0; $index--){
-                        $key .= '.@parentNode';
+                        $key .= '.' . $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.parentNode');
                         $storage->data($key, $this->local($index));
                     }
                 }

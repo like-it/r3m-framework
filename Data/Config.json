@@ -146,7 +146,8 @@
                     "parentNode" : "parentNode",
                     "rootNode" : "rootNode",
                     "attribute" : "attribute",
-                    "key" : "key"
+                    "key" : "key",
+                    "file" : "file"
                 }
             }
         },
