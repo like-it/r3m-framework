@@ -877,7 +877,7 @@ class Core
             $read = File::read($url);
             $read = Core::object($read);
             if ($compile) {
-                $read = $parse->compile($read, $data);
+                $read = $parse->compile($read, $data->data(), $parse->storage());
             }
             $json = new Data();
             $json->data($read);
