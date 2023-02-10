@@ -51,7 +51,8 @@ class Install extends Controller {
             throw new Exception('Package: ' . $key . PHP_EOL);
         }
         $data->set($object->config('parse.read.object.this.prefix') . $object->config('parse.read.object.this.key'), $key);
-        ddd($data);
+        $package = $parse->compile($package, $data->data(), $parse->storage());
+        ddd($package);
         if(property_exists($package, 'composer')){
             Core::execute($package->composer, $output, $error);
             if($output){
