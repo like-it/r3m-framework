@@ -1,7 +1,6 @@
 {
   "package" : {
     "r3m-io/priya" : {
-        "#debug" : "{{dd('$this')}}",
         "composer" : "composer require {{$this.#key}}",
         "route" : [
           "{{config('project.dir.vendor')}}{{$this.#key}}/Data/Route.json'}}"
