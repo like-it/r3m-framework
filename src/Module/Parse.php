@@ -248,12 +248,13 @@ class Parse {
                 } else {
                     $file = $storage->data('r3m.io.parse.view.source.url');
                 }
-                $key = 'this.' . $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.url');
-                $storage->data($key, $file);
+                $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.url');
+//                $storage->data($key, $file);
+                $string->{$key} = $file;
                 if($this->key){
-                    $key = 'this.' . $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.key');
-//                    $string->{$key} = $this->key;
-                    $storage->data($key, $this->key);
+                    $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.key');
+                    $string->{$key} = $this->key;
+//                    $storage->data($key, $this->key);
                 }
                 if($depth === null){
                     $depth = 0;
@@ -275,10 +276,10 @@ class Parse {
                 }
                 try {
                     $this->key = $key;
-                    $attribute = 'this.' . $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.attribute');
-                    $storage->data($attribute, $key);
-                    d($storage);
-//                    $string->{$attribute} = $key;
+                    $attribute = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.attribute');
+//                    $storage->data($attribute, $key);
+//                    d($storage);
+                    $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
