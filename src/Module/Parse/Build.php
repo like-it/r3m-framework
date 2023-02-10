@@ -546,6 +546,7 @@ class Build {
                         break;
                     case Build::VARIABLE_ASSIGN :
                         $run[] = $this->indent() . '$this->parse()->is_assign(true);';
+                        d($selection);
                         $run[] = $this->indent() . Variable::assign($this, $storage, $selection, false) . ';';
                         $run[] = $this->indent() . '$this->parse()->is_assign(false);';
                         $remove_newline = true;
