@@ -45,7 +45,7 @@ class Install extends Controller {
             $data,
             $url,
             'package.' . $key,
-            true
+            false
         );
         ddd($package);
         if(empty($package)){
