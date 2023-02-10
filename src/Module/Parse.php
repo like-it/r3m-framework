@@ -248,7 +248,7 @@ class Parse {
                 } else {
                     $file = $storage->data('r3m.io.parse.view.source.url');
                 }
-                $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.file');
+                $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.url');
                 $string->{$key} = $file;
                 if($this->key){
                     $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.key');
