@@ -52,7 +52,6 @@ class Install extends Controller {
         }
         $package->{$object->config('parse.read.object.this.prefix') . $object->config('parse.read.object.this.key')} = $key;
         $package = $parse->compile($package, $data->data(), $parse->storage());
-        ddd($package);
         if(property_exists($package, 'composer')){
             Core::execute($package->composer, $output, $error);
             if($output){
