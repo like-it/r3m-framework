@@ -486,6 +486,8 @@ class Controller {
             ddd($read);
         }
         if(is_object($read)){
+            $debug = debug_backtrace(true);
+            d($debug);
             ddd($read);
         }
         return $read;
