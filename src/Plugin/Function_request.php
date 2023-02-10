@@ -16,6 +16,10 @@ function function_request(Parse $parse, Data $data, $attribute=null, $value=null
     if(!empty($parse->is_assign())){
         d($attribute);
         d($value);
+        if($attribute === null){
+            $debug = debug_backtrace(true);
+            ddd($debug);
+        }
         return $object->request($attribute, $value);
     } else {
         if($attribute !== null){
