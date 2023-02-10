@@ -57,6 +57,9 @@ class Install extends Controller {
             if($output){
                 echo $output;
             }
+            if($error){
+                echo $error;
+            }
         }
         if(
             property_exists($package, 'route') &&
