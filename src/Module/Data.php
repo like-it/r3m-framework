@@ -247,7 +247,6 @@ class Data {
                 }
             }
         }
-        var_dump($attribute);
         return $this->getData();
     }
     private function setData($attribute='', $value=null){
