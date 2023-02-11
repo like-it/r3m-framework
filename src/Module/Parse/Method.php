@@ -153,7 +153,9 @@ class Method {
             } else {                
                 foreach($record['method']['attribute'] as $nr => $token){
                     $token = $build->require('function', $token);
+                    d($token);
                     $value = Variable::getValue($build, $storage, $token);
+                    d($value);
                     $attribute .= $value . ', ';
                 }
             }
@@ -269,15 +271,24 @@ class Method {
                 }
             } else {
                 if(empty($record['method']['trait'])){
-                    if($attribute = '' || $attribute === null){
-                        $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                    if(empty($attribute)){
+                        if($attribute === 0 || $attribute === '0'){
+                            $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(0))';
+                        } else {
+                            $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                        }
+
                     } else {
                         $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
                     }
                 } else {
                     $trait_name = str_replace('function_', '', $record['method']['php_name']);
-                    if($attribute = '' || $attribute === null){
-                        $result = '$this->' . $trait_name . '()';
+                    if(empty($attribute)){
+                        if($attribute === 0 || $attribute === '0'){
+                            $result = '$this->' . $trait_name . '(0)';
+                        } else {
+                            $result = '$this->' . $trait_name . '()';
+                        }
                     } else {
                         $result = '$this->' . $trait_name . '(' . $attribute . ')';
                     }
