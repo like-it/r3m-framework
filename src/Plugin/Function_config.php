@@ -16,7 +16,6 @@ function function_config(Parse $parse, Data $data, $attribute=null, $value=null)
     if($value !== null){
         $object->config($attribute, $value);
     } else {
-        ddd($attribute);
         return $object->config($attribute);
     }
 }
