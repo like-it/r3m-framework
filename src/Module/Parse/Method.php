@@ -271,14 +271,14 @@ class Method {
                 }
             } else {
                 if(empty($record['method']['trait'])){
-                    if(empty($attribute)){
+                    if($attribute = '' || $attribute === null){
                         $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
                     } else {
                         $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
                     }
                 } else {
                     $trait_name = str_replace('function_', '', $record['method']['php_name']);
-                    if(empty($attribute)){
+                    if($attribute = '' || $attribute === null){
                         $result = '$this->' . $trait_name . '()';
                     } else {
                         $result = '$this->' . $trait_name . '(' . $attribute . ')';
