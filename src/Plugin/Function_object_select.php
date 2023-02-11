@@ -17,6 +17,6 @@ use R3m\Io\Module\Core;
  * @throws \R3m\Io\Exception\ObjectException
  * @throws \R3m\Io\Exception\FileWriteException
  */
-function function_object_select(Parse $parse, Data $data, $url, $select=null, $compile=false){
-    return Core::object_select($url, $select, $compile);
+function function_object_select(Parse $parse, Data $data, $url, $select=null, $compile=false, $scope='item'){
+    return Core::object_select($url, $select, $compile, $scope='item');
 }
