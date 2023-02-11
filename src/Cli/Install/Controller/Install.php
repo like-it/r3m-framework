@@ -105,6 +105,7 @@ class Install extends Controller {
             is_array($package->command)
         ){
             foreach($package->command as $command){
+                echo $command . PHP_EOL;
                 Core::execute($command, $output, $error);
                 if($output){
                     echo $output;
