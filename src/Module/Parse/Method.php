@@ -154,6 +154,7 @@ class Method {
                 foreach($record['method']['attribute'] as $nr => $token){
                     $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
+                    d($value);
                     $attribute .= $value . ', ';
                 }
             }
