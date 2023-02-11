@@ -527,6 +527,7 @@ class Variable {
                 $record = Method::get($build, $storage, $record);
                 d($record);
                 $result .= Value::get($build, $storage, $record);
+
                 if(
                     !in_array(
                         $record['type'],
