@@ -51,7 +51,6 @@ class Install extends Controller {
         if(empty($package)){
             throw new Exception('Package: ' . $key . PHP_EOL);
         }
-        ddd($package);
         if(property_exists($package, 'composer')){
             Core::execute($package->composer, $output, $error);
             if($output){
