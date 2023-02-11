@@ -281,6 +281,17 @@ class Parse {
                     $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
+
+                    $unset = $this->object()->config('parse.read.object.this');
+                    $prefix = $this->object()->config('parse.read.object.this.prefix');
+                    if($unset && is_object($unset)){
+                        foreach($unset as $unset_key => $unset_value){
+                            if($unset_key === 'prefix'){
+                                continue;
+                            }
+                            unset($string->{$prefix . $unset_key});
+                        }
+                    }
                 } catch (Exception | ParseError $exception){
                     ddd($exception);
                 }
