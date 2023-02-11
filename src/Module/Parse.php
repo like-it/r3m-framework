@@ -221,6 +221,19 @@ class Parse {
         return $string;
     }
 
+    public static function unset(stdClass $object, stdClass $unset): stdClass
+    {
+        foreach($object as $key => $value){
+            if(is_object($value)){
+                Parse::unset($value, $unset);
+            }
+        }
+        foreach($unset as $unset_key => $unset_value){
+            unset($object->{$unset_value});
+        }
+        return $object;
+    }
+
     /**
      * @throws ObjectException
      * @throws FileWriteException
@@ -241,6 +254,7 @@ class Parse {
             }
         }
         elseif(is_object($string)){
+            $reserved_keys = [];
             if($this->useThis() === true){
                 $source = $storage->data('r3m.io.parse.view.source');
                 if(empty($source)){
@@ -249,18 +263,21 @@ class Parse {
                     $file = $storage->data('r3m.io.parse.view.source.url');
                 }
                 if($this->key){
-                    $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.key');
+                    $key = $this->object()->config('parse.read.object.this.key');
                     $string->{$key} = $this->key;
 //                    $storage->data($key, $this->key);
                 }
                 if($depth === null){
                     $depth = 0;
-                    $key = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.url');
+                    $key = $this->object()->config('parse.read.object.this.url');
                     $string->{$key} = $file;
                     $this->local($depth, $string);
                 } else {
                     $depth++;
                     $this->local($depth, $string);
+                }
+                foreach($this->object()->config('parse.read.object.this') as $key => $value){
+                    $reserved_keys[] = $value;
                 }
             }
             foreach($string as $key => $value){
@@ -268,28 +285,25 @@ class Parse {
                     $this->useThis() === true &&
                     in_array(
                         $key,
-                        Parse::THIS_RESERVED_WORDS
+                        $reserved_keys
                     )
                 ){
                     continue;
                 }
                 try {
                     $this->key = $key;
-                    $attribute = $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.attribute');
+                    $attribute = $this->object()->config('parse.read.object.this.attribute');
 //                    $storage->data($attribute, $key);
 //                    d($storage);
                     $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
 
-                    $unset = $this->object()->config('parse.read.object.this');
-                    $prefix = $this->object()->config('parse.read.object.this.prefix');
-                    if($unset && is_object($unset)){
-                        foreach($unset as $unset_key => $unset_value){
-                            if($unset_key === 'prefix'){
-                                continue;
-                            }
-                            unset($string->{$prefix . $unset_key});
+                    //move  to depth = 0
+                    if($depth === 0){
+                        $unset = $this->object()->config('parse.read.object.this');
+                        if($unset && is_object($unset)) {
+                            $string = Parse::unset($string, $unset);
                         }
                     }
                 } catch (Exception | ParseError $exception){
