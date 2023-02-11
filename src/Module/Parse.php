@@ -293,23 +293,19 @@ class Parse {
                 try {
                     $this->key = $key;
                     $attribute = $this->object()->config('parse.read.object.this.attribute');
-//                    $storage->data($attribute, $key);
-//                    d($storage);
                     $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
-
-                    //move  to depth = 0
-                    if($depth === 0){
-                        $unset = $this->object()->config('parse.read.object.this');
-                        if($unset && is_object($unset)) {
-                            $string = Parse::unset($string, $unset);
-                        }
-                    }
                 } catch (Exception | ParseError $exception){
                     ddd($exception);
                 }
-            }            
+            }
+            if($depth === 0){
+                $unset = $this->object()->config('parse.read.object.this');
+                if($unset && is_object($unset)) {
+                    $string = Parse::unset($string, $unset);
+                }
+            }
             return $string;
         }
         elseif(stristr($string, '{') === false){
