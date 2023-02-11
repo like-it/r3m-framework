@@ -871,18 +871,40 @@ class Core
      * @throws ObjectException
      * @throws FileWriteException
      */
-    public static function object_select(Parse $parse, Data $data, $url = '', $select = null, $compile = false)
+    public static function object_select(Parse $parse, Data $data, $url = '', $select = null, $compile = false, $scope='item')
     {
-        if (File::exist($url)) {
-            $read = File::read($url);
-            $read = Core::object($read);
-            if ($compile) {
-                $read = $parse->compile($read, $data->data(), $parse->storage());
+        if(
+            $compile === true &&
+            $scope === 'item'
+        ){
+            $read = Core::object_select(
+                $parse,
+                $data,
+                $url,
+                $select,
+                false
+            );
+            if(empty($read)){
+                throw new Exception('Could not compile item: ' . $select . PHP_EOL);
             }
-            $json = new Data();
-            $json->data($read);
-            return $json->get($select);
+            $explode = explode('.', $select);
+            ddd($explode);
+            $read->{$parse->object()->config('parse.read.object.this.prefix') . $parse->object()->config('parse.read.object.this.key')} = $key;
+            $read = $parse->compile($read, $data->data(), $parse->storage());
+
+        } else {
+            if (File::exist($url)) {
+                $read = File::read($url);
+                $read = Core::object($read);
+                if ($compile) {
+                    $read = $parse->compile($read, $data->data(), $parse->storage());
+                }
+                $json = new Data();
+                $json->data($read);
+                return $json->get($select);
+            }
+            return '';
         }
-        return '';
+
     }
 }
