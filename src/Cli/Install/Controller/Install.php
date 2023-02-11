@@ -48,12 +48,9 @@ class Install extends Controller {
             true,
             'item'
         );
-        ddd($package);
         if(empty($package)){
             throw new Exception('Package: ' . $key . PHP_EOL);
         }
-        $package->{$object->config('parse.read.object.this.prefix') . $object->config('parse.read.object.this.key')} = $key;
-        $package = $parse->compile($package, $data->data(), $parse->storage());
         if(property_exists($package, 'composer')){
             Core::execute($package->composer, $output, $error);
             if($output){
@@ -63,7 +60,6 @@ class Install extends Controller {
                 echo $error;
             }
         }
-        d($package);
         if(
             property_exists($package, 'route') &&
             is_array($package->route)
