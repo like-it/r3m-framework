@@ -201,7 +201,6 @@ class Variable {
             } else {
                 $assign = '$this->storage()->set(';
             }
-            d($attribute);
             $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
             $assign .= $value . ')';
@@ -209,7 +208,6 @@ class Variable {
         } else {
             switch($variable['variable']['operator']){
                 case '=' :
-                    d('other');
                     $assign = '$this->storage()->set(\'';
                     $assign .= $variable['variable']['attribute'] . '\', ';
                     $value = Variable::getValue($build, $storage, $token, $is_result);
@@ -528,6 +526,7 @@ class Variable {
             elseif($is_collect === false){                                
                 $record = Method::get($build, $storage, $record);            
                 $result .= Value::get($build, $storage, $record);
+                d($result);
                 if(
                     !in_array(
                         $record['type'],
