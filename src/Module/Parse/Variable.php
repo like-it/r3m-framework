@@ -525,10 +525,7 @@ class Variable {
             }
             elseif($is_collect === false){                                
                 $record = Method::get($build, $storage, $record);
-                d($record);
                 $result .= Value::get($build, $storage, $record);
-                d($result);
-
                 if(
                     !in_array(
                         $record['type'],
@@ -566,6 +563,7 @@ class Variable {
         if(substr($result, -3) == ' . '){
             $result = substr($result,0, -3);
         }
+        d($result);
         return $result;
     }
 }
