@@ -885,7 +885,7 @@ class Core
                 false
             );
             if(empty($read)){
-                throw new Exception('Could not compile item: ' . $select . PHP_EOL);
+                throw new ObjectException('Could not compile item: ' . $select . PHP_EOL);
             }
             $explode = explode('.', $select);
             $key = array_pop($explode);
