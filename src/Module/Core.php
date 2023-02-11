@@ -888,10 +888,9 @@ class Core
                 throw new Exception('Could not compile item: ' . $select . PHP_EOL);
             }
             $explode = explode('.', $select);
-            ddd($explode);
+            $key = array_pop($explode);
             $read->{$parse->object()->config('parse.read.object.this.prefix') . $parse->object()->config('parse.read.object.this.key')} = $key;
-            $read = $parse->compile($read, $data->data(), $parse->storage());
-
+            return $parse->compile($read, $data->data(), $parse->storage());
         } else {
             if (File::exist($url)) {
                 $read = File::read($url);
