@@ -61,6 +61,7 @@ class Install extends Controller {
                 echo $error;
             }
         }
+        d($package);
         if(
             property_exists($package, 'route') &&
             is_array($package->route)
