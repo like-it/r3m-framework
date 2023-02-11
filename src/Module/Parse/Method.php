@@ -153,6 +153,7 @@ class Method {
             } else {                
                 foreach($record['method']['attribute'] as $nr => $token){
                     $token = $build->require('function', $token);
+
                     $value = Variable::getValue($build, $storage, $token);
                     $attribute .= $value . ', ';
                 }
@@ -271,7 +272,7 @@ class Method {
                 if(empty($record['method']['trait'])){
                     if(empty($attribute)){
                         if($attribute === 0 || $attribute === '0'){
-                            $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(0))';
+                            $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), 0)';
                         } else {
                             $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
                         }
