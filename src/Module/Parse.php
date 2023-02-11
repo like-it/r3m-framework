@@ -300,6 +300,14 @@ class Parse {
                     ddd($exception);
                 }
             }
+            $copy = $this->object()->config('parse.read.object.copy');
+            if($copy && is_object($copy)){
+                foreach($copy as $key => $value){
+                    if(property_exists($string, $key)){
+                        $string->$value = $string->$key;
+                    }
+                }
+            }
             if($depth === 0){
                 $unset = $this->object()->config('parse.read.object.this');
                 if($unset && is_object($unset)) {

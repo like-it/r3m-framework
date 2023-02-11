@@ -147,6 +147,9 @@
                     "attribute" : "#attribute",
                     "key" : "#key",
                     "url" : "#url"
+                },
+                "copy" : {
+                    "#key" : "name"
                 }
             }
         },
