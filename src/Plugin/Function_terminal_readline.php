@@ -29,7 +29,8 @@ function function_terminal_readline(Parse $parse, Data $data, $text='', $type=nu
         if(ob_get_length() > 0){
             ob_flush();
         }
-        while ($line = fgets(STDIN)) {
+        if(!defined("INPUT")) define("INPUT", "fopen('php://stdin','r')");
+        while ($line = fgets(INPUT)) {
             if(stristr($line, "\n") !== false){
                 break;
             }
