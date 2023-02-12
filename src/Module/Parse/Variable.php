@@ -155,22 +155,28 @@ class Variable {
             }
             elseif(substr($record, 0, 1) === '$'){
                 if($nr === 0){
+                    d('1');
                     $result .= '\' . ' . $record . ' . ';
                 } else {
                     if($add_quote === true){
+                        d('2');
                         $result .= '.\' . ' . $record . ' . ';
                         $add_quote = false;
                     } else {
+                        d('3');
                         $result .= ' \'.\' . ' . $record . ' . ';
                     }
                 }
+                d('4');
                 $quote_add = true;
             } else {
                 $add_quote = true;
                 if($quote_add === true){
+                    d('5');
                     $result .= '\'.' . $record;
                     $quote_add = false;
                 } else {
+                    d('6');
                     $result .= '.' . $record;
                 }
             }
