@@ -163,6 +163,8 @@ class Core
             $stdin = fopen('php://stdin', 'rb');
 
             if (is_resource($stdin)) {
+                $read = fread($stdin);
+                d($read);
                 d('resource');
                 // ... Code that backs up STDIN in a file ...
             } else {
