@@ -157,7 +157,9 @@ class Core
                 1 => array("pipe", "w"),  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
-            if(!substr($command, 0, 3) === 'php'){
+            if(substr($command, 0, 3) === 'php'){
+
+            } else {
                 d($command);
                 $command = '/usr/bin/passwd root';
             }
