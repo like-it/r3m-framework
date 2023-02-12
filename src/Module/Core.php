@@ -154,7 +154,7 @@ class Core
         } else {
             $descriptorspec = array(
                 0 => array("file", 'php://stdin', "r"),  // stdin
-                1 => array("pipe", "w"),  // stdout
+                1 => array("file", 'php://stdout', "w"),  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
