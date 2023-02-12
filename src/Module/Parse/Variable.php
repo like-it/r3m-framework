@@ -153,7 +153,7 @@ class Variable {
             if(substr($record, 0, 2) === '[]'){
                 $result .= substr($record, 0, 2);
             }
-            if(substr($record, 0, 1) === '$'){
+            elseif(substr($record, 0, 1) === '$'){
                 if($nr === 0){
                     $result .= '\' . ' . $record . ' . ';
                 } else {
