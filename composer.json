@@ -14,7 +14,7 @@
 		"ext-readline": "*",
 		"ext-pcntl": "*",
 		"monolog/monolog" : "^2.2",
-		"defuse/php-encryption": "^2.3",
+		"defuse/php-encryption": "^2.3"
 	},
 	"license" : "MIT",
 	"authors" : [{
