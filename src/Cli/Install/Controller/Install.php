@@ -119,7 +119,7 @@ class Install extends Controller {
             is_string($package->command)
         ){
             $error = false;
-            $output = shell_exec($package->command);
+            exec($package->command, $output);
 //            Core::execute($package->command, $output, $error);
             if($output){
                 echo $output;
