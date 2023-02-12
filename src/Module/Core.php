@@ -555,8 +555,10 @@ class Core
         var_dump($attributeList);
         if (!empty($attributeList)) {
             foreach ($attributeList as $key => $attribute) {
+                var_dump($attribute);
                 if (isset($object->{$key}) && is_object($object->{$key})) {
                     if (empty($attribute) && $attribute !== '0' && is_object($value)) {
+                        var_dump('1');
                         foreach ($value as $value_key => $value_value) {
                             /*
                             if(isset($object->$key->$value_key)){
@@ -567,26 +569,32 @@ class Core
                         }
                         return $object->{$key};
                     }
+                    var_dump('2');
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } elseif (is_object($attribute)) {
                     if (
                         property_exists($object, $key) &&
                         is_array($object->{$key})
                     ) {
+                        var_dump('3');
                         foreach ($attribute as $index => $unused) {
                             $object->{$key}[$index] = $value;
                         }
                         return $object->{$key};
                     } else {
+                        var_dump('4');
                         $object->{$key} = new stdClass();
                     }
+                    var_dump('5');
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } else {
+                    var_dump('6');
                     $object->{$key} = $value;
                 }
             }
         }
         if ($return == 'child') {
+            var_dump('7');
             return $value;
         }
         return $return;
