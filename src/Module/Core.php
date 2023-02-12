@@ -556,7 +556,7 @@ class Core
         if (!empty($attributeList)) {
             foreach ($attributeList as $key => $attribute) {
                 if (isset($object->{$key}) && is_object($object->{$key})) {
-                    if (empty($attribute) && is_object($value)) {
+                    if (empty($attribute) && $attribute !== '0' && is_object($value)) {
                         foreach ($value as $value_key => $value_value) {
                             /*
                             if(isset($object->$key->$value_key)){
