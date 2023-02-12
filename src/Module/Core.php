@@ -159,6 +159,8 @@ class Core
             );
 
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);//
+            $input = stream_get_contents($pipes[0]);
+            fclose($pipes[0]);
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
