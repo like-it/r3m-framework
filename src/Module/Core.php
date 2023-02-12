@@ -555,6 +555,7 @@ class Core
         var_dump($attributeList);
         if (!empty($attributeList)) {
             foreach ($attributeList as $key => $attribute) {
+                var_dump('###############');
                 var_dump($attribute);
                 if (isset($object->{$key}) && is_object($object->{$key})) {
                     if (empty($attribute) && $attribute !== '0' && is_object($value)) {
