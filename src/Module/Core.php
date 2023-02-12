@@ -159,8 +159,8 @@ class Core
             );
 
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-            $stdin = stream_get_contents($pipes[0]);
-            var_dump($stdin);
+            fwrite($pipes[0], 'this is a test');
+            fclose($pipes[0]);
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
