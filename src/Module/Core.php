@@ -153,7 +153,7 @@ class Core
             return $result;
         } else {
             $descriptorspec = array(
-                0 => array("pipe", "r"),  // stdin
+                0 => array("file", '/dev/tty', "r"),  // stdin
                 1 => array("pipe", "w"),  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
