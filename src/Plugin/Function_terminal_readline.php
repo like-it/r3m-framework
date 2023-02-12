@@ -12,7 +12,7 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_terminal_readline(Parse $parse, Data $data, $text='', $type=null){
-    if($type == 'hidden'){
+    if($type === 'hidden'){
         echo $text;
         ob_flush();
         if(ob_get_length() > 0){
@@ -29,9 +29,9 @@ function function_terminal_readline(Parse $parse, Data $data, $text='', $type=nu
         if(ob_get_length() > 0){
             ob_flush();
         }
-        $input = trim(fgets(STDIN));
+//        $input = trim(fgets(STDIN));
         echo PHP_EOL;
-        return $input;
-    }
+//        return $input;
+//    }
 
 }
