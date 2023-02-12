@@ -158,6 +158,16 @@ class Data {
     }
 
     public function set($attribute='', $value=null){
+        $part_before = stristr($attribute, '[]', true);
+        $part_after = stristr($attribute, '[]');
+        if($part_before !== false){
+            $attribute = $part_before;
+            $attribute .= '.' . $this->index($attribute);
+        }
+        if(!empty($part_after)){
+            ddd($part_after);
+//            $attribute .= '.'
+        }
         if(substr($attribute, -2, 2) === '[]'){
             $attribute = substr($attribute, 0, -2);
             $attribute .= '.'  . $this->index($attribute);
