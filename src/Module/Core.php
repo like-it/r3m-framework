@@ -535,7 +535,7 @@ class Core
 
     public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child')
     {
-        if (empty($object)) {
+        if (!is_object($object)) {
             return;
         }
         if (is_string($return) && $return !== 'child') {
