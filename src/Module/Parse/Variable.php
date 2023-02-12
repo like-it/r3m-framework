@@ -143,7 +143,6 @@ class Variable {
                     array_key_exists('attribute', $variable['variable'])
                 ) {
                     $execute[] = $storage->index($variable['variable']['attribute']);
-                    ddd($execute);
                 }
             }
         }
