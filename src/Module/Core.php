@@ -580,6 +580,9 @@ class Core
                         is_array($object->{$key})
                     ) {
                         var_dump('3');
+                        var_dump($attribute);
+                        var_dump($value);
+                        die;
                         foreach ($attribute as $index => $unused) {
                             $object->{$key}[$index] = $value;
                         }
