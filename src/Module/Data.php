@@ -168,10 +168,7 @@ class Data {
             ddd($part_after);
 //            $attribute .= '.'
         }
-        if(substr($attribute, -2, 2) === '[]'){
-            $attribute = substr($attribute, 0, -2);
-            $attribute .= '.'  . $this->index($attribute);
-        }
+        d($attribute);
         return $this->data('set', $attribute, $value);
     }
 
