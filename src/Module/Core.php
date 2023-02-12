@@ -548,10 +548,12 @@ class Core
         if (is_scalar($attributeList)) {
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
         }
+        var_dump('1###############');
         var_dump($attributeList);
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
+        var_dump('2###############');
         var_dump($attributeList);
         if (!empty($attributeList)) {
             foreach ($attributeList as $key => $attribute) {
