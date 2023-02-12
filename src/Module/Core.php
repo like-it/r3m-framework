@@ -576,8 +576,7 @@ class Core
                             if(is_object($unused)){
                                 $child = new stdClass();
                                 $child = Core::object_set($unused, $value, $child, 'root', true);
-                                var_dump($child);
-                                die;
+                                $object->{$key}[$index] = $child;
                             } else {
                                 $object->{$key}[$index] = $value;
                             }
