@@ -160,7 +160,9 @@ class Core
 
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
 //            fwrite($pipes[0], 'this is a test');
-            fclose($pipes[0]);
+            if(stristr(fgets($pipes[0])) === "\n"){
+                fclose($pipes[0]);
+            }
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
