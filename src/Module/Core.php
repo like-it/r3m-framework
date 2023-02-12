@@ -583,18 +583,19 @@ class Core
                         return $object->{$key};
                     } else {
                         var_dump('4');
+                        var_dump($key);
                         $object->{$key} = new stdClass();
                     }
                     var_dump('5');
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } else {
-                    var_dump('6');
+                    var-dump('6');
+                    var_dump($key);
                     $object->{$key} = $value;
                 }
             }
         }
         if ($return == 'child') {
-            var_dump('7');
             return $value;
         }
         return $return;
