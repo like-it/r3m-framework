@@ -1225,6 +1225,12 @@ class Token {
                                                 'execute' => null
                                             ];
                                         }
+                                    } else {
+                                        $token[$variable_nr]['variable']['array'][$variable_array_level][] = [
+                                            'type' => Token::TYPE_NULL,
+                                            'value' => 'null',
+                                            'execute' => null
+                                        ];
                                     }
                                     $variable_array_level++;
                                     unset($token[$i]);
