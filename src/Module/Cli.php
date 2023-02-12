@@ -37,7 +37,8 @@ class Cli {
         }
         $input = null;
         if($url === 'input'){
-            echo $text;
+            fwrite(STDOUT, $text);
+//            echo $text;
             if($is_flush){
                 ob_flush();
             }
@@ -45,7 +46,8 @@ class Cli {
             echo PHP_EOL;
         }
         elseif($url === 'input-hidden'){
-            echo $text;
+//            echo $text;
+            fwrite(STDOUT, $text);
             if($is_flush){
                 ob_flush();
             }

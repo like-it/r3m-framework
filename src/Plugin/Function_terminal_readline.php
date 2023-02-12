@@ -10,6 +10,7 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Cli;
 
 function function_terminal_readline(Parse $parse, Data $data, $text='', $type=null){
     return Cli::read($type, $text);
