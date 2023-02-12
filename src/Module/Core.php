@@ -158,9 +158,6 @@ class Core
                 2 => array("pipe", "w"),  // stderr
             );
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-            stream_set_blocking($pipes[1], 0);
-            stream_set_blocking($pipes[2], 0);
-            stream_set_blocking(STDIN, 0);
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
