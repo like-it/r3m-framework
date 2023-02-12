@@ -52,88 +52,90 @@ class Variable {
         $execute = [];
         if(array_key_exists('array', $variable['variable'])){
             foreach($variable['variable']['array'] as $nr => $list){
-                foreach ($list as $record){
-                    if(
-                        array_key_exists('execute', $record) &&
-                        $record['execute'] === null
-                    ){
-                        $extra = [];
-                        if(!empty($execute)){
-                            $add_quote = false;
-                            $quote_add = false;
-                            $attribute = '\'' . $variable['variable']['attribute'];
-                            foreach($execute as $part_nr => $part_record){
-                                if(substr($part_record, 0, 1) === '$'){
-                                    if($part_nr === 0){
-                                        $attribute .= '\' . ' . $part_record . ' . ';
-                                    } else {
-                                        if($add_quote === true){
-                                            $attribute .= '.\' . ' . $part_record . ' . ';
-                                            $add_quote = false;
+                if(is_array($list)){
+                    foreach ($list as $record){
+                        if(
+                            array_key_exists('execute', $record) &&
+                            $record['execute'] === null
+                        ){
+                            $extra = [];
+                            if(!empty($execute)){
+                                $add_quote = false;
+                                $quote_add = false;
+                                $attribute = '\'' . $variable['variable']['attribute'];
+                                foreach($execute as $part_nr => $part_record){
+                                    if(substr($part_record, 0, 1) === '$'){
+                                        if($part_nr === 0){
+                                            $attribute .= '\' . ' . $part_record . ' . ';
                                         } else {
-                                            $attribute .= ' \'.\' . ' . $part_record . ' . ';
+                                            if($add_quote === true){
+                                                $attribute .= '.\' . ' . $part_record . ' . ';
+                                                $add_quote = false;
+                                            } else {
+                                                $attribute .= ' \'.\' . ' . $part_record . ' . ';
+                                            }
+                                        }
+                                        $quote_add = true;
+                                    } else {
+                                        $add_quote = true;
+                                        if($quote_add === true){
+                                            $attribute .= '\'.' . $part_record;
+                                            $quote_add = false;
+                                        } else {
+                                            $attribute .= '.' . $part_record;
                                         }
                                     }
-                                    $quote_add = true;
-                                } else {
-                                    $add_quote = true;
-                                    if($quote_add === true){
-                                        $attribute .= '\'.' . $part_record;
-                                        $quote_add = false;
-                                    } else {
-                                        $attribute .= '.' . $part_record;
-                                    }
                                 }
-                            }
-                            if(
-                                !empty($part_record) &&
-                                substr($part_record, 0, 1) === '$'
-                            ){
-                                $attribute = substr($attribute, 0, -3);
+                                if(
+                                    !empty($part_record) &&
+                                    substr($part_record, 0, 1) === '$'
+                                ){
+                                    $attribute = substr($attribute, 0, -3);
+                                } else {
+                                    $attribute .= '\'';
+                                }
+                                $extra[] = '$index = $this->storage()->index(' . $attribute  . ');';
                             } else {
-                                $attribute .= '\'';
+                                $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
                             }
-                            $extra[] = '$index = $this->storage()->index(' . $attribute  . ');';
-                        } else {
-                            $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
-                        }
-                        /*
-                        $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
-                        $extra[] = $build->indent() . '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
-                        $extra[] = $build->indent() . '} else {';
-                        $extra[] = $build->indent() . '$count = 0;';
-                        $extra[] = $build->indent() . '}';
-                        */
-                        $extra = implode(PHP_EOL, $extra);
+                            /*
+                            $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
+                            $extra[] = $build->indent() . '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
+                            $extra[] = $build->indent() . '} else {';
+                            $extra[] = $build->indent() . '$count = 0;';
+                            $extra[] = $build->indent() . '}';
+                            */
+                            $extra = implode(PHP_EOL, $extra);
 //                        $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
-                        $execute[] = '$index';
-                    }
-                    elseif(array_key_exists('execute', $record)){
-                        $execute[] = $record['execute'];
-                    }
-                    else {
-                        if(
-                            array_key_exists('type', $record) &&
-                            $record['type'] === Token::TYPE_VARIABLE &&
-                            array_key_exists('variable', $record) &&
-                            array_key_exists('attribute', $record['variable'])
-                        ){
-                            $tree = [];
-                            $tree[]= $record;
-                            $tree = $build->require('modifier', $tree);
-                            $tree = $build->require('function', $tree);
-                            $execute[] = Value::get($build, $storage, reset($tree));
+                            $execute[] = '$index';
                         }
-                        elseif(
-                            array_key_exists('type', $record) &&
-                            $record['type'] === Token::TYPE_METHOD &&
-                            array_key_exists('method', $record)
-                        ){
-                            $tree = [];
-                            $tree[]= $record;
-                            $tree = $build->require('modifier', $tree);
-                            $tree = $build->require('function', $tree);
-                            $execute[] = Value::get($build, $storage, reset($tree));
+                        elseif(array_key_exists('execute', $record)){
+                            $execute[] = $record['execute'];
+                        }
+                        else {
+                            if(
+                                array_key_exists('type', $record) &&
+                                $record['type'] === Token::TYPE_VARIABLE &&
+                                array_key_exists('variable', $record) &&
+                                array_key_exists('attribute', $record['variable'])
+                            ){
+                                $tree = [];
+                                $tree[]= $record;
+                                $tree = $build->require('modifier', $tree);
+                                $tree = $build->require('function', $tree);
+                                $execute[] = Value::get($build, $storage, reset($tree));
+                            }
+                            elseif(
+                                array_key_exists('type', $record) &&
+                                $record['type'] === Token::TYPE_METHOD &&
+                                array_key_exists('method', $record)
+                            ){
+                                $tree = [];
+                                $tree[]= $record;
+                                $tree = $build->require('modifier', $tree);
+                                $tree = $build->require('function', $tree);
+                                $execute[] = Value::get($build, $storage, reset($tree));
+                            }
                         }
                     }
                 }
