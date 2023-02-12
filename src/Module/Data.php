@@ -158,6 +158,10 @@ class Data {
     }
 
     public function set($attribute='', $value=null){
+        if(substr($attribute, -2, 2) === '[]'){
+            $attribute = substr($attribute, 0, -2);
+            $attribute .= '.'  . $this->index($attribute);
+        }
         return $this->data('set', $attribute, $value);
     }
 
