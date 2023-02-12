@@ -126,7 +126,6 @@ class Core
 
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
-                    fclose($pipes[0]);
                     proc_close($process);
                     exit();
                 default :
@@ -162,13 +161,13 @@ class Core
             d($command);
 
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-
+            fclose($pipes[0]);
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
-            fclose($pipes[0]);
+
             return proc_close($process);
         }
     }
