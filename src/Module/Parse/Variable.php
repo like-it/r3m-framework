@@ -146,7 +146,6 @@ class Variable {
                 }
             }
         }
-        d($execute);
         $result = '\'' . $variable['variable']['attribute'];
         $quote_add = false;
         $add_quote = false;
@@ -184,6 +183,7 @@ class Variable {
         } else {
             $result .= '\'';
         }
+        d($result);
         return $result;
     }
 
