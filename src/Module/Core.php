@@ -882,7 +882,14 @@ class Core
     {
         if(
             $compile === true &&
-            $scope === 'item'
+            in_array(
+                $scope, [
+                    'item',
+                    'scope:item',
+                    'object',
+                    'scope:object'
+                ]
+            )
         ){
             $read = Core::object_select(
                 $parse,
@@ -896,9 +903,11 @@ class Core
             }
             $explode = explode('.', $select);
             $key = array_pop($explode);
-            $read->{$parse->object()->config('parse.read.object.this.prefix') . $parse->object()->config('parse.read.object.this.key')} = $key;
+            $read->{$parse->object()->config('parse.read.object.this.key')} = $key;
             return $parse->compile($read, $data->data(), $parse->storage());
         } else {
+            //document
+            //scope:document
             if (File::exist($url)) {
                 $read = File::read($url);
                 $read = Core::object($read);
