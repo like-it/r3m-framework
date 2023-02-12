@@ -120,7 +120,6 @@ class Variable {
                     }
                 }
             }
-            ddd($execute);
         }
         $result = '\'' . $variable['variable']['attribute'];
         $quote_add = false;
