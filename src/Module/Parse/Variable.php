@@ -51,7 +51,6 @@ class Variable {
     private static function getArrayAttribute($variable=[], $build, Data $storage, &$extra=''){
         $execute = [];
         if(array_key_exists('array', $variable['variable'])){
-            ddd($variable['variable']);
             foreach($variable['variable']['array'] as $nr => $list){
                 $token = $build->require('function', $list);
                 $value = Variable::getValue($build, $storage, $list);
