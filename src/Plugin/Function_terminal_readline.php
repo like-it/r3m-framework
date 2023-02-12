@@ -32,6 +32,6 @@ function function_terminal_readline(Parse $parse, Data $data, $text='', $type=nu
 //        $input = trim(fgets(STDIN));
         echo PHP_EOL;
 //        return $input;
-//    }
+    }
 
 }
