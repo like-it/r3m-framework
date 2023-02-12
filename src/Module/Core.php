@@ -571,10 +571,11 @@ class Core
                         property_exists($object, $key) &&
                         is_array($object->{$key})
                     ) {
-                        var_dump('#####################');
-var_dump($attribute);
                         foreach ($attribute as $index => $unused) {
                             if(is_object($unused)){
+                                $child = new stdClass();
+                                $child = Core::object_set($unused, $value, $child, $return);
+                                var_dump($child);
                                 var_dump('3');
                                 var_dump($attribute);
                                 var_dump($value);
