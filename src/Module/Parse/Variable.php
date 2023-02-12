@@ -48,7 +48,7 @@ class Variable {
     /**
      * @throws Exception
      */
-    private static function getArrayAttribute($build, Data $storage, $variable=[], &$extra=''){
+    private static function getArrayAttribute($build, Data $storage, $variable=[]){
         $execute = [];
         if(array_key_exists('array', $variable['variable'])){
             foreach($variable['variable']['array'] as $nr => $list){
@@ -164,15 +164,8 @@ class Variable {
             $variable['variable']['operator'] === '=' &&
             array_key_exists('array', $variable['variable'])
         ){
-            $attribute = Variable::getArrayAttribute($build, $storage, $variable, $extra);
-            if($extra){
-                $assign = $extra;
-                $assign .= PHP_EOL;
-                $assign .= $build->indent();
-                $assign .= '$this->storage()->set(';
-            } else {
-                $assign = '$this->storage()->set(';
-            }
+            $attribute = Variable::getArrayAttribute($build, $storage, $variable);
+            $assign = '$this->storage()->set(';
             $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
             $assign .= $value . ')';
