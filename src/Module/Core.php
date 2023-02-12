@@ -589,7 +589,7 @@ class Core
                     var_dump('5');
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } else {
-                    var-dump('6');
+                    var_dump('6');
                     var_dump($key);
                     $object->{$key} = $value;
                 }
