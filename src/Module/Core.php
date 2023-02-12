@@ -587,6 +587,8 @@ class Core
                         $object->{$key} = new stdClass();
                     }
                     var_dump('5');
+                    var_dump($attribute);
+                    var_dump($key);
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } else {
                     var_dump('6');
