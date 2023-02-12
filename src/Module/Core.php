@@ -153,16 +153,11 @@ class Core
             return $result;
         } else {
             $descriptorspec = array(
-                0 => array("file", '/dev/tty', "r"),  // stdin
+                0 => array("file", 'php://stdin', "r"),  // stdin
                 1 => array("pipe", "w"),  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
-            if(substr($command, 0, 3) === 'php'){
-
-            } else {
-                d($command);
-                $command = '/usr/bin/passwd root';
-            }
+            ob_flush();
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
