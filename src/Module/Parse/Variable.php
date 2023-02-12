@@ -138,8 +138,12 @@ class Variable {
                             }
                         }
                     }
-                } elseif(is_null($list)) {
-                    ddd($variable);
+                } elseif(
+                    is_null($list) &&
+                    array_key_exists($variable['variable'], ['attribute'])
+                ) {
+                    $execute[] = $storage->index($variable['variable']['attribute']);
+                    ddd($execute);
                 }
             }
         }
