@@ -552,8 +552,8 @@ class Core
             $attributeList = Core::object_horizontal($attributeList);
         }
         if (!empty($attributeList)) {
-            var_dump($attributeList);
             foreach ($attributeList as $key => $attribute) {
+                var_dump($key);
                 if (isset($object->{$key}) && is_object($object->{$key})) {
                     if (empty($attribute) && $attribute !== '0' && is_object($value)) {
                         foreach ($value as $value_key => $value_value) {
