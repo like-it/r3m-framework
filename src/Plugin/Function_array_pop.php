@@ -16,7 +16,13 @@ function function_array_pop(Parse $parse, Data $data, $selector=''){
         $selector = substr($selector, 1);
     }
     $array = $data->data($selector);
-    $result = array_pop($array);
-    $data->data($selector, $array);
+    $result = false;
+    if($array && is_array($array)){
+        $result = array_pop($array);
+        $data->data($selector, $array);
+    } else {
+        d($array);
+        ddd($selector);
+    }
     return $result;
 }
