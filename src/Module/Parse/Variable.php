@@ -53,6 +53,7 @@ class Variable {
         if(array_key_exists('array', $variable['variable'])){
             foreach($variable['variable']['array'] as $nr => $list){
                 if(is_array($list)){
+                    $exec = null;
                     foreach ($list as $record){
                         if(
                             array_key_exists('execute', $record) &&
