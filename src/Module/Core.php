@@ -575,7 +575,7 @@ class Core
                         foreach ($attribute as $index => $unused) {
                             if(is_object($unused)){
                                 $child = new stdClass();
-                                $child = Core::object_set($unused, $value, $child, $return, true);
+                                $child = Core::object_set($unused, $value, $child, 'root', true);
                                 var_dump($child);
                                 die;
                             } else {
@@ -593,7 +593,7 @@ class Core
                 }
             }
         }
-        if ($return == 'child') {
+        if ($return === 'child') {
             return $value;
         }
         return $return;
