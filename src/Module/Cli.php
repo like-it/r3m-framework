@@ -39,6 +39,7 @@ class Cli {
                 ob_flush();
             }
             $input = trim(fgets(STDIN));
+            echo PHP_EOL;
         }
         elseif($url=='input-hidden'){
             echo $text;
