@@ -138,7 +138,7 @@ class Variable {
                             }
                         }
                     }
-                } else {
+                } elseif(is_null($list)) {
                     ddd($variable);
                 }
             }
