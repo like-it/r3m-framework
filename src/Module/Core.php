@@ -659,7 +659,7 @@ class Core
             return false;
         }
         foreach ($verticalArray as $attribute) {
-            if (empty($attribute)) {
+            if (empty($attribute) && $attribute !== '0') {
                 continue;
             }
             if (!isset($deep)) {
