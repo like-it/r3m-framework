@@ -153,22 +153,21 @@ class Core
             return $result;
         } else {
             $descriptorspec = array(
-//                0 => array("file", 'php://stdin', "r"),  // stdin
-                0 => array("pipe", "r"),  // stdin
+                0 => array("file", 'php://stdin', "r"),  // stdin
+//                0 => array("pipe", "r"),  // stdin
                 1 => array("pipe", "w"),  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
 
-            $read   = [$pipes[0]];
-            $write  = [$pipes[1]];
-            $except = [$pipes[2]];
-            if (false === ($num_changed_streams = stream_select($read, $write, $except, 0))) {
-                /* Error handling */
+            $stdin = fopen('php://stdin', 'rb');
+
+            if (is_resource($stdin)) {
+                d('resource');
+                // ... Code that backs up STDIN in a file ...
+            } else {
                 d('error');
-            } elseif ($num_changed_streams > 0) {
-                /* At least on one of the streams something interesting happened */
-                d('change');
+                // ... Code that logs "ERROR" in a file ...
             }
 
 
