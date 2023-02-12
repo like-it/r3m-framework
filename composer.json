@@ -12,9 +12,10 @@
 		"ext-zend-opcache": "*",
 		"ext-openssl": "*",
 		"ext-readline": "*",
+		"ext-pcntl": "*",
 		"monolog/monolog" : "^2.2",
-		"defuse/php-encryption": "^2.3"
-    },
+		"defuse/php-encryption": "^2.3",
+	},
 	"license" : "MIT",
 	"authors" : [{
 			"name" : "Remco van der Velde",
