@@ -571,7 +571,7 @@ class Core
                         property_exists($object, $key) &&
                         is_array($object->{$key})
                     ) {
-                        var_dump(count($attribute));
+                        var_dump('#####################');
 var_dump($attribute);
                         foreach ($attribute as $index => $unused) {
                             if(is_object($unused)){
