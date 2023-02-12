@@ -61,9 +61,7 @@ class Variable {
                     $list = $build->require('modifier', $list);
                     $list = $build->require('function', $list);
                     $value = Variable::getValue($build, $storage, $list);
-
                     if($value === 'null'){
-                        $extra = [];
                         if(!empty($execute)){
                             $add_quote = false;
                             $quote_add = false;
@@ -100,20 +98,9 @@ class Variable {
                                 $attribute .= '\'';
                             }
                             $exec = '$this->storage()->index(' . $attribute  . ')';
-//                                $extra[] = '$index = $this->storage()->index(' . $attribute  . ');';
                         } else {
                             $exec = '$this->storage()->index(\'' . $variable['variable']['attribute']  . '\')';
-//                                $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
                         }
-                        /*
-                        $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
-                        $extra[] = $build->indent() . '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
-                        $extra[] = $build->indent() . '} else {';
-                        $extra[] = $build->indent() . '$count = 0;';
-                        $extra[] = $build->indent() . '}';
-                        */
-                        $extra = implode(PHP_EOL, $extra);
-//                        $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
                         $execute[] = $exec;
                     } else {
                         $execute[] = $value;
@@ -158,7 +145,6 @@ class Variable {
         } else {
             $result .= '\'';
         }
-        d($result);
         return $result;
     }
 
