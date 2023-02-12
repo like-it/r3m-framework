@@ -137,6 +137,8 @@ class Variable {
                                 $execute[] = Value::get($build, $storage, reset($tree));
                             }
                         }
+                    } else {
+                        ddd($variable);
                     }
                 }
             }
