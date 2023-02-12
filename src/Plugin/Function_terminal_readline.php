@@ -15,6 +15,9 @@ function function_terminal_readline(Parse $parse, Data $data, $text='', $type=nu
     if($type == 'hidden'){
         echo $text;
         ob_flush();
+        if(ob_get_length() > 0){
+            ob_flush();
+        }
         system('stty -echo');
         $input = trim(fgets(STDIN));
         system('stty echo');
@@ -22,6 +25,7 @@ function function_terminal_readline(Parse $parse, Data $data, $text='', $type=nu
         return $input;
     } else {
         echo $text;
+        ob_flush();
         if(ob_get_length() > 0){
             ob_flush();
         }
