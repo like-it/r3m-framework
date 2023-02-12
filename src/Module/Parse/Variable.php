@@ -94,9 +94,11 @@ class Variable {
                                 } else {
                                     $attribute .= '\'';
                                 }
-                                $extra[] = '$index = $this->storage()->index(' . $attribute  . ');';
+                                $exec = '$this->storage()->index(' . $attribute  . ')';
+//                                $extra[] = '$index = $this->storage()->index(' . $attribute  . ');';
                             } else {
-                                $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
+                                $exec = '$this->storage()->index(\'' . $variable['variable']['attribute']  . '\')';
+//                                $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
                             }
                             /*
                             $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
@@ -107,7 +109,7 @@ class Variable {
                             */
                             $extra = implode(PHP_EOL, $extra);
 //                        $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
-                            $execute[] = '$index';
+                            $execute[] = $exec;
                         }
                         elseif(array_key_exists('execute', $record)){
                             $execute[] = $record['execute'];
