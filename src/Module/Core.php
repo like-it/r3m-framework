@@ -533,7 +533,7 @@ class Core
         return $main;
     }
 
-    public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child')
+    public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child', $is_debug=false)
     {
         if (!is_object($object)) {
             return;
@@ -552,6 +552,7 @@ class Core
             $attributeList = Core::object_horizontal($attributeList);
         }
         if (!empty($attributeList)) {
+            var_dump($attributeList);
             foreach ($attributeList as $key => $attribute) {
                 if (isset($object->{$key}) && is_object($object->{$key})) {
                     if (empty($attribute) && $attribute !== '0' && is_object($value)) {
@@ -574,12 +575,9 @@ class Core
                         foreach ($attribute as $index => $unused) {
                             if(is_object($unused)){
                                 $child = new stdClass();
-                                $child = Core::object_set($unused, $value, $child, $return);
+                                $child = Core::object_set($unused, $value, $child, $return, true);
                                 var_dump($child);
-                                var_dump('3');
-                                var_dump($attribute);
-                                var_dump($value);
-                                dd($unused);
+                                die;
                             } else {
                                 $object->{$key}[$index] = $value;
                             }
