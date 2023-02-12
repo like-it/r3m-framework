@@ -153,26 +153,12 @@ class Core
             return $result;
         } else {
             $descriptorspec = array(
-                0 => array("file", 'php://stdin', "r"),  // stdin
+                0 => array("file", 'php://stdin', "rb"),  // stdin
 //                0 => array("pipe", "r"),  // stdin
                 1 => array("pipe", "w"),  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-
-            $stdin = fopen('php://stdin', 'rb');
-
-            if (is_resource($stdin)) {
-                $read = fread($stdin, 8096);
-                d($read);
-                d('resource');
-                // ... Code that backs up STDIN in a file ...
-            } else {
-                d('error');
-                // ... Code that logs "ERROR" in a file ...
-            }
-
-
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
