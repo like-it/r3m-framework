@@ -51,6 +51,7 @@ class Variable {
     private static function getArrayAttribute($variable=[], $build, Data $storage, &$extra=''){
         $execute = [];
         if(array_key_exists('array', $variable['variable'])){
+            ddd($variable['variable']);
             foreach($variable['variable']['array'] as $nr => $list){
                 if(is_array($list)){
                     $exec = null;
