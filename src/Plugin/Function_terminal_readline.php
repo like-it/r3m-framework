@@ -29,9 +29,14 @@ function function_terminal_readline(Parse $parse, Data $data, $text='', $type=nu
         if(ob_get_length() > 0){
             ob_flush();
         }
-//        $input = trim(fgets(STDIN));
+        while ($line = fgets(STDIN)) {
+            if(stristr($line, "\n") !== false){
+                break;
+            }
+        }
+        $input = $line;
         echo PHP_EOL;
-//        return $input;
+        return $input;
     }
 
 }
