@@ -163,12 +163,7 @@ class Core
                 d($command);
                 $command = '/usr/bin/passwd root';
             }
-
-
-
-
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-            fclose($pipes[0]);
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
