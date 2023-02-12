@@ -20,6 +20,9 @@ function function_array_end(Parse $parse, Data $data, $selector=''){
     if($array && is_array($array)){
         $result = end($array);
         $data->data($selector, $array);
+    } else {
+        d($selector);
+        ddd($array);
     }
     return $result;
 }
