@@ -25,6 +25,7 @@ function function_terminal_readline(Parse $parse, Data $data, $text='', $type=nu
         if(ob_get_length() > 0){
             ob_flush();
         }
+        ddd($text);
         $input = trim(fgets(STDIN));
         return $input;
     }
