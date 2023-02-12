@@ -16,7 +16,10 @@ function function_array_end(Parse $parse, Data $data, $selector=''){
         $selector = substr($selector, 1);
     }
     $array = $data->data($selector);
-    $result = end($array);
-    $data->data($selector, $array);
+    $result = false;
+    if($array && is_array($array)){
+        $result = end($array);
+        $data->data($selector, $array);
+    }
     return $result;
 }
