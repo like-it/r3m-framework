@@ -53,6 +53,9 @@ class Variable {
         if(array_key_exists('array', $variable['variable'])){
             ddd($variable['variable']);
             foreach($variable['variable']['array'] as $nr => $list){
+                $token = $build->require('function', $list);
+                $value = Variable::getValue($build, $storage, $list);
+                var_dump($value);
                 if(is_array($list)){
                     $exec = null;
                     foreach ($list as $record){
