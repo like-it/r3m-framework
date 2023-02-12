@@ -163,7 +163,9 @@ class Core
 
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
-            ob_flush();
+            if(ob_get_level() > 0){
+                ob_flush();
+            }
             return proc_close($process);
         }
     }
