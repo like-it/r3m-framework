@@ -548,20 +548,13 @@ class Core
         if (is_scalar($attributeList)) {
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
         }
-        var_dump('1###############');
-        var_dump($attributeList);
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
-        var_dump('2###############');
-        var_dump($attributeList);
         if (!empty($attributeList)) {
             foreach ($attributeList as $key => $attribute) {
-                var_dump('###############');
-                var_dump($attribute);
                 if (isset($object->{$key}) && is_object($object->{$key})) {
                     if (empty($attribute) && $attribute !== '0' && is_object($value)) {
-                        var_dump('1');
                         foreach ($value as $value_key => $value_value) {
                             /*
                             if(isset($object->$key->$value_key)){
@@ -572,33 +565,30 @@ class Core
                         }
                         return $object->{$key};
                     }
-                    var_dump('2');
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } elseif (is_object($attribute)) {
                     if (
                         property_exists($object, $key) &&
                         is_array($object->{$key})
                     ) {
-                        var_dump('3');
-                        var_dump($attribute);
-                        var_dump($value);
+
                         foreach ($attribute as $index => $unused) {
-                            $object->{$key}[$index] = $value;
+                            if(is_object($unused)){
+                                var_dump('3');
+                                var_dump($attribute);
+                                var_dump($value);
+                                dd($unused);
+                            } else {
+                                $object->{$key}[$index] = $value;
+                            }
+
                         }
-                        var_dump($object->{$key});
                         return $object->{$key};
                     } else {
-                        var_dump('4');
-                        var_dump($key);
                         $object->{$key} = new stdClass();
                     }
-                    var_dump('5');
-                    var_dump($attribute);
-                    var_dump($key);
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } else {
-                    var_dump('6');
-                    var_dump($key);
                     $object->{$key} = $value;
                 }
             }
