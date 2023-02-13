@@ -42,6 +42,7 @@ class Cli {
             if($is_flush){
                 ob_flush();
             }
+            fflush(STDOUT);
             $input = trim(fgets(STDIN));
         }
         elseif($url === 'input-hidden'){
@@ -50,6 +51,7 @@ class Cli {
             if($is_flush){
                 ob_flush();
             }
+            fflush(STDOUT);
             system('stty -echo');
             $input = trim(fgets(STDIN));
             system('stty echo');
