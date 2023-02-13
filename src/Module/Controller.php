@@ -487,7 +487,7 @@ class Controller {
             return $read;
         }
         if(is_object($read)){
-            ddd($original);
+            d($original);
             ddd($read);
         }
         return $read;
