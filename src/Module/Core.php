@@ -205,7 +205,7 @@ class Core
 
                 $read = array(STDIN);
                 $n = stream_select($read, $write, $except, $tv, $utv);
-                d($n);
+//                d($n);
                 if($n > 0) {
                     $input = fread(STDIN, 8092);
                     // inpput to program
