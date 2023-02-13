@@ -64,7 +64,6 @@ class Cli {
             case 'stream' :
                 $input = trim(fgets(STDIN));
                 $input = Core::object($input);
-                ddd($input);
             break;
         }
         return $input;
