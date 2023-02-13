@@ -187,14 +187,16 @@ class Core
                         2 => ["pipe", "w"],  // stderr
                     ];
                     $data = Core::object($object->data(), 'json-line');
-                    ddd($data);
+                    d($data);
+
 
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                    fwrite($pipes[0], $data);
+                    fclose($pipes[0]);
                     $output = stream_get_contents($pipes[1]);
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     fclose($pipes[1]);
-                    fclose($pipes[0]);
                     return proc_close($process);
                 }
 //            stream_set_blocking($pipes[1], 0);
