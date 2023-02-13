@@ -154,13 +154,19 @@ class Core
             }
             return $result;
         } else {
-            $descriptorspec = array(
+            $descriptorspec = [
 //                0 => array("file", STDIN, "r"),  // stdin
-                0 => array("pipe", "r"),  // stdin
-                1 => array("pipe", "w"),  // stdout
-                2 => array("pipe", "w"),  // stderr
-            );
-            $process = proc_open($command, [], $pipes, Dir::current(), null);
+                0 => ["pipe", "r"],  // stdin
+                1 => ["pipe", "w"],  // stdout
+                2 => ["pipe", "w"],  // stderr
+            ];
+            $descriptorspec = [
+//                0 => array("file", STDIN, "r"),  // stdin
+                0 => [],  // stdin
+                1 => ["pipe", "w"],  // stdout
+                2 => ["pipe", "w"],  // stderr
+            ];
+            $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
 //            stream_set_blocking(STDIN, 0);
