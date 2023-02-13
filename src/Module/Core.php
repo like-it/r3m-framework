@@ -187,12 +187,11 @@ class Core
                         2 => ["pipe", "w"],  // stderr
                     ];
                     if(is_object($object->route())){
+                        $from = clone $object;
+                        $from->set('R3m\Io.config', $object->config());
+                        $from->set('route', $object->route()->data());
                         $data = Core::object(
-                            Core::object_merge(
-                                $object->data(),
-                                $object->config(),
-                                $object->route()->data()
-                            ),
+                            $from->data(),
                             'json-line'
                         );
                         $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
