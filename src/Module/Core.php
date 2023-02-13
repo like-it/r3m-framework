@@ -120,7 +120,7 @@ class Core
                         2 => array("pipe", "w"),  // stderr
                     );
 
-                    $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                    $process = proc_open($command, [], $pipes, Dir::current(), null);
                     $output = stream_get_contents($pipes[1]);
                     fclose($pipes[1]);
 
