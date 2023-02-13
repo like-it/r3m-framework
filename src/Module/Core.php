@@ -154,7 +154,6 @@ class Core
             }
             return $result;
         } else {
-            ddd($command);
             $descriptorspec = [
 //                0 => array("file", STDIN, "r"),  // stdin
                 0 => ["pipe", "r"],  // stdin
