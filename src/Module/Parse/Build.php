@@ -365,7 +365,7 @@ class Build {
                         $explode = explode('function', $read);
                         $explode[0] = '';
                         $read = implode('function', $explode);
-                        $indent = $this->indent - 1;
+                        $indent = $this->indent;// - 1;
                         $read = explode("\n", $read);
                         foreach($read as $nr => $row){
                             $read[$nr] = $this->indent($indent) . $row;
