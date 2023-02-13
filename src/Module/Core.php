@@ -176,6 +176,7 @@ class Core
 
 
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+            d($pipes);
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
 //            stream_set_blocking(STDIN, 0);
