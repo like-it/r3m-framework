@@ -10,7 +10,8 @@
  */
 namespace R3m\Io;
 
-use R3m\Io\Exception\AuthorizationException;
+use stdClass;
+
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Cli;
 use R3m\Io\Module\Core;
@@ -30,10 +31,10 @@ use R3m\Io\Module\Server;
 use Psr\Log\LoggerInterface;
 
 use Exception;
+
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\LocateException;
-
 
 class App extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -524,12 +525,12 @@ class App extends Data {
         return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
-    public static function flags($object): array
+    public static function flags($object): stdClass
     {
         return parent::flags($object->data(App::REQUEST)->data());
     }
 
-    public static function options($object): array
+    public static function options($object): stdClass
     {
         return parent::options($object->data(App::REQUEST)->data());
     }
