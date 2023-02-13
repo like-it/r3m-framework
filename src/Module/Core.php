@@ -170,7 +170,7 @@ class Core
 
             $descriptorspec = array(
                 0 => STDIN,  // stdin
-                1 => array("pipe", "w"),  // stdout
+                1 => STDOUT,  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
 
@@ -182,8 +182,8 @@ class Core
 
 
 
-            $output = stream_get_contents($pipes[1]);
-            fclose($pipes[1]);
+//            $output = stream_get_contents($pipes[1]);
+//            fclose($pipes[1]);
 
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
