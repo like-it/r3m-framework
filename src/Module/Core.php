@@ -194,9 +194,6 @@ class Core
                         ),
                         'json-line'
                     );
-                    d($data);
-
-
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
                     fwrite($pipes[0], $data .PHP_EOL);
                     fclose($pipes[0]);
