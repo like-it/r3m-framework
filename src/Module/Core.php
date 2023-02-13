@@ -167,13 +167,21 @@ class Core
                 2 => ["pipe", "w"],  // stderr
             ];
             $descriptorspec = [STDIN, STDOUT, STDOUT];
+
+            $descriptorspec = array(
+                0 => STDIN,  // stdin
+                1 => array("pipe", "w"),  // stdout
+                2 => array("pipe", "w"),  // stderr
+            );
+
+
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
 //            stream_set_blocking(STDIN, 0);
 
 
-/*
+
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
@@ -182,7 +190,6 @@ class Core
             if(ob_get_level() > 0){
                 ob_flush();
             }
-*/
             return proc_close($process);
         }
     }
