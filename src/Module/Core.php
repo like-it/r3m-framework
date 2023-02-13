@@ -72,24 +72,27 @@ class Core
         }
     }
 
-    public static function detach($command)
+    public static function detach(App $object, $command)
     {
         $output = [];
         $error = [];
-        return Core::execute($command, $output, $error, Core::SHELL_DETACHED);
+        return Core::execute($object, $command, $output, $error, Core::SHELL_DETACHED);
     }
 
-    public static function async($command)
+    public static function async(App $object, $command)
     {
         if (stristr($command, '&') === false) {
             $command .= ' &';
         }
         $output = [];
         $error = [];
-        return Core::execute($command, $output, $error, Core::SHELL_PROCESS);
+        return Core::execute($object, $command, $output, $error, Core::SHELL_PROCESS);
     }
 
-    public static function execute($command, &$output = '', &$error = '', $type = null)
+    /**
+     * @throws ObjectException
+     */
+    public static function execute(App $object, $command, &$output = '', &$error = '', $type = null)
     {
         if ($output === null) {
             $output = [];
@@ -154,27 +157,65 @@ class Core
             }
             return $result;
         } else {
-            $descriptorspec = [
-//                0 => array("file", STDIN, "r"),  // stdin
-                0 => ["pipe", "r"],  // stdin
-                1 => ["pipe", "w"],  // stdout
-                2 => ["pipe", "w"],  // stderr
-            ];
+
+            $option = 'default';
+            switch($option){
+                case 'file' :
+                case 'read' :
+                default :
+                $descriptorspec = [
+                    0 => ["pipe", "r"],  // stdin
+                    1 => ["pipe", "w"],  // stdout
+                    2 => ["pipe", "w"],  // stderr
+                ];
+                $data = Core::object($object->data(), 'json-line');
+                ddd($data);
+                
+                $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                $output = stream_get_contents($pipes[1]);
+                $error = stream_get_contents($pipes[2]);
+                fclose($pipes[2]);
+                fclose($pipes[1]);
+                fclose($pipes[0]);
+                return proc_close($process);
+            }
 
 
-            $descriptorspec = [
-                0 => ['file', 'php:' , 'r'],  // stdin
-                1 => ["pipe", "w"],  // stdout
-                2 => ["pipe", "w"],  // stderr
-            ];
 
-            $descriptorspec = array(
-                0 => STDIN,  // stdin
-                1 => STDOUT,  // stdout
-                2 => ["pipe", "w"],  // stderr
-            );
 
-            $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+            if(in_array($option, [
+                'file'
+            ])){
+                $descriptorspec = [
+                    0 => ['file', 'php://stdin' , 'r'],  // stdin
+                    1 => ['file', 'php://stdout', 'w'],  // stdout
+                    2 => ['pipe', 'w'],  // stderr
+                ];
+                $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                $error = stream_get_contents($pipes[2]);
+                fclose($pipes[2]);
+                return proc_close($process);
+            }
+            if(in_array($option, [
+                'read'
+            ])){
+                $descriptorspec = array(
+                    0 => STDIN,  // stdin
+                    1 => STDOUT,  // stdout
+                    2 => ["pipe", "w"],  // stderr
+                );
+                $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                $error = stream_get_contents($pipes[2]);
+                fclose($pipes[2]);
+                return proc_close($process);
+            }
+
+
+
+
+
+
+
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
 //            stream_set_blocking(STDIN, 0);
