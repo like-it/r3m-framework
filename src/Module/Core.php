@@ -161,7 +161,7 @@ class Core
                 2 => ["pipe", "w"],  // stderr
             ];
             $descriptorspec = [
-//                0 => array("file", STDIN, "r"),  // stdin
+                0 => array("file", STDIN, "r"),  // stdin
                 1 => ["pipe", "w"],  // stdout
                 2 => ["pipe", "w"],  // stderr
             ];
