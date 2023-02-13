@@ -64,6 +64,7 @@ class Cli {
             case 'stream' :
                 $input = trim(fgets(STDIN));
                 $input = Core::object($input);
+                ddd($input);
                 $input->{'R3m\Io'}->Config = new Config($input->Config);
                 $input->Route = new Route($input->Route);
             break;
