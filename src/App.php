@@ -117,6 +117,8 @@ class App extends Data {
                 if(!$options->domain){
                     $options->domain = Host::domain() . '.' . Host::extension();
                 }
+            } else {
+                $options->domain = 'localhost';
             }
             $options->secure = null;
             if(Host::scheme() === Host::SCHEME_HTTPS){
