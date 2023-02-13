@@ -164,7 +164,7 @@ class Core
 //            stream_set_blocking(STDIN, 0);
 
 
-
+/*
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
@@ -173,7 +173,7 @@ class Core
             if(ob_get_level() > 0){
                 ob_flush();
             }
-            
+*/
             return proc_close($process);
         }
     }
