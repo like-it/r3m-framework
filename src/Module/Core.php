@@ -186,7 +186,10 @@ class Core
                         1 => ["pipe", "w"],  // stdout
                         2 => ["pipe", "w"],  // stderr
                     ];
-                    if(is_object($object->route())){
+                    if(
+                        is_object($object->route()) &&
+                        method_exists($object->route(), 'data')
+                    ){
                         $from = clone $object;
                         $from->set('R3m\Io.Config', $object->config());
                         $from->set('R3m\Io.Route', $object->route()->data());
