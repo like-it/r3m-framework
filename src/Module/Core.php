@@ -121,11 +121,13 @@ class Core
                     );
 
                     $process = proc_open($command, [], $pipes, Dir::current(), null);
+                    /*
                     $output = stream_get_contents($pipes[1]);
                     fclose($pipes[1]);
 
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
+                    */
                     proc_close($process);
                     exit();
                 default :
@@ -159,6 +161,7 @@ class Core
                 2 => array("pipe", "w"),  // stderr
             );
             $process = proc_open($command, [], $pipes, Dir::current(), null);
+            ddd($pipes);
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
 //            stream_set_blocking(STDIN, 0);
