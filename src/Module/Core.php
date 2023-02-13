@@ -158,63 +158,13 @@ class Core
                 1 => array("pipe", "w"),  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
-            $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-            stream_set_blocking($pipes[1], 0);
-            stream_set_blocking($pipes[2], 0);
-            stream_set_blocking(STDIN, 0);
-
-            $pid = 1;
-
-            while(true) {
-                // detect if the child has terminated - the php way
-                $status = proc_get_status($process);
-//                d($status);
-                // check retval
-                if($status === FALSE) {
-                    throw new Exception ("Failed to obtain status information for $pid");
-                }
-                if($status['running'] === FALSE) {
-                    $exitcode = $status['exitcode'];
-                    if($exitcode === 0){
-                        break;
-                    }
-                    $pid = -1;
-                    echo "child exited with code: $exitcode\n";
-                    exit($exitcode);
-                }
-
-                // read from childs stdout and stderr
-                // avoid *forever* blocking through using a time out (50000usec)
-                foreach(array(1, 2) as $desc) {
-                    // check stdout for data
-                    $read = array($pipes[$desc]);
-                    $write = NULL;
-                    $except = NULL;
-                    $tv = 0;
-                    $utv = 500000;
-
-                    $n = stream_select($read, $write, $except, $tv, $utv);
-                    if($n > 0) {
-                        do {
-                            $data = fread($pipes[$desc], 8092);
-                            fwrite(STDOUT, $data);
-                        } while (strlen($data) > 0);
-                    }
-                }
+            $process = proc_open($command, [], $pipes, Dir::current(), null);
+//            stream_set_blocking($pipes[1], 0);
+//            stream_set_blocking($pipes[2], 0);
+//            stream_set_blocking(STDIN, 0);
 
 
-                $read = array(STDIN);
-                $n = stream_select($read, $write, $except, $tv, $utv);
-//                d($n);
-                if($n > 0) {
-                    $input = fread(STDIN, 8092);
-                    // inpput to program
-                    fwrite($pipes[0], $input);
-                }
-            }
 
-
-            /*
             $output = stream_get_contents($pipes[1]);
             fclose($pipes[1]);
 
@@ -223,7 +173,7 @@ class Core
             if(ob_get_level() > 0){
                 ob_flush();
             }
-            */
+            
             return proc_close($process);
         }
     }
