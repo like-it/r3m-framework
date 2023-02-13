@@ -17,7 +17,7 @@ use R3m\Io\Module\Core;
 function function_core_exec(Parse $parse, Data $data, $command, $attribute=null, $type=null){
     $object = $parse->object();
     $output = [];
-    Core::execute($command, $output, $error, $type);
+    Core::execute($object, $command, $output, $error, $type);
     if($attribute) {
         if (substr($attribute, 0, 1) === '$') {
             $attribute = substr($attribute, 1);

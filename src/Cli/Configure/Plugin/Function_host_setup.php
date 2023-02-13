@@ -50,18 +50,18 @@ function function_host_setup(Parse $parse, Data $data, $host='', $public_html=''
         throw new Exception('Server admin e-mail cannot be empty...');
     }
     $output = '';
-    Core::execute(Core::binary() . ' configure server admin ' . $email, $output);
+    Core::execute($object, Core::binary() . ' configure server admin ' . $email, $output);
     $output = '';
-    Core::execute(Core::binary() . ' configure site create ' . $host . ' ' . $public_html, $output);
+    Core::execute($object, Core::binary() . ' configure site create ' . $host . ' ' . $public_html, $output);
     if($id === 0) {
         $output = '';
-        Core::execute(Core::binary() . ' configure host add ' . $ip . ' ' . $host, $output);
+        Core::execute($object, Core::binary() . ' configure host add ' . $ip . ' ' . $host, $output);
     }
     $output = '';
-    Core::execute(Core::binary() . ' configure public create ' . $public_html, $output);
+    Core::execute($object, Core::binary() . ' configure public create ' . $public_html, $output);
     $output = '';
     $error = '';
-    Core::execute(Core::binary() . ' configure domain add ' . $host, $output, $error);
+    Core::execute($object, Core::binary() . ' configure domain add ' . $host, $output, $error);
     if(
         substr($output, 0, 1) === '{' &&
         substr($output, -1, 1) === '}'
@@ -71,14 +71,14 @@ function function_host_setup(Parse $parse, Data $data, $host='', $public_html=''
     }
     if($id === 0){
         $output = '';
-        Core::execute(Core::binary() . ' configure site enable ' . $host, $output);
+        Core::execute($object, Core::binary() . ' configure site enable ' . $host, $output);
         $output = '';
-        Core::execute('a2enmod rewrite', $output);
+        Core::execute($object, 'a2enmod rewrite', $output);
         $output = '';
         $host_dir_root = $object->config(Config::DATA_PROJECT_DIR_ROOT) . 'Host' . $object->config('ds');
-        Core::execute('chown www-data:www-data -R ' . $host_dir_root);
-        Core::execute('chmod 777 -R ' . $host_dir_root);
-        Core::execute('service apache2 restart', $output);
+        Core::execute($object, 'chown www-data:www-data -R ' . $host_dir_root);
+        Core::execute($object, 'chmod 777 -R ' . $host_dir_root);
+        Core::execute($object, 'service apache2 restart', $output);
     }
 }
 

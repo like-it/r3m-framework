@@ -62,7 +62,7 @@ class Restore extends Controller {
             $destination = $object->config('project.dir.public') . $filename;
             File::copy($source, $destination);
             $command = 'chown www-data:www-data ' . $destination;
-            Core::execute($command);
+            Core::execute($object, $command);
             echo $destination . ' Restored...' . PHP_EOL;
         }
     }

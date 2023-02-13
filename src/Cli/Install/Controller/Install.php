@@ -52,7 +52,7 @@ class Install extends Controller {
             throw new Exception('Package: ' . $key . PHP_EOL);
         }
         if(property_exists($package, 'composer')){
-            Core::execute($package->composer, $output, $error);
+            Core::execute($object, $package->composer, $output, $error);
             if($output){
                 echo $output;
             }
@@ -69,7 +69,7 @@ class Install extends Controller {
                     $command = '{{binary()}} configure route resource "' . $route . '"';
                     $parse = new Parse($object, $object->data());
                     $command = $parse->compile($command, $object->data());
-                    Core::execute($command, $output, $error);
+                    Core::execute($object, $command, $output, $error);
                     if($output){
                         echo $output;
                     }
@@ -89,7 +89,7 @@ class Install extends Controller {
                 $command = '{{binary()}} configure route resource "' . $package->route . '"';
                 $parse = new Parse($object, $object->data());
                 $command = $parse->compile($command, $object->data());
-                Core::execute($command, $output, $error);
+                Core::execute($object, $command, $output, $error);
                 if($output){
                     echo $output;
                 }
@@ -105,7 +105,7 @@ class Install extends Controller {
             is_array($package->command)
         ){
             foreach($package->command as $command){
-                Core::execute($command, $output, $error);
+                Core::execute($object, $command, $output, $error);
                 if($output){
                     echo $output;
                 }
@@ -118,7 +118,7 @@ class Install extends Controller {
             property_exists($package, 'command') &&
             is_string($package->command)
         ){
-            Core::execute($package->command, $output, $error);
+            Core::execute($object, $package->command, $output, $error);
             if($output){
                 echo $output;
             }

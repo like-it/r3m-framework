@@ -140,7 +140,7 @@ class Secret extends Controller {
                 Dir::create($dir, Dir::CHMOD);
                 File::write($key_url, $string);
                 $command = 'chown www-data:www-data ' . $dir . ' -R';
-                Core::execute($command);
+                Core::execute($object, $command);
             }
             $string = File::read($key_url);
             $key = Key::loadFromAsciiSafeString($string);
@@ -166,7 +166,7 @@ class Secret extends Controller {
                                 Dir::create($dir, Dir::CHMOD);
                                 $data->write($url);
                                 $command = 'chown www-data:www-data ' . $url;
-                                Core::execute($command);
+                                Core::execute($object, $command);
                                 echo $attribute . PHP_EOL;
                                 return null;
                             }
@@ -182,7 +182,7 @@ class Secret extends Controller {
                     Dir::create($dir, Dir::CHMOD);
                     $data->write($url);
                     $command = 'chown www-data:www-data ' . $url;
-                    Core::execute($command);
+                    Core::execute($object, $command);
                     echo $attribute . PHP_EOL;
                 }
             }
@@ -257,7 +257,7 @@ class Secret extends Controller {
                                 $data->delete($attribute);
                                 $data->write($url);
                                 $command = 'chown www-data:www-data ' . $url;
-                                Core::execute($command);
+                                Core::execute($object, $command);
                                 echo 'Secret delete: ' . $attribute . PHP_EOL;
                                 return null;
                             }
@@ -318,7 +318,7 @@ class Secret extends Controller {
                         Dir::create($dir, Dir::CHMOD);
                         $write = $data->write($url);
                         $command = 'chown www-data:www-data ' . $url;
-                        Core::execute($command);
+                        Core::execute($object, $command);
                         echo "Successfully locked with new username & password..." . PHP_EOL;
                         return null;
                     }
@@ -332,7 +332,7 @@ class Secret extends Controller {
                         Dir::create($dir, Dir::CHMOD);
                         File::write($key_url, $string);
                         $command = 'chown www-data:www-data ' . $dir . ' -R';
-                        Core::execute($command);
+                        Core::execute($object, $command);
                     }
                     $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
                     $data->delete('secret.uuid');
@@ -341,7 +341,7 @@ class Secret extends Controller {
                     Dir::create($dir, Dir::CHMOD);
                     $write = $data->write($url);
                     $command = 'chown www-data:www-data ' . $url;
-                    Core::execute($command);
+                    Core::execute($object, $command);
                     echo "Successfully locked..." . PHP_EOL;
                     return null;
                 } else {
@@ -362,7 +362,7 @@ class Secret extends Controller {
                                 Dir::create($dir, Dir::CHMOD);
                                 File::write($key_url, $string);
                                 $command = 'chown www-data:www-data ' . $dir . ' -R';
-                                Core::execute($command);
+                                Core::execute($object, $command);
                             }
                             $username = Crypto::encrypt((string)$username, $key);
                             $data->set($attribute, $username);
@@ -391,7 +391,7 @@ class Secret extends Controller {
                             Dir::create($dir, Dir::CHMOD);
                             $write = $data->write($url);
                             $command = 'chown www-data:www-data ' . $url;
-                            Core::execute($command);
+                            Core::execute($object, $command);
                             echo "Successfully locked..." . PHP_EOL;
                             return null;
                         }
@@ -416,7 +416,7 @@ class Secret extends Controller {
                         Dir::create($dir, Dir::CHMOD);
                         File::write($key_url, $string);
                         $command = 'chown www-data:www-data ' . $dir . ' -R';
-                        Core::execute($command);
+                        Core::execute($object, $command);
                     }
                     $username = Crypto::encrypt((string) $username, $key);
                     $data->set($attribute, $username);
@@ -445,7 +445,7 @@ class Secret extends Controller {
                     Dir::create($dir, Dir::CHMOD);
                     $write = $data->write($url);
                     $command = 'chown www-data:www-data ' . $url;
-                    Core::execute($command);
+                    Core::execute($object, $command);
                     echo "Successfully locked..." . PHP_EOL;
                 } else if (
                     $get &&
@@ -495,7 +495,7 @@ class Secret extends Controller {
                     echo $url . PHP_EOL;
                     echo $write . PHP_EOL;
                     $command = 'chown www-data:www-data ' . $url;
-                    Core::execute($command);
+                    Core::execute($object, $command);
                     echo "Successfully locked..." . PHP_EOL;
                 }
             }
@@ -545,7 +545,7 @@ class Secret extends Controller {
                             Dir::create($dir, Dir::CHMOD);
                             $data->write($url);
                             $command = 'chown www-data:www-data ' . $url;
-                            Core::execute($command);
+                            Core::execute($object, $command);
                             echo "Successfully unlocked..." . PHP_EOL;
                             return null;
                         }

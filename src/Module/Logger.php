@@ -165,7 +165,7 @@ class Logger {
         if(empty($uuid)){
             $dir = $object->config('project.dir.log');
             $command = 'chown www-data:www-data ' . $dir . ' -R';
-            Core::execute($command);
+            Core::execute($object, $command);
         }
     }
 

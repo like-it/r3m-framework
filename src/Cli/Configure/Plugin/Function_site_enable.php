@@ -27,6 +27,7 @@ function function_site_enable(Parse $parse, Data $data, $server=null){
         $url2 = '/etc/apache2/sites-enabled/';
         $dir = new Dir();
         $read = $dir->read($url);
+        $object = $parse->object();
         foreach($read as $file){
             if($file->type != File::TYPE){
                 continue;
@@ -37,7 +38,7 @@ function function_site_enable(Parse $parse, Data $data, $server=null){
             if(stristr($file->name, str_replace('.', '-', $server->name)) !== false){
                 $exec = 'ln -s ' . $file->url . ' '  . $url2 . $file->name;
                 $output = [];
-                Core::execute($exec, $output);
+                Core::execute($object, $exec, $output);
                 echo 'Site: ' . $server->name . ' enabled.' . "\n";
             }
         }

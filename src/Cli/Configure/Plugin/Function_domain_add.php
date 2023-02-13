@@ -74,7 +74,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $cwd = Dir::change($dir);
         $exec = 'ln -s ' . ucfirst($extension) . ' Local';
         $output = [];
-        Core::execute($exec, $output);
+        Core::execute($object, $exec, $output);
         $url = $dir . '.gitignore';
         $write = 'Local/' . PHP_EOL;
         File::write($url, $write);
@@ -188,20 +188,20 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             $id = posix_geteuid();
             if ($id === 0) {
                 File::chmod($url, 0666);
-                Core::execute('chown www-data:www-data -R ' . $object->config('project.dir.host'));
-                Core::execute('chmod 777 -R ' . $object->config('project.dir.host'));
-                Core::execute('chown www-data:www-data -R ' . $project_dir_data);
+                Core::execute($object, 'chown www-data:www-data -R ' . $object->config('project.dir.host'));
+                Core::execute($object, 'chmod 777 -R ' . $object->config('project.dir.host'));
+                Core::execute($object, 'chown www-data:www-data -R ' . $project_dir_data);
                 if (File::exist($project_dir_data . 'Cache/0/')) {
-                    Core::execute('chown root:root -R ' . $project_dir_data . 'Cache/0/');
+                    Core::execute($object, 'chown root:root -R ' . $project_dir_data . 'Cache/0/');
                 }
                 if (File::exist($project_dir_data . 'Compile/0/')) {
-                    Core::execute('chown root:root -R ' . $project_dir_data . 'Compile/0/');
+                    Core::execute($object, 'chown root:root -R ' . $project_dir_data . 'Compile/0/');
                 }
                 if (File::exist($project_dir_data . 'Cache/1000/')) {
-                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
+                    Core::execute($object, 'chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
                 }
                 if (File::exist($project_dir_data . 'Compile/1000/')) {
-                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
+                    Core::execute($object, 'chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
                 }
             }
         }
@@ -238,7 +238,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $cwd = Dir::change($dir);
         $exec = 'ln -s ' . ucfirst($extension) . ' Local';
         $output = [];
-        Core::execute($exec, $output);
+        Core::execute($object, $exec, $output);
         $dir = $object->config('project.dir.host') .
             ucfirst($subdomain) .
             $object->config('ds') .
@@ -357,20 +357,20 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             $id = posix_geteuid();
             if($id === 0){
                 File::chmod($url, 0666);
-                Core::execute('chown www-data:www-data -R ' . $object->config('project.dir.host'));
-                Core::execute('chmod 777 -R ' . $object->config('project.dir.host'));
-                Core::execute('chown www-data:www-data -R ' . $project_dir_data);
+                Core::execute($object, 'chown www-data:www-data -R ' . $object->config('project.dir.host'));
+                Core::execute($object, 'chmod 777 -R ' . $object->config('project.dir.host'));
+                Core::execute($object, 'chown www-data:www-data -R ' . $project_dir_data);
                 if(File::exist($project_dir_data . 'Cache/0/')){
-                    Core::execute('chown root:root -R ' . $project_dir_data . 'Cache/0/');
+                    Core::execute($object, 'chown root:root -R ' . $project_dir_data . 'Cache/0/');
                 }
                 if(File::exist($project_dir_data . 'Compile/0/')){
-                    Core::execute('chown root:root -R ' . $project_dir_data . 'Compile/0/');
+                    Core::execute($object, 'chown root:root -R ' . $project_dir_data . 'Compile/0/');
                 }
                 if(File::exist($project_dir_data . 'Cache/1000/')){
-                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
+                    Core::execute($object, 'chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
                 }
                 if(File::exist($project_dir_data . 'Compile/1000/')){
-                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
+                    Core::execute($object, 'chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
                 }
             }
         }

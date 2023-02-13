@@ -81,8 +81,8 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
         File::copy($source, $destination);
     }
     if($id === 0){
-        Core::execute('chown www-data:www-data ' . $public_html . ' -R');
-        Core::execute('chmod 777 ' . $public_html);
+        Core::execute($object, 'chown www-data:www-data ' . $public_html . ' -R');
+        Core::execute($object, 'chmod 777 ' . $public_html);
     }
     $read->data('server.public', $public_html);
     $write = '';

@@ -42,18 +42,18 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
         if($id === 0){
             File::chmod($url, 0666);
             $project_dir_data = $object->config('project.dir.data');
-            Core::execute('chown www-data:www-data -R ' . $project_dir_data);
+            Core::execute($object, 'chown www-data:www-data -R ' . $project_dir_data);
             if(File::exist($project_dir_data . 'Cache/0/')){
-                Core::execute('chown root:root -R ' . $project_dir_data . 'Cache/0/');
+                Core::execute($object, 'chown root:root -R ' . $project_dir_data . 'Cache/0/');
             }
             if(File::exist($project_dir_data . 'Compile/0/')){
-                Core::execute('chown root:root -R ' . $project_dir_data . 'Compile/0/');
+                Core::execute($object, 'chown root:root -R ' . $project_dir_data . 'Compile/0/');
             }
             if(File::exist($project_dir_data . 'Cache/1000/')){
-                Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
+                Core::execute($object, 'chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
             }
             if(File::exist($project_dir_data . 'Compile/1000/')){
-                Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
+                Core::execute($object, 'chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
             }
         }
         if($has_deleted === false){

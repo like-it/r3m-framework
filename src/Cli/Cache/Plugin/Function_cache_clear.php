@@ -12,7 +12,7 @@ function function_cache_clear(Parse $parse, Data $data){
     foreach($command as $record){
         $execute = $parse->compile($record);
         echo 'Executing: ' . $execute . "...\n";
-        Core::execute($execute, $output);
+        Core::execute($object, $execute, $output);
         echo $output . PHP_EOL;
         ob_flush();
     }

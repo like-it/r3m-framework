@@ -44,7 +44,7 @@ function function_route_add(Parse $parse, Data $data, $add=''){
             $read->data($key, $add);
             $read->write($has_route->resource);
             if($id === 0){
-                Core::execute('chmod 666 ' . $has_route->resource);
+                Core::execute($object, 'chmod 666 ' . $has_route->resource);
             }
             return 'Route: ' . $key . ' added' . PHP_EOL;
         } else {

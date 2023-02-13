@@ -127,7 +127,7 @@ class Version extends Controller {
             $execute = $parse->compile($record);
             echo 'Executing: ' . $execute . '...' . PHP_EOL;
             $output = [];
-            Core::execute($execute, $output);
+            Core::execute($object, $execute, $output);
             $output[] = '';
             echo implode(PHP_EOL, $output);
         }
