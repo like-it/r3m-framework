@@ -133,8 +133,7 @@ class Build {
     {
         if($indent !== null){
             if($indent < 0){
-                $debug = debug_backtrace(true);
-                ddd($debug);
+                ddd($indent);
             }
             $this->indent = $indent;
         }
