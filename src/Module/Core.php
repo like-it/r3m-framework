@@ -181,8 +181,8 @@ class Core
 
 
 
-//            $output = stream_get_contents($pipes[1]);
-//            fclose($pipes[1]);
+            $output = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
 
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
