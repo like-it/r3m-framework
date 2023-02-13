@@ -113,7 +113,7 @@ class App extends Data {
             $options->domain === true
         ){
             if(App::is_cli()){
-                $options->domain = 'localhost';
+                unset($options->domain);
             } else {
 
                 $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());
