@@ -118,8 +118,6 @@ class Install extends Controller {
             property_exists($package, 'command') &&
             is_string($package->command)
         ){
-            $error = false;
-//            exec($package->command, $output);
             Core::execute($package->command, $output, $error);
             if($output){
                 echo $output;
