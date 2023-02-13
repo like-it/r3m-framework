@@ -479,6 +479,7 @@ class Controller {
                 $data->rdelim = Controller::RDELIM;
             }
         }
+        $original = $read;
         $read = $parse->compile($read, $data, $parse->storage());
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
@@ -486,6 +487,7 @@ class Controller {
             ddd($read);
         }
         if(is_object($read)){
+            d($original);
             ddd($read);
         }
         return $read;
