@@ -40,6 +40,7 @@ class Install extends Controller {
         $data = new Data();
         $data->data(Controller::PROPERTY_VIEW_URL, $url);
         $parse = new Parse($object);
+        $object->config('is.stream', true);
         $package = Core::object_select(
             $parse,
             $data,
