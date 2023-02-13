@@ -188,8 +188,8 @@ class Core
                     ];
                     if(is_object($object->route())){
                         $from = clone $object;
-                        $from->set('R3m\Io.Config', $object->config());
-                        $from->set('Route', $object->route()->data());
+                        $from->set('R3m\Io.config', $object->config());
+                        $from->set('route', $object->route()->data());
                         $data = Core::object(
                             $from->data(),
                             'json-line'
