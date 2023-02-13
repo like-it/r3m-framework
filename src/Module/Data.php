@@ -116,7 +116,7 @@ class Data {
     /**
      * @throws ObjectException
      */
-    public static function flags($data): array
+    public static function flags($data): stdClass
     {
         $flags = [];
         foreach($data as $nr => $parameter){
@@ -138,7 +138,7 @@ class Data {
     /**
      * @throws ObjectException
      */
-    public static function options($data): array
+    public static function options($data): stdClass
     {
         $options = [];
         foreach($data as $nr => $parameter){
