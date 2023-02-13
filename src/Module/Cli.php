@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Config;
 use R3m\Io\Exception\ObjectException;
 use stdClass;
 use Exception;
@@ -63,6 +64,8 @@ class Cli {
             case 'stream' :
                 $input = trim(fgets(STDIN));
                 $input = Core::object($input);
+                $input->{'R3m\Io'}->Config = new Config($input->Config);
+                $input->Route = new Route($input->Route);
             break;
         }
         return $input;

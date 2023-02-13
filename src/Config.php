@@ -191,20 +191,30 @@ class Config extends Data {
     const DATA_ROUTE = 'route';
     const DATA_ROUTE_PREFIX = Config::DATA_ROUTE . '.' . 'prefix';
 
+    /**
+     * @throws Exception\ObjectException
+     */
     public function __construct($config=[]){
-        if(array_key_exists(Config::DATA_DIR_VENDOR, $config)){
+        if(
+            is_array($config) &&
+            array_key_exists(Config::DATA_DIR_VENDOR, $config)
+        ){
             $this->data(Config::DATA_PROJECT_DIR_VENDOR, $config[Config::DATA_DIR_VENDOR]);
             $this->data(Config::DATA_PROJECT_DIR_ROOT, dirname($this->data(Config::DATA_PROJECT_DIR_VENDOR)) . '/');
             unset($config[Config::DATA_DIR_VENDOR]);
         }
-        $this->default();
-        $url = $this->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
-        if(File::exist($url)){
-            $read = Core::object(File::read($url));
-            $this->data(Core::object_merge($this->data(), $read));
-        }
-        foreach($config as $attribute => $value){
-            $this->data($attribute, $value);
+        if(is_object($config)){
+            $this->data($config);
+        } else {
+            $this->default();
+            $url = $this->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
+            if(File::exist($url)){
+                $read = Core::object(File::read($url));
+                $this->data(Core::object_merge($this->data(), $read));
+            }
+            foreach($config as $attribute => $value){
+                $this->data($attribute, $value);
+            }
         }
     }
 
