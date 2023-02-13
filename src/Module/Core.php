@@ -163,6 +163,8 @@ class Core
             stream_set_blocking($pipes[2], 0);
             stream_set_blocking(STDIN, 0);
 
+            $pid = 1;
+
             while(true) {
                 // detect if the child has terminated - the php way
                 $status = proc_get_status($process);
