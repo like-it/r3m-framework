@@ -186,17 +186,22 @@ class Core
                         1 => ["pipe", "w"],  // stdout
                         2 => ["pipe", "w"],  // stderr
                     ];
-                    $data = Core::object(
-                        Core::object_merge(
-                            $object->data(),
-                            $object->config(),
-                            $object->route()->data()
-                        ),
-                        'json-line'
-                    );
-                    $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                    fwrite($pipes[0], $data .PHP_EOL);
-                    fclose($pipes[0]);
+                    if(is_object($object->route())){
+                        $data = Core::object(
+                            Core::object_merge(
+                                $object->data(),
+                                $object->config(),
+                                $object->route()->data()
+                            ),
+                            'json-line'
+                        );
+                        $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                        fwrite($pipes[0], $data .PHP_EOL);
+                        fclose($pipes[0]);
+                    } else {
+                        $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                        fclose($pipes[0]);
+                    }
                     $output = stream_get_contents($pipes[1]);
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
