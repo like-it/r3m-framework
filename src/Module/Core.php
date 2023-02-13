@@ -115,16 +115,16 @@ class Core
                     //in child process
                     //create a separate process to execute another process (async);
                     $descriptorspec = array(
-                        0 => array("pipe", "r"),  // stdin
-                        1 => array("pipe", "w"),  // stdout
+                        0 => STDIN,  // stdin
+                        1 => STDOUT,  // stdout
                         2 => array("pipe", "w"),  // stderr
                     );
 
                     $process = proc_open($command, [], $pipes, Dir::current(), null);
-                    /*
+
                     $output = stream_get_contents($pipes[1]);
                     fclose($pipes[1]);
-
+                    /*
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     */
@@ -173,7 +173,7 @@ class Core
                 1 => STDOUT,  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
-            ob_start();
+            ob_clean();
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
@@ -187,6 +187,7 @@ class Core
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
             $output = ob_get_clean();
+            d($output);
             return proc_close($process);
         }
     }
