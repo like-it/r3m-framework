@@ -129,6 +129,9 @@ class Build {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function indent($indent=null): string
     {
         if($indent !== null){
