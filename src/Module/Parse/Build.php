@@ -136,7 +136,8 @@ class Build {
     {
         if($indent !== null){
             if($indent < 0){
-                throw new Exception('Indentation error: ' . $indent);
+                $indent = 1;
+//                throw new Exception('Indentation error: ' . $indent);
             }
             $this->indent = $indent;
         }
