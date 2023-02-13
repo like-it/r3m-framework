@@ -36,27 +36,31 @@ class Cli {
             $url = 'input';
         }
         $input = null;
-        if($url === 'input'){
-            fwrite(STDOUT, $text);
+        switch($url){
+            case 'input':
+                fwrite(STDOUT, $text);
 //            echo $text;
-            if($is_flush){
-                ob_flush();
-            }
-            fflush(STDOUT);
-            $input = trim(fgets(STDIN));
+                if($is_flush){
+                    ob_flush();
+                }
+                fflush(STDOUT);
+                $input = trim(fgets(STDIN));
+            break;
+            case 'input-hidden':
+                fwrite(STDOUT, $text);
+                if($is_flush){
+                    ob_flush();
+                }
+                fflush(STDOUT);
+                system('stty -echo');
+                $input = trim(fgets(STDIN));
+                system('stty echo');
+            break;
+            case 'stream' :
+                $input = trim(fgets(STDIN));
+            break;
+
         }
-        elseif($url === 'input-hidden'){
-//            echo $text;
-            fwrite(STDOUT, $text);
-            if($is_flush){
-                ob_flush();
-            }
-            fflush(STDOUT);
-            system('stty -echo');
-            $input = trim(fgets(STDIN));
-            system('stty echo');
-//            echo PHP_EOL;
-        } 
         return $input;
     }
 
