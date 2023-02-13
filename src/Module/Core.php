@@ -170,8 +170,8 @@ class Core
 
             $descriptorspec = array(
                 0 => STDIN,  // stdin
-                1 => STDOUT,  // stdout
-                2 => array("pipe", "w"),  // stderr
+                1 => ["pipe", "w"],  // stdout
+                2 => ["pipe", "w"],  // stderr
             );
             ob_start();
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
