@@ -161,73 +161,45 @@ class Core
             $option = 'default';
             switch($option){
                 case 'file' :
+                    $descriptorspec = [
+                        0 => ['file', 'php://stdin' , 'r'],  // stdin
+                        1 => ['file', 'php://stdout', 'w'],  // stdout
+                        2 => ['pipe', 'w'],  // stderr
+                    ];
+                    $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                    $error = stream_get_contents($pipes[2]);
+                    fclose($pipes[2]);
+                    return proc_close($process);
                 case 'read' :
+                    $descriptorspec = array(
+                        0 => STDIN,  // stdin
+                        1 => STDOUT,  // stdout
+                        2 => ["pipe", "w"],  // stderr
+                    );
+                    $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                    $error = stream_get_contents($pipes[2]);
+                    fclose($pipes[2]);
+                    return proc_close($process);
                 default :
-                $descriptorspec = [
-                    0 => ["pipe", "r"],  // stdin
-                    1 => ["pipe", "w"],  // stdout
-                    2 => ["pipe", "w"],  // stderr
-                ];
-                $data = Core::object($object->data(), 'json-line');
-                ddd($data);
-                
-                $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                $output = stream_get_contents($pipes[1]);
-                $error = stream_get_contents($pipes[2]);
-                fclose($pipes[2]);
-                fclose($pipes[1]);
-                fclose($pipes[0]);
-                return proc_close($process);
-            }
+                    $descriptorspec = [
+                        0 => ["pipe", "r"],  // stdin
+                        1 => ["pipe", "w"],  // stdout
+                        2 => ["pipe", "w"],  // stderr
+                    ];
+                    $data = Core::object($object->data(), 'json-line');
+                    ddd($data);
 
-
-
-
-            if(in_array($option, [
-                'file'
-            ])){
-                $descriptorspec = [
-                    0 => ['file', 'php://stdin' , 'r'],  // stdin
-                    1 => ['file', 'php://stdout', 'w'],  // stdout
-                    2 => ['pipe', 'w'],  // stderr
-                ];
-                $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                $error = stream_get_contents($pipes[2]);
-                fclose($pipes[2]);
-                return proc_close($process);
-            }
-            if(in_array($option, [
-                'read'
-            ])){
-                $descriptorspec = array(
-                    0 => STDIN,  // stdin
-                    1 => STDOUT,  // stdout
-                    2 => ["pipe", "w"],  // stderr
-                );
-                $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                $error = stream_get_contents($pipes[2]);
-                fclose($pipes[2]);
-                return proc_close($process);
-            }
-
-
-
-
-
-
-
+                    $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                    $output = stream_get_contents($pipes[1]);
+                    $error = stream_get_contents($pipes[2]);
+                    fclose($pipes[2]);
+                    fclose($pipes[1]);
+                    fclose($pipes[0]);
+                    return proc_close($process);
+                }
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
 //            stream_set_blocking(STDIN, 0);
-
-
-
-//            $output = stream_get_contents($pipes[1]);
-//            fclose($pipes[1]);
-
-            $error = stream_get_contents($pipes[2]);
-            fclose($pipes[2]);
-            return proc_close($process);
         }
     }
 
