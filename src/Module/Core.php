@@ -190,7 +190,7 @@ class Core
                         Core::object_merge(
                             $object->data(),
                             $object->config(),
-                            $object->route()
+                            $object->route()->data()
                         ),
                         'json-line'
                     );
