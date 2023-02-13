@@ -20,7 +20,7 @@ use R3m\Io\Exception\ObjectException;
 function function_terminal_readline(Parse $parse, Data $data, $text='', $type=null){
     if(
         $text === 'stream' &&
-        $type===null
+        $type === null
     ){
         return Cli::read($text);
     }
