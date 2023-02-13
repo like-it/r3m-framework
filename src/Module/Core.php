@@ -166,6 +166,7 @@ class Core
                 1 => ["pipe", "w"],  // stdout
                 2 => ["pipe", "w"],  // stderr
             ];
+            $descriptorspec = [STDIN, STDOUT, STDOUT];
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
