@@ -14,13 +14,9 @@ use R3m\Io\Module\Data;
 function function_route_data(Parse $parse, Data $data, $attribute=null, $value=null){
     $object = $parse->object();
     if($attribute !== null){
-        ddd($object->route());
-        $current = $object->route()->current();
-        if(property_exists($current, $attribute)){
-            return $current->{$attribute};
+        if(is_object($attribute)){
+            $object->route()->data($attribute);
+            return $object->route()->data();
         }
-    } else {
-        return $object->route()->current();
     }
-
 }
