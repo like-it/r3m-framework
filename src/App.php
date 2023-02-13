@@ -112,9 +112,11 @@ class App extends Data {
             property_exists($options, 'domain') &&
             $options->domain === true
         ){
-            $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());
-            if(!$options->domain){
-                $options->domain = Host::domain() . '.' . Host::extension();
+            if(!App::is_cli()){
+                $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());
+                if(!$options->domain){
+                    $options->domain = Host::domain() . '.' . Host::extension();
+                }
             }
             $options->secure = null;
             if(Host::scheme() === Host::SCHEME_HTTPS){

@@ -337,9 +337,6 @@ class Handler {
      */
     public static function session_set_cookie_params($options=[]): bool
     {
-        $debug = debug_backtrace(true);
-        d($debug);
-        d($options);
         if(
             !empty($options) &&
             is_object($options)
