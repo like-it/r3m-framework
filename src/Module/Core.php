@@ -168,6 +168,7 @@ class Core
             while(true) {
                 // detect if the child has terminated - the php way
                 $status = proc_get_status($process);
+                ddd($status);
                 // check retval
                 if($status === FALSE) {
                     throw new Exception ("Failed to obtain status information for $pid");
