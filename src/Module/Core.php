@@ -186,7 +186,14 @@ class Core
                         1 => ["pipe", "w"],  // stdout
                         2 => ["pipe", "w"],  // stderr
                     ];
-                    $data = Core::object(Core::object_merge($object->data(), $object->config()), 'json-line');
+                    $data = Core::object(
+                        Core::object_merge(
+                            $object->data(),
+                            $object->config(),
+                            $object->route()
+                        ),
+                        'json-line'
+                    );
                     d($data);
 
 
