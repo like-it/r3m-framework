@@ -60,6 +60,10 @@ class Parse {
 
     private function configure(){
         $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        if(!method_exists($config, 'data')){
+            $this->object()->data(App::NAMESPACE . '.' . Config::NAME, new Config($config));
+            $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
+        }
         $dir_plugin = $config->data('project.dir.plugin');
         if(empty($dir_plugin)){
             $config->data('project.dir.plugin', $config->data('project.dir.root') . Parse::PLUGIN . $config->data('ds'));
