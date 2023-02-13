@@ -433,8 +433,6 @@ class Build {
 //        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
         $command = 'php -l ' . escapeshellcmd($url);
         Core::execute($command, $output, $error);
-        d($output);
-        ddd($error);
         if($error){
             $url_write_error = $this->object()->config('dictionary.cache') . 'parse/error/' . File::basename($url);
             $this->object()->logger()->error($error, [ $url_write_error ]);
