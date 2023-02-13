@@ -132,6 +132,10 @@ class Build {
     public function indent($indent=null): string
     {
         if($indent !== null){
+            if($indent < 0){
+                $debug = debug_backtrace(true);
+                ddd($debug);
+            }
             $this->indent = $indent;
         }
         return str_repeat("\t", $this->indent);
