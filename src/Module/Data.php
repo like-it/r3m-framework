@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\ObjectException;
 use stdClass;
 use Exception;
 
@@ -112,6 +113,9 @@ class Data {
         return trim($result);
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function flags($data): array
     {
         $flags = [];
@@ -128,9 +132,12 @@ class Data {
                 $flags[$parameter] = $value;
             }
         }
-        return $flags;
+        return Core::object($flags);
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function options($data): array
     {
         $options = [];
@@ -150,7 +157,7 @@ class Data {
                 $options[$parameter] = $value;
             }
         }
-        return $options;
+        return Core::object($options);
     }
 
     public function get($attribute=''){
