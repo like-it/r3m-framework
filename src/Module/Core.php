@@ -191,7 +191,7 @@ class Core
                     $write = NULL;
                     $except = NULL;
                     $tv = 0;
-                    $utv = 5000000;
+                    $utv = 500000;
 
                     $n = stream_select($read, $write, $except, $tv, $utv);
                     if($n > 0) {
