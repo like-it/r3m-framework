@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\ObjectException;
 use stdClass;
 use Exception;
 
@@ -23,7 +24,10 @@ class Cli {
     const COLOR_LIGHTBLUE = 6;
     const COLOR_LIGHTGREY = 7;
 
-    public static function read($url='', $text=''): ?string
+    /**
+     * @throws ObjectException
+     */
+    public static function read($url='', $text='')
     {
         $is_flush = false;
         if(ob_get_level() > 0){
@@ -58,8 +62,8 @@ class Cli {
             break;
             case 'stream' :
                 $input = trim(fgets(STDIN));
+                $input = Core::object($input);
             break;
-
         }
         return $input;
     }
