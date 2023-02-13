@@ -173,7 +173,7 @@ class Core
                 1 => STDOUT,  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
-            ob_clean();
+            ob_start();
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
