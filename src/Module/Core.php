@@ -175,6 +175,9 @@ class Core
                 }
                 if($status['running'] === FALSE) {
                     $exitcode = $status['exitcode'];
+                    if($exitcode === 0){
+                        break;
+                    }
                     $pid = -1;
                     echo "child exited with code: $exitcode\n";
                     exit($exitcode);
