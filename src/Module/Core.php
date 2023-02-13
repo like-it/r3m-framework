@@ -154,26 +154,27 @@ class Core
             }
             return $result;
         } else {
+            ddd($command);
             $descriptorspec = [
 //                0 => array("file", STDIN, "r"),  // stdin
                 0 => ["pipe", "r"],  // stdin
                 1 => ["pipe", "w"],  // stdout
                 2 => ["pipe", "w"],  // stderr
             ];
+
+
             $descriptorspec = [
-                0 => STDIN,  // stdin
+                0 => ['file', 'php:' , 'r'],  // stdin
                 1 => ["pipe", "w"],  // stdout
                 2 => ["pipe", "w"],  // stderr
             ];
-//            $descriptorspec = [STDIN, STDOUT, STDOUT];
 
-            /*
             $descriptorspec = array(
                 0 => STDIN,  // stdin
                 1 => STDOUT,  // stdout
                 2 => ["pipe", "w"],  // stderr
             );
-            */
+
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
@@ -181,8 +182,8 @@ class Core
 
 
 
-            $output = stream_get_contents($pipes[1]);
-            fclose($pipes[1]);
+//            $output = stream_get_contents($pipes[1]);
+//            fclose($pipes[1]);
 
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
