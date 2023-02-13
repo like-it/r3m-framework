@@ -173,6 +173,7 @@ class Core
                 1 => STDOUT,  // stdout
                 2 => array("pipe", "w"),  // stderr
             );
+            ob_start();
             $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
 //            stream_set_blocking($pipes[1], 0);
 //            stream_set_blocking($pipes[2], 0);
@@ -185,9 +186,7 @@ class Core
 
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
-            if(ob_get_level() > 0){
-                ob_flush();
-            }
+            $output = ob_get_clean();
             return proc_close($process);
         }
     }
