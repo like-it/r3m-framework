@@ -121,9 +121,9 @@ class Variable {
                 substr($record, -1, 1) === '\''
             ){
                  if($nr === 0){
-                     $result .= '\' . ' . $record . ' . ';
+                     $result .= '\' . ' . substr($record, 0, -1);
                  } else {
-                     $result .= '\' . \'.\' . ' . $record . ' . ';
+                     $result .= '\' . \'.\' . ' . substr($record, 0, -1);
                  }
             }
             elseif(substr($record, 0, 1) === '$'){
