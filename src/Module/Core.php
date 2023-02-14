@@ -191,6 +191,7 @@ class Core
                         method_exists($object->route(), 'data')
                     ){
                         $from = clone $object;
+                        ddd($from);
                         $from->set('R3m\Io.Config', $object->config());
                         $from->set('R3m\Io.Route', $object->route()->data());
                         $data = Core::object(
