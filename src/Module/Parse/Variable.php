@@ -173,10 +173,6 @@ class Variable {
             array_key_exists('array', $variable['variable'])
         ){
             $attribute = Variable::getArrayAttribute($build, $storage, $variable);
-            if(stristr($attribute, 'stream')){
-                d($variable);
-                d($attribute);
-            }
             $assign = '$this->storage()->set(';
             $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
