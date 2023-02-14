@@ -175,7 +175,7 @@ class Variable {
             $attribute = Variable::getArrayAttribute($build, $storage, $variable);
             if(stristr($attribute, 'stream')){
                 d($variable);
-                ddd($attribute);
+                d($attribute);
             }
             $assign = '$this->storage()->set(';
             $assign .= $attribute . ', ';
