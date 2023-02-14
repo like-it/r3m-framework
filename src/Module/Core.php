@@ -191,8 +191,8 @@ class Core
                         method_exists($object->route(), 'data')
                     ){
                         $from = clone $object;
-                        $from->set('R3m\Io.Stream.Input.Config', $object->config());
-                        $from->set('R3m\Io.Stream.Input.Route', $object->route()->data());
+                        $from->set('config', $object->config());
+                        $from->set('route', $object->route()->data());
                         $data = Core::object(
                             $from->data(),
                             'json-line'
