@@ -134,7 +134,7 @@ class Variable {
                         $result .= '.\' . ' . $record . ' . ';
                         $add_quote = false;
                     } else {
-                        $result .= ' \'.\' . ' . $record . ' . ';
+                        $result .= '\'.\' . ' . $record . ' . ';
                     }
                 }
                 $quote_add = true;
