@@ -165,7 +165,7 @@ class Variable {
             array_key_exists('array', $variable['variable'])
         ){
             $attribute = Variable::getArrayAttribute($build, $storage, $variable);
-            if(stristr($attribute, 'stream.\'test\'')){
+            if(stristr($attribute, 'stream')){
                 d($variable);
                 ddd($attribute);
             }
