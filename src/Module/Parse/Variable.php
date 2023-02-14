@@ -115,6 +115,13 @@ class Variable {
                         }
                         $execute[] = $exec;
                     } else {
+                        if(
+                            substr($value, 0, 1) === '\'' &&
+                            substr($value, -1, 1) === '\''
+                        ){
+                            $value = substr($value, 1, -1);
+                        }
+                        //add compile on "
                         $execute[] = $value;
                     }
                 }
