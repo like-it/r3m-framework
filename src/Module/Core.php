@@ -190,11 +190,11 @@ class Core
                         is_object($object->route()) &&
                         method_exists($object->route(), 'data')
                     ){
-                        $from = clone $object;
+                        $from = Core::deep_clone($object);
                         $from->delete('R3m\Io');
-                        $from->set('config', $object->config());
-                        $from->set('route', $object->route()->data());
-                        $from->set('request', $object->request());
+                        $from->config = $object->config();
+                        $from->route = $object->route()->data();
+                        $from->request = $object->request();
                         $data = Core::object(
                             $from->data(),
                             'json-line'
