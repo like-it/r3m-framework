@@ -66,19 +66,7 @@ class Variable {
                             $add_quote = false;
                             $quote_add = false;
                             $attribute = '\'' . $variable['variable']['attribute'];
-                            d($execute);
-                            ddd($attribute);
                             foreach($execute as $part_nr => $part_record){
-                                if(
-                                    substr($part_record, 0, 1) === '\'' &&
-                                    substr($part_record, -1, 1) === '\''
-                                ){
-                                    if($part_nr === 0){
-                                        $attribute .= '\' . ' . $part_record . ' . ';
-                                    } else {
-                                        $attribute .= '\'.\' . ' .$part_record . ' . ';
-                                    }
-                                }
                                 if(substr($part_record, 0, 1) === '$'){
                                     if($part_nr === 0){
                                         $attribute .= '\' . ' . $part_record . ' . ';
@@ -134,16 +122,6 @@ class Variable {
         foreach($execute as $nr => $record){
             if(substr($record, 0, 2) === '[]'){
                 $result .= substr($record, 0, 2);
-            }
-            elseif(
-                substr($record, 0, 1) === '\'' &&
-                substr($record, -1, 1) === '\''
-            ){
-                 if($nr === 0){
-                     $result .= '\' . ' . substr($record, 0, -1);
-                 } else {
-                     $result .= '\' . \'.\' . ' . substr($record, 0, -1);
-                 }
             }
             elseif(substr($record, 0, 1) === '$'){
                 if($nr === 0){
