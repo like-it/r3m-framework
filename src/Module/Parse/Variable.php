@@ -165,8 +165,10 @@ class Variable {
             array_key_exists('array', $variable['variable'])
         ){
             $attribute = Variable::getArrayAttribute($build, $storage, $variable);
+            d($variable);
+            d($attribute);
             if($attribute === 'stream.\'test\''){
-                d($variable);
+
                 ddd($attribute);
             }
             $assign = '$this->storage()->set(';
