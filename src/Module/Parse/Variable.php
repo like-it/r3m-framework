@@ -67,6 +67,16 @@ class Variable {
                             $quote_add = false;
                             $attribute = '\'' . $variable['variable']['attribute'];
                             foreach($execute as $part_nr => $part_record){
+                                if(
+                                    substr($part_record, 0, 1) === '\'' &&
+                                    substr($part_record, -1, 1) === '\''
+                                ){
+                                    if($part_nr === 0){
+                                        $attribute .= '\' . ' . $part_record . ' . ';
+                                    } else {
+                                        $attribute .= '\'.\' . ' .$part_record . ' . ';
+                                    }
+                                }
                                 if(substr($part_record, 0, 1) === '$'){
                                     if($part_nr === 0){
                                         $attribute .= '\' . ' . $part_record . ' . ';
