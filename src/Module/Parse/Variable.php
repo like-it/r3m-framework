@@ -116,6 +116,16 @@ class Variable {
             if(substr($record, 0, 2) === '[]'){
                 $result .= substr($record, 0, 2);
             }
+            elseif(
+                substr($record, 0, 1) === '\'' &&
+                substr($record, -1, 1) === '\''
+            ){
+                 if($nr === 0){
+                     $result .= '\' . ' . $record . ' . ';
+                 } else {
+                     $result .= '\' . \'.\' . ' . $record . ' . ';
+                 }
+            }
             elseif(substr($record, 0, 1) === '$'){
                 if($nr === 0){
                     $result .= '\' . \'.\' . ' . $record . ' . ';
