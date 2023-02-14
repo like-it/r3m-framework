@@ -192,9 +192,9 @@ class Core
                     ){
                         $from = clone $object;
 //                        $from->delete('R3m\Io');
-                        $from->config = $object->config();
-                        $from->route = $object->route()->data();
-                        $from->request = $object->request();
+                        $from->set('config', $object->config());
+                        $from->set('route', $object->route()->data());
+                        $from->set('request', $object->request());
                         $data = Core::object(
                             $from->data(),
                             'json-line'
