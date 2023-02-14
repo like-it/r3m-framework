@@ -190,8 +190,8 @@ class Core
                         is_object($object->route()) &&
                         method_exists($object->route(), 'data')
                     ){
-                        $from = Core::deep_clone($object);
-                        $from->delete('R3m\Io');
+                        $from = clone $object;
+//                        $from->delete('R3m\Io');
                         $from->config = $object->config();
                         $from->route = $object->route()->data();
                         $from->request = $object->request();
