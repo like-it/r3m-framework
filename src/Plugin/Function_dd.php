@@ -35,6 +35,7 @@ function function_dd(Parse $parse, Data $data, $debug=null){
     if($debug == 0){
         echo 'true' . PHP_EOL;
     }
+    var_dump(0);
     var_dump($debug);
     if(!defined('IS_CLI')){
         echo '</pre>';
