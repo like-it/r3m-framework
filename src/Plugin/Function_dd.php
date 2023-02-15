@@ -22,10 +22,9 @@ function function_dd(Parse $parse, Data $data, $debug=null){
             ]
         )
     ){
-        if($debug == 0){
-            echo 'true2' . PHP_EOL;
+        if(!empty($debug)){
+            $debug = $data->data();
         }
-        $debug = $data->data();
     }
     $trace = debug_backtrace(true);    
     if(!defined('IS_CLI')){
@@ -35,7 +34,6 @@ function function_dd(Parse $parse, Data $data, $debug=null){
     if(is_scalar($debug) == 0){
         echo 'true' . PHP_EOL;
     }
-    var_dump(0);
     var_dump($debug);
     if(!defined('IS_CLI')){
         echo '</pre>';
