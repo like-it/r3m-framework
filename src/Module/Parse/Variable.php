@@ -118,7 +118,6 @@ class Variable {
         $result = '\'' . $variable['variable']['attribute'];
         $quote_add = false;
         $add_quote = false;
-        d($execute);
         foreach($execute as $nr => $record){
             if(substr($record, 0, 2) === '[]'){
                 $result .= substr($record, 0, 2);
