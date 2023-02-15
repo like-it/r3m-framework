@@ -32,7 +32,7 @@ function function_dd(Parse $parse, Data $data, $debug=null){
         echo '<pre class="priya-debug">';
     }
     echo $trace[0]['file'] . ':' . $trace[0]['line'] . PHP_EOL;
-    if($debug == 0){
+    if(is_scalar($debug) == 0){
         echo 'true' . PHP_EOL;
     }
     var_dump(0);
