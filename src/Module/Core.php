@@ -537,6 +537,7 @@ class Core
             if (isset($object->{$key})) {
                 if($is_debug){
                     d($key);
+                    d($attributeList->{$key});
                     d($object->{$key});
                 }
                 return Core::object_get($attributeList->{$key}, $object->{$key});
