@@ -155,7 +155,7 @@ class Method {
                     $token = $build->require('modifier', $token);
                     $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
-                    if($value === '$this->storage()->data(\'stream.\' . 0)'){
+                    if(stristr($value,'$this->storage()->data(\'stream.\' . 0)')){
                         d($value);
                         $debug = debug_backtrace(true);
                         ddd($debug);
