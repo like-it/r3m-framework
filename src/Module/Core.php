@@ -519,14 +519,12 @@ class Core
                     unset($attributeList[$nr]);
                 }
             }
-            Logger::debug('was scalar', [$attributeList]);
         }
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
-            Logger::debug('object horizontal attributeList', [$attributeList]);
         }
         if (empty($attributeList)) {
-            Logger::debug('empty attributeList', [$attributeList]);
+            echo 'empty' . PHP_EOL;
             return $object;
         }
         foreach ($attributeList as $key => $attribute) {
