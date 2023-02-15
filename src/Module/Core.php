@@ -513,6 +513,7 @@ class Core
             return null;
         }
         if (is_scalar($attributeList)) {
+            echo $attributeList;
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
             foreach ($attributeList as $nr => $attribute) {
                 if ($attribute === null || $attribute === '') {
