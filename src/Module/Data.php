@@ -194,7 +194,6 @@ class Data {
     }
 
     public function data($attribute=null, $value=null, $type=null){
-        var_dump($attribute);
         if(is_int($attribute)){
             $attribute = (string) $attribute;
         }

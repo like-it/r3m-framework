@@ -508,9 +508,6 @@ class Core
                             return Core::object_get($attributeList->{$key}, $object[$key]);
                         }
                     }
-                } elseif (is_scalar($attributeList)) {
-                    var_dump($attributeList);
-                    die;
                 }
             }
             return null;
