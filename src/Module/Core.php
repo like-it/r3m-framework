@@ -494,6 +494,9 @@ class Core
 
     public static function object_get($attributeList = [], $object = '')
     {
+        if(empty($attributeList)){
+            echo $attributeList;
+        }
         if (Core::object_is_empty($object)) {
             if (empty($attributeList) && !is_scalar($attributeList)) {
                 return $object;
@@ -513,7 +516,7 @@ class Core
             return null;
         }
         if (is_scalar($attributeList)) {
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
             foreach ($attributeList as $nr => $attribute) {
                 if ($attribute === null || $attribute === '') {
                     unset($attributeList[$nr]);
@@ -524,7 +527,6 @@ class Core
             $attributeList = Core::object_horizontal($attributeList);
         }
         if (empty($attributeList)) {
-            echo $attributeList . PHP_EOL;
             return $object;
         }
         foreach ($attributeList as $key => $attribute) {
