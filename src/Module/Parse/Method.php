@@ -158,7 +158,7 @@ class Method {
                     if($value === '$this->storage()->data(\'stream.\' . 0)'){
                         d($value);
                         $debug = debug_backtrace(true);
-                        dd($debug);
+                        ddd($debug);
                     }
 
                     $attribute .= $value . ', ';
