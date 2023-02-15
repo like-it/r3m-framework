@@ -24,7 +24,11 @@ function function_dd(Parse $parse, Data $data, $debug=null){
     ){
         if(!empty($debug)){
             $debug = $data->data();
+        } else {
+            echo $debug .PHP_EOL;
+            die;
         }
+
     }
     $trace = debug_backtrace(true);    
     if(!defined('IS_CLI')){
