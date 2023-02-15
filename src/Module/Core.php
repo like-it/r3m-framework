@@ -524,11 +524,11 @@ class Core
                 }
             }
         }
-        if($is_debug){
-            ddd($attributeList);
-        }
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
+        }
+        if($is_debug){
+            ddd($attributeList);
         }
         if (empty($attributeList)) {
             return $object;
