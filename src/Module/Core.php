@@ -524,6 +524,7 @@ class Core
             $attributeList = Core::object_horizontal($attributeList);
         }
         if (empty($attributeList)) {
+            Logger::debug('empty attributeList', [$attributeList]);
             return $object;
         }
         foreach ($attributeList as $key => $attribute) {
