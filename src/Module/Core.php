@@ -527,11 +527,11 @@ class Core
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
-        if($is_debug){
-            ddd($attributeList);
-        }
         if (empty($attributeList)) {
             return $object;
+        }
+        if($is_debug){
+            ddd($attributeList);
         }
         foreach ($attributeList as $key => $attribute) {
             if ($key === null || $key === '') {
