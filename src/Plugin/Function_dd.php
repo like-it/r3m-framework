@@ -12,6 +12,9 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_dd(Parse $parse, Data $data, $debug=null){
+    if($debug == 0){
+        echo 'true' . PHP_EOL;
+    }
     if(
         $debug !== true &&
         in_array(
