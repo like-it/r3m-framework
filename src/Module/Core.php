@@ -530,14 +530,15 @@ class Core
         if (empty($attributeList)) {
             return $object;
         }
-        if($is_debug){
-            ddd($attributeList);
-        }
         foreach ($attributeList as $key => $attribute) {
             if ($key === null || $key === '') {
                 continue;
             }
             if (isset($object->{$key})) {
+                if($is_debug){
+                    d($key);
+                    ddd($object->{$key});
+                }
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }
         }
