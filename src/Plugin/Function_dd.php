@@ -15,7 +15,7 @@ function function_dd(Parse $parse, Data $data, $debug=null){
     if(
         $debug !== true &&
         in_array(
-            $debug, 
+            0,
             [
                 '$this',
                 '{$this}'
