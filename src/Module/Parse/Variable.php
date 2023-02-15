@@ -274,75 +274,14 @@ class Variable {
             $variable['variable']['is_array'] === true
         ){
             $variable['variable']['attribute'] .= '.\'';
-            foreach($variable['variable']['array'] as $nr => $array){
-                $variable['variable']['attribute'] .= ' . ';
-                foreach($array as $array_nr => $record){
-                    switch($record['type']){
-                        case Token::TYPE_METHOD :
-                            $tree = [];
-                            $tree[]= $record;
-                            $tree = $build->require('modifier', $tree);
-                            $tree = $build->require('function', $tree);
-                            $array[$array_nr] = Value::get($build, $storage, reset($tree));
-                            break;
-                        case Token::TYPE_VARIABLE:
-                            $temp = [];
-                            $temp[] = $record;
-                            $array[$array_nr] = Variable::define($build, $storage, $temp);
-                            break;
-                        default :
-                            $array[$array_nr] = Value::get($build, $storage, $record);
-                    }
-                }
-                $extra = '';
-                foreach($array as $array_nr => $record){
-                    if($array_nr === 0) {
-                        if(substr($record, 0, 1) === '$'){
-                            $variable['variable']['attribute'] .= $record;
-                        }
-                        elseif(
-                            in_array(
-                                $record,
-                                Token::TYPE_AS_OPERATOR
-                            )
-                        ){
-                            $variable['variable']['attribute'] .= $record;
-                        }
-                        elseif(is_numeric($record)) {
-                            $variable['variable']['attribute'] .= $record;
-                        } else {
-                            $variable['variable']['attribute'] .= '\'' . $record . '\'';
-                        }
-                    } else {
-                        if(substr($record, 0, 1) === '$'){
-                            $extra .= $record;
-                        }
-                        elseif(
-                            in_array(
-                                $record,
-                                Token::TYPE_AS_OPERATOR
-                            )
-                        ){
-                            $extra .= $record . ' ';
-                        }
-                        elseif(is_numeric($record)) {
-                            $extra .= $record;
-                        } else {
-                            $extra .= '\'' . $record . '\'';
-                        }
-                    }
-
-                }
-                $variable['variable']['attribute'] .= ' . \'.\'';
+            d($variable);
+            foreach($variable['variable']['array'] as $nr => $list) {
+                $list = $build->require('modifier', $list);
+                $list = $build->require('function', $list);
+                $value = Variable::getValue($build, $storage, $list);
+                d($value);
             }
-            $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
-            if($extra){
-//                $extra = '$attribute = ' . $extra . ';';
-//                $define = '$this->storage()->data($attribute)'; //no more extra, too complicated to realise
-                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
-            } else {
-                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
-            }
+            $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
         } else {
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         }
