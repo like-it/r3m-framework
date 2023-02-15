@@ -494,8 +494,9 @@ class Core
 
     public static function object_get($attributeList = [], $object = '')
     {
-        if(empty($attributeList)){
-            echo $attributeList;
+        $is_debug = false;
+        if($attributeList === 0){
+            $is_debug =true;
         }
         if (Core::object_is_empty($object)) {
             if (empty($attributeList) && !is_scalar($attributeList)) {
@@ -522,6 +523,9 @@ class Core
                     unset($attributeList[$nr]);
                 }
             }
+        }
+        if($is_debug){
+            ddd($attributeList);
         }
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
