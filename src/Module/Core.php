@@ -524,7 +524,7 @@ class Core
             $attributeList = Core::object_horizontal($attributeList);
         }
         if (empty($attributeList)) {
-            echo 'empty' . PHP_EOL;
+            echo $attributeList . PHP_EOL;
             return $object;
         }
         foreach ($attributeList as $key => $attribute) {
