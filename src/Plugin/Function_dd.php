@@ -15,29 +15,21 @@ function function_dd(Parse $parse, Data $data, $debug=null){
     if(
         $debug !== true &&
         in_array(
-            0,
+            $debug,
             [
                 '$this',
                 '{$this}'
-            ]
+            ],
+            true
         )
     ){
-        if(!empty($debug)){
-            $debug = $data->data();
-        } else {
-            echo $debug .PHP_EOL;
-            die;
-        }
-
+        $debug = $data->data();
     }
     $trace = debug_backtrace(true);    
     if(!defined('IS_CLI')){
         echo '<pre class="priya-debug">';
     }
     echo $trace[0]['file'] . ':' . $trace[0]['line'] . PHP_EOL;
-    if(is_scalar($debug) == 0){
-        echo 'true' . PHP_EOL;
-    }
     var_dump($debug);
     if(!defined('IS_CLI')){
         echo '</pre>';
