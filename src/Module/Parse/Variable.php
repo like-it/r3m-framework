@@ -427,11 +427,6 @@ class Variable {
         $operator = $token;
         while(Operator::has($operator)){            
             $statement = Operator::get($operator);
-            if($statement === false){
-                $debug = debug_backtrace(true);
-                ddd($debug);
-                ddd($operator);
-            }
             $operator = Operator::remove($operator, $statement);
             $statement = Operator::create($build, $storage, $statement);
             if(empty($statement)){
@@ -498,6 +493,7 @@ class Variable {
             elseif($is_collect === false){                                
                 $record = Method::get($build, $storage, $record);
                 $result .= Value::get($build, $storage, $record);
+                d($result);
                 if(
                     !in_array(
                         $record['type'],
