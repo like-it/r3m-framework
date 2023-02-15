@@ -517,12 +517,17 @@ class Core
             return null;
         }
         if (is_scalar($attributeList)) {
-            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
-            foreach ($attributeList as $nr => $attribute) {
-                if ($attribute === null || $attribute === '') {
-                    unset($attributeList[$nr]);
+            if($attributeList === '0'){
+                ddd($object);
+            } else {
+                $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
+                foreach ($attributeList as $nr => $attribute) {
+                    if ($attribute === null || $attribute === '') {
+                        unset($attributeList[$nr]);
+                    }
                 }
             }
+
         }
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
