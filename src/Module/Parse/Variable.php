@@ -274,7 +274,6 @@ class Variable {
             $variable['variable']['is_array'] === true
         ){
             $variable['variable']['attribute'] .= '.\'';
-            d($variable);
             foreach($variable['variable']['array'] as $nr => $list) {
                 $list = $build->require('modifier', $list);
                 $list = $build->require('function', $list);
