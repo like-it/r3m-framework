@@ -504,7 +504,10 @@ class Core
             d('found');
         }
         */
-        if (Core::object_is_empty($object)) {
+        if(is_array($object)){
+            ddd('found');
+        }
+        elseif (Core::object_is_empty($object)) {
             if (empty($attributeList) && !is_scalar($attributeList)) {
                 return $object;
             }
@@ -522,7 +525,7 @@ class Core
             }
             return null;
         }
-        if (is_scalar($attributeList)) {
+        elseif (is_scalar($attributeList)) {
             if($attributeList === '0' && isset($object->{$attributeList})){
                 return $object->{$attributeList};
             } else {
@@ -547,9 +550,6 @@ class Core
         foreach ($attributeList as $key => $attribute) {
             if ($key === null || $key === '') {
                 continue;
-            }
-            elseif($key === '0'){
-                ddd('kutzooi');
             }
             elseif (isset($object->{$key})) {
                 $get = Core::object_get($attributeList->{$key}, $object->{$key});
