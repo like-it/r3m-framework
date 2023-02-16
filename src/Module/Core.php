@@ -505,9 +505,12 @@ class Core
         }
         */
         if(is_array($object)){
-            d($object);
-            d($attributeList);
-            ddd('found');
+            if($attributeList !== null){
+                d($object);
+                d($attributeList);
+                ddd('found');
+            }
+
         }
         elseif (Core::object_is_empty($object)) {
             if (empty($attributeList) && !is_scalar($attributeList)) {
