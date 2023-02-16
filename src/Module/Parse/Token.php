@@ -1196,35 +1196,44 @@ class Token {
                                 }
                                 elseif($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
                                     $variable_array_depth--;
-                                    if(array_key_exists('array', $token[$variable_nr]['variable'])){
-                                        if(array_key_exists($variable_array_level, $token[$variable_nr]['variable']['array'])){
-                                            $prepare = $token[$variable_nr]['variable']['array'][$variable_array_level];
-                                            $prepare = [
-                                                [
-                                                    'type' => Token::TYPE_CURLY_OPEN,
-                                                    'value' => '{',
+                                    if($variable_array_depth === 0){
+                                        if(array_key_exists('array', $token[$variable_nr]['variable'])){
+                                            if(array_key_exists($variable_array_level, $token[$variable_nr]['variable']['array'])){
+                                                $prepare = $token[$variable_nr]['variable']['array'][$variable_array_level];
+                                                $prepare = [
+                                                    [
+                                                        'type' => Token::TYPE_CURLY_OPEN,
+                                                        'value' => '{',
+                                                        'is_operator' => false
+                                                    ],
+                                                    ...$prepare,
+                                                    [
+                                                        'type' => Token::TYPE_CURLY_CLOSE,
+                                                        'value' => '}',
+                                                        'is_operator' => false
+                                                    ]
+                                                ];
+                                                $prepare = Token::prepare(
+                                                    $prepare,
+                                                    count($prepare)
+                                                );
+                                                d($prepare);
+                                                $prepare = Token::define($prepare);
+                                                $prepare = Token::group($prepare, $is_debug);
+                                                $prepare = Token::cast($prepare);
+                                                $prepare = Token::method($prepare, $is_debug);
+                                                array_shift($prepare); // remove curly_open
+                                                array_pop($prepare); //remove curly_close
+                                                d($prepare);
+                                                $token[$variable_nr]['variable']['array'][$variable_array_level] = $prepare;
+                                            } else {
+                                                $token[$variable_nr]['variable']['array'][$variable_array_level][] = [
+                                                    'type' => Token::TYPE_NULL,
+                                                    'value' => 'null',
+                                                    'execute' => null,
                                                     'is_operator' => false
-                                                ],
-                                                ...$prepare,
-                                                [
-                                                    'type' => Token::TYPE_CURLY_CLOSE,
-                                                    'value' => '}',
-                                                    'is_operator' => false
-                                                ]
-                                            ];
-                                            $prepare = Token::prepare(
-                                                $prepare,
-                                                count($prepare)
-                                            );
-                                            d($prepare);
-                                            $prepare = Token::define($prepare);
-                                            $prepare = Token::group($prepare, $is_debug);
-                                            $prepare = Token::cast($prepare);
-                                            $prepare = Token::method($prepare, $is_debug);
-                                            array_shift($prepare); // remove curly_open
-                                            array_pop($prepare); //remove curly_close
-                                            d($prepare);
-                                            $token[$variable_nr]['variable']['array'][$variable_array_level] = $prepare;
+                                                ];
+                                            }
                                         } else {
                                             $token[$variable_nr]['variable']['array'][$variable_array_level][] = [
                                                 'type' => Token::TYPE_NULL,
@@ -1233,16 +1242,9 @@ class Token {
                                                 'is_operator' => false
                                             ];
                                         }
-                                    } else {
-                                        $token[$variable_nr]['variable']['array'][$variable_array_level][] = [
-                                            'type' => Token::TYPE_NULL,
-                                            'value' => 'null',
-                                            'execute' => null,
-                                            'is_operator' => false
-                                        ];
+                                        $variable_array_level++;
+                                        unset($token[$i]);
                                     }
-                                    $variable_array_level++;
-                                    unset($token[$i]);
                                 } else {
                                     if(
                                         array_key_exists('variable', $token[$i]) &&
