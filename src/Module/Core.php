@@ -533,7 +533,7 @@ class Core
                     }
                 }
                 if($is_debug){
-                    d($attributeList);
+                    ddd($attributeList);
                 }
             }
 
