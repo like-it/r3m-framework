@@ -1255,6 +1255,9 @@ class Token {
                             $token[$variable_nr]['variable']['array'][$variable_array_level] = null;
                         }
                         $variable_array_start = null;
+                    } else {
+                        
+                        ddd($record);
                     }
                     $variable_array_value .= $record['value'];
                     continue;
