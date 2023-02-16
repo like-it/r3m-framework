@@ -1190,6 +1190,9 @@ class Token {
                                 if($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
                                     if($variable_array_depth === 0){
                                         unset($token[$i]);
+                                    } else {
+                                        $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
+                                        unset($token[$i]);
                                     }
                                     $variable_array_depth++;
                                 }
@@ -1244,6 +1247,8 @@ class Token {
                                         $variable_array_level++;
                                         unset($token[$i]);
                                     } else {
+                                        $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
+                                        unset($token[$i]);
                                         ddd($token[$variable_nr]['variable']['array'][$variable_array_level]);
                                     }
                                 } else {
