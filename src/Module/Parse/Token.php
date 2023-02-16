@@ -1249,7 +1249,7 @@ class Token {
                                     } else {
                                         $token[$variable_nr]['variable']['array'][$variable_array_level][] = $token[$i];
                                         unset($token[$i]);
-                                        ddd($token[$variable_nr]['variable']['array'][$variable_array_level]);
+                                        d($token[$variable_nr]['variable']['array'][$variable_array_level]);
                                     }
                                 } else {
                                     if(
