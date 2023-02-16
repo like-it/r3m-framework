@@ -275,6 +275,7 @@ class Variable {
         ){
             $variable['variable']['attribute'] .= '.\'';
             foreach($variable['variable']['array'] as $nr => $list) {
+                $is_variable = false;
                 $list = $build->require('modifier', $list);
                 $list = $build->require('function', $list);
                 $value = Variable::getValue($build, $storage, $list);
@@ -286,12 +287,23 @@ class Variable {
                     $variable['variable']['attribute'] .= ' . ' . substr($value, 0, -1) . '.\'';
                 }
                 elseif(is_string($value)){
-                    $variable['variable']['attribute'] .= ' . ' . '\'' . $value . '.\'';
+                    if(substr($value, 0, 1) === '$'){
+                        $variable['variable']['attribute'] .= ' . ' . $value . ' . \'.\'';
+                        $is_variable = true;
+                    } else {
+                        $variable['variable']['attribute'] .= ' . ' . '\'' . $value . '.\'';
+                    }
+
                 } else {
                     ddd($value);
                 }
             }
-            $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -2) . '\'';
+            if($is_variable){
+                $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
+            } else {
+                $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -2) . '\'';
+            }
+
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
         } else {
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
