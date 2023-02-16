@@ -495,7 +495,7 @@ class Core
     public static function object_get($attributeList = [], $object = '')
     {
         $is_debug = false;
-        if($attributeList === '0'){
+        if($attributeList === 'stream.0'){
             $is_debug =true;
         }
         if($is_debug){
