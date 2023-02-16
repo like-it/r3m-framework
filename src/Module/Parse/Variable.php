@@ -278,7 +278,14 @@ class Variable {
                 $list = $build->require('modifier', $list);
                 $list = $build->require('function', $list);
                 $value = Variable::getValue($build, $storage, $list);
-                if(is_string($value)){
+                if(
+                    is_string($value) &&
+                    substr($value, 0,1) === '\'' &&
+                    substr($value, -1,1) === '\''
+                ){
+                    $variable['variable']['attribute'] .= ' . ' . $value;
+                }
+                elseif(is_string($value)){
                     $variable['variable']['attribute'] .= ' . ' . '\'' . $value . '\'';
                 } else {
                     ddd($value);
