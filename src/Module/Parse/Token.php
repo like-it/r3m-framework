@@ -657,7 +657,7 @@ class Token {
     {
         $prepare = Token::tree_prepare($string, $count);
         $prepare = Token::prepare($prepare, $count, $is_debug);
-        d($prepare);
+//        d($prepare);
         $token = Token::define($prepare);
         $token = Token::group($token, $is_debug);
         $token = Token::cast($token);
@@ -1330,6 +1330,7 @@ class Token {
                         }
                         if($variable_array_value){
                             $value .= $variable_array_value;
+                            ddd($value);
                         }
                         $token[$variable_nr]['variable']['is_assign'] = true;
                         $token[$variable_nr]['variable']['operator'] = $token[$next]['value'];
