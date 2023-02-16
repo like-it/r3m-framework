@@ -498,6 +498,9 @@ class Core
         if($attributeList === '0'){
             $is_debug =true;
         }
+        if($is_debug){
+            d('found');
+        }
         if (Core::object_is_empty($object)) {
             if (empty($attributeList) && !is_scalar($attributeList)) {
                 return $object;
@@ -540,11 +543,6 @@ class Core
                 continue;
             }
             if (isset($object->{$key})) {
-                if($is_debug){
-                    d($key);
-                    d($attributeList->{$key});
-                    d($object->{$key});
-                }
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }
         }
