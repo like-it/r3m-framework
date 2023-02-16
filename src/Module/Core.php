@@ -505,6 +505,7 @@ class Core
         }
         */
         if(is_array($object)){
+            d($object);
             d($attributeList);
             ddd('found');
         }
