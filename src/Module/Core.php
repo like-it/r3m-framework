@@ -550,8 +550,8 @@ class Core
                 if($is_debug){
                     d($get);
                     d($key);
-                    d($object);
-                    ddd($attributeList);
+                    d($object->{$key});
+                    d($attributeList->{$key});
                 }
                 return $get;
             }
