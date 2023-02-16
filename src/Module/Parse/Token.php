@@ -656,8 +656,8 @@ class Token {
     public static function tree($string='', $is_debug=false): array
     {
         $prepare = Token::tree_prepare($string, $count);
-        d($prepare);
         $prepare = Token::prepare($prepare, $count, $is_debug);
+        d($prepare);
         $token = Token::define($prepare);
         $token = Token::group($token, $is_debug);
         $token = Token::cast($token);
