@@ -283,14 +283,15 @@ class Variable {
                     substr($value, 0,1) === '\'' &&
                     substr($value, -1,1) === '\''
                 ){
-                    $variable['variable']['attribute'] .= ' . ' . $value;
+                    $variable['variable']['attribute'] .= ' . ' . substr($value, 0, -1) . '.\'';
                 }
                 elseif(is_string($value)){
-                    $variable['variable']['attribute'] .= ' . ' . '\'' . $value . '\'';
+                    $variable['variable']['attribute'] .= ' . ' . '\'' . $value . '.\'';
                 } else {
                     ddd($value);
                 }
             }
+            $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -2) . '\'';
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
         } else {
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
