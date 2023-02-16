@@ -194,7 +194,7 @@ class Data {
     }
 
     public function data($attribute=null, $value=null, $type=null){
-        if(is_string($attribute)){
+        if(is_string($attribute) && stristr($attribute, 'stream') !== false){
             echo $attribute . PHP_EOL;
         }
         if(is_int($attribute)){
