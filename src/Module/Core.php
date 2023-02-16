@@ -555,6 +555,11 @@ class Core
                 }
                 return $get;
             }
+            if(array_key_exists($key, $object)) {
+                if($is_debug){
+                    ddd($key);
+                }
+            }
         }
         return null;
     }
