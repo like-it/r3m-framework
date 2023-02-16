@@ -156,12 +156,6 @@ class Method {
                     $token = $build->require('modifier', $token);
                     $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
-                    if(stristr($value,'$this->storage()->data(\'stream.\' . 0)')){
-                        ddd($value);
-//                        $debug = debug_backtrace(true);
-//                        ddd($debug);
-                    }
-
                     $attribute .= $value . ', ';
                 }
             }
