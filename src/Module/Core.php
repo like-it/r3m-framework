@@ -548,6 +548,9 @@ class Core
             if ($key === null || $key === '') {
                 continue;
             }
+            elseif($key === '0'){
+                ddd('kutzooi');
+            }
             elseif (isset($object->{$key})) {
                 $get = Core::object_get($attributeList->{$key}, $object->{$key});
                 if($is_debug){
