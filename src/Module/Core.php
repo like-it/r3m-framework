@@ -554,7 +554,7 @@ class Core
                     d($get);
                     d($key);
 //                    d($object->{$key});
-//                    d($attributeList->{$key});
+                    d($attributeList->{$key});
                 }
                 return $get;
             }
