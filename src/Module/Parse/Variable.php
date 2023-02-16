@@ -274,6 +274,8 @@ class Variable {
             $variable['variable']['is_array'] === true
         ){
             $variable['variable']['attribute'] .= '.\'';
+            $debug = debug_backtrace(true);
+            d($debug);
             ddd($variable);
             foreach($variable['variable']['array'] as $nr => $list) {
                 $is_variable = false;
