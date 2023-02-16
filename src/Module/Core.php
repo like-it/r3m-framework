@@ -552,7 +552,7 @@ class Core
                 $get = Core::object_get($attributeList->{$key}, $object->{$key});
                 if($is_debug){
                     d($get);
-//                    d($key);
+                    d($key);
 //                    d($object->{$key});
 //                    d($attributeList->{$key});
                 }
