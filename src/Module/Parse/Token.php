@@ -1210,6 +1210,7 @@ class Token {
                                                 $prepare,
                                                 count($prepare)
                                             );
+                                            d($prepare);
                                             $prepare = Token::define($prepare);
                                             $prepare = Token::group($prepare, $is_debug);
                                             $prepare = Token::cast($prepare);
