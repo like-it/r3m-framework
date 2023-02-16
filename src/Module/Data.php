@@ -195,7 +195,7 @@ class Data {
 
     public function data($attribute=null, $value=null, $type=null){
         if(is_string($attribute)){
-            d($attribute);
+            echo $attribute . PHP_EOL;
         }
         if(is_int($attribute)){
             $attribute = (string) $attribute;
