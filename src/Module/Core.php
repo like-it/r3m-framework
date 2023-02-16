@@ -505,6 +505,7 @@ class Core
         }
         */
         if(is_array($object)){
+            d($attributeList);
             ddd('found');
         }
         elseif (Core::object_is_empty($object)) {
@@ -560,14 +561,6 @@ class Core
                     d($attributeList->{$key});
                 }
                 return $get;
-            }
-            elseif(
-                is_array($object) &&
-                array_key_exists($key, $object)
-            ) {
-                if($is_debug){
-                    ddd($key);
-                }
             }
         }
         return null;
