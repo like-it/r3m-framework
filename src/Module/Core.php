@@ -499,6 +499,7 @@ class Core
             $is_debug =true;
         }
         if($is_debug){
+            d($object);
             d('found');
         }
         if (Core::object_is_empty($object)) {
