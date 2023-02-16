@@ -532,9 +532,6 @@ class Core
                         unset($attributeList[$nr]);
                     }
                 }
-                if($is_debug){
-                    ddd($attributeList);
-                }
             }
 
         }
@@ -543,6 +540,9 @@ class Core
         }
         if (empty($attributeList)) {
             return $object;
+        }
+        if($is_debug){
+            ddd($attributeList);
         }
         foreach ($attributeList as $key => $attribute) {
             if ($key === null || $key === '') {
