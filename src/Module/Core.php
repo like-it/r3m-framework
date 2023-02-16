@@ -494,16 +494,6 @@ class Core
 
     public static function object_get($attributeList = [], $object = '')
     {
-        $is_debug = false;
-        if($attributeList === 'stream.0'){
-            $is_debug =true;
-        }
-        /*
-        if($is_debug){
-            d($object);
-            d('found');
-        }
-        */
         if(is_array($object)){
             if($attributeList !== null){
                 foreach($attributeList as $key => $attribute){
@@ -514,11 +504,7 @@ class Core
                         return Core::object_get($attributeList->{$key}, $object[$key]);
                     }
                 }
-                d($object);
-                d($attributeList);
-                ddd('found');
             }
-
         }
         elseif (Core::object_is_empty($object)) {
             if (empty($attributeList) && !is_scalar($attributeList)) {
@@ -557,22 +543,12 @@ class Core
         if (empty($attributeList)) {
             return $object;
         }
-        if($is_debug){
-            d($attributeList);
-        }
         foreach ($attributeList as $key => $attribute) {
             if ($key === null || $key === '') {
                 continue;
             }
             elseif (isset($object->{$key})) {
-                $get = Core::object_get($attributeList->{$key}, $object->{$key});
-                if($is_debug){
-                    d($get);
-                    d($key);
-//                    d($object->{$key});
-                    d($attributeList->{$key});
-                }
-                return $get;
+                return Core::object_get($attributeList->{$key}, $object->{$key});
             }
         }
         return null;
