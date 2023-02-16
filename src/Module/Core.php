@@ -548,7 +548,7 @@ class Core
             if ($key === null || $key === '') {
                 continue;
             }
-            if (isset($object->{$key})) {
+            elseif (isset($object->{$key})) {
                 $get = Core::object_get($attributeList->{$key}, $object->{$key});
                 if($is_debug){
                     d($get);
@@ -558,7 +558,7 @@ class Core
                 }
                 return $get;
             }
-            if(
+            elseif(
                 is_array($object) &&
                 array_key_exists($key, $object)
             ) {
