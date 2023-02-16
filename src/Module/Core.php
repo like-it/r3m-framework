@@ -498,10 +498,12 @@ class Core
         if($attributeList === 'stream.0'){
             $is_debug =true;
         }
+        /*
         if($is_debug){
             d($object);
             d('found');
         }
+        */
         if (Core::object_is_empty($object)) {
             if (empty($attributeList) && !is_scalar($attributeList)) {
                 return $object;
@@ -529,6 +531,9 @@ class Core
                     if ($attribute === null || $attribute === '') {
                         unset($attributeList[$nr]);
                     }
+                }
+                if($is_debug){
+                    d($attributeList);
                 }
             }
 
