@@ -506,6 +506,14 @@ class Core
         */
         if(is_array($object)){
             if($attributeList !== null){
+                foreach($attributeList as $key => $attribute){
+                    if ($key === null || $key === '') {
+                        continue;
+                    }
+                    if (array_key_exists($key, $object)) {
+                        return Core::object_get($attributeList->{$key}, $object[$key]);
+                    }
+                }
                 d($object);
                 d($attributeList);
                 ddd('found');
@@ -523,7 +531,7 @@ class Core
                             continue;
                         }
                         if (array_key_exists($key, $object)) {
-                            return Core::object_get($attributeList->{$key}, $object[$key]);
+                            return Core::object_get($attributeList[$key], $object[$key]);
                         }
                     }
                 }
