@@ -1256,8 +1256,9 @@ class Token {
                         }
                         $variable_array_start = null;
                     } else {
-                        
-                        ddd($record);
+                        d($variable_array_depth);
+                        d($variable_array_value);
+                        d($record);
                     }
                     $variable_array_value .= $record['value'];
                     continue;
