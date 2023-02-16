@@ -555,7 +555,10 @@ class Core
                 }
                 return $get;
             }
-            if(array_key_exists($key, $object)) {
+            if(
+                is_array($object) &&
+                array_key_exists($key, $object)
+            ) {
                 if($is_debug){
                     ddd($key);
                 }
