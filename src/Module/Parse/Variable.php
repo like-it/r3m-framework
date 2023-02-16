@@ -278,8 +278,11 @@ class Variable {
                 $list = $build->require('modifier', $list);
                 $list = $build->require('function', $list);
                 $value = Variable::getValue($build, $storage, $list);
-
-                $variable['variable']['attribute'] .= ' . ' . $value;
+                if(is_string($value)){
+                    $variable['variable']['attribute'] .= ' . ' . '\'' . $value . '\'';
+                } else {
+                    ddd($value);
+                }
             }
             d($variable);
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
