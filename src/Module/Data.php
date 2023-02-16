@@ -194,8 +194,8 @@ class Data {
     }
 
     public function data($attribute=null, $value=null, $type=null){
-        if(is_string($attribute) && stristr($attribute, 'stream') && stristr($attribute, '0')){
-            ddd($attribute);
+        if(is_string($attribute)){
+            d($attribute);
         }
         if(is_int($attribute)){
             $attribute = (string) $attribute;
