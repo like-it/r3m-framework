@@ -11,11 +11,17 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_object_attribute_first(Parse $parse, Data $data, $object){
+function function_property_list(Parse $parse, Data $data, $object, $allowed=[]){
+    $result = [];
     if(is_object($object)){
         foreach($object as $attribute => $unused){
-            return $attribute;
+            if(empty($allowed)){
+                $result[] = $attribute;
+            }
+            elseif(in_array($attribute, $allowed, true)){
+                $result[] = $attribute;
+            }
         }
     }
-    return false;
+    return $result;
 }

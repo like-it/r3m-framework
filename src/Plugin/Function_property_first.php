@@ -11,13 +11,11 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_object_attribute_last(Parse $parse, Data $data, $object){
+function function_property_first(Parse $parse, Data $data, $object){
     if(is_object($object)){
-        $attribute = false;
         foreach($object as $attribute => $unused){
-            //intentionally
+            return $attribute;
         }
-        return $attribute;
     }
     return false;
 }
