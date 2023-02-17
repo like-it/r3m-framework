@@ -1021,7 +1021,6 @@ class Token {
      */
     public static function prepare($token=[], $count=0, $is_debug=null): array
     {
-        d($token);
         $hex = null;
         $start = null;
         $skip = 0;
