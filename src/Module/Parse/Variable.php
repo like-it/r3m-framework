@@ -273,7 +273,6 @@ class Variable {
             array_key_exists('is_array', $variable['variable']) &&
             $variable['variable']['is_array'] === true
         ){
-            ddd($variable);
             $variable['variable']['attribute'] .= '.\'';
             foreach($variable['variable']['array'] as $nr => $list) {
                 $is_variable = false;
