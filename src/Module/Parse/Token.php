@@ -1328,7 +1328,6 @@ class Token {
                         }
                         if($variable_array_value){
                             $value .= $variable_array_value;
-                            d($value);
                         }
                         $token[$variable_nr]['variable']['is_assign'] = true;
                         $token[$variable_nr]['variable']['operator'] = $token[$next]['value'];
