@@ -1342,18 +1342,12 @@ class Token {
                         $previous_nr = $nr;
                         continue;
                     } else {
-                        $value .= $record['value'];
-                        if($record['value'] === ' '){
-                            d($nr);
-                            d($variable_nr);
-                            d($record);
-                            d($token[$variable_nr]['variable']['name']);
-                            dd($token);
+                        if($record['type'] !== Token::TYPE_WHITESPACE){
+                            $value .= $record['value'];
+                            $token[$variable_nr]['variable']['name'] .= $record['value'];
+                            $token[$variable_nr]['variable']['attribute'] .= $record['value'];
+                            $token[$variable_nr]['value'] = $value;
                         }
-
-                        $token[$variable_nr]['variable']['name'] .= $record['value'];
-                        $token[$variable_nr]['variable']['attribute'] .= $record['value'];
-                        $token[$variable_nr]['value'] = $value;                        
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
                         $variable_array_level = 0;
