@@ -273,6 +273,7 @@ class Variable {
             array_key_exists('is_array', $variable['variable']) &&
             $variable['variable']['is_array'] === true
         ){
+            ddd($variable);
             $variable['variable']['attribute'] .= '.\'';
             foreach($variable['variable']['array'] as $nr => $list) {
                 $is_variable = false;
@@ -303,7 +304,6 @@ class Variable {
             } else {
                 $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -2) . '\'';
             }
-
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
         } else {
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
