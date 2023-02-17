@@ -170,7 +170,7 @@ class Core
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     return proc_close($process);
-                case 'read' :
+                case 'prompt' :
                     $descriptorspec = array(
                         0 => STDIN,  // stdin
                         1 => STDOUT,  // stdout
@@ -191,10 +191,9 @@ class Core
                         method_exists($object->route(), 'data')
                     ){
                         $from = clone $object;
-//                        $from->delete('R3m\Io');
-                        $from->set('config', $object->config());
-                        $from->set('route', $object->route()->data());
-                        $from->set('request', $object->request());
+                        if(!$from->has('request')){
+                            $from->set('request', $object->request());
+                        }
                         $data = Core::object(
                             $from->data(),
                             'json-line'
