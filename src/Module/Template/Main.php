@@ -224,8 +224,6 @@ class Main {
 	}
 
 	protected function value_identical($variable1=null, $variable2=null){
-        d($variable1);
-        d($variable2);
 	    return $variable1 === $variable2;
 	}
 
