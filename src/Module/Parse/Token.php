@@ -1345,6 +1345,8 @@ class Token {
                         $value .= $record['value'];
                         if($record['value'] === ' '){
                             d($record);
+                            d($token[$variable_nr]['variable']['name']);
+                            dd($token);
                         }
 
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
@@ -1368,7 +1370,6 @@ class Token {
                 ){
                     if($token[$next_next]['value'] === '|'){
                         $value .= $record['value'];
-                        d($record['value']);
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         $token[$variable_nr]['variable']['operator'] = $token[$next_next]['value'];
@@ -1405,7 +1406,6 @@ class Token {
                         )
                     ){
                         $value .= $record['value'];
-                        d($record['value']);
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         $token[$variable_nr]['variable']['is_assign'] = true;
@@ -1422,7 +1422,6 @@ class Token {
                         continue;
                     } else {
                         $value .= $record['value'];
-                        d($record['value']);
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         $token[$variable_nr]['value'] = $value;                        
@@ -1450,7 +1449,6 @@ class Token {
                     $variable_array_level = 0;
                 }
                 elseif($variable_nr !== null) {
-                    d($record['value']);
                     $token[$variable_nr]['variable']['name'] .= $record['value'];
                     $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                     $value .= $record['value'];                    
@@ -1466,7 +1464,6 @@ class Token {
                 $quote_double_toggle === false
             ){
                 $variable_nr = $nr;
-                d($record['value']);
                 $token[$variable_nr]['variable']['name'] = $record['value'];
                 $token[$variable_nr]['variable']['attribute'] = substr($record['value'], 1);
                 $token[$variable_nr]['variable']['is_assign'] = false;
