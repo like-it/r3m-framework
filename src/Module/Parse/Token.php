@@ -1344,6 +1344,7 @@ class Token {
                     } else {
                         $value .= $record['value'];
                         if($record['value'] === ' '){
+                            d($variable_nr);
                             d($record);
                             d($token[$variable_nr]['variable']['name']);
                             dd($token);
