@@ -117,22 +117,37 @@ class Core
                 case 0 :
                     //in child process
                     //create a separate process to execute another process (async);
-                    $descriptorspec = array(
-                        0 => STDIN,  // stdin
-                        1 => STDOUT,  // stdout
-                        2 => array("pipe", "w"),  // stderr
-                    );
 
-                    $process = proc_open($command, [], $pipes, Dir::current(), null);
-
+                    $descriptorspec = [
+                        0 => ["pipe", "r"],  // stdin
+                        1 => ["pipe", "w"],  // stdout
+                        2 => ["pipe", "w"],  // stderr
+                    ];
+                    if(
+                        is_object($object->route()) &&
+                        method_exists($object->route(), 'data')
+                    ){
+                        $from = clone $object;
+                        if(!$from->has('request')){
+                            $from->set('request', $object->request());
+                        }
+                        $data = Core::object(
+                            $from->data(),
+                            'json-line'
+                        );
+                        $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                        fwrite($pipes[0], $data . PHP_EOL);
+                        fclose($pipes[0]);
+                    } else {
+                        $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                        fclose($pipes[0]);
+                    }
                     $output = stream_get_contents($pipes[1]);
-                    fclose($pipes[1]);
-                    /*
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
-                    */
+                    fclose($pipes[1]);
                     proc_close($process);
-                    exit();
+                    exit(0);
                 default :
                     if ($type == Core::SHELL_PROCESS) {
                         pcntl_waitpid(0, $status, WNOHANG);
@@ -157,8 +172,8 @@ class Core
             }
             return $result;
         } else {
-
-            $option = 'default';
+            $option = $object->config('core.execute.mode');
+            //get option from $command
             switch($option){
                 case 'file' :
                     $descriptorspec = [
@@ -170,7 +185,45 @@ class Core
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     return proc_close($process);
+                case 'stream' :
+                    $descriptorspec = [
+                        0 => ["pipe", "r"],  // stdin
+                        1 => ["pipe", "w"],  // stdout
+                        2 => ["pipe", "w"],  // stderr
+                    ];
+                    $data = '';
+                    if($object->config('core.execute.stream.is.default')){
+                        $from = clone $object;
+                        if(!$from->has('request')){
+                            $from->set('request', $object->request());
+                        }
+                        $delete = $object->config('core.execute.stream.delete');
+                        if(
+                            $delete &&
+                            is_array($delete)
+                        ){
+                            foreach($delete as $attribute){
+                                $from->delete($attribute);
+                            }
+                        }
+                        $data = Core::object(
+                            $from->data(),
+                            'json-line'
+                        );
+                    }
+                    $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+//                      stream_set_blocking($pipes[1], 0);
+//                      stream_set_blocking($pipes[2], 0);
+//                      stream_set_blocking(STDIN, 0);
+                    fwrite($pipes[0], $data . PHP_EOL);
+                    fclose($pipes[0]);
+                    $output = stream_get_contents($pipes[1]);
+                    $error = stream_get_contents($pipes[2]);
+                    fclose($pipes[2]);
+                    fclose($pipes[1]);
+                    return proc_close($process);
                 case 'prompt' :
+                default :
                     $descriptorspec = array(
                         0 => STDIN,  // stdin
                         1 => STDOUT,  // stdout
@@ -180,40 +233,7 @@ class Core
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     return proc_close($process);
-                default :
-                    $descriptorspec = [
-                        0 => ["pipe", "r"],  // stdin
-                        1 => ["pipe", "w"],  // stdout
-                        2 => ["pipe", "w"],  // stderr
-                    ];
-                    if(
-                        is_object($object->route()) &&
-                        method_exists($object->route(), 'data')
-                    ){
-                        $from = clone $object;
-                        if(!$from->has('request')){
-                            $from->set('request', $object->request());
-                        }
-                        $data = Core::object(
-                            $from->data(),
-                            'json-line'
-                        );
-                        $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                        fwrite($pipes[0], $data .PHP_EOL);
-                        fclose($pipes[0]);
-                    } else {
-                        $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                        fclose($pipes[0]);
-                    }
-                    $output = stream_get_contents($pipes[1]);
-                    $error = stream_get_contents($pipes[2]);
-                    fclose($pipes[2]);
-                    fclose($pipes[1]);
-                    return proc_close($process);
-                }
-//            stream_set_blocking($pipes[1], 0);
-//            stream_set_blocking($pipes[2], 0);
-//            stream_set_blocking(STDIN, 0);
+            }
         }
     }
 
