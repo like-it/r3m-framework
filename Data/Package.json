@@ -8,7 +8,7 @@
         "installation" : "{{config('project.dir.data')}}{{config('dictionary.package')}}{{config('ds')}}{{$this.#key}}{{config('ds')}}{{config('dictionary.installation')}}{{config('extension.json')}}",
         "command" : [
             "{{binary()}} {{$this.#key}} register",
-            "{{binary()}} {{$this.#key}} setup -stream"
+            "{{binary()}} {{$this.#key}} setup"
         ]
     }
   }
