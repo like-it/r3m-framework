@@ -173,8 +173,9 @@ class Core
             return $result;
         } else {
             $option = $object->config('core.execute.mode');
-            if($object->config('core.execute.as.stream')){
+            if($object->config('core.execute.stream.init')){
                 $option = 'stream';
+                $object->config('core.execute.stream.is.default', true);
             }
             //get option from $command
             switch($option){
