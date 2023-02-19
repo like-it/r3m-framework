@@ -173,6 +173,9 @@ class Core
             return $result;
         } else {
             $option = $object->config('core.execute.mode');
+            if($object->config('core.execute.as.stream')){
+                $option = 'stream';
+            }
             //get option from $command
             switch($option){
                 case 'file' :
