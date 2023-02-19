@@ -232,10 +232,7 @@ class Core
                 case 'prompt' :
                 default :
                     d('#########################################prompt');
-                    $descriptorspec = array(
-                        1 => STDOUT,  // stdout
-                        2 => ["pipe", "w"],  // stderr
-                    );
+                    $descriptorspec = [];
                     echo $command . PHP_EOL;
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
                     $error = stream_get_contents($pipes[2]);
