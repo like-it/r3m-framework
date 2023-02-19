@@ -345,11 +345,11 @@ class Parse {
                 $storage->data('this', $this->local($depth));
                 $rootNode = $this->local(0);
                 if($rootNode && is_object($rootNode)){
-                    $attribute = 'this.' . $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.rootNode');
+                    $attribute = 'this.' . $this->object()->config('parse.read.object.this.rootNode');
                     $storage->data($attribute, $rootNode);
                     $key = 'this';
                     for($index = $depth - 1; $index >= 0; $index--){
-                        $key .= '.' . $this->object()->config('parse.read.object.this.prefix') . $this->object()->config('parse.read.object.this.parentNode');
+                        $key .= '.' . $this->object()->config('parse.read.object.this.parentNode');
                         $storage->data($key, $this->local($index));
                     }
                 }
