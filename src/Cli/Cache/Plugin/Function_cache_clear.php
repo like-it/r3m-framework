@@ -13,7 +13,13 @@ function function_cache_clear(Parse $parse, Data $data){
         $execute = $parse->compile($record);
         echo 'Executing: ' . $execute . "...\n";
         Core::execute($object, $execute, $output);
-        echo $output . PHP_EOL;
+        if(is_array($output)){
+            echo implode(PHP_EOL, $output) . PHP_EOL;
+            ob_flush();
+        } else{
+            echo $output . PHP_EOL;
+            ob_flush();
+        }
         ob_flush();
     }
     if(File::exist($object->config('project.dir.vendor') . 'Doctrine')){
