@@ -13,8 +13,13 @@ function function_cache_clear(Parse $parse, Data $data){
         $execute = $parse->compile($record);
         echo 'Executing: ' . $execute . "...\n";
         Core::execute($object, $execute, $output);
-        echo $output . PHP_EOL;
-        ob_flush();
+        if(is_array($output)){
+            ddd($output);
+        } else{
+            echo $output . PHP_EOL;
+            ob_flush();
+        }
+
     }
     if(File::exist($object->config('project.dir.vendor') . 'Doctrine')){
         $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
