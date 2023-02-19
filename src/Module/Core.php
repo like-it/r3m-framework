@@ -233,7 +233,6 @@ class Core
                 default :
                     d('#########################################prompt');
                     $descriptorspec = array(
-                        0 => STDIN,  // stdin
                         1 => STDOUT,  // stdout
                         2 => ["pipe", "w"],  // stderr
                     );
