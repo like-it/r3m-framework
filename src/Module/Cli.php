@@ -27,6 +27,7 @@ class Cli {
 
     /**
      * @throws ObjectException
+     * @throws Exception
      */
     public static function read($url='', $text='')
     {
@@ -43,7 +44,11 @@ class Cli {
         $input = null;
         switch($url){
             case 'input':
-                echo $text;
+                fwrite(STDOUT, $text);
+                if($is_flush){
+                    ob_flush();
+                }
+                fflush(STDOUT);
                 if($is_flush){
                     ob_flush();
                 }
@@ -63,6 +68,9 @@ class Cli {
                 $input = trim(fgets(STDIN));
                 $input = Core::object($input);
             break;
+            default:
+                throw new Exception('Could not detect type: (input | input-hidden | stream)');
+
         }
         return $input;
     }
