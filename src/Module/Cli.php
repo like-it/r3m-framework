@@ -43,6 +43,8 @@ class Cli {
         $input = null;
         switch($url){
             case 'input':
+                $input = readline($text);
+                /*
                 fwrite(STDOUT, $text);
 //            echo $text;
                 if($is_flush){
@@ -50,6 +52,7 @@ class Cli {
                 }
                 fflush(STDOUT);
                 $input = trim(fgets(STDIN));
+                */
             break;
             case 'input-hidden':
                 fwrite(STDOUT, $text);
