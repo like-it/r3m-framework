@@ -115,7 +115,6 @@ class Core
                 case -1 :
                     return false;
                 case 0 :
-                    ddd('yes');
                     //in child process
                     //create a separate process to execute another process (async);
 
@@ -124,25 +123,29 @@ class Core
                         1 => ["pipe", "w"],  // stdout
                         2 => ["pipe", "w"],  // stderr
                     ];
-                    if(
-                        is_object($object->route()) &&
-                        method_exists($object->route(), 'data')
-                    ){
+                    $data = '';
+                    if($object->config('core.execute.stream.is.default')){
                         $from = clone $object;
                         if(!$from->has('request')){
                             $from->set('request', $object->request());
+                        }
+                        $delete = $object->config('core.execute.stream.delete');
+                        if(
+                            $delete &&
+                            is_array($delete)
+                        ){
+                            foreach($delete as $attribute){
+                                $from->delete($attribute);
+                            }
                         }
                         $data = Core::object(
                             $from->data(),
                             'json-line'
                         );
-                        $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                        fwrite($pipes[0], $data . PHP_EOL);
-                        fclose($pipes[0]);
-                    } else {
-                        $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                        fclose($pipes[0]);
                     }
+                    $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
+                    fwrite($pipes[0], $data . PHP_EOL);
+                    fclose($pipes[0]);
                     $output = stream_get_contents($pipes[1]);
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
@@ -181,7 +184,6 @@ class Core
             //get option from $command
             switch($option){
                 case 'file' :
-                    d('#########################################file');
                     $descriptorspec = [
                         0 => ['file', 'php://stdin' , 'r'],  // stdin
                         1 => ['file', 'php://stdout', 'w'],  // stdout
@@ -192,7 +194,6 @@ class Core
                     fclose($pipes[2]);
                     return proc_close($process);
                 case 'stream' :
-                    d('#########################################stream');
                     $descriptorspec = [
                         0 => ["pipe", "r"],  // stdin
                         1 => ["pipe", "w"],  // stdout
@@ -231,12 +232,15 @@ class Core
                     return proc_close($process);
                 case 'prompt' :
                 default :
-                    d('#########################################prompt');
-                    $descriptorspec = [];
+                    $descriptorspec = array(
+                        0 => STDIN,  // stdin
+                        1 => STDOUT,  // stdout
+                        2 => ["pipe", "w"],  // stderr
+                    );
                     echo $command . PHP_EOL;
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-//                    $error = stream_get_contents($pipes[2]);
-//                    fclose($pipes[2]);
+                    $error = stream_get_contents($pipes[2]);
+                    fclose($pipes[2]);
                     return proc_close($process);
             }
         }
