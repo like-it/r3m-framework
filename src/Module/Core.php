@@ -181,6 +181,7 @@ class Core
             //get option from $command
             switch($option){
                 case 'file' :
+                    d('#########################################file');
                     $descriptorspec = [
                         0 => ['file', 'php://stdin' , 'r'],  // stdin
                         1 => ['file', 'php://stdout', 'w'],  // stdout
@@ -191,6 +192,7 @@ class Core
                     fclose($pipes[2]);
                     return proc_close($process);
                 case 'stream' :
+                    d('#########################################stream');
                     $descriptorspec = [
                         0 => ["pipe", "r"],  // stdin
                         1 => ["pipe", "w"],  // stdout
@@ -229,6 +231,7 @@ class Core
                     return proc_close($process);
                 case 'prompt' :
                 default :
+                    d('#########################################prompt');
                     $descriptorspec = array(
                         0 => STDIN,  // stdin
                         1 => STDOUT,  // stdout
