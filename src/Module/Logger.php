@@ -163,11 +163,16 @@ class Logger {
         }
         $uuid = posix_geteuid();
         if(empty($uuid)){
-//            $object->config('core.execute.stream.init', true);
+            $mode = $object->config('core.execute.stream.mode');
+            $object->config('core.execute.stream.mode', 'stream');
             $dir = $object->config('project.dir.log');
             $command = 'chown www-data:www-data ' . $dir . ' -R';
             Core::execute($object, $command);
-//            $object->config('core.execute.stream.init', false);
+            if($mode === null){
+                $object->delete('core.execute.stream.mode');
+            } else {
+                $object->config('core.execute.stream.mode', $mode);
+            }
         }
     }
 
