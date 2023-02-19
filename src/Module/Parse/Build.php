@@ -438,11 +438,11 @@ class Build {
         File::put($url, $write);
 //        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
         $command = 'php -l ' . escapeshellcmd($url);
-        $default = $this->object->config('core.execute.stream.is.default');
-        $this->object->config('core.execute.stream.init', true);
+//        $default = $this->object->config('core.execute.stream.is.default');
+//        $this->object->config('core.execute.stream.init', true);
         Core::execute($this->object(), $command, $output, $error);
-        $this->object->config('core.execute.stream.init', false);
-        $this->object->config('core.execute.stream.is.default', $default);
+//        $this->object->config('core.execute.stream.init', false);
+//        $this->object->config('core.execute.stream.is.default', $default);
         if($error){
             $url_write_error = $this->object()->config('dictionary.cache') . 'parse/error/' . File::basename($url);
             $this->object()->logger()->error($error, [ $url_write_error ]);
