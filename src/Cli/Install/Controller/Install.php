@@ -40,7 +40,6 @@ class Install extends Controller {
         $data = new Data();
         $data->data(Controller::PROPERTY_VIEW_URL, $url);
         $parse = new Parse($object);
-        $object->config('is.stream', true);
         $package = Core::object_select(
             $parse,
             $data,
@@ -106,6 +105,7 @@ class Install extends Controller {
             is_array($package->command)
         ){
             foreach($package->command as $command){
+                echo $command . PHP_EOL;
                 Core::execute($object, $command, $output, $error);
                 if($output){
                     echo $output;
@@ -119,6 +119,7 @@ class Install extends Controller {
             property_exists($package, 'command') &&
             is_string($package->command)
         ){
+            echo $package->command . PHP_EOL;
             Core::execute($object, $package->command, $output, $error);
             if($output){
                 echo $output;
