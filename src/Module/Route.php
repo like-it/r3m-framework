@@ -179,7 +179,9 @@ class Route extends Data {
                     $request->request
                 )
             );
-        } else {
+        } elseif(
+            property_exists($request, 'request')
+        ) {
             $object->request(
                 Core::object_merge(
                     $object->request(),
