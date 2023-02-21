@@ -264,6 +264,9 @@ class Dir {
         if(Dir::is($dir) === false){
             return true;
         }
+        if($dir === '/'){
+            return false;
+        }
         $dir = escapeshellarg($dir);
         exec('rm -rf ' . $dir);
         return true;
