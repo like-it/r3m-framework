@@ -95,7 +95,7 @@ class Core
     public static function execute(App $object, $command, &$output = '', &$error = '', $type = null)
     {
         if ($output === null) {
-            $output = [];
+            $output = '';
         }
         $result = [
             'pid' => getmypid()
