@@ -169,7 +169,10 @@ class Route extends Data {
         if(empty($request)){
             return $object;
         }
-        if(get_class($request->request) === 'stdClass'){
+        if(
+            property_exists($request, 'request') &&
+            get_class($request->request) === 'stdClass'
+        ){
             $object->request(
                 Core::object_merge(
                     $object->request(),
@@ -184,8 +187,6 @@ class Route extends Data {
                 )
             );
         }
-
-
         return $object;
     }
 
