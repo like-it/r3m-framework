@@ -14,6 +14,7 @@ use R3m\Io\App;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Controller;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 
@@ -52,6 +53,7 @@ class Install extends Controller {
             throw new Exception('Package: ' . $key . PHP_EOL);
         }
         if(property_exists($package, 'composer')){
+            Dir::change($object->config('project.dir.root'));
             Core::execute($object, $package->composer, $output, $error);
             if($output){
                 echo $output;
