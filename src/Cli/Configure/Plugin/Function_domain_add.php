@@ -375,5 +375,20 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             }
         }
     }
+    $url = $object->config('project.dir.data') . 'Hosts' . $object->config('extension.json');
+    $read = $object->data_read($url);
+    if($read){
+        if($subdomain){
+            $read->set('host.' . $subdomain . '-' . $domain . '-' . $extension . '.subdomain', $subdomain);
+            $read->set('host.' . $subdomain . '-' . $domain . '-' . $extension . '.domain', $domain);
+            $read->set('host.' . $subdomain . '-' . $domain . '-' . $extension . '.extension', $extension);
+        } else {
+            $read->set('host.' . $domain . '-' . $extension . '.subdomain', false);
+            $read->set('host.' . $domain . '-' . $extension . '.domain', $domain);
+            $read->set('host.' . $domain . '-' . $extension . '.extension', $extension);
+        }
+        $read->write($url);
+    }
+
 }
 
