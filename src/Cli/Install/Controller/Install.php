@@ -34,6 +34,18 @@ class Install extends Controller {
      * @throws Exception
      */
     public static function run(App $object){
+        $id = posix_geteuid();
+        if(
+            !in_array(
+                $id,
+                [
+                    0,
+                    33
+                ]
+            )
+        ){
+            throw new Exception('Only root & www-data can install packages...');
+        }
         $key = App::parameter($object, 'install', 1);
         $url = $object->config('framework.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
         $data = clone $object->data();
