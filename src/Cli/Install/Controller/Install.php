@@ -59,7 +59,7 @@ class Install extends Controller {
             $url,
             'package.' . $key,
             true,
-            'item'
+            'object'
         );
         if(empty($package)){
             throw new Exception('Package: ' . $key . PHP_EOL);
