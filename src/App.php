@@ -622,7 +622,7 @@ class App extends Data {
      * @throws ObjectException
      * @throws FileWriteException
      */
-    public function object_select($url, $select=null, $compile=false, $scope='scope:object'): ?stdClass
+    public function object_select($url, $select=null, $compile=false, $scope='scope:object')
     {
         $parse = new Parse($this);
         return Core::object_select(
