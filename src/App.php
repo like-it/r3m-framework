@@ -584,7 +584,18 @@ class App extends Data {
     public function data_select($url, $select=null, $compile=false, $scope='scope:object'): Data
     {
         $parse = new Parse($this);
-        return Data::select($parse, $parse->storage(), $url, $select, $compile, $scope);
+        $node = new Data();
+        $node->data(
+            Core::object_select(
+                $parse,
+                $parse->storage(),
+                $url,
+                $select,
+                $compile,
+                $scope
+            )
+        );
+        return $node;
     }
 
     /**

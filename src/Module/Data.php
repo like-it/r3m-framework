@@ -381,15 +381,4 @@ class Data {
         Dir::create($dir);
         return File::write($url, Core::object($this->data(), Core::OBJECT_JSON));
     }
-
-    /**
-     * @throws ObjectException
-     * @throws FileWriteException
-     */
-    public static function select(Parse $parse, Data $data, $url='', $select=null, $compile=false, $scope='scope:object'): Data
-    {
-        $node = new Data();
-        $node->data(Core::object_select($parse, $data, $url, $select, $compile, $scope));
-        return $node;
-    }
 }
