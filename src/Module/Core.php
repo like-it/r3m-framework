@@ -969,7 +969,7 @@ class Core
      * @throws ObjectException
      * @throws FileWriteException
      */
-    public static function object_select(Parse $parse, Data $data, $url = '', $select = null, $compile = false, $scope='scope:object')
+    public static function object_select(Parse $parse, Data $data, $url='', $select=null, $compile=false, $scope='scope:object')
     {
         if(
             $compile === true &&

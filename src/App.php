@@ -579,6 +579,16 @@ class App extends Data {
 
     /**
      * @throws ObjectException
+     * @throws FileWriteException
+     */
+    public function data_select($url, $select=null, $compile=false, $scope='scope:object'): Data
+    {
+        $parse = new Parse($this);
+        return Data::select($parse, $parse->storage(), $url, $select, $compile, $scope);
+    }
+
+    /**
+     * @throws ObjectException
      */
     public function data_read($url, $attribute=null, $do_not_nest_key=false){
         if($attribute !== null){
