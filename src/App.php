@@ -584,11 +584,13 @@ class App extends Data {
     public function data_select($url, $select=null): Data
     {
         $parse = new Parse($this);
+        $data = new Data();
+        $data->data($this->data());
         $node = new Data();
         $node->data(
             Core::object_select(
                 $parse,
-                $this->data(),
+                $data,
                 $url,
                 $select,
                 false,
@@ -604,11 +606,13 @@ class App extends Data {
     public function parse_select($url, $select=null, $scope='scope:object'): Data
     {
         $parse = new Parse($this);
+        $data = new Data();
+        $data->data($this->data());
         $node = new Data();
         $node->data(
             Core::object_select(
                 $parse,
-                $this->data(),
+                $data,
                 $url,
                 $select,
                 true,
@@ -625,9 +629,11 @@ class App extends Data {
     public function object_select($url, $select=null, $compile=false, $scope='scope:object')
     {
         $parse = new Parse($this);
+        $data = new Data();
+        $data->data($this->data());
         return Core::object_select(
             $parse,
-            $this->data(),
+            $data,
             $url,
             $select,
             $compile,
