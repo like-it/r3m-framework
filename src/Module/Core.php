@@ -969,7 +969,7 @@ class Core
      * @throws ObjectException
      * @throws FileWriteException
      */
-    public static function object_select(Parse $parse, Data $data, $url='', $select=null, $compile=false, $scope='scope:object')
+    public static function object_select(Parse $parse, Data $data, $url='', $select=null, $compile=false, $scope='scope:object'): ?stdClass
     {
         if(
             $compile === true &&
@@ -1000,6 +1000,9 @@ class Core
             if (File::exist($url)) {
                 $read = File::read($url);
                 $read = Core::object($read);
+                if(empty($read)){
+                    throw new ObjectException('Could not read item: ' . $select . PHP_EOL);
+                }
                 if ($compile) {
                     $read = $parse->compile($read, $data->data(), $parse->storage());
                 }
@@ -1007,7 +1010,7 @@ class Core
                 $json->data($read);
                 return $json->get($select);
             }
-            return '';
+            return null;
         }
 
     }

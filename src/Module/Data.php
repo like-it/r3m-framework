@@ -376,6 +376,10 @@ class Data {
         return $this->do_not_nest_key;
     }
 
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
     public function write($url=''){
         $dir = Dir::name($url);
         Dir::create($dir);

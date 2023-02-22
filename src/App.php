@@ -581,21 +581,58 @@ class App extends Data {
      * @throws ObjectException
      * @throws FileWriteException
      */
-    public function data_select($url, $select=null, $compile=false, $scope='scope:object'): Data
+    public function data_select($url, $select=null): Data
     {
         $parse = new Parse($this);
         $node = new Data();
         $node->data(
             Core::object_select(
                 $parse,
-                $parse->storage(),
+                $this->data(),
                 $url,
                 $select,
-                $compile,
+                false,
+            )
+        );
+        return $node;
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
+    public function parse_select($url, $select=null, $scope='scope:object'): Data
+    {
+        $parse = new Parse($this);
+        $node = new Data();
+        $node->data(
+            Core::object_select(
+                $parse,
+                $this->data(),
+                $url,
+                $select,
+                true,
                 $scope
             )
         );
         return $node;
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
+    public function object_select($url, $select=null, $compile=false, $scope='scope:object'): ?stdClass
+    {
+        $parse = new Parse($this);
+        return Core::object_select(
+            $parse,
+            $this->data(),
+            $url,
+            $select,
+            $compile,
+            $scope
+        );
     }
 
     /**
