@@ -12,11 +12,8 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
+use R3m\Io\Exception\ObjectException;
 
-/**
- * @throws \R3m\Io\Exception\ObjectException
- * @throws \R3m\Io\Exception\FileWriteException
- */
-function function_object_select(Parse $parse, Data $data, $url, $select=null, $compile=false, $scope='scope:object'){
-    return Core::object_select($parse, $data, $url, $select, $compile, $scope);
+function function_parse_select(Parse $parse, Data $data, $url='', $select='', $scope='scope:object'){
+    return Core::object_select($parse, $data, $url, $select, true, $scope);
 }
