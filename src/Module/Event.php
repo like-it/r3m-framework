@@ -51,7 +51,9 @@ class Event {
                 property_exists($event, 'controller') &&
                 is_array($event->controller)
             ){
-                ddd($event);
+                if(!empty($event->controller)){
+                    ddd($event);
+                }
             }
         }
     }
