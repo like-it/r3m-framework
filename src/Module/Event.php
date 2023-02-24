@@ -43,7 +43,7 @@ class Event {
                 is_array($event->command)
             ){
                 foreach($event->command as $command){
-                    $command = str_replace('{{binary}}', Core::binary(), $command);
+                    $command = str_replace('{{binary()}}', Core::binary(), $command);
                     d($command);
                 }
             }
