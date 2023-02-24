@@ -18,6 +18,7 @@ use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Database;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\FileRequest;
 use R3m\Io\Module\Handler;
