@@ -48,25 +48,18 @@ class Install extends Controller {
         }
         $key = App::parameter($object, 'install', 1);
         $url = $object->config('framework.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
-        $data = clone $object->data();
-        unset($data->{App::NAMESPACE});
-        $data = new Data();
-        $data->data(Controller::PROPERTY_VIEW_URL, $url);
-        $parse = new Parse($object);
-        $package = Core::object_select(
-            $parse,
-            $data,
+        $object->set(Controller::PROPERTY_VIEW_URL, $url);
+
+        $package = $object->parse_select(
             $url,
-            'package.' . $key,
-            true,
-            'object'
+            'package.' . $key
         );
         if(empty($package)){
             throw new Exception('Package: ' . $key . PHP_EOL);
         }
-        if(property_exists($package, 'composer')){
+        if($package->has('composer')){
             Dir::change($object->config('project.dir.root'));
-            Core::execute($object, $package->composer, $output, $error);
+            Core::execute($object, $package->get('composer'), $output, $error);
             if($output){
                 echo $output;
             }
@@ -75,10 +68,10 @@ class Install extends Controller {
             }
         }
         if(
-            property_exists($package, 'route') &&
-            is_array($package->route)
+            $package->has('route') &&
+            is_array($package->get('route'))
         ){
-            foreach($package->route as $route){
+            foreach($package->get('route') as $route){
                 if(File::exist($route)){
                     $command = '{{binary()}} configure route resource "' . $route . '"';
                     $parse = new Parse($object, $object->data());
@@ -96,10 +89,10 @@ class Install extends Controller {
             }
         }
         elseif(
-            property_exists($package, 'route') &&
+            $package->has('route') &&
             is_string($package->route)
         ){
-            if(File::exist($package->route)){
+            if(File::exist($package->get('route'))){
                 $command = '{{binary()}} configure route resource "' . $package->route . '"';
                 $parse = new Parse($object, $object->data());
                 $command = $parse->compile($command, $object->data());
@@ -115,10 +108,10 @@ class Install extends Controller {
             }
         }
         if(
-            property_exists($package, 'command') &&
-            is_array($package->command)
+            $package->has('command') &&
+            is_array($package->get('command'))
         ){
-            foreach($package->command as $command){
+            foreach($package->get('command') as $command){
                 Core::execute($object, $command, $output, $error);
                 if($output){
                     echo $output;
@@ -129,10 +122,10 @@ class Install extends Controller {
             }
         }
         elseif(
-            property_exists($package, 'command') &&
-            is_string($package->command)
+            $package->has('command') &&
+            is_string($package->get('command'))
         ){
-            Core::execute($object, $package->command, $output, $error);
+            Core::execute($object, $package->get('command'), $output, $error);
             if($output){
                 echo $output;
             }
