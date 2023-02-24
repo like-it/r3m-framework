@@ -44,6 +44,7 @@ class Event {
             ){
                 foreach($event->command as $command){
                     $command = str_replace('{{binary()}}', Core::binary(), $command);
+                    d($command);
                     Core::execute($object, $command, $output, $error);
                 }
             }
