@@ -35,8 +35,18 @@ class Event {
             return null;
         }
         $list = [];
+        $events = Sort::list($events)->with(['priority' => 'DESC']);
+
         foreach($events as $event){
-            ddd($event);
+            if(
+                property_exists($event, 'command') &&
+                is_array($event->command)
+            ){
+                foreach($event->command as $command){
+                    $command = str_replace('{{binary}}', Core::binary(), $command);
+                    d($command);
+                }
+            }
         }
     }
 
