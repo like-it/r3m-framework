@@ -10,14 +10,13 @@
  */
 namespace R3m\Io\Module;
 
-use stdClass;
-use Exception;
 use R3m\Io\App;
-use R3m\Io\Config;
+
+use R3m\Io\Exception\ObjectException;
 
 class Event {
 
-    public static function on(App $object, $action, $options){
+    public static function on(App $object, $action, $options=[]){
         $event = $object->config('event.' . $action);
         if(empty($event)){
             $event = [];
@@ -26,11 +25,11 @@ class Event {
         $object->config('event.' . $action, $event);
     }
 
-    public static function off(App $object, $action, $options){
+    public static function off(App $object, $action, $options=[]){
 
     }
 
-    public static function trigger(App $object, $action, $options){
+    public static function trigger(App $object, $action, $options=[]){
         $events = $object->config('event.' . $action);
         if(empty($events)){
             return null;
@@ -41,6 +40,9 @@ class Event {
         }
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function configure(App $object){
         $url = $object->config('project.dir.data') . 'Events' . $object->config('extension.json');
         $data = $object->data_read($url);

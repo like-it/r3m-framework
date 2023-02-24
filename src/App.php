@@ -79,7 +79,7 @@ class App extends Data {
         require_once 'Debug.php';
         require_once 'Error.php';
         Config::configure($this);
-        Event::configure($this)
+        Event::configure($this);
         Host::configure($this);
         Logger::configure($this);
         Autoload::configure($this);
