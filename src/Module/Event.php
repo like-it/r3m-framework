@@ -60,9 +60,7 @@ class Event {
                 property_exists($error, 'controller') &&
                 is_array($error->controller)
             ){
-                if(!empty($error->controller)){
-                    ddd($error);
-                }
+                ddd($error);
             }
         }
         ddd($events);
