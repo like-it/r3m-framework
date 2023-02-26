@@ -66,6 +66,12 @@ class Event {
                     $route = new stdClass();
                     $route->controller = $controller;
                     $route = Route::controller($route);
+                    if(
+                        property_exists($route, 'controller') &&
+                        property_exists($route, 'function')
+                    ){
+                        $route->controller::$route->function($object, $error, $action, $options);
+                    }
                     ddd($route);
                 }
                 ddd($error);
