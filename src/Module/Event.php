@@ -33,13 +33,35 @@ class Event {
      * @throws ObjectException
      */
     public static function trigger(App $object, $action, $options=[]){
+        $errors = $object->config('event.' . $action . '.error');
         $events = $object->config('event.' . $action);
-        if(empty($events)){
+        unset($events['error']);
+        if(empty($events) && empty($errors)){
             return null;
         }
-        ddd($events);
-        $list = [];
+        $errors = Sort::list($errors)->with(['priority' => 'DESC']);
         $events = Sort::list($events)->with(['priority' => 'DESC']);
+
+        foreach($errors as $error){
+            if(
+                property_exists($error, 'command') &&
+                is_array($error->command)
+            ){
+                foreach($error->command as $command){
+                    $command = str_replace('{{binary()}}', Core::binary(), $command);
+                    d($command);
+                    Core::execute($object, $command, $output, $error);
+                }
+            }
+            if(
+                property_exists($error, 'controller') &&
+                is_array($error->controller)
+            ){
+                if(!empty($error->controller)){
+                    ddd($error);
+                }
+            }
+        }
 
         foreach($events as $event){
             ddd($events);
