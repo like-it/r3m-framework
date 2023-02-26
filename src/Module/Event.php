@@ -44,6 +44,8 @@ class Event {
         if(empty($events) && empty($errors)){
             return null;
         }
+        $debug = debug_backtrace(true);
+        d($debug);
         ddd($object->config('project.log'));
         $errors = Sort::list($errors)->with(['priority' => 'DESC']);
         $events = Sort::list($events)->with(['priority' => 'DESC']);
