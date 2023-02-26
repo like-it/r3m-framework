@@ -64,6 +64,10 @@ class Core
     const MODE_INTERACTIVE = Core::OUTPUT_MODE_IMPLICIT;
     const MODE_PASSIVE = Core::OUTPUT_MODE_EXPLICIT;
 
+    const STREAM = 'stream';
+    const FILE = 'file';
+    const PROMPT = 'prompt';
+
     public static function binary()
     {
         if (array_key_exists('_', $_SERVER)) {
@@ -123,7 +127,8 @@ class Core
                         1 => ["pipe", "w"],  // stdout
                         2 => ["pipe", "w"],  // stderr
                     ];
-                    $data = '';
+                    $data = $object->config('core.execute.data');
+                    $object->config('delete', 'core.execute.data');
                     if($object->config('core.execute.stream.is.default')){
                         $from = clone $object;
                         if(!$from->has('request')){
@@ -178,12 +183,12 @@ class Core
         } else {
             $option = $object->config('core.execute.mode');
             if($object->config('core.execute.stream.init')){
-                $option = 'stream';
+                $option = Core::STREAM;
                 $object->config('core.execute.stream.is.default', true);
             }
             //get option from $command
             switch($option){
-                case 'file' :
+                case Core::FILE:
                     $descriptorspec = [
                         0 => ['file', 'php://stdin' , 'r'],  // stdin
                         1 => ['file', 'php://stdout', 'w'],  // stdout
@@ -193,13 +198,18 @@ class Core
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     return proc_close($process);
-                case 'stream' :
+                case Core::STREAM :
                     $descriptorspec = [
                         0 => ["pipe", "r"],  // stdin
                         1 => ["pipe", "w"],  // stdout
                         2 => ["pipe", "w"],  // stderr
                     ];
-                    $data = '';
+                    $data = $object->config('core.execute.data');
+                    $object->config('delete', 'core.execute.data');
+                    if(empty($data)){
+                        $data = $object->config('core.execute.stream.data');
+                        $object->config('delete', 'core.execute.stream.data');
+                    }
                     if($object->config('core.execute.stream.is.default')){
                         $from = clone $object;
                         if(!$from->has('request')){
@@ -230,7 +240,7 @@ class Core
                     fclose($pipes[2]);
                     fclose($pipes[1]);
                     return proc_close($process);
-                case 'prompt' :
+                case Core::PROMPT :
                 default :
                     $descriptorspec = array(
                         0 => STDIN,  // stdin
