@@ -44,7 +44,6 @@ class Event {
         if(empty($events) && empty($errors)){
             return null;
         }
-        ddd($object->config('project.log'));
         $errors = Sort::list($errors)->with(['priority' => 'DESC']);
         $events = Sort::list($events)->with(['priority' => 'DESC']);
         if(is_array($errors)){
