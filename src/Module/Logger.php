@@ -141,8 +141,11 @@ class Logger {
                             }
                         }
                     }
-                    d($logger->getName());
+                    $logName = lcfirst($logger->getName());
                     $object->logger($logger->getName(), $logger);
+                    if($logName !== 'name'){
+                        $object->config('project.log.' . $logName, $logger->getName());
+                    }
                     if(
                         property_exists($record, 'channel') &&
                         !empty($record->channel) &&
