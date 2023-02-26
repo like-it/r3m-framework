@@ -129,6 +129,10 @@ class Core
                     ];
                     $data = $object->config('core.execute.data');
                     $object->config('delete', 'core.execute.data');
+                    if(empty($data)){
+                        $data = $object->config('core.execute.stream.data');
+                        $object->config('delete', 'core.execute.stream.data');
+                    }
                     if($object->config('core.execute.stream.is.default')){
                         $from = clone $object;
                         if(!$from->has('request')){

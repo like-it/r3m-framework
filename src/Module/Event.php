@@ -38,7 +38,6 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        Logger::configure($object);
         $errors = $object->config('event.' . $action . '.error');
         $events = $object->config('event.' . $action);
         unset($events['error']);
