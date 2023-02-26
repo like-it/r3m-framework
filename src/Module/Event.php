@@ -10,6 +10,8 @@
  */
 namespace R3m\Io\Module;
 
+use stdClass;
+
 use R3m\Io\App;
 
 use R3m\Io\Exception\ObjectException;
@@ -60,6 +62,12 @@ class Event {
                 property_exists($error, 'controller') &&
                 is_array($error->controller)
             ){
+                foreach($error->controller as $controller){
+                    $route = new stdClass();
+                    $route->controller = $controller;
+                    $route = Route::controller($route);
+                    ddd($route);
+                }
                 ddd($error);
             }
         }
