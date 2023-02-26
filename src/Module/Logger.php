@@ -142,6 +142,7 @@ class Logger {
                             }
                         }
                     }
+                    d($logger->getName());
                     $object->logger($logger->getName(), $logger);
                     if(
                         property_exists($record, 'channel') &&
