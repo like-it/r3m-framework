@@ -191,7 +191,7 @@ class Logger {
     public static function critical($message=null, $context=[], $channel=''){
         $object = App::instance();
         if(empty($channel)){
-            $channel = $object->config('project.log.name');
+            $channel = $object->config('project.log.error');
         } else {
             $channel = ucfirst($channel);
         }
@@ -222,7 +222,7 @@ class Logger {
     public static function emergency($message=null, $context=[], $channel=''){
         $object = App::instance();
         if(empty($channel)){
-            $channel = $object->config('project.log.name');
+            $channel = $object->config('project.log.error');
         } else {
             $channel = ucfirst($channel);
         }
@@ -237,7 +237,7 @@ class Logger {
     public static function error($message=null, $context=[], $channel=''){
         $object = App::instance();
         if(empty($name)){
-            $channel = $object->config('project.log.name');
+            $channel = $object->config('project.log.error');
         } else {
             $channel = ucfirst($channel);
         }
