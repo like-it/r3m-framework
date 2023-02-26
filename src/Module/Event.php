@@ -81,6 +81,7 @@ class Event {
                     foreach($event->command as $command){
                         $command = str_replace('{{binary()}}', Core::binary(), $command);
                         Core::execute($object, $command, $output, $error);
+                        $object->logger($object->config('project.log.error'))->error($command, [ $output, $error]);
                     }
                 }
                 if(
