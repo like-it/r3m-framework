@@ -34,10 +34,10 @@ class Event {
      */
     public static function trigger(App $object, $action, $options=[]){
         $events = $object->config('event.' . $action);
-        ddd($events);
         if(empty($events)){
             return null;
         }
+        ddd($events);
         $list = [];
         $events = Sort::list($events)->with(['priority' => 'DESC']);
 
