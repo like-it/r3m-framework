@@ -24,8 +24,8 @@ class Logger {
         $interface = $object->config('log');
         if($interface){
             foreach($interface as $name => $record){
+                d($record);
                 $name = ucfirst($name);
-                d($name);
                 if(
                     property_exists($record, 'default') &&
                     !empty($record->default)
