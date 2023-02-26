@@ -81,7 +81,7 @@ class Event {
                     foreach($event->command as $command){
                         $command = str_replace('{{binary()}}', Core::binary(), $command);
                         Core::execute($object, $command, $output, $error);
-                        ddd($object->config('project.log.error'));
+                        ddd($object->config('project.log'));
                         $object->logger($object->config('project.log.error'))->error($command, [ $output, $error]);
                     }
                 }
