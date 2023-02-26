@@ -476,7 +476,6 @@ class App extends Data {
     public function logger($name='', $logger=null): LoggerInterface
     {
         if($logger !== null){
-            d($name);
             $this->setLogger($name, $logger);
         }
         return $this->getLogger($name);
