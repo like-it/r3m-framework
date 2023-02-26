@@ -42,6 +42,9 @@ class Event {
         $errors = Sort::list($errors)->with(['priority' => 'DESC']);
         $events = Sort::list($events)->with(['priority' => 'DESC']);
 
+        d($errors);
+        d($events);
+
         foreach($errors as $error){
             if(
                 property_exists($error, 'command') &&
