@@ -19,14 +19,15 @@ use Exception;
 use R3m\Io\Exception\ObjectException;
 
 class Event {
+    const NAME = 'Event';
 
     public static function on(App $object, $action, $options=[]){
-        $event = $object->config('event.' . $action);
+        $event = $object->get(App::EVENT)->get($action);
         if(empty($event)){
             $event = [];
         }
         $event[] = $options;
-        $object->config('event.' . $action, $event);
+        $object->get(App::EVENT)->set($action, $event);
     }
 
     public static function off(App $object, $action, $options=[]){
@@ -38,8 +39,8 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        $errors = $object->config('event.' . $action . '.error');
-        $events = $object->config('event.' . $action);
+        $errors = $object->get(App::EVENT )->get($action . '.error');
+        $events = $object->get(App::EVENT)->get($action);
         unset($events['error']);
         if(empty($events) && empty($errors)){
             return null;

@@ -61,6 +61,7 @@ class App extends Data {
 
     const ROUTE = App::NAMESPACE . '.' . Route::NAME;
     const CONFIG = App::NAMESPACE . '.' . Config::NAME;
+    const EVENT = App::NAMESPACE . '.' . Event::NAME;
     const REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
     const DATABASE = App::NAMESPACE . '.' . Database::NAME;
     const REQUEST_HEADER = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_HEADER;
@@ -76,6 +77,7 @@ class App extends Data {
     public function __construct($autoload, $config){
         $this->data(App::AUTOLOAD_COMPOSER, $autoload);
         $this->data(App::CONFIG, $config);
+        $this->data(App::EVENT, new Data());
         App::is_cli();
         require_once 'Debug.php';
         require_once 'Error.php';
@@ -517,6 +519,10 @@ class App extends Data {
 
     public function config($attribute=null, $value=null){
         return $this->data(App::CONFIG)->data($attribute, $value);
+    }
+
+    public function event($attribute=null, $value=null){
+        return $this->data(App::EVENT)->data($attribute, $value);
     }
 
     public function request($attribute=null, $value=null){

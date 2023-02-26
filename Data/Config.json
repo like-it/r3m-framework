@@ -172,6 +172,7 @@
             "R3m\\Io\\Module\\Core",
             "R3m\\Io\\Module\\Data",
             "R3m\\Io\\Module\\Dir",
+            "R3m\\Io\\Module\\Event",
             "R3m\\Io\\Module\\File",
             "R3m\\Io\\Module\\Filter",
             "R3m\\Io\\Module\\Handler",
