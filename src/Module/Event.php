@@ -62,9 +62,8 @@ class Event {
                 }
             }
         }
-
+        ddd($events);
         foreach($events as $event){
-            ddd($events);
             if(
                 property_exists($event, 'command') &&
                 is_array($event->command)
