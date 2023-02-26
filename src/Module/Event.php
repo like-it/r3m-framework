@@ -38,13 +38,13 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        ddd($object->config('project.log'));
         $errors = $object->config('event.' . $action . '.error');
         $events = $object->config('event.' . $action);
         unset($events['error']);
         if(empty($events) && empty($errors)){
             return null;
         }
+        ddd($object->config('project.log'));
         $errors = Sort::list($errors)->with(['priority' => 'DESC']);
         $events = Sort::list($events)->with(['priority' => 'DESC']);
         if(is_array($errors)){
