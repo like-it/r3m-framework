@@ -24,7 +24,6 @@ class Logger {
         $interface = $object->config('log');
         if($interface){
             foreach($interface as $name => $record){
-                d($record);
                 $name = ucfirst($name);
                 if(
                     property_exists($record, 'default') &&
@@ -142,7 +141,6 @@ class Logger {
                             }
                         }
                     }
-                    d($logger->getName());
                     $object->logger($logger->getName(), $logger);
                     if(
                         property_exists($record, 'channel') &&
