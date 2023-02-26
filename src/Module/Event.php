@@ -29,6 +29,9 @@ class Event {
 
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function trigger(App $object, $action, $options=[]){
         $events = $object->config('event.' . $action);
         if(empty($events)){
@@ -38,6 +41,7 @@ class Event {
         $events = Sort::list($events)->with(['priority' => 'DESC']);
 
         foreach($events as $event){
+            ddd($event);
             if(
                 property_exists($event, 'command') &&
                 is_array($event->command)
