@@ -41,7 +41,7 @@ class Event {
         $events = Sort::list($events)->with(['priority' => 'DESC']);
 
         foreach($events as $event){
-            ddd($event);
+            ddd($events);
             if(
                 property_exists($event, 'command') &&
                 is_array($event->command)
