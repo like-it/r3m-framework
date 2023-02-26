@@ -43,58 +43,61 @@ class Event {
         }
         $errors = Sort::list($errors)->with(['priority' => 'DESC']);
         $events = Sort::list($events)->with(['priority' => 'DESC']);
-
-        d($errors);
-        d($events);
-
-        foreach($errors as $error){
-            if(
-                property_exists($error, 'command') &&
-                is_array($error->command)
-            ){
-                foreach($error->command as $command){
-                    $command = str_replace('{{binary()}}', Core::binary(), $command);
-                    d($command);
-                    Core::execute($object, $command, $output, $error);
-                }
-            }
-            if(
-                property_exists($error, 'controller') &&
-                is_array($error->controller)
-            ){
-                foreach($error->controller as $controller){
-                    $route = new stdClass();
-                    $route->controller = $controller;
-                    $route = Route::controller($route);
-                    if(
-                        property_exists($route, 'controller') &&
-                        property_exists($route, 'function')
-                    ){
-                        $route->controller::{$route->function}($object, $error, $action, $options);
+        if(is_array($errors)){
+            foreach($errors as $error){
+                if(
+                    property_exists($error, 'command') &&
+                    is_array($error->command)
+                ){
+                    foreach($error->command as $command){
+                        $command = str_replace('{{binary()}}', Core::binary(), $command);
+                        Core::execute($object, $command, $output, $error);
                     }
-                    ddd($route);
                 }
-                ddd($error);
+                if(
+                    property_exists($error, 'controller') &&
+                    is_array($error->controller)
+                ){
+                    foreach($error->controller as $controller){
+                        $route = new stdClass();
+                        $route->controller = $controller;
+                        $route = Route::controller($route);
+                        if(
+                            property_exists($route, 'controller') &&
+                            property_exists($route, 'function')
+                        ){
+                            $route->controller::{$route->function}($object, $error, $action, $options);
+                        }
+                    }
+                }
             }
         }
-        ddd($events);
-        foreach($events as $event){
-            if(
-                property_exists($event, 'command') &&
-                is_array($event->command)
-            ){
-                foreach($event->command as $command){
-                    $command = str_replace('{{binary()}}', Core::binary(), $command);
-                    d($command);
-                    Core::execute($object, $command, $output, $error);
+        if(is_array($events)){
+            foreach($events as $event){
+                if(
+                    property_exists($event, 'command') &&
+                    is_array($event->command)
+                ){
+                    foreach($event->command as $command){
+                        $command = str_replace('{{binary()}}', Core::binary(), $command);
+                        Core::execute($object, $command, $output, $error);
+                    }
                 }
-            }
-            if(
-                property_exists($event, 'controller') &&
-                is_array($event->controller)
-            ){
-                if(!empty($event->controller)){
-                    ddd($event);
+                if(
+                    property_exists($event, 'controller') &&
+                    is_array($event->controller)
+                ){
+                    foreach($event->controller as $controller){
+                        $route = new stdClass();
+                        $route->controller = $controller;
+                        $route = Route::controller($route);
+                        if(
+                            property_exists($route, 'controller') &&
+                            property_exists($route, 'function')
+                        ){
+                            $route->controller::{$route->function}($object, $event, $action, $options);
+                        }
+                    }
                 }
             }
         }
