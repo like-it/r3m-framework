@@ -240,8 +240,9 @@ class Core
                     fwrite($pipes[0], $data . PHP_EOL);
                     fclose($pipes[0]);
                     $output = stream_get_contents($pipes[1]);
-                    ddd($output);
                     $error = stream_get_contents($pipes[2]);
+                    d($error);
+                    ddd($output);
                     fclose($pipes[2]);
                     fclose($pipes[1]);
                     return proc_close($process);
