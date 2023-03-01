@@ -946,11 +946,16 @@ class Core
             if(empty($read)){
                 throw new ObjectException('Could not compile item: ' . $select . PHP_EOL);
             }
-            $explode = explode('.', $select);
-            $key = array_pop($explode);
-            d($url);
-            $read->{$parse->object()->config('parse.read.object.this.key')} = $key;
-            return $parse->compile($read, $data->data(), $parse->storage());
+            if(is_array($read)){
+                d($key);
+                ddd($read);
+            } else {
+                $explode = explode('.', $select);
+                $key = array_pop($explode);
+                $read->{$parse->object()->config('parse.read.object.this.key')} = $key;
+                return $parse->compile($read, $data->data(), $parse->storage());
+            }
+
         } else {
             //document
             //scope:document
