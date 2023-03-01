@@ -259,6 +259,7 @@ class Core
                     d('here');
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
                     $error = stream_get_contents($pipes[2]);
+                    d($error);
                     fclose($pipes[2]);
                     return proc_close($process);
             }
