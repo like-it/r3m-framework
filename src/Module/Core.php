@@ -308,6 +308,53 @@ class Core
         return false;
     }
 
+    public static function array_bestmatch_list($array=[], $search='', $with_score=false){
+        if(empty($array)){
+            return false;
+        }
+        $bestmatch = [];
+        $search = substr($search, 0, 255);
+        foreach($array as $nr => $record){
+            $match = substr($record, 0, 255);
+            $levensthein = levenshtein($search, $match);
+            $length = strlen($match);
+            $score = $length - $levensthein / $length;
+            $bestmatch[$score][$nr] = $match;
+        }
+        krsort($bestmatch, SORT_NATURAL);
+        $array = [];
+        foreach($bestmatch as $score => $list){
+            foreach($list as $key => $match){
+                if($with_score){
+                    $array[$key] = [
+                        'string' => $match,
+                        'score' => $score
+                    ];
+                } else {
+                    $array[$key] = $match;
+                }
+            }
+        }
+        return $array;
+    }
+
+    public static function array_bestmatch_key($array=[], $search=''){
+        if(empty($array)){
+            return false;
+        }
+        $array = Core::array_bestmatch_list($array, $search, false);
+        reset($array);
+        return key($array);
+    }
+
+    public static function array_bestmatch($array=[], $search='', $with_score=false){
+        if(empty($array)){
+            return false;
+        }
+        $array = Core::array_bestmatch_list($array, $search, $with_score);
+        return reset($array);
+    }
+
     public static function array_object($array = []): stdClass
     {
         $object = new stdClass();
@@ -852,113 +899,6 @@ class Core
         }
         return implode($delimiter, $explode);
     }
-
-    /**
-     * @throws Exception
-     */
-    /*
-    public static function cors_is_allowed(App $object, $origin=''): bool
-    {
-        $origin = rtrim($origin, '/');
-        $origin = explode('://', $origin);
-        if(array_key_exists(1, $origin)){
-            $origin = $origin[1];
-            $explode = explode('/', $origin);    //bugfix samsung browser ?
-            $origin = $explode[0];
-        } else {
-            return false;
-        }
-        $host_list = $object->config('server.cors');
-        if(is_array($host_list)){
-            foreach($host_list as $host){
-                $explode = explode('.', $host);
-                $local = $explode;
-                $count_explode = count($explode);
-                if($count_explode === 3){
-                    $local[2] = Core::LOCAL;
-                    if($explode[0] === '*'){
-                        $temp = explode('.', $origin);
-                        if(count($temp) === 3){
-                            $explode[0] = '';
-                            $temp[0] = '';
-                            $host = implode('.', $explode);
-                            $match = implode('.', $temp);
-                            if($host === $match){
-                                return true;
-                            }
-                            $local[0] = '';
-                            $host = implode('.', $local);
-                            if($host === $match){
-                                return true;
-                            }
-                        }
-                    } else {
-                        if($host === $origin){
-                            return true;
-                        }
-                        $host = implode('.', $local);
-                        if($host === $origin){
-                            return true;
-                        }
-                    }
-                }
-                elseif($count_explode === 2){
-                    $local[1] = Core::LOCAL;
-                    if($host === $origin){
-                        return true;
-                    }
-                    $host = implode('.', $local);
-                    if($host === $origin){
-                        return true;
-                    }
-                }
-                elseif($count_explode === 1){
-                    if($host === '*'){
-                        return true;
-                    }
-                }
-            }
-        }
-        $object->logger('App')->debug('Cors rejected...');
-        return false;
-    }
-    */
-
-    /**
-     * @throws Exception
-     */
-    /*
-    public static function cors(App $object){
-        header("HTTP/1.1 200 OK");
-        if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
-            $origin = $_SERVER['HTTP_ORIGIN'];
-            $object->logger('App')->debug('HTTP_ORIGIN: ', [ $origin]);
-            if(Core::cors_is_allowed($object, $origin)){
-                header('Access-Control-Allow-Credentials: true');
-                header("Access-Control-Allow-Origin: {$origin}");
-//                header("Access-Control-Allow-Origin: * ");
-                $object->logger('App')->debug('Make Access');
-            }
-        }
-        if (
-            array_key_exists('REQUEST_METHOD', $_SERVER) &&
-            $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
-        ) {
-            header('Access-Control-Allow-Credentials: true');
-            header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
-            //header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
-            header('Access-Control-Allow-Headers: Origin, Cache-Control, Content-Type, Authorization, X-Requested-With');
-            header('Access-Control-Max-Age: 86400');    // cache for 1 day
-            $object->logger('App')->debug('REQUEST_METHOD: ', [ $_SERVER['REQUEST_METHOD'] ]);
-            $object->logger('App')->debug('REQUEST: ', [ Core::object($object->request(), Core::OBJECT_ARRAY) ]);
-            exit(0);
-        }
-        if(array_key_exists('REQUEST_METHOD', $_SERVER)){
-            $object->logger('App')->debug('REQUEST_METHOD: ', [ $_SERVER['REQUEST_METHOD'] ]);
-        }
-        $object->logger('App')->debug('REQUEST: ', [ Core::object($object->request(), Core::OBJECT_ARRAY) ]);
-    }
-    */
 
     public static function deep_clone($object)
     {

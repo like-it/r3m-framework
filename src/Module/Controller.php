@@ -161,13 +161,65 @@ class Controller {
             }
             $basename = File::basename($name);
             if(!empty($object->config('controller.dir.view'))){
-                $list[] = $object->config('controller.dir.view') . str_replace('.', $object->config('ds'), $name) . $object->config('ds') . $basename . $config->data('extension.tpl');
-                $list[] = $object->config('controller.dir.view') . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl');
-                $list[] = $object->config('controller.dir.view') . $name . $config->data('extension.tpl');
+                $list[] = $object->config('controller.dir.view') . str_replace(
+                    [
+                        '\\',
+                        ':',
+                        '='
+                    ],
+                    [
+                        '/',
+                        '.',
+                        '-'
+                    ],
+                    str_replace('.', $object->config('ds'), $name)) .
+                    $object->config('ds') .
+                    str_replace(
+                        [
+                            '\\',
+                            ':',
+                            '='
+                        ],
+                        [
+                            '/',
+                            '.',
+                            '-'
+                        ],
+                        $basename
+                    ) . $config->data('extension.tpl');
+                $list[] = $object->config('controller.dir.view') .
+                    str_replace(
+                        [
+                            '\\',
+                            ':',
+                            '='
+                        ],
+                        [
+                            '/',
+                            '.',
+                            '-'
+                        ],
+                        str_replace('.', $object->config('ds'), $name)) .
+                    $config->data('extension.tpl');
+                $list[] = $object->config('controller.dir.view') .
+                    str_replace(
+                        [
+                            '\\',
+                            ':',
+                            '='
+                        ],
+                        [
+                            '/',
+                            '.',
+                            '-'
+                        ],
+                        $name
+                    ) .
+                    $config->data('extension.tpl');
             }
             elseif(!empty($object->config('host.dir.view'))){
-                $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name) . $object->config('ds') . $basename . $config->data('extension.tpl');
-                $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl');
+                $list[] = $object->config('host.dir.view') . str_replace(':', '.', str_replace('.', $object->config('ds'), $name)) . $object->config('ds') . str_replace(':', '.', $basename) . $config->data('extension.tpl');
+                $list[] = $object->config('host.dir.view') . str_replace(':', '.', str_replace('.', $object->config('ds'), $name)) . $config->data('extension.tpl');
                 $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
             }
             for($i = $max; $i > $minimum; $i--){
