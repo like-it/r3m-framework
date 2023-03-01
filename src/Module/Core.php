@@ -948,6 +948,7 @@ class Core
             }
             $explode = explode('.', $select);
             $key = array_pop($explode);
+            d($url);
             $read->{$parse->object()->config('parse.read.object.this.key')} = $key;
             return $parse->compile($read, $data->data(), $parse->storage());
         } else {
