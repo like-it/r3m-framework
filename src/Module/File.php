@@ -454,12 +454,10 @@ class File {
         $filename = $explode[0];
         $filename = str_replace(
             [
-                '\\',
                 ':',
                 '='
             ],
             [
-                '/',
                 '.',
                 '-'
             ],
