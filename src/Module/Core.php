@@ -947,7 +947,6 @@ class Core
                 throw new ObjectException('Could not compile item: ' . $select . PHP_EOL);
             }
             if(is_array($read)){
-                d($key);
                 ddd($read);
             } else {
                 $explode = explode('.', $select);
