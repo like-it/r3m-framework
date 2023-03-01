@@ -452,6 +452,19 @@ class File {
         $filename = basename($url);
         $explode = explode('?', $filename, 2);
         $filename = $explode[0];
+        $filename = str_replace(
+            [
+                '\\',
+                ':',
+                '='
+            ],
+            [
+                '/',
+                '.',
+                '-'
+            ],
+            $filename
+        );
         $filename = basename($filename, $extension);
         return $filename;
     }
