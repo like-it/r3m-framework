@@ -241,6 +241,7 @@ class Core
                     fclose($pipes[0]);
                     $output = stream_get_contents($pipes[1]);
                     $error = stream_get_contents($pipes[2]);
+                    d($command);
                     d($error);
                     d($output);
                     fclose($pipes[2]);
