@@ -121,7 +121,8 @@ class Core
                 case 0 :
                     //in child process
                     //create a separate process to execute another process (async);
-
+                    d($command);
+                    d('here2');
                     $descriptorspec = [
                         0 => ["pipe", "r"],  // stdin
                         1 => ["pipe", "w"],  // stdout
@@ -254,6 +255,8 @@ class Core
                         1 => STDOUT,  // stdout
                         2 => ["pipe", "w"],  // stderr
                     );
+                    d($command);
+                    d('here');
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
                     $error = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
