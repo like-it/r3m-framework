@@ -947,7 +947,14 @@ class Core
                 throw new ObjectException('Could not compile item: ' . $select . PHP_EOL);
             }
             if(is_array($read)){
-                ddd($read);
+                $explode = explode('.', $select);
+                $key = array_pop($explode);
+                foreach($read as $nr => $record){
+                    if(is_object($record)){
+                        $record->{$parse->object()->config('parse.read.object.this.key')} = $key;
+                    }
+                }
+                return $parse->compile($read, $data->data(), $parse->storage());
             } else {
                 $explode = explode('.', $select);
                 $key = array_pop($explode);
