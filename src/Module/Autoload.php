@@ -472,6 +472,9 @@ class Autoload {
             if(empty($this->expose())){
                 Logger::debug('Autoload prefixList: ', [ $prefixList ]);
                 Logger::debug('Autoload error: ', [ $fileList ]);
+                if(App::is_cli()){
+                    d($fileList);
+                }
                 throw new Exception('Autoload error, cannot load (' . $load .') class.');
             }
             $object = new stdClass();
