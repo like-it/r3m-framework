@@ -14,15 +14,8 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\Core;
 
 
-function function_core_exec(Parse $parse, Data $data, $command, $attribute=null, $type=null){
+function function_core_execute(Parse $parse, Data $data, $command, $attribute=null, $type=null){
     $object = $parse->object();
-    if($object->config('project.log.deprecated')){
-        $object->logger($object->config('project.log.deprecated'))->notice('Deprecated, use core_execute');
-    }
-    elseif($object->config('project.log.name')){
-        $object->logger($object->config('project.log.name'))->notice('Deprecated, use core_execute');
-    }
-
     $output = [];
     Core::execute($object, $command, $output, $error, $type);
     if($attribute) {
