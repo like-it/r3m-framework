@@ -404,7 +404,7 @@ class Autoload {
         $prefixList = $this->getPrefixList();
         $fileList = [];
         if(!empty($prefixList)){
-            foreach($prefixList as $item){
+            foreach($prefixList as $nr => $item){
                 if(empty($item['prefix'])){
                     continue;
                 }
@@ -446,9 +446,9 @@ class Autoload {
                     if($item['dirName'] == '.'){
                         unset($item['dirName']);
                     }
-                    $fileList = $this->fileList($item, $url);
-                    if(is_array($fileList) && empty($this->expose())){
-                        foreach($fileList as $file){
+                    $fileList[$nr] = $this->fileList($item, $url);
+                    if(is_array($fileList[$nr]) && empty($this->expose())){
+                        foreach($fileList[$nr] as $file){
                             if(substr($file, 0, 5) == '[---]'){
                                 continue;
                             }
