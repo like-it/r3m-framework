@@ -242,7 +242,7 @@ class Core
                     $output = stream_get_contents($pipes[1]);
                     $error = stream_get_contents($pipes[2]);
                     d($error);
-                    ddd($output);
+                    d($output);
                     fclose($pipes[2]);
                     fclose($pipes[1]);
                     return proc_close($process);
