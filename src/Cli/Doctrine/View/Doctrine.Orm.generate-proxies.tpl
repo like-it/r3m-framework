@@ -8,6 +8,6 @@
 {{if(string.substring($dir.core.stream, -1, 1) === '/')}}
 {{$dir.core.stream = string.substring($dir.core.stream, 0, -1)}}
 {{/if}}
-{{core.stream('chown www-data:www-data "{{$dir.core.stream}}" -R', 'output')}}
+{{core.stream('chown www-data:www-data "' + $dir.core.stream + '" -R', 'output')}}
 {{/if}}
 {{$output_notification)}}
