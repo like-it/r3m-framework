@@ -24,6 +24,8 @@ function function_core_execute(Parse $parse, Data $data, $command, $attribute=nu
         }
         if($notification){
             $data->data($attribute . '_notification', $notification);
+        } else {
+            $data->data('delete', $attribute . '_notification');
         }
         $data->data($attribute, $output);
     }

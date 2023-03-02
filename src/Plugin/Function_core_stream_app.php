@@ -26,6 +26,8 @@ function function_core_stream_app(Parse $parse, Data $data, $command, $attribute
         }
         if($notification){
             $data->data($attribute . '_notification', $notification);
+        } else {
+            $data->data('delete', $attribute . '_notification');
         }
         $data->data($attribute, $output);
     }
