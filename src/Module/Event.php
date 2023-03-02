@@ -39,30 +39,30 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        $errors = $object->get(App::EVENT )->get($action . '.error');
+        $notifications = $object->get(App::EVENT )->get($action . '.notification');
         $events = $object->get(App::EVENT)->get($action);
-        unset($events['error']);
-        if(empty($events) && empty($errors)){
+        unset($events['notification']);
+        if(empty($events) && empty($notifications)){
             return null;
         }
-        $errors = Sort::list($errors)->with(['priority' => 'DESC']);
+        $notifications = Sort::list($notifications)->with(['priority' => 'DESC']);
         $events = Sort::list($events)->with(['priority' => 'DESC']);
-        if(is_array($errors)){
-            foreach($errors as $error){
+        if(is_array($notifications)){
+            foreach($notifications as $record){
                 if(
-                    property_exists($error, 'command') &&
-                    is_array($error->command)
+                    property_exists($record, 'command') &&
+                    is_array($record->command)
                 ){
-                    foreach($error->command as $command){
+                    foreach($record->command as $command){
                         $command = str_replace('{{binary()}}', Core::binary(), $command);
-                        Core::execute($object, $command, $output, $error);
+                        Core::execute($object, $command, $output, $notification);
                     }
                 }
                 if(
-                    property_exists($error, 'controller') &&
-                    is_array($error->controller)
+                    property_exists($record, 'controller') &&
+                    is_array($record->controller)
                 ){
-                    foreach($error->controller as $controller){
+                    foreach($record->controller as $controller){
                         $route = new stdClass();
                         $route->controller = $controller;
                         $route = Route::controller($route);
@@ -70,7 +70,7 @@ class Event {
                             property_exists($route, 'controller') &&
                             property_exists($route, 'function')
                         ){
-                            $route->controller::{$route->function}($object, $error, $action, $options);
+                            $route->controller::{$route->function}($object, $record, $action, $options);
                         }
                     }
                 }
@@ -84,7 +84,7 @@ class Event {
                 ){
                     foreach($event->command as $command){
                         $command = str_replace('{{binary()}}', Core::binary(), $command);
-                        Core::execute($object, $command, $output, $error);
+                        Core::execute($object, $command, $output, $notification);
                     }
                 }
                 if(
