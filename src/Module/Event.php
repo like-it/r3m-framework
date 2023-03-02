@@ -39,9 +39,10 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        $notifications = $object->get(App::EVENT )->get($action . '.notification');
+        $notifications = $object->get(App::EVENT)->get($action . '.notification');
         $events = $object->get(App::EVENT)->get($action);
         unset($events['notification']);
+        d($action);
         d($events);
         d($notifications);
         if(empty($events) && empty($notifications)){
