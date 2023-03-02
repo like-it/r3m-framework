@@ -96,7 +96,7 @@ class Core
     /**
      * @throws ObjectException
      */
-    public static function execute(App $object, $command, &$output = '', &$error = '', $type = null)
+    public static function execute(App $object, $command, &$output = '', &$notification = '', $type = null)
     {
         if ($output === null) {
             $output = '';
@@ -155,7 +155,7 @@ class Core
                     fwrite($pipes[0], $data . PHP_EOL);
                     fclose($pipes[0]);
                     $output = stream_get_contents($pipes[1]);
-                    $error = stream_get_contents($pipes[2]);
+                    $notification = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     fclose($pipes[1]);
                     proc_close($process);
@@ -198,7 +198,7 @@ class Core
                         2 => ['pipe', 'w'],  // stderr
                     ];
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                    $error = stream_get_contents($pipes[2]);
+                    $notification = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     return proc_close($process);
                 case Core::STREAM :
@@ -239,7 +239,7 @@ class Core
                     fwrite($pipes[0], $data . PHP_EOL);
                     fclose($pipes[0]);
                     $output = stream_get_contents($pipes[1]);
-                    $error = stream_get_contents($pipes[2]);
+                    $notification = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     fclose($pipes[1]);
                     return proc_close($process);
@@ -251,7 +251,7 @@ class Core
                         2 => ["pipe", "w"],  // stderr
                     );
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                    $error = stream_get_contents($pipes[2]);
+                    $notification = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
                     return proc_close($process);
             }

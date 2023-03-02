@@ -19,13 +19,13 @@ function function_core_stream(Parse $parse, Data $data, $command, $attribute=nul
     $output = [];
     $mode = $object->config('core.execute.mode');
     $object->config('core.execute.mode', 'stream');
-    Core::execute($object, $command, $output, $error, $type);
+    Core::execute($object, $command, $output, $notification, $type);
     if($attribute) {
         if (substr($attribute, 0, 1) === '$') {
             $attribute = substr($attribute, 1);
         }
-        if($error){
-            $data->data($attribute . '_error', $error);
+        if($notification){
+            $data->data($attribute . '_notification', $notification);
         }
         $data->data($attribute, $output);
     }
