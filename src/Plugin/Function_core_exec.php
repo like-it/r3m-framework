@@ -23,7 +23,7 @@ function function_core_exec(Parse $parse, Data $data, $command, $attribute=null,
         $object->logger($object->config('project.log.name'))->notice('Deprecated, plugin: core_exec, use core_execute');
     }
 
-    $output = [];
+    $output = '';
     Core::execute($object, $command, $output, $error, $type);
     if($attribute) {
         if (substr($attribute, 0, 1) === '$') {

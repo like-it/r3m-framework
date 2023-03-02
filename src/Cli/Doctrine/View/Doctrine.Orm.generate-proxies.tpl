@@ -3,6 +3,7 @@
 {{core.exec('doctrine orm:generate-proxies', 'output')}}
 {{dd('{{$this}}')}}
 {{$output)}}
+{{$output_error)}}
 
 {{core.exec('chown www-data:www-data "/tmp" -R', 'output')}}
 {{$output)}}
