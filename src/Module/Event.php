@@ -42,9 +42,6 @@ class Event {
         $notifications = $object->get(App::EVENT)->get($action . '.notification');
         $events = $object->get(App::EVENT)->get($action);
         unset($events['notification']);
-        d($action);
-        d($events);
-        d($notifications);
         if(empty($events) && empty($notifications)){
             return null;
         }
