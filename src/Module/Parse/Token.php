@@ -1810,6 +1810,20 @@ class Token {
             ) {
                 if(
                     //hex
+                    isset($previous_nr) &&
+                    $token[$previous_nr]['type'] === Token::TYPE_STRING &&
+                    Token::is_hex($token[$previous_nr]['value'])
+                ){
+                    $hex = $token[$previous_nr];
+                    $hex['type'] = Token::TYPE_HEX;
+                    $hex['execute'] = strtoupper($token[$previous_nr]['value']);
+                    $hex['execute'] .= $record['value'];
+                    $hex['value'] .= $record['value'];
+                    $start = $previous_nr;
+                    unset($token[$nr]);
+                }
+                elseif(
+                    //hex
                     isset($token[$next]) &&
                     $token[$next]['type'] === Token::TYPE_STRING &&
                     Token::is_hex($token[$next]['value'])
@@ -1822,20 +1836,7 @@ class Token {
                     $skip_unset += 1;
                     $start = $nr;
                 }
-                elseif(
-                    //hex
-                    isset($previous_nr) &&
-                    $token[$previous_nr]['type'] === Token::TYPE_STRING &&
-                    Token::is_hex($token[$previous_nr]['value'])
-                ){
-                    $hex = $token[$previous_nr];
-                    $hex['type'] = Token::TYPE_HEX;
-                    $hex['execute'] = strtoupper($token[$previous_nr]['value']);
-                    $hex['execute'] .= $record['value'];
-                    $hex['value'] .= $record['value'];
-                    $start = $previous_nr;
-                    unset($token[$nr]);
-                } else {
+                else {
                     //int
                     $token[$nr]['execute'] = $record['value'] + 0;
                     $token[$nr]['is_executed'] = true;
