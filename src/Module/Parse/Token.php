@@ -1857,6 +1857,37 @@ class Token {
         return $token;
     }
 
+    /**
+     * @throws Exception
+     */
+    public static function match($record=[], $match=[], $options=[]){
+        if(array_key_exists('operator', $options)){
+            switch ($options['operator']){
+                case '===' :
+                    $keys_record = array_keys($record);
+                    $keys_match = array_keys($match);
+                    foreach($keys_record as $key){
+                        if(!in_array($key, $keys_match, true)){
+                            return false;
+                        }
+                    }
+                    foreach($keys_match as $key){
+                        if(!in_array($key, $keys_record, true)){
+                            return false;
+                        }
+                    }
+                    foreach($record as $key => $value){
+                        if($match[$key] !== $value){
+                            return false;
+                        }
+                    }
+                    return true;
+                default:
+                    throw new Exception('Match: operator not found');
+            }
+        }
+    }
+
     private static function is_hex($hex=''): bool
     {
         if(strtolower($hex) == 'nan'){
