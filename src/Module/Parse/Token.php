@@ -1808,7 +1808,7 @@ class Token {
             elseif(
                  $record['type'] === Token::TYPE_NUMBER
             ) {
-                ddd($next);
+                d($next);
                 //int
                 $token[$nr]['execute'] = $record['value'] + 0;
                 $token[$nr]['is_executed'] = true;
