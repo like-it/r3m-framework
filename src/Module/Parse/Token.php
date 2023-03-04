@@ -1638,7 +1638,10 @@ class Token {
                     $token[$nr]['is_executed'] = true;
                     $token[$nr]['type'] = Token::TYPE_BOOLEAN;
                 }
-                elseif(Token::is_hex($record['value'])){
+                elseif(
+                    Token::is_hex($record['value']) &&
+                    $hex === null
+                ){
                     $token[$nr]['execute'] = strtoupper($record['value']);
                     $token[$nr]['is_executed'] = true;
                     $token[$nr]['type'] = Token::TYPE_HEX;
