@@ -1638,6 +1638,11 @@ class Token {
                     $token[$nr]['is_executed'] = true;
                     $token[$nr]['type'] = Token::TYPE_BOOLEAN;
                 }
+                elseif(Token::is_hex($record['value'])){
+                    $token[$nr]['execute'] = strtoupper($record['value']);
+                    $token[$nr]['is_executed'] = true;
+                    $token[$nr]['type'] = Token::TYPE_HEX;
+                }
             }
             elseif($record['type'] === Token::TYPE_PARENTHESE_OPEN){
                 if($record['curly_count'] > 0){
