@@ -1020,6 +1020,16 @@ class Token {
         return $token;
     }
 
+    public static function to_string($token=[]): string
+    {
+        $string = '';
+        foreach($token as $record){
+            $string .= $record['value'];
+        }
+        return $string;
+    }
+
+
     /**
      * @throws Exception
      */
