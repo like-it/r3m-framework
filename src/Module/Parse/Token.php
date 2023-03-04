@@ -653,13 +653,14 @@ class Token {
     /**
      * @throws Exception
      */
-    public static function tree($string='', $is_debug=false): array
+    public static function tree($string='', $options=[]): array
     {
+        $is_debug = false;
         $prepare = Token::tree_prepare($string, $count);
         $prepare = Token::prepare($prepare, $count, $is_debug);
 //        d($prepare);
         $token = Token::define($prepare);
-        $token = Token::group($token, $is_debug);
+        $token = Token::group($token, $options);
         $token = Token::cast($token);
         $token = Token::method($token, $is_debug);
         return $token;
@@ -812,12 +813,12 @@ class Token {
         return $token;
     }
 
-    public static function group($token=[], $is_debug=false): array
+    public static function group($token=[], $options=[]): array
     {
         $is_outside = true;
         $curly_depth = 0;
         foreach($token as $nr => $record){
-            if($record['type'] == Token::TYPE_CURLY_OPEN){
+            if($record['type'] === Token::TYPE_CURLY_OPEN){
                 $curly_depth++;
                 $is_outside = false;
                 continue;
@@ -849,7 +850,11 @@ class Token {
             if($is_outside === true){
                 $is_outside = $nr;
             }
-            if($is_outside === false && $record['type'] == Token::TYPE_WHITESPACE) {
+            if(
+                $is_outside === false &&
+                $record['type'] === Token::TYPE_WHITESPACE &&
+                empty($options['with_whitespace'])
+            ) {
                 unset($token[$nr]);
                 continue;
             }
@@ -872,7 +877,7 @@ class Token {
                     unset($token[$is_outside]['direction']);
                     if($nr != $is_outside){
                         if(
-                            $record['type'] == Token::TYPE_VARIABLE && 
+                            $record['type'] === Token::TYPE_VARIABLE &&
                             !empty($record['variable']['is_assign'])
                         ){
                             if(isset($record['variable']['operator_whitespace'])){
@@ -883,7 +888,6 @@ class Token {
                         } else {
                             $token[$is_outside]['value'] .= $record['value'];
                         }
-                        
                         unset($token[$nr]);
                     }
                 }
