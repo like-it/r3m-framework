@@ -1763,7 +1763,7 @@ class Token {
                 $tmp = $token[$next];
                 $tmp['value'] = substr($token[$next]['value'], 1);
                 if(!empty($tmp['value'])){
-                    $is_hex = Token::is_hex($tmp);
+                    $is_hex = Token::is_hex($tmp['value']);
                     if($is_hex){
                         $hex['value'] .= $tmp['value'];
                         $hex['execute'] .= strtoupper($tmp['value']);
@@ -1809,19 +1809,33 @@ class Token {
                  $record['type'] === Token::TYPE_NUMBER
             ) {
                 if(
+                    //hex
+                    isset($token[$next]) &&
                     $token[$next]['type'] === Token::TYPE_STRING &&
                     Token::is_hex($token[$next]['value'])
                 ){
-                    d($token);
-                    ddd('is_hex');
+                    d($nr);
+                    d($start);
+                    $hex = $record;
+                    $hex['type'] = Token::TYPE_HEX;
+                    $hex['execute'] = (string) $record['value'];
+                    $hex['value'] .= $token[$next]['value'];
+                    $hex['execute'] .= strtoupper($token[$next]['value']);
+                    $skip_unset += 1;
                 }
                 elseif(
+                    //hex
                     isset($previous_nr) &&
                     $token[$previous_nr]['type'] === Token::TYPE_STRING &&
                     Token::is_hex($token[$previous_nr]['value'])
                 ){
-                    d($token);
-                    ddd('is_hex');
+                    d($nr);
+                    d($start);
+                    $hex = $token[$previous_nr];
+                    $hex['type'] = Token::TYPE_HEX;
+                    $hex['execute'] = strtoupper($token[$previous_nr]['value']);
+                    $hex['execute'] .= $record['value'];
+                    $hex['value'] .= $record['value'];
                 } else {
                     //int
                     $token[$nr]['execute'] = $record['value'] + 0;
@@ -1837,7 +1851,6 @@ class Token {
                         unset($token[$previous_nr]);
                     }
                 }
-
             }
             $previous_nr = $nr;
         }
