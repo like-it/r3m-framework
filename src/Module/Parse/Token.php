@@ -1713,7 +1713,7 @@ class Token {
                 }
             }
             if($hex){
-                $is_hex = Token::is_hex($record);
+                $is_hex = Token::is_hex($record['value']);
                 if($is_hex){
                     $hex['value'] .= $record['value'];
                     $hex['execute'] .= strtoupper($record['value']);
@@ -1808,20 +1808,36 @@ class Token {
             elseif(
                  $record['type'] === Token::TYPE_NUMBER
             ) {
-                d($token[$next]);
-                //int
-                $token[$nr]['execute'] = $record['value'] + 0;
-                $token[$nr]['is_executed'] = true;
-                $token[$nr]['type'] = Token::TYPE_INT;
                 if(
+                    $token[$next]['type'] === Token::TYPE_STRING &&
+                    Token::is_hex($token[$next]['value'])
+                ){
+                    d($token);
+                    ddd('is_hex');
+                }
+                elseif(
                     isset($previous_nr) &&
-                    isset($token[$previous_nr]) &&
-                    $token[$previous_nr]['type'] === Token::TYPE_IS_MINUS
+                    $token[$previous_nr]['type'] === Token::TYPE_STRING &&
+                    Token::is_hex($token[$previous_nr]['value'])
+                ){
+                    d($token);
+                    ddd('is_hex');
+                } else {
+                    //int
+                    $token[$nr]['execute'] = $record['value'] + 0;
+                    $token[$nr]['is_executed'] = true;
+                    $token[$nr]['type'] = Token::TYPE_INT;
+                    if(
+                        isset($previous_nr) &&
+                        isset($token[$previous_nr]) &&
+                        $token[$previous_nr]['type'] === Token::TYPE_IS_MINUS
                     ){
                         $token[$nr]['execute'] = -$token[$nr]['execute'];
                         $token[$nr]['value'] = '-' . $token[$nr]['value'];
                         unset($token[$previous_nr]);
+                    }
                 }
+
             }
             $previous_nr = $nr;
         }
