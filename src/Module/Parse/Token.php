@@ -1880,12 +1880,22 @@ class Token {
                             return false;
                         }
                     }
-                    foreach($record as $key => $value){
-                        if($match[$key] !== $value){
-                            return false;
+                    if(
+                        array_key_exists('whitespace', $options) &&
+                        $options['whitespace'] === 'type' &&
+                        $record['type'] === Token::TYPE_WHITESPACE
+                    ){
+                        return true;
+                    } else {
+                        foreach($record as $key => $value){
+
+                            if($match[$key] !== $value){
+                                return false;
+                            }
                         }
+                        return true;
                     }
-                    return true;
+
                 default:
                     throw new Exception('Match: operator not found');
             }
