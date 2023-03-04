@@ -1814,14 +1814,13 @@ class Token {
                     $token[$next]['type'] === Token::TYPE_STRING &&
                     Token::is_hex($token[$next]['value'])
                 ){
-                    d($nr);
-                    d($start);
                     $hex = $record;
                     $hex['type'] = Token::TYPE_HEX;
                     $hex['execute'] = (string) $record['value'];
                     $hex['value'] .= $token[$next]['value'];
                     $hex['execute'] .= strtoupper($token[$next]['value']);
                     $skip_unset += 1;
+                    $start = $nr;
                 }
                 elseif(
                     //hex
@@ -1829,13 +1828,13 @@ class Token {
                     $token[$previous_nr]['type'] === Token::TYPE_STRING &&
                     Token::is_hex($token[$previous_nr]['value'])
                 ){
-                    d($nr);
-                    d($start);
                     $hex = $token[$previous_nr];
                     $hex['type'] = Token::TYPE_HEX;
                     $hex['execute'] = strtoupper($token[$previous_nr]['value']);
                     $hex['execute'] .= $record['value'];
                     $hex['value'] .= $record['value'];
+                    $start = $previous_nr;
+                    unset($token[$nr]);
                 } else {
                     //int
                     $token[$nr]['execute'] = $record['value'] + 0;
