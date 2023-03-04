@@ -1642,6 +1642,10 @@ class Token {
                     $token[$nr]['execute'] = strtoupper($record['value']);
                     $token[$nr]['is_executed'] = true;
                     $token[$nr]['type'] = Token::TYPE_HEX;
+                    $hex = $token[$nr];
+                    $start = $nr;
+                    $previous_nr = $nr;
+                    continue;
                 }
             }
             elseif($record['type'] === Token::TYPE_PARENTHESE_OPEN){
