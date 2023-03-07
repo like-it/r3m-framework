@@ -1058,6 +1058,24 @@ class Token {
                             }
                         }
                     }
+                    elseif(
+                        array_key_exists('operator', $where) &&
+                        $where['operator'] === '!in.array' &&
+                        !empty($where[$where['key']]) &&
+                        is_array($where[$where['key']])
+                    ){
+                        foreach($token as $nr => $record){
+                            if(
+                                in_array(
+                                    $record[$where['key']],
+                                    $where[$where['key']],
+                                    true
+                                )
+                            ){
+                                unset($token[$nr]);
+                            }
+                        }
+                    }
                 }
             }
         }
