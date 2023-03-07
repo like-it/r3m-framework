@@ -1065,6 +1065,8 @@ class Token {
                         is_array($where[$where['key']])
                     ){
                         foreach($token as $nr => $record){
+                            d($record);
+                            d($where);
                             if(
                                 in_array(
                                     $record[$where['key']],
