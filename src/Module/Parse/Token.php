@@ -1038,10 +1038,10 @@ class Token {
             foreach($filter['where'] as $where){
                 if(
                     array_key_exists('key', $where) &&
-                    array_key_exists($where['key'], $where)
+                    array_key_exists($where['key'], $where) &&
+                    array_key_exists('operator', $where)
                 ){
                     if(
-                        array_key_exists('operator', $where) &&
                         $where['operator'] === 'in.array' &&
                         !empty($where[$where['key']]) &&
                         is_array($where[$where['key']])
@@ -1059,14 +1059,11 @@ class Token {
                         }
                     }
                     elseif(
-                        array_key_exists('operator', $where) &&
                         $where['operator'] === '!in.array' &&
                         !empty($where[$where['key']]) &&
                         is_array($where[$where['key']])
                     ){
                         foreach($token as $nr => $record){
-                            d($record);
-                            d($where);
                             if(
                                 in_array(
                                     $record[$where['key']],
@@ -1078,12 +1075,31 @@ class Token {
                             }
                         }
                     }
+                    elseif(
+                        $where['operator'] === '===' &&
+                        !empty($where[$where['key']])
+                    ){
+                        foreach($token as $nr => $record){
+                            if($record[$where['key']] !== $where[$where['key']]){
+                                unset($token[$nr]);
+                            }
+                        }
+                    }
+                    elseif(
+                        $where['operator'] === '!==' &&
+                        !empty($where[$where['key']])
+                    ){
+                        foreach($token as $nr => $record){
+                            if($record[$where['key']] === $where[$where['key']]){
+                                unset($token[$nr]);
+                            }
+                        }
+                    }
                 }
             }
         }
         return $token;
     }
-
 
     /**
      * @throws Exception
