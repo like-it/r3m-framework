@@ -1029,6 +1029,41 @@ class Token {
         return $string;
     }
 
+    public static function filter($token=[], $filter=[]){
+        if(
+            array_key_exists('where', $filter) &&
+            !empty($filter['where']) &&
+            is_array(($filter['where']))
+        ){
+            foreach($filter['where'] as $where){
+                if(
+                    array_key_exists('key', $where) &&
+                    array_key_exists($where['key'], $where)
+                ){
+                    if(
+                        array_key_exists('operator', $where) &&
+                        $where['operator'] === 'in.array' &&
+                        !empty($where[$where['key']]) &&
+                        is_array($where[$where['key']])
+                    ){
+                        foreach($token as $nr => $record){
+                            if(
+                                !in_array(
+                                    $record[$where['key']],
+                                    $where[$where['key']],
+                                    true
+                                )
+                            ){
+                                 unset($token[$nr]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $token;
+    }
+
 
     /**
      * @throws Exception
