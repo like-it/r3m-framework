@@ -1957,7 +1957,7 @@ class Token {
     /**
      * @throws Exception
      */
-    public static function match($record=[], $match=[], $options=[]){
+    public static function compare($record=[], $match=[], $options=[]){
         if(array_key_exists('operator', $options)){
             switch ($options['operator']){
                 case '===' :
@@ -1990,7 +1990,7 @@ class Token {
                     }
 
                 default:
-                    throw new Exception('Match: operator not found');
+                    throw new Exception('Compare: operator not found');
             }
         }
     }
