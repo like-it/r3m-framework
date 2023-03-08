@@ -256,13 +256,13 @@ class Notification {
                 !empty($is_found->create->filter) &&
                 is_array($is_found->create->filter)
             ) {
-                foreach ($is_found->create->filter as $filter_nr => $filter) {
+                foreach ($is_found->create->filter as $filter) {
                     if (
                         property_exists($filter, 'where') &&
                         !empty($filter->where) &&
                         is_array($filter->where)
                     ) {
-                        foreach ($filter->where as $where_nr => $where) {
+                        foreach ($filter->where as $where) {
                             if (
                                 property_exists($where, 'token') &&
                                 $where->token === 'token' &&
