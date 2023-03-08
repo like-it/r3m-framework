@@ -29,7 +29,7 @@ class Notification {
      * @throws FileWriteException
      * @throws Exception
      */
-    public static function is_new(App $object, $action='', $options=[], &$tokens=[], &$config=false): bool
+    public static function is_new(App $object, $action='', $options=[], &$tokens=[], &$config=false, &$url=null): bool
     {
         $url = $object->config('project.dir.data') .
             'Stream' .
