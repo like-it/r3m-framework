@@ -217,4 +217,84 @@ class Notification {
         }
         return $is_new;
     }
+
+    public static function create(App $object, $tokens=[], $config=false, $url=false, $action='', $uuid='') {
+        $number_tokens = Token::filter($tokens, [
+            'where' => [
+                0 => [
+                    'key' => 'type',
+                    'type' => [
+                        Token::TYPE_INT,
+                        Token::TYPE_FLOAT,
+                        Token::TYPE_HEX,
+                    ],
+                    'operator' => 'in.array'
+                ]
+            ]
+        ]);
+        $add_filter_not_in_array = false;
+        if (!empty($number_tokens)) {
+            $add_filter_not_in_array = true;
+        }
+        $config_notifications = $config->get('stream.notification');
+        $is_found = false;
+        $is_where = false;
+        foreach ($config_notifications as $nr => $config_notification) {
+            if (
+                property_exists($config_notification, 'action') &&
+                $config_notification->action === $action
+            ) {
+                $is_found = $config_notification;
+                unset($config_notifications[$nr]);
+                break;
+            }
+        }
+        if ($is_found) {
+            if (
+                property_exists($is_found, 'create') &&
+                property_exists($is_found->create, 'filter') &&
+                !empty($is_found->create->filter) &&
+                is_array($is_found->create->filter)
+            ) {
+                foreach ($is_found->create->filter as $filter_nr => $filter) {
+                    if (
+                        property_exists($filter, 'where') &&
+                        !empty($filter->where) &&
+                        is_array($filter->where)
+                    ) {
+                        foreach ($filter->where as $where_nr => $where) {
+                            if (
+                                property_exists($where, 'token') &&
+                                $where->token === 'token' &&
+                                $add_filter_not_in_array === false
+                            ) {
+                                $is_where = $where;
+                                break;
+                            }
+                            if ($add_filter_not_in_array) {
+                                if (
+                                    property_exists($where, 'operator') &&
+                                    $where->operator === '!in.array'
+                                ) {
+                                    $filter->document[] = $uuid;
+                                }
+                            }
+                        }
+                        if (count($filter->where) === 1 && $is_where !== false) {
+                            $filter->document[] = $uuid;
+                        }
+                    }
+                }
+            }
+            $config_notifications[] = $is_found;
+            $result = [];
+            foreach ($config_notifications as $config_notification) {
+                $result[] = $config_notification;
+            }
+            $config->set('stream.notification', $result);
+            $config->write($url);
+        }
+    }
+
+
 }
