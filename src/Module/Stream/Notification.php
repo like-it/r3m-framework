@@ -14,6 +14,7 @@ namespace R3m\Io\Module\Stream;
 use R3m\Io\App;
 
 use R3m\Io\Module\Core;
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse\Token;
 
@@ -29,7 +30,7 @@ class Notification {
      * @throws FileWriteException
      * @throws Exception
      */
-    public static function is_new(App $object, $action='', $options=[], &$tokens=[], &$config=false, &$url=false): bool
+    public static function is_new(App $object, $action='', $options=[], &$config=false, &$tokens=[]): bool
     {
         $url = $object->config('project.dir.data') .
             'Stream' .
@@ -218,7 +219,21 @@ class Notification {
         return $is_new;
     }
 
-    public static function create(App $object, $tokens=[], $config=false, $url=false, $action='', $uuid='') {
+    public static function create(App $object, $action='', $config=false, $tokens=[], $notification='') {
+        $url = $object->config('project.dir.data') .
+            'Stream' .
+            $object->config('ds') .
+            'Stream' .
+            $object->config('extension.json');
+        $uuid = Core::uuid();
+        $dir = $object->config('project.dir.data') .
+            'Stream' .
+            $object->config('ds') .
+            'Document' .
+            $object->config('ds');
+        Dir::create($dir, Dir::CHMOD);
+        $write = $notification;
+        File::write($dir . $uuid . '.stream', $write);
         $number_tokens = Token::filter($tokens, [
             'where' => [
                 0 => [
