@@ -329,11 +329,17 @@ class Notification {
                                     property_exists($where, 'operator') &&
                                     $where->operator === '!in.array'
                                 ) {
+                                    if(!is_array($filter->document)){
+                                        $filter->document = [];
+                                    }
                                     $filter->document[] = $uuid;
                                 }
                             }
                         }
                         if (count($filter->where) === 1 && $is_where !== false) {
+                            if(!is_array($filter->document)){
+                                $filter->document = [];
+                            }
                             $filter->document[] = $uuid;
                         }
                     }
