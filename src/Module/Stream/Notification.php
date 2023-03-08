@@ -219,6 +219,9 @@ class Notification {
         return $is_new;
     }
 
+    /**
+     * @throws FileWriteException
+     */
     public static function create(App $object, $action='', $config=false, $tokens=[], $notification='') {
         $url = $object->config('project.dir.data') .
             'Stream' .
