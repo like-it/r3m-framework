@@ -310,6 +310,4 @@ class Notification {
             $config->write($url);
         }
     }
-
-
 }
