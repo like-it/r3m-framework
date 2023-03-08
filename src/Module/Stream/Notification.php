@@ -32,6 +32,18 @@ class Notification {
      */
     public static function is_new(App $object, $action='', $options=[], &$config=false, &$tokens=[]): bool
     {
+        $id = posix_geteuid();
+        if(
+            !in_array(
+                $id,
+                [
+                    0,
+                    33
+                ]
+            )
+        ){
+            throw new Exception('Only root & www-data can check is_new...');
+        }
         $url = $object->config('project.dir.data') .
             'Stream' .
             $object->config('ds') .
@@ -47,10 +59,13 @@ class Notification {
             $notifications[] = $notification;
         }
         $tokens = $notifications;
-        $dir_require =
+        $dir_stream =
             $object->config('project.dir.data') .
             'Stream' .
-            $object->config('ds') .
+            $object->config('ds')
+        ;
+        $dir_require =
+            $dir_stream .
             'Document' .
             $object->config('ds')
         ;
@@ -216,27 +231,47 @@ class Notification {
                 }
             }
         }
+        if(empty($id)){
+            $command = 'chown www-data:www-data ' . $dir_stream . ' -R';
+            Core::execute($object, $command);
+        }
         return $is_new;
     }
 
     /**
      * @throws FileWriteException
+     * @throws ObjectException
+     * @throws Exception
      */
     public static function create(App $object, $action='', $config=false, $tokens=[], $notification='') {
+        $id = posix_geteuid();
+        if(
+            !in_array(
+                $id,
+                [
+                    0,
+                    33
+                ]
+            )
+        ){
+            throw new Exception('Only root & www-data can create notifications...');
+        }
         $url = $object->config('project.dir.data') .
             'Stream' .
             $object->config('ds') .
             'Stream' .
             $object->config('extension.json');
         $uuid = Core::uuid();
-        $dir = $object->config('project.dir.data') .
+        $dir_stream = $object->config('project.dir.data') .
             'Stream' .
-            $object->config('ds') .
+            $object->config('ds');
+        $dir_stream_document =
+            $dir_stream .
             'Document' .
             $object->config('ds');
-        Dir::create($dir, Dir::CHMOD);
+        Dir::create($dir_stream_document, Dir::CHMOD);
         $write = $notification;
-        File::write($dir . $uuid . '.stream', $write);
+        File::write($dir_stream_document . $uuid . '.stream', $write);
         $number_tokens = Token::filter($tokens, [
             'where' => [
                 0 => [
@@ -311,6 +346,10 @@ class Notification {
             }
             $config->set('stream.notification', $result);
             $config->write($url);
+        }
+        if(empty($id)){
+            $command = 'chown www-data:www-data ' . $dir_stream . ' -R';
+            Core::execute($object, $command);
         }
     }
 }
