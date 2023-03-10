@@ -302,8 +302,15 @@ class Notification {
                             break;
                             case 'daily':
                                 $day_of_year = date('z');
+                                $year = date('Y');
                                 if(File::exist($document_url)){
                                     $mtime = File::mtime($document_url);
+                                    $file_year = date('Y', $mtime);
+                                    $file_day_of_year = date('z', $mtime);
+                                    d($day_of_year);
+                                    d($file_day_of_year);
+                                    d($year);
+                                    d($file_year);
                                     ddd($mtime);
                                 }
                             break;
