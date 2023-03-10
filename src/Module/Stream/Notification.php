@@ -286,6 +286,7 @@ class Notification {
                     !empty($filter->document) &&
                     is_array($filter->document)
                 ){
+                    $document = [];
                     foreach($filter->document as $uuid){
                         $document_url = $object->config('project.dir.data') .
                             'Stream' .
@@ -307,11 +308,18 @@ class Notification {
                                     $mtime = File::mtime($document_url);
                                     $file_year = date('Y', $mtime);
                                     $file_day_of_year = date('z', $mtime);
-                                    d($day_of_year);
-                                    d($file_day_of_year);
-                                    d($year);
-                                    d($file_year);
-                                    ddd($mtime);
+                                    if(
+                                        $year <> $file_year ||
+                                        $day_of_year <> $file_day_of_year
+                                    ){
+                                        d($day_of_year);
+                                        d($file_day_of_year);
+                                        d($year);
+                                        d($file_year);
+                                        ddd($mtime);
+                                    } else {
+                                        $document[] = $uuid;
+                                    }
                                 }
                             break;
                             case 'weekly':
@@ -326,6 +334,7 @@ class Notification {
                             break;
                         }
                     }
+                    $filter->document = $document;
                 }
             }
         }
