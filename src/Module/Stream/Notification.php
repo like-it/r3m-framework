@@ -276,6 +276,53 @@ class Notification {
         if(empty($is_stream)){
             return;
         }
+        if(
+            property_exists($is_stream, 'create') &&
+            property_exists($is_stream->create, 'filter')
+        ){
+            foreach($is_stream->create->filter as $filter){
+                if(
+                    property_exists($filter, 'document') &&
+                    !empty($filter->document) &&
+                    is_array($filter->document)
+                ){
+                    foreach($filter->document as $uuid){
+                        $document_url = $object->config('project.dir.data') .
+                            'Stream' .
+                            $object->config('ds') .
+                            'Document' .
+                            $object->config('ds') .
+                            $uuid .
+                            '.stream'
+                        ;
+                        switch($is_stream->clean->frequency){
+                            case 'direct':
+                            break;
+                            case 'hourly':
+                            break;
+                            case 'daily':
+                                $day_of_year = date('z');
+                                if(File::exist($document_url)){
+                                    $mtime = File::mtime($document_url);
+                                    ddd($mtime);
+                                }
+                            break;
+                            case 'weekly':
+                            break;
+                            case 'bi-weekly':
+                            break;
+                            case 'monhtly':
+                            break;
+                            case 'quarterly':
+                            break;
+                            case 'yearly':
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         ddd($is_stream);
     }
 
