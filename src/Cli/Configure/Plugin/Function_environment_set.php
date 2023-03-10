@@ -4,6 +4,7 @@ use R3m\Io\Config;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 
@@ -37,6 +38,10 @@ function function_environment_set(Parse $parse, Data $data, $environment=''){
     $read->data('framework.environment', $environment);
     try {
         File::write($url, Core::object($read->data(), Core::OBJECT_JSON));
+        Event::trigger($object, 'framework.environment.set', [
+            'environment' => $environment
+        ]);
+        /*
         $id = posix_geteuid();
         if($id === 0){
             File::chmod($url, 0666);
@@ -55,6 +60,7 @@ function function_environment_set(Parse $parse, Data $data, $environment=''){
                 Core::execute($object, 'chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
             }
         }
+        */
     } catch (Exception | FileWriteException | ObjectException $exception){
         return $exception;
     }
