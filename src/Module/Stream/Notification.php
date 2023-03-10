@@ -50,7 +50,6 @@ class Notification {
             'Stream' .
             $object->config('extension.json');
         $config = $object->data_read($url);
-        $send_mail = true;
         $tree = Token::tree('{' . $options['notification'] . '}', [
             'with_whitespace' => true
         ]);
@@ -237,6 +236,49 @@ class Notification {
         }
         return $is_new;
     }
+
+    /**
+     * @throws Exception
+     */
+    public static function clean(App $object, $action, $options=[]){
+        $id = posix_geteuid();
+        if(
+            !in_array(
+                $id,
+                [
+                    0,
+                    33
+                ]
+            )
+        ){
+            throw new Exception('Only root & www-data can clean notifications...');
+        }
+        $url = $object->config('project.dir.data') .
+            'Stream' .
+            $object->config('ds') .
+            'Stream' .
+            $object->config('extension.json');
+        $config = $object->data_read($url);
+        $is_stream = false;
+        if($config && $config->has('stream.notification')) {
+            foreach ($config->data('stream.notification') as $stream) {
+                if (
+                    property_exists($stream, 'action') &&
+                    $stream->action === $action &&
+                    property_exists($stream, 'clean') &&
+                    property_exists($stream->clean, 'frequency')
+                ) {
+                    $is_stream = $stream;
+                    break;
+                }
+            }
+        }
+        if(empty($is_stream)){
+            return;
+        }
+        ddd($is_stream);
+    }
+
 
     /**
      * @throws FileWriteException
