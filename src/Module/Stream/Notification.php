@@ -312,11 +312,7 @@ class Notification {
                                         $year <> $file_year ||
                                         $day_of_year <> $file_day_of_year
                                     ){
-                                        d($day_of_year);
-                                        d($file_day_of_year);
-                                        d($year);
-                                        d($file_year);
-                                        ddd($mtime);
+                                        File::delete($document_url);
                                     } else {
                                         $document[] = $uuid;
                                     }
@@ -338,7 +334,7 @@ class Notification {
                 }
             }
         }
-
+        $config->write($url);
         ddd($is_stream);
     }
 
