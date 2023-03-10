@@ -440,7 +440,6 @@ class Notification {
             }
         }
         $config->write($url);
-        ddd($is_stream);
     }
 
 
