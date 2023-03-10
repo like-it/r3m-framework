@@ -298,8 +298,27 @@ class Notification {
                         ;
                         switch($is_stream->clean->frequency){
                             case 'direct':
+                                File::delete($document_url);
                             break;
                             case 'hourly':
+                                $hour_of_day = date('H');
+                                $day_of_year = date('z');
+                                $year = date('Y');
+                                if(File::exist($document_url)){
+                                    $mtime = File::mtime($document_url);
+                                    $file_hour_of_day = date('H', $mtime);
+                                    $file_year = date('Y', $mtime);
+                                    $file_day_of_year = date('z', $mtime);
+                                    if(
+                                        $hour_of_day <> $file_hour_of_day ||
+                                        $year <> $file_year ||
+                                        $day_of_year <> $file_day_of_year
+                                    ){
+                                        File::delete($document_url);
+                                    } else {
+                                        $document[] = $uuid;
+                                    }
+                                }
                             break;
                             case 'daily':
                                 $day_of_year = date('z');
@@ -319,14 +338,100 @@ class Notification {
                                 }
                             break;
                             case 'weekly':
+                                $week_of_year = date('w');
+                                $year = date('Y');
+                                if(File::exist($document_url)){
+                                    $mtime = File::mtime($document_url);
+                                    $file_year = date('Y', $mtime);
+                                    $file_week_of_year = date('w', $mtime);
+                                    if(
+                                        $year <> $file_year ||
+                                        $week_of_year <> $file_week_of_year
+                                    ){
+                                        File::delete($document_url);
+                                    } else {
+                                        $document[] = $uuid;
+                                    }
+                                }
                             break;
                             case 'bi-weekly':
+                                $week_of_year = date('w');
+                                $year = date('Y');
+                                if(File::exist($document_url)){
+                                    $mtime = File::mtime($document_url);
+                                    $file_year = date('Y', $mtime);
+                                    $file_week_of_year = date('w', $mtime);
+                                    if(
+                                        $year <> $file_year ||
+                                        $week_of_year - $file_week_of_year >= 2
+                                    ){
+                                        File::delete($document_url);
+                                    } else {
+                                        $document[] = $uuid;
+                                    }
+                                }
                             break;
-                            case 'monhtly':
+                            case 'monthly':
+                                $month_of_year = date('n');
+                                $year = date('Y');
+                                if(File::exist($document_url)){
+                                    $mtime = File::mtime($document_url);
+                                    $file_year = date('Y', $mtime);
+                                    $file_month_of_year = date('n', $mtime);
+                                    if(
+                                        $year <> $file_year ||
+                                        $month_of_year <> $file_month_of_year
+                                    ){
+                                        File::delete($document_url);
+                                    } else {
+                                        $document[] = $uuid;
+                                    }
+                                }
                             break;
                             case 'quarterly':
+                                $season = [
+                                    1 => 1,
+                                    2 => 1,
+                                    3 => 1,
+                                    4 => 2,
+                                    5 => 2,
+                                    6 => 2,
+                                    7 => 3,
+                                    8 => 3,
+                                    9 => 3,
+                                    10 => 4,
+                                    11 => 4,
+                                    12 => 4
+                                ];
+                                $month_of_year = date('n');
+                                $year = date('Y');
+                                if(File::exist($document_url)){
+                                    $mtime = File::mtime($document_url);
+                                    $file_year = date('Y', $mtime);
+                                    $file_month_of_year = date('n', $mtime);
+                                    if(
+                                        $year <> $file_year ||
+                                        $season[$month_of_year] <> $season[$file_month_of_year]
+                                    ){
+                                        File::delete($document_url);
+                                    } else {
+                                        $document[] = $uuid;
+                                    }
+                                }
                             break;
                             case 'yearly':
+                                $year = date('Y');
+                                if(File::exist($document_url)){
+                                    $mtime = File::mtime($document_url);
+                                    $file_year = date('Y', $mtime);
+                                    if(
+                                        $year <> $file_year
+                                    ){
+                                        File::delete($document_url);
+                                    } else {
+                                        $document[] = $uuid;
+                                    }
+                                }
                             break;
                         }
                     }
