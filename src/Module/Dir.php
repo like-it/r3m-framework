@@ -16,7 +16,7 @@ use Exception;
 use R3m\Io\Exception\ErrorException;
 
 class Dir {
-    const CHMOD = 0740;
+    const CHMOD = 0750;
     const TYPE = 'Dir';
     const SEPARATOR = DIRECTORY_SEPARATOR;
     const FORMAT_FLAT = 'flat';
