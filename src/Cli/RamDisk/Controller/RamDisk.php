@@ -43,7 +43,6 @@ class Ramdisk extends Controller {
             }
             if($name){
                 $url = RamDisk::locate($object, $name);
-
                 return RamDisk::response($object, $url);
             }
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
