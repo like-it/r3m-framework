@@ -28,13 +28,24 @@ function function_ramdisk_speedtest(Parse $parse, Data $data){
         $url = $config->get('ramdisk.url');
         if($url){
             $command = 'dd if=/dev/zero of=' . $url . 'zero bs=4k count=100000';
-            Core::execute($object, $command, $output);
+            Core::execute($object, $command, $output, $notification);
             echo 'Write:' . PHP_EOL;
-            echo $output . PHP_EOL;
+            if($output){
+                echo $output . PHP_EOL;
+            }
+            if($notification){
+                echo $notification . PHP_EOL;
+            }
+
             $command = 'dd if=' . $url . 'zero of=/dev/null bs=4k count=100000';
-            Core::execute($object, $command, $output);
+            Core::execute($object, $command, $output, $notification);
             Echo 'Read:' . PHP_EOL;
-            echo $output . PHP_EOL;
+            if($output){
+                echo $output . PHP_EOL;
+            }
+            if($notification){
+                echo $notification . PHP_EOL;
+            }
             File::delete($url . 'zero');
         }
     }
