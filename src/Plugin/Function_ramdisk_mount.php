@@ -34,7 +34,6 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
     if(empty($url)){
         $url = $object->config('dictionary.cache') . $name . $object->config('ds');
     }
-    ddd($url);
     $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
     $config = $object->data_read($config_url);
     if($config){
