@@ -24,7 +24,8 @@ class Ramdisk extends Controller {
     const NAME = 'Ramdisk';
     const INFO = [
         '{{binary()}} ramdisk mount <size>           | RamDisk allocation',
-        '{{binary()}} ramdisk unmount                | RamDisk allocation'
+        '{{binary()}} ramdisk unmount                | RamDisk unmount',
+        '{{binary()}} ramdisk speedtest              | RamDisk speedtest'
     ];
 
     public static function run(App $object){
