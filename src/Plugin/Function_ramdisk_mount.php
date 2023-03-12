@@ -47,7 +47,9 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
     Core::execute($object, $command);
     $mount_url = substr($url, 0, -1);
     $command = 'mount -t tmpfs -o size=' . $size . ' ' . $name .' ' . $mount_url;
-    Core::execute($object, $command);
+    echo $command . PHP_EOL;
+    Core::execute($object, $command, $output);
+    echo $output . PHP_EOL;
     $command = 'mount | tail -n 1';
     Core::execute($object, $command, $output);
     echo $output . PHP_EOL;
