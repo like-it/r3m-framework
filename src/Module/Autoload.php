@@ -11,6 +11,7 @@
 namespace R3m\Io\Module;
 
 
+use R3m\Io\Exception\LocateException;
 use stdClass;
 
 use R3m\Io\App;
@@ -463,19 +464,17 @@ class Autoload {
         }
         if($is_data === true){
             if($this->environment() == 'development'){
-                d($fileList);
+                throw new LocateException('Could not find data file (' . $load . ')', $fileList);
+            } else {
+                throw new LocateException('Could not find data file (' . $load . ')');
             }
-            throw new Exception('Could not find data file');
+
         }
-        //$this->environment('development'); //needed, should be gone @ home
         if($this->environment() == 'development' || !empty($this->expose())){
             if(empty($this->expose())){
                 Logger::debug('Autoload prefixList: ', [ $prefixList ]);
                 Logger::debug('Autoload error: ', [ $fileList ]);
-                if(App::is_cli()){
-                    d($fileList);
-                }
-                throw new Exception('Autoload error, cannot load (' . $load .') class.');
+                throw new LocateException('Autoload error, cannot load (' . $load .') class.', $fileList);
             }
             $object = new stdClass();
             $object->load = $load;
