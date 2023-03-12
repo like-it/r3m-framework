@@ -16,7 +16,7 @@
                 "uuid",
                 "password",
                 "route",
-                "ramdisk",
+                "ramDisk",
                 "bin",
                 "configure",
                 "doctrine",
