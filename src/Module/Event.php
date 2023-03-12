@@ -76,10 +76,10 @@ class Event {
                             }
                             catch (LocateException $exception){
                                 if($object->config('project.log.error')){
-                                    $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, $exception ]);
+                                    $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
                                 }
                                 elseif($object->config('project.log.name')){
-                                    $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, $exception ]);
+                                    $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
                                 }
                             }
                         }
@@ -116,10 +116,10 @@ class Event {
                             }
                             catch (LocateException $exception){
                                 if($object->config('project.log.error')){
-                                    $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, $exception ]);
+                                    $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
                                 }
                                 elseif($object->config('project.log.name')){
-                                    $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, $exception ]);
+                                    $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
                                 }
                             }
                         }
