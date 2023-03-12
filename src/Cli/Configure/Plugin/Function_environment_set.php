@@ -1,9 +1,7 @@
 <?php
 
-use R3m\Io\Config;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Dir;
 use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
@@ -11,9 +9,11 @@ use R3m\Io\Module\Parse;
 use Exception;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\ObjectException;
-use R3m\Io\Exception\LocateException;
 
 
+/**
+ * @throws Exception
+ */
 function function_environment_set(Parse $parse, Data $data, $environment=''){
     $id = posix_geteuid();
     if(
@@ -39,7 +39,7 @@ function function_environment_set(Parse $parse, Data $data, $environment=''){
         Event::trigger($object, 'framework.environment.set', [
             'environment' => $environment
         ]);
-    } catch (Exception | FileWriteException | ObjectException | LocateException $exception){
+    } catch (Exception | FileWriteException | ObjectException $exception){
         return $exception;
     }
     return ucfirst($environment) . ' mode enabled.' . PHP_EOL;
