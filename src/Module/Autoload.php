@@ -619,6 +619,16 @@ class Autoload {
     }
 
     private static function exception_filelist($filelist=[]){
-        ddd($filelist);
+        $result = [];
+        foreach($filelist as  $list){
+            foreach($list as $record){
+                if(substr($record, 0, 5) === '[---]'){
+                    $result[] = '[---]';
+                } else {
+                    $result[] = $record;
+                }
+            }
+        }
+        return $result;
     }
 }
