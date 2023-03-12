@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\LocateException;
 use stdClass;
 
 use R3m\Io\App;
@@ -101,7 +102,12 @@ class Event {
                         ){
 
                             $event = new Data($event);
-                            $route->controller::{$route->function}($object, $event, $action, $options);
+                            try {
+                                $route->controller::{$route->function}($object, $event, $action, $options);
+                            }
+                            catch (LocateException $exception){
+                                ddd('found');
+                            }
                         }
                     }
                 }
