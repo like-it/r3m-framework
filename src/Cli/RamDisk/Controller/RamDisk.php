@@ -19,9 +19,9 @@ use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 
-class RamDisk extends Controller {
+class Ramdisk extends Controller {
     const DIR = __DIR__;
-    const NAME = 'RamDisk';
+    const NAME = 'Ramdisk';
     const INFO = [
         '{{binary()}} ramdisk mount <size>           | RamDisk allocation',
         '{{binary()}} ramdisk unmount                | RamDisk allocation'
@@ -29,9 +29,22 @@ class RamDisk extends Controller {
 
     public static function run(App $object){
         try {
-            $name = RamDisk::name(__FUNCTION__    , RamDisk::NAME);
-            $url = RamDisk::locate($object, $name);
-            return RamDisk::response($object, $url);
+            $command = App::parameter($object, lcfirst(Ramdisk::NAME), 1);
+            $name = false;
+            switch (strtolower($command)){
+                case 'mount':
+                case 'unmount':
+                case 'speedtest':
+                    $name = RamDisk::name(strtolower($command), RamDisk::NAME);
+                break;
+                default:
+                    throw new Exception('Unknown ramdisk command...');
+            }
+            if($name){
+                $url = RamDisk::locate($object, $name);
+
+                return RamDisk::response($object, $url);
+            }
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return $exception;
         }

@@ -16,14 +16,21 @@ use R3m\Io\Module\Core;
 /**
  * @throws Exception
  */
-function function_ramdisk_unmount(Parse $parse, Data $data, $url='/tmp/r3m/io/ram/'){
+function function_ramdisk_unmount(Parse $parse, Data $data, $url=''){
     $object = $parse->object();
     $id = posix_geteuid();
     if (!empty($id)){
         throw new Exception('RamDisk can only be unmounted by root...');
     }
-    $command = 'umount ' . $url;
-    Core::execute($object, $command);
-    Dir::remove($url);
+    $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
+    $config = $object->data_read();
+    if($config){
+        $url = $object->get('ramdisk.url');
+        $command = 'umount ' . $url;
+        Core::execute($object, $command);
+        Dir::remove($url);
+        $config->delete('ramdisk');
+        $config->write($config_url);
+    }
     echo 'RamDisk successfully unmounted...' . PHP_EOL;
 }

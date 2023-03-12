@@ -8,6 +8,7 @@
  * @changeLog
  *     -            all
  */
+use R3m\Io\App;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
@@ -20,7 +21,7 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
     $object = $parse->object();
     $id = posix_geteuid();
 
-    $param_size = $object->parameter($object, 'mount', 1);
+    $param_size = App::parameter($object, 'mount', 1);
     if($param_size){
         $size = $param_size;
     }
