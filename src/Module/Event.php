@@ -71,7 +71,17 @@ class Event {
                             property_exists($route, 'controller') &&
                             property_exists($route, 'function')
                         ){
-                            $route->controller::{$route->function}($object, $record, $action, $options);
+                            try {
+                                $route->controller::{$route->function}($object, $record, $action, $options);
+                            }
+                            catch (LocateException $exception){
+                                if($object->config('project.log.error')){
+                                    $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, $exception ]);
+                                }
+                                elseif($object->config('project.log.name')){
+                                    $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, $exception ]);
+                                }
+                            }
                         }
                     }
                 }
@@ -100,13 +110,17 @@ class Event {
                             property_exists($route, 'controller') &&
                             property_exists($route, 'function')
                         ){
-
                             $event = new Data($event);
                             try {
                                 $route->controller::{$route->function}($object, $event, $action, $options);
                             }
                             catch (LocateException $exception){
-                                ddd('found');
+                                if($object->config('project.log.error')){
+                                    $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, $exception ]);
+                                }
+                                elseif($object->config('project.log.name')){
+                                    $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, $exception ]);
+                                }
                             }
                         }
                     }
