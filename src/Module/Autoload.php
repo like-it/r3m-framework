@@ -329,7 +329,8 @@ class Autoload {
         return false;
     }
 
-    public function fileList($item=array(), $url=''){
+    public function fileList($item=array(), $url=''): array
+    {
         if(empty($item)){
             return array();
         }
@@ -396,7 +397,7 @@ class Autoload {
     }
 
     /**
-     * @throws Exception
+     * @throws LocateException
      */
     public function locate($load=null, $is_data=false){
         $dir = $this->cache_dir();
@@ -517,8 +518,10 @@ class Autoload {
     public function __destruct(){
         if(!empty($this->read)){
             $dir = $this->cache_dir();
-            $url = $dir . Autoload::FILE;
-            $this->write($url, $this->read);
+            if($dir){
+                $url = $dir . Autoload::FILE;
+                $this->write($url, $this->read);
+            }
         }
     }
 
