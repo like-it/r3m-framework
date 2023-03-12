@@ -23,7 +23,7 @@ function function_ramdisk_unmount(Parse $parse, Data $data, $url=''){
         throw new Exception('RamDisk can only be unmounted by root...');
     }
     $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
-    $config = $object->data_read();
+    $config = $object->data_read($config_url);
     if($config){
         $url = $object->get('ramdisk.url');
         $command = 'umount ' . $url;

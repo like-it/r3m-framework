@@ -35,7 +35,7 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
         $url = $object->config('dictionary.temp') . $name . $object->config('ds');
     }
     $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
-    $config = $object->data_read();
+    $config = $object->data_read($config_url);
     if($config){
         $config->set('ramdisk.size', $size);
         $config->set('ramdisk.url', $url);
