@@ -84,7 +84,8 @@ class Parse {
         if(empty($template)){
             $config->data('dictionary.template', Parse::TEMPLATE);
         }
-        $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
+//        $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
+        $cache_dir = $config->data('dictionary.cache') . $config->data('dictionary.compile') . $config->data('ds');
         $this->cache_dir($cache_dir);
         $use_this = $config->data('parse.read.object.use_this');
         if(is_bool($use_this)){

@@ -918,11 +918,11 @@ class Build {
             $key = sha1($string);
             $config = $this->object()->data(App::CONFIG);
             $dir = $this->cache_dir();
-            $uuid = posix_geteuid();
+            $id = posix_geteuid();
             if(empty($dir)){
                 throw new Exception('Cache dir empty in Build');
             }
-            $dir .= $uuid . $config->data('ds');
+            $dir .= $id . $config->data('ds');
             $autoload = $this->object()->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
             if($autoload) {
                 $prefixList = $autoload->getPrefixList();

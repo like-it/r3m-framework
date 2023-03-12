@@ -36,7 +36,6 @@ function function_ramdisk_speedtest(Parse $parse, Data $data){
             if($notification){
                 echo $notification . PHP_EOL;
             }
-
             $command = 'dd if=' . $url . 'zero of=/dev/null bs=4k count=100000';
             Core::execute($object, $command, $output, $notification);
             Echo 'Read:' . PHP_EOL;
