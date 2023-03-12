@@ -464,7 +464,7 @@ class Autoload {
         }
         if($is_data === true){
             if($this->environment() == 'development'){
-                throw new LocateException('Could not find data file (' . $load . ')', Autoload::filelist($fileList));
+                throw new LocateException('Could not find data file (' . $load . ')', Autoload::exception_filelist($fileList));
             } else {
                 throw new LocateException('Could not find data file (' . $load . ')');
             }
@@ -474,7 +474,7 @@ class Autoload {
             if(empty($this->expose())){
                 Logger::debug('Autoload prefixList: ', [ $prefixList ]);
                 Logger::debug('Autoload error: ', [ $fileList ]);
-                throw new LocateException('Autoload error, cannot load (' . $load .') class.', Autoload::filelist($fileList));
+                throw new LocateException('Autoload error, cannot load (' . $load .') class.', Autoload::exception_filelist($fileList));
             }
             $object = new stdClass();
             $object->load = $load;
@@ -618,7 +618,7 @@ class Autoload {
         return $this->expose;
     }
 
-    private static function filelist($filelist=[]){
+    private static function exception_filelist($filelist=[]){
         ddd($filelist);
     }
 }
