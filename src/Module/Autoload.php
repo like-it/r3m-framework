@@ -110,7 +110,6 @@ class Autoload {
             $autoload->addPrefix('Source',  $object->config(Config::DATA_PROJECT_DIR_SOURCE));
         }
         $cache_dir = $object->config('autoload.cache.ramdrive');
-        ddd($cache_dir);
         if(empty($cache_dir)){
             $cache_dir = $object->config('autoload.cache.dir');
         }
@@ -120,49 +119,48 @@ class Autoload {
                 Autoload::NAME .
                 $object->config(Config::DS)
             ;
-        } else {
-            $parameters = [];
-            $parameters['cache'] = $cache_dir;
-            $uuid = Core::uuid();
-            foreach($parameters as $nr => $parameter){
-                $parameter = str_replace(
-                    [
-                        '{',
-                        '}',
-                    ],
-                    [
-                        '[$ldelim-' . $uuid . ']',
-                        '[$rdelim-' . $uuid . ']',
-                    ],
-                    $parameter
-                );
-                $parameter = str_replace(
-                    [
-                        '[$ldelim-' . $uuid . ']',
-                        '[$rdelim-' . $uuid . ']',
-                    ],
-                    [
-                        '{$ldelim}',
-                        '{$rdelim}',
-                    ],
-                    $parameter
-                );
-                $parameter = str_replace(
-                    [
-                        '{$ldelim}{$ldelim}',
-                        '{$rdelim}{$rdelim}',
-                    ],
-                    [
-                        '{',
-                        '}',
-                    ],
-                    $parameter
-                );
-                $parameters[$nr] = $parameter;
-            }
-            $parameters = Config::parameters($object, $parameters);
-            $cache_dir = $parameters['cache'];
         }
+        $parameters = [];
+        $parameters['cache'] = $cache_dir;
+        $uuid = Core::uuid();
+        foreach($parameters as $nr => $parameter){
+            $parameter = str_replace(
+                [
+                    '{',
+                    '}',
+                ],
+                [
+                    '[$ldelim-' . $uuid . ']',
+                    '[$rdelim-' . $uuid . ']',
+                ],
+                $parameter
+            );
+            $parameter = str_replace(
+                [
+                    '[$ldelim-' . $uuid . ']',
+                    '[$rdelim-' . $uuid . ']',
+                ],
+                [
+                    '{$ldelim}',
+                    '{$rdelim}',
+                ],
+                $parameter
+            );
+            $parameter = str_replace(
+                [
+                    '{$ldelim}{$ldelim}',
+                    '{$rdelim}{$rdelim}',
+                ],
+                [
+                    '{',
+                    '}',
+                ],
+                $parameter
+            );
+            $parameters[$nr] = $parameter;
+        }
+        $parameters = Config::parameters($object, $parameters);
+        $cache_dir = $parameters['cache'];
         $autoload->cache_dir($cache_dir);
         $autoload->register();
         $autoload->environment($object->config('framework.environment'));
