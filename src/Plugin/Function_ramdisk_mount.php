@@ -30,7 +30,7 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
     }
     if(empty($name)){
         $name = Core::uuid();
-//        $name = 'ram';
+        $name = 'ram';
     }
     if(empty($url)){
         $url = $object->config('dictionary.cache') . $name . $object->config('ds');
