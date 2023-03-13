@@ -266,6 +266,7 @@ class Controller {
                     $read->write($config_url);
                     $id = posix_geteuid();
                     if(empty($id)){
+                        exec('chown www-data:www-data ' . $view_dir);
                         exec('chown www-data:www-data ' . $view_url);
                         exec('chown www-data:www-data ' . $config_url);
                     }
