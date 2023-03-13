@@ -80,6 +80,10 @@ class Autoload {
             $class_dir = $object->config('ramdisk.url') . 'Class' . $object->config('ds');
             $object->config('autoload.cache.class', $class_dir);
             Dir::create($class_dir);
+            $id = posix_geteuid();
+            if(empty($id)){
+                exec('chown www-data:wwww-data ' . substr($class_dir, 0, -1));
+            }
         }
         if(empty($cache_dir)){
             $cache_dir = $object->config('autoload.cache.dir');
