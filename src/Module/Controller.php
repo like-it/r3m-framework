@@ -249,8 +249,8 @@ class Controller {
         }
         if(
             File::exist($view_url) &&
-            $read->has(sha1($view_url)) &&
-            File::mtime($view_url) === File::mtime($read->get(sha1($view_url)))
+            $read->has(sha1($view_url) . '.url') &&
+            File::mtime($view_url) === File::mtime($read->get(sha1($view_url) . '.url'))
         ){
             d($view_url);
             ddd('found ramdisk file');
@@ -263,10 +263,14 @@ class Controller {
                     $view_dir = Dir::name($view_url);
                     Dir::create($view_dir);
                     File::copy($file, $view_url);
-                    ddd($view_url);
                     File::touch($view_url, filemtime($file));
                     $read->set(sha1($view_url) . '.url', $file);
                     $read->write($config_url);
+                    $id = posix_geteuid();
+                    if(empty($id)){
+                        exec('chown www-data:www-data ' . $view_url);
+                        exec('chown www-data:www-data ' . $config_url);
+                    }
                 }
                 $url = $file;
                 break;
