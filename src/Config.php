@@ -19,6 +19,9 @@ use R3m\Io\Module\Parse\Token;
 
 use Exception;
 
+use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\FileWriteException;
+
 class Config extends Data {
     const DIR = __DIR__ . '/';
     const NAME = 'Config';
@@ -192,7 +195,7 @@ class Config extends Data {
     const DATA_ROUTE_PREFIX = Config::DATA_ROUTE . '.' . 'prefix';
 
     /**
-     * @throws Exception\ObjectException
+     * @throws ObjectException
      */
     public function __construct($config=[]){
         if(
@@ -219,8 +222,7 @@ class Config extends Data {
     }
 
     /**
-     * @throws Exception\ObjectException
-     * @throws Exception\FileWriteException
+     * @throws ObjectException
      */
     public static function configure(App $object){
         $config = $object->data(App::CONFIG);
@@ -542,8 +544,8 @@ class Config extends Data {
     }
 
     /**
-     * @throws Exception\ObjectException
-     * @throws Exception\FileWriteException
+     * @throws ObjectException
+     * @throws FileWriteException
      */
     public static function contentType(App $object){
         $contentType = $object->config('contentType');

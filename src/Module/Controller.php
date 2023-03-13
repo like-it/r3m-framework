@@ -62,6 +62,7 @@ class Controller {
         $temp = $object->data('template');
         $called = '';
         $url = false;
+        $list = [];
         if(
             !empty($template) &&
             is_object($template) &&
@@ -123,7 +124,6 @@ class Controller {
         }
         $config = $object->data(App::CONFIG);
         if($url){
-            $list = [];
             $list[] = $url;
         } else {
             if(substr($dir, -1) != $config->data('ds')){
@@ -137,7 +137,6 @@ class Controller {
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
             $max = count($explode);
-            $list = [];
             $temp = explode('\\', $called);
             if(empty($name)){
                 $name = array_pop($temp);
@@ -231,6 +230,14 @@ class Controller {
         $url = false;
         foreach($list as $file){
             if(File::exist($file)){
+                if($object->config('ramdisk.url')){
+                    //copy to ramdisk
+                    $view_url = $object->config('ramdisk.url') .
+                        $object->config('dictionary.view') .
+                        str_replace('/', '_', $file)
+                    ;
+                    ddd($view_url);
+                }
                 $url = $file;
                 break;
             }

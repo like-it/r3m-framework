@@ -97,43 +97,6 @@ class Autoload {
         }
         $parameters = [];
         $parameters['cache'] = $cache_dir;
-        $uuid = Core::uuid();
-        foreach($parameters as $nr => $parameter){
-            $parameter = str_replace(
-                [
-                    '{',
-                    '}',
-                ],
-                [
-                    '[$ldelim-' . $uuid . ']',
-                    '[$rdelim-' . $uuid . ']',
-                ],
-                $parameter
-            );
-            $parameter = str_replace(
-                [
-                    '[$ldelim-' . $uuid . ']',
-                    '[$rdelim-' . $uuid . ']',
-                ],
-                [
-                    '{$ldelim}',
-                    '{$rdelim}',
-                ],
-                $parameter
-            );
-            $parameter = str_replace(
-                [
-                    '{$ldelim}{$ldelim}',
-                    '{$rdelim}{$rdelim}',
-                ],
-                [
-                    '{',
-                    '}',
-                ],
-                $parameter
-            );
-            $parameters[$nr] = $parameter;
-        }
         $parameters = Config::parameters($object, $parameters);
         $cache_dir = $parameters['cache'];
         $autoload->cache_dir($cache_dir);
