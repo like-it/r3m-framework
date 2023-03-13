@@ -241,14 +241,18 @@ class Controller {
                     $view_dir = Dir::name($view_url);
                     Dir::create($view_dir);
                     File::copy($file, $view_url);
-
                     $config_url = $object->config('ramdisk.url') .
                         'Cache' .
                         $object->config('ds') .
                         $object->config('dictionary.view') .
                         $object->config('extension.json')
                     ;
-                    ddd($config_url);
+                    $read = $object->data_read($config_url);
+                    if(!$read){
+                        $read = new Data();
+                    }
+                    $read->set(sha1($view_url) . '.url', $file);
+                    $read->write($config_url);
                 }
                 $url = $file;
                 break;
