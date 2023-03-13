@@ -1043,7 +1043,6 @@ class Route extends Data {
             $config->data('ds') .
             $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
         ;
-        ddd($cache_url);
         if($object->config('ramdisk.url')){
             $cache_url = $object->config('ramdisk.url') .
                 'Cache' .
