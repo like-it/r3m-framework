@@ -43,7 +43,7 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
         $config->set('ramdisk.name', $name);
         $config->write($config_url);
     }
-    Dir::create($url, Dir::CHMOD);
+    Dir::create($url, 0777);
     $command = 'chown www-data:www-data ' . $url . ' -R';
     Core::execute($object, $command);
     $mount_url = substr($url, 0, -1);
