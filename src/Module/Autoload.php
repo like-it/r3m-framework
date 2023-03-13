@@ -562,7 +562,7 @@ class Autoload {
         $dir = dirname($url);
         if(is_dir($dir) === false){
             try {
-                @mkdir($dir, 0777, true);
+                @mkdir($dir, 0750, true);
             } catch(Exception $exception){
                 return false;
             }
