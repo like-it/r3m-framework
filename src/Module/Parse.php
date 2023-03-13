@@ -86,9 +86,9 @@ class Parse {
         }
 //        $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
         if($config->data('ramdisk.url')){
-            $cache_dir = $config->data('dictionary.cache') . $config->data('ramdisk.url') . $config->data('dictionary.compile') . $config->data('ds');
+            $cache_dir = $config->data('ramdisk.url') . $config->data('dictionary.compile') . $config->data('ds');
         } else {
-            $cache_dir = $config->data('dictionary.cache') . $config->data('dictionary.compile') . $config->data('ds');
+            $cache_dir = $config->data('dictionary.compile') . $config->data('ds');
         }
         $this->cache_dir($cache_dir);
         $use_this = $config->data('parse.read.object.use_this');
