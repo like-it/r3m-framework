@@ -86,6 +86,7 @@ class Parse {
         }
 //        $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
         $cache_dir = $config->data('dictionary.cache') . $config->data('dictionary.compile') . $config->data('ds');
+        ddd($cache_dir);
         $this->cache_dir($cache_dir);
         $use_this = $config->data('parse.read.object.use_this');
         if(is_bool($use_this)){
