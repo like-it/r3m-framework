@@ -475,6 +475,7 @@ class Autoload {
                                         filemtime($file) === filemtime($read[sha1($file)])
                                     ){
                                         //from ramdisk
+                                        d($file);
                                         ddd('found ramfile');
                                     } else {
                                         if(stristr($load, 'Controller') !== false){
