@@ -475,8 +475,8 @@ class Autoload {
                                         filemtime($file) === filemtime($read[sha1($file)])
                                     ){
                                         //from ramdisk
-                                        d($file);
-                                        ddd('found ramfile');
+                                        $this->cache($file, $load);
+                                        return $file;
                                     } else {
                                         if(stristr($load, 'Controller') !== false){
                                             //controllers cannot cache
