@@ -491,7 +491,7 @@ class Autoload {
                                                 }
                                             }
                                             copy($file, $object->config('autoload.cache.file'));
-                                            touch($url, filemtime($file));
+                                            touch($object->config('autoload.cache.file'), filemtime($file));
                                             //save file reference for filemtime comparison
                                             $read[sha1($object->config('autoload.cache.file'))] = $file;
                                             file_put_contents($config_url, json_encode($read));
