@@ -495,7 +495,6 @@ class Autoload {
                                             $read[sha1($object->config('autoload.cache.file'))] = $file;
                                             file_put_contents($config_url, json_encode($read));
                                         }
-
                                     }
                                 }
                                 $this->cache($file, $load);
