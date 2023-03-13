@@ -472,6 +472,7 @@ class Autoload {
                                         $file === $object->config('autoload.cache.file')
                                     ){
                                         //from ramdisk
+                                        d($file);
                                         ddd('found ramfile');
                                     } else {
                                         if(stristr($load, 'Controller') !== false){
