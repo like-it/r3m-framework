@@ -161,6 +161,7 @@ class Autoload {
         }
         $parameters = Config::parameters($object, $parameters);
         $cache_dir = $parameters['cache'];
+        ddd($cache_dir);
         $autoload->cache_dir($cache_dir);
         $autoload->register();
         $autoload->environment($object->config('framework.environment'));
