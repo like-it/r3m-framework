@@ -257,6 +257,7 @@ class Config extends Data {
                     ){
                         foreach($record['method']['attribute'] as $attribute_nr => $attribute_list){
                             foreach($attribute_list as $attribute){
+                                d($attribute);
                                 $parameters[$key] .= $object->config($attribute['execute']);
                             }
                         }
