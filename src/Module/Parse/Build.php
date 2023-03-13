@@ -923,7 +923,6 @@ class Build {
                 throw new Exception('Cache dir empty in Build');
             }
             $dir .= $id . $config->data('ds');
-            ddd($dir);
             $autoload = $this->object()->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
             if($autoload) {
                 $prefixList = $autoload->getPrefixList();
