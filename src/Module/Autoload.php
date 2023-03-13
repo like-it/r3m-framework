@@ -109,7 +109,10 @@ class Autoload {
             $autoload->addPrefix('Host',  $object->config(Config::DATA_PROJECT_DIR_HOST));
             $autoload->addPrefix('Source',  $object->config(Config::DATA_PROJECT_DIR_SOURCE));
         }
-        $cache_dir = $object->config('autoload.cache.dir');
+        $cache_dir = $object->config('autoload.cache.ramdrive');
+        if(empty($cache_dir)){
+            $cache_dir = $object->config('autoload.cache.dir');
+        }
         if(empty($cache_dir)){
             $cache_dir =
                 $object->config(Config::DATA_FRAMEWORK_DIR_CACHE) .
