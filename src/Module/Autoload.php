@@ -462,6 +462,10 @@ class Autoload {
                                             touch($object->config('autoload.cache.file'), filemtime($file));
                                             //save file reference for filemtime comparison
                                             $read[sha1($object->config('autoload.cache.file'))] = $file;
+                                            $config_dir = dirname($config_url);
+                                            if(!is_dir($config_dir)){
+                                                mkdir($config_dir, 0750, true);
+                                            }
                                             file_put_contents($config_url, json_encode($read, JSON_PRETTY_PRINT));
                                             $id = posix_geteuid();
                                             if(empty($id)){
