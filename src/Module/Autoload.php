@@ -82,7 +82,7 @@ class Autoload {
             Dir::create($class_dir);
             $id = posix_geteuid();
             if(empty($id)){
-                exec('chown www-data:wwww-data ' . substr($class_dir, 0, -1));
+                exec('chown www-data:www-data ' . substr($class_dir, 0, -1));
             }
         }
         if(empty($cache_dir)){
