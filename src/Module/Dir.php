@@ -54,6 +54,7 @@ class Dir {
                 if(empty($chmod)){
                     $mkdir = @mkdir($url, Dir::CHMOD, true);
                 } else {
+                    ddd($chmod);
                     $mkdir = @mkdir($url, $chmod, true);
                 }
             }
