@@ -36,9 +36,6 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
         }
     }
     if(File::exist($url)){
-        d($url);
-
-        
         $read = File::read($url);
         if(
             $is_cache_url === false &&
