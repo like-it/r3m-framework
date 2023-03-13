@@ -159,6 +159,7 @@ class Autoload {
             );
             $parameters[$nr] = $parameter;
         }
+        ddd($parameters);
         $parameters = Config::parameters($object, $parameters);
         $cache_dir = $parameters['cache'];
         ddd($cache_dir);
