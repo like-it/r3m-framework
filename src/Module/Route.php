@@ -1084,7 +1084,7 @@ class Route extends Data {
         }
     }
 
-    private static function cache_invalidate($object, $cache): bool
+    private static function cache_invalidate($object, $cache)
     {
         $has_resource = false;
         $invalidate = true;
