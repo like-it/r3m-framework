@@ -472,7 +472,7 @@ class Autoload {
                                         $file === $object->config('autoload.cache.file') &&
                                         $read &&
                                         array_key_exists(sha1($file), $read) &&
-                                        filemtime($file) === filemtime($read->{sha1($file)})
+                                        filemtime($file) === filemtime($read[sha1($file)])
                                     ){
                                         //from ramdisk
                                         ddd('found ramfile');
