@@ -1133,7 +1133,6 @@ class Route extends Data {
         $cache_url = $route->cache_url();
         $cache_dir = Dir::name($cache_url);
         $cache_root_dir = Dir::name($cache_dir);
-        ddd($cache_root_dir);
         $main = new stdClass();
         $main->resource = $url;
         $main->read = true;
@@ -1156,6 +1155,10 @@ class Route extends Data {
         $byte =  File::write($cache_url, $write);
         $time = strtotime(date('Y-m-d H:i:00'));
         $touch = File::touch($cache_url, $time, $time);
+        $id = posix_geteuid();
+        if(empty($id)){
+            exec('chown www-data:www-data ' . substr($cache_root_dir, 0, -1));
+        }
         return $byte;
     }
 
