@@ -15,8 +15,10 @@ use R3m\Io\App;
 use R3m\Io\Config;
 
 use Exception;
+
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\UrlEmptyException;
+use R3m\Io\Exception\FileWriteException;
 
 class Route extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -80,19 +82,21 @@ class Route extends Data {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function find($object, $name='', $option=[]){
         if($name === null){
-            return;
+            return false;
         }
         $route = $object->data(App::ROUTE);
         $get = $route->data($name);
         if(empty($get)){
-            return;
+            return false;
         }
         if(!property_exists($get, 'path')){
             if(property_exists($get, 'url')){
-                $url = $get->url;
-                return $url;
+                return $get->url;
             } else {
                 throw new Exception('path & url are empty');
             }
@@ -107,7 +111,7 @@ class Route extends Data {
             $get = $route::has_host($get, $host);
         }
         if(empty($get)){
-            return;
+            return false;
         }
         $get->path = str_replace([
             '{{',
@@ -211,6 +215,9 @@ class Route extends Data {
         return $select;
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function wildcard(App $object){
         if(defined('IS_CLI')){
 
@@ -470,6 +477,9 @@ class Route extends Data {
         return false;
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function selectWildcard($object, $select){
         $route =  $object->data(App::ROUTE);
         $match = false;
@@ -609,7 +619,8 @@ class Route extends Data {
         return $route;
     }
 
-    private static function is_variable($string){
+    private static function is_variable($string): bool
+    {
         $string = trim($string);
         $string = str_replace([
             '{{',
@@ -732,7 +743,8 @@ class Route extends Data {
         return $route;
     }
 
-    private static function is_match_by_attribute($object, $route, $select){
+    private static function is_match_by_attribute($object, $route, $select): bool
+    {
         if(!property_exists($route, 'path')){
             return false;
         }
@@ -798,7 +810,8 @@ class Route extends Data {
         return true;
     }
 
-    private static function is_match_by_condition($object, $route, $select){
+    private static function is_match_by_condition($object, $route, $select): bool
+    {
         if(!property_exists($route, 'path')){
             return false;
         }
@@ -841,7 +854,8 @@ class Route extends Data {
     }
 
 
-    private static function is_match_by_method($object, $route, $select){
+    private static function is_match_by_method($object, $route, $select): bool
+    {
         if(!property_exists($route, 'method')){
             return true;
         }
@@ -856,7 +870,8 @@ class Route extends Data {
         return false;
     }
 
-    private static function is_match_by_host($object, $route, $select){
+    private static function is_match_by_host($object, $route, $select): bool
+    {
         if(!property_exists($route, 'host')){
             return true;
         }
@@ -905,7 +920,8 @@ class Route extends Data {
         return false;
     }
 
-    private static function is_match_by_deep($object, $route, $select){
+    private static function is_match_by_deep($object, $route, $select): bool
+    {
         if(!property_exists($route, 'deep')){
             return false;
         }
@@ -918,7 +934,8 @@ class Route extends Data {
         return true;
     }
 
-    private static function is_match_cli($object, $route, $select){
+    private static function is_match_cli($object, $route, $select): bool
+    {
         $is_match = Route::is_match_by_attribute($object, $route, $select);
         if($is_match === false){
             return $is_match;
@@ -930,7 +947,8 @@ class Route extends Data {
         return $is_match;
     }
 
-    private static function is_match($object, $route, $select){
+    private static function is_match($object, $route, $select): bool
+    {
         $is_match = Route::is_match_by_method($object, $route, $select);
         if($is_match === false){
             return $is_match;
@@ -956,7 +974,8 @@ class Route extends Data {
         return $is_match;
     }
 
-    private static function is_match_has_slash_in_attribute($object, $route, $select){
+    private static function is_match_has_slash_in_attribute($object, $route, $select): bool
+    {
         $is_match = Route::is_match_by_method($object, $route, $select);
         if($is_match === false){
             return $is_match;
@@ -977,7 +996,8 @@ class Route extends Data {
         return $is_match;
     }
 
-    private static function is_match_by_wildcard($object, $route, $select){
+    private static function is_match_by_wildcard($object, $route, $select): bool
+    {
         $is_match = Route::is_match_by_method($object, $route, $select);
         if($is_match === false){
             return $is_match;
@@ -990,7 +1010,8 @@ class Route extends Data {
         return $is_match;
     }
 
-    private static function is_match_by_wildcard_has_slash_in_attribute($object, $route, $select){
+    private static function is_match_by_wildcard_has_slash_in_attribute($object, $route, $select): bool
+    {
         $is_match = Route::is_match_by_method($object, $route, $select);
         if($is_match === false){
             return $is_match;
@@ -1063,11 +1084,12 @@ class Route extends Data {
         }
     }
 
-    private static function cache_invalidate($object, $cache){
+    private static function cache_invalidate($object, $cache): bool
+    {
         $has_resource = false;
         $invalidate = true;
         if(empty($cache)){
-            return;
+            return false;
         }
         $time = strtotime(date('Y-m-d H:i:00'));
         if(
@@ -1114,6 +1136,9 @@ class Route extends Data {
         }
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function cache_read($object, $url, $cache_url){
         if(File::Exist($cache_url)){
             $read = File::read($cache_url);
@@ -1124,6 +1149,10 @@ class Route extends Data {
         }
     }
 
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
     private static function cache_write($object){
         $config = $object->data(App::CONFIG);
         $route = $object->data(App::ROUTE);
