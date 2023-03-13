@@ -1132,7 +1132,8 @@ class Route extends Data {
         $url = $route->url();
         $cache_url = $route->cache_url();
         $cache_dir = Dir::name($cache_url);
-        ddd($cache_dir);
+        $cache_root_dir = Dir::name($cache_dir);
+        ddd($cache_root_dir);
         $main = new stdClass();
         $main->resource = $url;
         $main->read = true;
