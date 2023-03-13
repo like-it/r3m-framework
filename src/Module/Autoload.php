@@ -494,6 +494,11 @@ class Autoload {
                                             //save file reference for filemtime comparison
                                             $read[sha1($object->config('autoload.cache.file'))] = $file;
                                             file_put_contents($config_url, json_encode($read));
+                                            $id = posix_geteuid();
+                                            if(empty($id)){
+                                                exec('chown www-data:www-data ' . $object->config('autoload.cache.file'));
+                                                exec('chown www-data:www-data ' . $config_url);
+                                            }
                                         }
                                     }
                                 }
