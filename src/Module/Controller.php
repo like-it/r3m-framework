@@ -252,8 +252,6 @@ class Controller {
             $read->has(sha1($view_url) . '.url') &&
             File::mtime($view_url) === File::mtime($read->get(sha1($view_url) . '.url'))
         ){
-            d($view_url);
-            ddd('found ramdisk file');
             return $view_url;
         }
         foreach($list as $file){
