@@ -11,13 +11,48 @@
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 
 function function_require(Parse $parse, Data $data, $url='', $storage=[]){
     $object = $parse->object();
-    ddd($url);
+    $cache_url = false;
+    $cache_dir = false;
+    $is_cache_url = false;
+    if($object->config('ramdisk.url')){
+        $cache_url = $object->config('ramdisk.url') .
+            $object->config('dictionary.view') .
+            $object->config('ds') .
+            $object->config('dictionary.view') .
+            str_replace('/', '_', $url)
+        ;
+        $cache_dir = Dir::name($cache_url);
+        if(
+            File::exist($cache_url) &&
+            File::mtime($cache_url) === File::mtime($url)
+        ){
+            $url = $cache_url;
+            $is_cache_url = true;
+        }
+    }
     if(File::exist($url)){
         $read = File::read($url);
+        if(
+            $is_cache_url === false &&
+            $object->config('ramdisk.url') &&
+            $cache_dir !== false
+        ){
+            //copy to ramdisk
+            Dir::create($cache_dir);
+            File::copy($url, $cache_url);
+            File::touch($cache_url, File::mtime($url));
+            $id = posix_geteuid();
+            if(empty($id)){
+                exec('chown www-data:www-data ' . $cache_dir);
+                exec('chown www-data:www-data ' . $cache_url);
+            }
+
+        }
         $mtime = File::mtime($url);
         if(!empty($storage)){
             $data_data = new Data();
