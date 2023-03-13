@@ -471,7 +471,7 @@ class Autoload {
                                     if(
                                         $file === $object->config('autoload.cache.file') &&
                                         $read &&
-                                        property_exists($read, sha1($file)) &&
+                                        array_key_exists(sha1($file), $read) &&
                                         filemtime($file) === filemtime($read->{sha1($file)})
                                     ){
                                         //from ramdisk
