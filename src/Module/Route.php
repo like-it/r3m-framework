@@ -1015,7 +1015,22 @@ class Route extends Data {
         }
         $url = $config->data(Config::DATA_PROJECT_ROUTE_URL);
         $uuid = posix_geteuid();
-        $cache_url = $config->data(Config::DATA_PROJECT_DIR_DATA) . 'Cache' . $config->data('ds') . $uuid . $config->data('ds') . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
+        $cache_url = $config->data(Config::DATA_PROJECT_DIR_DATA) .
+            'Cache' .
+            $config->data('ds') .
+            $uuid .
+            $config->data('ds') .
+            $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
+        ;
+        if($object->config('ramdisk.url')){
+            $cache_url = $object->config('ramdisk.url') .
+                'Cache' .
+                $config->data('ds') .
+                $uuid .
+                $config->data('ds') .
+                $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
+            ;
+        }
         $cache = Route::cache_read($object, $url, $cache_url);
         $cache = Route::cache_invalidate($object, $cache);
         if(empty($cache)){
