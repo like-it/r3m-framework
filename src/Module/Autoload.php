@@ -333,7 +333,9 @@ class Autoload {
             $object->config('autoload.cache.class')
         ){
             $load = 'Class' . str_replace('/', '_', $item['directory'] . $item['file']) . '.' . Autoload::EXT_PHP;
-            $data[] = $object->config('autoload.cache.class') . $load;
+            $load_url = $object->config('autoload.cache.class') . $load;
+            $data[] = $load_url;
+            $object->config('autoload.cache.file', $load_url);
         }
         if(
             property_exists($this->read, 'autoload') &&
@@ -452,10 +454,35 @@ class Autoload {
                                 continue;
                             }
                             if(file_exists($file)){
-                                d($file);
-                                ddd($object->config('autoload.cache.class'));
-                                if($object->config('autoload.cache.class')){
-
+                                if($object->config('autoload.cache.file')){
+                                    $config_url = $object->config('ramdisk.url') .
+                                        Autoload::NAME .
+                                        $object->config('ds') .
+                                        'File.mtime' .
+                                        $object->config('extension.json')
+                                    ;
+                                    $read = file_get_contents($config_url);
+                                    if($read){
+                                        $read = json_decode($read, true);
+                                    } else {
+                                        $read = [];
+                                    }
+                                    if(
+                                        $file === $object->config('autoload.cache.file') &&
+                                        $read &&
+                                        property_exists($read, sha1($file)) &&
+                                        filemtime($file) === filemtime($read->{sha1($file)})
+                                    ){
+                                        //from ramdisk
+                                        ddd('found ramfile');
+                                    } else {
+                                        //from disk
+                                        //copy to ramdisk
+                                        copy($file, $object->config('autoload.cache.file'));
+                                        //save file reference for filemtime comparison
+                                        $read[sha1($object->config('autoload.cache.file'))] = $file;
+                                        file_put_contents($config_url, json_encode($read));
+                                    }
                                 }
                                 $this->cache($file, $load);
                                 return $file;
