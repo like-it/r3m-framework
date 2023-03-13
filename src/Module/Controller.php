@@ -234,6 +234,8 @@ class Controller {
                     //copy to ramdisk
                     $view_url = $object->config('ramdisk.url') .
                         $object->config('dictionary.view') .
+                        $object->config('ds') .
+                        $object->config('dictionary.view') .
                         str_replace('/', '_', $file)
                     ;
                     ddd($view_url);
