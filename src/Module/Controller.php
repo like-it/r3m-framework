@@ -246,7 +246,6 @@ class Controller {
                         'Cache' .
                         $object->config('ds') .
                         $object->config('dictionary.view') .
-                        '.file.mtime' .
                         $object->config('extension.json')
                     ;
                     ddd($config_url);
