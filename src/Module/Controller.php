@@ -238,7 +238,18 @@ class Controller {
                         $object->config('dictionary.view') .
                         str_replace('/', '_', $file)
                     ;
-                    ddd($view_url);
+                    $view_dir = Dir::name($view_url);
+                    Dir::create($view_dir);
+                    File::copy($file, $view_url);
+
+                    $config_url = $object->config('ramdisk.url') .
+                        'Cache' .
+                        $object->config('ds') .
+                        $object->config('dictionary.view') .
+                        '.file.mtime' .
+                        $object->config('extension.json')
+                    ;
+                    ddd($config_url);
                 }
                 $url = $file;
                 break;
