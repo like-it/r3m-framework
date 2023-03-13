@@ -461,11 +461,12 @@ class Autoload {
                                         'File.mtime' .
                                         $object->config('extension.json')
                                     ;
-                                    $read = file_get_contents($config_url);
-                                    if($read){
-                                        $read = json_decode($read, true);
-                                    } else {
-                                        $read = [];
+                                    $read = [];
+                                    if(file_exists($config_url)){
+                                        $read = file_get_contents($config_url);
+                                        if($read){
+                                            $read = json_decode($read, true);
+                                        }
                                     }
                                     if(
                                         $file === $object->config('autoload.cache.file') &&
