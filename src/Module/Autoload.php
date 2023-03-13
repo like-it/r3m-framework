@@ -53,43 +53,6 @@ class Autoload {
         ){
             foreach($prefix as $record){
                 $parameters = Core::object($record, 'array');
-                $uuid = Core::uuid();
-                foreach($parameters as $nr => $parameter){
-                    $parameter = str_replace(
-                        [
-                            '{',
-                            '}',
-                        ],
-                        [
-                            '[$ldelim-' . $uuid . ']',
-                            '[$rdelim-' . $uuid . ']',
-                        ],
-                        $parameter
-                    );
-                    $parameter = str_replace(
-                        [
-                            '[$ldelim-' . $uuid . ']',
-                            '[$rdelim-' . $uuid . ']',
-                        ],
-                        [
-                            '{$ldelim}',
-                            '{$rdelim}',
-                        ],
-                        $parameter
-                    );
-                    $parameter = str_replace(
-                        [
-                            '{$ldelim}{$ldelim}',
-                            '{$rdelim}{$rdelim}',
-                        ],
-                        [
-                            '{',
-                            '}',
-                        ],
-                        $parameter
-                    );
-                    $parameters[$nr] = $parameter;
-                }
                 $parameters = Config::parameters($object, $parameters);
                 if(
                     array_key_exists('prefix', $parameters) &&
@@ -110,6 +73,10 @@ class Autoload {
             $autoload->addPrefix('Source',  $object->config(Config::DATA_PROJECT_DIR_SOURCE));
         }
         $cache_dir = $object->config('autoload.cache.ramdrive');
+        if($cache_dir){
+            $class_dir = $object->config('ramdisk.url') . $object->config('dictionary.class') . $object->config('ds');
+            ddd($class_dir);
+        }
         if(empty($cache_dir)){
             $cache_dir = $object->config('autoload.cache.dir');
         }

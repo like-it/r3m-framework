@@ -242,6 +242,43 @@ class Config extends Data {
         if(!is_array($parameters)){
             return [];
         }
+        $uuid = Core::uuid();
+        foreach($parameters as $nr => $parameter){
+            $parameter = str_replace(
+                [
+                    '{',
+                    '}',
+                ],
+                [
+                    '[$ldelim-' . $uuid . ']',
+                    '[$rdelim-' . $uuid . ']',
+                ],
+                $parameter
+            );
+            $parameter = str_replace(
+                [
+                    '[$ldelim-' . $uuid . ']',
+                    '[$rdelim-' . $uuid . ']',
+                ],
+                [
+                    '{$ldelim}',
+                    '{$rdelim}',
+                ],
+                $parameter
+            );
+            $parameter = str_replace(
+                [
+                    '{$ldelim}{$ldelim}',
+                    '{$rdelim}{$rdelim}',
+                ],
+                [
+                    '{',
+                    '}',
+                ],
+                $parameter
+            );
+            $parameters[$nr] = $parameter;
+        }
         foreach($parameters as $key => $parameter){
             $tree = Parse\Token::tree($parameter);
             if(
@@ -261,11 +298,10 @@ class Config extends Data {
                             }
                         }
                     }
-                    if($record['type'] === Token::TYPE_STRING){
+                    elseif($record['type'] === Token::TYPE_STRING){
                         $parameters[$key] .= $record['value'];
                     }
                 }
-            } else {
             }
         }
         return $parameters;
