@@ -478,6 +478,14 @@ class Autoload {
                                     } else {
                                         //from disk
                                         //copy to ramdisk
+                                        $dirname = dirname($object->config('autoload.cache.file'));
+                                        if(!is_dir($dirname)){
+                                            mkdir($dirname, 0750, true);
+                                            $id = posix_geteuid();
+                                            if(empty($id)){
+                                                exec('chown www-data:www-data ' . $dirname);
+                                            }
+                                        }
                                         copy($file, $object->config('autoload.cache.file'));
                                         //save file reference for filemtime comparison
                                         $read[sha1($object->config('autoload.cache.file'))] = $file;
