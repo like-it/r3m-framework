@@ -228,16 +228,23 @@ class Controller {
             }
         }
         $url = false;
+
+        $first = reset($list);
+
+        $view_url = $object->config('ramdisk.url') .
+            $object->config('dictionary.view') .
+            $object->config('ds') .
+            $object->config('dictionary.view') .
+            str_replace('/', '_', $first)
+        ;
+        if(File::exist($view_url)){
+            ddd('found ramdisk');
+            return $view_url;
+        }
         foreach($list as $file){
             if(File::exist($file)){
                 if($object->config('ramdisk.url')){
                     //copy to ramdisk
-                    $view_url = $object->config('ramdisk.url') .
-                        $object->config('dictionary.view') .
-                        $object->config('ds') .
-                        $object->config('dictionary.view') .
-                        str_replace('/', '_', $file)
-                    ;
                     $view_dir = Dir::name($view_url);
                     Dir::create($view_dir);
                     File::copy($file, $view_url);
