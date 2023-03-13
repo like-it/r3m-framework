@@ -46,6 +46,8 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
     Dir::create($url, 0777);
     $command = 'chown www-data:www-data ' . $url . ' -R';
     Core::execute($object, $command);
+    $command = 'chmod 777 ' . $url;
+    Core::execute($object, $command);
     $mount_url = substr($url, 0, -1);
     $command = 'mount -t tmpfs -o size=' . $size . ' ' . $name .' ' . $mount_url;
     echo $command . PHP_EOL;
