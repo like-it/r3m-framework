@@ -477,6 +477,7 @@ class Autoload {
                                         //from ramdisk
                                         ddd('found ramfile');
                                     } else {
+                                        ddd($load);
                                         //from disk
                                         //copy to ramdisk
                                         $dirname = dirname($object->config('autoload.cache.file'));
