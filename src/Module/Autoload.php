@@ -37,6 +37,8 @@ class Autoload {
     protected $fileList;
     protected $cache_dir;
 
+    protected $object;
+
     public $prefixList = array();
     public $environment = 'production';
 
@@ -46,6 +48,7 @@ class Autoload {
      */
     public static function configure(App $object){
         $autoload = new Autoload();
+        $autoload->object($object);
         $prefix = $object->config('autoload.prefix');
         if(
             !empty($prefix) &&
@@ -74,8 +77,9 @@ class Autoload {
         }
         $cache_dir = $object->config('autoload.cache.ramdrive');
         if($cache_dir){
-            $class_dir = $object->config('ramdisk.url') . $object->config('dictionary.class') . $object->config('ds');
-            ddd($class_dir);
+            $class_dir = $object->config('ramdisk.url') . 'Class' . $object->config('ds');
+            $object->config('autoload.cache.class', $class_dir);
+            Dir::create($class_dir);
         }
         if(empty($cache_dir)){
             $cache_dir = $object->config('autoload.cache.dir');
@@ -160,6 +164,21 @@ class Autoload {
                 spl_autoload_register($function, false, true); //prepend (prioritize)
             }
         }
+    }
+
+    public function object(App $object=null){
+        if($object !== null){
+            $this->setObject($object);
+        }
+        return $this->getObject();
+    }
+
+    private function setObject(App $object){
+        $this->object = $object;
+    }
+
+    private function getObject(){
+        return $this->object;
     }
 
     private function setEnvironment($environment='production'){
@@ -309,6 +328,7 @@ class Autoload {
         $data = array();
         $caller = get_called_class();
         if(
+
             isset($this->read->autoload) &&
             isset($this->read->autoload->{$caller}) &&
             isset($this->read->autoload->{$caller}->{$item['load']})
