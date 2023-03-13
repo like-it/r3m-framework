@@ -469,10 +469,12 @@ class Autoload {
                                         }
                                     }
                                     if(
-                                        $file === $object->config('autoload.cache.file')
+                                        $file === $object->config('autoload.cache.file') &&
+                                        $read &&
+                                        array_key_exists(sha1($file), $read) &&
+                                        filemtime($file) === filemtime($read[sha1($file)])
                                     ){
                                         //from ramdisk
-                                        d($file);
                                         ddd('found ramfile');
                                     } else {
                                         if(stristr($load, 'Controller') !== false){
@@ -489,6 +491,7 @@ class Autoload {
                                                 }
                                             }
                                             copy($file, $object->config('autoload.cache.file'));
+                                            touch($url, filemtime($file));
                                             //save file reference for filemtime comparison
                                             $read[sha1($object->config('autoload.cache.file'))] = $file;
                                             file_put_contents($config_url, json_encode($read));
