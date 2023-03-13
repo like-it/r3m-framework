@@ -332,7 +332,9 @@ class Autoload {
             $object &&
             $object->config('autoload.cache.class')
         ){
-            ddd($item);
+            $load = 'Class' . str_replace('/', '_', $item['directory'] . $item['file']) . '.' . Autoload::EXT_PHP;
+
+            ddd($load);
         }
         if(
             property_exists($this->read, 'autoload') &&
