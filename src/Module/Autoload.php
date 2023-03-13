@@ -334,7 +334,6 @@ class Autoload {
         ){
             $load = 'Class' . str_replace('/', '_', $item['directory'] . $item['file']) . '.' . Autoload::EXT_PHP;
             $data[] = $object->config('autoload.cache.class') . $load;
-            ddd($data);
         }
         if(
             property_exists($this->read, 'autoload') &&
@@ -402,6 +401,7 @@ class Autoload {
         $load = ltrim($load, '\\');
         $prefixList = $this->getPrefixList();
         $fileList = [];
+        $object = $this->object();
         if(!empty($prefixList)){
             foreach($prefixList as $nr => $item){
                 if(empty($item['prefix'])){
@@ -452,6 +452,11 @@ class Autoload {
                                 continue;
                             }
                             if(file_exists($file)){
+                                d($file);
+                                ddd($object->config('autoload.cache.class'));
+                                if($object->config('autoload.cache.class')){
+
+                                }
                                 $this->cache($file, $load);
                                 return $file;
                             }
