@@ -14,6 +14,8 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 
 function function_require(Parse $parse, Data $data, $url='', $storage=[]){
+    $object = $parse->object();
+    ddd($url);
     if(File::exist($url)){
         $read = File::read($url);
         $mtime = File::mtime($url);
