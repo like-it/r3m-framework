@@ -263,7 +263,7 @@ class Controller {
                     $view_dir = Dir::name($view_url);
                     Dir::create($view_dir);
                     File::copy($file, $view_url);
-
+                    File::touch($view_url, filemtime($file));
                     $read->set(sha1($view_url) . '.url', $file);
                     $read->write($config_url);
                 }
