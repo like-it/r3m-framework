@@ -30,7 +30,7 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
     }
     if(empty($name)){
         $name = Core::uuid();
-        $name = 'Ram';
+        $name = 'ram';
     }
     if(empty($url)){
         $url = $object->config('dictionary.cache') . $name . $object->config('ds');
@@ -49,9 +49,17 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
     $mount_url = substr($url, 0, -1);
     $command = 'mount -t tmpfs -o size=' . $size . ' ' . $name .' ' . $mount_url;
     echo $command . PHP_EOL;
-    Core::execute($object, $command, $output);
-    echo $output . PHP_EOL;
+    Core::execute($object, $command, $output, $notification);
+    if($output){
+        echo $output . PHP_EOL;
+    }
+    if($notification){
+        echo $notification . PHP_EOL;
+    }
     $command = 'mount | tail -n 1';
     Core::execute($object, $command, $output);
-    echo $output . PHP_EOL;
+    if($output){
+        echo $output . PHP_EOL;
+    }
+
 }
