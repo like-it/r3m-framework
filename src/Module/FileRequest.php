@@ -319,6 +319,19 @@ class FileRequest {
                     $object->logger($logger)->info('Url:', [ $url ]);
                 }
                 $read = File::read($url);
+
+                d($ram_url && in_array(
+                        $file_extension,
+                        [
+                            'js',
+                            'css',
+                            'json'
+                        ],
+                        true
+                    ));
+                dd('YES');
+
+
                 if(
                     $ram_url &&
                     in_array(
