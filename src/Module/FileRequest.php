@@ -82,6 +82,7 @@ class FileRequest {
             $dir;
         $location[] = $object->config('project.dir.public') .
             $dir;
+        ddd($location);
         return $location;
     }
 
@@ -165,7 +166,6 @@ class FileRequest {
         $config = $object->data(App::CONFIG);
         FileRequest::local($object);
         $fileRequest = $object->config('server.fileRequest');
-        ddd($fileRequest);
         Config::contentType($object);
         if(empty($fileRequest)){
             $location = FileRequest::location($object, $dir);

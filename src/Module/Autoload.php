@@ -448,7 +448,7 @@ class Autoload {
                                         return $file;
                                     } else {
                                         if(stristr($load, 'Controller') !== false){
-                                            //controllers cannot cache
+                                            //controllers cannot be cached
                                         } else {
                                             //from disk
                                             //copy to ramdisk
