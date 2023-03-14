@@ -210,8 +210,9 @@ class FileRequest {
             }
         }
         $ram_url = false;
-        $mtime_url = false;
-        $mtime_dir = false;
+        $file_mtime = false;
+        $file_mtime_url = false;
+        $file_mtime_dir = false;
         if(
             $object->config('ramdisk.url') &&
             in_array(
@@ -224,16 +225,15 @@ class FileRequest {
                 true
             )
         ){
-            $mtime_dir = $object->config('ramdisk.url') .
+            $file_mtime_dir = $object->config('ramdisk.url') .
                 'Cache' .
                 $object->config('ds')
             ;
-            $mtime_url = $mtime_dir .
+            $file_mtime_url = $file_mtime_dir .
                 'File.mtime' .
                 $object->config('extension.json')
             ;
-            $mtime = [];
-            $mtime = $object->data_read($mtime_url);
+            $file_mtime = $object->data_read($file_mtime_url);
             $ram_url = $object->config('ram.url') .
                 'File' .
                 $object->config('ds');
@@ -336,9 +336,9 @@ class FileRequest {
                     Dir::create($ram_dir);
                     File::copy($url, $ram_url);
                     File::touch($ram_url, filemtime($url));
-                    if($mtime && $mtime_url){
-                        $mtime->set(sha1($ram_url), $url);
-                        $mtime->write($mtime_url);
+                    if($file_mtime && $file_mtime_url){
+                        $file_mtime->set(sha1($ram_url), $url);
+                        $file_mtime->write($file_mtime_url);
                     }
                     $id = posix_geteuid();
                     if(empty($id)){
@@ -347,9 +347,9 @@ class FileRequest {
                         Core::execute($object, $command);
                         $command = 'chown www-data:www-data ' . $ram_url;
                         Core::execute($object, $command);
-                        $command = 'chown www-data:www-data ' . $mtime_dir;
+                        $command = 'chown www-data:www-data ' . $file_mtime_dir;
                         Core::execute($object, $command);
-                        $command = 'chown www-data:www-data ' . $mtime_url;
+                        $command = 'chown www-data:www-data ' . $file_mtime_url;
                         Core::execute($object, $command);
                     }
                 }
