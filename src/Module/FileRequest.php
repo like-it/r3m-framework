@@ -252,15 +252,25 @@ class FileRequest {
                 $file
             ;
         }
+        $is_ram_url = false;
         foreach($location as $url){
             if(substr($url, -1, 1) !== $object->config('ds')){
                 $url .= $object->config('ds');
             }
             $url .= $file;
-            if(File::exist($ram_url)){
-                ddd('found');
+            if($is_ram_url === false && File::exist($ram_url)){
+                $is_ram_url = $ram_url;
+                if(
+                    File::mtime($file_mtime->get(sha1($ram_url))) ===
+                    File::mtime($ram_url)
+                ){
+                    ddd('yes');
+                }
             }
-            if(File::exist($url)){
+            if(
+                $is_ram_url ||
+                File::exist($url)
+            ){
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
                 $contentType = $object->config('contentType.' . $file_extension);
