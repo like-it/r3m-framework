@@ -320,6 +320,7 @@ class FileRequest {
                 }
                 $read = File::read($url);
 
+                d($ram_url);
                 d($ram_url && in_array(
                         $file_extension,
                         [
