@@ -79,6 +79,7 @@ class Autoload {
         if($cache_dir){
             $class_dir = $object->config('ramdisk.url') . 'Class' . $object->config('ds');
             $object->config('autoload.cache.class', $class_dir);
+            dd(scandir($object->config('ramdisk.url')));
             if(!is_dir(substr($class_dir, 0, -1))){
                 mkdir(substr($class_dir, 0, -1), 0750, true);
                 $id = posix_geteuid();
