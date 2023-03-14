@@ -472,7 +472,6 @@ class Autoload {
                                                 exec('chown www-data:www-data ' . $object->config('autoload.cache.file'));
                                                 exec('chown www-data:www-data ' . $config_url);
                                             }
-                                            ddd($object->config('autoload.cache.file'));
                                         }
                                     }
                                 }
