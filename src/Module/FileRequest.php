@@ -234,6 +234,9 @@ class FileRequest {
                 $object->config('extension.json')
             ;
             $file_mtime = $object->data_read($file_mtime_url);
+            if(empty($file_mtime)){
+                $file_mtime = new Data();
+            }
             $ram_url = $object->config('ram.url') .
                 'File' .
                 $object->config('ds');
@@ -248,7 +251,6 @@ class FileRequest {
                 '_' .
                 $file
             ;
-
         }
         foreach($location as $url){
             if(substr($url, -1, 1) !== $object->config('ds')){
