@@ -333,9 +333,6 @@ class FileRequest {
                         true
                     )
                 ){
-                    d($ram_url);
-                    d($file_mtime_url);
-                    ddd('yes');
                     //copy to ramdisk
                     $ram_dir = Dir::name($ram_url);
                     Dir::create($ram_dir);
