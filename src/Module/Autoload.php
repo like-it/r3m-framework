@@ -79,6 +79,7 @@ class Autoload {
         if($cache_dir){
             $class_dir = $object->config('ramdisk.url') . 'Class' . $object->config('ds');
             $object->config('autoload.cache.class', $class_dir);
+            ddd($class_dir);
             Dir::create($class_dir);
             $id = posix_geteuid();
             if(empty($id)){
@@ -593,7 +594,6 @@ class Autoload {
             } catch(Exception $exception){
                 return false;
             }
-
         }
         if(is_dir($dir) === false){
             return false;
