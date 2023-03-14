@@ -257,6 +257,9 @@ class FileRequest {
                 $url .= $object->config('ds');
             }
             $url .= $file;
+            if(File::exist($ram_url)){
+                ddd('found');
+            }
             if(File::exist($url)){
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
