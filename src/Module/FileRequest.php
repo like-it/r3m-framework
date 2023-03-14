@@ -82,7 +82,6 @@ class FileRequest {
             $dir;
         $location[] = $object->config('project.dir.public') .
             $dir;
-        ddd($location);
         return $location;
     }
 
@@ -215,6 +214,18 @@ class FileRequest {
                 $url .= $object->config('ds');
             }
             $url .= $file;
+            ddd($file_extension);
+            if(
+                in_array(
+                    $file_extension,
+                    [
+
+                    ],
+                    true
+                )
+            ){
+
+            }
             if(File::exist($url)){
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
