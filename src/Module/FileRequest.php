@@ -341,14 +341,28 @@ class FileRequest {
                 $read = File::read($url);
                 $size = File::size($url);
                 if(
-                    $ram_maxsize !== false && $size <= $ram_maxsize &&
-                    $ram_url !== $url &&
-                    !empty($file_extension_allow) &&
-                    is_array($file_extension_allow) &&
-                    in_array(
-                        $file_extension,
-                        $file_extension_allow,
-                        true
+                    (
+                        $ram_maxsize !== false &&
+                        $size <= $ram_maxsize &&
+                        $ram_url !== $url &&
+                        !empty($file_extension_allow) &&
+                        is_array($file_extension_allow) &&
+                        in_array(
+                            $file_extension,
+                            $file_extension_allow,
+                            true
+                        )
+                    ) ||
+                    (
+                        $ram_maxsize === false &&
+                        $ram_url !== $url &&
+                        !empty($file_extension_allow) &&
+                        is_array($file_extension_allow) &&
+                        in_array(
+                            $file_extension,
+                            $file_extension_allow,
+                            true
+                        )
                     )
                 ){
                     //copy to ramdisk
@@ -362,7 +376,6 @@ class FileRequest {
                     }
                     $id = posix_geteuid();
                     if(empty($id)){
-                        //make detached
                         $command = 'chown www-data:www-data ' . $ram_dir;
                         Core::execute($object, $command, $output,$notification, Core::SHELL_DETACHED);
                         $command = 'chown www-data:www-data ' . $ram_url;
