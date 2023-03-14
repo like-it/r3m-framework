@@ -237,7 +237,7 @@ class FileRequest {
             if(empty($file_mtime)){
                 $file_mtime = new Data();
             }
-            $ram_url = $object->config('ram.url') .
+            $ram_url = $object->config('ramdisk.url') .
                 'File' .
                 $object->config('ds');
             if($subdomain){
