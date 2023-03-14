@@ -542,6 +542,11 @@ class Autoload {
             if($dir){
                 $url = $dir . Autoload::FILE;
                 $this->write($url, $this->read);
+                $id = posix_getuid();
+                if(empty($id)){
+                    exec('chown www-data:www-data ' . $dir);
+                    exec('chown www-data:www-data ' . $url);
+                }
             }
         }
     }
