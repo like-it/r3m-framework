@@ -264,7 +264,7 @@ class FileRequest {
                     File::mtime($file_mtime->get(sha1($ram_url))) ===
                     File::mtime($ram_url)
                 ){
-                    ddd('yes');
+                    $url = $ram_url;
                 }
             }
             if(
@@ -335,7 +335,7 @@ class FileRequest {
                 }
                 $read = File::read($url);
                 if(
-                    $ram_url &&
+                    $ram_url !== $url &&
                     in_array(
                         $file_extension,
                         [
