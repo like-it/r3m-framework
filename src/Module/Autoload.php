@@ -538,6 +538,7 @@ class Autoload {
     public function __destruct(){
         if(!empty($this->read)){
             $dir = $this->cache_dir();
+            ddd($dir);
             if($dir){
                 $url = $dir . Autoload::FILE;
                 $this->write($url, $this->read);
