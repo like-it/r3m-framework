@@ -12,7 +12,11 @@ namespace R3m\Io\Module;
 
 use R3m\Io\App;
 use R3m\Io\Config;
+
+use R3m\Io\Module\Parse\Token;
+
 use Exception;
+
 use R3m\Io\Exception\LocateException;
 
 class FileRequest {
@@ -210,18 +214,19 @@ class FileRequest {
             }
         }
         $ram_url = false;
+        $ram_maxsize = false;
+        $ram_maxsize_tree = [];
         $file_mtime = false;
         $file_mtime_url = false;
         $file_mtime_dir = false;
+        $file_extension_allow = $object->config('ramdisk.file.extension.allow');
         if(
             $object->config('ramdisk.url') &&
+            !empty($file_extension_allow) &&
+            is_array($file_extension_allow) &&
             in_array(
                 $file_extension,
-                [
-                    'js',
-                    'css',
-                    'json'
-                ],
+                $file_extension_allow,
                 true
             )
         ){
@@ -243,6 +248,16 @@ class FileRequest {
             if($subdomain){
                 $ram_url .= $subdomain . '_';
             }
+            $ram_maxsize = $object->config('ramdisk.file.size');
+            if($ram_maxsize){
+                $ram_maxsize_tree = Token::tree($ram_maxsize);
+                ddd($ram_maxsize_tree);
+            }
+
+
+
+
+
             $ram_url .= $domain .
                 '_' .
                 $extension .
@@ -334,15 +349,15 @@ class FileRequest {
                     $object->logger($logger)->info('Url:', [ $url ]);
                 }
                 $read = File::read($url);
+                $size = File::size($url);
+
                 if(
                     $ram_url !== $url &&
+                    !empty($file_extension_allow) &&
+                    is_array($file_extension_allow) &&
                     in_array(
                         $file_extension,
-                        [
-                            'js',
-                            'css',
-                            'json'
-                        ],
+                        $file_extension_allow,
                         true
                     )
                 ){
