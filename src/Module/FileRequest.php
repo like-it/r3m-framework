@@ -319,6 +319,7 @@ class FileRequest {
                     $object->logger($logger)->info('Url:', [ $url ]);
                 }
                 $read = File::read($url);
+                ddd($ram_url);
                 if(
                     $ram_url &&
                     in_array(
