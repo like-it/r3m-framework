@@ -215,7 +215,6 @@ class FileRequest {
         }
         $ram_url = false;
         $ram_maxsize = false;
-        $ram_maxsize_tree = [];
         $file_mtime = false;
         $file_mtime_url = false;
         $file_mtime_dir = false;
@@ -249,15 +248,6 @@ class FileRequest {
                 $ram_url .= $subdomain . '_';
             }
             $ram_maxsize = $object->config('ramdisk.file.size');
-            if($ram_maxsize){
-                $ram_maxsize_tree = Token::tree('{' . $ram_maxsize . '}');
-                ddd($ram_maxsize_tree);
-            }
-
-
-
-
-
             $ram_url .= $domain .
                 '_' .
                 $extension .
@@ -350,8 +340,8 @@ class FileRequest {
                 }
                 $read = File::read($url);
                 $size = File::size($url);
-
                 if(
+                    $ram_maxsize !== false && $size <= $ram_maxsize &&
                     $ram_url !== $url &&
                     !empty($file_extension_allow) &&
                     is_array($file_extension_allow) &&
