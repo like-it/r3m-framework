@@ -250,7 +250,7 @@ class FileRequest {
             }
             $ram_maxsize = $object->config('ramdisk.file.size');
             if($ram_maxsize){
-                $ram_maxsize_tree = Token::tree($ram_maxsize);
+                $ram_maxsize_tree = Token::tree('{' . $ram_maxsize . '}');
                 ddd($ram_maxsize_tree);
             }
 
