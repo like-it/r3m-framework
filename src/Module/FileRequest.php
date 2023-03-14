@@ -364,13 +364,13 @@ class FileRequest {
                     if(empty($id)){
                         //make detached
                         $command = 'chown www-data:www-data ' . $ram_dir;
-                        Core::execute($object, $command);
+                        Core::execute($object, $command, $output,$notification, Core::SHELL_DETACHED);
                         $command = 'chown www-data:www-data ' . $ram_url;
-                        Core::execute($object, $command);
+                        Core::execute($object, $command, $output,$notification, Core::SHELL_DETACHED);
                         $command = 'chown www-data:www-data ' . $file_mtime_dir;
-                        Core::execute($object, $command);
+                        Core::execute($object, $command, $output,$notification, Core::SHELL_DETACHED);
                         $command = 'chown www-data:www-data ' . $file_mtime_url;
-                        Core::execute($object, $command);
+                        Core::execute($object, $command, $output,$notification, Core::SHELL_DETACHED);
                     }
                 }
                 return $read;
