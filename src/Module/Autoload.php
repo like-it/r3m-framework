@@ -537,11 +537,11 @@ class Autoload {
 
     public function __destruct(){
         if(!empty($this->read)){
-            $dir = $this->cache_dir();
-            ddd($dir);
+            $dir = $this->cache_dir();;
             if($dir){
                 $url = $dir . Autoload::FILE;
                 $this->write($url, $this->read);
+                dd($url);
                 $id = posix_getuid();
                 if(empty($id)){
                     if(file_exists($dir)){
