@@ -543,8 +543,12 @@ class Autoload {
                 $this->write($url, $this->read);
                 $id = posix_getuid();
                 if(empty($id)){
-                    exec('chown www-data:www-data ' . $dir);
-                    exec('chown www-data:www-data ' . $url);
+                    if(file_exists($dir)){
+                        exec('chown www-data:www-data ' . $dir);
+                    }
+                    if(file_exists($url)){
+                        exec('chown www-data:www-data ' . $url);
+                    }
                 }
             }
         }
