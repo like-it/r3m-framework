@@ -213,7 +213,7 @@ class FileRequest {
         $mtime_url = false;
         $mtime_dir = false;
         if(
-            $object->config('ram.url') &&
+            $object->config('ramdisk.url') &&
             in_array(
                 $file_extension,
                 [
