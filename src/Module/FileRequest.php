@@ -209,23 +209,30 @@ class FileRequest {
                 $location = FileRequest::location($object, $dir);
             }
         }
+        if(
+            in_array(
+                $file_extension,
+                [
+                    'js',
+                    'css',
+                    'json'
+                ],
+                true
+            )
+        ){
+//            $ram_url =
+            d($subdomain);
+            d($domain);
+            d($extension);
+            d($file);
+            d($dir);
+        }
+        ddd($file_extension);
         foreach($location as $url){
             if(substr($url, -1, 1) !== $object->config('ds')){
                 $url .= $object->config('ds');
             }
             $url .= $file;
-            ddd($file_extension);
-            if(
-                in_array(
-                    $file_extension,
-                    [
-
-                    ],
-                    true
-                )
-            ){
-
-            }
             if(File::exist($url)){
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
