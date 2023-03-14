@@ -399,7 +399,7 @@ class FileRequest {
                     $location[$key] .= $file;
                 }
             }
-            throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
+            throw new LocateException('Cannot find location for file...', $location);
         } else {
             if(
                 in_array(

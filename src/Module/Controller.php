@@ -268,10 +268,10 @@ class Controller {
                     $read->write($config_url);
                     $id = posix_geteuid();
                     if(empty($id)){
-                        exec('chown www-data:www-data ' . substr($view_dir, 0, -1));
-                        exec('chown www-data:www-data ' . substr($config_dir, 0, -1));
-                        exec('chown www-data:www-data ' . $view_url);
-                        exec('chown www-data:www-data ' . $config_url);
+                        Core::execute($object, 'chown www-data:www-data ' . substr($view_dir, 0, -1), $output, $notification, Core::SHELL_DETACHED);
+                        Core::execute($object, 'chown www-data:www-data ' . substr($config_dir, 0, -1), $output, $notification, Core::SHELL_DETACHED);
+                        Core::execute($object, 'chown www-data:www-data ' . $view_url, $output, $notification, Core::SHELL_DETACHED);
+                        Core::execute($object, 'chown www-data:www-data ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
                     }
                 }
                 $url = $file;
