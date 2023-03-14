@@ -23,9 +23,10 @@ class Ramdisk extends Controller {
     const DIR = __DIR__;
     const NAME = 'Ramdisk';
     const INFO = [
+        '{{binary()}} ramdisk clear                  | RamDisk clear',
         '{{binary()}} ramdisk mount <size>           | RamDisk allocation',
-        '{{binary()}} ramdisk unmount                | RamDisk unmount',
-        '{{binary()}} ramdisk speedtest              | RamDisk speedtest'
+        '{{binary()}} ramdisk speedtest              | RamDisk speedtest',
+        '{{binary()}} ramdisk unmount                | RamDisk unmount'
     ];
 
     public static function run(App $object){

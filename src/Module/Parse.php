@@ -58,7 +58,11 @@ class Parse {
         }
     }
 
+    /**
+     * @throws ObjectException
+     */
     private function configure(){
+        $id = posix_geteuid();
         $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
         $dir_plugin = $config->data('project.dir.plugin');
         if(empty($dir_plugin)){
@@ -84,11 +88,20 @@ class Parse {
         if(empty($template)){
             $config->data('dictionary.template', Parse::TEMPLATE);
         }
-//        $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
         if($config->data('ramdisk.url')){
             $cache_dir = $config->data('ramdisk.url') . $config->data('dictionary.compile') . $config->data('ds');
+            Dir::create($cache_dir);
+            if(empty($id)){
+                $command = 'chown www-data:www-data ' . $cache_dir;
+                Core::execute($this->object(), $command);
+            }
         } else {
-            $cache_dir = $config->data('dictionary.compile') . $config->data('ds');
+            $cache_dir = $config->data('dictionary.cache') . $config->data('dictionary.compile') . $config->data('ds');
+            Dir::create($cache_dir);
+            if(empty($id)){
+                $command = 'chown www-data:www-data ' . $cache_dir;
+                Core::execute($this->object(), $command);
+            }
         }
         $this->cache_dir($cache_dir);
         $use_this = $config->data('parse.read.object.use_this');

@@ -20,7 +20,7 @@ function function_ramdisk_clear(Parse $parse, Data $data){
     $object = $parse->object();
     $id = posix_geteuid();
     if (!empty($id)){
-        throw new Exception('RamDisk can only be created by root...');
+        throw new Exception('RamDisk clear can only be run by root...');
     }
     $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
     $config = $object->data_read();

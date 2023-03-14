@@ -55,21 +55,21 @@
         "zip": "application\/zip",
         "rar": "application\/vnd.rar",
         "pdf": "application\/pdf",
-        "webp" : "image\/webp",
-        "mp4" : "video\/mp4",
-        "avi" : "video\/x-msvideo",
-        "wmv" : "video\/x-ms-wmv",
-        "mov" : "video\/quicktime",
-        "webm" : "video\/webm",
-        "csv" : "text\/csv",
-        "php" : "text\/html",
-        "xls" : "application\/vnd.ms-excel",
-        "doc" : "application\/msword",
-        "ppt" : "application\/vnd.ms-powerpoint",
-        "xlsx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "docx" : "application\/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "pptx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "xml": "application/xml"
+        "webp": "image\/webp",
+        "mp4": "video\/mp4",
+        "avi": "video\/x-msvideo",
+        "wmv": "video\/x-ms-wmv",
+        "mov": "video\/quicktime",
+        "webm": "video\/webm",
+        "csv": "text\/csv",
+        "php": "text\/html",
+        "xls": "application\/vnd.ms-excel",
+        "doc": "application\/msword",
+        "ppt": "application\/vnd.ms-powerpoint",
+        "xlsx": "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "docx": "application\/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "pptx": "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "xml": "application\/xml"
     },
     "extension": {
         "txt": ".txt",
@@ -97,24 +97,24 @@
         "conf": ".conf",
         "pdf": ".pdf",
         "php": ".php",
-        "webp" : ".webp",
-        "mp4" : ".mp4",
-        "avi" : ".avi",
-        "webm" : ".webm",
-        "xls" : ".xls",
-        "ppt" : ".ppt",
-        "doc" : ".doc",
-        "csv" : ".csv",
-        "xlsx" : ".xlsx",
-        "docx" : ".docx",
-        "pptx" : ".pptx",
-        "mov" :  ".mov",
-        "wmv" : ".wmv",
+        "webp": ".webp",
+        "mp4": ".mp4",
+        "avi": ".avi",
+        "webm": ".webm",
+        "xls": ".xls",
+        "ppt": ".ppt",
+        "doc": ".doc",
+        "csv": ".csv",
+        "xlsx": ".xlsx",
+        "docx": ".docx",
+        "pptx": ".pptx",
+        "mov": ".mov",
+        "wmv": ".wmv",
         "xml": ".xml"
     },
-    "error" : {
-        "extension" : {
-            "tpl" : [
+    "error": {
+        "extension": {
+            "tpl": [
                 "htm",
                 "html",
                 "php",
@@ -123,34 +123,34 @@
                 "aspx",
                 "pdf"
             ],
-            "text" : [
+            "text": [
                 "env",
                 "txt",
                 "log",
                 "cgi"
             ],
-            "js" : [
+            "js": [
                 "js"
             ],
-            "json" : [
+            "json": [
                 "json"
             ]
         }
     },
     "parse": {
-        "read" : {
-            "parser" : "{{R3M}}",
-            "object" : {
-                "use_this" : true,
-                "this" : {
-                    "parentNode" : "#parentNode",
-                    "rootNode" : "#rootNode",
-                    "attribute" : "#attribute",
-                    "key" : "#key",
-                    "url" : "#url"
+        "read": {
+            "parser": "{{R3M}}",
+            "object": {
+                "use_this": true,
+                "this": {
+                    "parentNode": "#parentNode",
+                    "rootNode": "#rootNode",
+                    "attribute": "#attribute",
+                    "key": "#key",
+                    "url": "#url"
                 },
-                "copy" : {
-                    "#key" : "name"
+                "copy": {
+                    "#key": "name"
                 }
             }
         },
@@ -165,7 +165,7 @@
                 "trait"
             ]
         },
-        "use" : [
+        "use": [
             "stdClass",
             "R3m\\Io\\App",
             "R3m\\Io\\Config",

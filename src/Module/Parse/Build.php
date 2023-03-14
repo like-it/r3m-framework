@@ -11,6 +11,7 @@
 
 namespace R3m\Io\Module\Parse;
 
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Server;
 use stdClass;
 
@@ -426,6 +427,7 @@ class Build {
      * @throws FileWriteException
      * @throws FileAppendException
      * @throws FileMoveException
+     * @throws ObjectException
      */
     public function write($url, $document=[]): string
     {
@@ -444,7 +446,7 @@ class Build {
         $this->object->config('core.execute.stream.init', false);
         $this->object->config('core.execute.stream.is.default', $default);
         if($error){
-            $url_write_error = $this->object()->config('dictionary.cache') . 'parse/error/' . File::basename($url);
+            $url_write_error = $this->object()->config('dictionary.cache') . 'Parse/Error/' . File::basename($url);
             $this->object()->logger()->error($error, [ $url_write_error ]);
             $dir = Dir::name($url_write_error);
             Dir::create($dir);

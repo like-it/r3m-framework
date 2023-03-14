@@ -26,9 +26,11 @@ function function_ramdisk_unmount(Parse $parse, Data $data, $url=''){
     $config = $object->data_read($config_url);
     if($config){
         $url = $object->get('ramdisk.url');
-        $command = 'umount ' . $url;
-        Core::execute($object, $command);
-        Dir::remove($url);
+        if($url){
+            $command = 'umount ' . $url;
+            Core::execute($object, $command);
+            Dir::remove($url);
+        }
         $config->delete('ramdisk');
         $config->write($config_url);
     }

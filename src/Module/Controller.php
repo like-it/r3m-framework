@@ -237,9 +237,11 @@ class Controller {
             $object->config('dictionary.view') .
             str_replace('/', '_', $first)
         ;
-        $config_url = $object->config('ramdisk.url') .
+        $config_dir = $object->config('ramdisk.url') .
             'Cache' .
-            $object->config('ds') .
+            $object->config('ds')
+        ;
+        $config_url = $config_dir .
             $object->config('dictionary.view') .
             $object->config('extension.json')
         ;
@@ -266,7 +268,8 @@ class Controller {
                     $read->write($config_url);
                     $id = posix_geteuid();
                     if(empty($id)){
-                        exec('chown www-data:www-data ' . $view_dir);
+                        exec('chown www-data:www-data ' . substr($view_dir, 0, -1));
+                        exec('chown www-data:www-data ' . substr($config_dir, 0, -1));
                         exec('chown www-data:www-data ' . $view_url);
                         exec('chown www-data:www-data ' . $config_url);
                     }
