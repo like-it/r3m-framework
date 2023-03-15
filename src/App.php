@@ -770,6 +770,7 @@ class App extends Data {
                     return false;
                 }
                 if($load_part === $prefix){
+                    ddd($this->config());
                     echo $load . PHP_EOL;
                 }
             }
