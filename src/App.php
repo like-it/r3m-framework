@@ -827,7 +827,7 @@ class App extends Data {
                             if(Autoload::ramdisk_exclude_content($this, $read)){
                                 //files with content __CLASS__, __DIR__, __FILE__ cannot be cached
                             } else {
-                                copy($url, $ramdisk_url);
+                                file_put_contents($ramdisk_url, $read);
                                 touch($ramdisk_url, filemtime($url));
                                 $mtime[sha1($ramdisk_url)] = $url;
                                 if(!is_dir($config_dir)){
