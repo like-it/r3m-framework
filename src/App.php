@@ -752,4 +752,8 @@ class App extends Data {
         ]);
         return new App($autoload, $config);
     }
+
+    public function ramdisk_load($load=''){
+        ddd($load);
+    }
 }

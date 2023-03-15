@@ -709,12 +709,8 @@ class Autoload {
         return $is_exclude;
     }
 
-    public function ramdisk_load($load=''){
-        ddd($load);
-    }
-
     public static function ramdisk_configure(App $object){
         $function ='ramdisk_load';
-        spl_autoload_register($function, true, true);
+        spl_autoload_register(array($object, $function), true, true);
     }
 }
