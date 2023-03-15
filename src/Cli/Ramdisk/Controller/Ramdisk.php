@@ -37,6 +37,7 @@ class Ramdisk extends Controller {
                 case 'mount':
                 case 'unmount':
                 case 'speedtest':
+                case 'clear':
                     $name = RamDisk::name(strtolower($command), RamDisk::NAME);
                 break;
                 default:
