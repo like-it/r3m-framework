@@ -823,10 +823,10 @@ class App extends Data {
                             }
                             file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
                             if(empty($id)){
-//                                Core::execute($this, 'chown www-data:www-data ' . $ramdisk_dir, $output, $notification, Core::SHELL_DETACHED);
-//                                Core::execute($this, 'chown www-data:www-data ' . $ramdisk_url, $output, $notification, Core::SHELL_DETACHED);
-//                                Core::execute($this, 'chown www-data:www-data ' . $config_dir, $output, $notification, Core::SHELL_DETACHED);
-//                                Core::execute($this, 'chown www-data:www-data ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
+                                exec('chown www-data:www-data ' . $ramdisk_dir);
+                                exec('chown www-data:www-data ' . $ramdisk_url);
+                                exec('chown www-data:www-data ' . $config_dir);
+                                exec('chown www-data:www-data ' . $config_url);
                             }
                         }
                     }
