@@ -784,7 +784,8 @@ class App extends Data {
                             $this->config('ds')
                         ;
                         $ramdisk_url = $ramdisk_dir .
-                            str_replace('/', '_', $part)
+                            str_replace('/', '_', $part) .
+                            $this->config('extension.php')
                         ;
                     }
                     $config_dir = $this->config('ramdisk.url') .
@@ -802,8 +803,14 @@ class App extends Data {
                             $mtime = json_decode($mtime, true);
                         }
                     }
-
-                    if(file_exists($url)){
+                    if(
+                        file_exists($ramdisk_url) &&
+                        filemtime($ramdisk_url) === filemtime($mtime[sha1($ramdisk_url)])
+                    ){
+                        d($ramdisk_url);
+                        ddd('require');
+                    }
+                    elseif(file_exists($url)){
                         require_once $url;
                         if(
                             $ramdisk_dir &&
