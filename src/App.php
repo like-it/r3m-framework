@@ -757,7 +757,6 @@ class App extends Data {
      * @throws ObjectException
      */
     public function ramdisk_load($load=''){
-        return false;
         $prefixes = $this->config('ramdisk.autoload.prefix');
         if(
             !empty($prefixes) &&
@@ -802,32 +801,34 @@ class App extends Data {
                     }
                     $part = str_replace('\\', '/', str_replace('R3m\\Io\\', '', $load));
                     $url = $this->config('framework.dir.source') . $part . $this->config('extension.php');
-                    require_once $url;
-                    if(
-                        $ramdisk_dir &&
-                        $ramdisk_url &&
-                        $config_dir &&
-                        $config_url
-                    ){
-                        //copy to ramdisk
-                        //save filemtime
-                        $id = posix_geteuid();
-                        Dir::create($ramdisk_dir);
-                        File::copy($url, $ramdisk_url);
-                        File::touch($ramdisk_url, File::mtime($url));
-                        $mtime[sha1($ramdisk_url)] = $url;
-                        if(!is_dir($config_dir)){
-                            mkdir($config_dir, 0750, true);
-                        }
-                        file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
-                        if(empty($id)){
-                            Core::execute($this, 'chown www-data:www-data ' . $ramdisk_dir, $output, $notification, Core::SHELL_DETACHED);
-                            Core::execute($this, 'chown www-data:www-data ' . $ramdisk_url, $output, $notification, Core::SHELL_DETACHED);
-                            Core::execute($this, 'chown www-data:www-data ' . $config_dir, $output, $notification, Core::SHELL_DETACHED);
-                            Core::execute($this, 'chown www-data:www-data ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
+                    if(file_exists($url)){
+                        require_once $url;
+                        return true;
+                        if(
+                            $ramdisk_dir &&
+                            $ramdisk_url &&
+                            $config_dir &&
+                            $config_url
+                        ){
+                            //copy to ramdisk
+                            //save filemtime
+                            $id = posix_geteuid();
+                            Dir::create($ramdisk_dir);
+                            File::copy($url, $ramdisk_url);
+                            File::touch($ramdisk_url, File::mtime($url));
+                            $mtime[sha1($ramdisk_url)] = $url;
+                            if(!is_dir($config_dir)){
+                                mkdir($config_dir, 0750, true);
+                            }
+                            file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
+                            if(empty($id)){
+                                Core::execute($this, 'chown www-data:www-data ' . $ramdisk_dir, $output, $notification, Core::SHELL_DETACHED);
+                                Core::execute($this, 'chown www-data:www-data ' . $ramdisk_url, $output, $notification, Core::SHELL_DETACHED);
+                                Core::execute($this, 'chown www-data:www-data ' . $config_dir, $output, $notification, Core::SHELL_DETACHED);
+                                Core::execute($this, 'chown www-data:www-data ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
+                            }
                         }
                     }
-                    return true;
                 }
             }
         }
