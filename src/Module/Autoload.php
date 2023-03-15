@@ -448,20 +448,7 @@ class Autoload {
                                         $this->cache($file, $load);
                                         return $file;
                                     } else {
-                                        $is_exclude = false;
-                                        $exclude_load = $object->config('ramdisk.autoload.exclude.load');
-                                        if(
-                                            !empty($exclude_load) &&
-                                            is_array($exclude_load)
-                                        ){
-                                            foreach($exclude_load as $needle){
-                                                if(stristr($load, $needle) !== false){
-                                                    $is_exclude = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        if($is_exclude){
+                                        if(Autoload::ramdisk_exclude_load($object, $load)){
                                             //controllers cannot be cached
                                         } else {
                                             //from disk
@@ -475,21 +462,8 @@ class Autoload {
                                                 }
                                             }
                                             $read = file_get_contents($file);
-                                            $exclude_content = $object->config('ramdisk.autoload.exclude.content');
-                                            $is_exclude = false;
-                                            if(
-                                                !empty($exclude_content) &&
-                                                is_array($exclude_content)
-                                            ){
-                                                foreach ($exclude_content as $needle){
-                                                    if(stristr($read, $needle) !== false){
-                                                        $is_exclude = true;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            if($is_exclude){
-                                                //files with content __CLASS__, __DIR__, __FILE cannot be cached
+                                            if(Autoload::ramdisk_exclude_content($object, $read)){
+                                                //files with content __CLASS__, __DIR__, __FILE__ cannot be cached
                                             } else {
                                                 file_put_contents($object->config('autoload.cache.file'), $read);
                                                 touch($object->config('autoload.cache.file'), filemtime($file));
@@ -676,14 +650,16 @@ class Autoload {
         return $filename;
     }
 
-    public function expose($expose=null){
+    public function expose($expose=null): bool
+    {
         if(!empty($expose) || $expose === false){
             $this->expose = (bool) $expose;
         }
         return $this->expose;
     }
 
-    private static function exception_filelist($filelist=[]){
+    private static function exception_filelist($filelist=[]): array
+    {
         $result = [];
         foreach($filelist as  $list){
             foreach($list as $record){
@@ -695,5 +671,41 @@ class Autoload {
             }
         }
         return $result;
+    }
+
+    public static function ramdisk_exclude_load(App $object, $load=''): bool
+    {
+        $is_exclude = false;
+        $exclude_load = $object->config('ramdisk.autoload.exclude.load');
+        if(
+            !empty($exclude_load) &&
+            is_array($exclude_load)
+        ){
+            foreach($exclude_load as $needle){
+                if(stristr($load, $needle) !== false){
+                    $is_exclude = true;
+                    break;
+                }
+            }
+        }
+        return $is_exclude;
+    }
+
+    public static function ramdisk_exclude_content(App $object, $content=''): bool
+    {
+        $exclude_content = $object->config('ramdisk.autoload.exclude.content');
+        $is_exclude = false;
+        if(
+            !empty($exclude_content) &&
+            is_array($exclude_content)
+        ){
+            foreach ($exclude_content as $needle){
+                if(stristr($content, $needle) !== false){
+                    $is_exclude = true;
+                    break;
+                }
+            }
+        }
+        return $is_exclude;
     }
 }
