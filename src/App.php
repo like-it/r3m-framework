@@ -773,6 +773,9 @@ class App extends Data {
                     return false;
                 }
                 if($load_part === $prefix){
+                    $part = str_replace('R3m\\Io\\', '', $load);
+                    $part = str_replace('\\', '/', $part);
+                    $url = $this->config('framework.dir.source') . $part . $this->config('extension.php');
                     $ramdisk_dir = false;
                     $ramdisk_url = false;
                     if($this->config('ramdisk.url')){
@@ -781,7 +784,7 @@ class App extends Data {
                             $this->config('ds')
                         ;
                         $ramdisk_url = $ramdisk_dir .
-                            str_replace('/', '_', $load)
+                            str_replace('/', '_', $part)
                         ;
                     }
                     $config_dir = $this->config('ramdisk.url') .
@@ -799,8 +802,7 @@ class App extends Data {
                             $mtime = json_decode($mtime, true);
                         }
                     }
-                    $part = str_replace('\\', '/', str_replace('R3m\\Io\\', '', $load));
-                    $url = $this->config('framework.dir.source') . $part . $this->config('extension.php');
+
                     if(file_exists($url)){
                         require_once $url;
                         if(
