@@ -715,6 +715,6 @@ class Autoload {
 
     public static function ramdisk_configure(App $object){
         $function ='ramdisk_load';
-        spl_autoload_register($function, false, true);
+        spl_autoload_register($function, true, true);
     }
 }
