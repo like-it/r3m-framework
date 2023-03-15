@@ -86,6 +86,7 @@ class App extends Data {
         Host::configure($this);
         Logger::configure($this);
         Autoload::configure($this);
+        Autoload::ramdisk_configure($this);
     }
 
     /**

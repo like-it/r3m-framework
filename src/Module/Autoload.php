@@ -102,7 +102,7 @@ class Autoload {
         $parameters = Config::parameters($object, $parameters);
         $cache_dir = $parameters['cache'];
         $autoload->cache_dir($cache_dir);
-        $autoload->register('load', true);
+        $autoload->register();
         $autoload->environment($object->config('framework.environment'));
         $object->data(App::AUTOLOAD_R3M, $autoload);        
     }
@@ -707,5 +707,14 @@ class Autoload {
             }
         }
         return $is_exclude;
+    }
+
+    public function ramdisk_load($load=''){
+        ddd($load);
+    }
+
+    public static function ramdisk_configure(App $object){
+        $function ='ramdisk_load';
+        spl_autoload_register($function, false, true);
     }
 }
