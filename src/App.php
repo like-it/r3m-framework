@@ -754,6 +754,7 @@ class App extends Data {
     }
 
     public function ramdisk_load($load=''){
-        ddd($load);
+        echo $load;
+        return false;
     }
 }
