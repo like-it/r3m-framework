@@ -760,7 +760,15 @@ class App extends Data {
             is_array($prefixes)
         ){
             foreach($prefixes as $prefix){
+                $is_not = false;
+                if(substr($prefix, 0, 1) === '!'){
+                    $prefix = substr($prefix, 1);
+                    $is_not = true;
+                }
                 $load_part = substr($load, 0, strlen($prefix));
+                if($is_not && $load_part === $prefix){
+                    return false;
+                }
                 if($load_part === $prefix){
                     echo $load . PHP_EOL;
                 }
