@@ -29,6 +29,7 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         $url = $config->get('ramdisk.url');
         $name = $config->get('ramdisk.name');
         $command = 'umount ' . $url;
+        Core::execute($object, $command);
         Dir::remove($url);
         $name = Core::uuid();
         $url = $object->config('dictionary.temp') . $name . $object->config('ds');

@@ -42,6 +42,8 @@ class Cache extends Controller {
         '{{binary()}} route restart'
     ];
 
+    const RAMDISK_CLEAR_COMMAND = '{{binary()}} ramdisk clear';
+
     const INFO = '{{binary()}} cache clear                    | Clears the app cache';
 
     /**
