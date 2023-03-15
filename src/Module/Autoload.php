@@ -438,7 +438,6 @@ class Autoload {
                                             $mtime = json_decode($mtime, true);
                                         }
                                     }
-                                    d($mtime);
                                     if(
                                         $mtime &&
                                         $file === $object->config('autoload.cache.file') &&
