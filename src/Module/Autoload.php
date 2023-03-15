@@ -484,6 +484,7 @@ class Autoload {
                                                 foreach ($exclude_content as $needle){
                                                     if(stristr($read, $needle) !== false){
                                                         $is_exclude = true;
+                                                        ddd('yes');
                                                         break;
                                                     }
                                                 }
