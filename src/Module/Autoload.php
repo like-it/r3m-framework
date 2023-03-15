@@ -500,7 +500,7 @@ class Autoload {
                                                 if(!is_dir($config_dir)){
                                                     mkdir($config_dir, 0750, true);
                                                 }
-                                                file_put_contents($config_url, json_encode($read, JSON_PRETTY_PRINT));
+                                                file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
                                                 $id = posix_geteuid();
                                                 if(empty($id)){
                                                     exec('chown www-data:www-data ' . $object->config('autoload.cache.file'));
