@@ -36,6 +36,8 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         Dir::create($url, Dir::CHMOD);
         $command = 'mount -t tmpfs -o size=' . $size . ' ' . $name .' ' . $url;
         Core::execute($object, $command);
+        $command = 'chown www-data:www-data ' . $url;
+        Core::execute($object, $command);
         $config->set('ramdisk.size', $size);
         $config->set('ramdisk.url', $url);
         $config->set('ramdisk.name', $name);

@@ -55,6 +55,8 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
     if($notification){
         echo $notification . PHP_EOL;
     }
+    $command = 'chown www-data:www-data ' . $url;
+    Core::execute($object, $command);
     $command = 'mount | tail -n 1';
     Core::execute($object, $command, $output);
     if($output){
