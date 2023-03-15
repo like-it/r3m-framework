@@ -365,6 +365,7 @@ class Autoload {
 
     /**
      * @throws LocateException
+     * @throws Exception
      */
     public function locate($load=null, $is_data=false){
         $dir = $this->cache_dir();
@@ -438,8 +439,8 @@ class Autoload {
                                         }
                                     }
                                     if(
-                                        $file === $object->config('autoload.cache.file') &&
                                         $read &&
+                                        $file === $object->config('autoload.cache.file') &&
                                         array_key_exists(sha1($file), $read) &&
                                         filemtime($file) === filemtime($read[sha1($file)])
                                     ){
@@ -447,32 +448,63 @@ class Autoload {
                                         $this->cache($file, $load);
                                         return $file;
                                     } else {
-                                        if(stristr($load, 'Controller') !== false){
+                                        $is_exclude = false;
+                                        $exclude_load = $object->config('ramdisk.autoload.exclude.load');
+                                        if(
+                                            !empty($exclude_load) &&
+                                            is_array($exclude_load)
+                                        ){
+                                            foreach($exclude_load as $needle){
+                                                if(stristr($load, $needle) !== false){
+                                                    $is_exclude = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if($is_exclude){
                                             //controllers cannot be cached
                                         } else {
                                             //from disk
                                             //copy to ramdisk
+                                            $id = posix_geteuid();
                                             $dirname = dirname($object->config('autoload.cache.file'));
                                             if(!is_dir($dirname)){
                                                 mkdir($dirname, 0750, true);
-                                                $id = posix_geteuid();
                                                 if(empty($id)){
                                                     exec('chown www-data:www-data ' . $dirname);
                                                 }
                                             }
-                                            copy($file, $object->config('autoload.cache.file'));
-                                            touch($object->config('autoload.cache.file'), filemtime($file));
-                                            //save file reference for filemtime comparison
-                                            $read[sha1($object->config('autoload.cache.file'))] = $file;
-                                            $config_dir = dirname($config_url);
-                                            if(!is_dir($config_dir)){
-                                                mkdir($config_dir, 0750, true);
+                                            $read = file_get_contents($file);
+                                            $exclude_content = $object->config('ramdisk.autoload.exclude.content');
+                                            $is_exclude = false;
+                                            if(
+                                                !empty($exclude_content) &&
+                                                is_array($exclude_content)
+                                            ){
+                                                foreach ($exclude_content as $needle){
+                                                    if(stristr($read, $needle) !== false){
+                                                        $is_exclude = true;
+                                                        break;
+                                                    }
+                                                }
                                             }
-                                            file_put_contents($config_url, json_encode($read, JSON_PRETTY_PRINT));
-                                            $id = posix_geteuid();
-                                            if(empty($id)){
-                                                exec('chown www-data:www-data ' . $object->config('autoload.cache.file'));
-                                                exec('chown www-data:www-data ' . $config_url);
+                                            if($is_exclude){
+                                                //files with content __CLASS__, __DIR__, __FILE cannot be cached
+                                            } else {
+                                                file_put_contents($object->config('autoload.cache.file'), $read);
+                                                touch($object->config('autoload.cache.file'), filemtime($file));
+                                                //save file reference for filemtime comparison
+                                                $read[sha1($object->config('autoload.cache.file'))] = $file;
+                                                $config_dir = dirname($config_url);
+                                                if(!is_dir($config_dir)){
+                                                    mkdir($config_dir, 0750, true);
+                                                }
+                                                file_put_contents($config_url, json_encode($read, JSON_PRETTY_PRINT));
+                                                $id = posix_geteuid();
+                                                if(empty($id)){
+                                                    exec('chown www-data:www-data ' . $object->config('autoload.cache.file'));
+                                                    exec('chown www-data:www-data ' . $config_url);
+                                                }
                                             }
                                         }
                                     }
