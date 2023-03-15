@@ -23,7 +23,7 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         throw new Exception('RamDisk clear can only be run by root...');
     }
     $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
-    $config = $object->data_read();
+    $config = $object->data_read($config_url);
     if($config){
         $size = $config->get('ramdisk.size');
         $url = $config->get('ramdisk.url');
