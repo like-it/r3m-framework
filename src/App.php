@@ -755,22 +755,17 @@ class App extends Data {
 
     public function ramdisk_load($load=''){
         $prefixes = $this->config('ramdisk.autoload.prefix');
-        var_dump($prefixes);
-        echo $load . PHP_EOL;
         if(
             !empty($prefixes) &&
             is_array($prefixes)
         ){
             foreach($prefixes as $prefix){
                 $load_part = substr($load, 0, strlen($prefix));
-                echo $load_part . PHP_EOL;
-                echo $prefix . PHP_EOL;
                 if($load_part === $prefix){
                     echo $load . PHP_EOL;
                 }
             }
         }
-
         return false;
     }
 }
