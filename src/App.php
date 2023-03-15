@@ -760,7 +760,7 @@ class App extends Data {
             is_array($prefixes)
         ){
             foreach($prefixes as $prefix){
-                if(substr($load, 0, stlen($prefix)) === $prefix){
+                if(substr($load, 0, strlen($prefix)) === $prefix){
                     echo $load . PHP_EOL;
                 }
             }
