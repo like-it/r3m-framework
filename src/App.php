@@ -754,7 +754,18 @@ class App extends Data {
     }
 
     public function ramdisk_load($load=''){
-        echo $load . PHP_EOL;
+        $prefixes = $this->get('ramdisk.autoload.prefix');
+        if(
+            !empty($prefixes) &&
+            is_array($prefixes)
+        ){
+            foreach($prefixes as $prefix){
+                if(substr($load, 0, stlen($prefix)) === $prefix){
+                    echo $load . PHP_EOL;
+                }
+            }
+        }
+
         return false;
     }
 }
