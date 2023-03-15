@@ -803,7 +803,6 @@ class App extends Data {
                     $url = $this->config('framework.dir.source') . $part . $this->config('extension.php');
                     if(file_exists($url)){
                         require_once $url;
-                        return true;
                         if(
                             $ramdisk_dir &&
                             $ramdisk_url &&
@@ -813,9 +812,11 @@ class App extends Data {
                             //copy to ramdisk
                             //save filemtime
                             $id = posix_geteuid();
-                            Dir::create($ramdisk_dir);
-                            File::copy($url, $ramdisk_url);
-                            File::touch($ramdisk_url, File::mtime($url));
+                            if(!is_dir($ramdisk_dir)){
+                                mkdir($ramdisk_dir, 0750, true);
+                            }
+                            copy($url, $ramdisk_url);
+                            touch($ramdisk_url, filemtime($url));
                             $mtime[sha1($ramdisk_url)] = $url;
                             if(!is_dir($config_dir)){
                                 mkdir($config_dir, 0750, true);
