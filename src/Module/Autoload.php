@@ -495,7 +495,7 @@ class Autoload {
                                                 file_put_contents($object->config('autoload.cache.file'), $read);
                                                 touch($object->config('autoload.cache.file'), filemtime($file));
                                                 //save file reference for filemtime comparison
-                                                $read[sha1($object->config('autoload.cache.file'))] = $file;
+                                                $mtime[sha1($object->config('autoload.cache.file'))] = $file;
                                                 $config_dir = dirname($config_url);
                                                 if(!is_dir($config_dir)){
                                                     mkdir($config_dir, 0750, true);
