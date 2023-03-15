@@ -807,8 +807,7 @@ class App extends Data {
                         file_exists($ramdisk_url) &&
                         filemtime($ramdisk_url) === filemtime($mtime[sha1($ramdisk_url)])
                     ){
-                        d($ramdisk_url);
-                        ddd('require');
+                        require_once $ramdisk_url;
                     }
                     elseif(file_exists($url)){
                         require_once $url;
@@ -824,18 +823,23 @@ class App extends Data {
                             if(!is_dir($ramdisk_dir)){
                                 mkdir($ramdisk_dir, 0750, true);
                             }
-                            copy($url, $ramdisk_url);
-                            touch($ramdisk_url, filemtime($url));
-                            $mtime[sha1($ramdisk_url)] = $url;
-                            if(!is_dir($config_dir)){
-                                mkdir($config_dir, 0750, true);
-                            }
-                            file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
-                            if(empty($id)){
-                                exec('chown www-data:www-data ' . $ramdisk_dir);
-                                exec('chown www-data:www-data ' . $ramdisk_url);
-                                exec('chown www-data:www-data ' . $config_dir);
-                                exec('chown www-data:www-data ' . $config_url);
+                            $read = file_get_contents($url);
+                            if(Autoload::ramdisk_exclude_content($this, $read)){
+                                //files with content __CLASS__, __DIR__, __FILE__ cannot be cached
+                            } else {
+                                copy($url, $ramdisk_url);
+                                touch($ramdisk_url, filemtime($url));
+                                $mtime[sha1($ramdisk_url)] = $url;
+                                if(!is_dir($config_dir)){
+                                    mkdir($config_dir, 0750, true);
+                                }
+                                file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
+                                if(empty($id)){
+                                    exec('chown www-data:www-data ' . $ramdisk_dir);
+                                    exec('chown www-data:www-data ' . $ramdisk_url);
+                                    exec('chown www-data:www-data ' . $config_dir);
+                                    exec('chown www-data:www-data ' . $config_url);
+                                }
                             }
                         }
                     }
