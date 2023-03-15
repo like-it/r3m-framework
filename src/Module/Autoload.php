@@ -425,9 +425,11 @@ class Autoload {
                             }
                             if(file_exists($file)){
                                 if($object->config('autoload.cache.file')){
-                                    $config_url = $object->config('ramdisk.url') .
+                                    $config_dir = $object->config('ramdisk.url') .
                                         Autoload::NAME .
-                                        $object->config('ds') .
+                                        $object->config('ds')
+                                    ;
+                                    $config_url = $config_dir .
                                         'File.mtime' .
                                         $object->config('extension.json')
                                     ;
@@ -469,7 +471,6 @@ class Autoload {
                                                 touch($object->config('autoload.cache.file'), filemtime($file));
                                                 //save file reference for filemtime comparison
                                                 $mtime[sha1($object->config('autoload.cache.file'))] = $file;
-                                                $config_dir = dirname($config_url);
                                                 if(!is_dir($config_dir)){
                                                     mkdir($config_dir, 0750, true);
                                                 }
@@ -477,6 +478,7 @@ class Autoload {
                                                 $id = posix_geteuid();
                                                 if(empty($id)){
                                                     exec('chown www-data:www-data ' . $object->config('autoload.cache.file'));
+                                                    exec('chown www-data:www-data ' . $config_dir);
                                                     exec('chown www-data:www-data ' . $config_url);
                                                 }
                                             }
