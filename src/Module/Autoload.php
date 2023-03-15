@@ -431,18 +431,18 @@ class Autoload {
                                         'File.mtime' .
                                         $object->config('extension.json')
                                     ;
-                                    $read = [];
+                                    $mtime = [];
                                     if(file_exists($config_url)){
-                                        $read = file_get_contents($config_url);
-                                        if($read){
-                                            $read = json_decode($read, true);
+                                        $mtime = file_get_contents($config_url);
+                                        if($mtime){
+                                            $mtime = json_decode($mtime, true);
                                         }
                                     }
                                     if(
-                                        $read &&
+                                        $mtime &&
                                         $file === $object->config('autoload.cache.file') &&
-                                        array_key_exists(sha1($file), $read) &&
-                                        filemtime($file) === filemtime($read[sha1($file)])
+                                        array_key_exists(sha1($file), $mtime) &&
+                                        filemtime($file) === filemtime($mtime[sha1($file)])
                                     ){
                                         //from ramdisk
                                         $this->cache($file, $load);
