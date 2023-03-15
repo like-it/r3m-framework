@@ -771,7 +771,8 @@ class App extends Data {
                 }
                 if($load_part === $prefix){
                     $part = str_replace('\\', '/', str_replace('R3m\\Io\\', '', $load));
-                    $url = $this->config('framework.dir.source') . $part;
+                    $url = $this->config('framework.dir.source') . $part . $this->config('extension.php');
+                    d(file_exists($url));
                     d($url);
                     echo $load . PHP_EOL;
                 }
