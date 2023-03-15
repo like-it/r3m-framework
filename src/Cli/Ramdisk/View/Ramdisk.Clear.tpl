@@ -1,3 +1,3 @@
 {{R3M}}
-{{ramdisk.mount()}}
+{{ramdisk.clear()}}
 
