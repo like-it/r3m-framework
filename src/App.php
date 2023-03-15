@@ -754,7 +754,7 @@ class App extends Data {
     }
 
     public function ramdisk_load($load=''){
-        echo $load;
+        echo $load . PHP_EOL;
         return false;
     }
 }
