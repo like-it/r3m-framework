@@ -32,7 +32,7 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         Core::execute($object, $command);
         Dir::remove($url);
         $name = Core::uuid();
-        $url = $object->config('dictionary.temp') . $name . $object->config('ds');
+        $url = $object->config('dictionary.cache') . $name . $object->config('ds');
         Dir::create($url, Dir::CHMOD);
         $command = 'mount -t tmpfs -o size=' . $size . ' ' . $name .' ' . $url;
         Core::execute($object, $command);
