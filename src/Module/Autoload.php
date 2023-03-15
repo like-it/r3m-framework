@@ -102,7 +102,7 @@ class Autoload {
         $parameters = Config::parameters($object, $parameters);
         $cache_dir = $parameters['cache'];
         $autoload->cache_dir($cache_dir);
-        $autoload->register();
+        $autoload->register('load', true);
         $autoload->environment($object->config('framework.environment'));
         $object->data(App::AUTOLOAD_R3M, $autoload);        
     }
