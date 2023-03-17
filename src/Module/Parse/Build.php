@@ -439,7 +439,6 @@ class Build {
             } elseif(array_key_exists('function', $limit)) {
                 throw new PluginNotAllowedException('Function (' . $name . ') not allowed, allowed: ' . implode(',', $limit['function']));
             }
-
         }
         return $document;
     }
