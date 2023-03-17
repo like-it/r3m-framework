@@ -829,12 +829,21 @@ class App extends Data {
                                 mkdir($ramdisk_dir, 0750, true);
                             }
                             $read = file_get_contents($url);
-                            if(Autoload::ramdisk_exclude_load($this, $load)){
+                            $require = $this->config('ramdisk.autoload.require');
+                            $is_require = false;
+                            if(
+                                !empty($require) &&
+                                is_array($require) &&
+                                in_array($load, $require, true)
+                            ) {
+                                $is_require = true;
+                            }
+                            if($is_require === false && Autoload::ramdisk_exclude_load($this, $load)){
                                 d($load);
                                 d($url);
                                 ddd('exclude_load');
                             }
-                            elseif(Autoload::ramdisk_exclude_content($this, $read)){
+                            elseif($is_require === false && Autoload::ramdisk_exclude_content($this, $read)){
                                 d($load);
                                 d($url);
                                 //files with content __DIR__, __FILE__ cannot be cached
