@@ -123,7 +123,7 @@ class Core
                     //create a separate process to execute another process (async);
                     $descriptorspec = [
                         0 => STDIN,  // stdin
-                        1 => STDOUT,  // stdout
+                        1 => [],  // stdout
                         2 => ["pipe", "w"],  // stderr
                     ];
                     $data = $object->config('core.execute.data');
