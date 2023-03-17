@@ -122,8 +122,8 @@ class Core
                     //in child process
                     //create a separate process to execute another process (async);
                     $descriptorspec = [
-                        0 => ['file', 'php://stdin' , 'r'],  // stdin
-                        1 => ['file', 'php://stdout', 'w'],  // stdout
+                        0 => STDIN,  // stdin
+                        1 => STDOUT,  // stdout
                         2 => ["pipe", "w"],  // stderr
                     ];
                     $data = $object->config('core.execute.data');
@@ -152,13 +152,13 @@ class Core
                         );
                     }
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                    ddd($pipes);
+//                    ddd($pipes);?
 //                    fwrite($pipes[0], $data . PHP_EOL);
-                    fclose($pipes[0]);
-                    $output = stream_get_contents($pipes[1]);
+//                    fclose($pipes[0]);
+//                    $output = stream_get_contents($pipes[1]);
                     $notification = stream_get_contents($pipes[2]);
                     fclose($pipes[2]);
-                    fclose($pipes[1]);
+//                    fclose($pipes[1]);
                     proc_close($process);
                     exit(0);
                 default :
