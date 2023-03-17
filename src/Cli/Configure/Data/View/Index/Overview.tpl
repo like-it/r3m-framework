@@ -1,4 +1,4 @@
-W{{R3M}}
+{{R3M}}
 {{$meta.author = 'R3m.io'}}
 {{$meta.title = 'Installed: '}}
 {{$meta.description = null}}
