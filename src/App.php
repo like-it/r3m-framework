@@ -807,6 +807,7 @@ class App extends Data {
                             }
                         }
                     }
+                    d($mtime);
                     if(
                         file_exists($ramdisk_url) &&
                         filemtime($ramdisk_url) === filemtime($mtime[sha1($ramdisk_url)])
