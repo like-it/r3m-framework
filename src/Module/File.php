@@ -405,13 +405,16 @@ class File {
         return '';
     }
 
+    /**
+     * @throws Exception
+     */
     public static function copy($source='', $destination=''): bool
     {
         try {
             return copy($source, $destination);
         }
         catch(\ErrorException $exception){
-            ddd($exception);
+            throw new Exception ('Couldn\'t copy source (' . $source . ') to destination (' . $destination .').');
         }
         return false;
     }
