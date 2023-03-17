@@ -330,11 +330,15 @@ class FileRequest {
                 }
                 $to_ramdisk = false;
                 $read = File::read($url);
+                if($is_ram_url){
+                    return $read;
+                }
                 $size = File::size($url);
                 $ram_maxsize = $object->config('ramdisk.file.size.max');
                 if(
                     !empty($ram_maxsize) &&
-                    $size > $ram_maxsize){
+                    $size > $ram_maxsize
+                ){
                     return $read;
                 }
                 $file_extension_allow = $object->config('ramdisk.file.extension.allow');
@@ -392,7 +396,10 @@ class FileRequest {
                         }
                     }
                 }
-                if($to_ramdisk){
+                if(
+                    $to_ramdisk &&
+                    $is_ram_url === false
+                ){
                     //copy to ramdisk
                     Dir::create($ram_dir);
                     if(File::exist($ram_url)){
