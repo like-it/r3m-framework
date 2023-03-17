@@ -407,7 +407,13 @@ class File {
 
     public static function copy($source='', $destination=''): bool
     {
-        return copy($source, $destination);
+        try {
+            return copy($source, $destination);
+        }
+        catch(\ErrorException $exception){
+            ddd($exception);
+        }
+        return false;
     }
 
 
