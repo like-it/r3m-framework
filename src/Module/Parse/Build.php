@@ -365,6 +365,7 @@ class Build {
                     $file = ucfirst($name) . $config->data('extension.php');
                     $url = $dir . $file;
                     $url_list[] = $url;
+                    //add ramdisk
                     if(File::exist($url)){
                         $read = File::read($url);
                         $explode = explode('function', $read);
@@ -378,6 +379,12 @@ class Build {
                         $read .= "\n";
                         $document = str_replace($placeholder, $read . $placeholder, $document);
                         $exist = true;
+                        if($this->object()->config('ramdisk.url')){
+                            $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
+                            $ramdisk_file = str_replace('/', '_', $dir) . $file . '_' . sha1($dir);
+                            $ramdisk_url = $ramdisk_dir . $ramdisk_file;
+                            ddd($ramdisk_url);
+                        }
                         break;
                     }
                 }
