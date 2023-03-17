@@ -394,7 +394,8 @@ class FileRequest {
                 }
                 if($to_ramdisk){
                     //copy to ramdisk
-                    ddd($ram_dir);
+                    d($ram_dir);
+                    die;
                     Dir::create($ram_dir);
                     File::copy($url, $ram_url);
                     File::touch($ram_url, filemtime($url));
