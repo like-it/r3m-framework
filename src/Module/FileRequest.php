@@ -394,9 +394,10 @@ class FileRequest {
                 }
                 if($to_ramdisk){
                     //copy to ramdisk
-                    d($ram_dir);
-                    die;
                     Dir::create($ram_dir);
+                    if(File::exist($ram_url)){
+                        File::remove($ram_url);
+                    }
                     File::copy($url, $ram_url);
                     File::touch($ram_url, filemtime($url));
                     if($file_mtime && $file_mtime_url){
