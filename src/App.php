@@ -662,9 +662,14 @@ class App extends Data {
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
-                $data = new Data();
-                $data->do_not_nest_key($do_not_nest_key);
-                $data->data(Core::object($read, Core::OBJECT_OBJECT))   ;
+                try {
+                    $data = new Data();
+                    $data->do_not_nest_key($do_not_nest_key);
+                    $data->data(Core::object($read, Core::OBJECT_OBJECT));
+                }
+                catch(ObjectException $exception){
+                    throw new ObjectException('Syntax error in ' . $url);
+                }
             } else {
                 $data = new Data();
                 $data->do_not_nest_key($do_not_nest_key);
