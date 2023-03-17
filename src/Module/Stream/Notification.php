@@ -224,7 +224,7 @@ class Notification {
                                         $config->write($url);
                                         if(empty($id)){
                                             $command = 'chown www-data:www-data ' . $url;
-                                            Core::execute($object, $command);                                
+                                            Core::execute($object, $command);
                                         }
                                     }
                                 }
