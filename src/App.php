@@ -835,6 +835,8 @@ class App extends Data {
                                 ddd('exclude_load');
                             }
                             elseif(Autoload::ramdisk_exclude_content($this, $read)){
+                                d($load);
+                                d($url);
                                 //files with content __DIR__, __FILE__ cannot be cached
                                 //save to /tmp/r3m/io/.../Autoload/Disable.Cache.json
                                 ddd('exclude_content');
