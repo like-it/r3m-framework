@@ -222,6 +222,10 @@ class Notification {
                                         }
                                         $filter->document = $documents;
                                         $config->write($url);
+                                        if(empty($id)){
+                                            $command = 'chown www-data:www-data ' . $url;
+                                            Core::execute($object, $command);                                
+                                        }
                                     }
                                 }
                             }
