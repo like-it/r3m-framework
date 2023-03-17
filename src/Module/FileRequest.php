@@ -213,22 +213,13 @@ class FileRequest {
                 $location = FileRequest::location($object, $dir);
             }
         }
+        $ram_dir = false;
         $ram_url = false;
         $ram_maxsize = false;
         $file_mtime = false;
         $file_mtime_url = false;
         $file_mtime_dir = false;
-        $file_extension_allow = $object->config('ramdisk.file.extension.allow');
-        if(
-            $object->config('ramdisk.url') &&
-            !empty($file_extension_allow) &&
-            is_array($file_extension_allow) &&
-            in_array(
-                $file_extension,
-                $file_extension_allow,
-                true
-            )
-        ){
+        if($object->config('ramdisk.url')){
             $file_mtime_dir = $object->config('ramdisk.url') .
                 'Cache' .
                 $object->config('ds')
@@ -241,13 +232,13 @@ class FileRequest {
             if(empty($file_mtime)){
                 $file_mtime = new Data();
             }
-            $ram_url = $object->config('ramdisk.url') .
+            $ram_dir = $object->config('ramdisk.url') .
                 'File' .
                 $object->config('ds');
+            $ram_url = $ram_dir;
             if($subdomain){
                 $ram_url .= $subdomain . '_';
             }
-            $ram_maxsize = $object->config('ramdisk.file.size');
             $ram_url .= $domain .
                 '_' .
                 $extension .
@@ -338,35 +329,70 @@ class FileRequest {
                 if($logger){
                     $object->logger($logger)->info('Url:', [ $url ]);
                 }
+                $to_ramdisk = false;
                 $read = File::read($url);
                 $size = File::size($url);
+                $ram_maxsize = $object->config('ramdisk.file.size.max');
+                if($size > $ram_maxsize){
+                    return $read;
+                }
+                $file_extension_allow = $object->config('ramdisk.file.extension.allow');
+                $file_extension_deny = $object->config('ramdisk.file.extension.deny');
+
                 if(
-                    (
-                        $ram_maxsize !== false &&
-                        $size <= $ram_maxsize &&
-                        $ram_url !== $url &&
-                        !empty($file_extension_allow) &&
-                        is_array($file_extension_allow) &&
-                        in_array(
-                            $file_extension,
-                            $file_extension_allow,
-                            true
-                        )
-                    ) ||
-                    (
-                        $ram_maxsize === false &&
-                        $ram_url !== $url &&
-                        !empty($file_extension_allow) &&
-                        is_array($file_extension_allow) &&
-                        in_array(
-                            $file_extension,
-                            $file_extension_allow,
-                            true
-                        )
-                    )
+                    empty($file_extension_allow) &&
+                    empty($file_extension_deny)
                 ){
+                    $to_ramdisk = true;
+                }
+                elseif(
+                    empty($file_extension_allow) &&
+                    !empty($file_extension_deny)
+                ){
+                    if(in_array('*', $file_extension_deny, true)){
+                        return $read;
+                    }
+                    elseif(in_array($file_extension, $file_extension_deny, true)){
+                        return $read;
+                    } else {
+                        $to_ramdisk = true;
+                    }
+                }
+                elseif(
+                    !empty($file_extension_allow) &&
+                    empty($file_extension_deny)
+                ){
+                    if(in_array('*', $file_extension_allow, true)){
+                        $to_ramdisk = true;
+                    }
+                    elseif(in_array($file_extension, $file_extension_allow, true)){
+                        $to_ramdisk = true;
+                    } else {
+                        return $read;
+                    }
+                }
+                elseif(
+                    !empty($file_extension_allow) &&
+                    !empty($file_extension_deny)
+                ){
+                    if(in_array('*', $file_extension_deny, true)){
+                        return $read;
+                    }
+                    elseif(in_array($file_extension, $file_extension_deny, true)){
+                        return $read;
+                    } else {
+                        if(in_array('*', $file_extension_allow, true)){
+                            $to_ramdisk = true;
+                        }
+                        elseif(in_array($file_extension, $file_extension_allow, true)){
+                            $to_ramdisk = true;
+                        } else {
+                            return $read;
+                        }
+                    }
+                }
+                if($to_ramdisk){
                     //copy to ramdisk
-                    $ram_dir = Dir::name($ram_url);
                     Dir::create($ram_dir);
                     File::copy($url, $ram_url);
                     File::touch($ram_url, filemtime($url));
