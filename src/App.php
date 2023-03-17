@@ -807,7 +807,6 @@ class App extends Data {
                             }
                         }
                     }
-                    d($mtime);
                     if(
                         file_exists($ramdisk_url) &&
                         array_key_exists(sha1($ramdisk_url), $mtime) &&
