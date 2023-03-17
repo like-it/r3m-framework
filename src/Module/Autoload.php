@@ -433,11 +433,14 @@ class Autoload {
                                         'File.Mtime' .
                                         $object->config('extension.json')
                                     ;
-                                    $mtime = [];
-                                    if(file_exists($config_url)){
-                                        $mtime = file_get_contents($config_url);
-                                        if($mtime){
-                                            $mtime = json_decode($mtime, true);
+                                    $mtime = $object->get(sha1($config_url));
+                                    if(empty($mtime)){
+                                        $mtime = [];
+                                        if(file_exists($config_url)){
+                                            $mtime = file_get_contents($config_url);
+                                            if($mtime){
+                                                $mtime = json_decode($mtime, true);
+                                            }
                                         }
                                     }
                                     if(
@@ -475,6 +478,7 @@ class Autoload {
                                                     mkdir($config_dir, 0750, true);
                                                 }
                                                 file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
+                                                $object->set(sha1($config_url), $mtime);
                                                 $id = posix_geteuid();
                                                 if(empty($id)){
                                                     exec('chown www-data:www-data ' . $object->config('autoload.cache.file'));
