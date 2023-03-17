@@ -384,6 +384,12 @@ class Build {
                         if(!$config_mtime){
                             $config_mtime = new Data();
                         }
+                        elseif(
+                            $config_mtime->has(sha1($ramdisk_url)) &&
+                            File::mtime($config_mtime->get(sha1($ramdisk_url))) && File::mtime($ramdisk_url)
+                        ){
+                            ddd('found');
+                        }
                     }
 
                     if(File::exist($url)){
@@ -416,7 +422,6 @@ class Build {
                                 exec('chown www-data:www-data ' . $config_dir);
                                 exec('chown www-data:www-data ' . $config_url);
                             }
-                            ddd($ramdisk_url);
                         }
                         break;
                     }
