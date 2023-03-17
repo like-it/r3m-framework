@@ -423,10 +423,10 @@ class Build {
                             $config_mtime->write($config_url);
                             $id = posix_geteuid();
                             if(empty($id)){
-                                Core::execute($this->object(),'chown www-data:www-data ' . $ramdisk_dir, $output, $notification, Core::SHELL_DETACHED);
-                                Core::execute($this->object(),'chown www-data:www-data ' . $ramdisk_url, $output, $notification, Core::SHELL_DETACHED);
-                                Core::execute($this->object(),'chown www-data:www-data ' . $config_dir, $output, $notification, Core::SHELL_DETACHED);
-                                Core::execute($this->object(),'chown www-data:www-data ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
+                                exec('chown www-data:www-data ' . $ramdisk_dir);
+                                exec('chown www-data:www-data ' . $ramdisk_url);
+                                exec('chown www-data:www-data ' . $config_dir);
+                                exec('chown www-data:www-data ' . $config_url);
                             }
                         }
                         break;
