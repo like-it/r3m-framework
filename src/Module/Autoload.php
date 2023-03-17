@@ -442,8 +442,6 @@ class Autoload {
                                                 $mtime = json_decode($mtime, true);
                                             }
                                         }
-                                    } else{
-                                        d('touch');
                                     }
                                     if(
                                         $mtime &&
