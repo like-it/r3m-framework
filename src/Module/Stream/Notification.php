@@ -440,6 +440,10 @@ class Notification {
             }
         }
         $config->write($url);
+        if(empty($id)){
+            $command = 'chown www-data:www-data ' . $url;
+            Core::execute($object, $command, $output, $notification, Core::SHELL_DETACHED);
+        }
     }
 
 
