@@ -401,12 +401,12 @@ class Build {
                         $explode = explode('function', $file_read);
                         $explode[0] = '';
                         $read = implode('function', $explode);
-                        $read = explode("\n", $read);
+                        $read = explode(PHP_EOL, $read);
                         foreach($read as $nr => $row){
                             $read[$nr] = $this->indent($indent) . $row;
                         }
-                        $read = implode("\n", $read);
-                        $read .= "\n";
+                        $read = implode(PHP_EOL, $read);
+                        $read .= PHP_EOL;
                         $document = str_replace($placeholder, $read . $placeholder, $document);
                         $exist = true;
                         if(
