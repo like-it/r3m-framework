@@ -831,6 +831,8 @@ class App extends Data {
                             }
                             $read = file_get_contents($url);
                             if(Autoload::ramdisk_exclude_load($this, $load)){
+                                d($load);
+                                d($url);
                                 ddd('exclude_load');
                             }
                             elseif(Autoload::ramdisk_exclude_content($this, $read)){
