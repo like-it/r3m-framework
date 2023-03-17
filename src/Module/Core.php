@@ -122,8 +122,8 @@ class Core
                     //in child process
                     //create a separate process to execute another process (async);
                     $descriptorspec = [
-                        0 => ["pipe", "r"],  // stdin
-                        1 => ["pipe", "w"],  // stdout
+                        0 => ['file', 'php://stdin' , 'r'],  // stdin
+                        1 => ['file', 'php://stdout', 'w'],  // stdout
                         2 => ["pipe", "w"],  // stderr
                     ];
                     $data = $object->config('core.execute.data');
