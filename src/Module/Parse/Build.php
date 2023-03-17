@@ -366,9 +366,29 @@ class Build {
                     $url = $dir . $file;
                     $url_list[] = $url;
                     //add ramdisk
+                    $ramdisk_dir = false;
+                    $ramdisk_url = false;
+                    if($this->object()->config('ramdisk.url')){
+                        $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
+                        $ramdisk_file = str_replace('/', '_', substr($dir, 1)) . $file . '_' . sha1($dir);
+                        $ramdisk_url = $ramdisk_dir . $ramdisk_file;
+                        $config_dir = $this->object()->config('ramdisk.url') .
+                            'Cache' .
+                            $this->object()->config('ds')
+                        ;
+                        $config_url = $config_dir .
+                            'File.Mtime' .
+                            $this->object()->config('extension.json')
+                        ;
+                        $config_mtime = $this->object()->data_read($config_url, sha1($config_url));
+                        if(!$config_mtime){
+                            $config_mtime = new Data();
+                        }
+                    }
+
                     if(File::exist($url)){
-                        $read = File::read($url);
-                        $explode = explode('function', $read);
+                        $file_read = File::read($url);
+                        $explode = explode('function', $file_read);
                         $explode[0] = '';
                         $read = implode('function', $explode);
                         $read = explode("\n", $read);
@@ -379,10 +399,23 @@ class Build {
                         $read .= "\n";
                         $document = str_replace($placeholder, $read . $placeholder, $document);
                         $exist = true;
-                        if($this->object()->config('ramdisk.url')){
-                            $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
-                            $ramdisk_file = str_replace('/', '_', $dir) . $file . '_' . sha1($dir);
-                            $ramdisk_url = $ramdisk_dir . $ramdisk_file;
+                        if(
+                            $ramdisk_dir &&
+                            $ramdisk_url &&
+                            $config_dir &&
+                            $config_url
+                        ){
+                            Dir::create($ramdisk_dir);
+                            File::put($ramdisk_url, $file_read);
+                            $config_mtime->set(sha1($ramdisk_url), $url);
+                            $config_mtime->write($config_url);
+                            $id = posix_geteuid();
+                            if(empty($id)){
+                                exec('chown www-data:www-data ' . $ramdisk_dir);
+                                exec('chown www-data:www-data ' . $ramdisk_url);
+                                exec('chown www-data:www-data ' . $config_dir);
+                                exec('chown www-data:www-data ' . $config_url);
+                            }
                             ddd($ramdisk_url);
                         }
                         break;
