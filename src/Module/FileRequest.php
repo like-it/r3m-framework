@@ -244,7 +244,6 @@ class FileRequest {
                 $extension .
                 '_' .
                 str_replace('/', '_', $dir) .
-                '_' .
                 $file
             ;
         }
@@ -333,7 +332,9 @@ class FileRequest {
                 $read = File::read($url);
                 $size = File::size($url);
                 $ram_maxsize = $object->config('ramdisk.file.size.max');
-                if($size > $ram_maxsize){
+                if(
+                    !empty($ram_maxsize) &&
+                    $size > $ram_maxsize){
                     return $read;
                 }
                 $file_extension_allow = $object->config('ramdisk.file.extension.allow');
@@ -393,6 +394,7 @@ class FileRequest {
                 }
                 if($to_ramdisk){
                     //copy to ramdisk
+                    ddd($ram_dir);
                     Dir::create($ram_dir);
                     File::copy($url, $ram_url);
                     File::touch($ram_url, filemtime($url));
