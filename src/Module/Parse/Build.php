@@ -388,7 +388,7 @@ class Build {
                             $config_mtime->has(sha1($ramdisk_url)) &&
                             File::mtime($config_mtime->get(sha1($ramdisk_url))) && File::mtime($ramdisk_url)
                         ){
-                            ddd('found');
+                            d($ramdisk_url);
                         }
                     }
 
