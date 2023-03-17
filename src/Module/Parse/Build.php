@@ -368,6 +368,9 @@ class Build {
                     //add ramdisk
                     $ramdisk_dir = false;
                     $ramdisk_url = false;
+                    $config_dir = false;
+                    $config_url = false;
+                    $config_mtime = false;
                     $is_ramdisk_url = false;
                     if($this->object()->config('ramdisk.url')){
                         $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
@@ -393,7 +396,6 @@ class Build {
                             $url = $ramdisk_url;
                         }
                     }
-
                     if(File::exist($url)){
                         $file_read = File::read($url);
                         $explode = explode('function', $file_read);
@@ -412,7 +414,8 @@ class Build {
                             $ramdisk_dir &&
                             $ramdisk_url &&
                             $config_dir &&
-                            $config_url
+                            $config_url &&
+                            $config_mtime
                         ){
                             Dir::create($ramdisk_dir);
                             File::put($ramdisk_url, $file_read);
