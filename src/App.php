@@ -793,14 +793,18 @@ class App extends Data {
                         $this->config('ds')
                     ;
                     $config_url = $config_dir .
-                        'File.mtime' .
+                        'File.Mtime' .
                         $this->config('extension.json')
                     ;
-                    $mtime = [];
-                    if(file_exists($config_url)){
-                        $mtime = file_get_contents($config_url);
-                        if($mtime){
-                            $mtime = json_decode($mtime, true);
+                    $mtime = $this->get(sha1($config_url));
+                    if(empty($mtime)){
+                        $mtime = [];
+                        if(file_exists($config_url)){
+                            $mtime = file_get_contents($config_url);
+                            if($mtime){
+                                $mtime = json_decode($mtime, true);
+                                $this->set(sha1($config_url), $mtime);
+                            }
                         }
                     }
                     if(
@@ -824,8 +828,13 @@ class App extends Data {
                                 mkdir($ramdisk_dir, 0750, true);
                             }
                             $read = file_get_contents($url);
-                            if(Autoload::ramdisk_exclude_content($this, $read)){
-                                //files with content __CLASS__, __DIR__, __FILE__ cannot be cached
+                            if(Autoload::ramdisk_exclude_load($this, $load)){
+                                ddd('exclude_load');
+                            }
+                            elseif(Autoload::ramdisk_exclude_content($this, $read)){
+                                //files with content __DIR__, __FILE__ cannot be cached
+                                //save to /tmp/r3m/io/.../Autoload/Disable.Cache.json
+                                ddd('exclude_content');
                             } else {
                                 file_put_contents($ramdisk_url, $read);
                                 touch($ramdisk_url, filemtime($url));
@@ -834,6 +843,7 @@ class App extends Data {
                                     mkdir($config_dir, 0750, true);
                                 }
                                 file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
+                                $this->set(sha1($config_url), $mtime);
                                 if(empty($id)){
                                     exec('chown www-data:www-data ' . $ramdisk_dir);
                                     exec('chown www-data:www-data ' . $ramdisk_url);

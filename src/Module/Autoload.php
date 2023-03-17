@@ -430,7 +430,7 @@ class Autoload {
                                         $object->config('ds')
                                     ;
                                     $config_url = $config_dir .
-                                        'File.mtime' .
+                                        'File.Mtime' .
                                         $object->config('extension.json')
                                     ;
                                     $mtime = [];

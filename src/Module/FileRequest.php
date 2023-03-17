@@ -225,7 +225,7 @@ class FileRequest {
                 $object->config('ds')
             ;
             $file_mtime_url = $file_mtime_dir .
-                'File.mtime' .
+                'File.Mtime' .
                 $object->config('extension.json')
             ;
             $file_mtime = $object->data_read($file_mtime_url);
