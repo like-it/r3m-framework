@@ -228,7 +228,7 @@ class FileRequest {
                 'File.Mtime' .
                 $object->config('extension.json')
             ;
-            $file_mtime = $object->data_read($file_mtime_url);
+            $file_mtime = $object->data_read($file_mtime_url, sha1($file_mtime_url));
             if(empty($file_mtime)){
                 $file_mtime = new Data();
             }
