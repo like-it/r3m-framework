@@ -287,7 +287,6 @@ class Autoload {
     {
         $file = $this->locate($load);
         if (!empty($file)) {
-            d($file);
             require_once $file;
             return true;
         }
@@ -459,7 +458,11 @@ class Autoload {
                                             array_key_exists(sha1($file), $mtime) &&
                                             filemtime($file) === filemtime($mtime[sha1($file)])
                                         ){
-                                            d('ramisk:' . $file);
+                                            if($file === '/tmp/r3m/io/88b30a33-852d-4e8c-83d1-8e2a953c53f3/Class/Class_Application_Host_Api_Workandtravel_World_Service_Mail.php'){
+                                                d(filemtime($file));
+                                                d(filemtime($mtime[sha1($file)]));
+                                                die;
+                                            }
                                             //from ramdisk
                                             $this->cache($file, $load);
                                             return $file;
