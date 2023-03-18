@@ -762,6 +762,7 @@ class App extends Data {
      * @throws ObjectException
      */
     public function ramdisk_load($load=''){
+        d($load);
         $prefixes = $this->config('ramdisk.autoload.prefix');
         if(
             !empty($prefixes) &&
@@ -812,7 +813,6 @@ class App extends Data {
                             }
                         }
                     }
-                    d($url);
                     if(
                         file_exists($ramdisk_url) &&
                         array_key_exists(sha1($ramdisk_url), $mtime) &&
