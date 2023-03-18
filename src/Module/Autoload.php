@@ -452,13 +452,18 @@ class Autoload {
                                     }
                                     if(
                                         $mtime &&
-                                        $file === $object->config('autoload.cache.file') &&
-                                        array_key_exists(sha1($file), $mtime) &&
-                                        filemtime($file) === filemtime($mtime[sha1($file)])
+                                        $file === $object->config('autoload.cache.file')
                                     ){
-                                        //from ramdisk
-                                        $this->cache($file, $load);
-                                        return $file;
+                                        if(
+                                            array_key_exists(sha1($file), $mtime) &&
+                                            filemtime($file) === filemtime($mtime[sha1($file)])
+                                        ){
+                                            //from ramdisk
+                                            $this->cache($file, $load);
+                                            return $file;
+                                        } else {
+                                            continue;
+                                        }
                                     } else {
                                         if(Autoload::ramdisk_exclude_load($object, $load)){
                                             //controllers cannot be cached
