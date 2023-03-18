@@ -96,7 +96,7 @@ class Parse {
                 Core::execute($this->object(), $command);
             }
         } else {
-            $cache_dir = $config->data('dictionary.cache') . $config->data('dictionary.compile') . $config->data('ds');
+            $cache_dir = $config->data('framework.dir.temp') . $config->data('dictionary.compile') . $config->data('ds');
             Dir::create($cache_dir);
             if(empty($id)){
                 $command = 'chown www-data:www-data ' . $cache_dir;

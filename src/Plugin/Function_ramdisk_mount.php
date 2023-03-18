@@ -32,7 +32,7 @@ function function_ramdisk_mount(Parse $parse, Data $data, $size='1G', $url='', $
         $name = Core::uuid();
     }
     if(empty($url)){
-        $url = $object->config('dictionary.cache') . $name . $object->config('ds');
+        $url = $object->config('framework.dir.temp') . $name . $object->config('ds');
     }
     $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
     $config = $object->data_read($config_url);

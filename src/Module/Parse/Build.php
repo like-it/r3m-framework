@@ -496,7 +496,7 @@ class Build {
         $this->object->config('core.execute.stream.init', false);
         $this->object->config('core.execute.stream.is.default', $default);
         if($error){
-            $url_write_error = $this->object()->config('dictionary.cache') . 'Parse/Error/' . File::basename($url);
+            $url_write_error = $this->object()->config('framwork.dir.temp') . 'Parse/Error/' . File::basename($url);
             $this->object()->logger()->error($error, [ $url_write_error ]);
             $dir = Dir::name($url_write_error);
             Dir::create($dir);

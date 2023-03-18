@@ -1036,9 +1036,7 @@ class Route extends Data {
         }
         $url = $config->data(Config::DATA_PROJECT_ROUTE_URL);
         $uuid = posix_geteuid();
-        $cache_url = $config->data('dictionary.cache') .
-            'Cache' .
-            $config->data('ds') .
+        $cache_url = $config->data('framework.dir.cache') .
             $uuid .
             $config->data('ds') .
             $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
