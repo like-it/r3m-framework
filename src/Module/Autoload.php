@@ -459,6 +459,7 @@ class Autoload {
                                             array_key_exists(sha1($file), $mtime) &&
                                             filemtime($file) === filemtime($mtime[sha1($file)])
                                         ){
+                                            d('ramisk:' . $file);
                                             //from ramdisk
                                             $this->cache($file, $load);
                                             return $file;
