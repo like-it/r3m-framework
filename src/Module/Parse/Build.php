@@ -995,8 +995,6 @@ class Build {
                         $autoload->addPrefix($record['prefix'],  $record['directory']);
                     }
                 }
-//            $autoload->addPrefix('Host',  $config->data('project.dir.host'));
-//            $autoload->addPrefix('Source',  $config->data('project.dir.source'));
                 $autoload->register();
             }
             $name = '';
