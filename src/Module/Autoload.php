@@ -79,12 +79,18 @@ class Autoload {
         if($cache_dir){
             $class_dir = $object->config('ramdisk.url') . 'Class' . $object->config('ds');
             $object->config('autoload.cache.class', $class_dir);
-            if(!is_dir(substr($class_dir, 0, -1))){
-                d($class_dir);
-                mkdir(substr($class_dir, 0, -1), 0750, true);
+
+            if(!is_dir($object->config('ramdisk.url'))){
+                mkdir($object->config('ramdisk.url'), 0750, true);
+                if(empty($id)){
+                    exec('chown www-data:www-data ' . $object->config('ramdisk.url'));
+                }
+            }
+            if(!is_dir($class_dir)){
+                mkdir($class_dir,0750, true);
                 $id = posix_geteuid();
                 if(empty($id)){
-                    exec('chown www-data:www-data ' . substr($class_dir, 0, -1));
+                    exec('chown www-data:www-data ' . $class_dir);
                 }
             }
         }
