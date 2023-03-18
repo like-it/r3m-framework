@@ -285,9 +285,9 @@ class Autoload {
      */
     public function load($load): bool
     {
-        d($load);
         $file = $this->locate($load);
         if (!empty($file)) {
+            d($file);
             require_once $file;
             return true;
         }
