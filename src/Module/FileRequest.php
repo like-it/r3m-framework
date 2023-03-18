@@ -380,7 +380,7 @@ class FileRequest {
                     !empty($file_extension_allow) &&
                     !empty($file_extension_deny) &&
                     is_array($file_extension_allow) &&
-                    is_array($file_extension_deny) &&
+                    is_array($file_extension_deny)
                 ){
                     if(in_array('*', $file_extension_deny, true)){
                         return $read;
