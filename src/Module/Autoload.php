@@ -308,7 +308,7 @@ class Autoload {
             $object &&
             $object->config('autoload.cache.class')
         ){
-            ddd($item);
+            d($item);
             $load = 'Class' . str_replace('/', '_', $item['directory'] . $item['file']) . '.' . Autoload::EXT_PHP;
             $load_url = $object->config('autoload.cache.class') . $load;
             $data[] = $load_url;
