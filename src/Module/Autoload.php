@@ -310,7 +310,11 @@ class Autoload {
         ){
             d($item);
             $load = $item['directory'] . $item['file'];
-            $load = 'Class' . basename($load) . '.' . Autoload::EXT_PHP;
+
+            $dirname = dirname($load);
+            d($dirname);
+
+            $load = basename($load) . '.' . Autoload::EXT_PHP;
             $load_url = $object->config('autoload.cache.class') . $load;
             d($load_url);
             $data[] = $load_url;
