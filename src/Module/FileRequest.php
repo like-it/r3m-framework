@@ -332,7 +332,8 @@ class FileRequest {
                 $read = File::read($url);
                 if($is_ram_url){
                     d($url);
-                    ddd($read);
+                    d($read);
+                    die;
                     return $read;
                 }
                 $size = File::size($url);
