@@ -152,7 +152,9 @@ class Core
                         );
                     }
                     $process = proc_open($command, $descriptorspec, $pipes, Dir::current(), null);
-                    fwrite($pipes[0], $data . PHP_EOL);
+                    if($data){
+                        fwrite($pipes[0], $data . PHP_EOL);
+                    }
                     fclose($pipes[0]);
                     $output = stream_get_contents($pipes[1]);
                     $notification = stream_get_contents($pipes[2]);
