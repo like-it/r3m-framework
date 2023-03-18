@@ -318,6 +318,7 @@ class Parse {
                     ddd($exception);
                 }
             }
+            //must read into it, copy should be configurable
             $copy = $this->object()->config('parse.read.object.copy');
             if($copy && is_object($copy)){
                 foreach($copy as $key => $value){

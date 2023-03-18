@@ -245,7 +245,7 @@ class Controller {
             $object->config('dictionary.view') .
             $object->config('extension.json')
         ;
-        $read = $object->data_read($config_url);
+        $read = $object->data_read($config_url, sha1($config_url));
         if(!$read){
             $read = new Data();
         }
