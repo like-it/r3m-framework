@@ -253,14 +253,12 @@ class FileRequest {
                 $url .= $object->config('ds');
             }
             $url .= $file;
-            if($is_ram_url === false && File::exist($ram_url)){
+            if(
+                $is_ram_url === false && File::exist($ram_url) &&
+                File::mtime($file_mtime->get(sha1($ram_url))) === File::mtime($ram_url)
+            ){
                 $is_ram_url = $ram_url;
-                if(
-                    File::mtime($file_mtime->get(sha1($ram_url))) ===
-                    File::mtime($ram_url)
-                ){
-                    $url = $ram_url;
-                }
+                $url = $ram_url;
             }
             if(
                 $is_ram_url ||
