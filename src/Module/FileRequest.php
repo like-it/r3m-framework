@@ -329,9 +329,6 @@ class FileRequest {
                 $to_ramdisk = false;
                 $read = File::read($url);
                 if($is_ram_url){
-                    d($url);
-                    d($read);
-                    die;
                     return $read;
                 }
                 $size = File::size($url);
@@ -353,7 +350,8 @@ class FileRequest {
                 }
                 elseif(
                     empty($file_extension_allow) &&
-                    !empty($file_extension_deny)
+                    !empty($file_extension_deny) &&
+                    is_array($file_extension_deny)
                 ){
                     if(in_array('*', $file_extension_deny, true)){
                         return $read;
@@ -366,7 +364,8 @@ class FileRequest {
                 }
                 elseif(
                     !empty($file_extension_allow) &&
-                    empty($file_extension_deny)
+                    empty($file_extension_deny) &&
+                    is_array($file_extension_allow)
                 ){
                     if(in_array('*', $file_extension_allow, true)){
                         $to_ramdisk = true;
@@ -379,7 +378,9 @@ class FileRequest {
                 }
                 elseif(
                     !empty($file_extension_allow) &&
-                    !empty($file_extension_deny)
+                    !empty($file_extension_deny) &&
+                    is_array($file_extension_allow) &&
+                    is_array($file_extension_deny) &&
                 ){
                     if(in_array('*', $file_extension_deny, true)){
                         return $read;
