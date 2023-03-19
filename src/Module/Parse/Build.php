@@ -1030,7 +1030,7 @@ class Build {
                         basename($options['source'])) . '_';
             }
             $name = str_replace('_tpl', '', $name);
-            $name = Autoload::name_reducer($this->object(), $name, 100, '_', 'shift');
+            $name = Autoload::name_reducer($this->object(), $name, 80, '_', 'shift');
             $url =
                 $dir .
                 $config->data('dictionary.template') .
