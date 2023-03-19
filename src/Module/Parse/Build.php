@@ -1033,6 +1033,8 @@ class Build {
             $name = Autoload::name_reducer($this->object(), $name, 100, '_', 'shift');
             $url =
                 $dir .
+                $config->data('dictionary.template') .
+                '_' .
                 $name .
                 $key .
                 $config->data('extension.php')
