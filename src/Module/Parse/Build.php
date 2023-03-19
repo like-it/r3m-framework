@@ -418,7 +418,6 @@ class Build {
                             $config_mtime
                         ){
                             Dir::create($ramdisk_dir);
-                            d($ramdisk_url);
                             File::put($ramdisk_url, $file_read);
                             $config_mtime->set(sha1($ramdisk_url), $url);
                             $config_mtime->write($config_url);
@@ -1044,6 +1043,7 @@ class Build {
             }
             $this->meta($options);
         }
+        d($url);
         return $url;
     }
 
