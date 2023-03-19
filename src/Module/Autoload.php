@@ -297,10 +297,6 @@ class Autoload {
      * @throws Exception
      */
     public static function name_reducer(App $object, $name='', $length=100, $separator='_', $pop_or_shift='pop'){
-        if(empty($separator)){
-            $debug = debug_backtrace(true);
-            ddd($debug);
-        }
         $name_length = strlen($name);
         if($name_length >= $length){
             $explode = explode($separator, $name);

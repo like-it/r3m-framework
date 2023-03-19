@@ -158,7 +158,15 @@
                 "name_pop_or_shift": "shift",
                 "directory_length": 100,
                 "directory_separator": "_",
-                "directory_pop_or_shift": "pop"
+                "directory_pop_or_shift": "pop",
+                "list" : [
+                    {
+                        "name": "require",
+                        "name_length": 200,
+                        "name_separator": "_",
+                        "name_pop_or_shift": "shift"
+                    }
+                ]
             }
         },
         "read": {
