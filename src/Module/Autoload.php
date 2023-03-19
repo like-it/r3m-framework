@@ -312,10 +312,8 @@ class Autoload {
                 }
                 $name = $tmp;
             }
-        } else {
-            str_replace($separator, '_', $name);
         }
-        return $name;
+        return str_replace($separator, '_', $name);
     }
 
     public function fileList($item=array(), $url=''): array
