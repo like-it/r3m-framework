@@ -507,6 +507,7 @@ class Autoload {
                                             //from disk
                                             //copy to ramdisk
                                             $id = posix_geteuid();
+                                            d($object->config('autoload.cache.file.name'));
                                             $dirname = dirname($object->config('autoload.cache.file.name'));
                                             if(!is_dir($dirname)){
                                                 mkdir($dirname, 0750, true);
