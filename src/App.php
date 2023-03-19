@@ -870,7 +870,7 @@ class App extends Data {
                                 exec('chown www-data:www-data ' . $config_url);
                             }
                             exec('chmod 640 ' . $ramdisk_url);
-                            exec('chown 640 ' . $config_url);
+                            exec('chmod 640 ' . $config_url);
                             d('yes');
                         }
                     }
