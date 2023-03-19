@@ -307,8 +307,6 @@ class Autoload {
             } else {
                 while(strlen($tmp) >= $length){
                     $count = count($explode);
-                    d($count);
-                    d($length);
                     if($count === 1){
                         break;
                     }
@@ -320,8 +318,6 @@ class Autoload {
                             array_shift($explode);
                         break;
                         default:
-                            $debug = debug_backtrace(true);
-                            d($debug);
                             throw new Exception('cannot reduce name with: ' . $pop_or_shift);
                     }
                     $tmp = implode('_', $explode);
