@@ -428,6 +428,8 @@ class Build {
                                 exec('chown www-data:www-data ' . $config_dir);
                                 exec('chown www-data:www-data ' . $config_url);
                             }
+                            exec('chmod 640 ' . $ramdisk_url);
+                            exec('chmod 640 ' . $config_url);
                         }
                         break;
                     }
@@ -488,6 +490,7 @@ class Build {
         $dir = Dir::name($url);
         Dir::create($dir);
         File::put($url, $write);
+        exec('chmod 640 ' . $url);
         //make event which checks php-l and move accordingly
 //        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
         $command = 'php -l ' . escapeshellcmd($url);
@@ -502,6 +505,8 @@ class Build {
             $dir = Dir::name($url_write_error);
             Dir::create($dir);
             File::move($url, $url_write_error, true);
+            exec('chown www-data:www-data ' . $url_write_error);
+            exec('chmod 640 ' . $url_write_error);
         }
         return $write;
     }
