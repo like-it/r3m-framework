@@ -233,7 +233,6 @@ class Controller {
         $view_url = $object->config('ramdisk.url') .
             $object->config('dictionary.view') .
             $object->config('ds') .
-            $object->config('dictionary.view') .
             str_replace('/', '_', $first)
         ;
         $config_dir = $object->config('ramdisk.url') .
