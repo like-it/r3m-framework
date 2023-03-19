@@ -333,12 +333,9 @@ class Autoload {
         ){
             $load = $item['directory'] . $item['file'];
             $load = basename($load) . '.' . Autoload::EXT_PHP;
-//            $load = Autoload::name_reducer($object, $load, $object->config('autoload.cache.file.max_length_file'));
-//            d($load);
+            $load = Autoload::name_reducer($object, $load, $object->config('autoload.cache.file.max_length_file'));
             $load_directory = Autoload::name_reducer($object, $item['directory'], $object->config('autoload.cache.file.max_length_directory'), $object->config('ds'));
-            d($load_directory);
             $load_url = $object->config('autoload.cache.class') . $load_directory . $load;
-            d($load_url);
             $data[] = $load_url;
             $object->config('autoload.cache.file.name', $load_url);
         }
