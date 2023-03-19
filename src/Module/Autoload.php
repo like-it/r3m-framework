@@ -294,7 +294,6 @@ class Autoload {
     }
 
     private static function name_reducer(App $object, $name='', $length=100, $separator='_'){
-        ddd($separator);
         $name_length = strlen($name);
         if($name_length >= $length){
             $explode = explode($separator, $name);
@@ -313,6 +312,8 @@ class Autoload {
                 }
                 $name = $tmp;
             }
+        } else {
+            str_replace($separator, '_', $name);
         }
         return $name;
     }
