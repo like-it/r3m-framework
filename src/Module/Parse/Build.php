@@ -1033,6 +1033,7 @@ class Build {
                 $key .
                 $config->data('extension.php')
             ;
+            d($url);
             $storage->data('url', $url);
             $storage->data('key', $key);
             if(!empty($options['parent'])){
@@ -1043,7 +1044,6 @@ class Build {
             }
             $this->meta($options);
         }
-        d($url);
         return $url;
     }
 
