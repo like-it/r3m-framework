@@ -526,9 +526,9 @@ class Autoload {
                                                     exec('chown www-data:www-data ' . $object->config('autoload.cache.file.name'));
                                                     exec('chown www-data:www-data ' . $config_dir);
                                                     exec('chown www-data:www-data ' . $config_url);
-                                                    exec('chmod 640 ' . $object->config('autoload.cache.file.name'));
-                                                    exec('chmod 640 ' . $config_url);
                                                 }
+                                                exec('chmod 640 ' . $object->config('autoload.cache.file.name'));
+                                                exec('chmod 640 ' . $config_url);
                                             }
                                         }
                                     }
