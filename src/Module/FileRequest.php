@@ -254,21 +254,20 @@ class FileRequest {
                     Autoload::name_reducer(
                         $object,
                         str_replace('/', '_', $dir),
-                        100,
-                        '_',
-                        'pop'
+                        $object->config('fileRequest.get.directory_length'),
+                        $object->config('fileRequest.get.directory_separator'),
+                        $object->config('fileRequest.get.directory_pop_or_shift')
                     ) .
                     '_' .
                     Autoload::name_reducer(
                         $object,
                         $file,
-                        100,
-                        '_',
-                        'shift'
+                        $object->config('fileRequest.get.name_length'),
+                        $object->config('fileRequest.get.name_separator'),
+                        $object->config('fileRequest.get.name_pop_or_shift')
                     )
                 ;
             }
-
         }
         $is_ram_url = false;
         foreach($location as $url){
