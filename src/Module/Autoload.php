@@ -410,7 +410,6 @@ class Autoload {
      * @throws Exception
      */
     public function locate($load=null, $is_data=false){
-        d($load);
         $dir = $this->cache_dir();
         $url = $dir . Autoload::FILE;
         $load = ltrim($load, '\\');
@@ -503,7 +502,6 @@ class Autoload {
                                     } else {
                                         if(Autoload::ramdisk_exclude_load($object, $load)){
                                             //controllers cannot be cached
-                                            d($file);
                                         } else {
                                             //from disk
                                             //copy to ramdisk
@@ -517,7 +515,6 @@ class Autoload {
                                             }
                                             $read = file_get_contents($file);
                                             if(Autoload::ramdisk_exclude_content($object, $read)){
-                                                d($file);
                                                 //files with content __DIR__, __FILE__ cannot be cached
                                             } else {
                                                 file_put_contents($object->config('autoload.cache.file.name'), $read);

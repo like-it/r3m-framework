@@ -794,8 +794,6 @@ class App extends Data {
                             sha1($ramdisk_dir) .
                             $this->config('extension.php')
                         ;
-                        d($ramdisk_url);
-
                     }
                     $config_dir = $this->config('ramdisk.url') .
                         App::NAME .
