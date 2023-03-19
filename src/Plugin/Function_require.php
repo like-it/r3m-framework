@@ -48,7 +48,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
                 $object->config('ds') .
                 Autoload::name_reducer(
                     $object,
-                    str_replace('/', '_', $url),
+                    $object->config('dictionary.view') . str_replace('/', '_', $url),
                     $is_plugin->name_length,
                     $is_plugin->name_separator,
                     $is_plugin->name_pop_or_shift
