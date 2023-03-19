@@ -762,6 +762,7 @@ class App extends Data {
      * @throws ObjectException
      */
     public function ramdisk_load($load=''){
+        d($load);
         $prefixes = $this->config('ramdisk.autoload.prefix');
         if(
             !empty($prefixes) &&

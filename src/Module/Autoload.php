@@ -338,7 +338,6 @@ class Autoload {
             $object &&
             $object->config('autoload.cache.class')
         ){
-            d($item);
             $load = $item['directory'] . $item['file'];
             $load_directory = dirname($load);
             $load = basename($load) . '.' . Autoload::EXT_PHP;
@@ -517,7 +516,6 @@ class Autoload {
                                             if(Autoload::ramdisk_exclude_content($object, $read)){
                                                 //files with content __DIR__, __FILE__ cannot be cached
                                             } else {
-                                                d($object->config('autoload.cache.file.name'));
                                                 file_put_contents($object->config('autoload.cache.file.name'), $read);
                                                 touch($object->config('autoload.cache.file.name'), filemtime($file));
                                                 //save file reference for filemtime comparison
