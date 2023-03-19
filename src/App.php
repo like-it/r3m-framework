@@ -787,7 +787,7 @@ class App extends Data {
                 $ramdisk_url = false;
                 if($this->config('ramdisk.url')){
                     $ramdisk_dir = $this->config('ramdisk.url') .
-                        'App' .
+                        App::NAME .
                         $this->config('ds')
                     ;
                     $ramdisk_url = $ramdisk_dir .
