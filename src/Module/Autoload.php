@@ -304,6 +304,7 @@ class Autoload {
             } else {
                 while(strlen($tmp) >= $length){
                     $count = count($explode);
+                    d($count);
                     if($count === 1){
                         break;
                     }
