@@ -871,6 +871,7 @@ class App extends Data {
                             }
                             exec('chmod 640 ' . $ramdisk_url);
                             exec('chown 640 ' . $config_url);
+                            d('yes');
                         }
                     }
                 }
