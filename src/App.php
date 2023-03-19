@@ -832,6 +832,7 @@ class App extends Data {
                             $id = posix_geteuid();
                             if(!is_dir($ramdisk_dir)){
                                 mkdir($ramdisk_dir, 0750, true);
+                                exec('chown www-data:www-data ' . $ramdisk_dir);
                             }
                             $read = file_get_contents($url);
                             $require = $this->config('ramdisk.autoload.require');
@@ -865,7 +866,7 @@ class App extends Data {
                                 file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
                                 $this->set(sha1($config_url), $mtime);
                                 if(empty($id)){
-                                    exec('chown www-data:www-data ' . $ramdisk_dir);
+
                                     exec('chown www-data:www-data ' . $ramdisk_url);
                                     exec('chown www-data:www-data ' . $config_dir);
                                     exec('chown www-data:www-data ' . $config_url);
