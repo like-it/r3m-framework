@@ -77,7 +77,7 @@ class Autoload {
         }
         $cache_dir = $object->config('autoload.cache.ramdisk');
         if($cache_dir){
-            $class_dir = $object->config('ramdisk.url') . 'Class' . $object->config('ds');
+            $class_dir = $object->config('ramdisk.url') . 'Test' . $object->config('ds');
             $object->config('autoload.cache.class', $class_dir);
 
             if(!is_dir($object->config('ramdisk.url'))){
