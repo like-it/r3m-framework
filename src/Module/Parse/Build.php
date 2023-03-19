@@ -492,10 +492,9 @@ class Build {
 //        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
         $command = 'php -l ' . escapeshellcmd($url);
         $default = $this->object->config('core.execute.stream.is.default');
-        ddd($default);
-        $this->object->config('core.execute.stream.init', true);
+        $this->object->config('core.execute.mode', 'stream');
+        $this->object->config('core.execute.stream.is.default', false);
         Core::execute($this->object(), $command, $output, $error);
-        $this->object->config('core.execute.stream.init', false);
         $this->object->config('core.execute.stream.is.default', $default);
         if($error){
             $url_write_error = $this->object()->config('framework.dir.temp') . 'Parse/Error/' . File::basename($url);
