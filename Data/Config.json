@@ -200,6 +200,7 @@
             "stdClass",
             "R3m\\Io\\App",
             "R3m\\Io\\Config",
+            "R3m\\Io\\Module\\Autoload",
             "R3m\\Io\\Module\\Cli",
             "R3m\\Io\\Module\\Core",
             "R3m\\Io\\Module\\Data",
