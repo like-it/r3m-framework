@@ -792,6 +792,8 @@ class App extends Data {
                             str_replace('/', '_', $part) .
                             $this->config('extension.php')
                         ;
+                        d($ramdisk_url);
+
                     }
                     $config_dir = $this->config('ramdisk.url') .
                         App::NAME .
