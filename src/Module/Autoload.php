@@ -340,6 +340,7 @@ class Autoload {
         ){
             $load = $item['directory'] . $item['file'];
             $load_directory = dirname($load);
+            d($load_directory);
             $load = basename($load) . '.' . Autoload::EXT_PHP;
             $load = Autoload::name_reducer($object, $load, $object->config('autoload.cache.file.max_length_file'),'_', 'shift');
             $load_directory = Autoload::name_reducer($object, $load_directory, $object->config('autoload.cache.file.max_length_directory'), $object->config('ds'), 'pop');
