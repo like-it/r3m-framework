@@ -273,7 +273,7 @@ class Controller {
                         Core::execute($object, 'chown www-data:www-data ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
                     }
                     Core::execute($object, 'chmod 0640 ' . $view_url, $output, $notification, Core::SHELL_DETACHED);
-                    Core::execute($object, 'chown 0640 ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
+                    Core::execute($object, 'chmod 0640 ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
                 }
                 $url = $file;
                 break;
