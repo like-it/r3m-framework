@@ -412,6 +412,7 @@ class Autoload {
      * @throws Exception
      */
     public function locate($load=null, $is_data=false){
+        d($load);
         $dir = $this->cache_dir();
         $url = $dir . Autoload::FILE;
         $load = ltrim($load, '\\');
@@ -538,7 +539,6 @@ class Autoload {
                                         }
                                     }
                                 }
-                                d($file);
                                 $this->cache($file, $load);
                                 return $file;
                             }
