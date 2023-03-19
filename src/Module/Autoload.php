@@ -325,6 +325,7 @@ class Autoload {
 
     public function fileList($item=array(), $url=''): array
     {
+        d($item);
         if(empty($item)){
             return [];
         }
