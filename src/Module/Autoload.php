@@ -338,6 +338,7 @@ class Autoload {
             $object &&
             $object->config('autoload.cache.class')
         ){
+            d($item);
             $load = $item['directory'] . $item['file'];
             $load_directory = dirname($load);
             $load = basename($load) . '.' . Autoload::EXT_PHP;
@@ -345,9 +346,6 @@ class Autoload {
             $load_directory = Autoload::name_reducer($object, $load_directory, $object->config('autoload.cache.file.max_length_directory'), $object->config('ds'), 'pop');
             $load_url = $object->config('autoload.cache.class') . $load_directory . '_' . $load;
             $data[] = $load_url;
-            if($load_url === '._System.php'){
-                ddd($item);
-            }
             $object->config('autoload.cache.file.name', $load_url);
         }
         if(
