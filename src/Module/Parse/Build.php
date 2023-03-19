@@ -374,7 +374,7 @@ class Build {
                     $is_ramdisk_url = false;
                     if($this->object()->config('ramdisk.url')){
                         $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
-                        ddd($this->object()->config());
+                        ddd($this->object()->config('parse.build.plugin'));
                         $ramdisk_file =
                             Autoload::name_reducer(
                                 $this->object(),
