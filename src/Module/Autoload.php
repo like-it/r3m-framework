@@ -95,7 +95,7 @@ class Autoload {
             }
         }
         if(empty($cache_dir)){
-            $cache_dir = $object->config('autoload.cache.dir');
+            $cache_dir = $object->config('autoload.cache.directory');
         }
         if(empty($cache_dir)){
             $cache_dir =
@@ -293,6 +293,29 @@ class Autoload {
         return false;
     }
 
+    private static function name_reducer(App $object, $name='', $length=100, $separator='_'){
+        $name_length = strlen($name);
+        if($name_length >= $length){
+            $explode = explode($separator, $name);
+            $explode = array_unique($explode);
+            $tmp = implode('_', $explode);
+            if(strlen($tmp) < $length){
+                $name = $tmp;
+            } else {
+                while(strlen($tmp) >= $length){
+                    $count = count($explode);
+                    if($count === 1){
+                        break;
+                    }
+                    array_shift($explode);
+                    $tmp = implode('_', $explode);
+                }
+                $name = $tmp;
+            }
+        }
+        return $name;
+    }
+
     public function fileList($item=array(), $url=''): array
     {
         if(empty($item)){
@@ -309,32 +332,10 @@ class Autoload {
             $object->config('autoload.cache.class')
         ){
             $load = $item['directory'] . $item['file'];
-            d($item['directory']);
             $load = basename($load) . '.' . Autoload::EXT_PHP;
-            $load_url = $object->config('autoload.cache.class') . $load;
-            $load_length = strlen($load_url);
-            $file_length = $object->config('autoload.cache.file.length');
-            if(empty($file_length)){
-                $file_length = 100;
-            }
-            if($load_length >= $file_length){
-                $explode = explode('_', $load_url);
-                $explode = array_unique($explode);
-                $tmp = implode('_', $explode);
-                if(strlen($tmp) < $file_length){
-                    $load_url = $tmp;
-                } else {
-                    while(strlen($tmp) >= $file_length){
-                        $count = count($explode);
-                        if($count === 1){
-                            break;
-                        }
-                        array_shift($explode);
-                        $tmp = implode('_', $explode);
-                    }
-                    $load_url = $tmp;
-                }
-            }
+            $load = Autoload::name_reducer($object, $load, $object->config('autoload.cache.file.max_file_length'));
+            $load_directory = Autoload::name_reducer($object, $item['directory'], $object->config('autoload.cache.file.max_directory_length'), $object->config('ds'));
+            $load_url = $object->config('autoload.cache.class') . $load_directory . $load;
             $data[] = $load_url;
             $object->config('autoload.cache.file.name', $load_url);
         }
