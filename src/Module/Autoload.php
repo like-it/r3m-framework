@@ -558,6 +558,8 @@ class Autoload {
             if(empty($this->expose())){
                 Logger::debug('Autoload prefixList: ', [ $prefixList ]);
                 Logger::debug('Autoload error: ', [ $fileList ]);
+                $debug = debug_backtrace(true);
+                d($debug);
                 throw new LocateException('Autoload error, cannot load (' . $load .') class.', Autoload::exception_filelist($fileList));
             }
             $object = new stdClass();
