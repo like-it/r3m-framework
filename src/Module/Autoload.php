@@ -484,9 +484,6 @@ class Autoload {
                                             }
                                         }
                                     }
-                                    d(file_exists($file));
-                                    d($file);
-                                    d(filemtime($mtime[sha1($file)]));
                                     if(
                                         $mtime &&
                                         $file === $object->config('autoload.cache.file.name') &&
