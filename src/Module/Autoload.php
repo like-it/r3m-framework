@@ -320,6 +320,8 @@ class Autoload {
                             array_shift($explode);
                         break;
                         default:
+                            $debug = debug_backtrace(true);
+                            d($debug);
                             throw new Exception('cannot reduce name with: ' . $pop_or_shift);
                     }
                     $tmp = implode('_', $explode);
