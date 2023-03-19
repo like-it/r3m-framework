@@ -386,9 +386,9 @@ class Build {
                             Autoload::name_reducer(
                                 $this->object(),
                                 $file,
-                                $this->object()->config('parse.build.plugin.file_length'),
-                                $this->object()->config('parse.build.plugin.file_separator'),
-                                $this->object()->config('parse.build.plugin.file_pop_or_shift')
+                                $this->object()->config('parse.build.plugin.name_length'),
+                                $this->object()->config('parse.build.plugin.name_separator'),
+                                $this->object()->config('parse.build.plugin.name_pop_or_shift')
                             );
                         $ramdisk_url = $ramdisk_dir . $ramdisk_file;
                         ddd($ramdisk_url);
