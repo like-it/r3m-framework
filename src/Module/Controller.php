@@ -249,6 +249,7 @@ class Controller {
         if(!$read){
             $read = new Data();
         }
+        d($view_url);
         if(
             File::exist($view_url) &&
             $read->has(sha1($view_url) . '.url') &&
