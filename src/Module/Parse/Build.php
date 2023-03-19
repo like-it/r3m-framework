@@ -487,6 +487,7 @@ class Build {
         $write = str_replace($this->storage()->data('placeholder.generation.time'), round($this->storage()->data('time.duration') * 1000, 2). ' msec', $write);
         $dir = Dir::name($url);
         Dir::create($dir);
+        d($url);
         File::put($url, $write);
         //make event which checks php-l and move accordingly
 //        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
@@ -1033,7 +1034,6 @@ class Build {
                 $key .
                 $config->data('extension.php')
             ;
-            d($url);
             $storage->data('url', $url);
             $storage->data('key', $key);
             if(!empty($options['parent'])){
@@ -1044,6 +1044,7 @@ class Build {
             }
             $this->meta($options);
         }
+        d($url);
         return $url;
     }
 
