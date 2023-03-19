@@ -373,42 +373,51 @@ class Build {
                     $config_mtime = false;
                     $is_ramdisk_url = false;
                     if($this->object()->config('ramdisk.url')){
-                        $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
-                        $ramdisk_file =
-                            Autoload::name_reducer(
-                                $this->object(),
-                                str_replace('/', '_', $dir),
-                                $this->object()->config('parse.build.plugin.directory_length'),
-                                $this->object()->config('parse.build.plugin.directory_separator'),
-                                $this->object()->config('parse.build.plugin.directory_pop_or_shift')
-                            ) .
-                            '_' .
-                            Autoload::name_reducer(
-                                $this->object(),
-                                $file,
-                                $this->object()->config('parse.build.plugin.name_length'),
-                                $this->object()->config('parse.build.plugin.name_separator'),
-                                $this->object()->config('parse.build.plugin.name_pop_or_shift')
-                            );
-                        $ramdisk_url = $ramdisk_dir . $ramdisk_file;
-                        $config_dir = $this->object()->config('ramdisk.url') .
-                            'Plugin' .
-                            $this->object()->config('ds')
-                        ;
-                        $config_url = $config_dir .
-                            'File.Mtime' .
-                            $this->object()->config('extension.json')
-                        ;
-                        $config_mtime = $this->object()->data_read($config_url, sha1($config_url));
-                        if(!$config_mtime){
-                            $config_mtime = new Data();
-                        }
-                        elseif(
-                            $config_mtime->has(sha1($ramdisk_url)) &&
-                            File::mtime($config_mtime->get(sha1($ramdisk_url))) && File::mtime($ramdisk_url)
+                        if(
+                            $this->object()->config('parse.build.plugin.directory_length') &&
+                            $this->object()->config('parse.build.plugin.directory_separator') &&
+                            $this->object()->config('parse.build.plugin.directory_pop_or_shift') &&
+                            $this->object()->config('parse.build.plugin.name_length') &&
+                            $this->object()->config('parse.build.plugin.name_separator') &&
+                            $this->object()->config('parse.build.plugin.name_pop_or_shift')
                         ){
-                            $is_ramdisk_url = true;
-                            $url = $ramdisk_url;
+                            $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
+                            $ramdisk_file =
+                                Autoload::name_reducer(
+                                    $this->object(),
+                                    str_replace('/', '_', $dir),
+                                    $this->object()->config('parse.build.plugin.directory_length'),
+                                    $this->object()->config('parse.build.plugin.directory_separator'),
+                                    $this->object()->config('parse.build.plugin.directory_pop_or_shift')
+                                ) .
+                                '_' .
+                                Autoload::name_reducer(
+                                    $this->object(),
+                                    $file,
+                                    $this->object()->config('parse.build.plugin.name_length'),
+                                    $this->object()->config('parse.build.plugin.name_separator'),
+                                    $this->object()->config('parse.build.plugin.name_pop_or_shift')
+                                );
+                            $ramdisk_url = $ramdisk_dir . $ramdisk_file;
+                            $config_dir = $this->object()->config('ramdisk.url') .
+                                'Plugin' .
+                                $this->object()->config('ds')
+                            ;
+                            $config_url = $config_dir .
+                                'File.Mtime' .
+                                $this->object()->config('extension.json')
+                            ;
+                            $config_mtime = $this->object()->data_read($config_url, sha1($config_url));
+                            if(!$config_mtime){
+                                $config_mtime = new Data();
+                            }
+                            elseif(
+                                $config_mtime->has(sha1($ramdisk_url)) &&
+                                File::mtime($config_mtime->get(sha1($ramdisk_url))) && File::mtime($ramdisk_url)
+                            ){
+                                $is_ramdisk_url = true;
+                                $url = $ramdisk_url;
+                            }
                         }
                     }
                     if(File::exist($url)){
