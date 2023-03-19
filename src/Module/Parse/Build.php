@@ -488,14 +488,15 @@ class Build {
         $dir = Dir::name($url);
         Dir::create($dir);
         File::put($url, $write);
-        //make event which checks php-l
+        //make event which checks php-l and move accordingly
 //        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
         $command = 'php -l ' . escapeshellcmd($url);
-//        $default = $this->object->config('core.execute.stream.is.default');
-//        $this->object->config('core.execute.stream.init', true);
+        $default = $this->object->config('core.execute.stream.is.default');
+        ddd($default);
+        $this->object->config('core.execute.stream.init', true);
         Core::execute($this->object(), $command, $output, $error);
-//        $this->object->config('core.execute.stream.init', false);
-//        $this->object->config('core.execute.stream.is.default', $default);
+        $this->object->config('core.execute.stream.init', false);
+        $this->object->config('core.execute.stream.is.default', $default);
         if($error){
             $url_write_error = $this->object()->config('framework.dir.temp') . 'Parse/Error/' . File::basename($url);
             $this->object()->logger()->error($error, [ $url_write_error ]);
