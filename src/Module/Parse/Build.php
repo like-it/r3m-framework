@@ -382,6 +382,7 @@ class Build {
                                 $this->object()->config('parse.build.plugin.directory_separator'),
                                 $this->object()->config('parse.build.plugin.directory_pop_or_shift')
                             ) .
+                            '_' .
                             Autoload::name_reducer(
                                 $this->object(),
                                 $file,
