@@ -334,7 +334,6 @@ class Autoload {
                     $load_url = $tmp;
                 }
             }
-            d($load_url);
             $data[] = $load_url;
             $object->config('autoload.cache.file.name', $load_url);
         }
