@@ -790,6 +790,8 @@ class App extends Data {
                         ;
                         $ramdisk_url = $ramdisk_dir .
                             str_replace('/', '_', $part) .
+                            '_' .
+                            sha1($ramdisk_dir) .
                             $this->config('extension.php')
                         ;
                         d($ramdisk_url);
