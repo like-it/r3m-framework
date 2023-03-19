@@ -236,7 +236,6 @@ class Controller {
             $object->config('dictionary.view') .
             str_replace('/', '_', $first)
         ;
-        d($view_url);
         $config_dir = $object->config('ramdisk.url') .
             'Cache' .
             $object->config('ds')

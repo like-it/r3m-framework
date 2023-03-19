@@ -465,6 +465,7 @@ class Autoload {
                             if(substr($file, 0, 5) == '[---]'){
                                 continue;
                             }
+                            d($file);
                             if(file_exists($file)){
                                 if($object->config('autoload.cache.file.name')){
                                     $config_dir = $object->config('ramdisk.url') .
