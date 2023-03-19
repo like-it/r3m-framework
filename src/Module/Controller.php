@@ -229,6 +229,7 @@ class Controller {
         }
         $url = false;
 
+        d($list);
         $first = reset($list);
 
         $view_url = $object->config('ramdisk.url') .
