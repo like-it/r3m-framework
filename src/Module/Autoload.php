@@ -535,6 +535,8 @@ class Autoload {
                                         }
                                     }
                                 }
+                                d($file);
+                                d($load);
                                 $this->cache($file, $load);
                                 return $file;
                             }
