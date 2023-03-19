@@ -141,7 +141,15 @@
         "build": {
             "name_length": 200,
             "name_separator": "_",
-            "name_pop_or_shift": "shift"
+            "name_pop_or_shift": "shift",
+            "plugin" : {
+                "name_length": 100,
+                "name_separator": "_",
+                "name_pop_or_shift": "shift",
+                "directory_length": 100,
+                "directory_separator": "_",
+                "directory_pop_or_shift": "pop"
+            }
         },
         "read": {
             "parser": "{{R3M}}",

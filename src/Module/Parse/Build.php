@@ -375,8 +375,20 @@ class Build {
                     if($this->object()->config('ramdisk.url')){
                         $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
                         $ramdisk_file =
-                            Autoload::name_reducer($this->object(), str_replace('/', '_', $dir), 100, '_', 'pop') .
-                            Autoload::name_reducer($this->object(), $file, 100, '_', 'shift');
+                            Autoload::name_reducer(
+                                $this->object(),
+                                str_replace('/', '_', $dir),
+                                $this->object()->config('parse.build.plugin.directory_length'),
+                                $this->object()->config('parse.build.plugin.directory_separator'),
+                                $this->object()->config('parse.build.plugin.directory_shift_or_pop')
+                            ) .
+                            Autoload::name_reducer(
+                                $this->object(),
+                                $file,
+                                $this->object()->config('parse.build.plugin.file_length'),
+                                $this->object()->config('parse.build.plugin.file_separator'),
+                                $this->object()->config('parse.build.plugin.file_shift_or_pop')
+                            );
                         $ramdisk_url = $ramdisk_dir . $ramdisk_file;
                         $config_dir = $this->object()->config('ramdisk.url') .
                             'Cache' .
