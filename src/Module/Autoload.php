@@ -340,14 +340,13 @@ class Autoload {
         ){
             $load = $item['directory'] . $item['file'];
             $load_directory = dirname($load);
-            d($load_directory);
             $load = basename($load) . '.' . Autoload::EXT_PHP;
             $load = Autoload::name_reducer($object, $load, $object->config('autoload.cache.file.max_length_file'),'_', 'shift');
             $load_directory = Autoload::name_reducer($object, $load_directory, $object->config('autoload.cache.file.max_length_directory'), $object->config('ds'), 'pop');
-            d($load_directory);
             $load_url = $object->config('autoload.cache.class') . $load_directory . '_' . $load;
             $data[] = $load_url;
             $object->config('autoload.cache.file.name', $load_url);
+            d($load_url);
         }
         if(
             property_exists($this->read, 'autoload') &&
@@ -515,7 +514,6 @@ class Autoload {
                                             if(Autoload::ramdisk_exclude_content($object, $read)){
                                                 //files with content __DIR__, __FILE__ cannot be cached
                                             } else {
-                                                d($object->config('autoload.cache.file.name'));
                                                 file_put_contents($object->config('autoload.cache.file.name'), $read);
                                                 touch($object->config('autoload.cache.file.name'), filemtime($file));
                                                 //save file reference for filemtime comparison
