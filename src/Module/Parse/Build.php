@@ -392,7 +392,7 @@ class Build {
                         $ramdisk_url = $ramdisk_dir . $ramdisk_file;
                         d($ramdisk_url);
                         $config_dir = $this->object()->config('ramdisk.url') .
-                            'Cache' .
+                            'Plugin' .
                             $this->object()->config('ds')
                         ;
                         $config_url = $config_dir .
