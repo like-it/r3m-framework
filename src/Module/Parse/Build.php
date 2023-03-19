@@ -391,7 +391,6 @@ class Build {
                                 $this->object()->config('parse.build.plugin.name_pop_or_shift')
                             );
                         $ramdisk_url = $ramdisk_dir . $ramdisk_file;
-                        ddd($ramdisk_url);
                         $config_dir = $this->object()->config('ramdisk.url') .
                             'Plugin' .
                             $this->object()->config('ds')
