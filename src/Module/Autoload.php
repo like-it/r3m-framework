@@ -484,6 +484,7 @@ class Autoload {
                                             }
                                         }
                                     }
+                                    d(file_exists($file));
                                     d($file);
                                     d($mtime[sha1($file)]);
                                     if(
