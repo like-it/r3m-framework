@@ -293,6 +293,9 @@ class Autoload {
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function name_reducer(App $object, $name='', $length=100, $separator='_', $pop_or_shift='pop'){
         $name_length = strlen($name);
         if($name_length >= $length){
@@ -305,6 +308,7 @@ class Autoload {
                 while(strlen($tmp) >= $length){
                     $count = count($explode);
                     d($count);
+                    d($length);
                     if($count === 1){
                         break;
                     }
@@ -315,6 +319,8 @@ class Autoload {
                         case 'shift':
                             array_shift($explode);
                         break;
+                        default:
+                            throw new Exception('cannot reduce name with: ' . $pop_or_shift);
                     }
                     $tmp = implode('_', $explode);
                 }
