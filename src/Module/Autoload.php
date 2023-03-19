@@ -77,7 +77,7 @@ class Autoload {
         }
         $cache_dir = $object->config('autoload.cache.ramdisk');
         if($cache_dir){
-            $class_dir = $object->config('ramdisk.url') . 'Test' . $object->config('ds');
+            $class_dir = $object->config('ramdisk.url') . 'Class' . $object->config('ds');
             $object->config('autoload.cache.class', $class_dir);
 
             if(!is_dir($object->config('ramdisk.url'))){
@@ -500,7 +500,6 @@ class Autoload {
                                             //from disk
                                             //copy to ramdisk
                                             $id = posix_geteuid();
-                                            d($object->config('autoload.cache.file.name'));
                                             $dirname = dirname($object->config('autoload.cache.file.name'));
                                             if(!is_dir($dirname)){
                                                 mkdir($dirname, 0750, true);
@@ -514,6 +513,7 @@ class Autoload {
                                             } else {
                                                 file_put_contents($object->config('autoload.cache.file.name'), $read);
                                                 touch($object->config('autoload.cache.file.name'), filemtime($file));
+
                                                 //save file reference for filemtime comparison
                                                 $mtime[sha1($object->config('autoload.cache.file.name'))] = $file;
                                                 if(!is_dir($config_dir)){
@@ -526,6 +526,8 @@ class Autoload {
                                                     exec('chown www-data:www-data ' . $object->config('autoload.cache.file.name'));
                                                     exec('chown www-data:www-data ' . $config_dir);
                                                     exec('chown www-data:www-data ' . $config_url);
+                                                    exec('chmod 640 ' . $object->config('autoload.cache.file.name'));
+                                                    exec('chmod 640 ' . $config_url);
                                                 }
                                             }
                                         }
