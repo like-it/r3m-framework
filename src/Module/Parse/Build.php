@@ -380,14 +380,14 @@ class Build {
                                 str_replace('/', '_', $dir),
                                 $this->object()->config('parse.build.plugin.directory_length'),
                                 $this->object()->config('parse.build.plugin.directory_separator'),
-                                $this->object()->config('parse.build.plugin.directory_shift_or_pop')
+                                $this->object()->config('parse.build.plugin.directory_pop_or_shift')
                             ) .
                             Autoload::name_reducer(
                                 $this->object(),
                                 $file,
                                 $this->object()->config('parse.build.plugin.file_length'),
                                 $this->object()->config('parse.build.plugin.file_separator'),
-                                $this->object()->config('parse.build.plugin.file_shift_or_pop')
+                                $this->object()->config('parse.build.plugin.file_pop_or_shift')
                             );
                         $ramdisk_url = $ramdisk_dir . $ramdisk_file;
                         ddd($ramdisk_url);
