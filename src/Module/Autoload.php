@@ -104,6 +104,7 @@ class Autoload {
                 $object->config(Config::DS)
             ;
         }
+        d($cache_dir);
         $parameters = [];
         $parameters['cache'] = $cache_dir;
         $parameters = Config::parameters($object, $parameters);
