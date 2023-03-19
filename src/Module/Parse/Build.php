@@ -1033,7 +1033,7 @@ class Build {
                 $key .
                 $config->data('extension.php')
             ;
-//            d($url);
+            d($url);
             $storage->data('url', $url);
             $storage->data('key', $key);
             if(!empty($options['parent'])){

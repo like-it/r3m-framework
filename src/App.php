@@ -869,7 +869,6 @@ class App extends Data {
                             file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
                             $this->set(sha1($config_url), $mtime);
                             if(empty($id)){
-
                                 exec('chown www-data:www-data ' . $ramdisk_url);
                                 exec('chown www-data:www-data ' . $config_dir);
                                 exec('chown www-data:www-data ' . $config_url);
