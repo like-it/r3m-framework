@@ -777,6 +777,8 @@ class App extends Data {
                 if($is_not && $load_part === $prefix){
                     return false;
                 }
+                d($load_part);
+                d($prefix);
                 if($load_part === $prefix){
                     $part = str_replace('R3m\\Io\\', '', $load);
                     $part = str_replace('\\', '/', $part);
