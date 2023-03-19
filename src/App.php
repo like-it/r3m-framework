@@ -849,9 +849,7 @@ class App extends Data {
                             $is_require = true;
                         }
                         if($is_require === false && Autoload::ramdisk_exclude_load($this, $load)){
-                            d($load);
-                            d($url);
-                            ddd('exclude_load');
+
                         }
                         elseif($is_require === false && Autoload::ramdisk_exclude_content($this, $read)){
                             d($load);
@@ -873,6 +871,8 @@ class App extends Data {
                                 exec('chown www-data:www-data ' . $config_dir);
                                 exec('chown www-data:www-data ' . $config_url);
                             }
+                            exec('chmod 640 ' . $ramdisk_url);
+                            exec('chown 640 ' . $config_url);
                         }
                     }
                 }
