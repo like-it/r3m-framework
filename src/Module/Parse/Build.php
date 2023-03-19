@@ -1036,8 +1036,6 @@ class Build {
 
             $url =
                 $dir .
-                $config->data('dictionary.template') .
-                '_' .
                 $name .
                 $key .
                 $config->data('extension.php')
