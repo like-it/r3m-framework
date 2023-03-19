@@ -308,17 +308,35 @@ class Autoload {
             $object &&
             $object->config('autoload.cache.class')
         ){
-            d($item);
             $load = $item['directory'] . $item['file'];
-
-            $dirname = dirname($load);
-            d($dirname);
-
             $load = basename($load) . '.' . Autoload::EXT_PHP;
             $load_url = $object->config('autoload.cache.class') . $load;
+            $load_length = strlen($load_url);
+            $file_length = $object->config('autoload.cache.file.length');
+            if(empty($file_length)){
+                $file_length = 100;
+            }
+            if($load_length >= $file_length){
+                $explode = explode('_', $load_url);
+                $explode = array_unique($explode);
+                $tmp = implode('_', $explode);
+                if(strlen($tmp) < $file_length){
+                    $load_url = $tmp;
+                } else {
+                    while(strlen($tmp) >= $file_length){
+                        $count = count($explode);
+                        if($count === 1){
+                            break;
+                        }
+                        array_shift($explode);
+                        $tmp = implode('_', $explode);
+                    }
+                    $load_url = $tmp;
+                }
+            }
             d($load_url);
             $data[] = $load_url;
-            $object->config('autoload.cache.file', $load_url);
+            $object->config('autoload.cache.file.name', $load_url);
         }
         if(
             property_exists($this->read, 'autoload') &&
@@ -438,7 +456,7 @@ class Autoload {
                                 continue;
                             }
                             if(file_exists($file)){
-                                if($object->config('autoload.cache.file')){
+                                if($object->config('autoload.cache.file.name')){
                                     $config_dir = $object->config('ramdisk.url') .
                                         Autoload::NAME .
                                         $object->config('ds')
@@ -459,7 +477,7 @@ class Autoload {
                                     }
                                     if(
                                         $mtime &&
-                                        $file === $object->config('autoload.cache.file')
+                                        $file === $object->config('autoload.cache.file.name')
                                     ){
                                         if(
                                             array_key_exists(sha1($file), $mtime) &&
@@ -478,7 +496,7 @@ class Autoload {
                                             //from disk
                                             //copy to ramdisk
                                             $id = posix_geteuid();
-                                            $dirname = dirname($object->config('autoload.cache.file'));
+                                            $dirname = dirname($object->config('autoload.cache.file.name'));
                                             if(!is_dir($dirname)){
                                                 mkdir($dirname, 0750, true);
                                                 if(empty($id)){
@@ -489,10 +507,10 @@ class Autoload {
                                             if(Autoload::ramdisk_exclude_content($object, $read)){
                                                 //files with content __DIR__, __FILE__ cannot be cached
                                             } else {
-                                                file_put_contents($object->config('autoload.cache.file'), $read);
-                                                touch($object->config('autoload.cache.file'), filemtime($file));
+                                                file_put_contents($object->config('autoload.cache.file.name'), $read);
+                                                touch($object->config('autoload.cache.file.name'), filemtime($file));
                                                 //save file reference for filemtime comparison
-                                                $mtime[sha1($object->config('autoload.cache.file'))] = $file;
+                                                $mtime[sha1($object->config('autoload.cache.file.name'))] = $file;
                                                 if(!is_dir($config_dir)){
                                                     mkdir($config_dir, 0750, true);
                                                 }
@@ -500,7 +518,7 @@ class Autoload {
                                                 $object->set(sha1($config_url), $mtime);
                                                 $id = posix_geteuid();
                                                 if(empty($id)){
-                                                    exec('chown www-data:www-data ' . $object->config('autoload.cache.file'));
+                                                    exec('chown www-data:www-data ' . $object->config('autoload.cache.file.name'));
                                                     exec('chown www-data:www-data ' . $config_dir);
                                                     exec('chown www-data:www-data ' . $config_url);
                                                 }
