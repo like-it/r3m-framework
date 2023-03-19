@@ -266,13 +266,13 @@ class Controller {
                     $read->write($config_url);
                     $id = posix_geteuid();
                     if(empty($id)){
-                        Core::execute($object, 'chown www-data:www-data ' . substr($view_dir, 0, -1), $output, $notification, Core::SHELL_DETACHED);
-                        Core::execute($object, 'chown www-data:www-data ' . substr($config_dir, 0, -1), $output, $notification, Core::SHELL_DETACHED);
-                        Core::execute($object, 'chown www-data:www-data ' . $view_url, $output, $notification, Core::SHELL_DETACHED);
-                        Core::execute($object, 'chown www-data:www-data ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
+                        exec('chown www-data:www-data ' . $view_dir);
+                        exec('chown www-data:www-data ' . $config_dir);
+                        exec('chown www-data:www-data ' . $view_url);
+                        exec('chown www-data:www-data ' . $config_url);
                     }
-                    Core::execute($object, 'chmod 0640 ' . $view_url, $output, $notification, Core::SHELL_DETACHED);
-                    Core::execute($object, 'chmod 0640 ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
+                    exec('chmod 640 ' . $view_url);
+                    exec('chmod 640 ' . $config_url);
                 }
                 $url = $file;
                 break;

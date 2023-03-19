@@ -418,14 +418,18 @@ class FileRequest {
                     $id = posix_geteuid();
                     if(empty($id)){
                         $command = 'chown www-data:www-data ' . $ram_dir;
-                        Core::execute($object, $command, $output,$notification, Core::SHELL_DETACHED);
+                        exec($command);
                         $command = 'chown www-data:www-data ' . $ram_url;
-                        Core::execute($object, $command, $output,$notification, Core::SHELL_DETACHED);
+                        exec($command);
                         $command = 'chown www-data:www-data ' . $file_mtime_dir;
-                        Core::execute($object, $command, $output,$notification, Core::SHELL_DETACHED);
+                        exec($command);
                         $command = 'chown www-data:www-data ' . $file_mtime_url;
-                        Core::execute($object, $command, $output,$notification, Core::SHELL_DETACHED);
+                        exec($command);
                     }
+                    $command = 'chmod 640 ' . $ram_url;
+                    exec($command);
+                    $command = 'chmod 640 ' . $file_mtime_url;
+                    exec($command);
                 }
                 return $read;
             }
