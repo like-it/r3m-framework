@@ -608,7 +608,9 @@ class Autoload {
                         exec('chown www-data:www-data ' . $url);
                     }
                 }
-                exec('chmod 640 ' . $url);
+                if(file_exists($url)) {
+                    exec('chmod 640 ' . $url);
+                }
             }
         }
     }
