@@ -293,7 +293,7 @@ class Autoload {
         return false;
     }
 
-    private static function name_reducer(App $object, $name='', $length=100, $separator='_', $pop_or_shift='pop'){
+    public static function name_reducer(App $object, $name='', $length=100, $separator='_', $pop_or_shift='pop'){
         $name_length = strlen($name);
         if($name_length >= $length){
             $explode = explode($separator, $name);
