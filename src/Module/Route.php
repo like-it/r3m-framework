@@ -1184,8 +1184,9 @@ class Route extends Data {
         $touch = File::touch($cache_url, $time, $time);
         $id = posix_geteuid();
         if(empty($id)){
-            exec('chown www-data:www-data ' . substr($cache_root_dir, 0, -1));
+            exec('chown www-data:www-data ' . $cache_root_dir);
         }
+        exec('chmod 640 ' . $cache_url);
         return $byte;
     }
 
