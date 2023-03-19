@@ -249,7 +249,6 @@ class Controller {
         if(!$read){
             $read = new Data();
         }
-        d($view_url);
         if(
             File::exist($view_url) &&
             $read->has(sha1($view_url) . '.url') &&
@@ -263,6 +262,7 @@ class Controller {
                     //copy to ramdisk
                     $view_dir = Dir::name($view_url);
                     Dir::create($view_dir);
+                    d($view_url);
                     File::copy($file, $view_url);
                     File::touch($view_url, filemtime($file));
                     $read->set(sha1($view_url) . '.url', $file);
