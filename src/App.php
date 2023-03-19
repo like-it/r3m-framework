@@ -777,8 +777,6 @@ class App extends Data {
                 if($is_not && $load_part === $prefix){
                     return false;
                 }
-                d($load_part);
-                d($prefix);
                 if($load_part === $prefix){
                     $part = str_replace('R3m\\Io\\', '', $load);
                     $part = str_replace('\\', '/', $part);
@@ -796,6 +794,7 @@ class App extends Data {
                             sha1($ramdisk_dir) .
                             $this->config('extension.php')
                         ;
+                        d($ramdisk_url);
                     }
                     $config_dir = $this->config('ramdisk.url') .
                         App::NAME .
