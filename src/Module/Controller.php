@@ -228,8 +228,6 @@ class Controller {
             }
         }
         $url = false;
-
-        d($list);
         $first = reset($list);
 
         $view_url = $object->config('ramdisk.url') .
@@ -238,6 +236,7 @@ class Controller {
             $object->config('dictionary.view') .
             str_replace('/', '_', $first)
         ;
+        d($view_url);
         $config_dir = $object->config('ramdisk.url') .
             'Cache' .
             $object->config('ds')
