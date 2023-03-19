@@ -777,102 +777,102 @@ class App extends Data {
                 if($is_not && $load_part === $prefix){
                     return false;
                 }
-                if($load_part === $prefix){
-                    $part = str_replace('R3m\\Io\\', '', $load);
-                    $part = str_replace('\\', '/', $part);
-                    $url = $this->config('framework.dir.source') . $part . $this->config('extension.php');
-                    $ramdisk_dir = false;
-                    $ramdisk_url = false;
-                    if($this->config('ramdisk.url')){
-                        $ramdisk_dir = $this->config('ramdisk.url') .
-                            'Class' .
-                            $this->config('ds')
-                        ;
-                        $ramdisk_url = $ramdisk_dir .
-                            str_replace('/', '_', $part) .
-                            '_' .
-                            sha1($ramdisk_dir) .
-                            $this->config('extension.php')
-                        ;
-                        d($ramdisk_url);
-                    }
-                    $config_dir = $this->config('ramdisk.url') .
-                        App::NAME .
+                if($load_part !== $prefix){
+                    continue;
+                }
+                $part = str_replace('R3m\\Io\\', '', $load);
+                $part = str_replace('\\', '/', $part);
+                $url = $this->config('framework.dir.source') . $part . $this->config('extension.php');
+                $ramdisk_dir = false;
+                $ramdisk_url = false;
+                if($this->config('ramdisk.url')){
+                    $ramdisk_dir = $this->config('ramdisk.url') .
+                        'App' .
                         $this->config('ds')
                     ;
-                    $config_url = $config_dir .
-                        'File.Mtime' .
-                        $this->config('extension.json')
+                    $ramdisk_url = $ramdisk_dir .
+                        str_replace('/', '_', $part) .
+                        '_' .
+                        sha1($ramdisk_dir) .
+                        $this->config('extension.php')
                     ;
-                    $mtime = $this->get(sha1($config_url));
-                    if(empty($mtime)){
-                        $mtime = [];
-                        if(file_exists($config_url)){
-                            $mtime = file_get_contents($config_url);
-                            if($mtime){
-                                $mtime = json_decode($mtime, true);
-                                $this->set(sha1($config_url), $mtime);
-                            }
+                }
+                $config_dir = $this->config('ramdisk.url') .
+                    App::NAME .
+                    $this->config('ds')
+                ;
+                $config_url = $config_dir .
+                    'File.Mtime' .
+                    $this->config('extension.json')
+                ;
+                $mtime = $this->get(sha1($config_url));
+                if(empty($mtime)){
+                    $mtime = [];
+                    if(file_exists($config_url)){
+                        $mtime = file_get_contents($config_url);
+                        if($mtime){
+                            $mtime = json_decode($mtime, true);
+                            $this->set(sha1($config_url), $mtime);
                         }
                     }
+                }
+                if(
+                    file_exists($ramdisk_url) &&
+                    array_key_exists(sha1($ramdisk_url), $mtime) &&
+                    filemtime($ramdisk_url) === filemtime($mtime[sha1($ramdisk_url)])
+                ){
+                    require_once $ramdisk_url;
+                }
+                elseif(file_exists($url)){
+                    require_once $url;
                     if(
-                        file_exists($ramdisk_url) &&
-                        array_key_exists(sha1($ramdisk_url), $mtime) &&
-                        filemtime($ramdisk_url) === filemtime($mtime[sha1($ramdisk_url)])
+                        $ramdisk_dir &&
+                        $ramdisk_url &&
+                        $config_dir &&
+                        $config_url
                     ){
-                        require_once $ramdisk_url;
-                    }
-                    elseif(file_exists($url)){
-                        require_once $url;
+                        //copy to ramdisk
+                        //save filemtime
+                        $id = posix_geteuid();
+                        if(!is_dir($ramdisk_dir)){
+                            mkdir($ramdisk_dir, 0750, true);
+                            exec('chown www-data:www-data ' . $ramdisk_dir);
+                        }
+                        $read = file_get_contents($url);
+                        $require = $this->config('ramdisk.autoload.require');
+                        $is_require = false;
                         if(
-                            $ramdisk_dir &&
-                            $ramdisk_url &&
-                            $config_dir &&
-                            $config_url
-                        ){
-                            //copy to ramdisk
-                            //save filemtime
-                            $id = posix_geteuid();
-                            if(!is_dir($ramdisk_dir)){
-                                mkdir($ramdisk_dir, 0750, true);
-                                exec('chown www-data:www-data ' . $ramdisk_dir);
+                            !empty($require) &&
+                            is_array($require) &&
+                            in_array($load, $require, true)
+                        ) {
+                            $is_require = true;
+                        }
+                        if($is_require === false && Autoload::ramdisk_exclude_load($this, $load)){
+                            d($load);
+                            d($url);
+                            ddd('exclude_load');
+                        }
+                        elseif($is_require === false && Autoload::ramdisk_exclude_content($this, $read)){
+                            d($load);
+                            d($url);
+                            //files with content __DIR__, __FILE__ cannot be cached
+                            //save to /tmp/r3m/io/.../Autoload/Disable.Cache.json
+                            ddd('exclude_content');
+                        } else {
+                            file_put_contents($ramdisk_url, $read);
+                            touch($ramdisk_url, filemtime($url));
+                            $mtime[sha1($ramdisk_url)] = $url;
+                            if(!is_dir($config_dir)){
+                                mkdir($config_dir, 0750, true);
                             }
-                            $read = file_get_contents($url);
-                            $require = $this->config('ramdisk.autoload.require');
-                            $is_require = false;
-                            if(
-                                !empty($require) &&
-                                is_array($require) &&
-                                in_array($load, $require, true)
-                            ) {
-                                $is_require = true;
-                            }
-                            if($is_require === false && Autoload::ramdisk_exclude_load($this, $load)){
-                                d($load);
-                                d($url);
-                                ddd('exclude_load');
-                            }
-                            elseif($is_require === false && Autoload::ramdisk_exclude_content($this, $read)){
-                                d($load);
-                                d($url);
-                                //files with content __DIR__, __FILE__ cannot be cached
-                                //save to /tmp/r3m/io/.../Autoload/Disable.Cache.json
-                                ddd('exclude_content');
-                            } else {
-                                file_put_contents($ramdisk_url, $read);
-                                touch($ramdisk_url, filemtime($url));
-                                $mtime[sha1($ramdisk_url)] = $url;
-                                if(!is_dir($config_dir)){
-                                    mkdir($config_dir, 0750, true);
-                                }
-                                file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
-                                $this->set(sha1($config_url), $mtime);
-                                if(empty($id)){
+                            file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
+                            $this->set(sha1($config_url), $mtime);
+                            if(empty($id)){
 
-                                    exec('chown www-data:www-data ' . $ramdisk_url);
-                                    exec('chown www-data:www-data ' . $config_dir);
-                                    exec('chown www-data:www-data ' . $config_url);
-                                }
+                                exec('chown www-data:www-data ' . $ramdisk_url);
+                                exec('chown www-data:www-data ' . $config_dir);
+                                exec('chown www-data:www-data ' . $config_url);
                             }
                         }
                     }
