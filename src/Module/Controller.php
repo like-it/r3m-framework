@@ -261,7 +261,6 @@ class Controller {
                     //copy to ramdisk
                     $view_dir = Dir::name($view_url);
                     Dir::create($view_dir);
-                    d($view_url);
                     File::copy($file, $view_url);
                     File::touch($view_url, filemtime($file));
                     $read->set(sha1($view_url) . '.url', $file);
@@ -273,6 +272,8 @@ class Controller {
                         Core::execute($object, 'chown www-data:www-data ' . $view_url, $output, $notification, Core::SHELL_DETACHED);
                         Core::execute($object, 'chown www-data:www-data ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
                     }
+                    Core::execute($object, 'chmod 0640 ' . $view_url, $output, $notification, Core::SHELL_DETACHED);
+                    Core::execute($object, 'chown 0640 ' . $config_url, $output, $notification, Core::SHELL_DETACHED);
                 }
                 $url = $file;
                 break;
