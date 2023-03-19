@@ -374,7 +374,9 @@ class Build {
                     $is_ramdisk_url = false;
                     if($this->object()->config('ramdisk.url')){
                         $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
-                        $ramdisk_file = str_replace('/', '_', substr($dir, 1)) . $file;
+                        $ramdisk_file =
+                            Autoload::name_reducer($this->object(), str_replace('/', '_', $dir), 100, '_', 'pop') .
+                            Autoload::name_reducer($this->object(), $file, 100, '_', 'shift');
                         $ramdisk_url = $ramdisk_dir . $ramdisk_file;
                         $config_dir = $this->object()->config('ramdisk.url') .
                             'Cache' .
