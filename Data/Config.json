@@ -138,6 +138,11 @@
         }
     },
     "parse": {
+        "build": {
+            "name_length": 200,
+            "name_separator": "_",
+            "name_pop_or_shift": "shift"
+        },
         "read": {
             "parser": "{{R3M}}",
             "object": {

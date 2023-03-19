@@ -51,6 +51,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
                 exec('chown www-data:www-data ' . $cache_dir);
                 exec('chown www-data:www-data ' . $cache_url);
             }
+            exec('chmod 640 ' . $cache_url);
 
         }
         $mtime = File::mtime($url);
