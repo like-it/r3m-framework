@@ -467,6 +467,7 @@ class Autoload {
                                 continue;
                             }
                             if(file_exists($file)){
+                                d($file);
                                 if($object->config('autoload.cache.file.name')){
                                     $config_dir = $object->config('ramdisk.url') .
                                         Autoload::NAME .
