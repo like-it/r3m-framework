@@ -243,8 +243,8 @@ class FileRequest {
                 '_' .
                 $extension .
                 '_' .
-                str_replace('/', '_', $dir) .
-                $file
+                Autoload::name_reducer($object, str_replace('/', '_', $dir),100, '_', 'pop') .
+                Autoload::name_reducer($object, $file, 100, '_', 'shift')
             ;
         }
         $is_ram_url = false;
