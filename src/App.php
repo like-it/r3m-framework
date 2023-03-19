@@ -762,7 +762,6 @@ class App extends Data {
      * @throws ObjectException
      */
     public function ramdisk_load($load=''){
-        d($load);
         $prefixes = $this->config('ramdisk.autoload.prefix');
         if(
             !empty($prefixes) &&
@@ -859,7 +858,6 @@ class App extends Data {
                                 //save to /tmp/r3m/io/.../Autoload/Disable.Cache.json
                                 ddd('exclude_content');
                             } else {
-                                d($ramdisk_url);
                                 file_put_contents($ramdisk_url, $read);
                                 touch($ramdisk_url, filemtime($url));
                                 $mtime[sha1($ramdisk_url)] = $url;
