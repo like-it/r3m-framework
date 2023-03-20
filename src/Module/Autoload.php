@@ -596,15 +596,6 @@ class Autoload {
             if($dir){
                 $url = $dir . Autoload::FILE;
                 $this->write($url, $this->read);
-                $id = posix_getuid();
-                if(empty($id)){
-                    if(file_exists($dir)){
-                        exec('chown www-data:www-data ' . $dir);
-                    }
-                    if(file_exists($url)){
-                        exec('chown www-data:www-data ' . $url);
-                    }
-                }
                 if(file_exists($url)) {
                     exec('chmod 640 ' . $url);
                 }
