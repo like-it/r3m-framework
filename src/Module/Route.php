@@ -1035,17 +1035,17 @@ class Route extends Data {
             $config->data(Config::DATA_PROJECT_ROUTE_URL, $url);
         }
         $url = $config->data(Config::DATA_PROJECT_ROUTE_URL);
-        $uuid = posix_geteuid();
+        d($config->data('framework.dir.cache'));
+        die;
         $cache_url = $config->data('framework.dir.cache') .
-            $uuid .
+            $config->data(Config::POSIX_ID) .
             $config->data('ds') .
             $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
         ;
         if($object->config('ramdisk.url')){
             $cache_url = $object->config('ramdisk.url') .
+                $config->data(Config::POSIX_ID) .
                 'Cache' .
-                $config->data('ds') .
-                $uuid .
                 $config->data('ds') .
                 $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
             ;
@@ -1159,7 +1159,6 @@ class Route extends Data {
         $url = $route->url();
         $cache_url = $route->cache_url();
         $cache_dir = Dir::name($cache_url);
-        $cache_root_dir = Dir::name($cache_dir);
         $main = new stdClass();
         $main->resource = $url;
         $main->read = true;
@@ -1182,10 +1181,6 @@ class Route extends Data {
         $byte =  File::write($cache_url, $write);
         $time = strtotime(date('Y-m-d H:i:00'));
         $touch = File::touch($cache_url, $time, $time);
-        $id = posix_geteuid();
-        if(empty($id)){
-            exec('chown www-data:www-data ' . $cache_root_dir);
-        }
         exec('chmod 640 ' . $cache_url);
         return $byte;
     }
