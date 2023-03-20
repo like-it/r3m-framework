@@ -1035,8 +1035,6 @@ class Route extends Data {
             $config->data(Config::DATA_PROJECT_ROUTE_URL, $url);
         }
         $url = $config->data(Config::DATA_PROJECT_ROUTE_URL);
-        d($config->data('framework.dir.temp'));
-        die;
         $cache_url = $config->data('framework.dir.temp') .
             $config->data(Config::POSIX_ID) .
             $config->data('ds') .
