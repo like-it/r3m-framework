@@ -75,25 +75,24 @@ class Autoload {
             $autoload->addPrefix('Host',  $object->config(Config::DATA_PROJECT_DIR_HOST));
             $autoload->addPrefix('Source',  $object->config(Config::DATA_PROJECT_DIR_SOURCE));
         }
-        $cache_dir = $object->config('autoload.cache.ramdisk');
-        if($cache_dir){
-            $class_dir = $object->config('ramdisk.url') . 'Class' . $object->config('ds');
-            $object->config('autoload.cache.class', $class_dir);
+        if($object->config('ramdisk.url')){
+            $cache_dir = $object->config('ramdisk.url') . $object->config(Config::POSIX_ID) . $object->config('ds') . Autoload::NAME . $object->config('ds');
+            if($cache_dir){
+                $class_dir = $object->config('ramdisk.url') . $object->config(Config::POSIX_ID) . $object->config('ds') . 'Class' . $object->config('ds');
+                $object->config('autoload.cache.class', $class_dir);
 
-            if(!is_dir($object->config('ramdisk.url'))){
-                mkdir($object->config('ramdisk.url'), 0750, true);
-                if(empty($id)){
-                    exec('chown www-data:www-data ' . $object->config('ramdisk.url'));
+                if(!is_dir($object->config('ramdisk.url'))){
+                    mkdir($object->config('ramdisk.url'), 0750, true);
+                    if(empty($id)){
+                        exec('chown www-data:www-data ' . $object->config('ramdisk.url'));
+                    }
                 }
-            }
-            if(!is_dir($class_dir)){
-                mkdir($class_dir,0750, true);
-                $id = posix_geteuid();
-                if(empty($id)){
-                    exec('chown www-data:www-data ' . $class_dir);
+                if(!is_dir($class_dir)){
+                    mkdir($class_dir,0750, true);
                 }
             }
         }
+
         if(empty($cache_dir)){
             $cache_dir = $object->config('autoload.cache.directory');
         }
@@ -472,6 +471,8 @@ class Autoload {
                             if(file_exists($file)){
                                 if($object->config('autoload.cache.file.name')){
                                     $config_dir = $object->config('ramdisk.url') .
+                                        $object->config(Config::POSIX_ID) .
+                                        $object->config('ds') .
                                         Autoload::NAME .
                                         $object->config('ds')
                                     ;
@@ -526,12 +527,6 @@ class Autoload {
                                                 }
                                                 file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
                                                 $object->set(sha1($config_url), $mtime);
-                                                $id = posix_geteuid();
-                                                if(empty($id)){
-                                                    exec('chown www-data:www-data ' . $object->config('autoload.cache.file.name'));
-                                                    exec('chown www-data:www-data ' . $config_dir);
-                                                    exec('chown www-data:www-data ' . $config_url);
-                                                }
                                                 exec('chmod 640 ' . $object->config('autoload.cache.file.name'));
                                                 exec('chmod 640 ' . $config_url);
                                             }

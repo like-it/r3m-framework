@@ -198,6 +198,7 @@ class Config extends Data {
     const DATA_ROUTE = 'route';
     const DATA_ROUTE_PREFIX = Config::DATA_ROUTE . '.' . 'prefix';
 
+    const POSIX_ID = 'posix.id';
     /**
      * @throws ObjectException
      */
@@ -223,6 +224,8 @@ class Config extends Data {
                 $this->data($attribute, $value);
             }
         }
+        $id = posix_geteuid();
+        $this->data(Config::POSIX_ID, $id);
     }
 
     /**
