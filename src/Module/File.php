@@ -319,24 +319,7 @@ class File {
     public static function write($url='', $data=''){
         $url = (string) $url;
         $data = (string) $data;
-        $resource = @fopen($url, 'w');
-        if($resource === false){
-            return $resource;
-        }        
-        flock($resource, LOCK_EX);
-        for ($written = 0; $written < strlen($data); $written += $fwrite) {
-            $fwrite = fwrite($resource, substr($data, $written));
-            if ($fwrite === false) {
-                break;
-            }
-        }
-        flock($resource, LOCK_UN);
-        fclose($resource);
-        if($written !== strlen($data)){
-            throw new FileWriteException('File.write failed, written != strlen data....');
-        } else {
-            return $written;
-        }
+        return File::put($url, $data);
     }
 
     /**
