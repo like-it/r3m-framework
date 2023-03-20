@@ -505,13 +505,9 @@ class Autoload {
                                         } else {
                                             //from disk
                                             //copy to ramdisk
-                                            $id = posix_geteuid();
                                             $dirname = dirname($object->config('autoload.cache.file.name'));
                                             if(!is_dir($dirname)){
                                                 mkdir($dirname, 0750, true);
-                                                if(empty($id)){
-                                                    exec('chown www-data:www-data ' . $dirname);
-                                                }
                                             }
                                             $read = file_get_contents($file);
                                             if(Autoload::ramdisk_exclude_content($object, $read)){
