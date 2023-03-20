@@ -381,7 +381,12 @@ class Build {
                             $this->object()->config('parse.build.plugin.name_separator') &&
                             $this->object()->config('parse.build.plugin.name_pop_or_shift')
                         ){
-                            $ramdisk_dir = $this->object()->config('ramdisk.url') . 'Plugin' . $this->object()->config('ds');
+                            $ramdisk_dir = $this->object()->config('ramdisk.url') .
+                                $this->object()->config(Config::POSIX_ID) .
+                                $this->object()->config('ds') .
+                                'Plugin' .
+                                $this->object()->config('ds')
+                            ;
                             $ramdisk_file =
                                 Autoload::name_reducer(
                                     $this->object(),
@@ -400,6 +405,8 @@ class Build {
                                 );
                             $ramdisk_url = $ramdisk_dir . $ramdisk_file;
                             $config_dir = $this->object()->config('ramdisk.url') .
+                                $this->object()->config(Config::POSIX_ID) .
+                                $this->object()->config('ds') .
                                 'Plugin' .
                                 $this->object()->config('ds')
                             ;
@@ -445,13 +452,6 @@ class Build {
                             File::put($ramdisk_url, $file_read);
                             $config_mtime->set(sha1($ramdisk_url), $url);
                             $config_mtime->write($config_url);
-                            $id = posix_geteuid();
-                            if(empty($id)){
-                                exec('chown www-data:www-data ' . $ramdisk_dir);
-                                exec('chown www-data:www-data ' . $ramdisk_url);
-                                exec('chown www-data:www-data ' . $config_dir);
-                                exec('chown www-data:www-data ' . $config_url);
-                            }
                             exec('chmod 640 ' . $ramdisk_url);
                             exec('chmod 640 ' . $config_url);
                         }
@@ -529,7 +529,7 @@ class Build {
             $dir = Dir::name($url_write_error);
             Dir::create($dir);
             File::move($url, $url_write_error, true);
-            exec('chown www-data:www-data ' . $url_write_error);
+            exec('chown www-data:www-data ' . $dir);
             exec('chmod 640 ' . $url_write_error);
         }
         return $write;
@@ -1000,11 +1000,9 @@ class Build {
             $key = sha1($string);
             $config = $this->object()->data(App::CONFIG);
             $dir = $this->cache_dir();
-            $id = posix_geteuid();
             if(empty($dir)){
                 throw new Exception('Cache dir empty in Build');
             }
-            $dir .= $id . $config->data('ds');
             $autoload = $this->object()->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
             if($autoload) {
                 $prefixList = $autoload->getPrefixList();

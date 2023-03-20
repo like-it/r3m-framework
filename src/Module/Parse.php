@@ -89,19 +89,11 @@ class Parse {
             $config->data('dictionary.template', Parse::TEMPLATE);
         }
         if($config->data('ramdisk.url')){
-            $cache_dir = $config->data('ramdisk.url') . $config->data('dictionary.compile') . $config->data('ds');
+            $cache_dir = $config->data('ramdisk.url') . $config->data(Config::POSIX_ID) . $config->data('ds') . $config->data('dictionary.compile') . $config->data('ds');
             Dir::create($cache_dir);
-            if(empty($id)){
-                $command = 'chown www-data:www-data ' . $cache_dir;
-                Core::execute($this->object(), $command);
-            }
         } else {
-            $cache_dir = $config->data('framework.dir.temp') . $config->data('dictionary.compile') . $config->data('ds');
+            $cache_dir = $config->data('framework.dir.temp') . $config->data(Config::POSIX_ID) . $config->data('ds') . $config->data('dictionary.compile') . $config->data('ds');
             Dir::create($cache_dir);
-            if(empty($id)){
-                $command = 'chown www-data:www-data ' . $cache_dir;
-                Core::execute($this->object(), $command);
-            }
         }
         $this->cache_dir($cache_dir);
         $use_this = $config->data('parse.read.object.use_this');
