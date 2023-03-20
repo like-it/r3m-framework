@@ -42,6 +42,9 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         $config->set('ramdisk.url', $url);
         $config->set('ramdisk.name', $name);
         $config->write($config_url);
+        $object->config('ramdisk.size', $size);
+        $object->config('ramdisk.url', $url);
+        $object->config('ramdisk.name', $name);
     }
     $command = 'mount | tail -n 1';
     Core::execute($object, $command, $output);
