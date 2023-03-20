@@ -786,8 +786,7 @@ class App extends Data {
                 $ramdisk_dir = false;
                 $ramdisk_url = false;
                 if(
-                    $this->config('ramdisk.url') &&
-                    !$this->config('ramdisk.is_new')
+                    $this->config('ramdisk.url')
                 ){
                     $ramdisk_dir = $this->config('ramdisk.url') .
                         $this->config(Config::POSIX_ID) .
