@@ -8,7 +8,7 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Core;
+use R3m\Io\Config;
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
@@ -44,6 +44,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             property_exists($is_plugin, 'name_pop_or_shift')
         ){
             $cache_url = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
                 $object->config('dictionary.view') .
                 $object->config('ds') .
                 Autoload::name_reducer(
@@ -76,11 +77,6 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             Dir::create($cache_dir);
             File::copy($url, $cache_url);
             File::touch($cache_url, File::mtime($url));
-            $id = posix_geteuid();
-            if(empty($id)){
-                exec('chown www-data:www-data ' . $cache_dir);
-                exec('chown www-data:www-data ' . $cache_url);
-            }
             exec('chmod 640 ' . $cache_url);
         }
         $mtime = File::mtime($url);
