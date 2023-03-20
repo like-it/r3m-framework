@@ -76,9 +76,6 @@ class Clear extends Controller {
             $name = Clear::name(__FUNCTION__, Clear::NAME);
             $url = Clear::locate($object, $name);
             $response = Clear::response($object, $url);
-            if($object->config('ramdisk.url')){
-                Dir::remove($object->config('ramdisk.url'));
-            }
             return $response;
 
 

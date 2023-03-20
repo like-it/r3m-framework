@@ -785,7 +785,10 @@ class App extends Data {
                 $url = $this->config('framework.dir.source') . $part . $this->config('extension.php');
                 $ramdisk_dir = false;
                 $ramdisk_url = false;
-                if($this->config('ramdisk.url')){
+                if(
+                    $this->config('ramdisk.url') &&
+                    !$this->config('ramdisk.is_new')
+                ){
                     $ramdisk_dir = $this->config('ramdisk.url') .
                         $this->config(Config::POSIX_ID) .
                         $this->config('ds') .
@@ -835,7 +838,6 @@ class App extends Data {
                     ){
                         //copy to ramdisk
                         //save filemtime
-                        $id = posix_geteuid();
                         if(!is_dir($ramdisk_dir)){
                             mkdir($ramdisk_dir, 0750, true);
                         }
