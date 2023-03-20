@@ -231,12 +231,16 @@ class Controller {
         $first = reset($list);
 
         $view_url = $object->config('ramdisk.url') .
+            $object->config(Config::POSIX_ID) .
+            $object->config('ds') .
             $object->config('dictionary.view') .
             $object->config('ds') .
             str_replace('/', '_', $first)
         ;
         $config_dir = $object->config('ramdisk.url') .
-            'Cache' .
+            $object->config(Config::POSIX_ID) .
+            $object->config('ds') .
+            $object->config('dictionary.view') .
             $object->config('ds')
         ;
         $config_url = $config_dir .
@@ -264,13 +268,7 @@ class Controller {
                     File::touch($view_url, filemtime($file));
                     $read->set(sha1($view_url) . '.url', $file);
                     $read->write($config_url);
-                    $id = posix_geteuid();
-                    if(empty($id)){
-                        exec('chown www-data:www-data ' . $view_dir);
-                        exec('chown www-data:www-data ' . $config_dir);
-                        exec('chown www-data:www-data ' . $view_url);
-                        exec('chown www-data:www-data ' . $config_url);
-                    }
+
                     exec('chmod 640 ' . $view_url);
                     exec('chmod 640 ' . $config_url);
                 }
