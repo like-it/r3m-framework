@@ -175,7 +175,14 @@ class FileRequest {
         } else {
             $config_mtime = false;
             $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
-            $cache_url = $object->config('framework.dir.cache') . 'FileRequest' . $object->config('extension.json');
+            $cache_dir = $object->config('framework.dir.temp') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds')
+            ;
+            $cache_url = $cache_dir .
+                'FileRequest' .
+                $object->config('extension.json')
+            ;
             if(File::exist($config_url)){
                 $config_mtime = File::mtime($config_url);
             }
@@ -196,6 +203,7 @@ class FileRequest {
                 //write cache_url
                 $parse = new Parse($object);
                 $fileRequest = $parse->compile($fileRequest, $object->data());
+                Dir::create($cache_dir, Dir::CHMOD);
                 $data = new Data($fileRequest);
                 $data->write($cache_url);
                 File::touch($cache_url, $config_mtime);
@@ -221,7 +229,9 @@ class FileRequest {
         $file_mtime_dir = false;
         if($object->config('ramdisk.url')){
             $file_mtime_dir = $object->config('ramdisk.url') .
-                'Cache' .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'File' .
                 $object->config('ds')
             ;
             $file_mtime_url = $file_mtime_dir .
@@ -233,8 +243,11 @@ class FileRequest {
                 $file_mtime = new Data();
             }
             $ram_dir = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
                 'File' .
-                $object->config('ds');
+                $object->config('ds')
+            ;
             $ram_url = $ram_dir;
             if($subdomain){
                 $ram_url .= $subdomain . '_';
@@ -365,7 +378,6 @@ class FileRequest {
                 }
                 $file_extension_allow = $object->config('ramdisk.file.extension.allow');
                 $file_extension_deny = $object->config('ramdisk.file.extension.deny');
-
                 if(
                     empty($file_extension_allow) &&
                     empty($file_extension_deny)
@@ -436,17 +448,6 @@ class FileRequest {
                     if($file_mtime && $file_mtime_url){
                         $file_mtime->set(sha1($ram_url), $url);
                         $file_mtime->write($file_mtime_url);
-                    }
-                    $id = posix_geteuid();
-                    if(empty($id)){
-                        $command = 'chown www-data:www-data ' . $ram_dir;
-                        exec($command);
-                        $command = 'chown www-data:www-data ' . $ram_url;
-                        exec($command);
-                        $command = 'chown www-data:www-data ' . $file_mtime_dir;
-                        exec($command);
-                        $command = 'chown www-data:www-data ' . $file_mtime_url;
-                        exec($command);
                     }
                     $command = 'chmod 640 ' . $ram_url;
                     exec($command);
