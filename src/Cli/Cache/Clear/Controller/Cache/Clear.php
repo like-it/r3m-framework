@@ -12,6 +12,7 @@ namespace R3m\Io\Cli\Cache\Clear\Controller\Cache;
 
 use R3m\Io\App;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Dir;
 
 use Exception;
 
@@ -74,7 +75,13 @@ class Clear extends Controller {
         try {
             $name = Clear::name(__FUNCTION__, Clear::NAME);
             $url = Clear::locate($object, $name);
-            return Clear::response($object, $url);
+            $response = Clear::response($object, $url);
+            if($object->config('ramdisk.url')){
+                Dir::remove($object->config('ramdisk.url'));
+            }
+            return $response;
+
+
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return $exception;
         }
