@@ -45,6 +45,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
         ){
             $cache_url = $object->config('ramdisk.url') .
                 $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
                 $object->config('dictionary.view') .
                 $object->config('ds') .
                 Autoload::name_reducer(
