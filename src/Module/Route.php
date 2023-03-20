@@ -1037,14 +1037,17 @@ class Route extends Data {
         $url = $config->data(Config::DATA_PROJECT_ROUTE_URL);
         d($config->data('framework.dir.temp'));
         die;
-        $cache_url = $config->data('framework.dir.cache') .
+        $cache_url = $config->data('framework.dir.temp') .
             $config->data(Config::POSIX_ID) .
+            $config->data('ds') .
+            'Cache' .
             $config->data('ds') .
             $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
         ;
         if($object->config('ramdisk.url')){
             $cache_url = $object->config('ramdisk.url') .
                 $config->data(Config::POSIX_ID) .
+                $config->data('ds') .
                 'Cache' .
                 $config->data('ds') .
                 $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
