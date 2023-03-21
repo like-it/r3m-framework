@@ -6,10 +6,21 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Dir;
 
 function function_parse_restart(Parse $parse, Data $data){
-    $cache_dir = $parse->cache_dir();
-    if(File::exist($cache_dir)){
-       Dir::remove($cache_dir);
-       Dir::create($cache_dir, Dir::CHMOD);
-       File::chown($cache_dir, 'www-data', 'www-data', true);
+    $object = $parse->object();
+    $temp_dir = $object->config('framework.dir.temp');
+    $dir = new Dir();
+    $read = $dir->read($temp_dir, true);
+    if($read){
+        foreach($read as $file){
+            if($file->type === Dir::TYPE){
+                if(
+                    stristr($file->url, $object->config('dictionary.compile')) !== false &&
+                    file_exists($file->url)
+                ){
+                    Dir::remove($file->url);
+                    echo 'Removed: ' . $file->url . PHP_EOL;
+                }
+            }
+        }
     }
 }

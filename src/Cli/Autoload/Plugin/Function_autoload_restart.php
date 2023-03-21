@@ -19,6 +19,7 @@ function function_autoload_restart(Parse $parse, Data $data){
                     file_exists($file->url)
                 ){
                     Dir::remove($file->url);
+                    echo 'Removed: ' . $file->url . PHP_EOL;
                 }
             }
         }
