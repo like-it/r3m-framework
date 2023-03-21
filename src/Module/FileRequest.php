@@ -439,7 +439,9 @@ class FileRequest {
                 }
                 if(
                     $to_ramdisk &&
-                    $is_ram_url === false
+                    $is_ram_url === false &&
+                    $ram_dir &&
+                    $ram_url
                 ){
                     //copy to ramdisk
                     Dir::create($ram_dir);
