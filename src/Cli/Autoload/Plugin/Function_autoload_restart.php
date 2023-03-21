@@ -15,7 +15,11 @@ function function_autoload_restart(Parse $parse, Data $data){
         foreach($read as $file){
             if($file->type === Dir::TYPE){
                 if(
-                    stristr($file->url, 'autoload') !== false &&
+                    (
+                        stristr($file->url, strtolower(\R3m\Io\Module\Autoload::NAME)) !== false ||
+                        stristr($file->url, strtolower(\R3m\Io\App::NAME)) !== false
+                    )
+                    &&
                     file_exists($file->url)
                 ){
                     Dir::remove($file->url);
