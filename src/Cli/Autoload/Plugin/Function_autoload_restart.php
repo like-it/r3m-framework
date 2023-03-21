@@ -14,7 +14,7 @@ function function_autoload_restart(Parse $parse, Data $data){
     if($read){
         foreach($read as $file){
             if($file->type === Dir::TYPE){
-                if(stristr($file, 'autoload') !== false){
+                if(stristr($file->url, 'autoload') !== false){
                     d($file);
                 }
             }
