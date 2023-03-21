@@ -90,7 +90,7 @@ class Parse {
         }
         if(
             $config->data('ramdisk.url') &&
-            !empty($config->data('ramdisk.is.disabled'))
+            empty($config->data('ramdisk.is.disabled'))
         ){
             $cache_dir =
                 $config->data('ramdisk.url') .
