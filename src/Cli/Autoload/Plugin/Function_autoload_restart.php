@@ -7,7 +7,7 @@ use R3m\Io\Module\Parse;
 
 function function_autoload_restart(Parse $parse, Data $data){
     $object = $parse->object();
-
+    $object->config('ramdisk.is.disabled', true);
     $temp_dir = $object->config('framework.dir.temp');
     $dir = new Dir();
     $read = $dir->read($temp_dir, true);

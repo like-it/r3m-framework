@@ -18,6 +18,7 @@ use R3m\Io\Module\Core;
  */
 function function_ramdisk_unmount(Parse $parse, Data $data, $url=''){
     $object = $parse->object();
+    $object->config('ramdisk.is.disabled', true);
     $id = posix_geteuid();
     if (!empty($id)){
         throw new Exception('RamDisk can only be unmounted by root...');

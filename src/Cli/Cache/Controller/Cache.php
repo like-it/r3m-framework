@@ -78,7 +78,6 @@ class Cache extends Controller {
 
     private static function clear(App $object){
         try {
-            $object->config('ramdisk.is.disabled', true);
             $name = Cache::name(__FUNCTION__, Cache::NAME);
             $url = Cache::locate($object, $name);
             return Cache::response($object, $url);

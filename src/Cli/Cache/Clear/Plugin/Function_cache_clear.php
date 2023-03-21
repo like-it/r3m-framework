@@ -24,7 +24,6 @@ function function_cache_clear(Parse $parse, Data $data){
         echo $output . PHP_EOL;
         ob_flush();
     }
-
     if(File::exist($object->config('project.dir.vendor') . 'Doctrine')){
         $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
         $cacheDriver->deleteAll();

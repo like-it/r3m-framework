@@ -18,6 +18,7 @@ use R3m\Io\Module\Dir;
  */
 function function_ramdisk_clear(Parse $parse, Data $data){
     $object = $parse->object();
+    $object->config('ramdisk.is.disabled', true);
     $id = posix_geteuid();
     if (!empty($id)){
         throw new Exception('RamDisk clear can only be run by root...');
