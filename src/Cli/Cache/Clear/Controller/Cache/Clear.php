@@ -73,6 +73,7 @@ class Clear extends Controller {
 
     private static function clear(App $object){
         try {
+            $object->config('ramdisk.is.disabled', true);
             $name = Clear::name(__FUNCTION__, Clear::NAME);
             $url = Clear::locate($object, $name);
             $response = Clear::response($object, $url);

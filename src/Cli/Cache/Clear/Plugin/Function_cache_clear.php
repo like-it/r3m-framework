@@ -13,26 +13,16 @@ function function_cache_clear(Parse $parse, Data $data){
         $execute = $parse->compile($record);
         echo 'Executing: ' . $execute . "...\n";
         Core::execute($object, $execute, $output);
-        if(is_array($output)){
-            echo implode(PHP_EOL, $output) . PHP_EOL;
-            ob_flush();
-        } else{
-            echo $output . PHP_EOL;
-            ob_flush();
-        }
+        echo $output . PHP_EOL;
+        ob_flush();
     }
     if($object->config('ramdisk.url')){
         $command = \R3m\Io\Cli\Cache\Controller\Cache::RAMDISK_CLEAR_COMMAND;
         $execute = $parse->compile($command);
         echo 'Executing: ' . $execute . "...\n";
         Core::execute($object, $execute, $output);
-        if(is_array($output)){
-            echo implode(PHP_EOL, $output) . PHP_EOL;
-            ob_flush();
-        } else{
-            echo $output . PHP_EOL;
-            ob_flush();
-        }
+        echo $output . PHP_EOL;
+        ob_flush();
     }
 
     if(File::exist($object->config('project.dir.vendor') . 'Doctrine')){

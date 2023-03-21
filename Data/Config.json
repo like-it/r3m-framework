@@ -153,7 +153,7 @@
                 "name_length": 100,
                 "name_separator": "_",
                 "name_pop_or_shift": "shift",
-                "directory_length": 100,
+                "directory_length": 75,
                 "directory_separator": "_",
                 "directory_pop_or_shift": "pop"
             }
@@ -183,7 +183,7 @@
                 "list" : [
                     {
                         "name": "require",
-                        "name_length": 200,
+                        "name_length": 175,
                         "name_separator": "_",
                         "name_pop_or_shift": "shift"
                     }
