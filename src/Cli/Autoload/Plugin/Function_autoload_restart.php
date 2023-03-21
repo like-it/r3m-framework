@@ -9,10 +9,18 @@ function function_autoload_restart(Parse $parse, Data $data){
     $object = $parse->object();
 
     $temp_dir = $object->config('framework.dir.temp');
-    ddd($temp_dir);
-
-
-
+    $dir = new Dir();
+    $read = $dir->read($temp_dir, true);
+    if($read){
+        foreach($read as $file){
+            if($file->type === Dir::TYPE){
+                if(stristr($file, 'autoload') !== false){
+                    d($file);
+                }
+            }
+        }
+    }
+    /*
     $autoload = $object->data(\R3m\Io\App::AUTOLOAD_R3M);
     $cache_dir = $autoload->cache_dir();
 
@@ -20,4 +28,5 @@ function function_autoload_restart(Parse $parse, Data $data){
     if($object->config('autoload.cache.class')){
         Dir::remove($object->config('autoload.cache.class'));
     }
+    */
 }
