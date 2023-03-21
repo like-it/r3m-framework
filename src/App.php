@@ -786,7 +786,8 @@ class App extends Data {
                 $ramdisk_dir = false;
                 $ramdisk_url = false;
                 if(
-                    $this->config('ramdisk.url')
+                    $this->config('ramdisk.url') &&
+                    empty($this->config('ramdisk.is.disabled'))
                 ){
                     $ramdisk_dir = $this->config('ramdisk.url') .
                         $this->config(Config::POSIX_ID) .

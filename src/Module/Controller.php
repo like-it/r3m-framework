@@ -228,39 +228,56 @@ class Controller {
             }
         }
         $url = false;
-        $first = reset($list);
-
-        $view_url = $object->config('ramdisk.url') .
-            $object->config(Config::POSIX_ID) .
-            $object->config('ds') .
-            $object->config('dictionary.view') .
-            $object->config('ds') .
-            str_replace('/', '_', $first)
-        ;
-        $config_dir = $object->config('ramdisk.url') .
-            $object->config(Config::POSIX_ID) .
-            $object->config('ds') .
-            $object->config('dictionary.view') .
-            $object->config('ds')
-        ;
-        $config_url = $config_dir .
-            $object->config('dictionary.view') .
-            $object->config('extension.json')
-        ;
-        $read = $object->data_read($config_url, sha1($config_url));
-        if(!$read){
-            $read = new Data();
-        }
+        $view_url = false;
+        $read = false;
         if(
-            File::exist($view_url) &&
-            $read->has(sha1($view_url) . '.url') &&
-            File::mtime($view_url) === File::mtime($read->get(sha1($view_url) . '.url'))
+            $object->config('ramdisk.url') &&
+            empty($object->config('ramdisk.is.disabled'))
         ){
-            return $view_url;
+            $first = reset($list);
+            $view_url = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                $object->config('dictionary.view') .
+                $object->config('ds') .
+                Autoload::name_reducer(
+                    $object,
+                    str_replace('/', '_', $first),
+                    $object->config('cache.controller.url.name_length'),
+                    $object->config('cache.controller.url.name_separator'),
+                    $object->config('cache.controller.url.name_pop_or_shift')
+                )
+            ;
+            $config_dir = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                $object->config('dictionary.view') .
+                $object->config('ds')
+            ;
+            $config_url = $config_dir .
+                $object->config('dictionary.view') .
+                $object->config('extension.json')
+            ;
+            $read = $object->data_read($config_url, sha1($config_url));
+            if(!$read){
+                $read = new Data();
+            }
+            if(
+                File::exist($view_url) &&
+                $read->has(sha1($view_url) . '.url') &&
+                File::mtime($view_url) === File::mtime($read->get(sha1($view_url) . '.url'))
+            ){
+                return $view_url;
+            }
         }
         foreach($list as $file){
             if(File::exist($file)){
-                if($object->config('ramdisk.url')){
+                if(
+                    $object->config('ramdisk.url') &&
+                    !empty($object->config('ramdisk.is.disabled')) &&
+                    $view_url &&
+                    $read
+                ){
                     //copy to ramdisk
                     $view_dir = Dir::name($view_url);
                     Dir::create($view_dir);

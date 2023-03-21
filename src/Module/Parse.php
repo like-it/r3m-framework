@@ -88,11 +88,25 @@ class Parse {
         if(empty($template)){
             $config->data('dictionary.template', Parse::TEMPLATE);
         }
-        if($config->data('ramdisk.url')){
-            $cache_dir = $config->data('ramdisk.url') . $config->data(Config::POSIX_ID) . $config->data('ds') . $config->data('dictionary.compile') . $config->data('ds');
+        if(
+            $config->data('ramdisk.url') &&
+            !empty($config->data('ramdisk.is.disabled'))
+        ){
+            $cache_dir =
+                $config->data('ramdisk.url') .
+                $config->data(Config::POSIX_ID) .
+                $config->data('ds') .
+                $config->data('dictionary.compile') .
+                $config->data('ds')
+            ;
             Dir::create($cache_dir);
         } else {
-            $cache_dir = $config->data('framework.dir.temp') . $config->data(Config::POSIX_ID) . $config->data('ds') . $config->data('dictionary.compile') . $config->data('ds');
+            $cache_dir =
+                $config->data('framework.dir.temp') .
+                $config->data(Config::POSIX_ID) .
+                $config->data('ds') .
+                $config->data('dictionary.compile') .
+                $config->data('ds');
             Dir::create($cache_dir);
         }
         $this->cache_dir($cache_dir);

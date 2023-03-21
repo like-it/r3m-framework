@@ -27,7 +27,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
     $is_cache_url = false;
     if($object->config('ramdisk.url')){
         $is_plugin = false;
-        $plugin_list = $object->config('parse.build.plugin.list');
+        $plugin_list = $object->config('cache.parse.plugin.list');
         foreach($plugin_list as $plugin){
             if(
                 property_exists($plugin, 'name') &&

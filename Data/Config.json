@@ -137,28 +137,49 @@
             ]
         }
     },
-    "fileRequest": {
-        "get" : {
-            "name_length": 100,
-            "name_separator": "_",
-            "name_pop_or_shift": "shift",
-            "directory_length": 100,
-            "directory_separator": "_",
-            "directory_pop_or_shift": "pop"
-        }
-    },
-    "parse": {
-        "build": {
-            "name_length": 200,
-            "name_separator": "_",
-            "name_pop_or_shift": "shift",
-            "plugin" : {
+    "cache" : {
+        "autoload": {
+            "url": {
+                "name_length": 100,
+                "name_separator": "_",
+                "name_pop_or_shift": "shift",
+                "directory_length": 75,
+                "directory_separator": "/",
+                "directory_pop_or_shift": "pop"
+            }
+        },
+        "fileRequest": {
+            "url" : {
                 "name_length": 100,
                 "name_separator": "_",
                 "name_pop_or_shift": "shift",
                 "directory_length": 100,
                 "directory_separator": "_",
-                "directory_pop_or_shift": "pop",
+                "directory_pop_or_shift": "pop"
+            }
+        },
+        "controller": {
+            "url": {
+                "name_length": 175,
+                "name_separator": "_",
+                "name_pop_or_shift": "shift"
+            }
+        },
+        "parse": {
+            "url": {
+                "name_length": 175,
+                "name_separator": "_",
+                "name_pop_or_shift": "shift"
+            },
+            "plugin": {
+                "url" : {
+                    "name_length": 100,
+                    "name_separator": "_",
+                    "name_pop_or_shift": "shift",
+                    "directory_length": 75,
+                    "directory_separator": "_",
+                    "directory_pop_or_shift": "pop"
+                },
                 "list" : [
                     {
                         "name": "require",
@@ -168,7 +189,9 @@
                     }
                 ]
             }
-        },
+        }
+    },
+    "parse": {
         "read": {
             "parser": "{{R3M}}",
             "object": {

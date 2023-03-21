@@ -75,15 +75,28 @@ class Autoload {
             $autoload->addPrefix('Host',  $object->config(Config::DATA_PROJECT_DIR_HOST));
             $autoload->addPrefix('Source',  $object->config(Config::DATA_PROJECT_DIR_SOURCE));
         }
-        if($object->config('ramdisk.url')){
-            $cache_dir = $object->config('ramdisk.url') . $object->config(Config::POSIX_ID) . $object->config('ds') . Autoload::NAME . $object->config('ds');
+        if(
+            empty($object->config('ramdisk.is.disabled')) &&
+            $object->config('ramdisk.url')
+        ){
+            $cache_dir = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                Autoload::NAME .
+                $object->config('ds')
+            ;
             if($cache_dir){
-                $class_dir = $object->config('ramdisk.url') . $object->config(Config::POSIX_ID) . $object->config('ds') . 'Class' . $object->config('ds');
+                $class_dir = $object->config('ramdisk.url') .
+                    $object->config(Config::POSIX_ID) .
+                    $object->config('ds') .
+                    'Class' .
+                    $object->config('ds')
+                ;
                 $object->config('autoload.cache.class', $class_dir);
 
                 if(!is_dir($object->config('ramdisk.url'))){
                     mkdir($object->config('ramdisk.url'), 0750, true);
-                    if(empty($id)){
+                    if(empty($object->config(Config::POSIX_ID))){
                         exec('chown www-data:www-data ' . $object->config('ramdisk.url'));
                     }
                 }
@@ -92,21 +105,24 @@ class Autoload {
                 }
             }
         }
-
         if(empty($cache_dir)){
             $cache_dir = $object->config('autoload.cache.directory');
+            if($cache_dir){
+                $parameters = [];
+                $parameters['cache'] = $cache_dir;
+                $parameters = Config::parameters($object, $parameters);
+                $cache_dir = $parameters['cache'];
+            }
         }
         if(empty($cache_dir)){
             $cache_dir =
-                $object->config(Config::DATA_FRAMEWORK_DIR_CACHE) .
+                $object->config(Config::DATA_FRAMEWORK_DIR_TEMP) .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
                 Autoload::NAME .
                 $object->config(Config::DS)
             ;
         }
-        $parameters = [];
-        $parameters['cache'] = $cache_dir;
-        $parameters = Config::parameters($object, $parameters);
-        $cache_dir = $parameters['cache'];
         $autoload->cache_dir($cache_dir);
         $autoload->register();
         $autoload->environment($object->config('framework.environment'));
@@ -327,6 +343,9 @@ class Autoload {
         return str_replace($separator, '_', $name);
     }
 
+    /**
+     * @throws Exception
+     */
     public function fileList($item=array(), $url=''): array
     {
         if(empty($item)){
@@ -340,13 +359,32 @@ class Autoload {
         $object = $this->object();
         if(
             $object &&
-            $object->config('autoload.cache.class')
+            empty($object->config('ramdisk.is.disabled')) &&
+            $object->config('autoload.cache.class') &&
+            $object->config('cache.autoload.url.name_length') &&
+            $object->config('cache.autoload.url.name_separator') &&
+            $object->config('cache.autoload.url.name_pop_or_shift') &&
+            $object->config('cache.autoload.url.directory_length') &&
+            $object->config('cache.autoload.url.directory_separator') &&
+            $object->config('cache.autoload.url.directory_pop_or_shift')
         ){
             $load = $item['directory'] . $item['file'];
             $load_directory = dirname($load);
             $load = basename($load) . '.' . Autoload::EXT_PHP;
-            $load = Autoload::name_reducer($object, $load, $object->config('autoload.cache.file.max_length_file'),'_', 'shift');
-            $load_directory = Autoload::name_reducer($object, $load_directory, $object->config('autoload.cache.file.max_length_directory'), $object->config('ds'), 'pop');
+            $load = Autoload::name_reducer(
+                $object,
+                $load,
+                $object->config('cache.autoload.url.name_length'),
+                $object->config('cache.autoload.url.name_separator'),
+                $object->config('cache.autoload.url.name_pop_or_shift')
+            );
+            $load_directory = Autoload::name_reducer(
+                $object,
+                $load_directory,
+                $object->config('cache.autoload.url.directory_length'),
+                $object->config('cache.autoload.url.directory_separator'),
+                $object->config('cache.autoload.url.directory_pop_or_shift')
+            );
             $load_url = $object->config('autoload.cache.class') . $load_directory . '_' . $load;
             $data[] = $load_url;
             $object->config('autoload.cache.file.name', $load_url);
@@ -469,7 +507,10 @@ class Autoload {
                                 continue;
                             }
                             if(file_exists($file)){
-                                if($object->config('autoload.cache.file.name')){
+                                if(
+                                    empty($this->config('ramdisk.is.disabled')) &&
+                                    $object->config('autoload.cache.file.name')
+                                ){
                                     $config_dir = $object->config('ramdisk.url') .
                                         $object->config(Config::POSIX_ID) .
                                         $object->config('ds') .

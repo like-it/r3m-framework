@@ -227,7 +227,10 @@ class FileRequest {
         $file_mtime = false;
         $file_mtime_url = false;
         $file_mtime_dir = false;
-        if($object->config('ramdisk.url')){
+        if(
+            $object->config('ramdisk.url') &&
+            empty($object->config('ramdisk.is.disabled'))
+        ){
             $file_mtime_dir = $object->config('ramdisk.url') .
                 $object->config(Config::POSIX_ID) .
                 $object->config('ds') .
@@ -253,12 +256,12 @@ class FileRequest {
                 $ram_url .= $subdomain . '_';
             }
             if(
-                $object->config('fileRequest.get.directory_length') &&
-                $object->config('fileRequest.get.directory_separator') &&
-                $object->config('fileRequest.get.directory_pop_or_shift') &&
-                $object->config('fileRequest.get.name_length') &&
-                $object->config('fileRequest.get.name_separator') &&
-                $object->config('fileRequest.get.name_pop_or_shift')
+                $object->config('cache.fileRequest.url.directory_length') &&
+                $object->config('cache.fileRequest.url.directory_separator') &&
+                $object->config('cache.fileRequest.url.directory_pop_or_shift') &&
+                $object->config('cache.fileRequest.url.name_length') &&
+                $object->config('cache.fileRequest.url.name_separator') &&
+                $object->config('cache.fileRequest.url.name_pop_or_shift')
             ){
                 $ram_url .= $domain .
                     '_' .
@@ -267,17 +270,17 @@ class FileRequest {
                     Autoload::name_reducer(
                         $object,
                         str_replace('/', '_', $dir),
-                        $object->config('fileRequest.get.directory_length'),
-                        $object->config('fileRequest.get.directory_separator'),
-                        $object->config('fileRequest.get.directory_pop_or_shift')
+                        $object->config('cache.fileRequest.url.directory_length'),
+                        $object->config('cache.fileRequest.url.directory_separator'),
+                        $object->config('cache.fileRequest.url.directory_pop_or_shift')
                     ) .
                     '_' .
                     Autoload::name_reducer(
                         $object,
                         $file,
-                        $object->config('fileRequest.get.name_length'),
-                        $object->config('fileRequest.get.name_separator'),
-                        $object->config('fileRequest.get.name_pop_or_shift')
+                        $object->config('cache.fileRequest.url.name_length'),
+                        $object->config('cache.fileRequest.url.name_separator'),
+                        $object->config('cache.fileRequest.url.name_pop_or_shift')
                     )
                 ;
             }

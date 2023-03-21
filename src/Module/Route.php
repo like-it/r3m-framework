@@ -1038,15 +1038,18 @@ class Route extends Data {
         $cache_url = $config->data('framework.dir.temp') .
             $config->data(Config::POSIX_ID) .
             $config->data('ds') .
-            'Cache' .
+            Route::NAME .
             $config->data('ds') .
             $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
         ;
-        if($object->config('ramdisk.url')){
+        if(
+            $object->config('ramdisk.url') &&
+            empty($object->config('ramdisk.is.disabled'))
+        ){
             $cache_url = $object->config('ramdisk.url') .
                 $config->data(Config::POSIX_ID) .
                 $config->data('ds') .
-                'Cache' .
+                Route::NAME .
                 $config->data('ds') .
                 $config->data(Config::DATA_PROJECT_ROUTE_FILENAME)
             ;

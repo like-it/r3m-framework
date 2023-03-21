@@ -319,7 +319,8 @@ class Build {
      */
     private function createRequireContent($type='', $document=[]): array
     {
-        $config = $this->object()->data(App::CONFIG);
+        $object = $this->object();
+        $config = $object->data(App::CONFIG);
         $storage = $this->storage();
         $dir_plugin = $config->get('parse.dir.plugin');
         if(empty($dir_plugin)){
@@ -372,14 +373,17 @@ class Build {
                     $config_url = false;
                     $config_mtime = false;
                     $is_ramdisk_url = false;
-                    if($this->object()->config('ramdisk.url')){
+                    if(
+                        $object->config('ramdisk.url') &&
+                        !empty($object->config('ramdisk.is.disabled'))
+                    ){
                         if(
-                            $this->object()->config('parse.build.plugin.directory_length') &&
-                            $this->object()->config('parse.build.plugin.directory_separator') &&
-                            $this->object()->config('parse.build.plugin.directory_pop_or_shift') &&
-                            $this->object()->config('parse.build.plugin.name_length') &&
-                            $this->object()->config('parse.build.plugin.name_separator') &&
-                            $this->object()->config('parse.build.plugin.name_pop_or_shift')
+                            $object->config('cache.parse.plugin.url.directory_length') &&
+                            $object->config('cache.parse.plugin.url.directory_separator') &&
+                            $object->config('cache.parse.plugin.url.directory_pop_or_shift') &&
+                            $object->config('cache.parse.plugin.url.name_length') &&
+                            $object->config('cache.parse.plugin.url.name_separator') &&
+                            $object->config('cache.parse.plugin.url.name_pop_or_shift')
                         ){
                             $ramdisk_dir = $this->object()->config('ramdisk.url') .
                                 $this->object()->config(Config::POSIX_ID) .
@@ -391,17 +395,17 @@ class Build {
                                 Autoload::name_reducer(
                                     $this->object(),
                                     str_replace('/', '_', $dir),
-                                    $this->object()->config('parse.build.plugin.directory_length'),
-                                    $this->object()->config('parse.build.plugin.directory_separator'),
-                                    $this->object()->config('parse.build.plugin.directory_pop_or_shift')
+                                    $this->object()->config('cache.parse.plugin.url.directory_length'),
+                                    $this->object()->config('cache.parse.plugin.url.directory_separator'),
+                                    $this->object()->config('cache.parse.plugin.url.directory_pop_or_shift')
                                 ) .
                                 '_' .
                                 Autoload::name_reducer(
                                     $this->object(),
                                     $file,
-                                    $this->object()->config('parse.build.plugin.name_length'),
-                                    $this->object()->config('parse.build.plugin.name_separator'),
-                                    $this->object()->config('parse.build.plugin.name_pop_or_shift')
+                                    $this->object()->config('cache.parse.plugin.url.name_length'),
+                                    $this->object()->config('cache.parse.plugin.url.name_separator'),
+                                    $this->object()->config('cache.parse.plugin.url.name_pop_or_shift')
                                 );
                             $ramdisk_url = $ramdisk_dir . $ramdisk_file;
                             $config_dir = $this->object()->config('ramdisk.url') .
@@ -994,6 +998,7 @@ class Build {
      */
     public function url($string=null, $options=[]): string
     {
+        $object = $this->object();
         $storage = $this->storage();
         $url = $storage->data('url');
         if($string !== null && $url === null){
@@ -1052,13 +1057,19 @@ class Build {
                         basename($options['source'])) . '_';
             }
             $name = str_replace('_tpl', '', $name);
-            $name = Autoload::name_reducer(
-                $this->object(),
-                $name,
-                $this->object()->config('parse.build.name_length'),
-                $this->object()->config('parse.build.name_separator'),
-                $this->object()->config('parse.build.name_pop_or_shift')
-            );
+            if(
+                $object->config('cache.parse.url.name_length') &&
+                $object->config('cache.parse.url.name_separator') &&
+                $object->config('cache.parse.url.name_pop_or_shift')
+            ){
+                $name = Autoload::name_reducer(
+                    $this->object(),
+                    $name,
+                    $object->config('cache.parse.url.name_length'),
+                    $object->config('cache.parse.url.name_separator'),
+                    $object->config('cache.parse.url.name_pop_or_shift')
+                );
+            }
             $url =
                 $dir .
                 $config->data('dictionary.template') .
