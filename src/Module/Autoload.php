@@ -508,7 +508,7 @@ class Autoload {
                             }
                             if(file_exists($file)){
                                 if(
-                                    empty($this->config('ramdisk.is.disabled')) &&
+                                    empty($object->config('ramdisk.is.disabled')) &&
                                     $object->config('autoload.cache.file.name')
                                 ){
                                     $config_dir = $object->config('ramdisk.url') .
