@@ -535,6 +535,7 @@ class Autoload {
                                         $mtime &&
                                         $file === $object->config('autoload.cache.file.name') &&
                                         array_key_exists(sha1($file), $mtime) &&
+                                        file_exists($mtime[sha1($file)]) &&
                                         filemtime($file) === filemtime($mtime[sha1($file)])
                                     ){
                                         //from ramdisk
