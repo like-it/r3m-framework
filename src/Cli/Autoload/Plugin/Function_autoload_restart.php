@@ -14,19 +14,13 @@ function function_autoload_restart(Parse $parse, Data $data){
     if($read){
         foreach($read as $file){
             if($file->type === Dir::TYPE){
-                if(stristr($file->url, 'autoload') !== false){
-                    d($file);
+                if(
+                    stristr($file->url, 'autoload') !== false &&
+                    file_exists($file->url)
+                ){
+                    Dir::remove($file->url);
                 }
             }
         }
     }
-    /*
-    $autoload = $object->data(\R3m\Io\App::AUTOLOAD_R3M);
-    $cache_dir = $autoload->cache_dir();
-
-    Dir::remove($cache_dir);
-    if($object->config('autoload.cache.class')){
-        Dir::remove($object->config('autoload.cache.class'));
-    }
-    */
 }
