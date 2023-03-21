@@ -109,6 +109,7 @@ class Parse {
                 $config->data('ds');
             Dir::create($cache_dir);
         }
+        d($cache_dir);
         $this->cache_dir($cache_dir);
         $use_this = $config->data('parse.read.object.use_this');
         if(is_bool($use_this)){
