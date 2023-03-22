@@ -483,6 +483,9 @@ class App extends Data {
         return $this->getLogger($name);
     }
 
+    /**
+     * @throws Exception
+     */
     private function setLogger($name='', LoggerInterface $logger=null){
         if(empty($name)){
             $name = $this->config('project.log.name');
@@ -760,6 +763,7 @@ class App extends Data {
 
     /**
      * @throws ObjectException
+     * @throws Exception
      */
     public function ramdisk_load($load=''){
         $prefixes = $this->config('ramdisk.autoload.prefix');
@@ -854,7 +858,7 @@ class App extends Data {
                         if($is_require === false && Autoload::ramdisk_exclude_load($this, $load)){
 
                         }
-                        elseif($is_require === false && Autoload::ramdisk_exclude_content($this, $read)){
+                        elseif($is_require === false && Autoload::ramdisk_exclude_content($this, $read, $url)){
                             d($load);
                             d($url);
                             //files with content __DIR__, __FILE__ cannot be cached

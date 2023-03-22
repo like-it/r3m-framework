@@ -20,6 +20,7 @@ use Exception;
 use R3m\Io\Exception\ObjectException;
 
 class Event {
+    const DIR = __DIR__ . DIRECTORY_SEPARATOR;
     const NAME = 'Event';
 
     public static function on(App $object, $action, $options=[]){
