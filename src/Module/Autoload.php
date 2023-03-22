@@ -798,6 +798,7 @@ class Autoload {
                     $exclude = json_decode($read, true);
                     if(
                         array_key_exists(sha1($file), $exclude) &&
+                        file_exists($file) &&
                         filemtime($file) === $exclude[sha1($file)]
                     ){
                         return true;
@@ -816,7 +817,10 @@ class Autoload {
                 }
             }
         }
-        if($exclude_url){
+        if(
+            $exclude_url &&
+            file_exists($file)
+        ){
             $exclude[sha1($file)] = filemtime($file);
             $write = json_encode($exclude, JSON_PRETTY_PRINT);
             file_put_contents($exclude_url, $write);
