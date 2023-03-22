@@ -9,6 +9,9 @@ use R3m\Io\Module\Route;
 
 function function_cache_clear(Parse $parse, Data $data){   
     $object = $parse->object();
+    $temp_dir = $object->config('framework.dir.temp');
+    $dir = new Dir();
+    $read = $dir->read($temp_dir, true);
     $parse = new Parse($object);
     if($object->config('ramdisk.url')){
         $command = \R3m\Io\Cli\Cache\Controller\Cache::RAMDISK_CLEAR_COMMAND;
@@ -18,9 +21,6 @@ function function_cache_clear(Parse $parse, Data $data){
         echo $output . PHP_EOL;
         ob_flush();
     }
-    $temp_dir = $object->config('framework.dir.temp');
-    $dir = new Dir();
-    $read = $dir->read($temp_dir, true);
     if($read){
         foreach($read as $file){
             if($file->type === Dir::TYPE){
