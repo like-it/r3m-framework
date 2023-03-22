@@ -12,6 +12,7 @@ namespace R3m\Io\Cli\Info\Controller;
 
 use R3m\Io\App;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Event;
 
 use Exception;
 
@@ -40,7 +41,17 @@ class Info extends Controller {
                     $url = Info::locate($object, Info::NAME);
                 }
             }
-            return Info::response($object, $url);
+            $result = Info::response($object, $url);
+            if($command){
+                Event::trigger($object, 'info.' . $command, [
+                    'command' => $command
+                ]);
+            } else {
+                Event::trigger($object, 'info', [
+                ]);
+            }
+
+            return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return $exception;
         }
