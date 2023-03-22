@@ -50,7 +50,6 @@ class Info extends Controller {
                 Event::trigger($object, 'info', [
                 ]);
             }
-
             return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
             return $exception;
