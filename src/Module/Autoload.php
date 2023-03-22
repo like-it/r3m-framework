@@ -831,6 +831,7 @@ class Autoload {
                 mkdir($exclude_dir, 0750, true);
             }
             file_put_contents($exclude_url, $write);
+            exec('chmod 640 ' . $exclude_url);
         }
         return $is_exclude;
     }
