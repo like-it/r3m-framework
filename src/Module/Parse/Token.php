@@ -1908,6 +1908,7 @@ class Token {
                 if(
                     //hex
                     isset($previous_nr) &&
+                    array_key_exists($previous_nr, $token) &&
                     $token[$previous_nr]['type'] === Token::TYPE_STRING &&
                     Token::is_hex($token[$previous_nr]['value'])
                 ){
@@ -1922,6 +1923,7 @@ class Token {
                 elseif(
                     //hex
                     isset($token[$next]) &&
+                    array_key_exists($next, $token) &&
                     $token[$next]['type'] === Token::TYPE_STRING &&
                     Token::is_hex($token[$next]['value'])
                 ){
