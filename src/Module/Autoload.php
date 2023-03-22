@@ -552,7 +552,7 @@ class Autoload {
                                                 mkdir($dirname, 0750, true);
                                             }
                                             $read = file_get_contents($file);
-                                            if(Autoload::ramdisk_exclude_content($object, $read)){
+                                            if(Autoload::ramdisk_exclude_content($object, $read, $file)){
                                                 //save tp file
                                                 //files with content __DIR__, __FILE__ cannot be cached
                                             } else {
@@ -777,10 +777,34 @@ class Autoload {
     /**
      * @throws Exception
      */
-    public static function ramdisk_exclude_content(App $object, $content=''): bool
+    public static function ramdisk_exclude_content(App $object, $content='', $file=''): bool
     {
         $exclude_content = $object->config('ramdisk.autoload.exclude.content');
         $is_exclude = false;
+        $exclude = [];
+        $exclude_url = false;
+        if($object->config('ramdisk.url')){
+            $exclude_url = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                Autoload::NAME .
+                $object->config('ds') .
+                'Exclude' .
+                $object->config('extension.json')
+            ;
+            if(file_exists($exclude_url)){
+                $read = file_get_contents($exclude_url);
+                if($read){
+                    $exclude = json_decode($read, true);
+                    if(
+                        array_key_exists(sha1($file), $exclude) &&
+                        filemtime($file) === $exclude[sha1($file)]
+                    ){
+                        return true;
+                    }
+                }
+            }
+        }
         if(
             !empty($exclude_content) &&
             is_array($exclude_content)
@@ -791,6 +815,11 @@ class Autoload {
                     break;
                 }
             }
+        }
+        if($exclude_url){
+            $exclude[sha1($file)] = filemtime($file);
+            $write = json_encode($exclude, JSON_PRETTY_PRINT);
+            file_put_contents($exclude_url, $write);
         }
         return $is_exclude;
     }
