@@ -14,7 +14,10 @@ function function_cache_clear(Parse $parse, Data $data){
     $dir = new Dir();
     $read = $dir->read($temp_dir, true);
     $parse = new Parse($object);
-    if($object->config('ramdisk.url')){
+    if(
+        $object->config('ramdisk.url') &&
+        empty($object->config(Config::POSIX_ID))
+    ){
         $command = \R3m\Io\Cli\Cache\Controller\Cache::RAMDISK_CLEAR_COMMAND;
         $execute = $parse->compile($command);
         echo 'Executing: ' . $execute . "...\n";
