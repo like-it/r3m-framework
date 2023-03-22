@@ -782,13 +782,16 @@ class Autoload {
         $exclude_content = $object->config('ramdisk.autoload.exclude.content');
         $is_exclude = false;
         $exclude = [];
+        $exclude_dir = false;
         $exclude_url = false;
         if($object->config('ramdisk.url')){
-            $exclude_url = $object->config('ramdisk.url') .
+            $exclude_dir = $object->config('ramdisk.url') .
                 $object->config(Config::POSIX_ID) .
                 $object->config('ds') .
                 Autoload::NAME .
-                $object->config('ds') .
+                $object->config('ds')
+            ;
+            $exclude_url = $exclude_dir .
                 'Exclude' .
                 $object->config('extension.json')
             ;
@@ -818,11 +821,15 @@ class Autoload {
             }
         }
         if(
+            $exclude_dir &&
             $exclude_url &&
             file_exists($file)
         ){
             $exclude[sha1($file)] = filemtime($file);
             $write = json_encode($exclude, JSON_PRETTY_PRINT);
+            if(!file_exists($exclude_dir)){
+                mkdir($exclude_dir, 0750, true);
+            }
             file_put_contents($exclude_url, $write);
         }
         return $is_exclude;
