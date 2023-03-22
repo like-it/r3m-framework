@@ -784,15 +784,19 @@ class Autoload {
         $is_exclude = false;
         require_once __DIR__ . DIRECTORY_SEPARATOR . 'Parse' . DIRECTORY_SEPARATOR . 'Token.php';
         $token = Token::tree('{' . $content . '}');
-        ddd($token);
         if(
             !empty($exclude_content) &&
-            is_array($exclude_content)
+            is_array($exclude_content) &&
+            !empty($token) &&
+            is_array($token)
         ){
-            foreach ($exclude_content as $needle){
-                if(stristr($content, $needle) !== false){
-                    $is_exclude = true;
-                    break;
+            foreach ($token as $nr => $record){
+                foreach ($exclude_content as $needle){
+                    if($record['value'] === $needle){
+                        ddd('yes');
+                        $is_exclude = true;
+                        break;
+                    }
                 }
             }
         }
