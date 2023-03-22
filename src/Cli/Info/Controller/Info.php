@@ -42,6 +42,7 @@ class Info extends Controller {
                 }
             }
             $result = Info::response($object, $url);
+            ddd($result);
             if($command){
                 Event::trigger($object, 'info.' . $command, [
                     'command' => $command
