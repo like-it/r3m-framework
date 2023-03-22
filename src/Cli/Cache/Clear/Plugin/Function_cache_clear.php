@@ -24,9 +24,8 @@ function function_cache_clear(Parse $parse, Data $data){
     if($read){
         foreach($read as $file){
             if($file->type === Dir::TYPE){
-                ddd($file);
                 if(
-                    stristr($file->url, strtolower(Route::NAME)) !== false &&
+                    is_numeric($file->name) &&
                     file_exists($file->url)
                 ){
                     Dir::remove($file->url);
@@ -35,9 +34,6 @@ function function_cache_clear(Parse $parse, Data $data){
             }
         }
     }
-
-
-
     if(File::exist($object->config('project.dir.vendor') . 'Doctrine')){
         $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
         $cacheDriver->deleteAll();
