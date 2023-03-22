@@ -47,6 +47,8 @@ class Event {
         if(empty($events) && empty($notifications)){
             return null;
         }
+        d($events);
+        d($notifications);
         $notifications = Sort::list($notifications)->with(['priority' => 'DESC']);
         $events = Sort::list($events)->with(['priority' => 'DESC']);
         if(is_array($notifications)){
