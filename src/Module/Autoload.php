@@ -16,7 +16,6 @@ use stdClass;
 
 use R3m\Io\App;
 use R3m\Io\Config;
-use R3m\Io\Module\Parse\Token;
 
 use Exception;
 
@@ -782,21 +781,14 @@ class Autoload {
     {
         $exclude_content = $object->config('ramdisk.autoload.exclude.content');
         $is_exclude = false;
-        require_once __DIR__ . DIRECTORY_SEPARATOR . 'Parse' . DIRECTORY_SEPARATOR . 'Token.php';
-        $token = Token::tree('{' . $content . '}');
         if(
             !empty($exclude_content) &&
-            is_array($exclude_content) &&
-            !empty($token) &&
-            is_array($token)
+            is_array($exclude_content)
         ){
-            foreach ($token as $nr => $record){
-                foreach ($exclude_content as $needle){
-                    if($record['value'] === $needle){
-                        ddd('yes');
-                        $is_exclude = true;
-                        break;
-                    }
+            foreach ($exclude_content as $needle){
+                if(stristr($content, $needle) !== false){
+                    $is_exclude = true;
+                    break;
                 }
             }
         }
