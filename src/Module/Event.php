@@ -47,9 +47,12 @@ class Event {
         if(empty($events) && empty($notifications)){
             return null;
         }
-        ddd($notifications);
-        $notifications = Sort::list($notifications)->with(['priority' => 'DESC']);
-        $events = Sort::list($events)->with(['priority' => 'DESC']);
+        if($notifications){
+            $notifications = Sort::list($notifications)->with(['priority' => 'DESC']);
+        }
+        if($events){
+            $events = Sort::list($events)->with(['priority' => 'DESC']);
+        }
         if(is_array($notifications)){
             foreach($notifications as $record){
                 if(
