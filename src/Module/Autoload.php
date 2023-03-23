@@ -766,6 +766,8 @@ class Autoload {
         ){
             foreach($exclude_load as $needle){
                 if(stristr($load, $needle) !== false){
+                    d($load);
+                    d($needle);
                     $is_exclude = true;
                     break;
                 }
