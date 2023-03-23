@@ -474,7 +474,7 @@ class Build {
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
                     $exception = new PluginNotFoundException('Function not found: ' . $text, $dir_plugin);
-                    Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.plugin.require.not_found', [
+                    Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.plugin.not_found', [
                         'url' => $url,
                         'name' => $name,
                         'exception' => $exception
@@ -483,7 +483,7 @@ class Build {
                 }
             } elseif(array_key_exists('function', $limit)) {
                 $exception = new PluginNotAllowedException('Function (' . $name . ') not allowed, allowed: ' . implode(',', $limit['function']));
-                Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.plugin.require.not_allowed', [
+                Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.plugin.not_allowed', [
                     'url' => $url,
                     'name' => $name,
                     'exception' => $exception,
