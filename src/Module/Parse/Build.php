@@ -11,8 +11,8 @@
 
 namespace R3m\Io\Module\Parse;
 
-use R3m\Io\Exception\ObjectException;
-use R3m\Io\Module\Server;
+
+
 use stdClass;
 
 use R3m\Io\App;
@@ -24,9 +24,12 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
-
+use R3m\Io\Module\Event;
+use R3m\Io\Module\Server;
 
 use Exception;
+
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\PluginNotFoundException;
 use R3m\Io\Exception\PluginNotAllowedException;
 use R3m\Io\Exception\FileWriteException;
@@ -519,6 +522,11 @@ class Build {
         Dir::create($dir);
         File::put($url, $write);
         exec('chmod 640 ' . $url);
+        $object = $this->object();
+        Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.' . __FUNCTION__, [
+            'url' => $url
+        ]);
+
         //make event which checks php-l and move accordingly
 //        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
         $command = 'php -l ' . escapeshellcmd($url);
@@ -527,8 +535,6 @@ class Build {
         $this->object->config('core.execute.stream.is.default', false);
         Core::execute($this->object(), $command, $output, $error);
         $this->object->config('core.execute.stream.is.default', $default);
-        d($output);
-        d($error);
         if($error){
             $url_write_error = $this->object()->config('framework.dir.temp') . 'Parse/Error/' . File::basename($url);
             $this->object()->logger()->error($error, [ $url_write_error ]);
