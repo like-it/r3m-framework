@@ -52,7 +52,7 @@ class Event {
         }
         if($events){
             d($action);
-            ddd($events);
+            d($events);
             $events = Sort::list($events)->with(['priority' => 'DESC']);
         }
         if(is_array($notifications)){
