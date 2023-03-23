@@ -303,7 +303,16 @@ class Config extends Data {
                     ){
                         foreach($record['method']['attribute'] as $attribute_nr => $attribute_list){
                             foreach($attribute_list as $attribute){
-                                $parameters[$key] .= $object->config($attribute['execute']);
+                                $value = $object->config($attribute['execute']);
+                                if(
+                                    is_object($value) ||
+                                    is_array($value)
+                                ){
+                                    $parameters[$key][] = $object->config($attribute['execute']);
+                                } else {
+                                    $parameters[$key] .= $object->config($attribute['execute']);
+                                }
+
                             }
                         }
                     }
@@ -311,6 +320,11 @@ class Config extends Data {
                         $parameters[$key] .= $record['value'];
                     }
                 }
+            }
+        }
+        foreach($parameters as $key => $sublist){
+            if(is_array($sublist)){
+                ddd($parameters);
             }
         }
         return $parameters;
