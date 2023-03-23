@@ -1,32 +1,42 @@
 <?php
 
+use R3m\Io\Config;
+
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
+use R3m\Io\Module\Event;
 
 
 /**
- * @throws \R3m\Io\Exception\FileWriteException
  * @throws Exception
  */
-function function_host_delete(Parse $parse, Data $data){
-    $id = posix_geteuid();
+function function_host_delete(Parse $parse, Data $data, $host=''){
+    $object = $parse->object();
+    $id = $object->config(Config::POSIX_ID);
     if(
         !in_array(
             $id,
             [
                 0
-            ]
+            ],
+            true
         )
     ){
-        throw new Exception('Only root can configure host delete...');
+        $exception = new Exception('Only root can configure host delete...');
+        Event::trigger($object, 'configure.host.delete', [
+            'host' => $host,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
-    $attribute = func_get_args();
-    array_shift($attribute);
-    array_shift($attribute);
-    $host = array_shift($attribute);
     if(empty($host)){
-        throw new Exception('Host cannot be empty...');
+        $exception = new Exception('Host cannot be empty...');
+        Event::trigger($object, 'configure.host.delete', [
+            'host' => $host,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
     $url = '/etc/hosts';
     $data = explode("\n", File::read($url));
@@ -37,5 +47,8 @@ function function_host_delete(Parse $parse, Data $data){
     }
     $data = implode("\n", $data);
     File::write($url, $data);
+    Event::trigger($object, 'configure.host.delete', [
+        'host' => $host,
+    ]);
 }
 

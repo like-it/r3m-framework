@@ -21,6 +21,7 @@ use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 
 class Configure extends Controller {
@@ -147,6 +148,7 @@ class Configure extends Controller {
      * @throws UrlNotExistException
      */
     public static function run(App $object){
+        $url = false;
         $scan = Configure::scan($object);
         $module = $object->parameter($object, 'configure', 1);
         if(!in_array($module, $scan['module'])){
@@ -230,8 +232,24 @@ class Configure extends Controller {
                     ucfirst($module)
                 );
             }
-            return Configure::response($object, $url);
+            $response = Configure::response($object, $url);
+            Event::trigger($object, strtolower(Configure::NAME) . '.' . __FUNCTION__, [
+                'module' => $module,
+                'submodule' => $submodule,
+                'command' => $command,
+                'subcommand' => $subcommand,
+                'url' => $url
+            ]);
+            return $response;
         } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
+            Event::trigger($object, strtolower(Configure::NAME) . '.' . __FUNCTION__, [
+                'module' => $module,
+                'submodule' => $submodule,
+                'command' => $command,
+                'subcommand' => $subcommand,
+                'url' => $url,
+                'exception', $exception
+            ]);
             return $exception;
         }
     }

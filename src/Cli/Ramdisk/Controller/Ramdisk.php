@@ -11,7 +11,10 @@
 namespace R3m\Io\Cli\RamDisk\Controller;
 
 use R3m\Io\App;
+
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Event;
 
 use Exception;
 
@@ -29,7 +32,13 @@ class Ramdisk extends Controller {
         '{{binary()}} ramdisk unmount                | RamDisk unmount'
     ];
 
+    /**
+     * @throws ObjectException
+     */
     public static function run(App $object){
+        $name = false;
+        $url = false;
+        $command = false;
         try {
             $command = App::parameter($object, lcfirst(Ramdisk::NAME), 1);
             $name = false;
@@ -41,13 +50,29 @@ class Ramdisk extends Controller {
                     $name = RamDisk::name(strtolower($command), RamDisk::NAME);
                 break;
                 default:
-                    throw new Exception('Unknown ramdisk command...');
+                    $exception = new Exception('Unknown ramdisk command...');
+                    Event::trigger($object, strtolower(Ramdisk::NAME) . '.' . __FUNCTION__, [
+                        'command' => $command,
+                        'exception' => $exception
+                    ]);
+                    throw $exception;
             }
             if($name){
                 $url = RamDisk::locate($object, $name);
-                return RamDisk::response($object, $url);
+                $response = RamDisk::response($object, $url);
+                Event::trigger($object, strtolower(Ramdisk::NAME) . '.' . strtolower($command), [
+                    'name' => $name,
+                    'url' => $url
+                ]);
+                return $response;
             }
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Ramdisk::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'command' => $command,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

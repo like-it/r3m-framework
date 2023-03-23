@@ -1,25 +1,36 @@
 <?php
 
+use R3m\Io\Config;
+
+use R3m\Io\Module\Event;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
+
 use Exception;
 
 /**
  * @throws Exception
  */
 function function_site_delete(Parse $parse, Data $data, $server=null){
-    $id = posix_geteuid();
+    $object = $parse->object();
+    $id = $object->config(Config::POSIX_ID);
     if(
         !in_array(
             $id,
             [
                 0
-            ]
+            ],
+            true
         )
     ){
-        throw new Exception('Only root can configure site delete...');
+        $exception = new Exception('Only root can configure site delete...');
+        Event::trigger($object, 'configure.site.delete', [
+            'server' => $server,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
     if(!empty($server) && is_object($server)){
         $url = '/etc/apache2/sites-available/';
@@ -33,8 +44,16 @@ function function_site_delete(Parse $parse, Data $data, $server=null){
                 File::delete($file->url);
             }
         }
+        Event::trigger($object, 'configure.site.delete', [
+            'server' => $server,
+        ]);
     } else {
-        throw new Exception('Server variable needs to be an object');
+        $exception = new Exception('Server variable needs to be an object');
+        Event::trigger($object, 'configure.site.delete', [
+            'server' => $server,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
 
 

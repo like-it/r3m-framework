@@ -1,8 +1,11 @@
 <?php
 
+use R3m\Io\Config;
+
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\File;
+use R3m\Io\Module\Event;
 
 use Exception;
 
@@ -10,32 +13,63 @@ use Exception;
  * @throws Exception
  */
 function function_cors_headers_expose(Parse $parse, Data $data, $headers=''){
-    $id = posix_geteuid();
+    $object = $parse->object();
+    $id = $object->config(Config::POSIX_ID);
     if(
         !in_array(
             $id,
             [
                 0,
                 33
-            ]
+            ],
+            true
         )
     ){
-        throw new Exception('Only root & www-data can configure cors setup default...');
+        $exception = new Exception('Only root & www-data can configure cors headers expose...');
+        Event::trigger($object, 'configure.cors.headers.expose', [
+            'headers' => $headers,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
     if(empty($headers)){
-        throw new Exception('Headers cannot be empty...');
+        $exception = new Exception('Headers cannot be empty...');
+        Event::trigger($object, 'configure.cors.headers.expose', [
+            'headers' => $headers,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
-    $object = $parse->object();
-    $url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
+    $dir = $object->config('project.dir.data');
+    $url = $dir .
+        'Config' .
+        $object->config('extension.json')
+    ;
     $config = $object->data_read($url);
     if(!$config){
         $config = new Data();
+        Dir::create($dir, Dir::CHMOD);
+        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+            exec('chmod 777 '. $dir);
+        }
+        if(empty($id)){
+            exec('chown www-data:www-data ' . $dir);
+        }
     }
     $config->set('server.cors.headers.expose', $headers);
     $config->write($url);
-    if($id === 0){
-        File::chown($url, 'www-data', 'www-data');
+    if(empty($id)){
+        exec('chmod www-data:www-data ' . $url);
     }
-    return 'Headers expose updated.' . PHP_EOL;
+    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+        exec('chmod 666 ' . $url);
+    } else {
+        exec('chmod 640 ' . $url);
+    }
+    $response = 'Headers expose updated.' . PHP_EOL;
+    Event::trigger($object, 'configure.cors.headers.expose', [
+        'headers' => $headers
+    ]);
+    return $response;
 }
 

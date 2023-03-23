@@ -11,6 +11,7 @@
 namespace R3m\Io\Cli\Doctrine\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
 
 use Exception;
@@ -18,6 +19,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Module\Event;
 
 class Doctrine extends Controller {
     const DIR = __DIR__;
@@ -26,14 +28,32 @@ class Doctrine extends Controller {
     const INFO_RUN = [
         '{{binary()}} doctrine orm:generate-proxies  | Generate proxies & adjust owner'
     ];
-    
+
+    /**
+     * @throws ObjectException
+     */
     public static function run(App $object){
+        $command = false;
+        $name = false;
+        $url = false;
         try {
             $command = App::parameter($object, 'doctrine', 1);
             $name = Doctrine::name($command, Doctrine::NAME);
             $url = Doctrine::locate($object, $name);
-            return Doctrine::response($object, $url);
+            $response = Doctrine::response($object, $url);
+            Event::trigger($object, strtolower(Doctrine::NAME) . '.' . __FUNCTION__, [
+                'command' => $command,
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Doctrine::NAME) . '.' . __FUNCTION__, [
+                'command' => $command,
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

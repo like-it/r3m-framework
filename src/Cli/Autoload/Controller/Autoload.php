@@ -11,7 +11,9 @@
 namespace R3m\Io\Cli\Autoload\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Event;
 
 use Exception;
 
@@ -35,6 +37,9 @@ class Autoload extends Controller {
     const EXCEPTION_COMMAND_PARAMETER = '{{$command}}';
     const EXCEPTION_COMMAND = 'invalid command (' . Autoload::EXCEPTION_COMMAND_PARAMETER . ')' . PHP_EOL;
 
+    /**
+     * @throws Exception
+     */
     public static function run(App $object){
         $command = $object->parameter($object, Autoload::NAME, 1);
 
@@ -47,28 +52,67 @@ class Autoload extends Controller {
                 $command,
                 Autoload::EXCEPTION_COMMAND
             );
-            throw new Exception($exception);
+            $exception = new Exception($exception);
+            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+                'command' => $command,
+                'exception' => $exception
+            ]);
+            throw $exception;
         }
-        return Autoload::{$command}($object);
+        $response = Autoload::{$command}($object);
+        Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+            'command' => $command
+        ]);
+        return $response;
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function info(App $object){
+        $name = false;
+        $url = false;
         try {
             $name = Autoload::name(__FUNCTION__, Autoload::NAME);
             $url = Autoload::locate($object, $name);
-            return Autoload::response($object, $url);
+            $result = Autoload::response($object, $url);
+            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }
 
 
+    /**
+     * @throws ObjectException
+     */
     private static function restart(App $object){
+        $name = false;
+        $url = false;
         try {
             $name = Autoload::name(__FUNCTION__, Autoload::NAME);
             $url = Autoload::locate($object, $name);
-            return Autoload::response($object, $url);
+            $result = Autoload::response($object, $url);
+            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

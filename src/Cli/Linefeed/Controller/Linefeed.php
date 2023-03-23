@@ -11,8 +11,10 @@
 namespace R3m\Io\Cli\Linefeed\Controller;
 
 use R3m\Io\App;
+
 use R3m\Io\Module\Cli;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Controller;
 
@@ -31,13 +33,20 @@ class Linefeed extends Controller {
         $url = $object->config('controller.dir.data') . 'Linefeed' . $object->config('extension.json');
         $config = $object->data_read($url, sha1($url));
         $counter = 0;
+        $directory = false;
         if($config){
             $directory = App::parameter($object, Linefeed::NAME, 1);
             while(empty($directory)){
                 $directory = Cli::read('input', 'Input directory: ');
             }
             if(!Dir::is($directory)){
-                throw new Exception('Not a directory.');
+                $exception = new Exception('Not a directory.');
+                Event::trigger($object, strtolower(Linefeed::NAME) . '.' . __FUNCTION__, [
+                    'directory' => $directory,
+                    'counter' => $counter,
+                    'exception' => $exception
+                ]);
+                throw $exception;
             }
             $dir = new Dir();
             $list = $dir->read($directory, true);
@@ -66,6 +75,10 @@ class Linefeed extends Controller {
                 }
             }
         }
+        Event::trigger($object, strtolower(Linefeed::NAME) . '.' . __FUNCTION__, [
+            'directory' => $directory,
+            'counter' => $counter
+        ]);
         return 'Linefeed: number of changes: ' . $counter . PHP_EOL;
     }
 }

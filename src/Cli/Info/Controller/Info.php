@@ -11,6 +11,7 @@
 namespace R3m\Io\Cli\Info\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
 use R3m\Io\Module\Event;
 
@@ -30,8 +31,12 @@ class Info extends Controller {
         '{{binary()}} info all                       | This info'
     ];
 
+    /**
+     * @throws ObjectException
+     */
     public static function run(App $object){
         $command = $object::parameter($object, Info::NAME, 1);
+        $url = false;
         try {
             if(empty($command)){
                 $url = Info::locate($object, Info::NAME);
@@ -44,14 +49,23 @@ class Info extends Controller {
             $result = Info::response($object, $url);
             if($command){
                 Event::trigger($object, 'info.' . $command, [
-                    'command' => $command
+                    'command' => $command,
+                    'url' => $url
                 ]);
             } else {
                 Event::trigger($object, 'info', [
+                    'command' => false,
+                    'url' => $url,
+
                 ]);
             }
             return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, 'info', [
+                'command' => $command,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

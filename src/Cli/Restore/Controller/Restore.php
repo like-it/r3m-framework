@@ -10,9 +10,13 @@
  */
 namespace R3m\Io\Cli\Restore\Controller;
 
-
 use R3m\Io\App;
+use R3m\Io\Config;
+
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
 
@@ -36,14 +40,31 @@ class Restore extends Controller {
         'index.php'
     ];
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
     public static function run(App $object){
+        $id = $object->config(Config::POSIX_ID);
         $filename = $object->parameter($object, Restore::NAME, 1);
+        $name = false;
+        $url = false;
         if(empty($filename)){
             try {
                 $name = Restore::name(Restore::DEFAULT_NAME, Restore::NAME);
                 $url = Restore::locate($object, $name);
-                return Restore::response($object, $url);
+                $response = Restore::response($object, $url);
+                Event::trigger($object, strtolower(Restore::NAME) . '.info', [
+                    'name' => $name,
+                    'url' => $url,
+                ]);
+                return $response;
             } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+                Event::trigger($object, strtolower(Restore::NAME) . '.info', [
+                    'name' => $name,
+                    'url' => $url,
+                    'exception' => $exception
+                ]);
                 return $exception;
             }
         }
@@ -59,11 +80,24 @@ class Restore extends Controller {
             File::exist($source) &&
             in_array($filename, Restore::FILE)
         ){
-            $destination = $object->config('project.dir.public') . $filename;
+            $dir = $object->config('project.dir.public');
+            Dir::create($dir, Dir::CHMOD);
+            $destination = $dir . $filename;
             File::copy($source, $destination);
-            $command = 'chown www-data:www-data ' . $destination;
-            Core::execute($object, $command);
+            if(empty($id)){
+                exec('chown www-data:www-data ' . $dir);
+                exec('chown www-data:www-data ' . $destination);
+            }
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 777 ' . $dir);
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
             echo $destination . ' Restored...' . PHP_EOL;
+            Event::trigger($object, strtolower(Restore::NAME) . '.' . __FUNCTION__, [
+                'url' => $destination,
+            ]);
         }
     }
 }

@@ -11,7 +11,9 @@
 namespace R3m\Io\Cli\Bin\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Event;
 
 use Exception;
 
@@ -29,17 +31,31 @@ class Bin extends Controller {
 
     const INFO = '{{binary()}} bin                            | Creates binary';
 
+    /**
+     * @throws ObjectException
+     */
     public static function run(App $object){
         $name = $object->parameter($object, Bin::NAME, 1);
         if(empty($name)){
             $name = Bin::DEFAULT_NAME;
         }
+        $url = false;
         $object->data('name', $name);
         try {
             $name = Bin::name('create', Bin::NAME);
             $url = Bin::locate($object, $name);
-            return Bin::response($object, $url);
+            $result = Bin::response($object, $url);
+            Event::trigger($object, strtolower(Bin::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Bin::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

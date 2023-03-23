@@ -11,6 +11,7 @@
 namespace R3m\Io\Cli\Route\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
 
 use Exception;
@@ -18,6 +19,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Module\Event;
 
 class Route extends Controller {
     const NAME = 'Route';
@@ -40,7 +42,6 @@ class Route extends Controller {
      */
     public static function run(App $object){
         $command = $object->parameter($object, Route::NAME, 1);
-
         if($command === null){
             $command = Route::DEFAULT_COMMAND;
         }
@@ -50,28 +51,64 @@ class Route extends Controller {
                 $command,
                 Route::EXCEPTION_COMMAND
             );
-            throw new Exception($exception);
+            $exception = new Exception($exception);
+            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+                'command' => $command,
+                'exception' => $exception,
+            ]);
+            throw $exception;
         }
-        return Route::{$command}($object);
+        $response = Route::{$command}($object);
+        Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+            'command' => $command,
+        ]);
+        return $response;
     }
 
     private static function info(App $object){
+        $name = false;
+        $url = false;
         try {
             $name = Route::name(__FUNCTION__, Route::NAME);
             $url = Route::locate($object, $name);
-            return Route::response($object, $url);
+            $response = Route::response($object, $url);
+            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+            ]);
+            return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }
 
 
+    /**
+     * @throws ObjectException
+     */
     private static function restart(App $object){
+        $name = false;
+        $url = false;
         try {
             $name = Route::name(__FUNCTION__    , Route::NAME);
             $url = Route::locate($object, $name);
-            return Route::response($object, $url);
+            $response = Route::response($object, $url);
+            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+            ]);
+            return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

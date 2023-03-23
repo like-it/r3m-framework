@@ -11,13 +11,17 @@
 namespace R3m\Io\Cli\Openssl\Controller;
 
 use R3m\Io\App;
+
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Event;
 
 use Exception;
 
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+
 
 class Openssl extends Controller {
     const NAME = 'OpenSsl';
@@ -51,28 +55,67 @@ class Openssl extends Controller {
                 $command,
                 Openssl::EXCEPTION_COMMAND
             );
-            throw new Exception($exception);
+            $exception = new Exception($exception);
+            Event::trigger($object, strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
+                'command' => $command,
+                'exception' => $exception
+            ]);
+            throw $exception;
         }
-        return Openssl::{$command}($object);
+        $response = Openssl::{$command}($object);
+        Event::trigger($object, strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
+            'command' => $command,
+        ]);
+        return $response;
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function info(App $object)
     {
+        $name = false;
+        $url = false;
         try {
             $name = Openssl::name(__FUNCTION__, Openssl::NAME);
             $url = Openssl::locate($object, $name);
-            return Openssl::response($object, $url);
+            $response = Openssl::response($object, $url);
+            Event::trigger($object, 'openssl.info', [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $response;
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
+            Event::trigger($object, strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function req(App $object){
+        $name = false;
+        $url = false;
         try {
             $name = Openssl::name(__FUNCTION__, Openssl::NAME);
             $url = Openssl::locate($object, $name);
-            return Openssl::response($object, $url);
+            $response = Openssl::response($object, $url);
+            Event::trigger($object, strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $response;
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
+            Event::trigger($object, strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

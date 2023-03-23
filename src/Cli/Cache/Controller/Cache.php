@@ -12,7 +12,9 @@ namespace R3m\Io\Cli\Cache\Controller;
 
 
 use R3m\Io\App;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Event;
 
 use Exception;
 
@@ -60,29 +62,68 @@ class Cache extends Controller {
                 $command,
                 Cache::EXCEPTION_COMMAND
             );
-            throw new Exception($exception);
+            $exception = new Exception($exception);
+            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+                'command' => $command,
+                'exception' => $exception
+            ]);
+            throw $exception;
         }
-        return Cache::{$command}($object);
+        $response = Cache::{$command}($object);
+        Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+            'command' => $command,
+        ]);
+        return $response;
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function info(App $object){
+        $name = false;
+        $url = false;
         try {
             $name = Cache::name(__FUNCTION__, Cache::NAME);
             $url = Cache::locate($object, $name);
-            return Cache::response($object, $url);
+            $response = Cache::response($object, $url);
+            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
 
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function clear(App $object){
+        $name = false;
+        $url = false;
         try {
             $object->config('ramdisk.is.disabled', true);
             $name = Cache::name(__FUNCTION__, Cache::NAME);
             $url = Cache::locate($object, $name);
-            return Cache::response($object, $url);
+            $response = Cache::response($object, $url);
+            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

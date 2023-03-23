@@ -1,8 +1,12 @@
 <?php
 
+use R3m\Io\Config;
+
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
+use R3m\Io\Module\Event;
 
 use Exception;
 
@@ -10,26 +14,48 @@ use Exception;
  * @throws Exception
  */
 function function_cors_setup_default(Parse $parse, Data $data, $host=''){
-    $id = posix_geteuid();
+    $object = $parse->object();
+    $id = $object->config(Config::POSIX_ID);
     if(
         !in_array(
             $id,
             [
                 0,
                 33
-            ]
+            ],
+            true
         )
     ){
-        throw new Exception('Only root & www-data can configure cors setup default...');
+        $exception = new Exception('Only root & www-data can configure cors setup default...');
+        Event::trigger($object, 'configure.cors.setup.default', [
+            'host' => $host,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
     if(empty($host)){
-        throw new Exception('Host cannot be empty...');
+        $exception = new Exception('Host cannot be empty...');
+        Event::trigger($object, 'configure.cors.setup.default', [
+            'host' => $host,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
-    $object = $parse->object();
-    $url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
+    $dir = $object->config('project.dir.data');
+    $url = $dir .
+        'Config' .
+        $object->config('extension.json')
+    ;
     $config = $object->data_read($url);
     if(!$config){
         $config = new Data();
+        Dir::create($dir, Dir::CHMOD);
+        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+            exec('chmod 777 '  . $dir);
+        }
+        if(empty($id)){
+            exec('chown www-data:www-data ' . $dir);
+        }
     }
     $list = [];
     $list[] = $host;
@@ -62,9 +88,18 @@ function function_cors_setup_default(Parse $parse, Data $data, $host=''){
     $config->set('server.cors.domains', $list);
     $config->set('server.cors.max-age', 86400);
     $config->write($url);
-    if($id === 0){
-        File::chown($url, 'www-data', 'www-data');
+    if(empty($id)){
+        exec('chmod www-data:www-data ' . $url);
     }
-    return 'Cors setup default for host: ' . $host . PHP_EOL;
+    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+        exec('chmod 666 ' . $url);
+    } else {
+        exec('chmod 640 ' . $url);
+    }
+    $response = 'Cors setup default for host: ' . $host . PHP_EOL;
+    Event::trigger($object, 'configure.cors.setup.default', [
+        'host' => $host
+    ]);
+    return $response;
 }
 

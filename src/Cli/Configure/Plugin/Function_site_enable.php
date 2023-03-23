@@ -1,26 +1,37 @@
 <?php
 
+use R3m\Io\Config;
+
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 
+use Exception;
 
 /**
  * @throws Exception
  */
 function function_site_enable(Parse $parse, Data $data, $server=null){
-    $id = posix_geteuid();
+    $object = $parse->object();
+    $id = $object->config(Config::POSIX_ID);
     if(
         !in_array(
             $id,
             [
                 0
-            ]
+            ],
+            true
         )
     ){
-        throw new Exception('Only root can configure site enable...');
+        $exception = new Exception('Only root can configure site enable...');
+        Event::trigger($object, 'configure.site.disable', [
+            'server' => $server,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
     if(!empty($server) && is_object($server)){
         $url = '/etc/apache2/sites-available/';
@@ -42,17 +53,15 @@ function function_site_enable(Parse $parse, Data $data, $server=null){
                 echo 'Site: ' . $server->name . ' enabled.' . "\n";
             }
         }
+        Event::trigger($object, 'configure.site.disable', [
+            'server' => $server,
+        ]);
     } else {
-        throw new Exception('Server variable needs to be an object');
+        $exception = new Exception('Server variable needs to be an object');
+        Event::trigger($object, 'configure.site.disable', [
+            'server' => $server,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
-
-
-
-
-
-
-
-
-
 }
-

@@ -11,10 +11,12 @@
 namespace R3m\Io\Cli\Install\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Config;
+
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Controller;
-use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 
@@ -34,20 +36,29 @@ class Install extends Controller {
      * @throws Exception
      */
     public static function run(App $object){
-        $id = posix_geteuid();
+        $id = $object->config(Config::POSIX_ID);
+        $key = App::parameter($object, 'install', 1);
         if(
             !in_array(
                 $id,
                 [
                     0,
                     33
-                ]
+                ],
+                true
             )
         ){
-            throw new Exception('Only root & www-data can install packages...');
+            $exception = new Exception('Only root & www-data can install packages...');
+            Event::trigger($object, 'install', [
+                'key' => $key,
+                'exception' => $exception
+            ]);
+            throw $exception;
         }
-        $key = App::parameter($object, 'install', 1);
-        $url = $object->config('framework.dir.data') . $object->config('dictionary.package') . $object->config('extension.json');
+        $url = $object->config('framework.dir.data') .
+            $object->config('dictionary.package') .
+            $object->config('extension.json')
+        ;
         $object->set(Controller::PROPERTY_VIEW_URL, $url);
 
         $package = $object->parse_select(
@@ -55,16 +66,21 @@ class Install extends Controller {
             'package.' . $key
         );
         if(empty($package)){
-            throw new Exception('Package: ' . $key . PHP_EOL);
+            $exception = new Exception('Package: ' . $key . PHP_EOL);
+            Event::trigger($object, 'install', [
+                'key' => $key,
+                'exception' => $exception
+            ]);
+            throw $exception;
         }
         if($package->has('composer')){
             Dir::change($object->config('project.dir.root'));
-            Core::execute($object, $package->get('composer'), $output, $error);
+            Core::execute($object, $package->get('composer'), $output, $notification);
             if($output){
                 echo $output;
             }
-            if($error){
-                echo $error;
+            if($notification){
+                echo $notification;
             }
         }
         if(
@@ -90,7 +106,7 @@ class Install extends Controller {
         }
         elseif(
             $package->has('route') &&
-            is_string($package->route)
+            is_string($package->get('route'))
         ){
             if(File::exist($package->get('route'))){
                 $command = '{{binary()}} configure route resource "' . $package->route . '"';
@@ -112,12 +128,12 @@ class Install extends Controller {
             is_array($package->get('command'))
         ){
             foreach($package->get('command') as $command){
-                Core::execute($object, $command, $output, $error);
+                Core::execute($object, $command, $output, $notification);
                 if($output){
                     echo $output;
                 }
-                if($error){
-                    echo $error;
+                if($notification){
+                    echo $notification;
                 }
             }
         }
@@ -125,13 +141,16 @@ class Install extends Controller {
             $package->has('command') &&
             is_string($package->get('command'))
         ){
-            Core::execute($object, $package->get('command'), $output, $error);
+            Core::execute($object, $package->get('command'), $output, $notification);
             if($output){
                 echo $output;
             }
-            if($error){
-                echo $error;
+            if($notification){
+                echo $notification;
             }
         }
+        Event::trigger($object, 'install', [
+            'key' => $key,
+        ]);
     }
 }

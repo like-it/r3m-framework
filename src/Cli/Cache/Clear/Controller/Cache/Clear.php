@@ -11,14 +11,16 @@
 namespace R3m\Io\Cli\Cache\Clear\Controller\Cache;
 
 use R3m\Io\App;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
-use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 
 use Exception;
 
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+
 
 class Clear extends Controller {
     const NAME = 'Cache';
@@ -55,32 +57,68 @@ class Clear extends Controller {
                 $command,
                 Clear::EXCEPTION_COMMAND
             );
-            throw new Exception($exception);
+            $exception = new Exception($exception);
+            Event::trigger($object, strtolower(Clear::NAME) . '.' . __FUNCTION__, [
+                'command' => $command,
+                'exception' => $exception
+            ]);
+            throw $exception;
         }
-        return Clear::{$command}($object);
+        $response = Clear::{$command}($object);
+        Event::trigger($object, strtolower(Clear::NAME) . '.' . __FUNCTION__, [
+            'command' => $command
+        ]);
+        return $response;
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function info(App $object){
+        $name = false;
+        $url = false;
         try {
             $name = Clear::name(__FUNCTION__, Clear::NAME);
             $url = Clear::locate($object, $name);
-            return Clear::response($object, $url);
+            $response = Clear::response($object, $url);
+            Event::trigger($object, strtolower(Clear::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Clear::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
 
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function clear(App $object){
+        $name = false;
+        $url = false;
         try {
             $object->config('ramdisk.is.disabled', true);
             $name = Clear::name(__FUNCTION__, Clear::NAME);
             $url = Clear::locate($object, $name);
             $response = Clear::response($object, $url);
+            Event::trigger($object, strtolower(Clear::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
             return $response;
-
-
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Clear::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

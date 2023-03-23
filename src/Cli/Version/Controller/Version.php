@@ -10,15 +10,20 @@
  */
 namespace R3m\Io\Cli\Version\Controller;
 
-use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
+
 use R3m\Io\Module\Core;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Controller;
 use R3m\Io\Module\Parse;
 
+use Exception;
+
+use R3m\Io\Exception\FileWriteException;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
@@ -65,31 +70,63 @@ class Version extends Controller {
         if($command === null){
             $command = Version::DEFAULT_COMMAND;
         }
-
-        if(!in_array($command, Version::COMMAND)){
+        if(
+            !in_array(
+                $command,
+                Version::COMMAND,
+                true
+            )
+        ){
             $exception = str_replace(
                 Version::EXCEPTION_COMMAND_PARAMETER,
                 $command,
                 Version::EXCEPTION_COMMAND
             );
-            throw new Exception($exception);
+            $exception = new Exception($exception);
+            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+                'command' => $command,
+                'exception' => $exception
+            ]);
+            throw $exception;
         }
-        return Version::{$command}($object);
+        $response = Version::{$command}($object);
+        Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+            'command' => $command
+        ]);
+        return $response;
     }
 
     private static function info(App $object){
+        $name = false;
+        $url = false;
         try {
             $name = Version::name(__FUNCTION__    , Version::NAME);
             $url = Version::locate($object, $name);
-            return Version::response($object, $url);
+            $response = Version::response($object, $url);
+            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }
 
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
     private static function update(App $object){
         $config = $object->data(App::CONFIG);
         $config_url = $config->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
+        $url = false;
+        $name = false;
         if(File::exist($config_url)){
             $read = Core::object(File::read($config_url));
             $data = new Data($read);
@@ -116,13 +153,22 @@ class Version extends Controller {
         try {
             $name = Version::name(__FUNCTION__    , Version::NAME);
             $url = Version::locate($object, $name);
-            echo Version::response($object, $url);
+            $response = Version::response($object, $url);
+            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            echo $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
         $parse = new Parse($object);
         $command = Version::UPDATE_COMMAND;
-
         foreach($command as $record){
             $execute = $parse->compile($record);
             echo 'Executing: ' . $execute . '...' . PHP_EOL;
@@ -131,5 +177,7 @@ class Version extends Controller {
             $output[] = '';
             echo implode(PHP_EOL, $output);
         }
+        return null;
     }
+
 }
