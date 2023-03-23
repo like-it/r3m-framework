@@ -549,11 +549,18 @@ class Parse {
                     $storage->data('delete', 'this');
                 }
             } else {
-                d($write);
-                d($string);
-                d($build);
-                //add phpstan error report on class in /tmp/r3m/io/parse/error/...
-                throw new Exception('Class ('. $class .') doesn\'t exist');
+                $exception = new Exception('Class ('. $class .') doesn\'t exist');
+                Event::trigger($object, 'parse.compile_exception', [
+                    'string' => $string,
+                    'data' => $data,
+                    'storage' => $storage,
+                    'depth' => $depth,
+                    'url' => $url,
+                    'url_mtime' => $file_mtime,
+                    'mtime' => $mtime,
+                    'exception' => $exception
+                ]);
+                throw $exception;
 
             }
         }
