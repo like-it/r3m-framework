@@ -308,6 +308,9 @@ class Config extends Data {
                                     is_object($value) ||
                                     is_array($value)
                                 ){
+                                    if(empty($parameters[$key])){
+                                        $parameters[$key] = [];
+                                    }
                                     $parameters[$key][] = $object->config($attribute['execute']);
                                 } else {
                                     $parameters[$key] .= $object->config($attribute['execute']);
