@@ -916,6 +916,7 @@ class App extends Data {
 
                         }
                         elseif($is_require === false && Autoload::ramdisk_exclude_content($this, $read, $url)){
+                            d($read);
                             d($load);
                             d($url);
                             //files with content __DIR__, __FILE__ cannot be cached
