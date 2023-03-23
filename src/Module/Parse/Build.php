@@ -536,7 +536,7 @@ class Build {
         $this->storage()->data('time.end', microtime(true));
         $this->storage()->data('time.duration', $this->storage()->data('time.end') - $this->storage()->data('time.start'));
         $write = str_replace($this->storage()->data('placeholder.generation.time'), round($this->storage()->data('time.duration') * 1000, 2). ' msec', $write);
-        $dir = Dir::name($url);
+        $dir = Dir::name($url, Dir::CHMOD);
         Dir::create($dir);
         File::put($url, $write);
         exec('chmod 640 ' . $url);
