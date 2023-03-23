@@ -467,7 +467,6 @@ class Build {
                             'url' => $url,
                             'name' => $name
                         ]);
-
                         break;
                     }
                 }
