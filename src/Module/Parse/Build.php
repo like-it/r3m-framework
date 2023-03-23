@@ -527,7 +527,8 @@ class Build {
         $this->object->config('core.execute.stream.is.default', false);
         Core::execute($this->object(), $command, $output, $error);
         $this->object->config('core.execute.stream.is.default', $default);
-        ddd($error);
+        d($output);
+        d($error);
         if($error){
             $url_write_error = $this->object()->config('framework.dir.temp') . 'Parse/Error/' . File::basename($url);
             $this->object()->logger()->error($error, [ $url_write_error ]);
