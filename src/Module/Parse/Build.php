@@ -526,24 +526,6 @@ class Build {
         Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.' . __FUNCTION__, [
             'url' => $url
         ]);
-
-        //make event which checks php-l and move accordingly
-//        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
-        $command = 'php -l ' . escapeshellcmd($url);
-        $default = $this->object->config('core.execute.stream.is.default');
-        $this->object->config('core.execute.mode', 'stream');
-        $this->object->config('core.execute.stream.is.default', false);
-        Core::execute($this->object(), $command, $output, $error);
-        $this->object->config('core.execute.stream.is.default', $default);
-        if($error){
-            $url_write_error = $this->object()->config('framework.dir.temp') . 'Parse/Error/' . File::basename($url);
-            $this->object()->logger()->error($error, [ $url_write_error ]);
-            $dir = Dir::name($url_write_error);
-            Dir::create($dir);
-            File::move($url, $url_write_error, true);
-            exec('chown www-data:www-data ' . $dir);
-            exec('chmod 640 ' . $url_write_error);
-        }
         return $write;
     }
 
