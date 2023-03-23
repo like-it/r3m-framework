@@ -327,7 +327,12 @@ class Config extends Data {
         }
         foreach($parameters as $key => $sublist){
             if(is_array($sublist)){
-                ddd($parameters);
+                $count = count($sublist);
+                if($count === 1){
+                    $parameters[$key] = reset($sublist);
+                } else {
+                    ddd($parameters);
+                }
             }
         }
         return $parameters;
