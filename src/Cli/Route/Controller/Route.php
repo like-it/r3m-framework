@@ -52,14 +52,14 @@ class Route extends Controller {
                 Route::EXCEPTION_COMMAND
             );
             $exception = new Exception($exception);
-            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Route::NAME) . '.' . __FUNCTION__, [
                 'command' => $command,
                 'exception' => $exception,
             ]);
             throw $exception;
         }
         $response = Route::{$command}($object);
-        Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+        Event::trigger($object, 'cli.' . strtolower(Route::NAME) . '.' . __FUNCTION__, [
             'command' => $command,
         ]);
         return $response;
@@ -72,13 +72,13 @@ class Route extends Controller {
             $name = Route::name(__FUNCTION__, Route::NAME);
             $url = Route::locate($object, $name);
             $response = Route::response($object, $url);
-            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Route::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Route::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
@@ -98,13 +98,13 @@ class Route extends Controller {
             $name = Route::name(__FUNCTION__    , Route::NAME);
             $url = Route::locate($object, $name);
             $response = Route::response($object, $url);
-            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Route::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Route::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Route::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception

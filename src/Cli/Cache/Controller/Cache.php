@@ -63,14 +63,14 @@ class Cache extends Controller {
                 Cache::EXCEPTION_COMMAND
             );
             $exception = new Exception($exception);
-            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
                 'command' => $command,
                 'exception' => $exception
             ]);
             throw $exception;
         }
         $response = Cache::{$command}($object);
-        Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+        Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
             'command' => $command,
         ]);
         return $response;
@@ -86,13 +86,13 @@ class Cache extends Controller {
             $name = Cache::name(__FUNCTION__, Cache::NAME);
             $url = Cache::locate($object, $name);
             $response = Cache::response($object, $url);
-            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
@@ -113,13 +113,13 @@ class Cache extends Controller {
             $name = Cache::name(__FUNCTION__, Cache::NAME);
             $url = Cache::locate($object, $name);
             $response = Cache::response($object, $url);
-            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception

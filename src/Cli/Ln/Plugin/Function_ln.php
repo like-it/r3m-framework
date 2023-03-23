@@ -20,7 +20,7 @@ function function_ln(Parse $parse, Data $data){
 
     if(File::exist($target)){
         $exception = new Exception('File exists...');
-        Event::trigger($object, 'ln', [
+        Event::trigger($object, 'cli.ln', [
             'source' => $source,
             'target' => $target,
             'exception' => $exception
@@ -28,7 +28,7 @@ function function_ln(Parse $parse, Data $data){
         return;
     }
     exec('ln -s ' . escapeshellarg($source) . ' ' . escapeshellarg($target));
-    Event::trigger($object, 'ln', [
+    Event::trigger($object, 'cli.ln', [
         'source' => $source,
         'target' => $target
     ]);

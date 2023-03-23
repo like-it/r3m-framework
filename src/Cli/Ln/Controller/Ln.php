@@ -36,13 +36,13 @@ class Ln extends Controller {
             $name = Ln::name(__FUNCTION__    , Ln::NAME);
             $url = Ln::locate($object, $name);
             $response = Ln::response($object, $url);
-            Event::trigger($object, strtolower(Ln::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Ln::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Ln::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Ln::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception

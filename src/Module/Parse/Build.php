@@ -323,6 +323,7 @@ class Build {
     private function createRequireContent($type='', $document=[]): array
     {
         $object = $this->object();
+        $url = false;
         $config = $object->data(App::CONFIG);
         $storage = $this->storage();
         $dir_plugin = $config->get('parse.dir.plugin');
@@ -462,15 +463,33 @@ class Build {
                             exec('chmod 640 ' . $ramdisk_url);
                             exec('chmod 640 ' . $config_url);
                         }
+                        Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.plugin.require', [
+                            'url' => $url,
+                            'name' => $name
+                        ]);
+
                         break;
                     }
                 }
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
-                    throw new PluginNotFoundException('Function not found: ' . $text, $dir_plugin);
+                    $exception = new PluginNotFoundException('Function not found: ' . $text, $dir_plugin);
+                    Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.plugin.require.not_found', [
+                        'url' => $url,
+                        'name' => $name,
+                        'exception' => $exception
+                    ]);
+                    throw $exception;
                 }
             } elseif(array_key_exists('function', $limit)) {
-                throw new PluginNotAllowedException('Function (' . $name . ') not allowed, allowed: ' . implode(',', $limit['function']));
+                $exception = new PluginNotAllowedException('Function (' . $name . ') not allowed, allowed: ' . implode(',', $limit['function']));
+                Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.plugin.require.not_allowed', [
+                    'url' => $url,
+                    'name' => $name,
+                    'exception' => $exception,
+                    'allowed' => $limit['function']
+                ]);
+                throw $exception;
             }
         }
         return $document;
@@ -619,7 +638,6 @@ class Build {
                         if($select['value'] == 'if'){
                             throw new Exception('if must be a method, use {if()} on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
                         } else {
-                            d($select);
                             throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') . ' ' . $record['value']);
                         }
                     case Token::TYPE_IS_MINUS_MINUS :

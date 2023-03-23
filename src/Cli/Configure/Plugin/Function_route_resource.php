@@ -27,7 +27,7 @@ function function_route_resource(Parse $parse, Data $data, $resource='')
         )
     ) {
         $exception = new Exception('Only root and www-data can configure route resource...');
-        Event::trigger($object, 'configure.route.resource', [
+        Event::trigger($object, 'cli.configure.route.resource', [
             'resource' => $resource,
             'route' => false,
             'exception' => $exception
@@ -66,14 +66,14 @@ function function_route_resource(Parse $parse, Data $data, $resource='')
         $response = 'Route resource: ' . $resource . ' added' . PHP_EOL;
     }
     if($response){
-        Event::trigger($object, 'configure.route.resource', [
+        Event::trigger($object, 'cli.configure.route.resource', [
             'resource' => $resource,
             'route' => $has_route
         ]);
         return $response;
     } else {
         $exception = new RouteExistException('Route resource already exists...');
-        Event::trigger($object, 'configure.route.resource', [
+        Event::trigger($object, 'cli.configure.route.resource', [
             'resource' => $resource,
             'route' => $has_route,
             'exception' => $exception

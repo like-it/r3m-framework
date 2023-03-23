@@ -53,14 +53,14 @@ class Autoload extends Controller {
                 Autoload::EXCEPTION_COMMAND
             );
             $exception = new Exception($exception);
-            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
                 'command' => $command,
                 'exception' => $exception
             ]);
             throw $exception;
         }
         $response = Autoload::{$command}($object);
-        Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+        Event::trigger($object, 'cli.' . strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
             'command' => $command
         ]);
         return $response;
@@ -76,13 +76,13 @@ class Autoload extends Controller {
             $name = Autoload::name(__FUNCTION__, Autoload::NAME);
             $url = Autoload::locate($object, $name);
             $result = Autoload::response($object, $url);
-            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
@@ -102,13 +102,13 @@ class Autoload extends Controller {
             $name = Autoload::name(__FUNCTION__, Autoload::NAME);
             $url = Autoload::locate($object, $name);
             $result = Autoload::response($object, $url);
-            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Autoload::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception

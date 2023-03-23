@@ -27,7 +27,7 @@ function function_cors_methods(Parse $parse, Data $data, $methods=''){
         )
     ){
         $exception = new Exception('Only root & www-data can configure cors setup default...');
-        Event::trigger($object, 'configure.cors.methods', [
+        Event::trigger($object, 'cli.configure.cors.methods', [
             'methods' => $methods,
             'exception' => $exception
         ]);
@@ -35,7 +35,7 @@ function function_cors_methods(Parse $parse, Data $data, $methods=''){
     }
     if(empty($methods)){
         $exception = new Exception('Method cannot be empty...');
-        Event::trigger($object, 'configure.cors.methods', [
+        Event::trigger($object, 'cli.configure.cors.methods', [
             'methods' => $methods,
             'exception' => $exception
         ]);
@@ -68,7 +68,7 @@ function function_cors_methods(Parse $parse, Data $data, $methods=''){
         exec('chmod 640 ' . $url);
     }
     $response = 'Cors methods updated.' . PHP_EOL;
-    Event::trigger($object, 'configure.cors.methods', [
+    Event::trigger($object, 'cli.configure.cors.methods', [
         'methods' => $methods
     ]);
     return $response;

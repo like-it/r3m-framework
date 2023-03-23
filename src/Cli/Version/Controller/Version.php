@@ -83,14 +83,14 @@ class Version extends Controller {
                 Version::EXCEPTION_COMMAND
             );
             $exception = new Exception($exception);
-            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Version::NAME) . '.' . __FUNCTION__, [
                 'command' => $command,
                 'exception' => $exception
             ]);
             throw $exception;
         }
         $response = Version::{$command}($object);
-        Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+        Event::trigger($object, 'cli.' . strtolower(Version::NAME) . '.' . __FUNCTION__, [
             'command' => $command
         ]);
         return $response;
@@ -103,13 +103,13 @@ class Version extends Controller {
             $name = Version::name(__FUNCTION__    , Version::NAME);
             $url = Version::locate($object, $name);
             $response = Version::response($object, $url);
-            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Version::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Version::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
@@ -154,13 +154,13 @@ class Version extends Controller {
             $name = Version::name(__FUNCTION__    , Version::NAME);
             $url = Version::locate($object, $name);
             $response = Version::response($object, $url);
-            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Version::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             echo $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Version::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Version::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception

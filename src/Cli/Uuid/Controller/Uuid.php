@@ -36,13 +36,13 @@ class Uuid extends Controller {
             $name = Uuid::name(__FUNCTION__    , Uuid::NAME);
             $url = Uuid::locate($object, $name);
             $response = Uuid::response($object, $url);
-            Event::trigger($object, strtolower(Uuid::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Uuid::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Uuid::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Uuid::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception

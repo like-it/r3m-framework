@@ -143,6 +143,7 @@ class App extends Data {
         Handler::request_configure($object);
         App::configure($object);
         Route::configure($object);
+        $route = false;
         $logger = $object->config('project.log.name');
         try {
             $file = FileRequest::get($object);
@@ -153,13 +154,18 @@ class App extends Data {
                         if($logger){
                             $object->logger($logger)->error('Couldn\'t determine route (' . $object->request('request') . ')...');
                         }
+                        $exception = new Exception(
+                            'Couldn\'t determine route (' . $object->request('request') . ')...'
+                        );
                         $response = new Response(
-                            App::exception_to_json(new Exception(
-                                'Couldn\'t determine route (' . $object->request('request') . ')...'
-                            )),
+                            App::exception_to_json($exception),
                             Response::TYPE_JSON,
                             Response::STATUS_ERROR
                         );
+                        Event::trigger($object, 'app.run.route.error', [
+                            'route' => false,
+                            'exception' => $exception
+                        ]);
                         return Response::output($object, $response);
                     } else {
                         $route = Route::wildcard($object);
@@ -171,6 +177,10 @@ class App extends Data {
                                 "Website is not configured...",
                                 Response::TYPE_HTML
                             );
+                            Event::trigger($object, 'app.run.route.wildcard.error', [
+                                'route' => false,
+                                'is_not_configured' => true
+                            ]);
                             return Response::output($object, $response);
                         }
                     }
@@ -186,6 +196,9 @@ class App extends Data {
                     if($logger){
                         $object->logger($logger)->info('Request (' . $object->request('request') . ') Redirect: ' . $route->redirect . ' Method: ' . implode(', ', $route->method));
                     }
+                    Event::trigger($object, 'app.run.route.redirect', [
+                        'route' => $route,
+                    ]);
                     Core::redirect($route->redirect);
                 } elseif (
                     property_exists($route, 'redirect') &&
@@ -194,6 +207,9 @@ class App extends Data {
                     if($logger){
                         $object->logger($logger)->info('Redirect: ' . $route->redirect);
                     }
+                    Event::trigger($object, 'app.run.route.redirect', [
+                        'route' => $route,
+                    ]);
                     Core::redirect($route->redirect);
                 } elseif (
                     property_exists($route, 'url')
@@ -205,6 +221,11 @@ class App extends Data {
                             File::read($route->url),
                             Response::TYPE_JSON,
                         );
+                        Event::trigger($object, 'app.run.route.file', [
+                            'route' => $route,
+                            'extension' => $object->config('extension.json'),
+                            'content_type' => $object->config('contentType.' . strtolower($object->config('extension.json')))
+                        ]);
                         return Response::output($object, $response);
                     } else {
                         $extension = File::extension($route->url);
@@ -218,6 +239,11 @@ class App extends Data {
                             $response->header([
                                 'Content-Type: ' . $contentType
                             ]);
+                            Event::trigger($object, 'app.run.route.file', [
+                                'route' => $route,
+                                'extension' => $extension,
+                                'content_type' => $contentType
+                            ]);
                             return Response::output($object, $response);
                         }
                         throw new Exception('Extension (' . $extension . ') not supported...');
@@ -230,13 +256,18 @@ class App extends Data {
                         if($logger){
                             $object->logger($logger)->error('Couldn\'t determine controller (' . $route->controller . ') with request (' . $object->request('request') . ')');
                         }
+                        $exception = new Exception(
+                            'Couldn\'t determine controller (' . $route->controller . ')'
+                        );
                         $response = new Response(
-                            App::exception_to_json(new Exception(
-                                'Couldn\'t determine controller (' . $route->controller . ')'
-                            )),
+                            App::exception_to_json($exception),
                             Response::TYPE_JSON,
                             Response::STATUS_ERROR
                         );
+                        Event::trigger($object, 'app.run.route.file', [
+                            'route' => $route,
+                            'exception' => $exception
+                        ]);
                         return Response::output($object, $response);
                     }
                     Config::contentType($object);
@@ -268,6 +299,9 @@ class App extends Data {
                             $request
                         );
                         $result = $route->controller::{$route->function}($object);
+                        Event::trigger($object, 'app.run.route.controller', [
+                            'route' => $route,
+                        ]);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
                             'Controller (' .
@@ -276,17 +310,22 @@ class App extends Data {
                             $route->function .
                             ') does not exist.'
                         );
+                        $exception = new Exception(
+                            'Controller (' .
+                            $route->controller .
+                            ') function (' .
+                            $route->function .
+                            ') does not exist.'
+                        );
                         $response = new Response(
-                            App::exception_to_json(new Exception(
-                                'Controller (' .
-                                $route->controller .
-                                ') function (' .
-                                $route->function .
-                                ') does not exist.'
-                            )),
+                            App::exception_to_json($exception),
                             Response::TYPE_JSON,
                             Response::STATUS_ERROR
                         );
+                        Event::trigger($object, 'app.run.route.controller', [
+                            'route' => $route,
+                            'exception' => $exception
+                        ]);
                         return Response::output($object, $response);
                     }
                     if (in_array('after_run', $methods)) {
@@ -312,6 +351,7 @@ class App extends Data {
                 if($logger){
                     $object->logger($logger)->info('File request: ' . $object->request('request') . ' called...');
                 }
+                Event::trigger($object, 'app.run.file.request', []);
                 return $file;
             }
         }
@@ -325,12 +365,20 @@ class App extends Data {
                     if($logger){
                         $object->logger($logger)->error($exception->getMessage());
                     }
+                    Event::trigger($object, 'app.route.exception', [
+                        'route' => $route,
+                        'exception' => $exception
+                    ]);
                     return App::exception_to_json($exception);
                 }
                 elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
                     if($logger){
                         $object->logger($logger)->error($exception->getMessage());
                     }
+                    Event::trigger($object, 'app.route.exception', [
+                        'route' => $route,
+                        'exception' => $exception
+                    ]);
                     fwrite(STDERR, App::exception_to_cli($object, $exception));
                     return '';
                 } else {
@@ -346,8 +394,17 @@ class App extends Data {
                         $data = [];
                         $data['exception'] = Core::object_array($exception);
                         $data['exception']['className'] = get_class($exception);
+                        Event::trigger($object, 'app.route.exception', [
+                            'route' => $route,
+                            'url' => $url,
+                            'exception' => $exception
+                        ]);
                         return $parse->compile($read, $data);
                     } else {
+                        Event::trigger($object, 'app.route.exception', [
+                            'route' => $route,
+                            'exception' => $exception
+                        ]);
                         echo $exception;
                     }
                 }

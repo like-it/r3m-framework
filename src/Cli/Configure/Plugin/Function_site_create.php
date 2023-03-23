@@ -35,7 +35,7 @@ function function_site_create(Parse $parse, Data $data){
         )
     ){
         $exception = new Exception('Only root can configure site create...');
-        Event::trigger($object, 'configure.site.create', [
+        Event::trigger($object, 'cli.configure.site.create', [
             'server' => $server,
             'bytes' => $bytes,
             'exception' => $exception
@@ -62,14 +62,14 @@ function function_site_create(Parse $parse, Data $data){
         $write = $parse->compile($read, $data, $parse->storage());
         $bytes = File::write($server->url, $write);
         $response = $server->url . ' created.' . PHP_EOL;
-        Event::trigger($object, 'configure.site.create', [
+        Event::trigger($object, 'cli.configure.site.create', [
             'server' => $server,
             'bytes' => $bytes,
         ]);
         return $response;
     }
     $exception = new Exception('Server variable needs to be an object');
-    Event::trigger($object, 'configure.site.create', [
+    Event::trigger($object, 'cli.configure.site.create', [
         'server' => $server,
         'bytes' => $bytes,
         'exception' => $exception

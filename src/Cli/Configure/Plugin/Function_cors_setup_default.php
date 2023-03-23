@@ -27,7 +27,7 @@ function function_cors_setup_default(Parse $parse, Data $data, $host=''){
         )
     ){
         $exception = new Exception('Only root & www-data can configure cors setup default...');
-        Event::trigger($object, 'configure.cors.setup.default', [
+        Event::trigger($object, 'cli.configure.cors.setup.default', [
             'host' => $host,
             'exception' => $exception
         ]);
@@ -35,7 +35,7 @@ function function_cors_setup_default(Parse $parse, Data $data, $host=''){
     }
     if(empty($host)){
         $exception = new Exception('Host cannot be empty...');
-        Event::trigger($object, 'configure.cors.setup.default', [
+        Event::trigger($object, 'cli.configure.cors.setup.default', [
             'host' => $host,
             'exception' => $exception
         ]);
@@ -97,7 +97,7 @@ function function_cors_setup_default(Parse $parse, Data $data, $host=''){
         exec('chmod 640 ' . $url);
     }
     $response = 'Cors setup default for host: ' . $host . PHP_EOL;
-    Event::trigger($object, 'configure.cors.setup.default', [
+    Event::trigger($object, 'cli.configure.cors.setup.default', [
         'host' => $host
     ]);
     return $response;

@@ -25,7 +25,7 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
         )
     ){
         $exception = new Exception('Only root and www-data can configure route delete...');
-        Event::trigger($object, 'configure.route.delete', [
+        Event::trigger($object, 'cli.configure.route.delete', [
             'resource' => $resource,
             'has_deleted' => false,
             'exception' => $exception
@@ -59,14 +59,14 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
         }
         if($has_deleted === false){
             $exception = new Exception('Couldn\'t find resource: ' . $resource);
-            Event::trigger($object, 'configure.route.delete', [
+            Event::trigger($object, 'cli.configure.route.delete', [
                 'resource' => $resource,
                 'has_deleted' => $has_deleted,
                 'exception' => $exception
             ]);
             throw $exception;
         } else {
-            Event::trigger($object, 'configure.route.delete', [
+            Event::trigger($object, 'cli.configure.route.delete', [
                 'resource' => $resource,
                 'has_deleted' => $has_deleted
             ]);

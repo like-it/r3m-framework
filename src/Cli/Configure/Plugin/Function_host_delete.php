@@ -24,7 +24,7 @@ function function_host_delete(Parse $parse, Data $data, $host=''){
         )
     ){
         $exception = new Exception('Only root can configure host delete...');
-        Event::trigger($object, 'configure.host.delete', [
+        Event::trigger($object, 'cli.configure.host.delete', [
             'host' => $host,
             'exception' => $exception
         ]);
@@ -32,7 +32,7 @@ function function_host_delete(Parse $parse, Data $data, $host=''){
     }
     if(empty($host)){
         $exception = new Exception('Host cannot be empty...');
-        Event::trigger($object, 'configure.host.delete', [
+        Event::trigger($object, 'cli.configure.host.delete', [
             'host' => $host,
             'exception' => $exception
         ]);
@@ -46,9 +46,10 @@ function function_host_delete(Parse $parse, Data $data, $host=''){
         }
     }
     $data = implode("\n", $data);
-    File::write($url, $data);
-    Event::trigger($object, 'configure.host.delete', [
+    $bytes = File::write($url, $data);
+    Event::trigger($object, 'cli.configure.host.delete', [
         'host' => $host,
+        'bytes' => $bytes
     ]);
 }
 

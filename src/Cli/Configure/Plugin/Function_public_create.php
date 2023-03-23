@@ -31,7 +31,7 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
         )
     ){
         $exception = new Exception('Only root and after that www-data can configure host create...');
-        Event::trigger($object, 'configure.public.create', [
+        Event::trigger($object, 'cli.configure.public.create', [
             'public_html' => $public_html,
             'bytes' => $write,
             'exception' => $exception
@@ -106,7 +106,7 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
                 exec('chmod 640 ' . $destination);
             }
         } catch (Exception $exception){
-            Event::trigger($object, 'configure.public.create', [
+            Event::trigger($object, 'cli.configure.public.create', [
                 'public_html' => $public_html,
                 'bytes' => $write,
                 'exception' => $exception
@@ -147,13 +147,13 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
     try {
         $write = File::write($url, Core::object($read->data(), Core::OBJECT_JSON));
         $response = 'Bytes written: ' . $write . PHP_EOL;
-        Event::trigger($object, 'configure.public.create', [
+        Event::trigger($object, 'cli.configure.public.create', [
             'public_html' => $public_html,
             'bytes' => $write
         ]);
         return $response;
     } catch (Exception | ObjectException $exception){
-        Event::trigger($object, 'configure.public.create', [
+        Event::trigger($object, 'cli.configure.public.create', [
             'public_html' => $public_html,
             'bytes' => $write,
             'exception' => $exception

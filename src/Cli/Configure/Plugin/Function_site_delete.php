@@ -26,7 +26,7 @@ function function_site_delete(Parse $parse, Data $data, $server=null){
         )
     ){
         $exception = new Exception('Only root can configure site delete...');
-        Event::trigger($object, 'configure.site.delete', [
+        Event::trigger($object, 'cli.configure.site.delete', [
             'server' => $server,
             'exception' => $exception
         ]);
@@ -44,12 +44,12 @@ function function_site_delete(Parse $parse, Data $data, $server=null){
                 File::delete($file->url);
             }
         }
-        Event::trigger($object, 'configure.site.delete', [
+        Event::trigger($object, 'cli.configure.site.delete', [
             'server' => $server,
         ]);
     } else {
         $exception = new Exception('Server variable needs to be an object');
-        Event::trigger($object, 'configure.site.delete', [
+        Event::trigger($object, 'cli.configure.site.delete', [
             'server' => $server,
             'exception' => $exception
         ]);

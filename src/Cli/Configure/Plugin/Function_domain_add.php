@@ -32,10 +32,15 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             true
         )
     ){
-        throw new Exception('Only root & www-data can configure domain add...');
+        $exception = new Exception('Only root & www-data can configure domain add...');
+        Event::trigger($object, 'cli.configure.domain.add', [
+            'domain' => $domain,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
     $domain_add = strtolower($domain);
-    $explode = explode('.', $domain_ad);
+    $explode = explode('.', $domain_add);
     $domain = false;
     $subdomain = false;
     $extension = false;
@@ -52,10 +57,11 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             break;
         default:
             $exception = new Exception('Invalid domain');
-            Event::trigger($object, 'configure.domain.add', [
+            Event::trigger($object, 'cli.configure.domain.add', [
                 'subdomain' => $subdomain,
-                'domain' => $domain_add,
+                'domain' => $domain,
                 'extension' => $extension,
+                'input_domain' => $domain_add,
                 'exception' => $exception
             ]);
             throw $exception;
@@ -75,22 +81,22 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $host_dir_view = $host_dir_root .
             $object->config('dictionary.view') .
             $object->config('ds');
+        Dir::create($host_dir_data, Dir::CHMOD);
+        Dir::create($host_dir_controller, Dir::CHMOD);
+        Dir::create($host_dir_view, Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index/Public/Css', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index/Public/Image', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Main', Dir::CHMOD);
         if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-            Dir::create($host_dir_data, 0777);
-            Dir::create($host_dir_controller, 0777);
-            Dir::create($host_dir_view, 0777);
-            Dir::create($host_dir_view . 'Index', 0777);
-            Dir::create($host_dir_view . 'Index/Public/Css', 0777);
-            Dir::create($host_dir_view . 'Index/Public/Image', 0777);
-            Dir::create($host_dir_view . 'Main', 0777);
-        } else {
-            Dir::create($host_dir_data, 0750);
-            Dir::create($host_dir_controller, 0750);
-            Dir::create($host_dir_view, 0750);
-            Dir::create($host_dir_view . 'Index', 0750);
-            Dir::create($host_dir_view . 'Index/Public/Css', 0750);
-            Dir::create($host_dir_view . 'Index/Public/Image', 0750);
-            Dir::create($host_dir_view . 'Main', 0750);
+            exec('chmod 777 ' . $host_dir_data);
+            exec('chmod 777 ' . $host_dir_controller);
+            exec('chmod 777 ' . $host_dir_view);
+            exec('chmod 777 ' . $host_dir_view . 'Index');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/Css');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/Image');
+            exec('chmod 777 ' . $host_dir_view . 'Main');
         }
         $dir = $object->config('project.dir.host') .
             ucfirst($domain) .
@@ -126,10 +132,11 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                 }
             }
         } catch (Exception | FileWriteException | ObjectException $exception){
-            Event::trigger($object, 'configure.domain.add', [
+            Event::trigger($object, 'cli.configure.domain.add', [
                 'subdomain' => $subdomain,
                 'domain' => $domain,
                 'extension' => $extension,
+                'input_domain' => $domain_add,
                 'exception' => $exception
             ]);
             return $exception;
@@ -154,10 +161,11 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                 }
             }
         } catch (Exception | FileWriteException $exception){
-            Event::trigger($object, 'configure.domain.add', [
+            Event::trigger($object, 'cli.configure.domain.add', [
                 'subdomain' => $subdomain,
                 'domain' => $domain,
                 'extension' => $extension,
+                'input_domain' => $domain_add,
                 'exception' => $exception
             ]);
             return $exception;
@@ -224,11 +232,9 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         }
         $project_dir_data = $object->config('project.dir.data');
         if(!File::exist($project_dir_data)){
-            Dir::create($project_dir_data);
+            Dir::create($project_dir_data, Dir::CHMOD);
             if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
                 exec('chmod 777 ' . $project_dir_data);
-            } else {
-                exec('chmod 750 ' . $project_dir_data);
             }
         }
         $url = $project_dir_data . 'Route' . $object->config('extension.json');
@@ -266,7 +272,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                         exec('chmod 640 ' . $url);
                     }
                 } catch (Exception|FileWriteException|ObjectException $exception) {
-                    Event::trigger($object, 'configure.domain.add', [
+                    Event::trigger($object, 'cli.configure.domain.add', [
                         'subdomain' => $subdomain,
                         'domain' => $domain,
                         'extension' => $extension,
@@ -297,22 +303,23 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $host_dir_view = $host_dir_root .
             $object->config('dictionary.view') .
             $object->config('ds');
+
+        Dir::create($host_dir_data, Dir::CHMOD);
+        Dir::create($host_dir_controller, Dir::CHMOD);
+        Dir::create($host_dir_view, Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index/Public/Css', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index/Public/Image', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Main', Dir::CHMOD);
         if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-            Dir::create($host_dir_data, 0777);
-            Dir::create($host_dir_controller, 0777);
-            Dir::create($host_dir_view, 0777);
-            Dir::create($host_dir_view . 'Index', 0777);
-            Dir::create($host_dir_view . 'Index/Public/Css', 0777);
-            Dir::create($host_dir_view . 'Index/Public/Image', 0777);
-            Dir::create($host_dir_view . 'Main', 0777);
-        } else {
-            Dir::create($host_dir_data, 0750);
-            Dir::create($host_dir_controller, 0750);
-            Dir::create($host_dir_view, 0750);
-            Dir::create($host_dir_view . 'Index', 0750);
-            Dir::create($host_dir_view . 'Index/Public/Css', 0750);
-            Dir::create($host_dir_view . 'Index/Public/Image', 0750);
-            Dir::create($host_dir_view . 'Main', 0750);
+            exec('chmod 777 ' . $host_dir_data);
+            exec('chmod 777 ' . $host_dir_controller);
+            exec('chmod 777 ' . $host_dir_view);
+            exec('chmod 777 ' . $host_dir_view . 'Index');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/Css');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/Image');
+            exec('chmod 777 ' . $host_dir_view . 'Main');
         }
         $dir = $object->config('project.dir.host') .
             ucfirst($subdomain) .
@@ -356,7 +363,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                 }
             }
         } catch (Exception | FileWriteException | ObjectException $exception){
-            Event::trigger($object, 'configure.domain.add', [
+            Event::trigger($object, 'cli.configure.domain.add', [
                 'subdomain' => $subdomain,
                 'domain' => $domain,
                 'extension' => $extension,
@@ -383,7 +390,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                 }
             }
         } catch (Exception | FileWriteException $exception){
-            Event::trigger($object, 'configure.domain.add', [
+            Event::trigger($object, 'cli.configure.domain.add', [
                 'subdomain' => $subdomain,
                 'domain' => $domain,
                 'extension' => $extension,
@@ -453,11 +460,9 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         }
         $project_dir_data = $object->config('project.dir.data');
         if(!File::exist($project_dir_data)){
-            Dir::create($project_dir_data);
+            Dir::create($project_dir_data, Dir::CHMOD);
             if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
                 exec('chmod 777 ' . $project_dir_data);
-            } else {
-                exec('chmod 750 ' . $project_dir_data);
             }
         }
         $url = $project_dir_data . 'Route' . $object->config('extension.json');
@@ -496,7 +501,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                         exec('chmod 640 ' . $url);
                     }
                 } catch (Exception|FileWriteException|ObjectException $exception) {
-                    Event::trigger($object, 'configure.domain.add', [
+                    Event::trigger($object, 'cli.configure.domain.add', [
                         'subdomain' => $subdomain,
                         'domain' => $domain,
                         'extension' => $extension,
@@ -547,7 +552,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             exec('chmod 640 ' . $url);
         }
     }
-    Event::trigger($object, 'configure.domain.add', [
+    Event::trigger($object, 'cli.configure.domain.add', [
         'subdomain' => $subdomain,
         'domain' => $domain,
         'extension' => $extension

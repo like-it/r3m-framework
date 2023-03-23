@@ -17,7 +17,7 @@ function function_config_read(Parse $parse, Data $data, $attribute=''){
     if(!empty($read)){
         $response = $read->get($attribute);
     }
-    Event::trigger($object, 'configure.config.read', [
+    Event::trigger($object, 'cli.configure.config.read', [
         'attribute' => $attribute
     ]);
     return $response;

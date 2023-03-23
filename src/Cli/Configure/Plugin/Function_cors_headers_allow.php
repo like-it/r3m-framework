@@ -26,7 +26,7 @@ function function_cors_headers_allow(Parse $parse, Data $data, $headers=''){
         )
     ){
         $exception = new Exception('Only root & www-data can configure cors headers allow...');
-        Event::trigger($object, 'configure.cors.headers.allow', [
+        Event::trigger($object, 'cli.configure.cors.headers.allow', [
             'headers' => $headers,
             'exception' => $exception
         ]);
@@ -34,7 +34,7 @@ function function_cors_headers_allow(Parse $parse, Data $data, $headers=''){
     }
     if(empty($headers)){
         $exception = new Exception('Headers cannot be empty...');
-        Event::trigger($object, 'configure.cors.headers.allow', [
+        Event::trigger($object, 'cli.configure.cors.headers.allow', [
             'headers' => $headers,
             'exception' => $exception
         ]);
@@ -67,7 +67,7 @@ function function_cors_headers_allow(Parse $parse, Data $data, $headers=''){
         exec('chmod 640 ' . $url);
     }
     $response = 'Headers allow updated.' . PHP_EOL;
-    Event::trigger($object, 'configure.cors.headers.allow', [
+    Event::trigger($object, 'cli.configure.cors.headers.allow', [
         'headers' => $headers
     ]);
     return $response;

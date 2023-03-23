@@ -31,7 +31,7 @@ function function_server_admin(Parse $parse, Data $data, $email=''){
         )
     ){
         $exception = new Exception('Only root and www-data can configure route add...');
-        Event::trigger($object, 'configure.server.admin', [
+        Event::trigger($object, 'cli.configure.server.admin', [
             'email' => $email,
             'bytes' => $write,
             'exception' => $exception
@@ -40,7 +40,7 @@ function function_server_admin(Parse $parse, Data $data, $email=''){
     }
     if(empty($email)){
         $exception = new Exception('Server admin e-mail cannot be empty');
-        Event::trigger($object, 'configure.server.admin', [
+        Event::trigger($object, 'cli.configure.server.admin', [
             'email' => $email,
             'bytes' => $write,
             'exception' => $exception
@@ -72,12 +72,12 @@ function function_server_admin(Parse $parse, Data $data, $email=''){
         if(empty($id)){
             exec('chown www-data:www-data ' . $url);
         }
-        Event::trigger($object, 'configure.server.admin', [
+        Event::trigger($object, 'cli.configure.server.admin', [
             'email' => $email,
             'bytes' => $write,
         ]);
     } catch (Exception | ObjectException $exception){
-        Event::trigger($object, 'configure.server.admin', [
+        Event::trigger($object, 'cli.configure.server.admin', [
             'email' => $email,
             'bytes' => $write,
             'exception' => $exception

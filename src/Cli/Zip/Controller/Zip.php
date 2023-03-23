@@ -55,7 +55,7 @@ class Zip extends Controller {
                 $name = Zip::name($command, Zip::NAME);
                 $url = Zip::locate($object, $name);
                 $response = Zip::response($object, $url);
-                Event::trigger($object, strtolower(Zip::NAME) . '.' . $command, [
+                Event::trigger($object, 'cli.' . strtolower(Zip::NAME) . '.' . $command, [
                     'name' => $name,
                     'url' => $url,
                 ]);
@@ -63,7 +63,7 @@ class Zip extends Controller {
             }
             throw new Exception('Command undefined.' . PHP_EOL);
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Zip::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Zip::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'command' => $command,

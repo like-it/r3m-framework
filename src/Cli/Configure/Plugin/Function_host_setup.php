@@ -26,7 +26,7 @@ function function_host_setup(Parse $parse, Data $data, $host='', $public_html=''
         )
     ){
         $exception = new Exception('Only root and after that www-data can configure host create...');
-        Event::trigger($object, 'configure.host.setup', [
+        Event::trigger($object, 'cli.configure.host.setup', [
             'host' => $host,
             'public_html' => $public_html,
             'ip' => $ip,
@@ -47,7 +47,7 @@ function function_host_setup(Parse $parse, Data $data, $host='', $public_html=''
     }
     if(empty($host)){
         $exception = new Exception('Host cannot be empty...');
-        Event::trigger($object, 'configure.host.setup', [
+        Event::trigger($object, 'cli.configure.host.setup', [
             'host' => $host,
             'public_html' => $public_html,
             'ip' => $ip,
@@ -59,7 +59,7 @@ function function_host_setup(Parse $parse, Data $data, $host='', $public_html=''
     $point = substr_count($host, '.');
     if($point < 1 ){
         $exception = new Exception('Invalid host...');
-        Event::trigger($object, 'configure.host.setup', [
+        Event::trigger($object, 'cli.configure.host.setup', [
             'host' => $host,
             'public_html' => $public_html,
             'ip' => $ip,
@@ -74,7 +74,7 @@ function function_host_setup(Parse $parse, Data $data, $host='', $public_html=''
     $email = escapeshellarg($email);
     if(empty($email)){
         $exception = new Exception('Server admin e-mail cannot be empty...');
-        Event::trigger($object, 'configure.host.setup', [
+        Event::trigger($object, 'cli.configure.host.setup', [
             'host' => $host,
             'public_html' => $public_html,
             'ip' => $ip,
@@ -95,7 +95,7 @@ function function_host_setup(Parse $parse, Data $data, $host='', $public_html=''
         Core::execute($object, 'a2enmod rewrite');
         Core::execute($object, 'service apache2 restart');
     }
-    Event::trigger($object, 'configure.host.setup', [
+    Event::trigger($object, 'cli.configure.host.setup', [
         'host' => $host,
         'public_html' => $public_html,
         'ip' => $ip,

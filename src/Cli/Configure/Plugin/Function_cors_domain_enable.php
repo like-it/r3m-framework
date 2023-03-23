@@ -26,7 +26,7 @@ function function_cors_domain_enable(Parse $parse, Data $data, $domain=''){
         )
     ){
         $exception = new Exception('Only root & www-data can configure cors domain enable...');
-        Event::trigger($object, 'configure.cors.domain.enable', [
+        Event::trigger($object, 'cli.configure.cors.domain.enable', [
             'domain' => $domain,
             'exception' => $exception
         ]);
@@ -68,7 +68,7 @@ function function_cors_domain_enable(Parse $parse, Data $data, $domain=''){
         exec('chmod 640 ' . $url);
     }
     $response = 'Cors enabled for domain: ' . $domain . PHP_EOL;
-    Event::trigger($object, 'configure.cors.domain.enable', [
+    Event::trigger($object, 'cli.configure.cors.domain.enable', [
         'domain' => $domain
     ]);
     return $response;

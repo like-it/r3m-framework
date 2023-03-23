@@ -25,7 +25,7 @@ function function_route_add(Parse $parse, Data $data, $add=''){
         )
     ){
         $exception = new Exception('Only root and www-data can configure route add...');
-        Event::trigger($object, 'configure.route.add', [
+        Event::trigger($object, 'cli.configure.route.add', [
             'add' => $add,
             'route' => false,
             'exception' => $exception
@@ -61,7 +61,7 @@ function function_route_add(Parse $parse, Data $data, $add=''){
             if(empty($id)){
                 exec('chown www-data:www-data ' . $has_route->resource);
             }
-            Event::trigger($object, 'route.add', [
+            Event::trigger($object, 'cli.configure.route.add', [
                 'add' => $add,
                 'route' => $has_route
             ]);
@@ -79,7 +79,7 @@ function function_route_add(Parse $parse, Data $data, $add=''){
                 $error[] = 'No resources found, is Route corrupt?';
             }
             $exception = new Exception(implode(PHP_EOL, $error));
-            Event::trigger($object, 'configure.route.add', [
+            Event::trigger($object, 'cli.configure.route.add', [
                 'add' => $add,
                 'route' => $has_route,
                 'error' => $error,

@@ -233,7 +233,7 @@ class Configure extends Controller {
                 );
             }
             $response = Configure::response($object, $url);
-            Event::trigger($object, strtolower(Configure::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Configure::NAME) . '.' . __FUNCTION__, [
                 'module' => $module,
                 'submodule' => $submodule,
                 'command' => $command,
@@ -242,7 +242,7 @@ class Configure extends Controller {
             ]);
             return $response;
         } catch (Exception | UrlEmptyException | UrlNotExistException | LocateException $exception){
-            Event::trigger($object, strtolower(Configure::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Configure::NAME) . '.' . __FUNCTION__, [
                 'module' => $module,
                 'submodule' => $submodule,
                 'command' => $command,

@@ -41,7 +41,7 @@ class Linefeed extends Controller {
             }
             if(!Dir::is($directory)){
                 $exception = new Exception('Not a directory.');
-                Event::trigger($object, strtolower(Linefeed::NAME) . '.' . __FUNCTION__, [
+                Event::trigger($object, 'cli.' . strtolower(Linefeed::NAME) . '.' . __FUNCTION__, [
                     'directory' => $directory,
                     'counter' => $counter,
                     'exception' => $exception
@@ -75,7 +75,7 @@ class Linefeed extends Controller {
                 }
             }
         }
-        Event::trigger($object, strtolower(Linefeed::NAME) . '.' . __FUNCTION__, [
+        Event::trigger($object, 'cli.' . strtolower(Linefeed::NAME) . '.' . __FUNCTION__, [
             'directory' => $directory,
             'counter' => $counter
         ]);

@@ -28,7 +28,7 @@ function function_environment_set(Parse $parse, Data $data, $environment=''){
         )
     ){
         $exception = new Exception('Only root & www-data can configure environment set...');
-        Event::trigger($object, 'configure.framework.environment.set', [
+        Event::trigger($object, 'cli.configure.framework.environment.set', [
             'environment' => $environment,
             'exception' => $exception
         ]);
@@ -62,11 +62,11 @@ function function_environment_set(Parse $parse, Data $data, $environment=''){
         } else {
             exec('chmod 640 ' . $url);
         }
-        Event::trigger($object, 'configure.framework.environment.set', [
+        Event::trigger($object, 'cli.configure.framework.environment.set', [
             'environment' => $environment
         ]);
     } catch (Exception $exception){
-        Event::trigger($object, 'configure.framework.environment.set', [
+        Event::trigger($object, 'cli.configure.framework.environment.set', [
             'environment' => $environment,
             'exception' => $exception
         ]);

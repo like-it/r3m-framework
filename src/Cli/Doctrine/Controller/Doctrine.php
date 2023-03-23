@@ -41,14 +41,14 @@ class Doctrine extends Controller {
             $name = Doctrine::name($command, Doctrine::NAME);
             $url = Doctrine::locate($object, $name);
             $response = Doctrine::response($object, $url);
-            Event::trigger($object, strtolower(Doctrine::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object,'cli.' .  strtolower(Doctrine::NAME) . '.' . __FUNCTION__, [
                 'command' => $command,
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Doctrine::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Doctrine::NAME) . '.' . __FUNCTION__, [
                 'command' => $command,
                 'name' => $name,
                 'url' => $url,

@@ -27,7 +27,7 @@ function function_site_enable(Parse $parse, Data $data, $server=null){
         )
     ){
         $exception = new Exception('Only root can configure site enable...');
-        Event::trigger($object, 'configure.site.disable', [
+        Event::trigger($object, 'cli.configure.site.disable', [
             'server' => $server,
             'exception' => $exception
         ]);
@@ -53,12 +53,12 @@ function function_site_enable(Parse $parse, Data $data, $server=null){
                 echo 'Site: ' . $server->name . ' enabled.' . "\n";
             }
         }
-        Event::trigger($object, 'configure.site.disable', [
+        Event::trigger($object, 'cli.configure.site.disable', [
             'server' => $server,
         ]);
     } else {
         $exception = new Exception('Server variable needs to be an object');
-        Event::trigger($object, 'configure.site.disable', [
+        Event::trigger($object, 'cli.configure.site.disable', [
             'server' => $server,
             'exception' => $exception
         ]);

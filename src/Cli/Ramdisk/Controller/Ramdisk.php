@@ -51,7 +51,7 @@ class Ramdisk extends Controller {
                 break;
                 default:
                     $exception = new Exception('Unknown ramdisk command...');
-                    Event::trigger($object, strtolower(Ramdisk::NAME) . '.' . __FUNCTION__, [
+                    Event::trigger($object, 'cli.' . strtolower(Ramdisk::NAME) . '.' . __FUNCTION__, [
                         'command' => $command,
                         'exception' => $exception
                     ]);
@@ -60,14 +60,14 @@ class Ramdisk extends Controller {
             if($name){
                 $url = RamDisk::locate($object, $name);
                 $response = RamDisk::response($object, $url);
-                Event::trigger($object, strtolower(Ramdisk::NAME) . '.' . strtolower($command), [
+                Event::trigger($object, 'cli.' . strtolower(Ramdisk::NAME) . '.' . strtolower($command), [
                     'name' => $name,
                     'url' => $url
                 ]);
                 return $response;
             }
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Ramdisk::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Ramdisk::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'command' => $command,

@@ -54,13 +54,13 @@ class Restore extends Controller {
                 $name = Restore::name(Restore::DEFAULT_NAME, Restore::NAME);
                 $url = Restore::locate($object, $name);
                 $response = Restore::response($object, $url);
-                Event::trigger($object, strtolower(Restore::NAME) . '.info', [
+                Event::trigger($object, 'cli.' . strtolower(Restore::NAME) . '.info', [
                     'name' => $name,
                     'url' => $url,
                 ]);
                 return $response;
             } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-                Event::trigger($object, strtolower(Restore::NAME) . '.info', [
+                Event::trigger($object, 'cli.' . strtolower(Restore::NAME) . '.info', [
                     'name' => $name,
                     'url' => $url,
                     'exception' => $exception
@@ -95,7 +95,7 @@ class Restore extends Controller {
                 exec('chmod 640 ' . $destination);
             }
             echo $destination . ' Restored...' . PHP_EOL;
-            Event::trigger($object, strtolower(Restore::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Restore::NAME) . '.' . __FUNCTION__, [
                 'url' => $destination,
             ]);
         }

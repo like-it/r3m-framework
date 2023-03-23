@@ -31,7 +31,7 @@ function function_server_url_add(Parse $parse, Data $data, stdClass $node){
         )
     ){
         $exception = new Exception('Only root and www-data can configure server url add...');
-        Event::trigger($object, 'configure.server.url.add', [
+        Event::trigger($object, 'cli.configure.server.url.add', [
             'node' => $node,
             'bytes' => $write,
             'exception' => $exception
@@ -55,12 +55,12 @@ function function_server_url_add(Parse $parse, Data $data, stdClass $node){
         if(empty($id)){
             exec('chown www-data:www-data ' . $url);
         }
-        Event::trigger($object, 'configure.server.url.add', [
+        Event::trigger($object, 'cli.configure.server.url.add', [
             'node' => $node,
             'bytes' => $write,
         ]);
     } catch (Exception | ObjectException $exception){
-        Event::trigger($object, 'configure.server.url.add', [
+        Event::trigger($object, 'cli.configure.server.url.add', [
             'node' => $node,
             'bytes' => $write,
             'exception' => $exception

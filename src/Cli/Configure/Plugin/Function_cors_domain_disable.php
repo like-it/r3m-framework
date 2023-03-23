@@ -24,7 +24,7 @@ function function_cors_domain_disable(Parse $parse, Data $data, $domain=''){
         )
     ){
         $exception = new Exception('Only root & www-data can configure cors domain disable...');
-        Event::trigger($object, 'configure.cors.domain.disable', [
+        Event::trigger($object, 'cli.configure.cors.domain.disable', [
             'domain' => $domain,
             'exception' => $exception
         ]);
@@ -32,7 +32,7 @@ function function_cors_domain_disable(Parse $parse, Data $data, $domain=''){
     }
     if(empty($domain)){
         $exception = new Exception('Domain cannot be empty...');
-        Event::trigger($object, 'configure.cors.domain.disable', [
+        Event::trigger($object, 'cli.configure.cors.domain.disable', [
             'domain' => $domain,
             'exception' => $exception
         ]);
@@ -79,7 +79,7 @@ function function_cors_domain_disable(Parse $parse, Data $data, $domain=''){
         exec('chmod 640 ' . $url);
     }
     $response = 'Cors disabled for domain: ' . $domain . PHP_EOL;
-    Event::trigger($object, 'configure.cors.domain.disable', [
+    Event::trigger($object, 'cli.configure.cors.domain.disable', [
         'domain' => $domain
     ]);
     return $response;

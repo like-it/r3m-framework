@@ -48,12 +48,12 @@ class Info extends Controller {
             }
             $result = Info::response($object, $url);
             if($command){
-                Event::trigger($object, 'info.' . $command, [
+                Event::trigger($object, 'cli.info.' . $command, [
                     'command' => $command,
                     'url' => $url
                 ]);
             } else {
-                Event::trigger($object, 'info', [
+                Event::trigger($object, 'cli.info', [
                     'command' => false,
                     'url' => $url,
 
@@ -61,7 +61,7 @@ class Info extends Controller {
             }
             return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, 'info', [
+            Event::trigger($object, 'cli.info', [
                 'command' => $command,
                 'url' => $url,
                 'exception' => $exception

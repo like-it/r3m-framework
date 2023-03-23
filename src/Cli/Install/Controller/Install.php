@@ -49,7 +49,7 @@ class Install extends Controller {
             )
         ){
             $exception = new Exception('Only root & www-data can install packages...');
-            Event::trigger($object, 'install', [
+            Event::trigger($object, 'cli.install', [
                 'key' => $key,
                 'exception' => $exception
             ]);
@@ -67,7 +67,7 @@ class Install extends Controller {
         );
         if(empty($package)){
             $exception = new Exception('Package: ' . $key . PHP_EOL);
-            Event::trigger($object, 'install', [
+            Event::trigger($object, 'cli.install', [
                 'key' => $key,
                 'exception' => $exception
             ]);
@@ -149,7 +149,7 @@ class Install extends Controller {
                 echo $notification;
             }
         }
-        Event::trigger($object, 'install', [
+        Event::trigger($object, 'cli.install', [
             'key' => $key,
         ]);
     }

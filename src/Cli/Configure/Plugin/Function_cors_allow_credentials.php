@@ -24,7 +24,7 @@ function function_cors_allow_credentials(Parse $parse, Data $data, $allow=null){
         )
     ){
         $exception = new Exception('Only root & www-data can configure cors enable...');
-        Event::trigger($object, 'configure.cors.allow_credentials', [
+        Event::trigger($object, 'cli.configure.cors.allow_credentials', [
             'allow' => $allow,
             'exception' => $exception
         ]);
@@ -73,7 +73,7 @@ function function_cors_allow_credentials(Parse $parse, Data $data, $allow=null){
         }
         $response = 'Cors allow credentials disabled.' . PHP_EOL;
     }
-    Event::trigger($object, 'configure.cors.allow_credentials', [
+    Event::trigger($object, 'cli.configure.cors.allow_credentials', [
         'allow' => $allow
     ]);
     return $response;

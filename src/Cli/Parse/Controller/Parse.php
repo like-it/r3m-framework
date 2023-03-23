@@ -64,14 +64,14 @@ class Parse extends Controller {
                 Parse::EXCEPTION_COMMAND
             );
             $exception = new Exception($exception);
-            Event::trigger($object, strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
                 'command' => $command,
                 'exception' => $exception
             ]);
             throw $exception;
         }
         $response = Parse::{$command}($object);
-        Event::trigger($object, strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+        Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
             'command' => $command,
         ]);
         return $response;
@@ -87,13 +87,13 @@ class Parse extends Controller {
             $name = Parse::name(__FUNCTION__, Parse::NAME);
             $url = Parse::locate($object, $name);
             $response = Parse::response($object, $url);
-            Event::trigger($object, strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object,  'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
@@ -112,13 +112,13 @@ class Parse extends Controller {
             $name = Parse::name(__FUNCTION__, Parse::NAME);
             $url = Parse::locate($object, $name);
             $response = Parse::response($object, $url);
-            Event::trigger($object, strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
@@ -180,7 +180,7 @@ class Parse extends Controller {
                     if($is_json){
                         $read = Core::object($read, Core::OBJECT_JSON);
                     }
-                    Event::trigger($object, strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+                    Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
                         'template_url' => $template_url,
                         'data_url' => $data_url,
                         'is_json' => $is_json
@@ -188,14 +188,14 @@ class Parse extends Controller {
                     return $read;
                 }
             }
-            Event::trigger($object, strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
                 'template_url' => $template_url,
                 'data_url' => $data_url,
                 'is_template' => false,
                 'is_json' => $is_json
             ]);
         } catch (Exception $exception){
-            Event::trigger($object, strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object,'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
                 'template_url' => $template_url,
                 'data_url' => $data_url,
                 'is_template' => false,

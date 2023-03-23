@@ -109,7 +109,7 @@ class Secret extends Controller {
                                     !empty($session['unlock']['since'])
                                 ){
                                     echo Crypto::decrypt($get, $key) . PHP_EOL;
-                                    Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                                         'attribute' => $attribute,
                                     ]);
                                     return null;
@@ -186,7 +186,7 @@ class Secret extends Controller {
                                     exec('chmod 640 ' . $url);
                                 }
                                 echo $attribute . PHP_EOL;
-                                Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                                     'attribute' => $attribute,
                                 ]);
                                 return null;
@@ -210,7 +210,7 @@ class Secret extends Controller {
                     }
                     echo $attribute . PHP_EOL;
                 }
-                Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                     'attribute' => $attribute,
                     'has_username' => $data->has('secret.username')
                 ]);
@@ -259,7 +259,7 @@ class Secret extends Controller {
                         }
                     }
                 }
-                Event::trigger($object, 'secret.' . $action, [
+                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                     'attribute' => $attribute,
                     'has_username' => $data->has('secret.username'),
                     'has_password' => $data->has('secret.password'),
@@ -313,7 +313,7 @@ class Secret extends Controller {
                                     exec('chmod 640 ' . $url);
                                 }
                                 echo 'Secret delete: ' . $attribute . PHP_EOL;
-                                Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                                     'attribute' => $attribute,
                                     'has_username' => $data->has('secret.username'),
                                     'has_password' => $data->has('secret.password'),
@@ -325,7 +325,7 @@ class Secret extends Controller {
                     }
                 }
                 echo 'Secret is locked...' . PHP_EOL;
-                Event::trigger($object, 'secret.' . $action, [
+                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                     'attribute' => $attribute,
                     'has_username' => $data->has('secret.username'),
                     'has_password' => $data->has('secret.password'),
@@ -390,7 +390,7 @@ class Secret extends Controller {
                             exec('chmod 640 ' . $url);
                         }
                         echo "Successfully locked with new username & password..." . PHP_EOL;
-                        Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                        Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                             'has_username' => $data->has('secret.username'),
                             'has_password' => $data->has('secret.password'),
                             'has_uuid' => $data->has('secret.uuid')
@@ -426,7 +426,7 @@ class Secret extends Controller {
                         exec('chmod 640 ' . $url);
                     }
                     echo "Successfully locked..." . PHP_EOL;
-                    Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                         'has_username' => $data->has('secret.username'),
                         'has_password' => $data->has('secret.password'),
                         'has_uuid' => $data->has('secret.uuid')
@@ -489,7 +489,7 @@ class Secret extends Controller {
                                 exec('chmod 640 ' . $url);
                             }
                             echo "Successfully locked..." . PHP_EOL;
-                            Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                            Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                                 'has_username' => $data->has('secret.username'),
                                 'has_password' => $data->has('secret.password'),
                                 'has_uuid' => $data->has('secret.uuid')
@@ -556,7 +556,7 @@ class Secret extends Controller {
                         exec('chmod 640 ' . $url);
                     }
                     echo "Successfully locked..." . PHP_EOL;
-                    Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                         'has_username' => $data->has('secret.username'),
                         'has_password' => $data->has('secret.password'),
                         'has_uuid' => $data->has('secret.uuid')
@@ -573,7 +573,7 @@ class Secret extends Controller {
                         !$data->has('secret.uuid')
                     ){
                         echo "Secret is locked, unlock first..." . PHP_EOL;
-                        Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                        Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                             'has_username' => $data->has('secret.username'),
                             'has_password' => $data->has('secret.password'),
                             'has_uuid' => $data->has('secret.uuid')
@@ -611,7 +611,7 @@ class Secret extends Controller {
                     $dir = Dir::name($url);
                     Dir::create($dir, Dir::CHMOD);
                     $write = $data->write($url);
-                    Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                         'has_username' => $data->has('secret.username'),
                         'has_password' => $data->has('secret.password'),
                         'has_uuid' => $data->has('secret.uuid')
@@ -642,7 +642,7 @@ class Secret extends Controller {
             if ($data) {
                 if($data->get('secret.uuid')){
                     echo "Already unlocked..." . PHP_EOL;
-                    Event::trigger($object, 'secret.' . $action, [
+                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                         'has_username' => !!$username,
                         'has_password' => !!$password,
                         'has_uuid' => $data->has('secret.uuid')
@@ -684,7 +684,7 @@ class Secret extends Controller {
                                 exec('chmod 640 ' . $url);
                             }
                             echo "Successfully unlocked..." . PHP_EOL;
-                            Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                            Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                                 'has_username' => $data->has('secret.username'),
                                 'has_password' => $data->has('secret.password'),
                                 'has_uuid' => $data->has('secret.uuid')
@@ -696,7 +696,7 @@ class Secret extends Controller {
                 //add 5 attempts and 15 minute break
                 sleep(Secret::SLEEP);
                 echo "Invalid username and / or password..." . PHP_EOL;
-                Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                     'has_username' => $data->has('secret.username'),
                     'has_password' => $data->has('secret.password'),
                     'has_uuid' => $data->has('secret.uuid'),
@@ -721,7 +721,7 @@ class Secret extends Controller {
                                 !empty($session['unlock']['since'])
                             ) {
                                 echo 'Session unlocked since: ' . date('Y-m-d H:i:s', $session['unlock']['since']) . '+00:00' . PHP_EOL;
-                                Event::trigger($object, 'secret.' . $action, [
+                                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
                                     'has_uuid' => $data->has('secret.uuid')
                                 ]);
                                 return null;

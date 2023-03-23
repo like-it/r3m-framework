@@ -27,7 +27,7 @@ function function_host_add(Parse $parse, Data $data, $ip='', $host=''){
         )
     ){
         $exception = new Exception('Only root can configure host add...');
-        Event::trigger($object, 'configure.host.add', [
+        Event::trigger($object, 'cli.configure.host.add', [
             'ip' => $ip,
             'host' => $host,
             'exception' => $exception
@@ -39,7 +39,7 @@ function function_host_add(Parse $parse, Data $data, $ip='', $host=''){
     }
     if(empty($host)){
         $exception = new Exception('Host cannot be empty...');
-        Event::trigger($object, 'configure.host.add', [
+        Event::trigger($object, 'cli.configure.host.add', [
             'ip' => $ip,
             'host' => $host,
             'exception' => $exception
@@ -52,9 +52,10 @@ function function_host_add(Parse $parse, Data $data, $ip='', $host=''){
         $data = explode("\n", File::read($url));
         foreach($data as $nr => $row){
             if(stristr($row, $host) !== false){
-                Event::trigger($object, 'host.add', [
+                Event::trigger($object, 'cli.configure.host.add', [
                     'ip' => $ip,
                     'host' => $host,
+                    'is_found' => true
                 ]);
                 return $response;
             }
@@ -62,10 +63,9 @@ function function_host_add(Parse $parse, Data $data, $ip='', $host=''){
         $data = $ip . "\t" . $host . "\n";
         $append = File::append($url, $data);
         $response = 'ip: ' . $ip  .' host: ' . $host . ' added.' . "\n";
-        Event::trigger($object, 'configure.host.add', [
+        Event::trigger($object, 'cli.configure.host.add', [
             'ip' => $ip,
-            'host' => $host,
-            'exist' => false
+            'host' => $host
         ]);
     }
     return $response;

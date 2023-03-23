@@ -86,7 +86,7 @@ class Openssl extends Controller {
             ]);
             return $response;
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
-            Event::trigger($object, strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
@@ -105,13 +105,13 @@ class Openssl extends Controller {
             $name = Openssl::name(__FUNCTION__, Openssl::NAME);
             $url = Openssl::locate($object, $name);
             $response = Openssl::response($object, $url);
-            Event::trigger($object, strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
-            Event::trigger($object, strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Openssl::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception

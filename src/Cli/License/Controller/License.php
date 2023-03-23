@@ -52,14 +52,14 @@ class License extends Controller {
                 License::EXCEPTION_COMMAND
             );
             $exception = new Exception($exception);
-            Event::trigger($object, strtolower(License::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(License::NAME) . '.' . __FUNCTION__, [
                 'command' => $command,
                 'exception' => $exception
             ]);
             throw $exception;
         }
         $response = License::{$command}($object);
-        Event::trigger($object, strtolower(License::NAME) . '.' . __FUNCTION__, [
+        Event::trigger($object, 'cli.' . strtolower(License::NAME) . '.' . __FUNCTION__, [
             'command' => $command
         ]);
         return $response;
@@ -76,13 +76,13 @@ class License extends Controller {
             $name = License::name(__FUNCTION__, License::NAME);
             $url = License::locate($object, $name);
             $result = License::response($object, $url);
-            Event::trigger($object, strtolower(License::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(License::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $result;
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
-            Event::trigger($object, strtolower(License::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(License::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception

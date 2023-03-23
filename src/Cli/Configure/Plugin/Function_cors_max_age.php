@@ -27,7 +27,7 @@ function function_cors_max_age(Parse $parse, Data $data, $age=null){
         )
     ){
         $exception = new Exception('Only root & www-data can configure cors enable...');
-        Event::trigger($object, 'configure.cors.max-age', [
+        Event::trigger($object, 'cli.configure.cors.max-age', [
             'age' => $age,
             'exception' => $exception
         ]);
@@ -67,7 +67,7 @@ function function_cors_max_age(Parse $parse, Data $data, $age=null){
     } else {
         exec('chmod 640 ' . $url);
     }
-    Event::trigger($object, 'configure.cors.max-age', [
+    Event::trigger($object, 'cli.configure.cors.max-age', [
         'age' => $age
     ]);
     return $response;

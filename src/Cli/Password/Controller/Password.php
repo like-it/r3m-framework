@@ -36,13 +36,13 @@ class Password extends Controller {
             $name = Password::name('hash', Password::NAME);
             $url = Password::locate($object, $name);
             $response = Password::response($object, $url);
-            Event::trigger($object, 'password.hash', [
+            Event::trigger($object, 'cli.password.hash', [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, 'password.hash', [
+            Event::trigger($object, 'cli.password.hash', [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception

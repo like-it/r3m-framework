@@ -264,6 +264,7 @@ class Parse {
      * @throws Exception
      */
     public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
+        $object = $this->object();
         if($storage === null){            
             $storage = $this->storage(new Data());
         }
@@ -276,6 +277,14 @@ class Parse {
             foreach($string as $key => $value){
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
             }
+            Event::trigger($object, 'parse.compile', [
+                'string' => $string,
+                'data' => $data,
+                'storage' => $storage,
+                'depth' => $depth,
+                'is_array' => true
+            ]);
+            return $string;
         }
         elseif(is_object($string)){
             $reserved_keys = [];
@@ -321,7 +330,13 @@ class Parse {
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
-                    ddd($exception);
+                    Event::trigger($object, 'parse.compile', [
+                        'string' => $string,
+                        'data' => $data,
+                        'storage' => $storage,
+                        'depth' => $depth,
+                        'exception' => $exception
+                    ]);
                 }
             }
             //must read into it, copy should be configurable
@@ -339,9 +354,22 @@ class Parse {
                     $string = Parse::unset($string, $unset);
                 }
             }
+            Event::trigger($object, 'parse.compile', [
+                'string' => $string,
+                'data' => $data,
+                'storage' => $storage,
+                'depth' => $depth,
+                'is_object' => true
+            ]);
             return $string;
         }
         elseif(stristr($string, '{') === false){
+            Event::trigger($object, 'parse.compile', [
+                'string' => $string,
+                'data' => $data,
+                'storage' => $storage,
+                'depth' => $depth
+            ]);
             return $string;
         } else {
             $build = $this->build(new Build($this->object(), $this, $is_debug));
@@ -379,8 +407,13 @@ class Parse {
                     }
                 }
             }
-            $mtime = $storage->data('r3m.io.parse.view.mtime');            
-            if(File::exist($url) && File::mtime($url) == $mtime){
+            $mtime = $storage->data('r3m.io.parse.view.mtime');
+            $file_exist = File::exist($url);
+            $file_mtime = false;
+            if($file_exist){
+                $file_mtime = File::mtime($url);
+            }
+            if($file_exist && $file_mtime == $mtime){
                 //cache file                   
                 $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
                 $template = new $class(new Parse($this->object()), $storage);
@@ -391,11 +424,29 @@ class Parse {
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
                 }
-                
                 $storage->data('delete', 'this');
+                Event::trigger($object, 'parse.compile', [
+                    'string' => $string,
+                    'data' => $data,
+                    'storage' => $storage,
+                    'depth' => $depth,
+                    'url' => $url,
+                    'url_mtime' => $file_mtime,
+                    'is_cache' => true,
+                    'mtime' => $mtime
+                ]);
                 return $string;
             }
             elseif(File::exist($url) && File::mtime($url) != $mtime){
+                Event::trigger($object, 'parse.compile.opcache_invalidate', [
+                    'string' => $string,
+                    'data' => $data,
+                    'storage' => $storage,
+                    'depth' => $depth,
+                    'url' => $url,
+                    'url_mtime' => $file_mtime,
+                    'mtime' => $mtime
+                ]);
                 opcache_invalidate($url, true);
             }
             if(empty($this->halt_literal())){
@@ -473,10 +524,19 @@ class Parse {
                     $status = opcache_get_status(true);
                     if($status !== false){
                         opcache_compile_file($url);
+                        Event::trigger($object, 'parse.compile.opcache_file', [
+                            'string' => $string,
+                            'data' => $data,
+                            'storage' => $storage,
+                            'depth' => $depth,
+                            'url' => $url,
+                            'url_mtime' => $file_mtime,
+                            'mtime' => $mtime
+                        ]);
                     }
                 }
             }
-            $id = posix_geteuid();
+            $id = $object->config(Config::POSIX_ID);
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
             $exists = class_exists($class);
             if($exists){
@@ -497,6 +557,12 @@ class Parse {
 
             }
         }
+        Event::trigger($object, 'parse.compile', [
+            'string' => $string,
+            'data' => $data,
+            'storage' => $storage,
+            'depth' => $depth
+        ]);
         if($string === 'null'){
             return null;
         }

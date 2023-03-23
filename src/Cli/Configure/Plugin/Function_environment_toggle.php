@@ -28,7 +28,7 @@ function function_environment_toggle(Parse $parse, Data $data){
         )
     ){
         $exception = new Exception('Only root & www-data can configure environment toggle...');
-        Event::trigger($object, 'configure.framework.environment.set', [
+        Event::trigger($object, 'cli.configure.framework.environment.set', [
             'environment' => false,
             'exception' => $exception
         ]);
@@ -74,11 +74,11 @@ function function_environment_toggle(Parse $parse, Data $data){
         } else {
             exec('chmod 640 ' . $url);
         }
-        Event::trigger($object, 'configure.framework.environment.set', [
+        Event::trigger($object, 'cli.configure.framework.environment.set', [
             'environment' => $status
         ]);
     } catch (Exception $exception){
-        Event::trigger($object, 'configure.framework.environment.set', [
+        Event::trigger($object, 'cli.configure.framework.environment.set', [
             'environment' => $status,
             'exception' => $exception
         ]);

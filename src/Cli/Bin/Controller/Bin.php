@@ -45,13 +45,13 @@ class Bin extends Controller {
             $name = Bin::name('create', Bin::NAME);
             $url = Bin::locate($object, $name);
             $result = Bin::response($object, $url);
-            Event::trigger($object, strtolower(Bin::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Bin::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url
             ]);
             return $result;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, strtolower(Bin::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.' . strtolower(Bin::NAME) . '.' . __FUNCTION__, [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
