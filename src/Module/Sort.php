@@ -40,26 +40,50 @@ class Sort extends Data{
                 $attribute = false;
                 $sortable_1 = 'ASC';
                 foreach($list as $uuid => $node){
-                    foreach($sort as $attribute => $record){                    
-                        if(property_exists($node, $attribute)){
-                            if(is_scalar($node->$attribute)){
-                                $result[$node->$attribute][] = $node;
-                            } else if (is_array($node->$attribute)){
-                                $attr = '';
-                                foreach($node->$attribute as $node_attribute){
-                                    if(is_scalar($node_attribute)){
-                                        $attr .= '.' . $node_attribute;
+                    if(is_array($node)){
+                        foreach($sort as $attribute => $record){
+                            if(array_key_exists($attribute, $node)){
+                                if(is_scalar($node[$attribute])){
+                                    $result[$node[$attribute]][] = $node;
+                                } else if (is_array($node[$attribute])){
+                                    $attr = '';
+                                    foreach($node[$attribute] as $node_attribute){
+                                        if(is_scalar($node_attribute)){
+                                            $attr .= '.' . $node_attribute;
+                                        }
                                     }
+                                    $attr = substr($attr, 1);
+                                    $result[$attr][] = $node;
                                 }
-                                $attr = substr($attr, 1);
-                                $result[$attr][] = $node;
+                            } else {
+                                $result[''][] = $node;
                             }
-                        } else {
-                            $result[''][] = $node;                            
+                            $sortable_1 = $sort[$attribute];
+                            break;
                         }
-                        $sortable_1 = $sort[$attribute];                    
-                        break;
-                    }                
+                    } else {
+                        foreach($sort as $attribute => $record){
+                            if(property_exists($node, $attribute)){
+                                if(is_scalar($node->$attribute)){
+                                    $result[$node->$attribute][] = $node;
+                                } else if (is_array($node->$attribute)){
+                                    $attr = '';
+                                    foreach($node->$attribute as $node_attribute){
+                                        if(is_scalar($node_attribute)){
+                                            $attr .= '.' . $node_attribute;
+                                        }
+                                    }
+                                    $attr = substr($attr, 1);
+                                    $result[$attr][] = $node;
+                                }
+                            } else {
+                                $result[''][] = $node;
+                            }
+                            $sortable_1 = $sort[$attribute];
+                            break;
+                        }
+                    }
+
                 }
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
@@ -70,18 +94,33 @@ class Sort extends Data{
                 $list = [];                
                 foreach($result as $attribute => $subList){
                     foreach($subList as $nr => $record){
-                        if(property_exists($record, 'uuid')){
-                            $list[$record->uuid] = $record;
-                        } else {
-                            while(true){
-                                $uuid = Core::uuid();
-                                if(!array_key_exists($uuid, $list)){
-                                    $record->uuid = $uuid;
-                                    break;
+                        if(is_array($record)){
+                            if(array_key_exists('uuid', $record)){
+                                $list[$record['uuid']] = $record;
+                            } else {
+                                while(true){
+                                    $uuid = Core::uuid();
+                                    if(!array_key_exists($uuid, $list)){
+                                        $record['uuid'] = $uuid;
+                                        break;
+                                    }
                                 }
+                                $list[$uuid] = $record;
                             }
-                            $list[$uuid] = $record;
-                        }                        
+                        } else {
+                            if(property_exists($record, 'uuid')){
+                                $list[$record->uuid] = $record;
+                            } else {
+                                while(true){
+                                    $uuid = Core::uuid();
+                                    if(!array_key_exists($uuid, $list)){
+                                        $record->uuid = $uuid;
+                                        break;
+                                    }
+                                }
+                                $list[$uuid] = $record;
+                            }
+                        }
                     }
                 }                                
             }
@@ -95,22 +134,41 @@ class Sort extends Data{
                 $sortable_1 = 'ASC';
                 $sortable_2 = 'ASC';
                 foreach($list as $uuid => $node){
-                    foreach($sort as $attribute => $record){                    
-                        if(property_exists($node, $attribute)){
-                            if(is_scalar($node->$attribute)){
-                                $result[$node->$attribute][] = $node;
-                            } else if (is_array($node->$attribute)){
-                                $attr = '';
-                                foreach($node->$attribute as $node_attribute){
-                                    if(is_scalar($node_attribute)){
-                                        $attr .= '.' . $node_attribute;
+                    foreach($sort as $attribute => $record){
+                        if(is_array($record)){
+                            if(array_key_exists($attribute, $node)){
+                                if(is_scalar($node[$attribute])){
+                                    $result[$node[$attribute]][] = $node;
+                                } else if (is_array($node[$attribute])){
+                                    $attr = '';
+                                    foreach($node[$attribute] as $node_attribute){
+                                        if(is_scalar($node_attribute)){
+                                            $attr .= '.' . $node_attribute;
+                                        }
                                     }
+                                    $attr = substr($attr, 1);
+                                    $result[$attr][] = $node;
                                 }
-                                $attr = substr($attr, 1);
-                                $result[$attr][] = $node;
+                            } else {
+                                $result[''][] = $node;
                             }
                         } else {
-                            $result[''][] = $node;                            
+                            if(property_exists($node, $attribute)){
+                                if(is_scalar($node->$attribute)){
+                                    $result[$node->$attribute][] = $node;
+                                } else if (is_array($node->$attribute)){
+                                    $attr = '';
+                                    foreach($node->$attribute as $node_attribute){
+                                        if(is_scalar($node_attribute)){
+                                            $attr .= '.' . $node_attribute;
+                                        }
+                                    }
+                                    $attr = substr($attr, 1);
+                                    $result[$attr][] = $node;
+                                }
+                            } else {
+                                $result[''][] = $node;
+                            }
                         }
                         $sortable_1 = $sort[$attribute];                    
                         break;
@@ -121,15 +179,28 @@ class Sort extends Data{
                     $list = [];                
                     foreach($result as $key => $subList){
                         foreach($subList as $nr => $node){
-                            foreach($sort as $attribute => $record){                            
-                                if(property_exists($node, $attribute)){
-                                    $list[$key][$node->$attribute][] = $node;
-                                } else {
-                                    $list[$key][''][] = $node;                                    
+                            if(is_array($node)){
+                                foreach($sort as $attribute => $record){
+                                    if(array_key_exists($attribute, $node)){
+                                        $list[$key][$node[$attribute]][] = $node;
+                                    } else {
+                                        $list[$key][''][] = $node;
+                                    }
+                                    $sortable_2 = $sort[$attribute];
+                                    break;
                                 }
-                                $sortable_2 = $sort[$attribute];                            
-                                break;
+                            } else {
+                                foreach($sort as $attribute => $record){
+                                    if(property_exists($node, $attribute)){
+                                        $list[$key][$node->$attribute][] = $node;
+                                    } else {
+                                        $list[$key][''][] = $node;
+                                    }
+                                    $sortable_2 = $sort[$attribute];
+                                    break;
+                                }
                             }
+
                         }
                     }
                     unset($sort[$attribute]);
@@ -152,19 +223,36 @@ class Sort extends Data{
                     foreach($result as $key => $subList){
                         foreach($subList as $attribute => $subSubList){
                             foreach($subSubList as $nr => $node){
-                                if(property_exists($node, 'uuid')){
-                                    $has_uuid = true;
-                                    $list[$node->uuid] = $node;
-                                } else {
-                                    while(true){
-                                        $uuid = Core::uuid();
-                                        if(!array_key_exists($uuid, $list)){
-                                            $node->uuid = $uuid;
-                                            break;
+                                if(is_array($node)){
+                                    if(array_key_exists('uuid', $node)){
+                                        $has_uuid = true;
+                                        $list[$node['uuid']] = $node;
+                                    } else {
+                                        while(true){
+                                            $uuid = Core::uuid();
+                                            if(!array_key_exists($uuid, $list)){
+                                                $node['uuid'] = $uuid;
+                                                break;
+                                            }
                                         }
+                                        $list[$uuid] = $node;
                                     }
-                                    $list[$uuid] = $node;
+                                } else {
+                                    if(property_exists($node, 'uuid')){
+                                        $has_uuid = true;
+                                        $list[$node->uuid] = $node;
+                                    } else {
+                                        while(true){
+                                            $uuid = Core::uuid();
+                                            if(!array_key_exists($uuid, $list)){
+                                                $node->uuid = $uuid;
+                                                break;
+                                            }
+                                        }
+                                        $list[$uuid] = $node;
+                                    }
                                 }
+
                             }
                         }
                     }                                      
