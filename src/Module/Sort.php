@@ -51,6 +51,9 @@ class Sort extends Data{
                             }
                         }
                     }
+                    d($node);
+                    d($sort);
+                    die;
                     if(is_array($node)){
                         foreach($sort as $attribute => $record){
                             if(array_key_exists($attribute, $node)){
