@@ -174,13 +174,11 @@ class Data {
         if(empty($data)){
             return $find;
         }
-        d($attribute);
-        d($options);
-        ddd($data);
         if(!is_array($data)){
             return $find;
         }
         foreach($data as $value){
+            ddd($value);
             foreach($options as $option_key => $option_value){
                 if(is_object($value) && property_exists($value, $option_key)){
                     if($value->{$option_key} === $option_value){
