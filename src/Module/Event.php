@@ -32,7 +32,6 @@ class Event {
             'action' => $action,
             'options' => $options
         ];
-        ddd($list);
         $object->get(App::EVENT)->set('event', $list);
     }
 
