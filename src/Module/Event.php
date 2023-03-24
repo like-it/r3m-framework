@@ -78,6 +78,8 @@ class Event {
                                 property_exists($route, 'function')
                             ){
                                 $event = new Data($event);
+                                d($route);
+                                ddd($event);
                                 try {
                                     $route->controller::{$route->function}($object, $event, $action, $options);
                                 }
