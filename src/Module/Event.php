@@ -51,14 +51,10 @@ class Event {
         if(empty($events)){
             return null;
         }
-        d($action);
-        d($events);
-        if($events){
-            $events = Sort::list($events)->with(['priority' => 'DESC', 'command' => 'ASC'], false , 'options');
-        }
-        ddd($events);
+        $events = Sort::list($events)->with(['priority' => 'DESC'], false , 'options');
         if(is_array($events)){
             foreach($events as $event){
+                ddd($event);
                 if(
                     property_exists($event, 'command') &&
                     is_array($event->command)
