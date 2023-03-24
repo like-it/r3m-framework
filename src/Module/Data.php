@@ -178,10 +178,21 @@ class Data {
             return $find;
         }
         foreach($data as $value){
-            ddd($value);
-            foreach($options as $option_key => $option_value){
-                if(is_object($value) && property_exists($value, $option_key)){
-                    if($value->{$option_key} === $option_value){
+            if(is_array($value)){
+                foreach($options as $option_key => $option_value){
+                    if(
+                        array_key_exists($option_key, $value) &&
+                        $value[$option_key] === $option_value
+                    ){
+                        $find[] = $value;
+                    }
+                }
+            } else {
+                foreach($options as $option_key => $option_value){
+                    if(
+                        property_exists($value, $option_key) &&
+                        $value->{$option_key} === $option_value
+                    ){
                         $find[] = $value;
                     }
                 }
