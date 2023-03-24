@@ -83,10 +83,18 @@ class ParseException extends Exception {
             $source = File::read($options['source']);
         }
         $string = parent::__toString();
-        $string .= PHP_EOL . 'Code: ' . PHP_EOL;
+        $string .= PHP_EOL .
+            PHP_EOL .
+            'Code: ' .
+            PHP_EOL
+        ;
         $string .= implode(PHP_EOL, $result);
         if($source){
-            $string .= PHP_EOL . 'Source: ' . PHP_EOL;
+            $string .= PHP_EOL .
+                PHP_EOL .
+                'Source: ' .
+                PHP_EOL
+            ;
             $string .= $source;
         }
         if(App::is_cli()){
