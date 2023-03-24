@@ -199,7 +199,7 @@ class Route extends Data {
     /**
      * @throws Exception
      */
-    private static function select_info($object, $record): stdClass
+    private static function route_select_info($object, $record): stdClass
     {
         $select = new stdClass();
         $select->parameter = new stdClass();
@@ -354,10 +354,10 @@ class Route extends Data {
             }
             $select->method = Handler::method();
             $select->host = [];
-            $request = Route::select_cli($object, $select);
+            $request = Route::route_select_cli($object, $select);
             if($request === false){
-                $select = Route::select_info($object, $select);
-                $request = Route::select_cli($object, $select);
+                $select = Route::route_select_info($object, $select);
+                $request = Route::route_select_cli($object, $select);
             }
             if($request === false){
                 throw new Exception('Exception in request');
@@ -432,7 +432,7 @@ class Route extends Data {
                 }
             }
             $select->host = array_unique($select->host);
-            $request = Route::select($object, $select);
+            $request = Route::route_select($object, $select);
             $route =  $object->data(App::ROUTE);
             Route::add_request($object, $request);
             return $route->current($request);
@@ -444,7 +444,7 @@ class Route extends Data {
         return $input;
     }
 
-    private static function select_cli($object, $select){
+    private static function route_select_cli($object, $select){
         $route =  $object->data(App::ROUTE);
         if(empty($route)){
             return false;
@@ -529,7 +529,7 @@ class Route extends Data {
         return false;
     }
 
-    private static function select($object, $select){
+    private static function route_select($object, $select){
         $route =  $object->data(App::ROUTE);
         $match = false;
         $data = $route->data();
