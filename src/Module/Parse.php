@@ -438,7 +438,7 @@ class Parse {
                 return $string;
             }
             elseif(File::exist($url) && File::mtime($url) != $mtime){
-                Event::trigger($object, 'parse.compile.opcache_invalidate', [
+                Event::trigger($object, 'parse.compile.opcache.invalidate', [
                     'string' => $string,
                     'data' => $data,
                     'storage' => $storage,
@@ -524,7 +524,7 @@ class Parse {
                     $status = opcache_get_status(true);
                     if($status !== false){
                         opcache_compile_file($url);
-                        Event::trigger($object, 'parse.compile.opcache_file', [
+                        Event::trigger($object, 'parse.compile.opcache.file', [
                             'string' => $string,
                             'data' => $data,
                             'storage' => $storage,
@@ -550,7 +550,7 @@ class Parse {
                 }
             } else {
                 $exception = new Exception('Class ('. $class .') doesn\'t exist');
-                Event::trigger($object, 'parse.compile_exception', [
+                Event::trigger($object, 'parse.compile.exception', [
                     'string' => $string,
                     'data' => $data,
                     'storage' => $storage,
