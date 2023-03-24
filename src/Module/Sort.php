@@ -202,30 +202,42 @@ class Sort extends Data{
                 unset($sort[$attribute]);                                
                 if(!empty($sort) && is_array($result)){                
                     $list = [];                
-                    foreach($result as $key => $subList){
+                    foreach($result as $result_key => $subList){
                         foreach($subList as $nr => $node){
-                            if(is_array($node)){
+                            if($key){
+                                if(is_array($node)){
+                                    if(array_key_exists($key, $node)){
+                                        $select = $node[$key];
+                                    }
+                                } else {
+                                    if(property_exists($node, $key)){
+                                        $select = $node->$key;
+                                    }
+                                }
+                            } else {
+                                $select = $node;
+                            }
+                            if(is_array($select)){
                                 foreach($sort as $attribute => $record){
-                                    if(array_key_exists($attribute, $node)){
-                                        $list[$key][$node[$attribute]][] = $node;
+                                    if(array_key_exists($attribute, $select)){
+                                        $list[$result_key][$select[$attribute]][] = $node;
                                     } else {
-                                        $list[$key][''][] = $node;
+                                        $list[$result_key][''][] = $node;
                                     }
                                     $sortable_2 = $sort[$attribute];
                                     break;
                                 }
                             } else {
                                 foreach($sort as $attribute => $record){
-                                    if(property_exists($node, $attribute)){
-                                        $list[$key][$node->$attribute][] = $node;
+                                    if(property_exists($select, $attribute)){
+                                        $list[$result_key][$select->$attribute][] = $node;
                                     } else {
-                                        $list[$key][''][] = $node;
+                                        $list[$result_key][''][] = $node;
                                     }
                                     $sortable_2 = $sort[$attribute];
                                     break;
                                 }
                             }
-
                         }
                     }
                     unset($sort[$attribute]);
@@ -245,7 +257,7 @@ class Sort extends Data{
                     }                                        
                     $list = [];          
                     $has_uuid = false;      
-                    foreach($result as $key => $subList){
+                    foreach($result as $result_key => $subList){
                         foreach($subList as $attribute => $subSubList){
                             foreach($subSubList as $nr => $node){
                                 if(is_array($node)){
