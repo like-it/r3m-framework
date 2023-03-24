@@ -229,7 +229,10 @@ class Sort extends Data{
                                 }
                             } else {
                                 foreach($sort as $attribute => $record){
-                                    if(property_exists($select, $attribute)){
+                                    if(
+                                        property_exists($select, $attribute) &&
+                                        is_scalar($select->$attribute)
+                                    ){
                                         $list[$result_key][$select->$attribute][] = $node;
                                     } else {
                                         $list[$result_key][''][] = $node;
