@@ -530,7 +530,7 @@ class Build {
      * @throws FileMoveException
      * @throws ObjectException
      */
-    public function write($url, $document=[]): string
+    public function write($url, $document=[], $string=''): string
     {
         $write = implode("\n", $document);
         $this->storage()->data('time.end', microtime(true));
@@ -541,8 +541,9 @@ class Build {
         File::put($url, $write);
         exec('chmod 640 ' . $url);
         $object = $this->object();
-        Event::trigger($object, 'parse.' . strtolower(Build::NAME) . '.' . __FUNCTION__, [
-            'url' => $url
+        Event::trigger($object, 'parse.build.write', [
+            'url' => $url,
+            'string' => $string,
         ]);
         return $write;
     }

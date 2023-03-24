@@ -516,7 +516,7 @@ class Parse {
             $document = $build->create('require', $tree, $document);
             $document = $build->create('use', $tree, $document);
             $document = $build->create('trait', $tree, $document);
-            $write = $build->write($url, $document);
+            $write = $build->write($url, $document, $string);
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
                 opcache_invalidate($url, true);
