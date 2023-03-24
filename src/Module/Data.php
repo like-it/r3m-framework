@@ -161,6 +161,28 @@ class Data {
         return Core::object($options);
     }
 
+    public function find($attribute='', $options=[]){
+        $data = $this->get($attribute);
+        if(empty($data)){
+            return false;
+        }
+        if(!is_array($data)){
+            return false;
+        }
+        $find = [];
+        foreach($data as $value){
+            foreach($options as $option_key => $option_value){
+                if(is_object($value) && property_exists($value, $option_key)){
+                    if($value->{$option_key} === $option_value){
+                        $find[] = $value;
+                    }
+                }
+            }
+        }
+        return $find;
+    }
+
+
     public function get($attribute=''){
         return $this->data('get', $attribute);
     }
