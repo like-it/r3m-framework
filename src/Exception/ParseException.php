@@ -21,10 +21,12 @@ use Exception;
 class ParseException extends Exception {
 
     protected $object;
-    protected $url;
+    protected $options;
 
-    public function __construct($message = "", $url='', $code = 0, Throwable $previous = null) {
-        $this->setUrl($url);
+    public function __construct($message = "", $options=[], $code = 0, Throwable $previous = null) {
+        if(!empty($options)){
+            $this->setOptions($options);
+        }
         parent::__construct($message, $code, $previous);
     }
 
@@ -43,12 +45,12 @@ class ParseException extends Exception {
         return $this->object;
     }
 
-    public function getUrl(){
-        return $this->url;
+    public function getOptions(){
+        return $this->options;
     }
 
-    public function setUrl($url=''){
-        $this->url = $url;
+    public function setOptions($options=''){
+        $this->options = $options;
     }
 
     /**
@@ -58,12 +60,15 @@ class ParseException extends Exception {
      */
     public function __toString()
     {
+        $options = $this->getOptions();
         $result = [];
         $explode = explode('on line', $this->getMessage());
         if(array_key_exists(1, $explode)) {
+            $tmp = explode(PHP_EOL, $explode[1]);
+            ddd($tmp);
             $line_nr = trim($explode[1]);
-            if ($this->getUrl()) {
-                $read = File::read($this->getUrl());
+            if (!empty($options['url'])) {
+                $read = File::read($options['url']);
             }
             if ($read) {
                 $explode = explode(PHP_EOL, $read);
