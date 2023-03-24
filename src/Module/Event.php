@@ -54,7 +54,7 @@ class Event {
         d($action);
         d($events);
         if($events){
-            $events = Sort::list($events)->with(['options.priority' => 'DESC']);
+            $events = Sort::list($events)->with(['priority' => 'DESC'], false , 'options');
         }
         ddd($events);
         if(is_array($events)){

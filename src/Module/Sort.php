@@ -22,7 +22,7 @@ class Sort extends Data{
         return new Sort($list);
     }
 
-    public function with($sort=[], $key_reset=false){
+    public function with($sort=[], $key_reset=false, $key=false){
         $list = $this->data();
         if(
             is_array($list) || 
@@ -40,6 +40,17 @@ class Sort extends Data{
                 $attribute = false;
                 $sortable_1 = 'ASC';
                 foreach($list as $uuid => $node){
+                    if($key){
+                        if(is_array($node)){
+                            if(array_key_exists($key, $node)){
+                                $node = $node[$key];
+                            }
+                        } else {
+                            if(property_exists($node, $key)){
+                                $node = $node->$key;
+                            }
+                        }
+                    }
                     if(is_array($node)){
                         foreach($sort as $attribute => $record){
                             if(array_key_exists($attribute, $node)){
@@ -134,6 +145,17 @@ class Sort extends Data{
                 $sortable_1 = 'ASC';
                 $sortable_2 = 'ASC';
                 foreach($list as $uuid => $node){
+                    if($key){
+                        if(is_array($node)){
+                            if(array_key_exists($key, $node)){
+                                $node = $node[$key];
+                            }
+                        } else {
+                            if(property_exists($node, $key)){
+                                $node = $node->$key;
+                            }
+                        }
+                    }
                     foreach($sort as $attribute => $record){
                         if(is_array($record)){
                             if(array_key_exists($attribute, $node)){
