@@ -53,39 +53,80 @@ class Event {
         $events = Sort::list($events)->with(['priority' => 'DESC'], false , 'options');
         if(is_array($events)){
             foreach($events as $event){
-                if(
-                    property_exists($event, 'options') &&
-                    property_exists($event->options, 'command') &&
-                    is_array($event->options->command)
-                ){
-                    foreach($event->options->command as $command){
-                        $command = str_replace('{{binary()}}', Core::binary(), $command);
-                        Core::execute($object, $command, $output, $notification);
+                if(is_array($event)){
+                    if(
+                        array_key_exists('options', $event) &&
+                        property_exists($event['options'], 'command') &&
+                        is_array($event['options']->command)
+                    ){
+                        foreach($event['options']->command as $command){
+                            $command = str_replace('{{binary()}}', Core::binary(), $command);
+                            Core::execute($object, $command, $output, $notification);
+                        }
                     }
-                }
-                if(
-                    property_exists($event, 'options') &&
-                    property_exists($event, 'controller') &&
-                    is_array($event->controller)
-                ){
-                    foreach($event->options->controller as $controller){
-                        $route = new stdClass();
-                        $route->controller = $controller;
-                        $route = Route::controller($route);
-                        if(
-                            property_exists($route, 'controller') &&
-                            property_exists($route, 'function')
-                        ){
-                            $event = new Data($event);
-                            try {
-                                $route->controller::{$route->function}($object, $event, $action, $options);
-                            }
-                            catch (LocateException $exception){
-                                if($object->config('project.log.error')){
-                                    $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
+                    if(
+                        array_key_exists('options', $event) &&
+                        property_exists($event['options'], 'controller') &&
+                        is_array($event['options']->controller)
+                    ){
+                        foreach($event['options']->controller as $controller){
+                            $route = new stdClass();
+                            $route->controller = $controller;
+                            $route = Route::controller($route);
+                            if(
+                                property_exists($route, 'controller') &&
+                                property_exists($route, 'function')
+                            ){
+                                $event = new Data($event);
+                                try {
+                                    $route->controller::{$route->function}($object, $event, $action, $options);
                                 }
-                                elseif($object->config('project.log.name')){
-                                    $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
+                                catch (LocateException $exception){
+                                    if($object->config('project.log.error')){
+                                        $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
+                                    }
+                                    elseif($object->config('project.log.name')){
+                                        $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if(
+                        property_exists($event, 'options') &&
+                        property_exists($event->options, 'command') &&
+                        is_array($event->options->command)
+                    ){
+                        foreach($event->options->command as $command){
+                            $command = str_replace('{{binary()}}', Core::binary(), $command);
+                            Core::execute($object, $command, $output, $notification);
+                        }
+                    }
+                    if(
+                        property_exists($event, 'options') &&
+                        property_exists($event->options, 'controller') &&
+                        is_array($event->options->controller)
+                    ){
+                        foreach($event->options->controller as $controller){
+                            $route = new stdClass();
+                            $route->controller = $controller;
+                            $route = Route::controller($route);
+                            if(
+                                property_exists($route, 'controller') &&
+                                property_exists($route, 'function')
+                            ){
+                                $event = new Data($event);
+                                try {
+                                    $route->controller::{$route->function}($object, $event, $action, $options);
+                                }
+                                catch (LocateException $exception){
+                                    if($object->config('project.log.error')){
+                                        $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
+                                    }
+                                    elseif($object->config('project.log.name')){
+                                        $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
+                                    }
                                 }
                             }
                         }
