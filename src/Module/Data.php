@@ -161,7 +161,8 @@ class Data {
         return Core::object($options);
     }
 
-    public function find($attribute='', $options=[]){
+    public function select($attribute='', $options=[]): array
+    {
         $find = [];
         if(empty($attribute)){
             return $find;
