@@ -44,6 +44,7 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
+        d($action);
         $events = $object->get(App::EVENT)->select('event', [
             'action' => $action
         ]);
