@@ -45,6 +45,8 @@ class Event {
      */
     public static function trigger(App $object, $action, $options=[]){
 //        $notifications = $object->get(App::EVENT)->get($action . '.notification');
+        d($action);
+        d($object->get(App::EVENT)->data());
         $events = $object->get(App::EVENT)->select('event', [
             'action' => $action
         ]);
