@@ -97,13 +97,13 @@ class Sort extends Data{
                         }
                     }
                 }
-                ddd($result);
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
                     ksort($result, SORT_NATURAL);
                 } else {
                     krsort($result, SORT_NATURAL);
-                } 
+                }
+                ddd($result);
                 $list = [];                
                 foreach($result as $attribute => $subList){
                     foreach($subList as $nr => $record){
