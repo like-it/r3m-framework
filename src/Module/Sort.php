@@ -97,6 +97,7 @@ class Sort extends Data{
                         }
                     }
                 }
+                ddd($result);
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
                     ksort($result, SORT_NATURAL);
