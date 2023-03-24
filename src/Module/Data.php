@@ -162,14 +162,20 @@ class Data {
     }
 
     public function find($attribute='', $options=[]){
+        $find = [];
+        if(empty($attribute)){
+            return $find;
+        }
+        if($this->has($attribute) === false){
+            return $find;
+        }
         $data = $this->get($attribute);
         if(empty($data)){
-            return false;
+            return $find;
         }
         if(!is_array($data)){
-            return false;
+            return $find;
         }
-        $find = [];
         foreach($data as $value){
             foreach($options as $option_key => $option_value){
                 if(is_object($value) && property_exists($value, $option_key)){
