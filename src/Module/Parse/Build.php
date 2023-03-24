@@ -541,6 +541,7 @@ class Build {
         File::put($url, $write);
         exec('chmod 640 ' . $url);
         $object = $this->object();
+        ddd($this->storage());
         Event::trigger($object, 'parse.build.write', [
             'url' => $url,
             'string' => $string,
