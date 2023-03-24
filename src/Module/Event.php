@@ -24,12 +24,16 @@ class Event {
     const NAME = 'Event';
 
     public static function on(App $object, $action, $options=[]){
-        $event = $object->get(App::EVENT)->get($action);
-        if(empty($event)){
-            $event = [];
+        $list = $object->get(App::EVENT)->get('event');
+        if(empty($list)){
+            $list = [];
         }
-        $event[] = $options;
-        $object->get(App::EVENT)->set($action, $event);
+        $list[] = [
+            'action' => $action,
+            'options' => $options
+        ];
+        ddd($list);
+        $object->get(App::EVENT)->set('event', $list);
     }
 
     public static function off(App $object, $action, $options=[]){
@@ -41,8 +45,11 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        $notifications = $object->get(App::EVENT)->get($action . '.notification');
-        $events = $object->get(App::EVENT)->get($action);
+//        $notifications = $object->get(App::EVENT)->get($action . '.notification');
+        $events = $object->get(App::EVENT)->find([
+            'action' => $action
+        ]);
+        ddd($events);
         unset($events['notification']);
         if(empty($events) && empty($notifications)){
             return null;
