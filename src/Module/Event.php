@@ -45,19 +45,14 @@ class Event {
      */
     public static function trigger(App $object, $action, $options=[]){
 //        $notifications = $object->get(App::EVENT)->get($action . '.notification');
-        d($action);
-        d($object->get(App::EVENT)->data());
         $events = $object->get(App::EVENT)->select('event', [
             'action' => $action
         ]);
-        ddd($events);
-        unset($events['notification']);
-        if(empty($events) && empty($notifications)){
+        if(empty($events)){
             return null;
         }
-        if($notifications){
-            $notifications = Sort::list($notifications)->with(['priority' => 'DESC']);
-        }
+        d($action);
+        d($events);
         if($events){
             $events = Sort::list($events)->with(['priority' => 'DESC']);
         }
