@@ -44,7 +44,6 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-//        $notifications = $object->get(App::EVENT)->get($action . '.notification');
         $events = $object->get(App::EVENT)->select('event', [
             'action' => $action
         ]);
@@ -54,21 +53,22 @@ class Event {
         $events = Sort::list($events)->with(['priority' => 'DESC'], false , 'options');
         if(is_array($events)){
             foreach($events as $event){
-                ddd($event);
                 if(
-                    property_exists($event, 'command') &&
-                    is_array($event->command)
+                    property_exists($event, 'options') &&
+                    property_exists($event->options, 'command') &&
+                    is_array($event->options->command)
                 ){
-                    foreach($event->command as $command){
+                    foreach($event->options->command as $command){
                         $command = str_replace('{{binary()}}', Core::binary(), $command);
                         Core::execute($object, $command, $output, $notification);
                     }
                 }
                 if(
+                    property_exists($event, 'options') &&
                     property_exists($event, 'controller') &&
                     is_array($event->controller)
                 ){
-                    foreach($event->controller as $controller){
+                    foreach($event->options->controller as $controller){
                         $route = new stdClass();
                         $route->controller = $controller;
                         $route = Route::controller($route);
