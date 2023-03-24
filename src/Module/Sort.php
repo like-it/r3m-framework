@@ -103,7 +103,6 @@ class Sort extends Data{
                 } else {
                     krsort($result, SORT_NATURAL);
                 }
-                ddd($result);
                 $list = [];                
                 foreach($result as $attribute => $subList){
                     foreach($subList as $nr => $record){
@@ -150,22 +149,24 @@ class Sort extends Data{
                     if($key){
                         if(is_array($node)){
                             if(array_key_exists($key, $node)){
-                                $node = $node[$key];
+                                $select = $node[$key];
                             }
                         } else {
                             if(property_exists($node, $key)){
-                                $node = $node->$key;
+                                $select = $node->$key;
                             }
                         }
+                    } else {
+                        $select = $node;
                     }
                     foreach($sort as $attribute => $record){
-                        if(is_array($record)){
-                            if(array_key_exists($attribute, $node)){
-                                if(is_scalar($node[$attribute])){
-                                    $result[$node[$attribute]][] = $node;
-                                } else if (is_array($node[$attribute])){
+                        if(is_array($select)){
+                            if(array_key_exists($attribute, $select)){
+                                if(is_scalar($select[$attribute])){
+                                    $result[$select[$attribute]][] = $node;
+                                } else if (is_array($select[$attribute])){
                                     $attr = '';
-                                    foreach($node[$attribute] as $node_attribute){
+                                    foreach($select[$attribute] as $node_attribute){
                                         if(is_scalar($node_attribute)){
                                             $attr .= '.' . $node_attribute;
                                         }
@@ -177,12 +178,12 @@ class Sort extends Data{
                                 $result[''][] = $node;
                             }
                         } else {
-                            if(property_exists($node, $attribute)){
-                                if(is_scalar($node->$attribute)){
-                                    $result[$node->$attribute][] = $node;
-                                } else if (is_array($node->$attribute)){
+                            if(property_exists($select, $attribute)){
+                                if(is_scalar($select->$attribute)){
+                                    $result[$select->$attribute][] = $node;
+                                } else if (is_array($select->$attribute)){
                                     $attr = '';
-                                    foreach($node->$attribute as $node_attribute){
+                                    foreach($select->$attribute as $node_attribute){
                                         if(is_scalar($node_attribute)){
                                             $attr .= '.' . $node_attribute;
                                         }
