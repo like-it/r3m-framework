@@ -56,45 +56,6 @@ class Event {
         if($events){
             $events = Sort::list($events)->with(['priority' => 'DESC']);
         }
-        if(is_array($notifications)){
-            foreach($notifications as $record){
-                if(
-                    property_exists($record, 'command') &&
-                    is_array($record->command)
-                ){
-                    foreach($record->command as $command){
-                        $command = str_replace('{{binary()}}', Core::binary(), $command);
-                        Core::execute($object, $command, $output, $notification);
-                    }
-                }
-                if(
-                    property_exists($record, 'controller') &&
-                    is_array($record->controller)
-                ){
-                    foreach($record->controller as $controller){
-                        $route = new stdClass();
-                        $route->controller = $controller;
-                        $route = Route::controller($route);
-                        if(
-                            property_exists($route, 'controller') &&
-                            property_exists($route, 'function')
-                        ){
-                            try {
-                                $route->controller::{$route->function}($object, $record, $action, $options);
-                            }
-                            catch (LocateException $exception){
-                                if($object->config('project.log.error')){
-                                    $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
-                                }
-                                elseif($object->config('project.log.name')){
-                                    $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
         if(is_array($events)){
             foreach($events as $event){
                 if(

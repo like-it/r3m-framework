@@ -174,6 +174,7 @@ class Data {
         if(empty($data)){
             return $find;
         }
+        ddd($data);
         if(!is_array($data)){
             return $find;
         }
