@@ -42,6 +42,9 @@ class Sort extends Data{
                 foreach($list as $uuid => $node){
                     foreach($sort as $attribute => $record){
                         $value = $this->data($uuid . '.' . $attribute);
+                        d($uuid);
+                        d($attribute);
+                        d($this->data());
                         ddd($value);
                     }
 
