@@ -56,9 +56,8 @@ class Parse {
         } else {
             $this->storage($storage);
         }
-        $url = true;
-        $name = true;
-        Event::off($object, 'parse.build.plugin.require', ['url' => $url, 'name' => $name]);
+        $priority = true;
+        Event::off($object, 'parse.build.plugin.require', ['priority' => $priority]);
     }
 
     /**
