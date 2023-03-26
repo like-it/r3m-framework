@@ -587,14 +587,11 @@ class Core
             is_array($object) &&
             $attributeList !== null
         ){
-            d($attributeList);
             if(is_array($attributeList)){
                 foreach($attributeList as $key => $attribute){
                     if ($key === null || $key === '') {
                         continue;
                     }
-                    d($key);
-                    d($object);
                     if (array_key_exists($key, $object)) {
                         return Core::object_get($attributeList->{$key}, $object[$key]);
                     }
@@ -634,7 +631,6 @@ class Core
         }
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
-            var_dump($attributeList);
         }
         if (empty($attributeList)) {
             return $object;
