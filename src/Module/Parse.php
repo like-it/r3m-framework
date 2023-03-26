@@ -277,13 +277,6 @@ class Parse {
             foreach($string as $key => $value){
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
             }
-            Event::trigger($object, 'parse.compile', [
-                'string' => $string,
-                'data' => $data,
-                'storage' => $storage,
-                'depth' => $depth,
-                'is_array' => true
-            ]);
             return $string;
         }
         elseif(is_object($string)){
@@ -330,7 +323,7 @@ class Parse {
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->$key = $value;
                 } catch (Exception | ParseError $exception){
-                    Event::trigger($object, 'parse.compile', [
+                    Event::trigger($object, 'parse.compile.exception', [
                         'string' => $string,
                         'data' => $data,
                         'storage' => $storage,
@@ -354,22 +347,9 @@ class Parse {
                     $string = Parse::unset($string, $unset);
                 }
             }
-            Event::trigger($object, 'parse.compile', [
-                'string' => $string,
-                'data' => $data,
-                'storage' => $storage,
-                'depth' => $depth,
-                'is_object' => true
-            ]);
             return $string;
         }
         elseif(stristr($string, '{') === false){
-            Event::trigger($object, 'parse.compile', [
-                'string' => $string,
-                'data' => $data,
-                'storage' => $storage,
-                'depth' => $depth
-            ]);
             return $string;
         } else {
             $build = $this->build(new Build($this->object(), $this, $is_debug));
@@ -425,16 +405,6 @@ class Parse {
                     $string = Literal::restore($storage, $string);
                 }
                 $storage->data('delete', 'this');
-                Event::trigger($object, 'parse.compile', [
-                    'string' => $string,
-                    'data' => $data,
-                    'storage' => $storage,
-                    'depth' => $depth,
-                    'url' => $url,
-                    'url_mtime' => $file_mtime,
-                    'is_cache' => true,
-                    'mtime' => $mtime
-                ]);
                 return $string;
             }
             elseif(File::exist($url) && File::mtime($url) != $mtime){
@@ -564,12 +534,6 @@ class Parse {
 
             }
         }
-        Event::trigger($object, 'parse.compile', [
-            'string' => $string,
-            'data' => $data,
-            'storage' => $storage,
-            'depth' => $depth
-        ]);
         if($string === 'null'){
             return null;
         }
