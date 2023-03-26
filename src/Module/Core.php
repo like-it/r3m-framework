@@ -617,7 +617,7 @@ class Core
             }
             return null;
         }
-        elseif (is_scalar($attributeList)) {
+       if (is_scalar($attributeList)) {
             if($attributeList === '0' && isset($object->{$attributeList})){
                 return $object->{$attributeList};
             } else {
