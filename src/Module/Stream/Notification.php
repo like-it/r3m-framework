@@ -49,23 +49,25 @@ class Notification {
             $object->config('ramdisk.url') &&
             empty($object->config('ramdisk.is.disabled'))
         ){
-            $url = $object->config('ramdisk.url') .
+            $dir = $object->config('ramdisk.url') .
                 $object->config(Config::POSIX_ID) .
                 $object->config('ds') .
                 'Stream' .
-                $object->config('ds') .
-                'Stream' .
-                $object->config('extension.json');
+                $object->config('ds')
+            ;
         } else {
-            $url = $object->config('project.dir.temp') .
+            $dir = $object->config('project.dir.temp') .
                 $object->config(Config::POSIX_ID) .
                 $object->config('ds') .
                 'Stream' .
-                $object->config('ds') .
-                'Stream' .
-                $object->config('extension.json');
+                $object->config('ds')
+            ;
         }
+        $url = $dir .
+            'Stream' .
+            $object->config('extension.json');
         if(!File::exist($url)){
+            Dir::create($dir, Dir::CHMOD);
             //init stream filter
             File::copy($object->config('framework.dir.data') . 'Stream' . $object->config('extension.json'), $url);
         }
