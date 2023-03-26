@@ -53,14 +53,32 @@ class Event {
                     foreach($options as $options_key => $value){
                         if(
                             $value === true &&
+                            is_array($event['options']) &&
                             array_key_exists($options_key, $event['options'])
                         ){
                             unset($list[$key]);
                             break;
                         }
+                        if(
+                            $value === true &&
+                            is_object($event['options']) &&
+                            property_exists($event['options'], $options_key)
+                        ){
+                            unset($list[$key]);
+                            break;
+                        }
                         elseif(
+                            is_array($event['options']) &&
                             array_key_exists($options_key, $event['options']) &&
                             $event['options'][$options_key] === $value
+                        ){
+                            unset($list[$key]);
+                            break;
+                        }
+                        elseif(
+                            is_object($event['options']) &&
+                            property_exists($event['options'], $options_key) &&
+                            $event['options']->{$options_key} === $value
                         ){
                             unset($list[$key]);
                             break;
