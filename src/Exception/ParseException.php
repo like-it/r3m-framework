@@ -12,6 +12,7 @@ namespace R3m\Io\Exception;
 
 use R3m\Io\App;
 
+use R3m\Io\Module\Cli;
 use R3m\Io\Module\File;
 
 use Throwable;
@@ -84,17 +85,23 @@ class ParseException extends Exception {
         }
         $string = parent::__toString();
         $string .= PHP_EOL .
-            PHP_EOL .
-            'Code: ' .
             PHP_EOL
         ;
+        if(App::is_cli()){
+            $string .= Cli::color(null, ['r'=> 200, 'g' => 0, 'b' => 0]) . 'Code: ' . PHP_EOL . Cli::default();
+        } else {
+            $string .= 'Code: ' . PHP_EOL;
+        }
         $string .= implode(PHP_EOL, $result);
         if($source){
             $string .= PHP_EOL .
-                PHP_EOL .
-                'Source: ' .
                 PHP_EOL
             ;
+            if(App::is_cli()){
+                $string .= Cli::color(null, ['r'=> 200, 'g' => 0, 'b' => 0]) . 'Source: ' . PHP_EOL . Cli::default();
+            } else {
+                $string .= 'Source: ' . PHP_EOL;
+            }
             $string .= $source;
         }
         if(App::is_cli()){

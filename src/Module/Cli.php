@@ -170,4 +170,45 @@ class Cli {
         ob_end_clean();
         return $result;
     }
+
+    public static function color($color=null, $background=null): string
+    {
+        $result = [];
+        if (
+            $color &&
+            is_array($color) &&
+            array_key_exists('r', $color) &&
+            array_key_exists('g', $color) &&
+            array_key_exists('b', $color)
+        )
+        {
+            $result[] = chr(27) . '[38;2;' . $color['r'] . ';' . $color['g'] . ';' . $color['b'] . 'm'; //rgb foreground color
+        }
+        elseif
+        (
+            $color &&
+            is_object($color) &&
+            property_exists($color, 'r') &&
+            property_exists($color, 'g') &&
+            property_exists($color, 'b')
+        ){
+            $result[] = chr(27) . '[38;2;' . $color->r . ';' . $color->g . ';' . $color->b . 'm'; //rgb foreground color
+        }
+        if (
+            is_array($background) &&
+            array_key_exists('r', $background) &&
+            array_key_exists('g', $background) &&
+            array_key_exists('b', $background)
+        ) {
+            $result[] = chr(27) . '[48;2;' . $background['r'] . ';' . $background['g'] . ';' . $background['b'] . 'm'; //rgb background color
+        } elseif (
+            is_object($background) &&
+            property_exists($background, 'r') &&
+            property_exists($background, 'g') &&
+            property_exists($background, 'b')
+        ) {
+            $result[] = chr(27) . '[48;2;' . $color->r . ';' . $color->g . ';' . $color->b . 'm'; //rgb background color
+        }
+        return implode('', $result);
+    }
 }
