@@ -40,6 +40,15 @@ class Sort extends Data{
                 $attribute = false;
                 $sortable_1 = 'ASC';
                 foreach($list as $uuid => $node){
+                    foreach($sort as $attribute => $record){
+                        $value = $this->data($uuid . '.' . $attribute);
+                        ddd($value);
+                    }
+
+
+
+
+
                     if($key){
                         if(is_array($node)){
                             if(array_key_exists($key, $node)){
@@ -71,7 +80,7 @@ class Sort extends Data{
                             } else {
                                 $result[''][] = $node;
                             }
-                            $sortable_1 = $sort[$attribute];
+                            $sortable_1 = $record;
                             break;
                         }
                     } else {
@@ -92,7 +101,7 @@ class Sort extends Data{
                             } else {
                                 $result[''][] = $node;
                             }
-                            $sortable_1 = $sort[$attribute];
+                            $sortable_1 = $record;
                             break;
                         }
                     }
@@ -195,7 +204,7 @@ class Sort extends Data{
                                 $result[''][] = $node;
                             }
                         }
-                        $sortable_1 = $sort[$attribute];                    
+                        $sortable_1 = $record;
                         break;
                     }                
                 }                    
@@ -224,7 +233,7 @@ class Sort extends Data{
                                     } else {
                                         $list[$result_key][''][] = $node;
                                     }
-                                    $sortable_2 = $sort[$attribute];
+                                    $sortable_2 = $record;
                                     break;
                                 }
                             } else {
@@ -237,7 +246,7 @@ class Sort extends Data{
                                     } else {
                                         $list[$result_key][''][] = $node;
                                     }
-                                    $sortable_2 = $sort[$attribute];
+                                    $sortable_2 = $record;
                                     break;
                                 }
                             }

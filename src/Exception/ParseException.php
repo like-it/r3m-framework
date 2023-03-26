@@ -76,7 +76,7 @@ class ParseException extends Exception {
                     if (array_key_exists($i, $explode)) {
                         if($i === $line_nr - 1){
                             if(!App::is_cli()){
-                                $explode[$i] = '<span style="color: rgba(200, 0, 0, 1);">' . $explode[$i] . '</span>';
+                                $explode[$i] = '<span class="selected">' . $explode[$i] . '</span>';
                             } else {
                                 $explode[$i] = Cli::color(['r'=> 200, 'g' => 0, 'b' => 0]) . $explode[$i] . Cli::tput('init');
                             }

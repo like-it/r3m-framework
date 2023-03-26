@@ -161,7 +161,7 @@ class Data {
         return Core::object($options);
     }
 
-    public function select($attribute='', $options=[]): array
+    public function select($attribute='', $criteria=[]): array
     {
         $find = [];
         if(empty($attribute)){
@@ -179,7 +179,7 @@ class Data {
         }
         foreach($data as $value){
             if(is_array($value)){
-                foreach($options as $option_key => $option_value){
+                foreach($criteria as $option_key => $option_value){
                     if(
                         array_key_exists($option_key, $value) &&
                         $value[$option_key] === $option_value
@@ -187,8 +187,9 @@ class Data {
                         $find[] = $value;
                     }
                 }
-            } else {
-                foreach($options as $option_key => $option_value){
+            }
+            elseif(is_object($value)) {
+                foreach($criteria as $option_key => $option_value){
                     if(
                         property_exists($value, $option_key) &&
                         $value->{$option_key} === $option_value

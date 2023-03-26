@@ -50,6 +50,8 @@ class Event {
         if(empty($events)){
             return null;
         }
+        $events = Sort::list($events)->with(['options.priority' => 'DESC']);
+        ddd($events);
         $events = Sort::list($events)->with(['priority' => 'DESC'], false , 'options');
         if(is_array($events)){
             foreach($events as $event){
