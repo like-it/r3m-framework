@@ -36,7 +36,29 @@ class Event {
     }
 
     public static function off(App $object, $action, $options=[]){
-
+        $list = $object->get(App::EVENT)->get('event');
+        if(empty($list)){
+            return;
+        }
+        //remove them on the sorted list backwards so sorted on input order
+        krsort($list);
+        foreach($list as $key => $event){
+            if(empty($options)){
+                if($event['action'] == $action){
+                    unset($list[$key]);
+                    break;
+                }
+            } else {
+                if(
+                    $event['action'] == $action &&
+                    $event['options'] == $options
+                ){
+                    unset($list[$key]);
+                    break;
+                }
+            }
+        }
+        $object->get(App::EVENT)->set('event', $list);
     }
 
     /**
