@@ -126,7 +126,6 @@ class Sort extends Data{
                                 } elseif (is_object($node)) {
                                     $result[$result_key][$value][] = $node;
                                 }
-                                ddd($result);
                                 $sortable_2 = $record;
                                 break;
                             }
