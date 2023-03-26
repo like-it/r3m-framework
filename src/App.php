@@ -491,7 +491,6 @@ class App extends Data {
         $output .= 'line: ' . $exception->getLine() . PHP_EOL;
         $output .= chr(27) . "[0m";
         $output .= PHP_EOL;
-        ddd((string) $exception);
         if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
             $output .= (string) $exception;
         }
