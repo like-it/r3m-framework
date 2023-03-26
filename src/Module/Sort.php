@@ -117,18 +117,19 @@ class Sort extends Data{
                 $data = new Data($result);
                 $result = [];
                 if(!empty($sort)){
-                    foreach($data->data() as $result_key => $node){
-                        foreach($sort as $attribute => $record){
-                            $value = $data->data($result_key . '.' . $attribute);
-                            if(is_array($node)){
-                                $result[$result_key][$value][] = $node;
+                    foreach($data->data() as $result_key => $list){
+                        foreach($list as $list_key => $node) {
+                            foreach ($sort as $attribute => $record) {
+                                $value = $data->data($result_key . '.' . $attribute);
+                                if (is_array($node)) {
+                                    $result[$result_key][$value][] = $node;
+                                } elseif (is_object($node)) {
+                                    $result[$result_key][$value][] = $node;
+                                }
+                                ddd($result);
+                                $sortable_2 = $record;
+                                break;
                             }
-                            elseif(is_object($node)){
-                                $result[$result_key][$value][] = $node;
-                            }
-                            ddd($result);
-                            $sortable_2 = $record;
-                            break;
                         }
                     }
                     unset($sort[$attribute]);
