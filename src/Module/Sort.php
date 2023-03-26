@@ -51,67 +51,6 @@ class Sort extends Data{
                         $sortable_1 = $record;
                         break;
                     }
-                    ddd($sortable_1);
-
-
-
-
-                    if($key){
-                        if(is_array($node)){
-                            if(array_key_exists($key, $node)){
-                                $select = $node[$key];
-                            }
-                        } else {
-                            if(property_exists($node, $key)){
-                                $select = $node->$key;
-                            }
-                        }
-                    } else {
-                        $select = $node;
-                    }
-                    if(is_array($select)){
-                        foreach($sort as $attribute => $record){
-                            if(array_key_exists($attribute, $select)){
-                                if(is_scalar($select[$attribute])){
-                                    $result[$select[$attribute]][] = $node;
-                                } else if (is_array($node[$attribute])){
-                                    $attr = '';
-                                    foreach($select[$attribute] as $node_attribute){
-                                        if(is_scalar($node_attribute)){
-                                            $attr .= '.' . $node_attribute;
-                                        }
-                                    }
-                                    $attr = substr($attr, 1);
-                                    $result[$attr][] = $node;
-                                }
-                            } else {
-                                $result[''][] = $node;
-                            }
-                            $sortable_1 = $record;
-                            break;
-                        }
-                    } else {
-                        foreach($sort as $attribute => $record){
-                            if(property_exists($select, $attribute)){
-                                if(is_scalar($select->$attribute)){
-                                    $result[$select->$attribute][] = $node;
-                                } else if (is_array($select->$attribute)){
-                                    $attr = '';
-                                    foreach($select->$attribute as $node_attribute){
-                                        if(is_scalar($node_attribute)){
-                                            $attr .= '.' . $node_attribute;
-                                        }
-                                    }
-                                    $attr = substr($attr, 1);
-                                    $result[$attr][] = $node;
-                                }
-                            } else {
-                                $result[''][] = $node;
-                            }
-                            $sortable_1 = $record;
-                            break;
-                        }
-                    }
                 }
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
@@ -162,105 +101,36 @@ class Sort extends Data{
                 $sortable_1 = 'ASC';
                 $sortable_2 = 'ASC';
                 foreach($list as $uuid => $node){
-                    if($key){
-                        if(is_array($node)){
-                            if(array_key_exists($key, $node)){
-                                $select = $node[$key];
-                            }
-                        } else {
-                            if(property_exists($node, $key)){
-                                $select = $node->$key;
-                            }
-                        }
-                    } else {
-                        $select = $node;
-                    }
                     foreach($sort as $attribute => $record){
-                        if(is_array($select)){
-                            if(array_key_exists($attribute, $select)){
-                                if(is_scalar($select[$attribute])){
-                                    $result[$select[$attribute]][] = $node;
-                                } else if (is_array($select[$attribute])){
-                                    $attr = '';
-                                    foreach($select[$attribute] as $node_attribute){
-                                        if(is_scalar($node_attribute)){
-                                            $attr .= '.' . $node_attribute;
-                                        }
-                                    }
-                                    $attr = substr($attr, 1);
-                                    $result[$attr][] = $node;
-                                }
-                            } else {
-                                $result[''][] = $node;
-                            }
-                        } else {
-                            if(property_exists($select, $attribute)){
-                                if(is_scalar($select->$attribute)){
-                                    $result[$select->$attribute][] = $node;
-                                } else if (is_array($select->$attribute)){
-                                    $attr = '';
-                                    foreach($select->$attribute as $node_attribute){
-                                        if(is_scalar($node_attribute)){
-                                            $attr .= '.' . $node_attribute;
-                                        }
-                                    }
-                                    $attr = substr($attr, 1);
-                                    $result[$attr][] = $node;
-                                }
-                            } else {
-                                $result[''][] = $node;
-                            }
+                        $value = $this->data($uuid . '.' . $attribute);
+                        if(is_array($node)){
+                            $result[$value][] = $node;
+                        }
+                        elseif(is_object($node)){
+                            $result[$value][] = $node;
                         }
                         $sortable_1 = $record;
                         break;
-                    }                
-                }                    
-                unset($sort[$attribute]);                                
-                if(!empty($sort) && is_array($result)){                
-                    $list = [];                
-                    foreach($result as $result_key => $subList){
-                        foreach($subList as $nr => $node){
-                            if($key){
-                                if(is_array($node)){
-                                    if(array_key_exists($key, $node)){
-                                        $select = $node[$key];
-                                    }
-                                } else {
-                                    if(property_exists($node, $key)){
-                                        $select = $node->$key;
-                                    }
-                                }
-                            } else {
-                                $select = $node;
+                    }
+                }
+                unset($sort[$attribute]);
+                $data = new Data($result);
+                $result = [];
+                if(!empty($sort)){
+                    foreach($data->data() as $result_key => $node){
+                        foreach($sort as $attribute => $record){
+                            $value = $data->data($result_key . '.' . $attribute);
+                            if(is_array($node)){
+                                $result[$result_key][$value][] = $node;
                             }
-                            if(is_array($select)){
-                                foreach($sort as $attribute => $record){
-                                    if(array_key_exists($attribute, $select)){
-                                        $list[$result_key][$select[$attribute]][] = $node;
-                                    } else {
-                                        $list[$result_key][''][] = $node;
-                                    }
-                                    $sortable_2 = $record;
-                                    break;
-                                }
-                            } else {
-                                foreach($sort as $attribute => $record){
-                                    if(
-                                        property_exists($select, $attribute) &&
-                                        is_scalar($select->$attribute)
-                                    ){
-                                        $list[$result_key][$select->$attribute][] = $node;
-                                    } else {
-                                        $list[$result_key][''][] = $node;
-                                    }
-                                    $sortable_2 = $record;
-                                    break;
-                                }
+                            elseif(is_object($node)){
+                                $result[$result_key][$value][] = $node;
                             }
+                            $sortable_2 = $record;
+                            break;
                         }
                     }
                     unset($sort[$attribute]);
-                    $result = $list;                
                     if(strtolower($sortable_1) == 'asc'){
                         ksort($result, SORT_NATURAL);
                     } else {
