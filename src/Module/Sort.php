@@ -147,7 +147,6 @@ class Sort extends Data{
                     }                                        
                     $list = [];          
                     $has_uuid = false;
-                    ddd($result);
                     foreach($result as $result_key => $subList){
                         foreach($subList as $attribute => $subSubList){
                             foreach($subSubList as $nr => $node){
