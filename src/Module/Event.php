@@ -44,14 +44,32 @@ class Event {
         krsort($list);
         foreach($list as $key => $event){
             if(empty($options)){
-                if($event['action'] == $action){
+                if($event['action'] === $action){
                     unset($list[$key]);
                     break;
                 }
             } else {
+                if($event['action'] === $action){
+                    foreach($options as $key => $value){
+                        if(
+                            $value === true &&
+                            array_key_exists($key, $event['options'])
+                        ){
+                            unset($list[$key]);
+                            break;
+                        }
+                        if(
+                            array_key_exists($key, $event['options']) &&
+                            $event['options'][$key] === $value
+                        ){
+                            unset($list[$key]);
+                            break;
+                        }
+                    }
+                }
                 if(
-                    $event['action'] == $action &&
-                    $event['options'] == $options
+                    $event['action'] === $action &&
+                    $event['options'] === $options
                 ){
                     unset($list[$key]);
                     break;
