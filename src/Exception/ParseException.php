@@ -88,7 +88,12 @@ class ParseException extends Exception {
             PHP_EOL
         ;
         if(App::is_cli()){
-            $string .= Cli::color(null, ['r'=> 200, 'g' => 0, 'b' => 0]) . 'Code: ' . PHP_EOL . Cli::tput('init');
+            $title = 'Code: ';
+            $width = Cli::width();
+            $title_length = strlen($title);
+            $width = $width - $title_length;
+            $title .= str_repeat(' ', $width);
+            $string .= Cli::color(null, ['r'=> 200, 'g' => 0, 'b' => 0]) . $title . Cli::tput('init') . PHP_EOL;
         } else {
             $string .= 'Code: ' . PHP_EOL;
         }
@@ -98,7 +103,12 @@ class ParseException extends Exception {
                 PHP_EOL
             ;
             if(App::is_cli()){
-                $string .= Cli::color(null, ['r'=> 200, 'g' => 0, 'b' => 0]) . 'Source: ' . PHP_EOL . Cli::tput('init');
+                $title = 'Source: ';
+                $width = Cli::width();
+                $title_length = strlen($title);
+                $width = $width - $title_length;
+                $title .= str_repeat(' ', $width);
+                $string .= Cli::color(null, ['r'=> 200, 'g' => 0, 'b' => 0]) . $title . Cli::tput('init') . PHP_EOL;
             } else {
                 $string .= 'Source: ' . PHP_EOL;
             }

@@ -79,6 +79,14 @@ class Cli {
         echo chr(27) . "[0m";
     }
 
+    public static function width(){
+        return exec('tput cols');
+    }
+
+    public static function height(){
+        return exec('tput lines');
+    }
+
     public static function tput($tput='', $arguments=[]): string
     {
         if(!is_array($arguments)){
