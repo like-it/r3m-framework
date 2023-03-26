@@ -593,6 +593,8 @@ class Core
                     if ($key === null || $key === '') {
                         continue;
                     }
+                    d($key);
+                    d($object);
                     if (array_key_exists($key, $object)) {
                         return Core::object_get($attributeList->{$key}, $object[$key]);
                     }
