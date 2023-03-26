@@ -74,9 +74,14 @@ class ParseException extends Exception {
                 $explode = explode(PHP_EOL, $read);
                 for ($i = $line_nr - 5; $i <= $line_nr + 5; $i++) {
                     if (array_key_exists($i, $explode)) {
-                        if(!App::is_cli()){
-                            $expode[$i] = '<span style="color: rgba(200, 0, 0, 1);">' . $explode[$i] . '</span>';
+                        if($i === $line_nr){
+                            if(!App::is_cli()){
+                                $expode[$i] = '<span style="color: rgba(200, 0, 0, 1);">' . $explode[$i] . '</span>';
+                            } else {
+                                $explode[$i] = Cli::color(['r'=> 200, 'g' => 0, 'b' => 0]) . $explode[$i] . Cli::tput('init');
+                            }
                         }
+
                         $result[] = $explode[$i];
                     }
                 }
