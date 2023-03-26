@@ -585,16 +585,17 @@ class Core
     {
         if(
             is_array($object) &&
-            $attributeList !== null &&
-            is_array($attributeList)
+            $attributeList !== null
         ){
             d($attributeList);
-            foreach($attributeList as $key => $attribute){
-                if ($key === null || $key === '') {
-                    continue;
-                }
-                if (array_key_exists($key, $object)) {
-                    return Core::object_get($attributeList->{$key}, $object[$key]);
+            if(is_array($attributeList)){
+                foreach($attributeList as $key => $attribute){
+                    if ($key === null || $key === '') {
+                        continue;
+                    }
+                    if (array_key_exists($key, $object)) {
+                        return Core::object_get($attributeList->{$key}, $object[$key]);
+                    }
                 }
             }
         }
