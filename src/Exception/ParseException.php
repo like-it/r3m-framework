@@ -67,7 +67,6 @@ class ParseException extends Exception {
         if(array_key_exists(1, $explode)) {
             $tmp = explode(PHP_EOL, $explode[1]);
             $line_nr = (int) trim($tmp[0]);
-            ddd($line_nr);
             if (!empty($options['url'])) {
                 $read = File::read($options['url']);
             }
