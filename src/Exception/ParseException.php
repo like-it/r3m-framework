@@ -62,6 +62,7 @@ class ParseException extends Exception {
     public function __toString()
     {
         $options = $this->getOptions();
+        ddd($options);
         $result = [];
         $explode = explode('on line', $this->getMessage());
         if(array_key_exists(1, $explode)) {
