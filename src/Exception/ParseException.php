@@ -66,7 +66,7 @@ class ParseException extends Exception {
         $explode = explode('on line', $this->getMessage());
         if(array_key_exists(1, $explode)) {
             $tmp = explode(PHP_EOL, $explode[1]);
-            $line_nr = (int) trim($tmp[0]) -1;
+            $line_nr = (int) trim($tmp[0]);
             if (!empty($options['url'])) {
                 $read = File::read($options['url']);
             }
@@ -74,7 +74,7 @@ class ParseException extends Exception {
                 $explode = explode(PHP_EOL, $read);
                 for ($i = $line_nr - 5; $i <= $line_nr + 5; $i++) {
                     if (array_key_exists($i, $explode)) {
-                        if($i === $line_nr){
+                        if($i === $line_nr - 1){
                             if(!App::is_cli()){
                                 $explode[$i] = '<span style="color: rgba(200, 0, 0, 1);">' . $explode[$i] . '</span>';
                             } else {
