@@ -585,6 +585,7 @@ class Core
     {
         if(is_array($object)){
             if($attributeList !== null){
+                d($attributeList);
                 foreach($attributeList as $key => $attribute){
                     if ($key === null || $key === '') {
                         continue;
