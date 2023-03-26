@@ -117,6 +117,7 @@ class ParseException extends Exception {
         if(App::is_cli()){
             $output = [];
             $output[] = $string;
+            $output = [];
         } else {
             $output = [];
             $output[] = '<pre>';

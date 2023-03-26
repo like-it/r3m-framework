@@ -36,6 +36,7 @@
         "txt": "text\/plain",
         "log": "text\/plain",
         "html": "text\/html",
+        "tpl": "text\/html",
         "css": "text\/css",
         "js": "application\/javascript",
         "map": "application\/json",
