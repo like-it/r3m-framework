@@ -631,6 +631,7 @@ class Core
         }
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
+            d($attributeList);
         }
         if (empty($attributeList)) {
             return $object;
