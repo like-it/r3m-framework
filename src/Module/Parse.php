@@ -56,7 +56,7 @@ class Parse {
         } else {
             $this->storage($storage);
         }
-        Event::off($object, 'parse.build.plugin.require');
+        Event::off($object, 'parse.build.plugin.require', ['url' => true, 'name' =>true]);
     }
 
     /**
