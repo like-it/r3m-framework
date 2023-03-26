@@ -56,7 +56,7 @@ class Event {
                             $value === true &&
                             array_key_exists($key, $event['options'])
                         ){
-                            d('yes');
+                            d($key);
                             unset($list[$key]);
                             break;
                         }
