@@ -50,13 +50,11 @@ class Event {
                 }
             } else {
                 if($event['action'] === $action){
-                    d($options);
                     foreach($options as $options_key => $value){
                         if(
                             $value === true &&
                             array_key_exists($options_key, $event['options'])
                         ){
-                            d($key);
                             unset($list[$key]);
                             break;
                         }
@@ -85,8 +83,7 @@ class Event {
         if(empty($events)){
             return null;
         }
-        $events = Sort::list($events)->with(['options.priority' => 'DESC', 'options.name' => 'ASC']);
-        d($events);
+        $events = Sort::list($events)->with(['options.priority' => 'DESC']);
         if(is_array($events)){
             foreach($events as $event){
                 if(is_array($event)){
@@ -128,7 +125,7 @@ class Event {
                             }
                         }
                     }
-                } else {
+                } elseif(is_object($event)) {
                     if(
                         property_exists($event, 'options') &&
                         property_exists($event->options, 'command') &&

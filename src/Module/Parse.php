@@ -56,7 +56,7 @@ class Parse {
         } else {
             $this->storage($storage);
         }
-        $priority = true;
+        $priority = 10;
         Event::off($object, 'parse.build.plugin.require', ['priority' => $priority]);
     }
 
