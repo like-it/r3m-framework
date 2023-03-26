@@ -51,12 +51,12 @@ class Event {
             } else {
                 if($event['action'] === $action){
                     d($options);
-                    ddd($event['options']);
                     foreach($options as $key => $value){
                         if(
                             $value === true &&
                             array_key_exists($key, $event['options'])
                         ){
+                            d('yes');
                             unset($list[$key]);
                             break;
                         }
