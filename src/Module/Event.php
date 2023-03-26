@@ -50,6 +50,9 @@ class Event {
                 }
             } else {
                 if($event['action'] === $action){
+                    d($list);
+                    d($action);
+                    dd($options);
                     foreach($options as $key => $value){
                         if(
                             $value === true &&
@@ -58,7 +61,7 @@ class Event {
                             unset($list[$key]);
                             break;
                         }
-                        if(
+                        elseif(
                             array_key_exists($key, $event['options']) &&
                             $event['options'][$key] === $value
                         ){
