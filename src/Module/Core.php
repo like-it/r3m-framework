@@ -646,6 +646,9 @@ class Core
             elseif (isset($object->{$key})) {
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }
+            elseif(array_key_exists($key, $object)){
+                return Core::object_get($attributeList->{$key}, $object[$key]);
+            }
         }
         return null;
     }
