@@ -1,0 +1,45 @@
+{
+    "stream": {
+        "input": [],
+        "output": [],
+        "notification": [
+            {
+                "action": "cli.system.update.notification",
+                "create": {
+                    "filter": [
+                        {
+                            "document": [],
+                            "where": [
+                                {
+                                    "operator": "!==",
+                                    "token": "token"
+                                }
+                            ]
+                        },
+                        {
+                            "document": [],
+                            "where": [
+                                {
+                                    "operator": "!==",
+                                    "token": "token"
+                                },
+                                {
+                                    "key": "type",
+                                    "type": [
+                                        "hexadecimal",
+                                        "integer",
+                                        "float"
+                                    ],
+                                    "operator": "!in.array"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "clean": {
+                    "frequency": "daily"
+                }
+            }
+        ]
+    }
+}

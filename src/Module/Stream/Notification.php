@@ -13,6 +13,7 @@ namespace R3m\Io\Module\Stream;
 
 use R3m\Io\App;
 
+use R3m\Io\Config;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
@@ -44,11 +45,30 @@ class Notification {
         ){
             throw new Exception('Only root & www-data can check is_new...');
         }
-        $url = $object->config('project.dir.data') .
-            'Stream' .
-            $object->config('ds') .
-            'Stream' .
-            $object->config('extension.json');
+        if(
+            $object->config('ramdisk.url') &&
+            empty($object->config('ramdisk.is.disabled'))
+        ){
+            $url = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('extension.json');
+        } else {
+            $url = $object->config('project.dir.temp') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('extension.json');
+        }
+        if(!File::exist($url)){
+            //init stream filter
+            File::copy($object->config('framework.dir.data') . 'Stream' . $object->config('extension.json'), $url);
+        }
         $config = $object->data_read($url);
         $tree = Token::tree('{' . $options['notification'] . '}', [
             'with_whitespace' => true
@@ -58,11 +78,23 @@ class Notification {
             $notifications[] = $notification;
         }
         $tokens = $notifications;
-        $dir_stream =
-            $object->config('project.dir.data') .
-            'Stream' .
-            $object->config('ds')
-        ;
+        if($object->config('ramdisk.url') && empty($object->config('ramdisk.is.disabled'))){
+            $dir_stream =
+                $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('ds')
+            ;
+        } else {
+            $dir_stream =
+                $object->config('project.dir.temp') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('ds')
+            ;
+        }
         $dir_require =
             $dir_stream .
             'Document' .
@@ -222,10 +254,6 @@ class Notification {
                                         }
                                         $filter->document = $documents;
                                         $config->write($url);
-                                        if(empty($id)){
-                                            $command = 'chown www-data:www-data ' . $url;
-                                            Core::execute($object, $command);
-                                        }
                                     }
                                 }
                             }
@@ -233,10 +261,6 @@ class Notification {
                     }
                 }
             }
-        }
-        if(empty($id)){
-            $command = 'chown www-data:www-data ' . $dir_stream . ' -R';
-            Core::execute($object, $command);
         }
         return $is_new;
     }
@@ -257,11 +281,26 @@ class Notification {
         ){
             throw new Exception('Only root & www-data can clean notifications...');
         }
-        $url = $object->config('project.dir.data') .
-            'Stream' .
-            $object->config('ds') .
-            'Stream' .
-            $object->config('extension.json');
+        if(
+            $object->config('ramdisk.url') &&
+            !empty($object->config('ramdisk.is.disabled'))
+        ){
+            $url = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('extension.json');
+        } else {
+            $url = $object->config('project.dir.temp') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('extension.json');
+        }
         $config = $object->data_read($url);
         $is_stream = false;
         if($config && $config->has('stream.notification')) {
@@ -292,14 +331,32 @@ class Notification {
                 ){
                     $document = [];
                     foreach($filter->document as $uuid){
-                        $document_url = $object->config('project.dir.data') .
-                            'Stream' .
-                            $object->config('ds') .
-                            'Document' .
-                            $object->config('ds') .
-                            $uuid .
-                            '.stream'
-                        ;
+                        if(
+                            $object->config('ramdisk.url') &&
+                            empty($object->config('ramdisk.is.disabled'))
+                        ){
+                            $document_url = $object->config('ramdisk.url') .
+                                $object->config(Config::POSIX_ID) .
+                                $object->config('ds') .
+                                'Stream' .
+                                $object->config('ds') .
+                                'Document' .
+                                $object->config('ds') .
+                                $uuid .
+                                '.stream'
+                            ;
+                        } else {
+                            $document_url = $object->config('project.dir.temp') .
+                                $object->config(Config::POSIX_ID) .
+                                $object->config('ds') .
+                                'Stream' .
+                                $object->config('ds') .
+                                'Document' .
+                                $object->config('ds') .
+                                $uuid .
+                                '.stream'
+                            ;
+                        }
                         switch($is_stream->clean->frequency){
                             case 'direct':
                                 File::delete($document_url);
@@ -423,6 +480,37 @@ class Notification {
                                     }
                                 }
                             break;
+                            case 'half-yearly':
+                                $season = [
+                                    1 => 1,
+                                    2 => 1,
+                                    3 => 1,
+                                    4 => 1,
+                                    5 => 1,
+                                    6 => 1,
+                                    7 => 2,
+                                    8 => 2,
+                                    9 => 2,
+                                    10 => 2,
+                                    11 => 2,
+                                    12 => 2
+                                ];
+                                $month_of_year = date('n');
+                                $year = date('Y');
+                                if(File::exist($document_url)){
+                                    $mtime = File::mtime($document_url);
+                                    $file_year = date('Y', $mtime);
+                                    $file_month_of_year = date('n', $mtime);
+                                    if(
+                                        $year <> $file_year ||
+                                        $season[$month_of_year] <> $season[$file_month_of_year]
+                                    ){
+                                        File::delete($document_url);
+                                    } else {
+                                        $document[] = $uuid;
+                                    }
+                                }
+                            break;
                             case 'yearly':
                                 $year = date('Y');
                                 if(File::exist($document_url)){
@@ -444,10 +532,6 @@ class Notification {
             }
         }
         $config->write($url);
-        if(empty($id)){
-            $command = 'chown www-data:www-data ' . $url;
-            exec($command);
-        }
     }
 
 
@@ -469,15 +553,29 @@ class Notification {
         ){
             throw new Exception('Only root & www-data can create notifications...');
         }
-        $url = $object->config('project.dir.data') .
-            'Stream' .
-            $object->config('ds') .
+        if(
+            $object->config('ramdisk.url') &&
+            empty($object->config('ramdisk.is.disabled'))
+        ){
+            $dir_stream = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('ds')
+            ;
+        } else {
+            $dir_stream = $object->config('project.dir.temp') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Stream' .
+                $object->config('ds')
+            ;
+        }
+        $url = $dir_stream .
             'Stream' .
             $object->config('extension.json');
         $uuid = Core::uuid();
-        $dir_stream = $object->config('project.dir.data') .
-            'Stream' .
-            $object->config('ds');
+
         $dir_stream_document =
             $dir_stream .
             'Document' .
@@ -565,10 +663,6 @@ class Notification {
             }
             $config->set('stream.notification', $result);
             $config->write($url);
-        }
-        if(empty($id)){
-            $command = 'chown www-data:www-data ' . $dir_stream . ' -R';
-            Core::execute($object, $command);
         }
     }
 }
