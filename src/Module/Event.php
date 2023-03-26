@@ -51,30 +51,23 @@ class Event {
             } else {
                 if($event['action'] === $action){
                     d($options);
-                    foreach($options as $key => $value){
+                    foreach($options as $options_key => $value){
                         if(
                             $value === true &&
-                            array_key_exists($key, $event['options'])
+                            array_key_exists($options_key, $event['options'])
                         ){
                             d($key);
                             unset($list[$key]);
                             break;
                         }
                         elseif(
-                            array_key_exists($key, $event['options']) &&
-                            $event['options'][$key] === $value
+                            array_key_exists($options_key, $event['options']) &&
+                            $event['options'][$options_key] === $value
                         ){
                             unset($list[$key]);
                             break;
                         }
                     }
-                }
-                if(
-                    $event['action'] === $action &&
-                    $event['options'] === $options
-                ){
-                    unset($list[$key]);
-                    break;
                 }
             }
         }
