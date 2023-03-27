@@ -803,15 +803,6 @@ class App extends Data {
         }
     }
 
-    public static function is_mail() : bool
-    {
-        if(!defined('IS_MAIL')){
-            return Core::is_mail();
-        } else {
-            return true;
-        }
-    }
-
     /**
      * @throws Exception
      */

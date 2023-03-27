@@ -769,12 +769,6 @@ class Core
         return $is_empty;
     }
 
-    public static function is_mail(): bool
-    {
-        define('IS_MAIL', true);
-        return true;
-    }
-
     public static function is_cli()
     {
         if (isset($_SERVER['HTTP_HOST'])) {
