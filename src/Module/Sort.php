@@ -46,7 +46,13 @@ class Sort extends Data{
                             $result[$value][] = $node;
                         }
                         elseif(is_object($node)){
-                            $result[$value][] = $node;
+                            if(is_scalar($value)){
+                                $result[$value][] = $node;
+                            } else {
+                                d($value);
+                                ddd($node);
+                            }
+
                         }
                         $sortable_1 = $record;
                         break;
