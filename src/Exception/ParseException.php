@@ -80,7 +80,7 @@ class ParseException extends Exception {
                             if($object->config('is.exception')){
                                 $explode[$i] = Cli::color(null, ['r'=> 200, 'g' => 0, 'b' => 0]) . $explode[$i] . Cli::tput('init');
                             } else {
-                                $explode[$i] = '<span style="color: rgba(200, 0, 0, 1);">' . $explode[$i] . '</span>';
+                                $explode[$i] = '<span style="color: #A00000;">' . $explode[$i] . '</span>';
                             }
                         }
                         $result[] = $explode[$i];
