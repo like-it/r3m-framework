@@ -42,17 +42,26 @@ class Sort extends Data{
                 foreach($list as $uuid => $node){
                     foreach($sort as $attribute => $record){
                         $value = $this->data($uuid . '.' . $attribute);
-                        if(is_array($node)){
-                            $result[$value][] = $node;
-                        }
-                        elseif(is_object($node)){
-                            if(is_scalar($value)){
+                        if(is_scalar($value)) {
+                            if(is_array($node)){
                                 $result[$value][] = $node;
-                            } else {
-                                d($value);
-                                ddd($node);
                             }
+                            elseif(is_object($node)){
 
+                                $result[$value][] = $node;
+                            }
+                        }
+                        else if (is_array($value)){
+                            $attr = '';
+                            foreach($value as $node_attribute){
+                                if(is_scalar($node_attribute)){
+                                    $attr .= '.' . $node_attribute;
+                                }
+                            }
+                            $attr = substr($attr, 1);
+                            $result[$attr][] = $node;
+                        } else {
+                            $result[''][] = $node;
                         }
                         $sortable_1 = $record;
                         break;
@@ -109,12 +118,27 @@ class Sort extends Data{
                 foreach($list as $uuid => $node){
                     foreach($sort as $attribute => $record){
                         $value = $this->data($uuid . '.' . $attribute);
-                        if(is_array($node)){
-                            $result[$value][] = $node;
+                        if(is_scalar($value)){
+                            if(is_array($node)){
+                                $result[$value][] = $node;
+                            }
+                            elseif(is_object($node)){
+                                $result[$value][] = $node;
+                            }
                         }
-                        elseif(is_object($node)){
-                            $result[$value][] = $node;
+                        else if (is_array($value)){
+                            $attr = '';
+                            foreach($value as $node_attribute){
+                                if(is_scalar($node_attribute)){
+                                    $attr .= '.' . $node_attribute;
+                                }
+                            }
+                            $attr = substr($attr, 1);
+                            $result[$attr][] = $node;
+                        } else {
+                            $result[''][] = $node;
                         }
+
                         $sortable_1 = $record;
                         break;
                     }
@@ -127,10 +151,24 @@ class Sort extends Data{
                         foreach($list as $list_key => $node) {
                             foreach ($sort as $attribute => $record) {
                                 $value = $data->data($result_key . '.' . $attribute);
-                                if (is_array($node)) {
-                                    $result[$result_key][$value][] = $node;
-                                } elseif (is_object($node)) {
-                                    $result[$result_key][$value][] = $node;
+                                if(is_scalar($value)){
+                                    if (is_array($node)) {
+                                        $result[$result_key][$value][] = $node;
+                                    } elseif (is_object($node)) {
+                                        $result[$result_key][$value][] = $node;
+                                    }
+                                }
+                                else if (is_array($value)){
+                                    $attr = '';
+                                    foreach($value as $node_attribute){
+                                        if(is_scalar($node_attribute)){
+                                            $attr .= '.' . $node_attribute;
+                                        }
+                                    }
+                                    $attr = substr($attr, 1);
+                                    $result[$attr][] = $node;
+                                } else {
+                                    $result[$result_key][''][] = $node;
                                 }
                                 $sortable_2 = $record;
                                 break;
