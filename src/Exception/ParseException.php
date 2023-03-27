@@ -129,8 +129,9 @@ class ParseException extends Exception {
             $output[] = '';
         } else {
             $output = [];
+            $output[] = '<code>';
             $output[] = $string;
-            $output[] = '';
+            $output[] = '</code>';
         }
         return implode(PHP_EOL, $output);
     }
