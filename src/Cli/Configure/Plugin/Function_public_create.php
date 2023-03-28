@@ -52,7 +52,7 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
         if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
             Dir::create($dir, 0777);
         } else {
-            Dir::create($dir, 0750);
+            Dir::create($dir, Dir::CHMOD);
         }
         if(empty($id)){
             exec('chown www-data:www-data ' . $dir);
