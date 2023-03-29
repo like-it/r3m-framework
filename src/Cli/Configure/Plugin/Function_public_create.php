@@ -73,7 +73,10 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
                 File::rename($source, $destination);
             }
             if(!File::exist($destination)){
-                Dir::create($destination);
+                Dir::create($destination, Dir::CHMOD);
+            }
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 777 ' . $destination);
             }
             $destination = $public_html . '.htaccess';
             if(!File::exist($destination)){
