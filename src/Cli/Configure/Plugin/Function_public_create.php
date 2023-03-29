@@ -117,7 +117,10 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
             return $exception;
         }
     } else {
-        Dir::create($public_html);
+        Dir::create($public_html, Dir::CHMOD);
+        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+            exec('chmod 777 ' . $public_html);
+        }
         $source = $object->config('controller.dir.data') . '.htaccess';
         $destination = $public_html . '.htaccess';
         File::copy($source, $destination);
