@@ -280,7 +280,7 @@ class Token {
                 }
             }
         }
-        ddd($array);
+        return $array;
     }
 
 

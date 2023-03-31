@@ -23,6 +23,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Module\Parse\Token;
 
 class Parse extends Controller {
     const NAME = 'Parse';
@@ -31,16 +32,19 @@ class Parse extends Controller {
     const COMMAND_INFO = 'info';
     const COMMAND_RESTART = 'restart';
     const COMMAND_COMPILE = 'compile';
+    const COMMAND_AST = 'ast';
     const COMMAND = [
         Parse::COMMAND_INFO,
         Parse::COMMAND_RESTART,
-        Parse::COMMAND_COMPILE
+        Parse::COMMAND_COMPILE,
+        Parse::COMMAND_AST
     ];
 
     const DEFAULT_COMMAND = Parse::COMMAND_INFO;
 
     const INFO = [
         '{{binary()}} parse info                     | parse information',
+        '{{binary()}} parse ast                      | create ast (json) from <source>',
         '{{binary()}} parse compile                  | compiles <source> with <data>',
         '{{binary()}} parse restart                  | removes parse compile cache files',
     ];
@@ -87,13 +91,13 @@ class Parse extends Controller {
             $name = Parse::name(__FUNCTION__, Parse::NAME);
             $url = Parse::locate($object, $name);
             $response = Parse::response($object, $url);
-            Event::trigger($object,  'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object,  'cli.parse.info', [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.parse.info', [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
@@ -112,13 +116,13 @@ class Parse extends Controller {
             $name = Parse::name(__FUNCTION__, Parse::NAME);
             $url = Parse::locate($object, $name);
             $response = Parse::response($object, $url);
-            Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.parse.restart', [
                 'name' => $name,
                 'url' => $url
             ]);
             return $response;
         } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.parse.restart', [
                 'name' => $name,
                 'url' => $url,
                 'exception' => $exception
@@ -180,7 +184,7 @@ class Parse extends Controller {
                     if($is_json){
                         $read = Core::object($read, Core::OBJECT_JSON);
                     }
-                    Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+                    Event::trigger($object, 'cli.parse.compile', [
                         'template_url' => $template_url,
                         'data_url' => $data_url,
                         'is_json' => $is_json
@@ -188,14 +192,56 @@ class Parse extends Controller {
                     return $read;
                 }
             }
-            Event::trigger($object, 'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object, 'cli.parse.compile', [
                 'template_url' => $template_url,
                 'data_url' => $data_url,
                 'is_template' => false,
                 'is_json' => $is_json
             ]);
         } catch (Exception $exception){
-            Event::trigger($object,'cli.' . strtolower(Parse::NAME) . '.' . __FUNCTION__, [
+            Event::trigger($object,'cli.parse.compile', [
+                'template_url' => $template_url,
+                'data_url' => $data_url,
+                'is_template' => false,
+                'is_json' => $is_json,
+                'exception' => $exception
+            ]);
+            return $exception;
+        }
+    }
+
+    private static function ast(App $object)
+    {
+        $template_url = false;
+        $data_url = false;
+        $is_json = false;
+        try {
+            $template_url = $object->parameter($object, __FUNCTION__, 1);
+            $data_url = $object->parameter($object, __FUNCTION__, 2);
+            if (File::exist($template_url)) {
+                $extension = File::extension($template_url);
+                if($object->config('extension.json') === '.' . $extension) {
+                    $read = $object->data_read($template_url);
+                    if($read){
+                        $read = $read->data();
+                        $is_json = true;
+                    }
+                } else {
+                    $read = File::read($template_url);
+                }
+                if ($read) {
+                    $ast = Token::ast($read);
+                    ddd($ast);
+                }
+            }
+            Event::trigger($object, 'cli.parse.ast', [
+                'template_url' => $template_url,
+                'data_url' => $data_url,
+                'is_template' => false,
+                'is_json' => $is_json
+            ]);
+        } catch (Exception $exception){
+            Event::trigger($object,'cli.parse.ast', [
                 'template_url' => $template_url,
                 'data_url' => $data_url,
                 'is_template' => false,
