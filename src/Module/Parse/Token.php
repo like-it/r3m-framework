@@ -21,6 +21,7 @@ class Token {
     const TYPE_BOOLEAN_AND = 'boolean-and';
     const TYPE_BOOLEAN_OR = 'boolean-or';
     const TYPE_INT = 'integer';
+    const TYPE_WORD = 'word';
     const TYPE_OCT = 'octal';
     const TYPE_HEX = 'hexadecimal';
     const TYPE_FLOAT = 'float';
@@ -208,21 +209,80 @@ class Token {
     public static function split($string='', $length=1, $encoding='UTF-8'): array
     {
         $array = [];
-        $start = microtime(true);
         $strlen = mb_strlen($string);
         for($i=0; $i<$strlen; $i=$i+$length){
             $array[] = mb_substr($string, $i, $length, $encoding);
         }
-        $end = microtime(true);
-        $duration = $end - $start;
-        d($duration);
-        $start = microtime(true);
-        $array = mb_str_split($string, $length, $encoding);
-        $end = microtime(true);
-        $duration = $end - $start;
-        d($duration);
         return $array;
     }
+
+    public static function ast($string){
+        $length = 1;
+        $array = [];
+        $strlen = mb_strlen($string);
+        $whitespace = [];
+        $number = [];
+        $word = [];
+        for($i = 0; $i < $strlen; $i = $i + $length){
+            $char = mb_substr($string, $i, $length);
+            if(in_array($char, [
+                "\t",
+                "\n",
+                "\r",
+                " ",
+            ], true)){
+                if(array_key_exists('value', $whitespace)){
+                    $whitespace['value'] .= $char;
+                } else {
+                    $whitespace = [
+                        'type' => Token::TYPE_WHITESPACE,
+                        'value' => $char,
+                    ];
+                }
+            }
+            elseif(in_array($char, [
+                '0',
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+                '6',
+                '7',
+                '8',
+                '9',
+            ], true)){
+                if(array_key_exists('type', $whitespace)){
+                    $array[] = $whitespace;
+                    $whitespace = [];
+                }
+                if(array_key_exists('value', $number)){
+                    $number['value'] .= $char;
+                } else {
+                    $number = [
+                        'type' => Token::TYPE_NUMBER,
+                        'value' => $char,
+                    ];
+                }
+            }
+            else {
+                if(array_key_exists('type', $whitespace)){
+                    $array[] = $whitespace;
+                    $whitespace = [];
+                }
+                if(array_key_exists('value', $word)){
+                    $word['value'] .= $char;
+                } else {
+                    $word = [
+                        'type' => Token::TYPE_WORD,
+                        'value' => $char,
+                    ];
+                }
+            }
+        }
+        ddd($array);
+    }
+
 
     private static function operator($record=[], $level=1): array
     {
