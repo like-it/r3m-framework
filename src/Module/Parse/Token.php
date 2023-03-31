@@ -238,6 +238,7 @@ class Token {
                     $number = [];
                 }
                 elseif(array_key_exists('value', $word)){
+                    $word = Token::symbol($word);
                     $array[] = $word;
                     $word = [];
                 }
@@ -267,6 +268,7 @@ class Token {
                     $whitespace = [];
                 }
                 elseif(array_key_exists('value', $word)){
+                    $word = Token::symbol($word);
                     $array[] = $word;
                     $word = [];
                 }
@@ -302,6 +304,7 @@ class Token {
                     $number = [];
                 }
                 if(array_key_exists('value', $word)){
+                    $word = Token::symbol($word);
                     $array[] = $word;
                     $word = [];
                 }
@@ -377,12 +380,205 @@ class Token {
             $number = [];
         }
         if(array_key_exists('value', $word)){
+            $word = Token::symbol($word);
             $array[] = $word;
             $word = [];
         }
         return $array;
     }
 
+    private static function symbol($word=[]){
+        if($word['type'] != Token::TYPE_WORD){
+            return $word;
+        }
+        $word['is_symbol'] = true;
+        switch($word['value']) {
+            case 'true' :
+                $word['type'] = Token::TYPE_BOOLEAN;
+                return $word;
+            case 'false' :
+                $word['type'] = Token::TYPE_BOOLEAN;
+                return $word;
+            case 'null' :
+                $word['type'] = Token::TYPE_NULL;
+                return $word;
+            case '=' :
+                $word['type'] = Token::TYPE_IS;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '+' :
+                $word['type'] = Token::TYPE_IS_PLUS;
+                $word['direction'] = Token::DIRECTION_LTR;
+                return $word;
+            case '-' :
+                $word['type'] = Token::TYPE_IS_MINUS;
+                $word['direction'] = Token::DIRECTION_LTR;
+                return $word;
+            case '*' :
+                $word['type'] = Token::TYPE_IS_MULTIPLY;
+                $word['direction'] = Token::DIRECTION_LTR;
+                return $word;
+            case '/' :
+                $word['type'] = Token::TYPE_IS_DIVIDE;
+                $word['direction'] = Token::DIRECTION_LTR;
+                return $word;
+            case '%' :
+                $word['type'] = Token::TYPE_IS_MODULO;
+                $word['direction'] = Token::DIRECTION_LTR;
+                return $word;
+            case '==' :
+                $word['type'] = Token::TYPE_IS_EQUAL;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '!=' :
+                $word['type'] = Token::TYPE_IS_NOT_EQUAL;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '<' :
+                $word['type'] = Token::TYPE_IS_SMALLER;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '<=' :
+                $word['type'] = Token::TYPE_IS_SMALLER_EQUAL;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '>' :
+                $word['type'] = Token::TYPE_IS_GREATER;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '>=' :
+                $word['type'] = Token::TYPE_IS_GREATER_EQUAL;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '&&' :
+                $word['type'] = Token::TYPE_BOOLEAN_AND;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '||' :
+                $word['type'] = Token::TYPE_BOOLEAN_OR;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '!' :
+                $word['type'] = Token::TYPE_EXCLAMATION;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '===' :
+                $word['type'] = Token::TYPE_IS_IDENTICAL;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '!==' :
+                $word['type'] = Token::TYPE_IS_NOT_IDENTICAL;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '++' :
+                $word['type'] = Token::TYPE_IS_PLUS_PLUS;
+                $word['direction'] = Token::DIRECTION_LTR;
+                return $word;
+            case '--' :
+                $word['type'] = Token::TYPE_IS_MINUS_MINUS;
+                $word['direction'] = Token::DIRECTION_LTR;
+                return $word;
+            case '<<' :
+                $word['type'] = Token::TYPE_IS_SMALLER_SMALLER;
+                $word['direction'] = Token::DIRECTION_LTR;
+                return $word;
+            case '>>' :
+                $word['type'] = Token::TYPE_IS_GREATER_GREATER;
+                $word['direction'] = Token::DIRECTION_LTR;
+                return $word;
+            case '=>' :
+                $word['type'] = Token::TYPE_IS_ARRAY_OPERATOR;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '?' :
+                $word['type'] = Token::TYPE_QUESTION;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case ':' :
+                $word['type'] = Token::TYPE_COLON;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '??' :
+                $word['type'] = Token::TYPE_IS_COALESCE;
+                $word['direction'] = Token::DIRECTION_RTL;
+                return $word;
+            case '<>' :
+                $record['type'] = Token::TYPE_IS_NOT_EQUAL;
+                $record['direction'] = Token::DIRECTION_LTR;
+                return $record;
+            case '->' :
+                $record['type'] = Token::TYPE_IS_OBJECT_OPERATOR;
+                return $record;
+            case '|' :
+                $record['type'] = Token::TYPE_PIPE;
+                $record['direction'] = Token::DIRECTION_LTR;
+                return $record;
+            case '+=' :
+                $record['type'] = Token::TYPE_IS_PLUS_EQUAL;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+            case '-=' :
+                $record['type'] = Token::TYPE_IS_MINUS_EQUAL;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+            case '*=' :
+                $record['type'] = Token::TYPE_IS_MULTIPLY_EQUAL;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+            case '/=' :
+                $record['type'] = Token::TYPE_IS_DIVIDE_EQUAL;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+            case '%=' :
+                $record['type'] = Token::TYPE_IS_MODULO_EQUAL;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+            case '^=' :
+                $record['type'] = Token::TYPE_IS_XOR_EQUAL;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+            case '&=' :
+                $record['type'] = Token::TYPE_IS_AND_EQUAL;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+            case '|=' :
+                $record['type'] = Token::TYPE_IS_OR_EQUAL;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+            case '**' :
+                $record['type'] = Token::TYPE_IS_POWER;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+            case '::' :
+                $record['type'] = Token::TYPE_DOUBLE_COLON;
+                return $record;
+            case '//' :
+                $record['is_operator'] = false;
+                $record['type'] = Token::TYPE_COMMENT_SINGLE_LINE;
+                return $record;
+            case '/*' :
+                $record['is_operator'] = false;
+                $record['type'] = Token::TYPE_COMMENT;
+                return $record;
+            case '*/' :
+                $record['is_operator'] = false;
+                $record['type'] = Token::TYPE_COMMENT_CLOSE;
+                return $record;
+            case '/**' :
+                $record['is_operator'] = false;
+                $record['type'] = Token::TYPE_DOC_COMMENT;
+                return $record;
+            case '<=>' :
+                $record['type'] = Token::TYPE_IS_SPACESHIP;
+                $record['direction'] = Token::DIRECTION_LTR;
+                return $record;
+            case '**=' :
+                $record['type'] = Token::TYPE_IS_POWER_EQUAL;
+                $record['direction'] = Token::DIRECTION_RTL;
+                return $record;
+
+        }
+    }
 
     private static function operator($record=[], $level=1): array
     {
