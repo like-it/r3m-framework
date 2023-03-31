@@ -384,6 +384,7 @@ class Autoload {
                 $object->config('cache.parse.url.name_separator'),
                 $object->config('cache.parse.url.name_pop_or_shift')
             );
+            $data[] = $object->config('autoload.cache.compile') . $load_compile;
             d($load_compile);
             $load = Autoload::name_reducer(
                 $object,
