@@ -215,12 +215,12 @@ class Token {
         }
         $end = microtime(true);
         $duration = $end - $start;
-        Logger::info('split', $duration);
+        d($duration);
         $start = microtime(true);
         $array = mb_str_split($string, $length, $encoding);
         $end = microtime(true);
         $duration = $end - $start;
-        Logger::info('split', $duration);
+        d($duration);
         return $array;
     }
 
