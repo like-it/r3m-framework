@@ -93,7 +93,13 @@ class Autoload {
                     $object->config('ds')
                 ;
                 $object->config('autoload.cache.class', $class_dir);
-
+                $compile_dir = $object->config('ramdisk.url') .
+                    $object->config(Config::POSIX_ID) .
+                    $object->config('ds') .
+                    'Compile' .
+                    $object->config('ds')
+                ;
+                $object->config('autoload.cache.compile', $compile_dir);
                 if(!is_dir($object->config('ramdisk.url'))){
                     mkdir($object->config('ramdisk.url'), 0750, true);
                     if(empty($object->config(Config::POSIX_ID))){
