@@ -11,6 +11,7 @@
 namespace R3m\Io\Module\Parse;
 
 use Exception;
+use R3m\Io\Module\Logger;
 
 class Token {
     const TYPE_NULL = 'null';
@@ -201,13 +202,25 @@ class Token {
         '%',
     ];
 
+    /**
+     * @throws Exception
+     */
     public static function split($string='', $length=1, $encoding='UTF-8'): array
     {
         $array = [];
+        $start = microtime();
         $strlen = mb_strlen($string);
         for($i=0; $i<$strlen; $i=$i+$length){
             $array[] = mb_substr($string, $i, $length, $encoding);
         }
+        $end = microtime();
+        $duration = $end - $start;
+        Logger::info('split', $duration);
+        $start = microtime();
+        $array = mb_str_split($string, $length, $encoding);
+        $end = microtime();
+        $duration = $end - $start;
+        Logger::info('split', $duration);
         return $array;
     }
 
