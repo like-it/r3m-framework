@@ -108,6 +108,7 @@ class Database {
      */
     public static function entityManager(App $object, $options=[]): ?EntityManager
     {
+        ddd('test');
         $environment = $object->config('framework.environment');
         if(empty($environment)){
             $environment = Config::MODE_DEVELOPMENT;
