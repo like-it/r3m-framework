@@ -223,6 +223,8 @@ class Token {
         $whitespace = [];
         $number = [];
         $word = [];
+        $line = 1;
+        $column = 1;
         for($i = 0; $i < $strlen; $i = $i + $length){
             $char = mb_substr($string, $i, $length);
             if(in_array($char, [
@@ -276,6 +278,75 @@ class Token {
                         'value' => $char,
                     ];
                 }
+            }
+            elseif(in_array($char, [
+                '(',
+                ')',
+                '[',
+                ']',
+                '{',
+                '}',
+                '.',
+                ',',
+                ';',
+                '!',
+                "'",
+                '"',
+            ], true)){
+                if(array_key_exists('type', $whitespace)){
+                    $array[] = $whitespace;
+                    $whitespace = [];
+                }
+                if(array_key_exists('type', $number)){
+                    $array[] = $number;
+                    $number = [];
+                }
+                if(array_key_exists('value', $word)){
+                    $array[] = $word;
+                    $word = [];
+                }
+                $type = null;
+                switch($char){
+                    case '(' :
+                        $type = Token::TYPE_PARENTHESE_OPEN;
+                    break;
+                    case ')' :
+                        $type = Token::TYPE_PARENTHESE_CLOSE;
+                    break;
+                    case '[' :
+                        $type = Token::TYPE_BRACKET_SQUARE_OPEN;
+                    break;
+                    case ']' :
+                        $type = Token::TYPE_BRACKET_SQUARE_CLOSE;
+                    break;
+                    case '{' :
+                        $type = Token::TYPE_CURLY_OPEN;
+                    break;
+                    case '}' :
+                        $type = Token::TYPE_CURLY_CLOSE;
+                    break;
+                    case '.' :
+                        $type = Token::TYPE_DOT;
+                    break;
+                    case ',' :
+                        $type = Token::TYPE_COMMA;
+                    break;
+                    case ';' :
+                        $type = Token::TYPE_SEMI_COLON;
+                    break;
+                    case '!' :
+                        $type = Token::TYPE_EXCLAMATION;
+                    break;
+                    case "'" :
+                        $type = Token::TYPE_QUOTE_SINGLE;
+                    break;
+                    case '"' :
+                        $type = Token::TYPE_QUOTE_DOUBLE;
+                }
+                $array[] = [
+                    'type' => $type,
+                    'value' => $char,
+                ];
             }
             else {
                 if(array_key_exists('type', $whitespace)){
