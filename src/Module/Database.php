@@ -108,7 +108,6 @@ class Database {
      */
     public static function entityManager(App $object, $options=[]): ?EntityManager
     {
-        ddd('test');
         $environment = $object->config('framework.environment');
         if(empty($environment)){
             $environment = Config::MODE_DEVELOPMENT;
@@ -125,6 +124,7 @@ class Database {
             return $entityManager;
         }
         $url = $object->config('project.dir.data') . 'Config.json';
+        ddd('test');
         $config  = $object->parse_read($url, sha1($url));
         if($config){
             $connection = (array) $config->get('doctrine.' . $name . '.' . $environment);
