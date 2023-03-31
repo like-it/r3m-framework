@@ -388,10 +388,6 @@ class Token {
     }
 
     private static function symbol($word=[]){
-        if($word['type'] != Token::TYPE_WORD){
-            return $word;
-        }
-        $word['is_symbol'] = true;
         switch($word['value']) {
             case 'true' :
                 $word['type'] = Token::TYPE_BOOLEAN;
