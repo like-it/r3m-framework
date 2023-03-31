@@ -135,11 +135,12 @@ class Database {
                 $logger->error('Error: No connection string...');
                 return null;
             }
+            ddd($config);
             $paths = $config->get('doctrine.paths');
             $proxyDir = $config->get('doctrine.proxy.dir');
             $cache = null;
             $config = ORMSetup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, $cache);
-            ddd($config);
+
             if(!empty($connection['logging'])){
                 $logger = new Logger(Database::LOGGER_DOCTRINE);
                 $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
