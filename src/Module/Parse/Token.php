@@ -264,6 +264,10 @@ class Token {
                     $array[] = $whitespace;
                     $whitespace = [];
                 }
+                elseif(array_key_exists('value', $word)){
+                    $array[] = $word;
+                    $word = [];
+                }
                 if(array_key_exists('value', $number)){
                     $number['value'] .= $char;
                 } else {
