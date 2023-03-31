@@ -130,7 +130,7 @@ class Event {
                             ){
                                 $event = new Data($event);
                                 try {
-                                    $route->controller::{$route->function}($object, $event, $action, $options);
+                                    $route->controller::{$route->function}($object, $event, $options);
                                 }
                                 catch (LocateException $exception){
                                     if($object->config('project.log.error')){
@@ -169,7 +169,7 @@ class Event {
                             ){
                                 $event = new Data($event);
                                 try {
-                                    $route->controller::{$route->function}($object, $event, $action, $options);
+                                    $route->controller::{$route->function}($object, $event, $options);
                                 }
                                 catch (LocateException $exception){
                                     if($object->config('project.log.error')){
