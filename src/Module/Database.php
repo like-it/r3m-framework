@@ -123,10 +123,14 @@ class Database {
         if(!empty($entityManager)){
             return $entityManager;
         }
+        $connection = $object->config('doctrine.' . $name . '.' . $environment);
+        ddd($connection);
+
+
         $url = $object->config('project.dir.data') . 'Config.json';
         $parse = new Parse($object);
         $data = new Data();
-        $connection = Core::object_select($parse, $data, $url, 'doctrine.' . $name . '.' . $environment, true);
+        $connection = Core::object_select(null, null, $url, 'doctrine.' . $name . '.' . $environment, false);
         ddd($connection);
 
         $config  = $object->parse_read($url, sha1($url));
