@@ -139,7 +139,7 @@ class Database {
             d($paths);
             $parameters = [];
             $parameters[] = $object->config('doctrine.proxy.dir');
-            $parameters = Config::parameters($object, $paths);
+            $parameters = Config::parameters($object, $parameters);
             if(array_key_exists(0, $parameters)){
                 $proxyDir = $parameters[0];
             }
