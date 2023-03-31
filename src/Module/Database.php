@@ -124,6 +124,11 @@ class Database {
             return $entityManager;
         }
         $url = $object->config('project.dir.data') . 'Config.json';
+        $parse = new Parse($object);
+        $data = new Data();
+        $connection = Core::object_select($parse, $data, $url, 'doctrine.' . $name . '.' . $environment, true);
+        ddd($connection);
+
         $config  = $object->parse_read($url, sha1($url));
         ddd('test');
         if($config){
