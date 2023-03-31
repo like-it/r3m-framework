@@ -231,6 +231,14 @@ class Token {
                 "\r",
                 " ",
             ], true)){
+                if(array_key_exists('type', $number)){
+                    $array[] = $number;
+                    $number = [];
+                }
+                elseif(array_key_exists('value', $word)){
+                    $array[] = $word;
+                    $word = [];
+                }
                 if(array_key_exists('value', $whitespace)){
                     $whitespace['value'] .= $char;
                 } else {
@@ -269,6 +277,10 @@ class Token {
                 if(array_key_exists('type', $whitespace)){
                     $array[] = $whitespace;
                     $whitespace = [];
+                }
+                if(array_key_exists('type', $number)){
+                    $array[] = $number;
+                    $number = [];
                 }
                 if(array_key_exists('value', $word)){
                     $word['value'] .= $char;
