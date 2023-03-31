@@ -754,6 +754,8 @@ class App extends Data {
                 return $data;
             }
         }
+        $debug = debug_backtrace(true);
+        ddd($debug);
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
@@ -766,7 +768,6 @@ class App extends Data {
                 $data = clone $this->data();
                 unset($data->{App::NAMESPACE});
                 $read = $parse->compile(Core::object($read), $data, $parse->storage());
-                ddd($read);
                 $data = new Data($read);
                 $readback = [
                     'script',
