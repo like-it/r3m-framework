@@ -135,8 +135,14 @@ class Database {
                 return null;
             }
             $paths = $object->config('doctrine.paths');
+            $paths = Config::parameters($object, $paths);
             d($paths);
-            $proxyDir = $object->config('doctrine.proxy.dir');
+            $parameters = [];
+            $parameters[] = $object->config('doctrine.proxy.dir');
+            $parameters = Config::parameters($object, $paths);
+            if(array_key_exists(0, $parameters)){
+                $proxyDir = $parameters[0];
+            }
             ddd($proxyDir);
             $cache = null;
             $config = ORMSetup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, $cache);
