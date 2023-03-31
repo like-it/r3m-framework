@@ -127,6 +127,7 @@ class Database {
         $config  = $object->parse_read($url, sha1($url));
         if($config){
             $connection = (array) $config->get('doctrine.' . $name . '.' . $environment);
+            ddd('this');
             if(empty($connection)){
                 $logger = new Logger(Database::LOGGER_DOCTRINE);
                 $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
@@ -135,7 +136,6 @@ class Database {
                 $logger->error('Error: No connection string...');
                 return null;
             }
-            ddd($config);
             $paths = $config->get('doctrine.paths');
             $proxyDir = $config->get('doctrine.proxy.dir');
             $cache = null;
