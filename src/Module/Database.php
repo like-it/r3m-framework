@@ -124,8 +124,8 @@ class Database {
             return $entityManager;
         }
         $url = $object->config('project.dir.data') . 'Config.json';
-        ddd('test');
         $config  = $object->parse_read($url, sha1($url));
+        ddd('test');
         if($config){
             $connection = (array) $config->get('doctrine.' . $name . '.' . $environment);
             ddd('this');
