@@ -342,6 +342,7 @@ class Token {
                     break;
                     case '"' :
                         $type = Token::TYPE_QUOTE_DOUBLE;
+                    break;
                 }
                 $array[] = [
                     'type' => $type,
@@ -366,6 +367,18 @@ class Token {
                     ];
                 }
             }
+        }
+        if(array_key_exists('type', $whitespace)){
+            $array[] = $whitespace;
+            $whitespace = [];
+        }
+        if(array_key_exists('type', $number)){
+            $array[] = $number;
+            $number = [];
+        }
+        if(array_key_exists('value', $word)){
+            $array[] = $word;
+            $word = [];
         }
         return $array;
     }
