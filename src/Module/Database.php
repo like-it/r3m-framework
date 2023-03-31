@@ -124,20 +124,8 @@ class Database {
             return $entityManager;
         }
         $connection = $object->config('doctrine.' . $name . '.' . $environment);
-        ddd($connection);
-
-
-        $url = $object->config('project.dir.data') . 'Config.json';
-        $parse = new Parse($object);
-        $data = new Data();
-        $connection = Core::object_select(null, null, $url, 'doctrine.' . $name . '.' . $environment, false);
-        ddd($connection);
-
-        $config  = $object->parse_read($url, sha1($url));
-        ddd('test');
-        if($config){
-            $connection = (array) $config->get('doctrine.' . $name . '.' . $environment);
-            ddd('this');
+        if(!empty($connection)){
+            $connection = (array) $connection;
             if(empty($connection)){
                 $logger = new Logger(Database::LOGGER_DOCTRINE);
                 $logger->pushHandler(new StreamHandler($object->config('project.dir.log') . 'sql.log', Logger::DEBUG));
@@ -146,8 +134,10 @@ class Database {
                 $logger->error('Error: No connection string...');
                 return null;
             }
-            $paths = $config->get('doctrine.paths');
-            $proxyDir = $config->get('doctrine.proxy.dir');
+            $paths = $object->config('doctrine.paths');
+            d($paths);
+            $proxyDir = $object->config('doctrine.proxy.dir');
+            ddd($proxyDir);
             $cache = null;
             $config = ORMSetup::createAnnotationMetadataConfiguration($paths, false, $proxyDir, $cache);
 
