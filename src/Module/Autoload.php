@@ -385,7 +385,6 @@ class Autoload {
                 $object->config('cache.parse.url.name_pop_or_shift')
             );
             $data[] = $object->config('autoload.cache.compile') . $load_compile;
-            d($load_compile);
             $load = Autoload::name_reducer(
                 $object,
                 $load,
@@ -472,7 +471,6 @@ class Autoload {
         $prefixList = $this->getPrefixList();
         $fileList = [];
         $object = $this->object();
-        d($object->config('autoload.cache.file.name'));
         if(!empty($prefixList)){
             foreach($prefixList as $nr => $item){
                 if(empty($item['prefix'])){
