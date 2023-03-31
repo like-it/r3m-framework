@@ -303,7 +303,7 @@ class Controller {
         return $url;
     }
 
-    public static function configure(App $object){
+    public static function configure(App $object, $caller=null){
         $config = $object->data(App::CONFIG);
         $key = Config::DATA_PARSE_DIR_TEMPLATE;
         $value = $config->data(Config::DATA_HOST_DIR_CACHE) . Controller::PARSE . $config->data('ds') . Controller::TEMPLATE . $config->data('ds');
@@ -318,7 +318,11 @@ class Controller {
         $config->data($key, $value);
         $key = Config::DATA_PARSE_DIR_PLUGIN;
         $value = [];
-        $dir = rtrim(get_called_class()::DIR,$config->data(Config::DS)) . $config->data(Config::DS);
+        if($caller !== null){
+            $dir = rtrim($caller::DIR, $config->data('ds')) . $config->data('ds');
+        } else {
+            $dir = rtrim(get_called_class()::DIR, $config->data(Config::DS)) . $config->data(Config::DS);
+        }
         $config->data(Config::DATA_CONTROLLER_DIR_SOURCE, $dir);
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT, Dir::name($dir));
         $config->data(Config::DATA_CONTROLLER_DIR_DATA,
@@ -478,7 +482,11 @@ class Controller {
         ;
         $config->data($key, $value);
 
-        $config->data(Config::DATA_CONTROLLER_CLASS, get_called_class());
+        if($caller !== null){
+            $config->data(Config::DATA_CONTROLLER_CLASS, $caller);
+        } else {
+            $config->data(Config::DATA_CONTROLLER_CLASS, get_called_class());
+        }
         $config->data(Config::DATA_CONTROLLER_NAME, strtolower(File::basename($config->data(Config::DATA_CONTROLLER_CLASS))));
         $config->data(Config::DATA_CONTROLLER_TITLE, File::basename($config->data(Config::DATA_CONTROLLER_CLASS)));
 
