@@ -755,8 +755,6 @@ class App extends Data {
                 return $data;
             }
         }
-        $debug = debug_backtrace(true);
-        ddd($debug);
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
