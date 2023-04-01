@@ -755,7 +755,6 @@ class App extends Data {
                 return $data;
             }
         }
-        d($url);
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
