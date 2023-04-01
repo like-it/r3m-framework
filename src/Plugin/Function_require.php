@@ -97,7 +97,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             }
             elseif(!empty($data_script && !empty($script))){
                 foreach($script as $nr => $value){
-                    if(in_array($value, $data_script)){
+                    if(in_array($value, $data_script, true)){
                         unset($script[$nr]);
                     }
                 }
@@ -110,7 +110,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             }
             elseif(!empty($data_link && !empty($link))){
                 foreach($link as $nr => $value){
-                    if(in_array($value, $data_link)){
+                    if(in_array($value, $data_link, true)){
                         unset($link[$nr]);
                     }
                 }

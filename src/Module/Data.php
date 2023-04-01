@@ -278,7 +278,8 @@ class Data {
                         [
                             'delete',
                             'remove'
-                        ]
+                        ],
+                        true
                     )
                 ){
                     return $this->deleteData($value);

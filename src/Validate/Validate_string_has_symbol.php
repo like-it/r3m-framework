@@ -50,7 +50,8 @@ function validate_string_has_symbol(R3m\Io\App $object, $string='', $field='', $
                     '.',
                     '?',
                     '/',
-                ]
+                ],
+                true
             )
         ){
             $test[] = $char;

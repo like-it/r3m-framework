@@ -47,7 +47,7 @@ function validate_in_list_json(R3m\Io\App $object, $request=null, $field='', $ar
                     }
                 }
                 foreach($request as $post){
-                    if(!in_array($post, $result)) {
+                    if(!in_array($post, $result, true)) {
                         return false;
                     }
                 }

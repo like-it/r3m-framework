@@ -190,7 +190,8 @@ class App extends Data {
                     property_exists($route, 'method') &&
                     in_array(
                         Handler::method(),
-                        $route->method
+                        $route->method,
+                        true
                     )
                 ) {
                     if($logger){
@@ -272,19 +273,19 @@ class App extends Data {
                     }
                     Config::contentType($object);
                     $functions = [];
-                    if (in_array('controller', $methods)) {
+                    if (in_array('controller', $methods, true)) {
                         $functions[] = 'controller';
                         $route->controller::controller($object);
                     }
-                    if (in_array('configure', $methods)) {
+                    if (in_array('configure', $methods, true)) {
                         $functions[] = 'configure';
                         $route->controller::configure($object);
                     }
-                    if (in_array('before_run', $methods)) {
+                    if (in_array('before_run', $methods, true)) {
                         $functions[] = 'before_run';
                         $route->controller::before_run($object);
                     }
-                    if (in_array($route->function, $methods)) {
+                    if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
                         $object->config('controller.function', $route->function);
                         $request = Core::deep_clone(
@@ -328,11 +329,11 @@ class App extends Data {
                         ]);
                         return Response::output($object, $response);
                     }
-                    if (in_array('after_run', $methods)) {
+                    if (in_array('after_run', $methods, true)) {
                         $functions[] = 'after_run';
                         $route->controller::after_run($object);
                     }
-                    if (in_array('before_result', $methods)) {
+                    if (in_array('before_result', $methods, true)) {
                         $functions[] = 'before_result';
                         $route->controller::before_result($object);
                     }

@@ -14,5 +14,5 @@ function validate_in_array(R3m\Io\App $object, $in='', $field='', $array=''){
     if(empty($in)){
         return false;
     }
-    return in_array($in, $array);
+    return in_array($in, $array, true);
 }

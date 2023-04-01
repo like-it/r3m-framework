@@ -51,7 +51,7 @@ class Clear extends Controller {
      */
     public static function run(App $object){
         $command = Clear::COMMAND_CLEAR;
-        if(!in_array($command, Clear::COMMAND)){
+        if(!in_array($command, Clear::COMMAND, true)){
             $exception = str_replace(
                 Clear::EXCEPTION_COMMAND_PARAMETER,
                 $command,

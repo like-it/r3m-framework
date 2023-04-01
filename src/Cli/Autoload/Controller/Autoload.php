@@ -46,7 +46,7 @@ class Autoload extends Controller {
         if($command === null){
             $command = Autoload::DEFAULT_COMMAND;
         }
-        if(!in_array($command, Autoload::COMMAND)){
+        if(!in_array($command, Autoload::COMMAND, true)){
             $exception = str_replace(
                 Autoload::EXCEPTION_COMMAND_PARAMETER,
                 $command,

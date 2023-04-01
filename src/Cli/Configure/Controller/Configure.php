@@ -104,7 +104,8 @@ class Configure extends Controller {
             if(
                 !in_array(
                     $module,
-                    $scan['module']
+                    $scan['module'],
+                    true
                 )
             ){
                 $scan['module'][] = $module;
@@ -113,7 +114,8 @@ class Configure extends Controller {
                 $submodule &&
                 !in_array(
                     $submodule,
-                    $scan['submodule']
+                    $scan['submodule'],
+                    true
                 )
             ){
                 $scan['submodule'][] = $submodule;
@@ -122,7 +124,8 @@ class Configure extends Controller {
                 $command  &&
                 !in_array(
                     $command,
-                    $scan['command']
+                    $scan['command'],
+                    true
                 )
             ){
                 $scan['command'][] = $command;
@@ -131,7 +134,8 @@ class Configure extends Controller {
                 $subcommand &&
                 !in_array(
                     $subcommand,
-                    $scan['subcommand']
+                    $scan['subcommand'],
+                    true
                 )
             ){
                 $scan['subcommand'][] = $subcommand;
@@ -151,14 +155,15 @@ class Configure extends Controller {
         $url = false;
         $scan = Configure::scan($object);
         $module = $object->parameter($object, 'configure', 1);
-        if(!in_array($module, $scan['module'])){
+        if(!in_array($module, $scan['module'], true)){
             $module = Configure::MODULE_INFO;
         }
         $submodule = $object->parameter($object, 'configure', 2);
         if(
             !in_array(
                 $submodule,
-                $scan['submodule']
+                $scan['submodule'],
+                true
             )
         ){
             if($module === Configure::MODULE_INFO){
@@ -171,7 +176,8 @@ class Configure extends Controller {
         if(
             !in_array(
                 $command,
-                $scan['command']
+                $scan['command'],
+                true
             ) ||
             $module === Configure::MODULE_INFO ||
             $submodule === Configure::MODULE_INFO
@@ -182,7 +188,8 @@ class Configure extends Controller {
         if(
             !in_array(
                 $subcommand,
-                $scan['subcommand']
+                $scan['subcommand'],
+                true
             ) ||
             $module === Configure::MODULE_INFO ||
             $submodule === Configure::MODULE_INFO

@@ -20,7 +20,8 @@ function function_binary(Parse $parse, Data $data){
                 $binary,
                 [
                     'php'
-                ]
+                ],
+                true
             )
         ){
             $binary = '';

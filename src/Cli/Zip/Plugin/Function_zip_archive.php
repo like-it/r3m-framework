@@ -43,9 +43,13 @@ function function_zip_archive(Parse $parse, Data $data){
         $dir = Dir::name($target);
         if(
             $dir &&
-            !in_array($dir, [
-                $object->config('ds')
-            ])
+            !in_array(
+                $dir,
+                [
+                    $object->config('ds')
+                ],
+                true
+            )
         ){
             Dir::create($dir);
         }
@@ -69,9 +73,13 @@ function function_zip_archive(Parse $parse, Data $data){
         $dir = Dir::name($target);
         if(
             $dir &&
-            !in_array($dir, [
-                $object->config('ds')
-            ])
+            !in_array(
+                $dir,
+                [
+                    $object->config('ds')
+                ],
+                true
+            )
         ){
             Dir::create($dir);
         }

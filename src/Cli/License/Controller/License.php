@@ -45,7 +45,7 @@ class License extends Controller {
         if($command === null){
             $command = License::DEFAULT_COMMAND;
         }
-        if(!in_array($command, License::COMMAND)){
+        if(!in_array($command, License::COMMAND, true)){
             $exception = str_replace(
                 License::EXCEPTION_COMMAND_PARAMETER,
                 $command,

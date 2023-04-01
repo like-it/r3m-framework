@@ -460,7 +460,8 @@ class Variable {
                         [
                             Token::TYPE_EXCLAMATION,
                             Token::TYPE_CAST
-                        ]
+                        ],
+                        true
                     )
                 ){
                     if(
@@ -472,7 +473,8 @@ class Variable {
                                 $record['type'],
                                 [
                                     Token::TYPE_CODE
-                                ]
+                                ],
+                                true
                             ) &&
                             substr($record['value'], -1, 1) == '!'
                         ){

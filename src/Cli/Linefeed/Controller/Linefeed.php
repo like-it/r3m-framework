@@ -55,7 +55,8 @@ class Linefeed extends Controller {
                 if(
                     in_array(
                         $extension,
-                        $config->get('extension')
+                        $config->get('extension'),
+                        true
                     )
                 ){
                     $read = File::read($file->url);

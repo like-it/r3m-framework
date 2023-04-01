@@ -49,7 +49,7 @@ class Openssl extends Controller {
         if($command === null){
             $command = Openssl::DEFAULT_COMMAND;
         }
-        if(!in_array($command, Openssl::COMMAND)){
+        if(!in_array($command, Openssl::COMMAND, true)){
             $exception = str_replace(
                 Openssl::EXCEPTION_COMMAND_PARAMETER,
                 $command,

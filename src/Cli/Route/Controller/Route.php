@@ -45,7 +45,7 @@ class Route extends Controller {
         if($command === null){
             $command = Route::DEFAULT_COMMAND;
         }
-        if(!in_array($command, Route::COMMAND)){
+        if(!in_array($command, Route::COMMAND, true)){
             $exception = str_replace(
                 Route::EXCEPTION_COMMAND_PARAMETER,
                 $command,

@@ -78,7 +78,7 @@ class Restore extends Controller {
         $source = $dir . $filename;
         if(
             File::exist($source) &&
-            in_array($filename, Restore::FILE)
+            in_array($filename, Restore::FILE, true)
         ){
             $dir = $object->config('project.dir.public');
             Dir::create($dir, Dir::CHMOD);

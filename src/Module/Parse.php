@@ -313,7 +313,8 @@ class Parse {
                     $this->useThis() === true &&
                     in_array(
                         $key,
-                        $reserved_keys
+                        $reserved_keys,
+                        true
                     )
                 ){
                     continue;

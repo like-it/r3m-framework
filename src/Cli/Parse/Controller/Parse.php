@@ -58,7 +58,7 @@ class Parse extends Controller {
         if($command === null){
             $command = Parse::DEFAULT_COMMAND;
         }
-        if(!in_array($command, Parse::COMMAND)){
+        if(!in_array($command, Parse::COMMAND, true)){
             $exception = str_replace(
                 Parse::EXCEPTION_COMMAND_PARAMETER,
                 $command,

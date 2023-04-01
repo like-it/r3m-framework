@@ -56,7 +56,7 @@ class Cache extends Controller {
         if($command === null){
             $command = Cache::DEFAULT_COMMAND;
         }
-        if(!in_array($command, Cache::COMMAND)){
+        if(!in_array($command, Cache::COMMAND, true)){
             $exception = str_replace(
                 Cache::EXCEPTION_COMMAND_PARAMETER,
                 $command,

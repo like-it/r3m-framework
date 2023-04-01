@@ -231,7 +231,8 @@ class Operator {
                 [
                     '++',
                     '--'
-                ]
+                ],
+                true
             ) && 
             $operator !== null
         ){            
@@ -253,7 +254,8 @@ class Operator {
                     [
                         '++',
                         '--'
-                    ]
+                    ],
+                    true
                 )
             ){
                 switch($operator['value']){

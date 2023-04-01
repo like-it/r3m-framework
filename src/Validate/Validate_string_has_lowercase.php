@@ -28,7 +28,8 @@ function validate_string_has_lowercase(R3m\Io\App $object, $string='', $field=''
                     '7',
                     '8',
                     '9'
-                ]
+                ],
+                true
             )
         ){
             continue;

@@ -60,7 +60,7 @@ function function_cors_domain_disable(Parse $parse, Data $data, $domain=''){
     if(empty($list)){
         $list = [];
     }
-    if(in_array($domain, $list)){
+    if(in_array($domain, $list, true)){
         foreach($list as $key => $value){
             if($value === $domain){
                 unset($list[$key]);

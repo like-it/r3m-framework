@@ -40,7 +40,8 @@ class Notification {
                 [
                     0,
                     33
-                ]
+                ],
+                true
             )
         ){
             throw new Exception('Only root & www-data can check is_new...');
@@ -278,7 +279,8 @@ class Notification {
                 [
                     0,
                     33
-                ]
+                ],
+                true
             )
         ){
             throw new Exception('Only root & www-data can clean notifications...');
@@ -550,7 +552,8 @@ class Notification {
                 [
                     0,
                     33
-                ]
+                ],
+                true
             )
         ){
             throw new Exception('Only root & www-data can create notifications...');

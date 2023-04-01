@@ -13,7 +13,8 @@ function function_binary_create(Parse $parse, Data $data, $name=null){
             $id,
             [
                 0
-            ]
+            ],
+            true
         )
     ){
         throw new Exception('Only root can execute bin...');
