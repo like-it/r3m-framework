@@ -36,7 +36,7 @@ class Install extends Controller {
      * @throws Exception
      */
     public static function run(App $object){
-        Core::output_mode(Core::MODE_INTERACTIVE);
+        $object->config('core.execute.mode', Core::FILE);
         $id = $object->config(Config::POSIX_ID);
         $key = App::parameter($object, 'install', 1);
         if(
