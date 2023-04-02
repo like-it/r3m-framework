@@ -148,7 +148,6 @@ class Install extends Controller {
                 echo $notification;
             }
         }
-        ddd('almost done');
         Event::trigger($object, 'cli.install', [
             'key' => $key,
         ]);

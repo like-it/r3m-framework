@@ -36,6 +36,34 @@ class Controller {
     const PROPERTY_VIEW_URL = 'r3m.io.parse.view.url';
     const PROPERTY_VIEW_MTIME = 'r3m.io.parse.view.mtime';
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public static function autoload(App $object){
+        $url = $object->config('controller.dir.data') . 'Config' . $object->config('extension.json');
+        $read = $object->data_read($url);
+        if($read){
+            $list = $read->get('autoload');
+            if($list && is_array($list)){
+                foreach($list as $record){
+                    if(
+                        property_exists($record, 'prefix') &&
+                        property_exists($record, 'directory')
+                    ){
+                        $autoload = $object->data(App::AUTOLOAD_R3M);
+                        $addPrefix  = Core::object($record, Core::OBJECT_ARRAY);
+                        $addPrefix = Config::parameters($object, $addPrefix);
+                        $autoload->addPrefix($addPrefix['prefix'], $addPrefix['directory']);
+                        if($object->config('project.log.name')){
+                            $object->logger($object->config('project.log.name'))->info('New namespace: ' . $addPrefix['prefix'], [ $addPrefix ]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public static function name($name='', $before=null, $delimiter='.'): string
     {
         if(
