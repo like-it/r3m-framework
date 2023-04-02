@@ -60,11 +60,6 @@ class Install extends Controller {
             $object->config('extension.json')
         ;
         $object->set(Controller::PROPERTY_VIEW_URL, $url);
-
-        ddd($object->config('core.execute.mode'));
-
-//        $object->config('core.execute.mode', Core::PROMPT);
-
         $package = $object->parse_select(
             $url,
             'package.' . $key
@@ -132,12 +127,7 @@ class Install extends Controller {
             is_array($package->get('command'))
         ){
             foreach($package->get('command') as $command){
-                d($command);
-                exec($command, $output);
-                ddd($output);
                 Core::execute($object, $command, $output, $notification);
-                d($output);
-                dd($notification);
                 if($output){
                     echo $output;
                 }
