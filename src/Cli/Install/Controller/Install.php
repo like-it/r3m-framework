@@ -131,6 +131,8 @@ class Install extends Controller {
         ){
             foreach($package->get('command') as $command){
                 d($command);
+                exec($command, $output);
+                ddd($output);
                 Core::execute($object, $command, $output, $notification);
                 d($output);
                 dd($notification);
