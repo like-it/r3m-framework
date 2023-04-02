@@ -61,7 +61,7 @@ class Install extends Controller {
         ;
         $object->set(Controller::PROPERTY_VIEW_URL, $url);
 
-        $object->config('core.execute.mode', Core::STREAM);
+        $object->config('core.execute.mode', Core::PROMPT);
 
         $package = $object->parse_select(
             $url,
