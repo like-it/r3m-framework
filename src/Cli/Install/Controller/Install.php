@@ -83,6 +83,7 @@ class Install extends Controller {
                 echo $notification;
             }
         }
+        ddd($package);
         if(
             $package->has('route') &&
             is_array($package->get('route'))
