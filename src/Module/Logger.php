@@ -22,6 +22,7 @@ class Logger {
      */
     public static function configure(App $object){
         $interface = $object->config('log');
+        $is = null;
         if($interface){
             foreach($interface as $name => $record){
                 $name = ucfirst($name);
@@ -30,6 +31,12 @@ class Logger {
                     !empty($record->default)
                 ){
                     $object->config('project.log.name', $name);
+                }
+                if(
+                    property_exists($record, 'is') &&
+                    !empty($record->is)
+                ){
+                    $is = $record->is;
                 }
                 if(
                     property_exists($record, 'class') &&
@@ -166,7 +173,15 @@ class Logger {
             }
         }
         $uuid = posix_geteuid();
-        if(empty($uuid)){
+
+        $is_chown =false;
+        if(
+            $is &&
+            is_object($is) &&
+            property_exists($is, 'chown')){
+            $is_chown = $is->chown;
+        }
+        if(empty($uuid) && $is_chown === false){
             $dir = $object->config('project.dir.log');
             $command = 'chown www-data:www-data ' . $dir . ' -R';
             Core::execute($object, $command);
