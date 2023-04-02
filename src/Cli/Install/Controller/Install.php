@@ -130,7 +130,10 @@ class Install extends Controller {
             is_array($package->get('command'))
         ){
             foreach($package->get('command') as $command){
+                d($command);
                 Core::execute($object, $command, $output, $notification);
+                d($output);
+                dd($notification);
                 if($output){
                     echo $output;
                 }
