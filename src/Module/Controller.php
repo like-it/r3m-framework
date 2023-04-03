@@ -46,7 +46,6 @@ class Controller {
             $url = $object->config('controller.dir.data') . 'Config' . $object->config('extension.json');
             $read = $object->data_read($url);
         }
-        ddd($read);
         if($read){
             $list = $read->get('autoload');
             if($list && is_array($list)){
