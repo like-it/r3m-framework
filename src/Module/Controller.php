@@ -40,9 +40,13 @@ class Controller {
      * @throws ObjectException
      * @throws Exception
      */
-    public static function autoload(App $object){
-        $url = $object->config('controller.dir.data') . 'Config' . $object->config('extension.json');
-        $read = $object->data_read($url);
+    public static function autoload(App $object, Data $read=null){
+        $autoload = $object->data(App::AUTOLOAD_R3M);
+        if($read === null){
+            $url = $object->config('controller.dir.data') . 'Config' . $object->config('extension.json');
+            $read = $object->data_read($url);
+        }
+        ddd($read);
         if($read){
             $list = $read->get('autoload');
             if($list && is_array($list)){
@@ -51,7 +55,6 @@ class Controller {
                         property_exists($record, 'prefix') &&
                         property_exists($record, 'directory')
                     ){
-                        $autoload = $object->data(App::AUTOLOAD_R3M);
                         $addPrefix  = Core::object($record, Core::OBJECT_ARRAY);
                         $addPrefix = Config::parameters($object, $addPrefix);
                         $autoload->addPrefix($addPrefix['prefix'], $addPrefix['directory']);
