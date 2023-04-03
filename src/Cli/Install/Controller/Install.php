@@ -129,6 +129,7 @@ class Install extends Controller {
         if($output){
             echo $output;
         }
+        echo 'Press ctrl-c to stop the installation...' . PHP_EOL;
         if(
             $package->has('command') &&
             is_array($package->get('command'))
