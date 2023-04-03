@@ -87,6 +87,7 @@ class Install extends Controller {
             is_array($package->get('route'))
         ){
             foreach($package->get('route') as $route){
+                d($route);
                 if(File::exist($route)){
                     $command = '{{binary()}} configure route resource "' . $route . '"';
                     $parse = new Parse($object, $object->data());
