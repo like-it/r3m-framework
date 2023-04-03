@@ -122,11 +122,19 @@ class Install extends Controller {
                 }
             }
         }
+        $command = '{{binary()}} cache:clear';
+        $parse = new Parse($object, $object->data());
+        $command = $parse->compile($command, $object->data());
+        Core::execute($object, $command, $output);
+        if($output){
+            echo $output;
+        }
         if(
             $package->has('command') &&
             is_array($package->get('command'))
         ){
             foreach($package->get('command') as $command){
+                echo $command . PHP_EOL;
                 Core::execute($object, $command, $output, $notification);
                 if($output){
                     echo $output;
@@ -140,6 +148,7 @@ class Install extends Controller {
             $package->has('command') &&
             is_string($package->get('command'))
         ){
+            echo $package->get('command') . PHP_EOL;
             Core::execute($object, $package->get('command'), $output, $notification);
             if($output){
                 echo $output;
