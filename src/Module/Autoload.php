@@ -457,6 +457,7 @@ class Autoload {
             }
             $result[$file] = $file;
         }
+        d($result);
         return $result;
     }
 
