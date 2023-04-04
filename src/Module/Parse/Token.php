@@ -1805,7 +1805,12 @@ class Token {
                         $token[$method_nr]['method']['trait'] = $explode[0];
                         $token[$method_nr]['method']['name'] = strtolower(trim($explode[1]));
                     } elseif($method_count === 3){
-                        $token[$method_nr]['method']['namespace'] = $explode[0];
+                        $temp = explode('.', $explode[0]);
+                        $temp_count = count($temp);
+                        if(strtolower($temp[$temp_count - 1]) !== 'trait'){
+                            $temp[] = 'Trait';
+                        }
+                        $token[$method_nr]['method']['namespace'] = implode('.', $temp);
                         $token[$method_nr]['method']['trait'] = $explode[1];
                         $token[$method_nr]['method']['name'] = strtolower(trim($explode[2]));
                     } else {
