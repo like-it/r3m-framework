@@ -422,26 +422,26 @@ class Variable {
             }
             if(
                 $is_collect === true &&
-                $record['type'] != Token::TYPE_CURLY_CLOSE
+                $record['type'] !== Token::TYPE_CURLY_CLOSE
             ){
                 if($type === null){
                     $type = Build::getType($build->object(), $record);
                 }
                 $selection[] = $record;
             }
-            if($record['type'] == Token::TYPE_CURLY_OPEN){
+            if($record['type'] === Token::TYPE_CURLY_OPEN){
                 $selection = [];
                 $is_collect = true;
                 continue;
             }
-            elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
+            elseif($record['type'] === Token::TYPE_CURLY_CLOSE){
                 $result .= Code::result($build, $storage, $type, $selection);
                 $result .= ' . ';
                 $is_collect = false;
                 $type = null;
                 $selection = [];
             }
-            elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
+            elseif($record['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
                 $array_level++;
                 if($array_level > 1){
@@ -453,7 +453,7 @@ class Variable {
                 $result .= '[';
             }
             elseif(
-                $record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE &&
+                $record['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE &&
                 $in_array === true
             ){
                 $result .= ']';
@@ -501,6 +501,7 @@ class Variable {
                     break;
                 }
             }
+            d($result);
         }
         if(substr($result, -3) === ' . '){
             $result = substr($result,0, -3);
