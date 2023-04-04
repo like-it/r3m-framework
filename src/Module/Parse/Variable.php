@@ -456,6 +456,8 @@ class Variable {
                 $record['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE &&
                 $in_array === true
             ){
+                d($record);
+                d($array_level);
                 $result .= ']';
                 $array_level--;
                 if($array_level === 0){
@@ -501,7 +503,6 @@ class Variable {
                     break;
                 }
             }
-            d($result);
         }
         if(substr($result, -3) === ' . '){
             $result = substr($result,0, -3);
