@@ -445,7 +445,7 @@ class Variable {
                 $in_array = true;
                 $array_level++;
                 $counter++;
-                d($array_level);
+                d($counter);
                 if($array_level > 1){
                     ddd($result);
                 }
@@ -461,9 +461,9 @@ class Variable {
                 $result .= ']';
                 $array_level--;
                 if($array_level === 0){
-                    d($selection);
+//                    d($selection);
                     $in_array = false;
-                    d($result);
+//                    d($result);
                     d($counter);
                 }
             }
