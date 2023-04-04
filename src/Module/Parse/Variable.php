@@ -410,6 +410,7 @@ class Variable {
         $is_collect = false;
         $type = null;
         $count = 0;
+        $counter = 0;
         $array_level = 0;
         $selection = [];
         while(count($operator) >= 1){
@@ -443,7 +444,8 @@ class Variable {
             }
             elseif($record['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
-                $array_level = $array_level++;
+                $array_level++;
+                $counter++;
                 d($array_level);
                 if($array_level > 1){
                     ddd($result);
@@ -463,6 +465,7 @@ class Variable {
                 if($array_level === 0){
                     $in_array = false;
                     d($result);
+                    d($counter);
                 }
             }
             elseif($is_collect === false){                                
