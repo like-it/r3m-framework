@@ -444,6 +444,9 @@ class Variable {
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
                 $array_level++;
+                if($array_level > 1){
+                    ddd($result);
+                }
                 if(substr($result, -3, 3) === ' . '){
                     $result = substr($result, 0, -3);
                 }
