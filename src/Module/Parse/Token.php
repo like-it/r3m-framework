@@ -1283,6 +1283,8 @@ class Token {
                         for($i = $variable_array_start; $i <= $nr; $i++){
                             if(array_key_exists($i, $token)){
                                 if($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
+                                    $array_depth++;
+                                    $token[$i]['array_depth'] = $array_depth;
                                     if($variable_array_depth === 0){
                                         unset($token[$i]);
                                     } else {
@@ -1290,11 +1292,11 @@ class Token {
                                         unset($token[$i]);
                                     }
                                     $variable_array_depth++;
-                                    $array_depth++;
                                 }
                                 elseif($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
                                     $variable_array_depth--;
                                     $array_depth--;
+                                    $token[$i]['array_depth'] = $array_depth;
                                     if($variable_array_depth === 0){
                                         if(array_key_exists('array', $token[$variable_nr]['variable'])){
                                             if(array_key_exists($variable_array_level, $token[$variable_nr]['variable']['array'])){
