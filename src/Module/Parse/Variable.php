@@ -470,6 +470,7 @@ class Variable {
             elseif($is_collect === false){                                
                 $record = Method::get($build, $storage, $record);
                 $result .= Value::get($build, $storage, $record);
+                d($result)l
                 if(
                     !in_array(
                         $record['type'],
