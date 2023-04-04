@@ -409,12 +409,12 @@ class Variable {
         $in_array = false;
         $is_collect = false;
         $type = null;
-        $count = 0;
         $counter = 0;
         $array_level = 0;
         $selection = [];
         while(count($operator) >= 1){
             $record = array_shift($operator);
+            d($record);
             if(is_bool($record) && $record === false){
                 if(substr($result, -3) == ' . '){
                     $result = substr($result,0, -3);
