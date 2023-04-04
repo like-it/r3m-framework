@@ -410,6 +410,7 @@ class Variable {
         $is_collect = false;
         $type = null;
         $count = 0;
+        $array_level = 0;
         $selection = [];
         while(count($operator) >= 1){
             $record = array_shift($operator);
@@ -442,14 +443,19 @@ class Variable {
             }
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
+                $array_level++;
                 if(substr($result, -3, 3) === ' . '){
                     $result = substr($result, 0, -3);
                 }
                 $result .= '[';
             }
             elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
-                $in_array = false;
                 $result .= ']';
+                $array_level--;
+                if($array_level === 0){
+                    $in_array = false;
+                    ddd($result);
+                }
             }
             elseif($is_collect === false){                                
                 $record = Method::get($build, $storage, $record);
