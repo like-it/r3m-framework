@@ -426,7 +426,7 @@ class Autoload {
             }
             $result[$file] = $file;
         }
-        $data = json_encode($result) . PHP_EOL;
+        $data = json_encode($result, JSON_PRETTY_PRINT) . PHP_EOL;
         $url = '/Application/Log/Autoload.log';
         $resource = @fopen($url, 'a');
         if($resource === false){
