@@ -412,7 +412,6 @@ class Variable {
         $counter = 0;
         $array_level = 0;
         $selection = [];
-        d($operator);
         while(count($operator) >= 1){
             $record = array_shift($operator);
             if(is_bool($record) && $record === false){
@@ -459,10 +458,10 @@ class Variable {
                 $record['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE &&
                 $in_array === true
             ){
-                d($array_level);
                 $result .= ']';
                 $array_level--;
                 if($array_level === 0){
+                    d($selection);
                     $in_array = false;
                     d($result);
                     d($counter);
