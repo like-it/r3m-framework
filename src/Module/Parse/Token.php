@@ -1264,6 +1264,7 @@ class Token {
                     $variable_array_value .= $record['value'];
                     $variable_array_depth++;
                     $array_depth++;
+                    $token[$variable_nr]['array_depth'] = $array_depth;
                     continue;
                 }
                 elseif(
@@ -1278,6 +1279,7 @@ class Token {
                 ){
                     $variable_array_depth--;
                     $array_depth--;
+                    $token[$variable_nr]['array_depth'] = $array_depth;
                     if($variable_array_depth === 0){
                         $token[$variable_nr]['variable']['is_array'] = true;
                         for($i = $variable_array_start; $i <= $nr; $i++){
