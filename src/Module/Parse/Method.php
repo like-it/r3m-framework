@@ -156,6 +156,7 @@ class Method {
                     $token = $build->require('modifier', $token);
                     $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
+                    d($value);
                     $attribute .= $value . ', ';
                 }
             }
