@@ -19,8 +19,7 @@ function function_session(Parse $parse, Data $data, $attribute=null, $value=null
         return;
     }
     if(!empty($parse->is_assign())){
-        $session = $object->session($attribute, $value); 
-        return Core::object($session);
+        return $object->session($attribute, $value);
     } else {
         return $object->session($attribute, $value);
     }    
