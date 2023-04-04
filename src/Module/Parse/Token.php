@@ -1116,6 +1116,7 @@ class Token {
         $skip = 0;
         $skip_unset = 0;
         $depth = 0;
+        $array_depth = 0;
         $curly_count = 0;
         $parenthese_open = null;
         $quote_single = null;
@@ -1137,7 +1138,9 @@ class Token {
         $tag_close = '';        
         foreach($token as $nr => $record){
             $record['depth'] = $depth;
+            $record['array_depth'] = $array_depth;
             $token[$nr]['depth'] = $depth;
+            $token[$nr]['array_depth'] = $array_depth;
             $next = null;
             $next_next = null;
             if($skip > 0){
@@ -1260,6 +1263,7 @@ class Token {
                     }
                     $variable_array_value .= $record['value'];
                     $variable_array_depth++;
+                    $array_depth++;
                     continue;
                 }
                 elseif(
@@ -1273,6 +1277,7 @@ class Token {
                     )
                 ){
                     $variable_array_depth--;
+                    $array_depth--;
                     if($variable_array_depth === 0){
                         $token[$variable_nr]['variable']['is_array'] = true;
                         for($i = $variable_array_start; $i <= $nr; $i++){
@@ -1285,9 +1290,11 @@ class Token {
                                         unset($token[$i]);
                                     }
                                     $variable_array_depth++;
+                                    $array_depth++;
                                 }
                                 elseif($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE){
                                     $variable_array_depth--;
+                                    $array_depth--;
                                     if($variable_array_depth === 0){
                                         if(array_key_exists('array', $token[$variable_nr]['variable'])){
                                             if(array_key_exists($variable_array_level, $token[$variable_nr]['variable']['array'])){
