@@ -443,7 +443,7 @@ class Variable {
             }
             elseif($record['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
-                $array_level++;
+                $array_level = $array_level++;
                 d($array_level);
                 if($array_level > 1){
                     ddd($result);
@@ -457,7 +457,6 @@ class Variable {
                 $record['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE &&
                 $in_array === true
             ){
-                d($record);
                 d($array_level);
                 $result .= ']';
                 $array_level--;
