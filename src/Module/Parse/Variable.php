@@ -454,7 +454,7 @@ class Variable {
                 $array_level--;
                 if($array_level === 0){
                     $in_array = false;
-                    ddd($result);
+                    d($result);
                 }
             }
             elseif($is_collect === false){                                
