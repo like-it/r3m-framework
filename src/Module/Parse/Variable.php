@@ -449,7 +449,10 @@ class Variable {
                 }
                 $result .= '[';
             }
-            elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
+            elseif(
+                $record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE &&
+                $in_array === true
+            ){
                 $result .= ']';
                 $array_level--;
                 if($array_level === 0){
