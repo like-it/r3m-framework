@@ -157,7 +157,7 @@ class Method {
                     $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
                     if(stristr($value, 'cli.autoload.run') !== false){
-                        ddd($token);
+                        d($token);
                         ddd($value);
                     }
                     $attribute .= $value . ', ';
