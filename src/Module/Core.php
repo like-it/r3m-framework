@@ -763,6 +763,11 @@ class Core
                         array_key_exists($key, $object) &&
                         is_array($object[$key])
                     ) {
+                        var_dump($key);
+                        var_dump($attribute);
+                        var_dump($value);
+                        var_dump($object);
+                        die;
                         foreach ($attribute as $index => $unused) {
                             if(is_object($unused)){
                                 $child = new stdClass();
