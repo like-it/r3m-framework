@@ -705,7 +705,10 @@ class Core
 
     public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child', $is_debug=false)
     {
-        if (!is_object($object)) {
+        if (
+            !is_object($object) &&
+            !is_array($object)
+        ) {
             return;
         }
         if (is_string($return) && $return !== 'child') {
@@ -721,6 +724,7 @@ class Core
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
+        d($attributeList);
         if (!empty($attributeList)) {
             foreach ($attributeList as $key => $attribute) {
                 if (isset($object->{$key}) && is_object($object->{$key})) {
