@@ -734,6 +734,8 @@ class Core
                             */
                             $object->{$key}->{$value_key} = $value_value;
                         }
+                        d($object);
+                        d($key);
                         return $object->{$key};
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
@@ -753,6 +755,8 @@ class Core
                             }
 
                         }
+                        d($object);
+                        d($key);
                         return $object->{$key};
                     }
                     elseif(

@@ -21,6 +21,8 @@ class Data {
 
     private $copy;
 
+    private $is_debug = false;
+
     public function __construct($data=null){
         $this->data($data);
     }
@@ -234,6 +236,10 @@ class Data {
         $get = $this->get($attribute);
         $this->delete($attribute);
         return $get;
+    }
+
+    public function is_debug($is_debug=false){
+        $this->is_debug = $is_debug;
     }
 
     public function data($attribute=null, $value=null, $type=null){
