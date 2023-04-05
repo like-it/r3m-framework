@@ -151,13 +151,13 @@ class Method {
                     $attribute .= $value . ', ';
                 }                
             } else {
-                d($record['method']['attribute']);
                 foreach($record['method']['attribute'] as $nr => $token){
                     $token = $build->require('modifier', $token);
                     $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
                     if(stristr($value, 'cli.autoload.run') !== false){
                         d($token);
+                        d($record);
                         ddd($value);
                     }
                     $attribute .= $value . ', ';
