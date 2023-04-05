@@ -801,6 +801,9 @@ class Core
                         var_dump('6');
                         $object[$key] = $value;
                     } else {
+                        var_dump($attributeList);
+                        var_dump($key);
+                        var_dump($value);
                         var_dump('7');
                         $object->{$key} = $value;
                     }
