@@ -443,12 +443,6 @@ class Variable {
             }
             elseif($record['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
-                $array_level++;
-                $counter++;
-                d($counter);
-                if($array_level > 1){
-                    ddd($result);
-                }
                 if(substr($result, -3, 3) === ' . '){
                     $result = substr($result, 0, -3);
                 }
@@ -459,12 +453,11 @@ class Variable {
                 $in_array === true
             ){
                 $result .= ']';
-                $array_level--;
-                if($array_level === 0){
-//                    d($selection);
+                if(
+                    array_key_exists('array_depth', $record) &&
+                    $record['array_depth'] === 0
+                ){
                     $in_array = false;
-//                    d($result);
-                    d($counter);
                 }
             }
             elseif($is_collect === false){                                
@@ -497,6 +490,9 @@ class Variable {
                             substr($record['value'], -1, 1) == '!'
                         ){
 
+                        }
+                        elseif($in_array === true){
+                            d($result);
                         } else {
                             $result .= ' . ';
                         }
