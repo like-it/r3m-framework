@@ -1137,7 +1137,6 @@ class Token {
         $comment_single_line_nr = null;
         $is_tag_close_nr = null;
         $tag_close = '';
-        d($token);
         foreach($token as $nr => $record){
             $record['depth'] = $depth;
             $token[$nr]['depth'] = $depth;
