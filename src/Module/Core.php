@@ -721,6 +721,7 @@ class Core
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
+        var_dump($attributeList);
         if (!empty($attributeList)) {
             foreach ($attributeList as $key => $attribute) {
                 if (isset($object->{$key}) && is_object($object->{$key})) {
@@ -736,7 +737,8 @@ class Core
                         return $object->{$key};
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
-                } elseif (is_object($attribute)) {
+                }
+                elseif (is_object($attribute)) {
                     if (
                         property_exists($object, $key) &&
                         is_array($object->{$key})
