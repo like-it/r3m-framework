@@ -760,14 +760,16 @@ class Core
                         d($key);
                         ddd($object);
                     }
-
                     else {
-
                         $object->{$key} = new stdClass();
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } else {
-                    $object->{$key} = $value;
+                    if(is_array($object)){
+                        $object[$key] = $value;
+                    } else {
+                        $object->{$key} = $value;
+                    }
                 }
             }
         }
