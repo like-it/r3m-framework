@@ -356,7 +356,6 @@ class Variable {
         $set_counter = 0;
         $operator_max = 1024;
         $operator_counter = 0;
-        $set = null;
         while(Set::has($token)){
             $set = Set::get($token);
             while(Operator::has($set)){
@@ -409,8 +408,6 @@ class Variable {
         $in_array = false;
         $is_collect = false;
         $type = null;
-        $counter = 0;
-        $array_level = 0;
         $selection = [];
         while(count($operator) >= 1){
             $record = array_shift($operator);
@@ -462,9 +459,7 @@ class Variable {
             }
             elseif($is_collect === false){                                
                 $record = Method::get($build, $storage, $record);
-                d($record);
                 $result .= Value::get($build, $storage, $record);
-                d($result);
                 if(
                     !in_array(
                         $record['type'],
@@ -489,10 +484,10 @@ class Variable {
                             ) &&
                             substr($record['value'], -1, 1) == '!'
                         ){
-
+                            //nothing
                         }
                         elseif($in_array === true){
-                            d($result);
+                            //nothing
                         } else {
                             $result .= ' . ';
                         }
@@ -507,7 +502,6 @@ class Variable {
         if(substr($result, -3) === ' . '){
             $result = substr($result,0, -3);
         }
-        d($result);
         return $result;
     }
 }
