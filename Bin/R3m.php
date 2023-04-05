@@ -13,6 +13,7 @@ use R3m\Io\Config;
 
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\ObjectException;
+use R3m\Io\Module\Core;
 
 $dir = __DIR__;
 $dir_vendor =
@@ -36,7 +37,11 @@ try {
         echo $result;
     }
     elseif(is_array($result)){
-        echo implode(PHP_EOL, $result);
+        if(Core::is_array_nested($result)){
+            echo Core::object($result, Core::OBJECT_JSON);
+        } else {
+            echo implode(PHP_EOL, $result);
+        }
     }
 } catch (Exception | LocateException | ObjectException $e) {
     echo $e;
