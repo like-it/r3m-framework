@@ -20,9 +20,6 @@ function function_array_pop(Parse $parse, Data $data, $selector=''){
     if($array && is_array($array)){
         $result = array_pop($array);
         $data->data($selector, $array);
-    } else {
-        d($array);
-        ddd($selector);
     }
     return $result;
 }

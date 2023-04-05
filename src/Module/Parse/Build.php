@@ -668,7 +668,6 @@ class Build {
                         $remove_newline = true;
                         break;
                     case Build::METHOD :
-                        d($selection);
                         $run[] = $this->indent() . '$method = ' . Method::create($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($method)){ return $method; }';
                         $run[] = $this->indent() . 'elseif (is_array($method)){ return $method; }';
@@ -775,7 +774,6 @@ class Build {
                         break;
                     default:
                         if($type !== null){
-                            d($selection);
                             throw new Exception('type (' . $type . ') undefined in source: ' . $this->storage()->data('source'));
                         }
                 }
@@ -857,7 +855,6 @@ class Build {
             case Token::TYPE_DOC_COMMENT :
                 return Token::TYPE_DOC_COMMENT;
             default:
-                d($record);
                 throw new Exception('Undefined type (' . $record['type'] . ')');
         }
     }

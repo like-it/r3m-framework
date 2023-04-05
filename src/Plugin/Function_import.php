@@ -64,9 +64,6 @@ function function_import(Parse $parse, Data $data, $url=null, $controller=null, 
                     break;
                 }
             }
-            if($locate !== false){
-                d($location);
-            }
             if($file === false){
                 return;
             }
