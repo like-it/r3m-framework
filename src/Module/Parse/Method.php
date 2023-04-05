@@ -156,6 +156,8 @@ class Method {
                     $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
                     if(stristr($value, 'cli.autoload.run') !== false){
+                        $debug = debug_backtrace(true);
+                        ddd($debug);
                         d($token);
                         d($record);
                         ddd($value);
