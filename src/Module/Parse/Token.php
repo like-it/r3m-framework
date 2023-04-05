@@ -1282,6 +1282,7 @@ class Token {
                     $token[$nr]['array_depth'] = $array_depth;
                     if($variable_array_depth === 0){
                         $token[$variable_nr]['variable']['is_array'] = true;
+                        ddd($token[$variable_nr]);
                         for($i = $variable_array_start; $i <= $nr; $i++){
                             if(array_key_exists($i, $token)){
                                 if($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
