@@ -10,6 +10,6 @@
  */
 use R3m\Io\Module\Parse\Token;
 
-function validate_is_array(R3m\Io\App $object, $array=[]){
+function validate_is_array(R3m\Io\App $object, $array=[], $field='', $argument='') {
     return is_array($array);
 }

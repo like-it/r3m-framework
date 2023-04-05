@@ -87,6 +87,9 @@ class Validate {
                 } else {
                     foreach($list as $nr => $record){
                         foreach($record as $key => $argument){
+                            if(substr($key, 0, 1) === '#'){
+                                continue;
+                            }
                             $key = 'validate' . '.' . $key;
                             $url = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
                             if(File::exist($url)){
