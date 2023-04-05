@@ -752,7 +752,17 @@ class Core
 
                         }
                         return $object->{$key};
-                    } else {
+                    }
+                    elseif(
+                        is_array($object) &&
+                        array_key_exists($key, $object)
+                    ){
+                        d($key);
+                        ddd($object);
+                    }
+
+                    else {
+
                         $object->{$key} = new stdClass();
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
