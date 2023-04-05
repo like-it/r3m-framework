@@ -721,7 +721,6 @@ class Core
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
-        var_dump($attributeList);
         if (!empty($attributeList)) {
             foreach ($attributeList as $key => $attribute) {
                 if (isset($object->{$key}) && is_object($object->{$key})) {
@@ -734,8 +733,6 @@ class Core
                             */
                             $object->{$key}->{$value_key} = $value_value;
                         }
-                        d($object);
-                        d($key);
                         return $object->{$key};
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
@@ -755,27 +752,13 @@ class Core
                             }
 
                         }
-                        d($object);
-                        d($key);
                         return $object->{$key};
-                    }
-                    elseif(
-                        is_array($object) &&
-                        array_key_exists($key, $object)
-                    ){
-                        d($key);
-                        ddd($object);
-                    }
-                    else {
+                    } else {
                         $object->{$key} = new stdClass();
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } else {
-                    if(is_array($object)){
-                        $object[$key] = $value;
-                    } else {
-                        $object->{$key} = $value;
-                    }
+                    $object->{$key} = $value;
                 }
             }
         }
