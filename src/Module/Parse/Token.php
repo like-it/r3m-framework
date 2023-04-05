@@ -1258,6 +1258,7 @@ class Token {
                         ]
                     )
                 ){
+                    ddd($record);
                     if($variable_array_depth === 0){
                         $variable_array_start = $nr;
                     }
