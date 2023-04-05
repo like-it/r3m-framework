@@ -771,14 +771,22 @@ class Core
                             } else {
                                 $object[$key][$index] = $value;
                             }
-
                         }
                         return $object[$key];
                     }
+                    elseif(is_array($object)){
+                        var_dump($key);
+                        var_dump($attribute);
+                        var_dump($value);
+                        var_dump($object);
+                        die;
+                        return Core::object_set($attribute, $value, $object[$key], $return);
+                    }
                     else {
                         $object->{$key} = new stdClass();
+                        return Core::object_set($attribute, $value, $object->{$key}, $return);
                     }
-                    return Core::object_set($attribute, $value, $object->{$key}, $return);
+
                 } else {
                     if(is_array($object)){
                         $object[$key] = $value;
