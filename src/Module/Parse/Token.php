@@ -766,7 +766,8 @@ class Token {
                         ){
                             $attribute_nr++;                            
                             continue;
-                        }                    
+                        }
+                        $attribute_value['array_depth'] = $square_depth;
                         $token[$target]['method']['attribute'][$attribute_nr][$attribute_key] = $attribute_value;
                     }                    
                 }                
@@ -1247,7 +1248,6 @@ class Token {
                     $variable_nr = null;
                     $variable_array_level = 0;
                 }
-                d($record);
                 if(
                     $quote_double_toggle === false &&
                     $quote_single_toggle === false &&
@@ -1258,7 +1258,6 @@ class Token {
                         ]
                     )
                 ){
-                    ddd($record);
                     if($variable_array_depth === 0){
                         $variable_array_start = $nr;
                     }
@@ -1283,7 +1282,6 @@ class Token {
                     $token[$nr]['array_depth'] = $array_depth;
                     if($variable_array_depth === 0){
                         $token[$variable_nr]['variable']['is_array'] = true;
-                        ddd($token[$variable_nr]);
                         for($i = $variable_array_start; $i <= $nr; $i++){
                             if(array_key_exists($i, $token)){
                                 if($token[$i]['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
