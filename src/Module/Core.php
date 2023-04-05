@@ -757,12 +757,35 @@ class Core
 
                         }
                         return $object->{$key};
-                    } else {
+                    }
+                    elseif (
+                        is_array($object) &&
+                        array_key_exists($key, $object) &&
+                        is_array($object[$key])
+                    ) {
+                        foreach ($attribute as $index => $unused) {
+                            if(is_object($unused)){
+                                $child = new stdClass();
+                                $child = Core::object_set($unused, $value, $child, 'root', true);
+                                $object[$key][$index] = $child;
+                            } else {
+                                $object[$key][$index] = $value;
+                            }
+
+                        }
+                        return $object[$key];
+                    }
+                    else {
                         $object->{$key} = new stdClass();
                     }
                     return Core::object_set($attribute, $value, $object->{$key}, $return);
                 } else {
-                    $object->{$key} = $value;
+                    if(is_array($object)){
+                        $object[$key] = $value;
+                    } else {
+                        $object->{$key} = $value;
+                    }
+
                 }
             }
         }
