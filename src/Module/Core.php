@@ -791,7 +791,6 @@ class Core
                         return Core::object_set($attribute, $value, $object[$key], $return);
                     }
                     else {
-                        var_dump('5');
                         $object->{$key} = new stdClass();
                         return Core::object_set($attribute, $value, $object->{$key}, $return);
                     }
@@ -799,12 +798,10 @@ class Core
                 } else {
                     if(is_array($object)){
                         var_dump('6');
-                        $object[$key] = $value;
-                    } else {
-                        var_dump($attributeList);
-                        var_dump($key);
                         var_dump($value);
-                        var_dump('7');
+                        $object[$key] = $value;
+                        $return = $object;
+                    } else {
                         $object->{$key} = $value;
                     }
 
