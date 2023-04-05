@@ -1247,6 +1247,7 @@ class Token {
                     $variable_nr = null;
                     $variable_array_level = 0;
                 }
+                d($record);
                 if(
                     $quote_double_toggle === false &&
                     $quote_single_toggle === false &&
@@ -1753,7 +1754,6 @@ class Token {
                 }
             }
             $token[$nr]['depth'] = $depth;
-            $token[$nr]['array_depth'] = $array_depth;
             if($record['type'] === Token::TYPE_PARENTHESE_CLOSE){
                 if($record['curly_count'] > 0){
                     $depth--;
