@@ -44,37 +44,40 @@ function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $arg
     if($url){
         $data = $object->data_read($url, sha1($url));
         if($data){
-            foreach($data->data($list) as $nr => $record){
-                $uuid = false;
-                if(
-                    is_array($record) &&
-                    array_key_exists('uuid', $record)
-                ){
-                    $uuid = $record['uuid'];
-                }
-                elseif(
-                    is_object($record) &&
-                    property_exists($record, 'uuid')
-                ){
-                    $uuid = $record->uuid;
-                }
-                if(
-                    !empty($original_uuid) &&
-                    $original_uuid === $uuid
-                ){
-                    continue;
-                }
-                if(empty($list)){
-                    $match = strtolower($data->data($nr . '.' . $field));
-                } else {
-                    $match = strtolower($data->data($list . '.' . $nr . '.' . $field));
-                }
-                if(empty($match)){
-                    continue;
-                }
-                if($match == $string){
-                    $is_unique = false;
-                    break;
+            $result = $data->data($list);
+            if(is_array($result) || is_object($result)){
+                foreach($result as $nr => $record){
+                    $uuid = false;
+                    if(
+                        is_array($record) &&
+                        array_key_exists('uuid', $record)
+                    ){
+                        $uuid = $record['uuid'];
+                    }
+                    elseif(
+                        is_object($record) &&
+                        property_exists($record, 'uuid')
+                    ){
+                        $uuid = $record->uuid;
+                    }
+                    if(
+                        !empty($original_uuid) &&
+                        $original_uuid === $uuid
+                    ){
+                        continue;
+                    }
+                    if(empty($list)){
+                        $match = strtolower($data->data($nr . '.' . $field));
+                    } else {
+                        $match = strtolower($data->data($list . '.' . $nr . '.' . $field));
+                    }
+                    if(empty($match)){
+                        continue;
+                    }
+                    if($match == $string){
+                        $is_unique = false;
+                        break;
+                    }
                 }
             }
         }
