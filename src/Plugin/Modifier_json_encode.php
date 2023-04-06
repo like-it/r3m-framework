@@ -17,8 +17,6 @@ function modifier_json_encode(Parse $parse, Data $data, $value, $flags=0, $depth
     }
     elseif(is_numeric($flags)){
         $flags += 0;
-    } else {
-        $flags = 0;
-    }
+    } 
     return json_encode($value, $flags, $depth);
 }
