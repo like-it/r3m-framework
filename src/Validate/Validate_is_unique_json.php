@@ -8,10 +8,16 @@
  * @changeLog
  *     -            all
  */
+
+use R3m\Io\Config;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 
+/**
+ * @throws \R3m\Io\Exception\ObjectException
+ * @throws Exception
+ */
 function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $argument=''){
     if($object->request('has', 'node.' . 'uuid')){
         $original_uuid = $object->request('node.' . 'uuid');
@@ -26,6 +32,10 @@ function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $arg
     $list = false;
     if(property_exists($argument, 'url')){
         $url = $argument->url;
+        $parameters =[];
+        $parameters[] = $url;
+        $parameters = Config::parameters($object, $parameters);
+        $url = $parameters[0];
     }
     if(property_exists($argument, 'list')){
         $list = $argument->list;
