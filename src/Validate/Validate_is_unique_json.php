@@ -45,7 +45,6 @@ function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $arg
         $data = $object->data_read($url, sha1($url));
         if($data){
             $result = $data->data($list);
-            ddd($result);
             if(is_array($result) || is_object($result)){
                 foreach($result as $nr => $record){
                     $uuid = false;
@@ -61,6 +60,8 @@ function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $arg
                     ){
                         $uuid = $record->uuid;
                     }
+                    d($uuid);
+                    d($original_uuid);
                     if(
                         !empty($original_uuid) &&
                         $original_uuid === $uuid
