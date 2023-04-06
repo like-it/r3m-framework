@@ -29,7 +29,7 @@ function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $arg
         $original_uuid = $object->request('uuid');
     }
     $url = false;
-    $list = false;
+    $list = null;
     if(property_exists($argument, 'url')){
         $url = $argument->url;
         $parameters =[];
