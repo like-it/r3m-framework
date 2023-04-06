@@ -41,9 +41,9 @@ function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $arg
         $list = $argument->list;
     }
     $is_unique = true;
-    ddd($url);
     if($url){
         $data = $object->data_read($url, sha1($url));
+        ddd($data);
         if($data){
             $result = $data->data($list);
             if(is_array($result) || is_object($result)){
