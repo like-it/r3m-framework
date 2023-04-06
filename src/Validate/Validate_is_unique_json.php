@@ -71,6 +71,7 @@ function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $arg
                     } else {
                         $match = strtolower($data->data($list . '.' . $nr . '.' . $field));
                     }
+                    d($match);
                     if(empty($match)){
                         continue;
                     }
