@@ -194,6 +194,8 @@ class Operator {
                 unset($token[$nr]);
             }
         } else {
+            d($token);
+            d($statement);
             throw new exception('Statement must be an array in Operator::remove');
         }
         
