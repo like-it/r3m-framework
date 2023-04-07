@@ -16,6 +16,9 @@ use stdClass;
 use Exception;
 
 class Cli {
+    const INPUT = 'input';
+    const INPUT_HIDDEN = 'input-hidden';
+    const STREAM = 'stream';
     const COLOR_BLACK = 0;
     const COLOR_RED = 1;
     const COLOR_GREEN = 2;
@@ -43,7 +46,7 @@ class Cli {
         }
         $input = null;
         switch($url){
-            case 'input':
+            case Cli::INPUT:
                 fwrite(STDOUT, $text);
                 if($is_flush){
                     ob_flush();
@@ -54,7 +57,7 @@ class Cli {
                 }
                 $input = trim(fgets(STDIN));
             break;
-            case 'input-hidden':
+            case Cli::INPUT_HIDDEN:
                 fwrite(STDOUT, $text);
                 if($is_flush){
                     ob_flush();
@@ -64,7 +67,7 @@ class Cli {
                 $input = trim(fgets(STDIN));
                 system('stty echo');
             break;
-            case 'stream' :
+            case Cli::STREAM :
                 $input = trim(fgets(STDIN));
                 $input = Core::object($input);
             break;

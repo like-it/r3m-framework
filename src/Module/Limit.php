@@ -37,7 +37,7 @@ class Limit extends Data{
             $the_limit = Limit::LIMIT;
         }
         if(array_key_exists('page', $limit)){
-            $start =  ((int) $limit['page'] * $the_limit) - $the_limit;
+            $start = ((int) $limit['page'] * $the_limit) - $the_limit;
         }
         $nr = 0;
         $end = $start + $the_limit;

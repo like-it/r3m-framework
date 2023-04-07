@@ -24,5 +24,8 @@ function function_terminal_readline(Parse $parse, Data $data, $text='', $type=nu
     ){
         return Cli::read($text);
     }
+    if($type === null){
+        $type = 'input';
+    }
     return Cli::read($type, $text);
 }
