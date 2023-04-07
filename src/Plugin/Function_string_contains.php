@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_string_occurrence(Parse $parse, Data $data, $haystack='', $needle='', $before_needle=false){
+function function_string_contains(Parse $parse, Data $data, $haystack='', $needle='', $before_needle=false){
     $result = strstr($haystack, $needle, $before_needle);
     return $result;
 }
