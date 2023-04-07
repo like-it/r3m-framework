@@ -19,13 +19,13 @@ use R3m\Io\Exception\ObjectException;
  */
 function function_terminal_readline(Parse $parse, Data $data, $text='', $type=null){
     if(
-        $text === 'stream' &&
+        $text === Cli::STREAM &&
         $type === null
     ){
         return Cli::read($text);
     }
     if($type === null){
-        $type = 'input';
+        $type = Cli::INPUT;
     }
     return Cli::read($type, $text);
 }
