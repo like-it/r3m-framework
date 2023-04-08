@@ -37,6 +37,8 @@ class Code {
                     dd($selection);
                 }
             default:
+                $debug = debug_backtrace();
+                d($debug);
                 d($selection);
                 throw new Exception('type not defined, (' . $type .')');
         }
