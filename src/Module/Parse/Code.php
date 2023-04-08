@@ -37,6 +37,7 @@ class Code {
                     dd($selection);
                 }
             default:
+                d($selection);
                 throw new Exception('type not defined, (' . $type .')');
         }
         return $result;
