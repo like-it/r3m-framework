@@ -432,7 +432,6 @@ class Variable {
                 continue;
             }
             elseif($record['type'] === Token::TYPE_CURLY_CLOSE){
-                d($operator);
                 $result .= Code::result($build, $storage, $type, $selection);
                 $result .= ' . ';
                 $is_collect = false;
