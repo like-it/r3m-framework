@@ -295,7 +295,7 @@ class App extends Data {
                         'route' => $route,
                         'type' => 'input'
                     ]);
-                    ddd(App::flags($object));
+                    ddd(App::options($object));
                     ddd($route);
                     if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
@@ -614,7 +614,7 @@ class App extends Data {
         return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
-    public static function flags($object): stdClass
+    public static function flags(App $object): stdClass
     {
         $flags = $object->data(App::FLAGS);
         if(empty($flags)){
@@ -624,9 +624,14 @@ class App extends Data {
         return $flags;
     }
 
-    public static function options($object): stdClass
+    public static function options(App $object): stdClass
     {
-        return parent::options($object->data(App::REQUEST)->data());
+        $options = $object->data(App::OPTIONS);
+        if(empty($options)){
+            $options = parent::options($object->data(App::REQUEST)->data());
+            $object->data(App::OPTIONS, $options);
+        }
+        return $options;
     }
 
     /**
