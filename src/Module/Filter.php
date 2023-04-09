@@ -696,7 +696,6 @@ class Filter extends Data{
         $filters = $object->get(App::FILTER)->select(Filter::NAME, [
             'action' => $action
         ]);
-        ddd($filters);
         $response = null;
         if(empty($filters)){
             if(array_key_exists('response', $options)){
