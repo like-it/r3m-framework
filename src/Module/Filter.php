@@ -624,10 +624,7 @@ class Filter extends Data{
         if(empty($list)){
             $list = [];
         }
-        $list[] = [
-            'action' => $action,
-            'options' => $options
-        ];
+        $list[] = $filter->data();
         $object->get(App::FILTER)->set(Filter::NAME, $list);
     }
 
