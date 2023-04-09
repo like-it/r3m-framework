@@ -614,7 +614,7 @@ class App extends Data {
         return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
-    public static function flags(App $object): stdClass
+    public static function flags($object): stdClass
     {
         $flags = $object->data(App::FLAGS);
         if(empty($flags)){
@@ -624,7 +624,7 @@ class App extends Data {
         return $flags;
     }
 
-    public static function options(App $object): stdClass
+    public static function options($object): stdClass
     {
         $options = $object->data(App::OPTIONS);
         if(empty($options)){
