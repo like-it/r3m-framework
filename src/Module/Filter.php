@@ -617,7 +617,9 @@ class Filter extends Data{
         return $list;
     }
 
-    public static function on(App $object, $action, $options=[]){
+    public static function on(App $object, $filter){
+        $action = $filter->get('action');
+        $options = $filter->get('options');
         $list = $object->get(App::FILTER)->get(Filter::NAME);
         if(empty($list)){
             $list = [];
@@ -629,50 +631,52 @@ class Filter extends Data{
         $object->get(App::FILTER)->set(Filter::NAME, $list);
     }
 
-    public static function off(App $object, $action, $options=[]){
+    public static function off(App $object, $filter){
+        $action = $filter->get('action');
+        $options = $filter->get('options');
         $list = $object->get(App::FILTER)->get(Filter::NAME);
         if(empty($list)){
             return;
         }
         //remove them on the sorted list backwards so sorted on input order
         krsort($list);
-        foreach($list as $key => $filter){
+        foreach($list as $key => $node){
             if(empty($options)){
-                if($filter['action'] === $action){
+                if($node['action'] === $action){
                     unset($list[$key]);
                     break;
                 }
             } else {
-                if($filter['action'] === $action){
+                if($node['action'] === $action){
                     foreach($options as $options_key => $value){
                         if(
                             $value === true &&
-                            is_array($filter['options']) &&
-                            array_key_exists($options_key, $filter['options'])
+                            is_array($node['options']) &&
+                            array_key_exists($options_key, $node['options'])
                         ){
                             unset($list[$key]);
                             break;
                         }
                         if(
                             $value === true &&
-                            is_object($filter['options']) &&
-                            property_exists($filter['options'], $options_key)
+                            is_object($node['options']) &&
+                            property_exists($node['options'], $options_key)
                         ){
                             unset($list[$key]);
                             break;
                         }
                         elseif(
-                            is_array($filter['options']) &&
-                            array_key_exists($options_key, $filter['options']) &&
-                            $filter['options'][$options_key] === $value
+                            is_array($node['options']) &&
+                            array_key_exists($options_key, $node['options']) &&
+                            $node['options'][$options_key] === $value
                         ){
                             unset($list[$key]);
                             break;
                         }
                         elseif(
-                            is_object($filter['options']) &&
-                            property_exists($filter['options'], $options_key) &&
-                            $filter['options']->{$options_key} === $value
+                            is_object($node['options']) &&
+                            property_exists($node['options'], $options_key) &&
+                            $node['options']->{$options_key} === $value
                         ){
                             unset($list[$key]);
                             break;
@@ -808,7 +812,6 @@ class Filter extends Data{
             $object->config('extension.json')
         ;
         $data = $object->data_read($url);
-        ddd($data);
         if(!$data){
             return;
         }
@@ -818,7 +821,7 @@ class Filter extends Data{
                     property_exists($filter, 'action') &&
                     property_exists($filter, 'options')
                 )
-                    Filter::on($object, $filter->action, $filter->options);
+                    Filter::on($object, $filter);
             }
         }
 
