@@ -288,12 +288,12 @@ class App extends Data {
                     if (in_array('before_run', $methods, true)) {
                         $functions[] = 'before_run';
                         $route->controller::before_run($object);
-                        $route = Filter::trigger($object,'filter.input', [
-                            'route' => $route,
-                            'type' => 'input'
-                        ]);
-                        ddd($route);
                     }
+                    $route = Filter::trigger($object,'filter.input', [
+                        'route' => $route,
+                        'type' => 'input'
+                    ]);
+                    ddd($route);
                     if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
                         $object->config('controller.function', $route->function);
