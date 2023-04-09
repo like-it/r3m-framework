@@ -180,6 +180,7 @@ class Data {
             return $find;
         }
         foreach($data as $value){
+            d($value);
             if(is_array($value)){
                 foreach($criteria as $option_key => $option_value){
                     if(
