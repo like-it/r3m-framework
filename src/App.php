@@ -293,7 +293,7 @@ class App extends Data {
                         'route' => $route,
                         'type' => 'input'
                     ]);
-                    ddd(App::parameter($object, 'all', 3));
+                    ddd(App::flags($object));
                     ddd($route);
                     if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
