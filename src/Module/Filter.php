@@ -704,42 +704,9 @@ class Filter extends Data{
             return null;
         }
         $filters = Sort::list($filters)->with(['options.priority' => 'DESC']);
-        ddd($filters);
         if(is_array($filters) || is_object($filters)){
             foreach($filters as $filter){
-                if(is_array($filter)){
-                    if(
-                        array_key_exists('options', $filter) &&
-                        property_exists($filter['options'], 'controller') &&
-                        is_array($filter['options']->controller)
-                    ){
-                        foreach($filter['options']->controller as $controller){
-                            $route = new stdClass();
-                            $route->controller = $controller;
-                            $route = Route::controller($route);
-                            if(
-                                property_exists($route, 'controller') &&
-                                property_exists($route, 'function')
-                            ){
-                                $filter = new Data($filter);
-                                try {
-                                    $response = $route->controller::{$route->function}($object, $filter, $options);
-                                    if($filter->get('stopPropagation')){
-                                        break 2;
-                                    }
-                                }
-                                catch (LocateException $exception){
-                                    if($object->config('project.log.error')){
-                                        $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
-                                    }
-                                    elseif($object->config('project.log.name')){
-                                        $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } elseif(is_object($filter)) {
+                if(is_object($filter)) {
                     if(
                         property_exists($filter, 'options') &&
                         property_exists($filter->options, 'controller') &&
