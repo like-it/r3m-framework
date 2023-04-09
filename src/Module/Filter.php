@@ -808,6 +808,7 @@ class Filter extends Data{
             $object->config('extension.json')
         ;
         $data = $object->data_read($url);
+        ddd($data);
         if(!$data){
             return;
         }
