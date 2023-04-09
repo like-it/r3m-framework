@@ -694,6 +694,12 @@ class Filter extends Data{
         ]);
         $response = null;
         if(empty($filters)){
+            if(array_key_exists('response', $options)){
+                return $options['response'];
+            }
+            elseif(array_key_exists('route', $options)){
+                return $options['route'];
+            }
             return null;
         }
         $filters = Sort::list($filters)->with(['options.priority' => 'DESC']);
@@ -771,12 +777,18 @@ class Filter extends Data{
             switch($options['type']){
                 case 'input' :
                     if(array_key_exists('route', $options)){
-                        return $response;
+                        if($response){
+                            return $response;
+                        }
+                        return $options['route'];
                     }
                     break;
                 case 'output' :
                     if(array_key_exists('response', $options)){
-                        return $response;
+                        if($response){
+                            return $response;
+                        }
+                        return $options['response'];
                     }
                     break;
             }
