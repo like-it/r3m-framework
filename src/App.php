@@ -64,6 +64,8 @@ class App extends Data {
     const CONFIG = App::NAMESPACE . '.' . Config::NAME;
     const EVENT = App::NAMESPACE . '.' . Event::NAME;
     const FILTER = App::NAMESPACE . '.' . Filter::NAME;
+    const FLAGS = App::NAMESPACE . '.' . Data::FLAGS;
+    const OPTIONS = App::NAMESPACE . '.' . Data::OPTIONS;
     const REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
     const DATABASE = App::NAMESPACE . '.' . Database::NAME;
     const REQUEST_HEADER = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_HEADER;
@@ -614,7 +616,12 @@ class App extends Data {
 
     public static function flags($object): stdClass
     {
-        return parent::flags($object->data(App::REQUEST)->data());
+        $flags = $object->data(App::FLAGS);
+        if(empty($flags)){
+            $flags = parent::flags($object->data(App::REQUEST)->data());
+            $object->data(App::FLAGS, $flags);
+        }
+        return $flags;
     }
 
     public static function options($object): stdClass

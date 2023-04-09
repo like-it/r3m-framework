@@ -16,6 +16,9 @@ use stdClass;
 use Exception;
 
 class Data {
+    const FLAGS = 'flags';
+    const OPTIONS = 'options';
+
     private $data;
     private $do_not_nest_key;
 
