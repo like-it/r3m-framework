@@ -693,10 +693,10 @@ class Filter extends Data{
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        ddd($object->get(App::FILTER));
         $filters = $object->get(App::FILTER)->select(Filter::NAME, [
             'action' => $action
         ]);
+        ddd($filters);
         $response = null;
         if(empty($filters)){
             if(array_key_exists('response', $options)){
