@@ -123,7 +123,10 @@ class Data {
     {
         $flags = [];
         foreach($data as $nr => $parameter){
-            if(substr($parameter, 0, 2) === '--'){
+            if(
+                is_string($parameter) &&
+                substr($parameter, 0, 2) === '--'
+            ){
                 $parameter = substr($parameter, 2);
                 $tmp = explode('=', $parameter);
                 if(count($tmp) > 1){
@@ -146,6 +149,7 @@ class Data {
         $options = [];
         foreach($data as $nr => $parameter){
             if(
+                is_string($parameter) &&
                 substr($parameter, 0, 2) !== '--' &&
                 substr($parameter, 0, 1) === '-'
             ){
