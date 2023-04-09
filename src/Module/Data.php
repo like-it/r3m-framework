@@ -117,7 +117,10 @@ class Data {
         if($result === null || is_bool($result)){
             return $result;
         }
-        return trim($result);
+        if(is_scalar($result)){
+            return trim($result);
+        }
+        return $result;
     }
 
     /**
