@@ -656,7 +656,7 @@ class Filter extends Data{
                         if(
                             $value === true &&
                             is_object($filter['options']) &&
-                            property_exists($event['options'], $options_key)
+                            property_exists($filter['options'], $options_key)
                         ){
                             unset($list[$key]);
                             break;
@@ -664,7 +664,7 @@ class Filter extends Data{
                         elseif(
                             is_array($filter['options']) &&
                             array_key_exists($options_key, $filter['options']) &&
-                            $event['options'][$options_key] === $value
+                            $filter['options'][$options_key] === $value
                         ){
                             unset($list[$key]);
                             break;
@@ -817,7 +817,7 @@ class Filter extends Data{
                     property_exists($filter, 'action') &&
                     property_exists($filter, 'options')
                 )
-                    Filter::on($object, $filter->type, $filter->action, $filter->options);
+                    Filter::on($object, $filter->action, $filter->options);
             }
         }
 
