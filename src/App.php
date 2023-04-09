@@ -21,6 +21,7 @@ use R3m\Io\Module\Dir;
 use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\FileRequest;
+use R3m\Io\Module\Filter;
 use R3m\Io\Module\Handler;
 use R3m\Io\Module\Host;
 use R3m\Io\Module\Logger;
@@ -62,6 +63,7 @@ class App extends Data {
     const ROUTE = App::NAMESPACE . '.' . Route::NAME;
     const CONFIG = App::NAMESPACE . '.' . Config::NAME;
     const EVENT = App::NAMESPACE . '.' . Event::NAME;
+    const FILTER = App::NAMESPACE . '.' . Filter::NAME;
     const REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
     const DATABASE = App::NAMESPACE . '.' . Database::NAME;
     const REQUEST_HEADER = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_HEADER;
@@ -78,12 +80,14 @@ class App extends Data {
         $this->data(App::AUTOLOAD_COMPOSER, $autoload);
         $this->data(App::CONFIG, $config);
         $this->data(App::EVENT, new Data());
+        $this->data(App::FILTER, new Filter());
         App::is_cli();
         require_once 'Debug.php';
         require_once 'Error.php';
         Config::configure($this);
-        Event::configure($this);
         Host::configure($this);
+        Event::configure($this);
+        Filter::configure($this);
         Logger::configure($this);
         Autoload::configure($this);
         Autoload::ramdisk_configure($this);
@@ -284,6 +288,10 @@ class App extends Data {
                     if (in_array('before_run', $methods, true)) {
                         $functions[] = 'before_run';
                         $route->controller::before_run($object);
+                        $route = Filter::trigger($object,'filter.input', [
+                            'route' => $route,
+                            'type' => 'input'
+                        ]);
                     }
                     if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
@@ -302,6 +310,12 @@ class App extends Data {
                         $result = $route->controller::{$route->function}($object);
                         Event::trigger($object, 'app.run.route.controller', [
                             'route' => $route,
+                            'result' => $result
+                        ]);
+                        $result = Filter::trigger($object, 'filter.output', [
+                            'route' => $route,
+                            'type' => 'output',
+                            'result' => $result
                         ]);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(

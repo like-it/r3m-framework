@@ -10,12 +10,15 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\LocateException;
+use R3m\Io\Exception\ObjectException;
 use stdClass;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 
 class Filter extends Data{
+    const NAME = 'Filter';
 
     public static function list($list): Filter
     {
@@ -612,5 +615,199 @@ class Filter extends Data{
             }
         }
         return $list;
+    }
+
+    public static function on(App $object, $action, $options=[]){
+        $list = $object->get(App::FILTER)->get(Filter::NAME);
+        if(empty($list)){
+            $list = [];
+        }
+        $list[] = [
+            'action' => $action,
+            'options' => $options
+        ];
+        $object->get(App::FILTER)->set(Filter::NAME, $list);
+    }
+
+    public static function off(App $object, $action, $options=[]){
+        $list = $object->get(App::FILTER)->get(Filter::NAME);
+        if(empty($list)){
+            return;
+        }
+        //remove them on the sorted list backwards so sorted on input order
+        krsort($list);
+        foreach($list as $key => $filter){
+            if(empty($options)){
+                if($filter['action'] === $action){
+                    unset($list[$key]);
+                    break;
+                }
+            } else {
+                if($filter['action'] === $action){
+                    foreach($options as $options_key => $value){
+                        if(
+                            $value === true &&
+                            is_array($filter['options']) &&
+                            array_key_exists($options_key, $filter['options'])
+                        ){
+                            unset($list[$key]);
+                            break;
+                        }
+                        if(
+                            $value === true &&
+                            is_object($filter['options']) &&
+                            property_exists($event['options'], $options_key)
+                        ){
+                            unset($list[$key]);
+                            break;
+                        }
+                        elseif(
+                            is_array($filter['options']) &&
+                            array_key_exists($options_key, $filter['options']) &&
+                            $event['options'][$options_key] === $value
+                        ){
+                            unset($list[$key]);
+                            break;
+                        }
+                        elseif(
+                            is_object($filter['options']) &&
+                            property_exists($filter['options'], $options_key) &&
+                            $filter['options']->{$options_key} === $value
+                        ){
+                            unset($list[$key]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $object->get(App::FILTER)->set(Filter::NAME, $list);
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public static function trigger(App $object, $action, $options=[]){
+        $filters = $object->get(App::FILTER)->select(Filter::NAME, [
+            'action' => $action
+        ]);
+        $response = null;
+        if(empty($filters)){
+            return null;
+        }
+        $filters = Sort::list($filters)->with(['options.priority' => 'DESC']);
+        ddd($filters);
+        if(is_array($filters) || is_object($filters)){
+            foreach($filters as $filter){
+                if(is_array($filter)){
+                    if(
+                        array_key_exists('options', $filter) &&
+                        property_exists($filter['options'], 'controller') &&
+                        is_array($filter['options']->controller)
+                    ){
+                        foreach($filter['options']->controller as $controller){
+                            $route = new stdClass();
+                            $route->controller = $controller;
+                            $route = Route::controller($route);
+                            if(
+                                property_exists($route, 'controller') &&
+                                property_exists($route, 'function')
+                            ){
+                                $filter = new Data($filter);
+                                try {
+                                    $response = $route->controller::{$route->function}($object, $filter, $options);
+                                    if($filter->get('stopPropagation')){
+                                        break 2;
+                                    }
+                                }
+                                catch (LocateException $exception){
+                                    if($object->config('project.log.error')){
+                                        $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
+                                    }
+                                    elseif($object->config('project.log.name')){
+                                        $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } elseif(is_object($filter)) {
+                    if(
+                        property_exists($filter, 'options') &&
+                        property_exists($filter->options, 'controller') &&
+                        is_array($filter->options->controller)
+                    ){
+                        foreach($filter->options->controller as $controller){
+                            $route = new stdClass();
+                            $route->controller = $controller;
+                            $route = Route::controller($route);
+                            if(
+                                property_exists($route, 'controller') &&
+                                property_exists($route, 'function')
+                            ){
+                                $filter = new Data($filter);
+                                try {
+                                    $response = $route->controller::{$route->function}($object, $filter, $options);
+                                    if($filter->get('stopPropagation')){
+                                        break 2;
+                                    }
+                                }
+                                catch (LocateException $exception){
+                                    if($object->config('project.log.error')){
+                                        $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
+                                    }
+                                    elseif($object->config('project.log.name')){
+                                        $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(array_key_exists('type', $options)){
+            switch($options['type']){
+                case 'input' :
+                    if(array_key_exists('route', $options)){
+                        return $response;
+                    }
+                    break;
+                case 'output' :
+                    if(array_key_exists('response', $options)){
+                        return $response;
+                    }
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @throws ObjectException
+     */
+    public static function configure(App $object){
+        $url = $object->config('project.dir.data') .
+            'Node' .
+            $object->config('ds') .
+            'Filter' .
+            $object->config('ds') .
+            'Data' .
+            $object->config('extension.json')
+        ;
+        $data = $object->data_read($url);
+        if(!$data){
+            return;
+        }
+        if($data->has(Filter::NAME)){
+            foreach($data->get(Filter::NAME) as $filter){
+                if(
+                    property_exists($filter, 'action') &&
+                    property_exists($filter, 'options')
+                )
+                    Filter::on($object, $filter->type, $filter->action, $filter->options);
+            }
+        }
+
     }
 }
