@@ -821,6 +821,7 @@ class Filter extends Data{
                     property_exists($filter, 'action') &&
                     property_exists($filter, 'options')
                 )
+                    $filter = new Data($filter);
                     Filter::on($object, $filter);
             }
         }
