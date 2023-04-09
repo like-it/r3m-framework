@@ -292,6 +292,7 @@ class App extends Data {
                             'route' => $route,
                             'type' => 'input'
                         ]);
+                        ddd($route);
                     }
                     if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
@@ -312,11 +313,13 @@ class App extends Data {
                             'route' => $route,
                             'result' => $result
                         ]);
+                        d($result);
                         $result = Filter::trigger($object, 'filter.output', [
                             'route' => $route,
                             'type' => 'output',
                             'result' => $result
                         ]);
+                        ddd($result);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
                             'Controller (' .
