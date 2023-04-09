@@ -703,7 +703,6 @@ class Filter extends Data{
             }
             return null;
         }
-        ddd($filters);
         $filters = Sort::list($filters)->with(['options.priority' => 'DESC']);
         ddd($filters);
         if(is_array($filters) || is_object($filters)){
