@@ -72,7 +72,11 @@ class Data {
                         if(strtolower($param) == strtolower($parameter)){
                             if($offset !== 0){
                                 if(property_exists($data, ($key + $offset))){
-                                    $value = trim($data->{($key + $offset)});
+                                    if(is_scalar($data->{($key + $offset)})){
+                                        $value = trim($data->{($key + $offset)});
+                                    } else {
+                                        $value = $data->{($key + $offset)};
+                                    }
                                 } else {
                                     $result = null;
                                     break;
