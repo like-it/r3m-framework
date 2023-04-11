@@ -88,8 +88,6 @@ class Sort extends Data{
                 } else {
                     $test = krsort($result, $flags);
                 }
-                d($test);
-                d($result);
                 $list = [];                
                 foreach($result as $attribute => $subList){
                     foreach($subList as $nr => $record){
