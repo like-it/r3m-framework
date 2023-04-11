@@ -62,7 +62,6 @@ class Validate {
             } 
             elseif(is_array($list)){
                 $field_request = str_replace('[]', '', $field);
-                d($object->request('has', 'node.' . $field_request));
                 if($object->request('has', 'node.' . $field_request)){
                     $value = $object->request('node.' . $field_request);
                 }
@@ -72,7 +71,6 @@ class Validate {
                 else {
                     $value = $object->request($field_request);
                 }
-                d($value);
                 if(
                     is_string($value) &&
                     substr($value, 0, 1) === '[' &&
