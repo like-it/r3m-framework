@@ -84,9 +84,18 @@ class Sort extends Data{
                 }
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
-                    $test = ksort($result, $flags);
+                    if($attribute === 'uuid'){
+                        ddd('uuid sort');
+                    } else {
+                        ksort($result, $flags);
+                    }
+
                 } else {
-                    $test = krsort($result, $flags);
+                    if($attribute === 'uuid'){
+                        ddd('reverseuuid sort');
+                    } else {
+                        krsort($result, $flags);
+                    }
                 }
                 $list = [];                
                 foreach($result as $attribute => $subList){
