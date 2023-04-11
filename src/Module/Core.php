@@ -590,7 +590,6 @@ class Core
             }
             elseif(is_array($object) && array_key_exists($key, $object)){
                 $get = Core::object_has($attributeList->{$key}, $object[$key]);
-                d($get);
                 if ($get === false) {
                     return false;
                 }
