@@ -319,7 +319,6 @@ class App extends Data {
                             'type' => 'output',
                             'response' => $result
                         ]);
-                        ddd($result);
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
                             'Controller (' .
