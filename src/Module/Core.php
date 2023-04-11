@@ -578,8 +578,15 @@ class Core
             if (empty($key)) {
                 continue;
             }
-            if (property_exists($object, $key)) {
+            if (is_object($object) && property_exists($object, $key)) {
                 $get = Core::object_has($attributeList->{$key}, $object->{$key});
+                if ($get === false) {
+                    return false;
+                }
+                return true;
+            }
+            elseif(is_array($object) && array_key_exists($key, $object)){
+                $get = Core::object_has($attributeList->{$key}, $object[$key]);
                 if ($get === false) {
                     return false;
                 }
