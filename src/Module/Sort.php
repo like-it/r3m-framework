@@ -288,6 +288,9 @@ class Sort extends Data{
         if($a === $b){
             return 0;
         }
+        if(is_array($a) || is_array($b)){
+            return 0;
+        }
         $explode_a = explode('-', $a);
         $explode_b = explode('-', $b);
 
