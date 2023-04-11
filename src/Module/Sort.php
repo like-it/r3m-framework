@@ -85,7 +85,7 @@ class Sort extends Data{
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
                     if($attribute === 'uuid'){
-                        usort($result, array($this,"uuid_compare"));
+                        usort($result, array($this,"uuid_compare_ascending"));
                         ddd($result);
                     } else {
                         ksort($result, $flags);
@@ -93,7 +93,8 @@ class Sort extends Data{
 
                 } else {
                     if($attribute === 'uuid'){
-                        ddd('reverseuuid sort');
+                        usort($result, array($this,"uuid_compare_descending"));
+                        ddd($result);
                     } else {
                         krsort($result, $flags);
                     }
@@ -270,7 +271,7 @@ class Sort extends Data{
         return $list;
     }
 
-    public function uuid_compare($a, $b)
+    public function uuid_compare_ascending($a, $b)
     {
         $object_a = reset($a);
         $object_b = reset($b);
@@ -284,12 +285,45 @@ class Sort extends Data{
         } else {
             $b = $object_b->uuid;
         }
-        if($a > $b){
-            return -1;
+        if($a === $b){
+            return 0;
         }
-        if($a < $b){
-            return 1;
+        $explode_a = explode('-', $a);
+        $explode_b = explode('-', $b);
+
+        foreach($explode_a as $nr => $part){
+            if(hexdec($part) > hexdec($explode_b[$nr])){
+                return 1;
+            }
         }
-        return 0;
+        return -1;
+    }
+
+    public function uuid_compare_descending($a, $b)
+    {
+        $object_a = reset($a);
+        $object_b = reset($b);
+        if(is_array($object_a)){
+            $a = $object_a['uuid'];
+        } else {
+            $a = $object_a->uuid;
+        }
+        if(is_array($object_b)){
+            $b = $object_b['uuid'];
+        } else {
+            $b = $object_b->uuid;
+        }
+        if($a === $b){
+            return 0;
+        }
+        $explode_a = explode('-', $a);
+        $explode_b = explode('-', $b);
+
+        foreach($explode_a as $nr => $part){
+            if(hexdec($part) > hexdec($explode_b[$nr])){
+                return -1;
+            }
+        }
+        return 1;
     }
 }
