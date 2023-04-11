@@ -22,7 +22,7 @@ class Sort extends Data{
         return new Sort($list);
     }
 
-    public function with($sort=[], $key_reset=false, $key=false){
+    public function with($sort=[], $key_reset=false, $key=false, $flags=SORT_NATURAL){
         $list = $this->data();
         if(
             is_array($list) || 
@@ -69,9 +69,9 @@ class Sort extends Data{
                 }
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
-                    $test = ksort($result, SORT_NATURAL);
+                    $test = ksort($result, $flags);
                 } else {
-                    $test = krsort($result, SORT_NATURAL);
+                    $test = krsort($result, $flags);
                 }
                 d($test);
                 d($result);
@@ -182,15 +182,15 @@ class Sort extends Data{
                     }
                     unset($sort[$attribute]);
                     if(strtolower($sortable_1) == 'asc'){
-                        ksort($result, SORT_NATURAL);
+                        ksort($result, $flags);
                     } else {
-                        krsort($result, SORT_NATURAL);
+                        krsort($result, $flags);
                     }                
                     foreach($result as $key => $list){
                         if(strtolower($sortable_2) == 'asc'){
-                            ksort($list, SORT_NATURAL);                            
+                            ksort($list, $flags);
                         } else {
-                            krsort($list, SORT_NATURAL);
+                            krsort($list, $flags);
                         }
                         $result[$key] = $list;                                                
                     }                                        
