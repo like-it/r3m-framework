@@ -312,7 +312,10 @@ class File {
         $size = file_put_contents($url, $data, $flags);
         switch($return){
             case 'size':
+            case 'byte':
+            case 'bytes':
                 return $size;
+            case 'line':
             case 'lines':
                 ddd($data);
                 return $size !== false;
