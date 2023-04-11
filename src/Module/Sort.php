@@ -95,7 +95,10 @@ class Sort extends Data{
                             } else {
                                 while(true){
                                     $uuid = Core::uuid();
-                                    if(!array_key_exists($uuid, $list)){
+                                    if(
+                                        !array_key_exists($uuid, $list) &&
+                                        is_object($record)
+                                    ){
                                         $record->uuid = $uuid;
                                         break;
                                     }
@@ -215,7 +218,10 @@ class Sort extends Data{
                                     } else {
                                         while(true){
                                             $uuid = Core::uuid();
-                                            if(!array_key_exists($uuid, $list)){
+                                            if(
+                                                !array_key_exists($uuid, $list) &&
+                                                is_object($node)
+                                            ){
                                                 $node->uuid = $uuid;
                                                 break;
                                             }
