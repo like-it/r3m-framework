@@ -272,8 +272,24 @@ class Sort extends Data{
 
     public function uuid_compare($a, $b)
     {
-        d($a);
-        d($b);
-        return 1;
-    } 
+        $object_a = reset($a);
+        $object_b = reset($b);
+        if(is_array($object_a)){
+            $a = $object_a['uuid'];
+        } else {
+            $a = $object_a->uuid;
+        }
+        if(is_array($object_b)){
+            $b = $object_b['uuid'];
+        } else {
+            $b = $object_b->uuid;
+        }
+        if($a > $b){
+            return -1;
+        }
+        if($a < $b){
+            return 1;
+        }
+        return 0;
+    }
 }
