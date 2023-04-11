@@ -697,7 +697,6 @@ class Filter extends Data{
             'action' => $action
         ]);
         $response = null;
-        d($options);
         if(empty($filters)){
             if(
                 array_key_exists('type', $options) &&
