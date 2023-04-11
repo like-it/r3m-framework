@@ -327,7 +327,7 @@ class File {
     public static function write($url='', $data='', $return='size'){
         $url = (string) $url;
         $data = (string) $data;
-        return File::put($url, $data, $return);
+        return File::put($url, $data, LOCK_EX, $return);
     }
 
     /**
