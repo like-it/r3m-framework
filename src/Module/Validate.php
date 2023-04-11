@@ -61,7 +61,11 @@ class Validate {
                 }
             } 
             elseif(is_array($list)){
+                d($list);
+                d($field);
                 $field_request = str_replace('[]', '', $field);
+                d($field_request);
+                d($object->request());
                 if($object->request('has', 'node.' . $field_request)){
                     $value = $object->request('node.' . $field_request);
                 }
