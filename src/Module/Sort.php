@@ -69,10 +69,11 @@ class Sort extends Data{
                 }
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
-                    ksort($result, SORT_NATURAL);
+                    $test = ksort($result, SORT_NATURAL);
                 } else {
-                    krsort($result, SORT_NATURAL);
+                    $test = krsort($result, SORT_NATURAL);
                 }
+                d($test);
                 d($result);
                 $list = [];                
                 foreach($result as $attribute => $subList){
