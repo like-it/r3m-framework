@@ -327,10 +327,17 @@ class Sort extends Data{
         $explode_b = explode('-', $b);
 
         foreach($explode_a as $nr => $part){
-            if(hexdec($part) > hexdec($explode_b[$nr])){
+            $hex = hexdec($part);
+            $match = hexdec($explode_b[$nr]);
+            if($hex === $match){
+                continue;
+            }
+            if($hex > $match){
+                return 1;
+            }
+            elseif($hex < $match){
                 return -1;
             }
         }
-        return 1;
     }
 }
