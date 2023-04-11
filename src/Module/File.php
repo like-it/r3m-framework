@@ -317,7 +317,11 @@ class File {
                 return $size;
             case 'line':
             case 'lines':
-                ddd($data);
+                $explode = explode(PHP_EOL, $data);
+                foreach($explode as $nr => $line){
+
+                }
+                ddd($explode);
                 return $size !== false;
 
         }
