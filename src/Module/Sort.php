@@ -22,7 +22,22 @@ class Sort extends Data{
         return new Sort($list);
     }
 
-    public function with($sort=[], $key_reset=false, $key=false, $flags=SORT_NATURAL){
+    public function with($sort=[], $options=[]){
+        if(array_key_exists('key', $options)){
+            $key = $options['key'];
+        } else {
+            $key = false;
+        }
+        if(array_key_exists('key_reset', $options)){
+            $key_reset = $options['key_reset'];
+        } else {
+            $key_reset = false;
+        }
+        if(array_key_exists('flags', $options)){
+            $flags = $options['flags'];
+        } else {
+            $flags = SORT_NATURAL;
+        }
         $list = $this->data();
         if(
             is_array($list) || 
