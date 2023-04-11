@@ -11,6 +11,7 @@
 use R3m\Io\Module\Parse\Token;
 
 function validate_integer(R3m\Io\App $object, $string='', $field='', $argument=''){
+    d($string);
     $int = intval($string);
     $argument = Token::tree('{if($argument ' . $argument . ')}{/if}');
     $left = null;
