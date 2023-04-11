@@ -443,9 +443,9 @@ class Data {
      * @throws ObjectException
      * @throws FileWriteException
      */
-    public function write($url=''){
+    public function write($url='', $return='size'){
         $dir = Dir::name($url);
         Dir::create($dir);
-        return File::write($url, Core::object($this->data(), Core::OBJECT_JSON));
+        return File::write($url, Core::object($this->data(), Core::OBJECT_JSON), $return);
     }
 }
