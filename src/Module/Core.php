@@ -554,7 +554,10 @@ class Core
 
     public static function object_has($attributeList = [], $object = ''): bool
     {
-        if (Core::object_is_empty($object)) {
+        if (
+            is_object($object) &&
+            Core::object_is_empty($object)
+        ) {
             if (empty($attributeList)) {
                 return true;
             }
@@ -587,6 +590,7 @@ class Core
             }
             elseif(is_array($object) && array_key_exists($key, $object)){
                 $get = Core::object_has($attributeList->{$key}, $object[$key]);
+                d($get);
                 if ($get === false) {
                     return false;
                 }
