@@ -73,6 +73,7 @@ class Sort extends Data{
                 } else {
                     krsort($result, SORT_NATURAL);
                 }
+                ddd($result);
                 $list = [];                
                 foreach($result as $attribute => $subList){
                     foreach($subList as $nr => $record){
