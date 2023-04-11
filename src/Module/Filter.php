@@ -19,6 +19,9 @@ use R3m\Io\Config;
 
 class Filter extends Data{
     const NAME = 'Filter';
+    const INPUT = 'input';
+    const OUTPUT = 'output';
+
 
     public static function list($list): Filter
     {
@@ -696,10 +699,18 @@ class Filter extends Data{
         $response = null;
         d($options);
         if(empty($filters)){
-            if(array_key_exists('response', $options)){
+            if(
+                array_key_exists('type', $options) &&
+                $options['type'] === Filter::OUTPUT &&
+                array_key_exists('response', $options)
+        ){
                 return $options['response'];
             }
-            elseif(array_key_exists('route', $options)){
+            elseif(
+                array_key_exists('type', $options) &&
+                $options['type'] === Filter::INPUT &&
+                array_key_exists('route', $options)
+            ){
                 return $options['route'];
             }
             return null;

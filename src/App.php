@@ -312,12 +312,12 @@ class App extends Data {
                         $result = $route->controller::{$route->function}($object);
                         Event::trigger($object, 'app.run.route.controller', [
                             'route' => $route,
-                            'result' => $result
+                            'response' => $result
                         ]);
                         $result = Filter::trigger($object, 'filter.output', [
                             'route' => $route,
                             'type' => 'output',
-                            'result' => $result
+                            'response' => $result
                         ]);
                         ddd($result);
                     } else {
