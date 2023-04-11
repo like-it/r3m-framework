@@ -308,18 +308,26 @@ class File {
     }
 
 
-    public static function put($url, $data, $flags=LOCK_EX){
-        return file_put_contents($url, $data, $flags);
+    public static function put($url, $data, $flags=LOCK_EX, $return='size'){
+        $size = file_put_contents($url, $data, $flags);
+        switch($return){
+            case 'size':
+                return $size;
+            case 'lines':
+                ddd($data);
+                return $size !== false;
+
+        }
     }
 
     /**
      * @throws FileWriteException
      * @bug may write wrong files in Parse:Build:write in a multithreading situation . solution use file::put
      */
-    public static function write($url='', $data=''){
+    public static function write($url='', $data='', $return='size'){
         $url = (string) $url;
         $data = (string) $data;
-        return File::put($url, $data);
+        return File::put($url, $data, $return);
     }
 
     /**
