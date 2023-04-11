@@ -318,12 +318,7 @@ class File {
             case 'line':
             case 'lines':
                 $explode = explode(PHP_EOL, $data);
-                foreach($explode as $nr => $line){
-
-                }
-                ddd($explode);
-                return $size !== false;
-
+                return $size !== false ? count($explode) : false;
         }
     }
 
