@@ -86,7 +86,6 @@ class Sort extends Data{
                 if(strtolower($sortable_1) == 'asc'){
                     if($attribute === 'uuid'){
                         usort($result, array($this,"uuid_compare_ascending"));
-                        ddd($result);
                     } else {
                         ksort($result, $flags);
                     }
@@ -94,7 +93,6 @@ class Sort extends Data{
                 } else {
                     if($attribute === 'uuid'){
                         usort($result, array($this,"uuid_compare_descending"));
-                        ddd($result);
                     } else {
                         krsort($result, $flags);
                     }
