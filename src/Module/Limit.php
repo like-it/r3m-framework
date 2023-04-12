@@ -57,9 +57,16 @@ class Limit extends Data{
                 }
                 if($nr < $end && $is_collect){
                     if($preserve_keys){
-                        if(is_object($record) && property_exists($record, 'uuid')){
+                        if(
+                            is_object($record) &&
+                            property_exists($record, 'uuid')
+                        ){
                             $result[$record->uuid] = $record;
-                        } elseif(is_array($record) && array_key_exists('uuid', $record)){
+                        }
+                        elseif(
+                            is_array($record) &&
+                            array_key_exists('uuid', $record)
+                        ){
                             $result[$record['uuid']] = $record;
                         } else {
                             $result[] = $record;
