@@ -24,8 +24,12 @@ class Limit extends Data{
         return new Limit($list);
     }
 
-    public function with($limit=[]): array
+    public function with($limit=[], $options=[]): array
     {
+        $preserve_keys = false;
+        if(array_key_exists('preserve_keys', $options)){
+            $preserve_keys = $options['preserve_keys'];
+        }
         $list = $this->data();
         $start = 0;
         if(array_key_exists('start', $limit)){
@@ -52,7 +56,17 @@ class Limit extends Data{
                     $is_collect = true;
                 }
                 if($nr < $end && $is_collect){
-                    $result[] = $record;
+                    if($preserve_keys){
+                        if(is_object($record) && property_exists($record, 'uuid')){
+                            $result[$record->uuid] = $record;
+                        } elseif(is_array($record) && array_key_exists('uuid', $record)){
+                            $result[$record['uuid']] = $record;
+                        } else {
+                            $result[] = $record;
+                        }
+                    } else {
+                        $result[] = $record;
+                    }
                 }
                 elseif($is_collect) {
                     break;
