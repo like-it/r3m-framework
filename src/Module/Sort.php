@@ -186,8 +186,6 @@ class Sort extends Data{
                         foreach($list as $list_key => $node) {
                             foreach ($sort as $attribute => $record) {
                                 $value = $data->data($result_key . '.' . $list_key . '.' . $attribute);
-                                d($attribute);
-                                d($value);
                                 if(is_scalar($value)){
                                     if (is_array($node)) {
                                         $result[$result_key][$value][] = $node;
