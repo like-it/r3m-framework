@@ -74,6 +74,7 @@ class Controller {
         ){
             $before = File::basename($before);
         }
+        $name = str_replace(':','.', $name);
         $name = Core::ucfirst_sentence(str_replace('_','.', $name));
         if($before !== null){
             return $before . $delimiter . $name;
