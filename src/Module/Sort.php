@@ -212,8 +212,6 @@ class Sort extends Data{
                             }
                         }
                     }
-                    d($sortable_1);
-                    d($sortable_2);
                     unset($sort[$attribute]);
                     if(strtolower($sortable_1) == 'asc'){
                         ksort($result, $flags);
@@ -229,7 +227,6 @@ class Sort extends Data{
                         $result[$key] = $list;                                                
                     }
                     if($output === 'raw'){
-                        ddd($result);
                         return $result;
                     }
                     $list = [];          
