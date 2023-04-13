@@ -225,6 +225,7 @@ class Sort extends Data{
                         $result[$key] = $list;                                                
                     }
                     if($output === 'raw'){
+                        ddd($result);
                         return $result;
                     }
                     $list = [];          
