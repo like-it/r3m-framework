@@ -23,6 +23,11 @@ class Sort extends Data{
     }
 
     public function with($sort=[], $options=[]){
+        if(array_key_exists('output', $options)){
+            $output = $options['output'];
+        } else {
+            $output = false;
+        }
         if(array_key_exists('key', $options)){
             $key = $options['key'];
         } else {
@@ -96,6 +101,9 @@ class Sort extends Data{
                     } else {
                         krsort($result, $flags);
                     }
+                }
+                if($output === 'raw'){
+                    return $result;
                 }
                 $list = [];                
                 foreach($result as $attribute => $subList){
@@ -215,7 +223,10 @@ class Sort extends Data{
                             krsort($list, $flags);
                         }
                         $result[$key] = $list;                                                
-                    }                                        
+                    }
+                    if($output === 'raw'){
+                        return $result;
+                    }
                     $list = [];          
                     $has_uuid = false;
                     foreach($result as $result_key => $subList){
