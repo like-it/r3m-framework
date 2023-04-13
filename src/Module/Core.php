@@ -650,7 +650,6 @@ class Core
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
-        var_dump($attributeList);
         if (empty($attributeList)) {
             return $object;
         }
