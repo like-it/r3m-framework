@@ -87,6 +87,7 @@ class Sort extends Data{
                         break;
                     }
                 }
+                d($result);
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
                     if($attribute === 'uuid'){
@@ -102,7 +103,6 @@ class Sort extends Data{
                         krsort($result, $flags);
                     }
                 }
-                d($result);
                 if($output === 'raw'){
                     return $result;
                 }
