@@ -87,7 +87,8 @@ class Sort extends Data{
                         break;
                     }
                 }
-                d($result);
+                d($this->data());
+//                d($result);
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
                     if($attribute === 'uuid'){
