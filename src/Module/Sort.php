@@ -102,6 +102,7 @@ class Sort extends Data{
                         krsort($result, $flags);
                     }
                 }
+                ddd($result);
                 if($output === 'raw'){
                     return $result;
                 }
