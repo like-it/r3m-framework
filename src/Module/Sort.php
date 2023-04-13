@@ -62,8 +62,6 @@ class Sort extends Data{
                 foreach($list as $uuid => $node){
                     foreach($sort as $attribute => $record){
                         $value = $this->data($uuid . '.' . $attribute);
-                        d($attribute);
-                        d($value);
                         if(is_scalar($value)) {
                             if(is_array($node)){
                                 $result[$value][] = $node;
@@ -89,8 +87,6 @@ class Sort extends Data{
                         break;
                     }
                 }
-                d($this->data());
-//                d($result);
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
                     if($attribute === 'uuid'){
