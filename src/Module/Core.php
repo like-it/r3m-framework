@@ -725,20 +725,27 @@ class Core
         if (empty($attributeList)) {
             return $object;
         }
+        $is_collect = [];
         foreach ($attributeList as $key => $attribute) {
             if ($key === null || $key === '') {
                 continue;
             }
-            d($key);
-            d($object);
+            if(!empty($is_collect)){
+                $is_collect[] = $key;
+                $key = implode('.', $is_collect);
+            }
             if (isset($object->{$key})) {
+                $is_collect = [];
                 return Core::object_get2($attributeList->{$key}, $object->{$key});
             }
             elseif(
                 is_array($object) &&
                 array_key_exists($key, $object)
             ){
+                $is_collect = [];
                 return Core::object_get2($attributeList->{$key}, $object[$key]);
+            } else {
+                $is_collect[] = $key;
             }
         }
         return null;
