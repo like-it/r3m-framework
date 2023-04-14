@@ -727,20 +727,7 @@ class Core
         }
         $is_collect = [];
         foreach ($attributeList as $key => $attribute) {
-            d($key);
             if ($key === null || $key === '') {
-                continue;
-            }
-            if(!empty($is_collect)){
-                $is_collect[] = $key;
-                $collect_key = implode('.', $is_collect);
-                d($collect_key);
-                d($object);
-                if (isset($object->{$collect_key})) {
-                    ddd('found');
-                    $is_collect = [];
-                    return Core::object_get2($attributeList->{$key}, $object->{$collect_key});
-                }
                 continue;
             }
             if (isset($object->{$key})) {
@@ -755,6 +742,12 @@ class Core
                 return Core::object_get2($attributeList->{$key}, $object[$key]);
             } else {
                 $is_collect[] = $key;
+                $is_collect[] = $attribute;
+                $collect_key = implode('.', $is_collect);
+                if (isset($object->{$collect_key})) {
+                    $is_collect = [];
+                    return Core::object_get2($attributeList->{$key}->{$attribute}, $object->{$collect_key});
+                }
                 d($is_collect);
             }
         }
