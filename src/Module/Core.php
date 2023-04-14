@@ -722,7 +722,6 @@ class Core
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
-        ddd($attributeList);
         if (empty($attributeList)) {
             return $object;
         }
@@ -730,7 +729,8 @@ class Core
             if ($key === null || $key === '') {
                 continue;
             }
-            elseif (isset($object->{$key})) {
+            d($key);
+            if (isset($object->{$key})) {
                 return Core::object_get2($attributeList->{$key}, $object->{$key});
             }
             elseif(
