@@ -738,7 +738,7 @@ class Core
             ){
                 return Core::object_get2($attributeList->{$key}, $object[$key]);
             } else {
-                return Core::object_get_nested($attributeList, $object, $key);
+                return Core::object_get_nested($attributeList->{$key}, $object, $key);
             }
         }
         return null;
@@ -747,20 +747,17 @@ class Core
     private static function object_get_nested($attributeList, $object, $key=''){
         $is_collect = [];
         $is_collect[] = $key;
-        foreach($attributeList as $key => $attribute){
-            foreach($attribute as $key_attribute => $value_attribute){
-                $is_collect[] = $key_attribute;
-                $collect_key = implode('.', $is_collect);
-                if (isset($object->{$collect_key})) {
-                    return Core::object_get2($attributeList->{$key}->{$key_attribute}, $object->{$collect_key});
-                } else {
-                    d($attribute);
-                    d($collect_key);
-                    ddd($object);
-                }
+        foreach($attributeList as $key_attribute => $value_attribute){
+            $is_collect[] = $key_attribute;
+            $key_collect = implode('.', $is_collect);
+            d($key_collect);
+            if (isset($object->{$collect_key})) {
+                return Core::object_get2($attributeList->{$key_attribute}, $object->{$collect_key});
+            } else {
+                return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect);
             }
         }
-
+        return null;
     }
 
     /**
