@@ -223,6 +223,10 @@ class Data {
         return $this->data('get', $attribute);
     }
 
+    public function get2($attribute=''){
+        return $this->data2('get', $attribute);
+    }
+
     public function set($attribute='', $value=null){
         $part_before = stristr($attribute, '[]', true);
         $part_after = stristr($attribute, '[]');
@@ -330,6 +334,82 @@ class Data {
         }
         return $this->getData();
     }
+
+    public function data2($attribute=null, $value=null, $type=null){
+        if(is_int($attribute)){
+            $attribute = (string) $attribute;
+        }
+        if($attribute !== null){
+            if($attribute == 'set'){
+                if(
+                    $value === null &&
+                    $type === null
+                ){
+                    $this->data = null;
+                } else {
+                    if(is_int($value)){
+                        $value = (string) $value;
+                    }
+                    $do_not_nest_key = $this->do_not_nest_key();
+                    if($do_not_nest_key){
+                        $this->data->{$value} = $type;
+                        return $this->data->{$value};
+                    } else {
+                        Core::object_delete($value, $this->data()); //for sorting an object
+                        Core::object_set($value, $type, $this->data());
+                        return Core::object_get($value, $this->data());
+                    }
+                }
+            }
+            elseif($attribute == 'get'){
+                return Core::object_get2($value, $this->data());
+            }
+            elseif($attribute == 'has'){
+                return Core::object_has($value, $this->data());
+            }
+            elseif($attribute === 'extract'){
+                return $this->extract($value);
+            }
+            if($value !== null){
+                if(
+                    in_array(
+                        $attribute,
+                        [
+                            'delete',
+                            'remove'
+                        ],
+                        true
+                    )
+                ){
+                    return $this->deleteData($value);
+                } else {
+                    if(is_int($attribute)){
+                        $attribute = (string) $attribute;
+                    }
+                    Core::object_delete($attribute, $this->data()); //for sorting an object
+                    Core::object_set($attribute, $value, $this->data());
+                    return;
+                }
+            } else {
+                if(is_int($attribute)){
+                    $attribute = (string) $attribute;
+                }
+                if(is_string($attribute)){
+                    return Core::object_get($attribute, $this->data());
+                }
+                elseif(is_object($attribute) && get_class($attribute) === Data::class){
+                    $this->setData($attribute->data());
+                    return $this->getData();
+                }
+                else {
+                    $this->setData($attribute);
+                    return $this->getData();
+                }
+            }
+        }
+        return $this->getData();
+    }
+
     private function setData($attribute='', $value=null){
         if(is_array($attribute) || is_object($attribute)){
             if(is_object($this->data)){

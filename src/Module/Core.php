@@ -670,6 +670,78 @@ class Core
         return null;
     }
 
+    public static function object_get2($attributeList = [], $object = '')
+    {
+        ddd($attributeList);
+        if(
+            is_array($object) &&
+            $attributeList !== null
+        ){
+            if(is_array($attributeList)){
+                foreach($attributeList as $key => $attribute){
+                    if ($key === null || $key === '') {
+                        continue;
+                    }
+                    if (array_key_exists($key, $object)) {
+                        return Core::object_get($attributeList->{$key}, $object[$key]);
+                    }
+                }
+            }
+        }
+        elseif (Core::object_is_empty($object)) {
+            if (empty($attributeList) && !is_scalar($attributeList)) {
+                return $object;
+            }
+            if (is_array($object)) {
+                if (is_array($attributeList)) {
+                    foreach ($attributeList as $key => $attribute) {
+                        if ($key === null || $key === '') {
+                            continue;
+                        }
+                        if (array_key_exists($key, $object)) {
+                            return Core::object_get($attributeList[$key], $object[$key]);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        if (is_scalar($attributeList)) {
+            if($attributeList === '0' && isset($object->{$attributeList})){
+                return $object->{$attributeList};
+            } else {
+                $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
+                foreach ($attributeList as $nr => $attribute) {
+                    if ($attribute === null || $attribute === '') {
+                        unset($attributeList[$nr]);
+                    }
+                }
+            }
+
+        }
+        if (is_array($attributeList)) {
+            $attributeList = Core::object_horizontal($attributeList);
+        }
+        if (empty($attributeList)) {
+            return $object;
+        }
+        foreach ($attributeList as $key => $attribute) {
+            if ($key === null || $key === '') {
+                continue;
+            }
+            elseif (isset($object->{$key})) {
+                return Core::object_get($attributeList->{$key}, $object->{$key});
+            }
+            elseif(
+                is_array($object) &&
+                array_key_exists($key, $object)
+            ){
+                return Core::object_get($attributeList->{$key}, $object[$key]);
+            }
+        }
+        return null;
+    }
+
     /**
      * @throws ObjectException
      */
