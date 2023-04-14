@@ -683,7 +683,14 @@ class Core
             $key_collect = implode('.', $is_collect);
             if (isset($object->{$key_collect})) {
                 return Core::object_get($attributeList->{$key_attribute}, $object->{$key_collect});
-            } else {
+            }
+            elseif(
+                is_array($object) &&
+                array_key_exists($key_collect, $object)
+            ){
+                return Core::object_get($attributeList->{$key_attribute}, $object[$key_collect]);
+            }
+            else {
                 return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect);
             }
         }
