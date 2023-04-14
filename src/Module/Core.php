@@ -675,6 +675,9 @@ class Core
     private static function object_get_nested($attributeList, $object, $key=''){
         $is_collect = [];
         $is_collect[] = $key;
+        if(empty($attributeList)){
+            return null;
+        }
         foreach($attributeList as $key_attribute => $value_attribute){
             $is_collect[] = $key_attribute;
             $key_collect = implode('.', $is_collect);
