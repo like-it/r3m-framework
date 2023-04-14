@@ -754,6 +754,7 @@ class Core
                 return Core::object_get2($attributeList->{$key}, $object[$key]);
             } else {
                 $is_collect[] = $key;
+                d($is_collect);
             }
         }
         return null;
