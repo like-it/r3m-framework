@@ -730,6 +730,7 @@ class Core
                 continue;
             }
             d($key);
+            d($object);
             if (isset($object->{$key})) {
                 return Core::object_get2($attributeList->{$key}, $object->{$key});
             }
