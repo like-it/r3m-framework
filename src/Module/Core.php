@@ -672,7 +672,7 @@ class Core
 
     public static function object_get2($attributeList = [], $object = '')
     {
-        ddd($attributeList);
+        d($attributeList);
         if(
             is_array($object) &&
             $attributeList !== null
@@ -683,7 +683,7 @@ class Core
                         continue;
                     }
                     if (array_key_exists($key, $object)) {
-                        return Core::object_get($attributeList->{$key}, $object[$key]);
+                        return Core::object_get2($attributeList->{$key}, $object[$key]);
                     }
                 }
             }
@@ -699,7 +699,7 @@ class Core
                             continue;
                         }
                         if (array_key_exists($key, $object)) {
-                            return Core::object_get($attributeList[$key], $object[$key]);
+                            return Core::object_get2($attributeList[$key], $object[$key]);
                         }
                     }
                 }
@@ -722,6 +722,7 @@ class Core
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
         }
+        ddd($attributeList);
         if (empty($attributeList)) {
             return $object;
         }
@@ -730,13 +731,13 @@ class Core
                 continue;
             }
             elseif (isset($object->{$key})) {
-                return Core::object_get($attributeList->{$key}, $object->{$key});
+                return Core::object_get2($attributeList->{$key}, $object->{$key});
             }
             elseif(
                 is_array($object) &&
                 array_key_exists($key, $object)
             ){
-                return Core::object_get($attributeList->{$key}, $object[$key]);
+                return Core::object_get2($attributeList->{$key}, $object[$key]);
             }
         }
         return null;
