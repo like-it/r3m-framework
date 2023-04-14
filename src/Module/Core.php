@@ -734,6 +734,7 @@ class Core
                 $is_collect[] = $key;
                 $collect_key = implode('.', $is_collect);
                 if (isset($object->{$collect_key})) {
+                    ddd('found');
                     $is_collect = [];
                     return Core::object_get2($attributeList->{$key}, $object->{$collect_key});
                 }
