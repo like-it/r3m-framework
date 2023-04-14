@@ -733,7 +733,7 @@ class Core
             if(!empty($is_collect)){
                 $is_collect[] = $key;
                 $collect_key = implode('.', $is_collect);
-                if (isset($object->{$key})) {
+                if (isset($object->{$collect_key})) {
                     $is_collect = [];
                     return Core::object_get2($attributeList->{$key}, $object->{$collect_key});
                 }
