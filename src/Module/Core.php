@@ -733,6 +733,8 @@ class Core
             if(!empty($is_collect)){
                 $is_collect[] = $key;
                 $collect_key = implode('.', $is_collect);
+                d($collect_key);
+                d($object);
                 if (isset($object->{$collect_key})) {
                     ddd('found');
                     $is_collect = [];
