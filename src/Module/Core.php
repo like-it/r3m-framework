@@ -737,6 +737,7 @@ class Core
                     $is_collect = [];
                     return Core::object_get2($attributeList->{$key}, $object->{$key});
                 }
+                continue;
             }
             if (isset($object->{$key})) {
                 $is_collect = [];
