@@ -727,6 +727,7 @@ class Core
         }
         $is_collect = [];
         foreach ($attributeList as $key => $attribute) {
+            d($key);
             if ($key === null || $key === '') {
                 continue;
             }
