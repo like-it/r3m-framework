@@ -669,7 +669,6 @@ class Token {
         $url = false;
         if($object && $object->config('ramdisk.parse.tree')){
             $dir = $object->config('framework.dir.temp') .
-                $object->config('ds') .
                 'Parse' .
                 $object->config('ds')
             ;
