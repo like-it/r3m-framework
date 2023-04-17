@@ -474,7 +474,8 @@ class Parse {
                 $string = ltrim($string, " \t\n\r\0\x0B");
             }
             $tree = Token::tree($string, [
-                'object' => $object
+                'object' => $object,
+                'url' => $url,
             ]);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);

@@ -674,11 +674,10 @@ class Token {
         $token = Token::method($token);
         $data = new Data();
         if($object && $object->config('ramdisk.parse.tree')){
-            foreach($token as $nr => $record){
-                ddd($record);
-
-            }
-
+            $data->set('string', $string);
+            $data->set('token', $token);
+            $data->set('url', $options['url']);
+            ddd($data);
 
         }
         return $token;
