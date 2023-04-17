@@ -11,6 +11,7 @@
 namespace R3m\Io\Module\Parse;
 
 use Exception;
+use R3m\Io\Config;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Logger;
@@ -668,7 +669,9 @@ class Token {
         }
         $url = false;
         if($object && $object->config('ramdisk.parse.tree')){
-            $dir = $object->config('framework.dir.temp') .
+            $dir = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
                 'Parse' .
                 $object->config('ds')
             ;
