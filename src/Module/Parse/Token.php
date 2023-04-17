@@ -664,6 +664,7 @@ class Token {
     public static function tree($string='', $options=[]): array
     {
         $object = false;
+        /*
         if(array_key_exists('object', $options)){
             $object = $options['object'];
         }
@@ -691,13 +692,16 @@ class Token {
                 return $read->get('token');
             }
         }
+        */
         $prepare = Token::tree_prepare($string, $count);
         $prepare = Token::prepare($prepare, $count);
         $token = Token::define($prepare);
         $token = Token::group($token, $options);
         $token = Token::cast($token);
         $token = Token::method($token);
+        /*
         $data = new Data();
+
         if(
             $object &&
             $object->config('ramdisk.parse.tree') &&
@@ -710,6 +714,7 @@ class Token {
             $data->write($url);
             File::touch($url, File::mtime($options['url']));
         }
+        */
         return $token;
     }
 
