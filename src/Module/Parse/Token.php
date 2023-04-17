@@ -12,6 +12,7 @@ namespace R3m\Io\Module\Parse;
 
 use Exception;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\File;
 use R3m\Io\Module\Logger;
 
 class Token {
@@ -677,6 +678,7 @@ class Token {
             $data->set('string', $string);
             $data->set('token', $token);
             $data->set('url', $options['url']);
+            $data->set('mtime', File::mtime($options['url']));
             ddd($data);
 
         }
