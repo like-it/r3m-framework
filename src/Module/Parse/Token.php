@@ -11,6 +11,7 @@
 namespace R3m\Io\Module\Parse;
 
 use Exception;
+use R3m\Io\Module\Data;
 use R3m\Io\Module\Logger;
 
 class Token {
@@ -660,14 +661,26 @@ class Token {
      */
     public static function tree($string='', $options=[]): array
     {
-        $is_debug = false;
+        $object = false;
+        if(array_key_exists('object', $options)){
+            $object = $options['object'];
+        }
         $prepare = Token::tree_prepare($string, $count);
-        $prepare = Token::prepare($prepare, $count, $is_debug);
+        $prepare = Token::prepare($prepare, $count);
 //        d($prepare);
         $token = Token::define($prepare);
         $token = Token::group($token, $options);
         $token = Token::cast($token);
-        $token = Token::method($token, $is_debug);
+        $token = Token::method($token);
+        $data = new Data();
+        if($object && $object->config('ramdisk.parse.tree')){
+            foreach($token as $nr => $record){
+                ddd($record);
+
+            }
+
+
+        }
         return $token;
     }
 
@@ -702,7 +715,7 @@ class Token {
         return $token;
     }
 
-    public static function method($token=[], $is_debug=false): array
+    public static function method($token=[]): array
     {
         $selection = [];
         $collect = false;
@@ -1110,7 +1123,7 @@ class Token {
     /**
      * @throws Exception
      */
-    public static function prepare($token=[], $count=0, $is_debug=null): array
+    public static function prepare($token=[], $count=0): array
     {
         $hex = null;
         $start = null;
@@ -1320,9 +1333,9 @@ class Token {
                                                     count($prepare)
                                                 );
                                                 $prepare = Token::define($prepare);
-                                                $prepare = Token::group($prepare, $is_debug);
+                                                $prepare = Token::group($prepare);
                                                 $prepare = Token::cast($prepare);
-                                                $prepare = Token::method($prepare, $is_debug);
+                                                $prepare = Token::method($prepare);
                                                 array_shift($prepare); // remove curly_open
                                                 array_pop($prepare); //remove curly_close
                                                 $token[$variable_nr]['variable']['array'][$variable_array_level] = $prepare;
