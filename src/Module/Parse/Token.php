@@ -668,31 +668,47 @@ class Token {
             $object = $options['object'];
         }
         $url = false;
-        if($object && $object->config('ramdisk.parse.tree')){
+        if(
+            $object &&
+            $object->config('ramdisk.parse.tree') &&
+            $object->config('ramdisk.url') &&
+            array_key_exists('url', $options)
+        ){
             $dir = $object->config('ramdisk.url') .
                 $object->config(Config::POSIX_ID) .
                 $object->config('ds') .
                 'Parse' .
                 $object->config('ds')
             ;
-            $url =  $dir . sha1($string) . '.json';
-            ddd($url);
+            $url =  $dir .
+                sha1($string) .
+                $object->config('extension.json');
+            $read = $object->data_read($url);
+            if(
+                File::mtime($options['url']) === File::mtime($url) &&
+                $read && $read->get('string') === $string
+            ){
+                return $read->get('token');
+            }
         }
         $prepare = Token::tree_prepare($string, $count);
         $prepare = Token::prepare($prepare, $count);
-//        d($prepare);
         $token = Token::define($prepare);
         $token = Token::group($token, $options);
         $token = Token::cast($token);
         $token = Token::method($token);
         $data = new Data();
-        if($object && $object->config('ramdisk.parse.tree')){
+        if(
+            $object &&
+            $object->config('ramdisk.parse.tree') &&
+            $url &&
+            array_key_exists('url', $options)
+        ){
             $data->set('string', $string);
             $data->set('token', $token);
             $data->set('url', $options['url']);
-            $data->set('mtime', File::mtime($options['url']));
-            ddd($data);
-
+            $data->write($url);
+            File::touch($url, File::mtime($options['url']));
         }
         return $token;
     }
