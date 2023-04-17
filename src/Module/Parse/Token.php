@@ -12,6 +12,7 @@ namespace R3m\Io\Module\Parse;
 
 use Exception;
 use R3m\Io\Config;
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Logger;
@@ -688,7 +689,7 @@ class Token {
                 File::mtime($options['url']) === File::mtime($url) &&
                 $read && $read->get('string') === $string
             ){
-                return $read->get('token');
+                return Core::object($read->get('token'), Core::OBJECT_ARRAY);
             }
         }
         $prepare = Token::tree_prepare($string, $count);
