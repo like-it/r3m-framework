@@ -666,6 +666,10 @@ class Token {
         if(array_key_exists('object', $options)){
             $object = $options['object'];
         }
+        if($object && $object->config('ramdisk.parse.tree')){
+            $url =  $object->config();
+            ddd($url);
+        }
         $prepare = Token::tree_prepare($string, $count);
         $prepare = Token::prepare($prepare, $count);
 //        d($prepare);
