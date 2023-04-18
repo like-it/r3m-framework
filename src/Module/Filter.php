@@ -103,7 +103,10 @@ class Filter extends Data{
                         switch($record['operator']){
                             case '===' :
                             case 'strictly-exact' :
-                                d($node);
+                                $data = new Data($node);
+
+                                
+                                ddd($data);
                                 d($attribute);
                                 d($record);
 
