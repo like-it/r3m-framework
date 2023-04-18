@@ -161,6 +161,7 @@ class Filter extends Data{
                             case '>' :
                             case 'gt' :
                                 $value = $data->get($attribute);
+                                d($value);
                                 if(is_scalar($value)){
                                     if($record['value'] > $value){
                                         $skip = true;
