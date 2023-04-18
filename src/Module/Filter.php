@@ -103,9 +103,12 @@ class Filter extends Data{
                         switch($record['operator']){
                             case '===' :
                             case 'strictly-exact' :
+                                d($node);
+                                d($attribute);
+                                d($record);
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
-
                                 ){
                                     if(is_array($node->$attribute)){
                                         foreach($node->$attribute as $key => $value){
@@ -122,8 +125,8 @@ class Filter extends Data{
                             case '!==' :
                             case 'not-strictly-exact' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
-
                                 ){
                                     if(is_array($node->$attribute)){
                                         foreach($node->$attribute as $key => $value){
@@ -140,8 +143,8 @@ class Filter extends Data{
                             case '==' :
                             case 'exact' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
-
                                 ){
                                     if(is_array($node->$attribute)){
                                         foreach($node->$attribute as $key => $value){
@@ -158,8 +161,8 @@ class Filter extends Data{
                             case '!=' :
                             case 'not-exact' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
-
                                 ){
                                     if(is_array($node->$attribute)){
                                         foreach($node->$attribute as $key => $value){
@@ -176,6 +179,7 @@ class Filter extends Data{
                             case '>' :
                             case 'gt' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
                                 ){
                                     if(is_array($node->$attribute)){
@@ -194,6 +198,7 @@ class Filter extends Data{
                             case '>=' :
                             case 'gte' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
                                 ){
                                     if(is_array($node->$attribute)){
@@ -212,6 +217,7 @@ class Filter extends Data{
                             case '<' :
                             case 'lt' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
                                 ){
                                     if(is_array($node->$attribute)){
@@ -230,6 +236,7 @@ class Filter extends Data{
                             case '<=' :
                             case 'lte' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
                                 ){
                                     if(is_array($node->$attribute)){
@@ -248,6 +255,7 @@ class Filter extends Data{
                             case '> <' :
                             case 'between' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
                                 ){
                                     $explode = explode('..', $record['value'], 2);
@@ -282,6 +290,7 @@ class Filter extends Data{
                             case '>=<' :
                             case 'between-equals' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute)
                                 ){
                                     $explode = explode('..', $record['value'], 2);
@@ -314,7 +323,10 @@ class Filter extends Data{
                                 }
                             break;
                             case 'before' :
-                                if(property_exists($node, $attribute)){
+                                if(
+                                    is_object($node) &&
+                                    property_exists($node, $attribute)
+                                ){
                                     if(is_string($node->$attribute)){
                                         $node_date = strtotime($node->$attribute);
                                         $record_date = Filter::date($record);
@@ -334,7 +346,10 @@ class Filter extends Data{
                                 }
                             break;
                             case 'after' :
-                                if(property_exists($node, $attribute)){
+                                if(
+                                    is_object($node) &&
+                                    property_exists($node, $attribute)
+                                ){
                                     if(is_string($node->$attribute)){
                                         $node_date = strtotime($node->$attribute);
                                         $record_date = Filter::date($record);
@@ -354,7 +369,10 @@ class Filter extends Data{
                                 }
                             break;
                             case 'strictly-before' :
-                                if(property_exists($node, $attribute)){
+                                if(
+                                    is_object($node) &&
+                                    property_exists($node, $attribute)
+                                ){
                                     if(is_string($node->$attribute)){
                                         $node_date = strtotime($node->$attribute);
                                         $record_date = Filter::date($record);
@@ -374,7 +392,10 @@ class Filter extends Data{
                                 }
                             break;
                             case 'strictly-after' :
-                                if(property_exists($node, $attribute)){
+                                if(
+                                    is_object($node) &&
+                                    property_exists($node, $attribute)
+                                ){
                                     if(is_string($node->$attribute)){
                                         $node_date = strtotime($node->$attribute);
                                         $record_date = Filter::date($record);
@@ -396,8 +417,8 @@ class Filter extends Data{
                             break;
                             case 'partial' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute) &&
-
                                     is_string($record['value'])
                                 ){
                                     if(is_array($node->$attribute)){
@@ -417,6 +438,7 @@ class Filter extends Data{
                             break;
                             case 'not-partial' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute) &&
                                     is_string($record['value'])
                                 ){
@@ -437,6 +459,7 @@ class Filter extends Data{
                             break;
                             case 'start' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute) &&
                                     is_string($record['value'])
                                 ){
@@ -474,6 +497,7 @@ class Filter extends Data{
                             break;
                             case 'not-start' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute) &&
                                     is_string($record['value'])
                                 ){
@@ -511,6 +535,7 @@ class Filter extends Data{
                             break;
                             case 'end' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute) &&
                                     is_string($record['value'])
                                 ){
@@ -552,6 +577,7 @@ class Filter extends Data{
                             break;
                             case 'not-end' :
                                 if(
+                                    is_object($node) &&
                                     property_exists($node, $attribute) &&
                                     is_string($record['value'])
                                 ){
