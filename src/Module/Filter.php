@@ -206,8 +206,6 @@ class Filter extends Data{
                             case '<' :
                             case 'lt' :
                                 $value = $data->get($attribute);
-                                d($record['value']);
-                                ddd($value);
                                 if(is_scalar($value)){
                                     if($value < $record['value']){
                                         $skip = true;
