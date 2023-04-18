@@ -105,7 +105,7 @@ class Filter extends Data{
                             case 'strictly-exact' :
                                 $data = new Data($node);
 
-                                
+
                                 ddd($data);
                                 d($attribute);
                                 d($record);
