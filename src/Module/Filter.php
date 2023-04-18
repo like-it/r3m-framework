@@ -101,6 +101,7 @@ class Filter extends Data{
                         array_key_exists('value', $record)                     
                     ){
                         $skip = false;
+                        ddd($record);
                         switch($record['operator']){
                             case '===' :
                             case 'strictly-exact' :
