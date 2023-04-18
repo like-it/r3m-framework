@@ -162,16 +162,15 @@ class Filter extends Data{
                             case '>' :
                             case 'gt' :
                                 $value = $data->get($attribute);
-                                d($value);
                                 if(is_scalar($value)){
-                                    if($record['value'] > $value){
+                                    if($value > $record['value']){
                                         $skip = true;
                                     }
                                 }
                                 elseif(is_array($value)){
                                     $found = false;
                                     foreach($value as $value_key => $value_value){
-                                        if($record['value'] > $value_value){
+                                        if($value_value > $record['value']){
                                         } else {
                                             $found = true;
                                             break;
@@ -186,14 +185,14 @@ class Filter extends Data{
                             case 'gte' :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
-                                    if($record['value'] >= $value){
+                                    if($value >= $record['value']){
                                         $skip = true;
                                     }
                                 }
                                 elseif(is_array($value)){
                                     $found = false;
                                     foreach($value as $value_key => $value_value){
-                                        if($record['value'] >= $value_value){
+                                        if($value_value >= $record['value']){
                                         } else {
                                             $found = true;
                                             break;
@@ -210,14 +209,14 @@ class Filter extends Data{
                                 d($record['value']);
                                 ddd($value);
                                 if(is_scalar($value)){
-                                    if($record['value'] < $value){
+                                    if($value < $record['value']){
                                         $skip = true;
                                     }
                                 }
                                 elseif(is_array($value)){
                                     $found = false;
                                     foreach($value as $value_key => $value_value){
-                                        if($record['value'] < $value_value){
+                                        if($value_value < $record['value']){
                                         } else {
                                             $found = true;
                                             break;
@@ -232,14 +231,14 @@ class Filter extends Data{
                             case 'lte' :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
-                                    if($record['value'] <= $value){
+                                    if($value <= $record['value']){
                                         $skip = true;
                                     }
                                 }
                                 elseif(is_array($value)){
                                     $found = false;
                                     foreach($value as $value_key => $value_value){
-                                        if($record['value'] <= $value_value){
+                                        if($value_value <= $record['value']){
                                         } else {
                                             $found = true;
                                             break;
