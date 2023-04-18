@@ -101,7 +101,7 @@ class Filter extends Data{
                         array_key_exists('value', $record)                     
                     ){
                         $skip = false;
-                        ddd($record);
+                        d($record);
                         switch($record['operator']){
                             case '===' :
                             case 'strictly-exact' :
@@ -207,6 +207,8 @@ class Filter extends Data{
                             case '<' :
                             case 'lt' :
                                 $value = $data->get($attribute);
+                                d($record['value']);
+                                ddd($value);
                                 if(is_scalar($value)){
                                     if($record['value'] < $value){
                                         $skip = true;
