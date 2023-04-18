@@ -104,11 +104,10 @@ class Filter extends Data{
                             case '===' :
                             case 'strictly-exact' :
                                 $data = new Data($node);
-
-
-                                ddd($data);
+                                $value = $data->get($attribute);
+                                d($value);
                                 d($attribute);
-                                d($record);
+                                ddd($record);
 
                                 $explode = explode('.', $attribute);
                                 $child = $node;
