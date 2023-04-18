@@ -106,19 +106,27 @@ class Filter extends Data{
                                 d($node);
                                 d($attribute);
                                 d($record);
-                                if(
-                                    is_object($node) &&
-                                    property_exists($node, $attribute)
-                                ){
-                                    if(is_array($node->$attribute)){
-                                        foreach($node->$attribute as $key => $value){
-                                            if($value === $record['value']){
-                                                $skip = true;
-                                                break;
-                                            }
-                                        }
-                                    } elseif($node->$attribute === $record['value']){
+
+                                $explode = explode('.', $attribute);
+                                $child = $node;
+                                foreach($explode as $key => $value){
+                                    if(property_exists($child, $value)){
+                                        $child = $child->$value;
+                                    } else {
+                                        break 2;
+                                    }
+                                }
+                                if(is_scalar($child)){
+                                    if($child === $record['value']){
                                         $skip = true;
+                                    }
+                                }
+                                elseif(is_array($child)){
+                                    foreach($child as $key => $value){
+                                        if($value === $record['value']){
+                                            $skip = true;
+                                            break;
+                                        }
                                     }
                                 }
                             break;
