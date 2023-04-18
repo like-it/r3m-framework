@@ -107,7 +107,7 @@ class Filter extends Data{
                             case 'strictly-exact' :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
-                                    if($record['value'] === $value){
+                                    if($value === $record['value']){
                                         $skip = true;
                                     }
                                 }
@@ -121,7 +121,7 @@ class Filter extends Data{
                             case 'not-strictly-exact' :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
-                                    if($record['value'] !== $value){
+                                    if($value !== $record['value']){
                                         $skip = true;
                                     }
                                 }
@@ -135,7 +135,7 @@ class Filter extends Data{
                             case 'exact' :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
-                                    if($record['value'] == $value){
+                                    if($value == $record['value']){
                                         $skip = true;
                                     }
                                 }
@@ -149,7 +149,7 @@ class Filter extends Data{
                             case 'not-exact' :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
-                                    if($record['value'] != $value){
+                                    if($value != $record['value']){
                                         $skip = true;
                                     }
                                 }
