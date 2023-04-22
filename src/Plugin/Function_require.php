@@ -66,6 +66,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             }
         }
     }
+    d($url);
     if(File::exist($url)){
         $read = File::read($url);
         if(

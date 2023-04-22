@@ -327,7 +327,7 @@ class Parse {
                     if($key === 'content'){
                         d($attribute);
                         d($value);
-                        d($storage->data());
+//                        d($storage->data());
                         ddd($string);
 
                     }
