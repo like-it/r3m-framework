@@ -325,6 +325,7 @@ class Parse {
                     $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     if($key === 'content'){
+                        d($attribute);
                         d($value);
                         ddd($string);
                     }
