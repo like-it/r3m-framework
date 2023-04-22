@@ -324,7 +324,7 @@ class Parse {
                     $attribute = $this->object()->config('parse.read.object.this.attribute');
                     $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
-                    if($key === 'html'){
+                    if($key === 'content'){
                         d($value);
                         ddd($string);
                     }
