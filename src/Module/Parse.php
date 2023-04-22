@@ -282,6 +282,7 @@ class Parse {
             return $string;
         }
         elseif(is_object($string)){
+            d($string);
             $reserved_keys = [];
             if($this->useThis() === true){
                 $source = $storage->data('r3m.io.parse.view.source');
