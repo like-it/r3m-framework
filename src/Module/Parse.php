@@ -327,9 +327,11 @@ class Parse {
                     if($key === 'content'){
                         d($attribute);
                         d($value);
+                        d($storage->data());
                         ddd($string);
+
                     }
-                    $string->$key = $value;
+                    $string->{$key} = $value;
                 } catch (Exception | ParseError $exception){
                     Event::trigger($object, 'parse.compile.exception', [
                         'string' => $string,
