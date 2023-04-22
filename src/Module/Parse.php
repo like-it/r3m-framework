@@ -405,6 +405,7 @@ class Parse {
             $file_mtime = false;
             if($file_exist){
                 $file_mtime = File::mtime($url);
+                $file_mtime = false;
             }
             if($file_exist && $file_mtime == $mtime){
                 //cache file                   
@@ -483,6 +484,7 @@ class Parse {
                 );
                 $string = ltrim($string, " \t\n\r\0\x0B");
             }
+            d($string);
             $tree = Token::tree($string, [
                 'object' => $object,
                 'url' => $url,
