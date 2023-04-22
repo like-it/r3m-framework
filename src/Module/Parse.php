@@ -325,9 +325,10 @@ class Parse {
                     $attribute = $this->object()->config('parse.read.object.this.attribute');
                     $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
+                    d($value);
                     if($key === 'content'){
                         d($attribute);
-                        d($value);
+
 //                        d($storage->data());
                         ddd($string);
 
