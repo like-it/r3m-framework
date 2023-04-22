@@ -429,9 +429,6 @@ class Parse {
             $string = str_replace('{{ R3M }}', '{R3M}', $string);
             $string = str_replace('{{R3M}}', '{R3M}', $string);
             $explode = explode('{R3M}', $string, 2);
-            if(!array_key_exists(1, $explode)){
-                $explode[1] = $explode[0];
-            }
             if(array_key_exists(1, $explode)){
                 if($storage->get('ldelim') === null){
                     $storage->set('ldelim','{');
