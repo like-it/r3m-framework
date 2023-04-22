@@ -266,7 +266,6 @@ class Parse {
      * @throws Exception
      */
     public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
-        d($string);
         $object = $this->object();
         if($storage === null){            
             $storage = $this->storage(new Data());
@@ -283,7 +282,6 @@ class Parse {
             return $string;
         }
         elseif(is_object($string)){
-            d($string);
             $reserved_keys = [];
             if($this->useThis() === true){
                 $source = $storage->data('r3m.io.parse.view.source');
@@ -326,14 +324,6 @@ class Parse {
                     $attribute = $this->object()->config('parse.read.object.this.attribute');
                     $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
-                    d($value);
-                    if($key === 'content'){
-                        d($attribute);
-
-//                        d($storage->data());
-                        ddd($string);
-
-                    }
                     $string->{$key} = $value;
                 } catch (Exception | ParseError $exception){
                     Event::trigger($object, 'parse.compile.exception', [
@@ -405,7 +395,6 @@ class Parse {
             $file_mtime = false;
             if($file_exist){
                 $file_mtime = File::mtime($url);
-                $file_mtime = false;
             }
             if($file_exist && $file_mtime == $mtime){
                 //cache file                   
@@ -487,7 +476,6 @@ class Parse {
                 );
                 $string = ltrim($string, " \t\n\r\0\x0B");
             }
-            d($string);
             $tree = Token::tree($string, [
                 'object' => $object,
                 'url' => $url,
