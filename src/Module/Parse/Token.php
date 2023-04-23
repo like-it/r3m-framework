@@ -56,6 +56,7 @@ class Token {
     const TYPE_MODIFIER = 'modifier';
     const TYPE_CLASS = 'class';
     const TYPE_TRAIT = 'trait';
+    const TYPE_COLLECTION = 'collection';
     const TYPE_EXCLAMATION = 'exclamation';
     const TYPE_CONTROL = 'control';
     const TYPE_WHILE = 'while';
