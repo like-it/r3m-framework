@@ -484,6 +484,7 @@ class Token {
                         $token[$nr]['value'] = $test_value;
                         $token[$nr]['type'] = strtolower($test_value);
                         $token[$nr]['direction'] = Token::DIRECTION_LTR;
+                        $token[$nr]['is_operator'] = true;
                         unset($token[$next]);
                         unset($token[$next_next]);
                         $previous_nr = $nr;
@@ -504,6 +505,7 @@ class Token {
                         $token[$nr]['value'] = $test_value;
                         $token[$nr]['type'] = strtolower($test_value);
                         $token[$nr]['direction'] = Token::DIRECTION_LTR;
+                        $token[$nr]['is_operator'] = true;
                         $previous_nr = $nr;
                         $count -= 1;
                         $skip = 1;
