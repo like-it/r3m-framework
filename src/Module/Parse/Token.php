@@ -283,6 +283,10 @@ class Token {
                         return $record;
                 }
                 $record['is_operator'] = false;
+                if(array_key_exists('extra_operators', $options)){
+                    d($record);
+                    ddd($options);
+                }
                 break;
             case 2 :
                 switch($record['value']){
@@ -392,6 +396,10 @@ class Token {
                         return $record;
                 }
                 $record['is_operator'] = false;
+                if(array_key_exists('extra_operators', $options)){
+                    d($record);
+                    ddd($options);
+                }
                 break;
             case 3 :
                 switch($record['value']){
