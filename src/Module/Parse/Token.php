@@ -482,7 +482,8 @@ class Token {
                         )
                     ){
                         $token[$nr]['value'] = $test_value;
-                        $token[$nr]['type'] = Token::TYPE_OPERATOR;
+                        $token[$nr]['type'] = strtolower($test_value);
+                        $token[$nr]['direction'] = Token::DIRECTION_LTR;
                         unset($token[$next]);
                         unset($token[$next_next]);
                         $previous_nr = $nr;
@@ -501,8 +502,8 @@ class Token {
                         )
                     ){
                         $token[$nr]['value'] = $test_value;
-                        $token[$nr]['type'] = Token::TYPE_OPERATOR;
-                        unset($token[$next]);
+                        $token[$nr]['type'] = strtolower($test_value);
+                        $token[$nr]['direction'] = Token::DIRECTION_LTR;
                         $previous_nr = $nr;
                         $count -= 1;
                         $skip = 1;
@@ -1863,6 +1864,7 @@ class Token {
                                 continue;
                         }
                         if($is_start_method === false){
+                            continue;
                             //catch parameter?
                         } else {
                             if(
@@ -2106,6 +2108,7 @@ class Token {
                     throw new Exception('Compare: operator not found');
             }
         }
+        return false;
     }
 
     private static function is_hex($hex=''): bool
