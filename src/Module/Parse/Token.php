@@ -702,7 +702,7 @@ class Token {
                 return Core::object($read->get('token'), Core::OBJECT_ARRAY);
             }
         }
-        $prepare = Token::tree_prepare($string, $count);
+        $prepare = Token::tree_prepare($string, $count, $options);
         $prepare = Token::prepare($prepare, $count);
         $token = Token::define($prepare);
         $token = Token::group($token, $options);
