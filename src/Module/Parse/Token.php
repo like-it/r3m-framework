@@ -471,8 +471,33 @@ class Token {
                 $next_next = $nr + 2;
             }
             if(array_key_exists('extra_operators', $options)){
-                d($options);
-                ddd($record);
+                $testvalue = false;
+                if($next !== null && $next_next !== null){
+                    $test_value = $record['value'] . $token[$next]['value'] . $token[$next_next]['value'];
+                    if(
+                        in_array(
+                            strtolower($test_value),
+                            $options['extra_operators'],
+                            true
+                        )
+                    ){
+                        d($record);
+                        ddd($test_value);
+                    }
+                }
+                elseif($next !== null){
+                    $test_value = $record['value'] . $token[$next]['value'];
+                    if(
+                        in_array(
+                            strtolower($test_value),
+                            $options['extra_operators'],
+                            true
+                        )
+                    ){
+                        d($record);
+                        ddd($test_value);
+                    }
+                }
             }
             if(
             in_array(
