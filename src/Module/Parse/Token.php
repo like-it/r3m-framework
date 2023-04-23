@@ -470,6 +470,10 @@ class Token {
             if($nr + 2 < $count_begin){
                 $next_next = $nr + 2;
             }
+            if(array_key_exists('extra_operators', $options)){
+                d($options);
+                ddd($record);
+            }
             if(
             in_array(
                 $record['type'],
@@ -487,10 +491,6 @@ class Token {
                 $record['type'] === $token[$next_next]['type']
             ){
                 //3
-                if(array_key_exists('extra_operators', $options)){
-                    d($options);
-                    ddd($record);
-                }
                 if($record['type'] === Token::TYPE_OPERATOR){
                     $operator = $record;
                     $operator['value'] .= $token[$next]['value'] . $token[$next_next]['value'];
