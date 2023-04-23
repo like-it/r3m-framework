@@ -481,8 +481,14 @@ class Token {
                             true
                         )
                     ){
-                        d($record);
-                        ddd($test_value);
+                        $token[$nr]['value'] = $test_value;
+                        $token[$nr]['type'] = Token::TYPE_OPERATOR;
+                        unset($token[$next]);
+                        unset($token[$next_next]);
+                        $previous_nr = $nr;
+                        $count -= 2;
+                        $skip = 2;
+                        continue;
                     }
                 }
                 elseif($next !== null){
@@ -494,8 +500,13 @@ class Token {
                             true
                         )
                     ){
-                        d($record);
-                        ddd($test_value);
+                        $token[$nr]['value'] = $test_value;
+                        $token[$nr]['type'] = Token::TYPE_OPERATOR;
+                        unset($token[$next]);
+                        $previous_nr = $nr;
+                        $count -= 1;
+                        $skip = 1;
+                        continue;
                     }
                 }
             }
