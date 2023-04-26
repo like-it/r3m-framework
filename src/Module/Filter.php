@@ -22,6 +22,49 @@ class Filter extends Data{
     const INPUT = 'input';
     const OUTPUT = 'output';
 
+    const OPERATOR_STRICTLY_EXACT = 'strictly-exact';
+    const OPERATOR_NOT_STRICTLY_EXACT = 'not-strictly-exact';
+    const OPERATOR_EXACT = 'exact';
+    const OPERATOR_NOT_EXACT = 'not-exact';
+    const OPERATOR_GT = 'gt';
+    const OPERATOR_GTE = 'gte';
+    const OPERATOR_LT = 'lt';
+    const OPERATOR_LTE = 'lte';
+    const OPERATOR_BETWEEN = 'between';
+    const OPERATOR_BETWEEN_EQUALS = 'between-equals';
+    const OPERATOR_BEFORE = 'before';
+    const OPERATOR_AFTER = 'after';
+    const OPERATOR_STRICTLY_BEFORE = 'strictly-before';
+    const OPERATOR_STRICTLY_AFTER = 'strictly-after';
+    const OPERATOR_PARTIAL = 'partial';
+    const OPERATOR_NOT_PARTIAL = 'not-partial';
+    const OPERATOR_START = 'start';
+    const OPERATOR_NOT_START = 'not-start';
+    const OPERATOR_END = 'end';
+    const OPERATOR_NOT_END = 'not-end';
+
+    const OPERATOR_LIST_NAME = [
+        Filter::OPERATOR_STRICTLY_EXACT,
+        Filter::OPERATOR_NOT_STRICTLY_EXACT,
+        Filter::OPERATOR_EXACT,
+        Filter::OPERATOR_NOT_EXACT,
+        Filter::OPERATOR_GT,
+        Filter::OPERATOR_GTE,
+        Filter::OPERATOR_LT,
+        Filter::OPERATOR_LTE,
+        Filter::OPERATOR_BETWEEN,
+        Filter::OPERATOR_BETWEEN_EQUALS,
+        Filter::OPERATOR_BEFORE,
+        Filter::OPERATOR_AFTER,
+        Filter::OPERATOR_STRICTLY_BEFORE,
+        Filter::OPERATOR_STRICTLY_AFTER,
+        Filter::OPERATOR_PARTIAL,
+        Filter::OPERATOR_NOT_PARTIAL,
+        Filter::OPERATOR_START,
+        Filter::OPERATOR_NOT_START,
+        Filter::OPERATOR_END,
+        Filter::OPERATOR_NOT_END,
+    ];
 
     public static function list($list): Filter
     {
@@ -103,7 +146,7 @@ class Filter extends Data{
                         $skip = false;
                         switch($record['operator']){
                             case '===' :
-                            case 'strictly-exact' :
+                            case Filter::OPERATOR_STRICTLY_EXACT :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
                                     if($value === $record['value']){
@@ -117,7 +160,7 @@ class Filter extends Data{
                                 }
                             break;
                             case '!==' :
-                            case 'not-strictly-exact' :
+                            case Filter::OPERATOR_NOT_STRICTLY_EXACT :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
                                     if($value !== $record['value']){
@@ -131,7 +174,7 @@ class Filter extends Data{
                                 }
                             break;
                             case '==' :
-                            case 'exact' :
+                            case Filter::OPERATOR_EXACT :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
                                     if($value == $record['value']){
@@ -145,7 +188,7 @@ class Filter extends Data{
                                 }
                             break;
                             case '!=' :
-                            case 'not-exact' :
+                            case Filter::OPERATOR_NOT_EXACT :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
                                     if($value != $record['value']){
@@ -159,7 +202,7 @@ class Filter extends Data{
                                 }
                             break;
                             case '>' :
-                            case 'gt' :
+                            case Filter::OPERATOR_GT :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
                                     if($value > $record['value']){
@@ -181,7 +224,7 @@ class Filter extends Data{
                                 }
                             break;
                             case '>=' :
-                            case 'gte' :
+                            case Filter::OPERATOR_GTE :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
                                     if($value >= $record['value']){
@@ -203,7 +246,7 @@ class Filter extends Data{
                                 }
                             break;
                             case '<' :
-                            case 'lt' :
+                            case Filter::OPERATOR_LT :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
                                     if($value < $record['value']){
@@ -225,7 +268,7 @@ class Filter extends Data{
                                 }
                             break;
                             case '<=' :
-                            case 'lte' :
+                            case Filter::OPERATOR_LTE :
                                 $value = $data->get($attribute);
                                 if(is_scalar($value)){
                                     if($value <= $record['value']){
@@ -247,7 +290,7 @@ class Filter extends Data{
                                 }
                             break;
                             case '> <' :
-                            case 'between' :
+                            case Filter::OPERATOR_BETWEEN :
                                 $value = $data->get($attribute);
                                 $explode = explode('..', $record['value'], 2);
                                 if(array_key_exists(1, $explode)){
@@ -279,7 +322,7 @@ class Filter extends Data{
                                 }
                             break;
                             case '>=<' :
-                            case 'between-equals' :
+                            case Filter::OPERATOR_BETWEEN_EQUALS :
                                 $value = $data->get($attribute);
                                 $explode = explode('..', $record['value'], 2);
                                 if(array_key_exists(1, $explode)){
@@ -310,7 +353,7 @@ class Filter extends Data{
                                     throw new Exception('Value is range: ?..?');
                                 }
                             break;
-                            case 'before' :
+                            case Filter::OPERATOR_BEFORE :
                                 $value = $data->get($attribute);
                                 if(is_string($value)){
                                     $node_date = strtotime($value);
@@ -329,7 +372,7 @@ class Filter extends Data{
                                     $skip = true;
                                 }
                             break;
-                            case 'after' :
+                            case Filter::OPERATOR_AFTER :
                                 $value = $data->get($attribute);
                                 if(is_string($value)){
                                     $node_date = strtotime($value);
@@ -348,7 +391,7 @@ class Filter extends Data{
                                     $skip = true;
                                 }
                             break;
-                            case 'strictly-before' :
+                            case Filter::OPERATOR_STRICTLY_BEFORE :
                                 $value = $data->get($attribute);
                                 if(is_string($value)){
                                     $node_date = strtotime($value);
@@ -367,7 +410,7 @@ class Filter extends Data{
                                     $skip = true;
                                 }
                             break;
-                            case 'strictly-after' :
+                            case Filter::OPERATOR_STRICTLY_AFTER :
                                 $value = $data->get($attribute);
                                 if(is_string($value)){
                                     $node_date = strtotime($value);
@@ -386,7 +429,7 @@ class Filter extends Data{
                                     $skip = true;
                                 }
                             break;
-                            case 'partial' :
+                            case Filter::OPERATOR_PARTIAL :
                                 $value = $data->get($attribute);
                                 if(
                                     is_string($record['value'])
@@ -406,7 +449,7 @@ class Filter extends Data{
                                     }
                                 }
                             break;
-                            case 'not-partial' :
+                            case Filter::OPERATOR_NOT_PARTIAL :
                                 $value = $data->get($attribute);
                                 if(
                                     is_string($record['value'])
@@ -426,7 +469,7 @@ class Filter extends Data{
                                     }
                                 }
                             break;
-                            case 'start' :
+                            case Filter::OPERATOR_START :
                                 $value = $data->get($attribute);
                                 if(
                                     is_string($record['value'])
@@ -463,7 +506,7 @@ class Filter extends Data{
                                     }
                                 }
                             break;
-                            case 'not-start' :
+                            case Filter::OPERATOR_NOT_START :
                                 $value = $data->get($attribute);
                                 if(
                                     is_string($record['value'])
@@ -500,7 +543,7 @@ class Filter extends Data{
                                     }
                                 }
                             break;
-                            case 'end' :
+                            case Filter::OPERATOR_END :
                                 $value = $data->get($attribute);
                                 if(
                                     is_string($record['value'])
@@ -541,7 +584,7 @@ class Filter extends Data{
                                     }
                                 }
                             break;
-                            case 'not-end' :
+                            case Filter::OPERATOR_NOT_END :
                                 $value = $data->get($attribute);
                                 if(
                                     is_string($record['value'])
@@ -600,7 +643,7 @@ class Filter extends Data{
                     } else {
                         $where = [];
                         $where[$attribute] = [
-                            'operator' => 'partial',
+                            'operator' => Filter::OPERATOR_PARTIAL,
                             'value' => $record
                         ];
                         $list = Filter::list($list)->where($where);
@@ -763,6 +806,7 @@ class Filter extends Data{
                     break;
             }
         }
+        return null;
     }
 
     /**
