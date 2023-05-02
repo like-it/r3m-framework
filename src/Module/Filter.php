@@ -635,11 +635,14 @@ class Filter extends Data{
                             }
                         }
                     } elseif(is_array($record)) {
+                        $where = [];
                         foreach($record as $key => $value){
-                            $where = [];
-                            $where[$attribute] = $value;
-                            $list = Filter::list($list)->where($where);
+                            $where[$attribute] = [
+                                'operator' => Filter::OPERATOR_PARTIAL,
+                                'value' => $value
+                            ];
                         }
+                        $list = Filter::list($list)->where($where);
                     } else {
                         $where = [];
                         $where[$attribute] = [
