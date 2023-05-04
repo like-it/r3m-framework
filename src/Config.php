@@ -445,6 +445,10 @@ class Config extends Data {
         $value = Config::VALUE_VALIDATE;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::VALIDATOR;
+        $value = Config::VALUE_VALIDATOR;
+        $this->data($key, $value);
+
         $key = Config::DICTIONARY . '.' . Config::DS;
         $value = Config::VALUE_DS;
         $this->data($key, $value);
