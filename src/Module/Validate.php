@@ -11,9 +11,13 @@
 namespace R3m\Io\Module;
 
 use stdClass;
-use Exception;
+
 use R3m\Io\App;
 use R3m\Io\Config;
+
+use Exception;
+
+use R3m\Io\Exception\LocateException;
 
 class Validate {
 
@@ -92,35 +96,27 @@ class Validate {
                             }
                             $key = 'validate' . '.' . $key;
                             $function = str_replace('.', '_', $key);
-                            if(empty($test[$field][$function])){
-                                $test[$field][$function] = [];
-                            }
+
                             $url_list = [];
-                            ddd($object->config());
+                            $url_list[] = $object->config('controller.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
+                            $url_list[] = $object->config('project.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
                             $url_list[] = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
                             $url_list[] = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . ucfirst(str_replace('.', '_', $key) . $extension);
 
-
-                            $url = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
-                            if(File::exist($url)){
-                                require_once $url;
-                                $function = str_replace('.', '_', $key);
-                                if(empty($test[$field][$function])){
-                                    $test[$field][$function] = [];
-                                }
-                                $test[$field][$function][] = $function($object, $value, $field, $argument);
-                            } else {
-                                $url_2 = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . ucfirst(str_replace('.', '_', $key) . $extension);
-                                if(File::exist($url_2)){
-                                    require_once $url_2;
-                                    $function = str_replace('.', '_', $key);
-                                    if(empty($test[$field][$function])){
-                                        $test[$field][$function] = [];
-                                    }
+                            if(empty($test[$field][$function])){
+                                $test[$field][$function] = [];
+                            }
+                            $is_found = false;
+                            foreach($url_list as $url){
+                                if(File::exist($url)){
+                                    require_once $url;
                                     $test[$field][$function][] = $function($object, $value, $field, $argument);
-                                } else {
-                                    throw new Exception('validator (' . $url .  ',' . $url_2 . ') not found');
+                                    $is_found = true;
+                                    break;
                                 }
+                            }
+                            if($is_found === false){
+                                throw new LocateException('validator (' . $function . ') not found.', $url_list);
                             }
                         }
                     }
