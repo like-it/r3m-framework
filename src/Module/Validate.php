@@ -98,8 +98,8 @@ class Validate {
                             $function = str_replace('.', '_', $key);
 
                             $url_list = [];
-                            $url_list[] = $object->config('controller.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
-                            $url_list[] = $object->config('project.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
+                            $url_list[] = $object->config('controller.dir.validator') . ucfirst(str_replace('.', '_', $key) . $extension);
+                            $url_list[] = $object->config('project.dir.validator') . ucfirst(str_replace('.', '_', $key) . $extension);
                             $url_list[] = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . ucfirst(str_replace('.', '_', $key) . $extension);
                             $url_list[] = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
 
