@@ -91,6 +91,16 @@ class Validate {
                                 continue;
                             }
                             $key = 'validate' . '.' . $key;
+                            $function = str_replace('.', '_', $key);
+                            if(empty($test[$field][$function])){
+                                $test[$field][$function] = [];
+                            }
+                            $url_list = [];
+                            ddd($object->config());
+                            $url_list[] = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
+                            $url_list[] = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . ucfirst(str_replace('.', '_', $key) . $extension);
+
+
                             $url = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
                             if(File::exist($url)){
                                 require_once $url;
