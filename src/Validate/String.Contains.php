@@ -8,9 +8,10 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Parse\Token;
+use R3m\Io\App;
 
-function validate_string_contains(R3m\Io\App $object, $string='', $field='', $argument=''){
+function validate_string_contains(App $object, $string='', $field='', $argument=''): bool
+{
     if(empty($string)){
         return true;
     }

@@ -9,16 +9,15 @@
  *     -            all
  */
 
+use R3m\Io\App;
 use R3m\Io\Config;
-use R3m\Io\Module\Core;
-use R3m\Io\Module\Data;
-use R3m\Io\Module\File;
 
 /**
  * @throws \R3m\Io\Exception\ObjectException
  * @throws Exception
  */
-function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $argument=''){
+function validate_is_unique_json(App $object, $string='', $field='', $argument=''): bool
+{
     if($object->request('has', 'node.' . 'uuid')){
         $original_uuid = $object->request('node.' . 'uuid');
     }
@@ -83,4 +82,5 @@ function validate_is_unique_json(R3m\Io\App $object, $string='', $field='', $arg
         }
         return $is_unique;
     }
+    return false;
 }

@@ -8,8 +8,9 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Parse\Token;
+use R3m\Io\App;
 
-function validate_is_array(R3m\Io\App $object, $array=[], $field='', $argument='') {
+function validate_is_array(App $object, $array=[], $field='', $argument=''): bool
+{
     return is_array($array);
 }

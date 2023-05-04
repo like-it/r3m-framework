@@ -8,9 +8,14 @@
  * @changeLog
  *     -            all
  */
+use R3m\Io\App;
 use R3m\Io\Module\Parse\Token;
 
-function validate_string_has_symbol(R3m\Io\App $object, $string='', $field='', $argument=''){
+/**
+ * @throws Exception
+ */
+function validate_string_has_symbol(App $object, $string='', $field='', $argument=''): bool
+{
     $split = str_split($string);
     $test = [];
     foreach($split as $nr => $char){

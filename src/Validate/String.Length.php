@@ -8,9 +8,14 @@
  * @changeLog
  *     -            all
  */
+use R3m\Io\App;
 use R3m\Io\Module\Parse\Token;
 
-function validate_string_length(R3m\Io\App $object, $string='', $field='', $argument=''){
+/**
+ * @throws Exception
+ */
+function validate_string_length(App $object, $string='', $field='', $argument=''): bool
+{
     $length = strlen($string);
     $argument = Token::tree('{if($argument ' . $argument . ')}{/if}');
     $left = null;

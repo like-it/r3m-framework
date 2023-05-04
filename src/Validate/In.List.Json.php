@@ -8,11 +8,17 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Core;
-use R3m\Io\Module\Data;
-use R3m\Io\Module\File;
+use R3m\Io\App;
 
-function validate_in_list_json(R3m\Io\App $object, $request=null, $field='', $argument=''){
+use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\FileWriteException;
+
+/**
+ * @throws ObjectException
+ * @throws FileWriteException
+ */
+function validate_in_list_json(App $object, $request=null, $field='', $argument=''): bool
+{
     if($object->request('has', 'node.' . 'uuid')){
         $original_uuid = $object->request('node.' . 'uuid');
     }
@@ -80,4 +86,5 @@ function validate_in_list_json(R3m\Io\App $object, $request=null, $field='', $ar
             return false;
         }
     }
+    return false;
 }

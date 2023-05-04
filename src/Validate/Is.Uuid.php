@@ -8,9 +8,10 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Parse\Token;
+use R3m\Io\App;
 
-function validate_is_uuid(R3m\Io\App $object, $string='', $field='', $argument=''){
+function validate_is_uuid(App $object, $string='', $field='', $argument=''): bool
+{
     //format: %s%s-%s-%s-%s-%s%s%s
     $explode = explode('-', $string);
     $result = false;

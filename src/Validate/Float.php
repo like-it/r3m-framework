@@ -8,9 +8,14 @@
  * @changeLog
  *     -            all
  */
+use R3m\Io\App;
 use R3m\Io\Module\Parse\Token;
 
-function validate_float(R3m\Io\App $object, $string='', $field='', $argument=''){
+/**
+ * @throws Exception
+ */
+function validate_float(App $object, $string='', $field='', $argument=''): bool
+{
     $float = floatval($string);
     $argument = Token::tree('{if($argument ' . $argument . ')}{/if}');
     $left = null;

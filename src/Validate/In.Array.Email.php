@@ -9,15 +9,16 @@
  *     -            all
  */
 
+use R3m\Io\App;
 use R3m\Io\Module\Core;
-use R3m\Io\Module\Parse\Token;
 
 use R3m\Io\Exception\ObjectException;
 
 /**
  * @throws ObjectException
  */
-function validate_in_array_email(R3m\Io\App $object, $array=null, $field='', $argument=''){
+function validate_in_array_email(App $object, $array=null, $field='', $argument=''): bool
+{
     if(
         is_string($array) &&
         substr($array, 0, 1) === '[' &&

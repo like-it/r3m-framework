@@ -8,9 +8,10 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Parse\Token;
+use R3m\Io\App;
 
-function validate_is_email(R3m\Io\App $object, $string='', $field='', $argument=''){
+function validate_is_email(App $object, $string='', $field='', $argument=''): bool
+{
     if(filter_var($string, FILTER_VALIDATE_EMAIL)) {
         // valid address
         if($argument === false){

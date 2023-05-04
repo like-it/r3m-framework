@@ -8,9 +8,10 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Parse\Token;
+use R3m\Io\App;
 
-function validate_in_array(R3m\Io\App $object, $in='', $field='', $array=''){
+function validate_in_array(App $object, $in='', $field='', $array=''): bool
+{
     if(empty($in)){
         return false;
     }

@@ -8,9 +8,11 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Parse\Token;
 
-function validate_boolean(R3m\Io\App $object, $string='', $field='', $argument=''){
+use R3m\Io\App;
+
+function validate_boolean(App $object, $string='', $field='', $argument=''): bool
+{
     $bool = $string;
     if(
         $bool == '1' ||

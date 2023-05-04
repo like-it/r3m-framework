@@ -9,6 +9,7 @@
  *     -            all
  */
 
+use R3m\Io\App;
 use R3m\Io\Module\Database;
 
 use R3m\Io\Exception\ObjectException;
@@ -20,7 +21,8 @@ use R3m\Io\Exception\FileWriteException;
  * @throws \Doctrine\ORM\Exception\ORMException
  * @throws \Doctrine\ORM\ORMException
  */
-function validate_is_unique_mysql(R3m\Io\App $object, $string='', $field='', $argument=''){
+function validate_is_unique_mysql(App $object, $string='', $field='', $argument=''): bool
+{
     $table = false;
     $field = false;
     if(property_exists($argument, 'table')){

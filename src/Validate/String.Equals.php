@@ -8,9 +8,10 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Parse\Token;
+use R3m\Io\App;
 
-function validate_string_equals(R3m\Io\App $object, $string='', $field='', $argument=''){
+function validate_string_equals(App $object, $string='', $field='', $argument=''): bool
+{
     $compare = $object->request('node.' . $argument);
     if(empty($compare)){
         $compare = $object->request($argument);

@@ -8,9 +8,14 @@
  * @changeLog
  *     -            all
  */
+use R3m\Io\App;
 use R3m\Io\Module\Parse\Token;
 
-function validate_integer(R3m\Io\App $object, $string='', $field='', $argument=''){
+/**
+ * @throws Exception
+ */
+function validate_integer(App $object, $string='', $field='', $argument=''): bool
+{
     $int = intval($string);
     $argument = Token::tree('{if($argument ' . $argument . ')}{/if}');
     $left = null;
