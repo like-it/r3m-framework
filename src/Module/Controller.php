@@ -438,7 +438,7 @@ class Controller {
             $config->data(Config::DS)
         );
         $config->data(Config::DATA_CONTROLLER_DIR_EXECUTE,
-            $config->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
             $config->data(
                 Config::DICTIONARY .
                 '.' .
@@ -452,6 +452,15 @@ class Controller {
                 Config::DICTIONARY .
                 '.' .
                 Config::SERVICE
+            ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_CONTROLLER_DIR_VALIDATOR,
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::VALIDATOR
             ) .
             $config->data(Config::DS)
         );

@@ -119,6 +119,9 @@ class Config extends Data {
     const EXECUTE = 'execute';
     const VALUE_EXECUTE = 'Execute';
 
+    const VALIDATOR = 'validator';
+    const VALUE_VALIDATOR = 'Validator';
+
     const ROUTE = 'Route.json';
     const CONFIG = 'Config.json';
 
@@ -174,6 +177,8 @@ class Config extends Data {
     const DATA_PROJECT_DIR_FUNCTION =  Config::DATA_PROJECT_DIR . '.' . 'function';
     const DATA_PROJECT_DIR_LOG =  Config::DATA_PROJECT_DIR . '.' . 'log';
     const DATA_PROJECT_DIR_EXECUTE =  Config::DATA_PROJECT_DIR . '.' . 'execute';
+    const DATA_PROJECT_DIR_COMPONENT =  Config::DATA_PROJECT_DIR . '.' . 'component';
+    const DATA_PROJECT_DIR_VALIDATOR =  Config::DATA_PROJECT_DIR . '.' . 'validator';
 
     const DATA_CONTROLLER = 'controller';
     const DATA_CONTROLLER_CLASS = 'controller.class';
@@ -189,6 +194,7 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_ENTITY = Config::DATA_CONTROLLER_DIR . '.' .'entity';
     const DATA_CONTROLLER_DIR_REPOSITORY = Config::DATA_CONTROLLER_DIR . '.' .'repository';
     const DATA_CONTROLLER_DIR_EXECUTE = Config::DATA_CONTROLLER_DIR . '.' .'execute';
+    const DATA_CONTROLLER_DIR_VALIDATOR = Config::DATA_CONTROLLER_DIR . '.' .'validator';
     const DATA_CONTROLLER_DIR_SERVICE = Config::DATA_CONTROLLER_DIR . '.' .'service';
     const DATA_CONTROLLER_DIR_NODE = Config::DATA_CONTROLLER_DIR . '.' .'node';
     const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
@@ -516,6 +522,19 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::EXECUTE) .
+            $this->data(Config::DS)
+        ;
+        $key = Config::DATA_PROJECT_DIR_COMPONENT;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::COMPONENT) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_PROJECT_DIR_VALIDATOR;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::VALIDATOR) .
             $this->data(Config::DS)
         ;
         $this->data($key, $value);
