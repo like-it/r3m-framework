@@ -94,14 +94,15 @@ class Validate {
                             if(substr($key, 0, 1) === '#'){
                                 continue;
                             }
+                            $name = Controller::name($key);
                             $key = 'validate' . '.' . $key;
                             $function = str_replace('.', '_', $key);
 
                             $url_list = [];
-                            $url_list[] = $object->config('controller.dir.validator') . ucfirst(str_replace('.', '_', $key) . $extension);
-                            $url_list[] = $object->config('project.dir.validator') . ucfirst(str_replace('.', '_', $key) . $extension);
-                            $url_list[] = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . ucfirst(str_replace('.', '_', $key) . $extension);
-                            $url_list[] = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
+                            $url_list[] = $object->config('controller.dir.validator') . $name . $extension;
+                            $url_list[] = $object->config('project.dir.validator') . $name . $extension;
+                            $url_list[] = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . $name . $extension;
+                            $url_list[] = $object->config('framework.dir.validate') . $name . $extension;
 
                             if(empty($test[$field][$function])){
                                 $test[$field][$function] = [];
