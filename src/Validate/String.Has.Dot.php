@@ -14,68 +14,13 @@ use R3m\Io\Module\Parse\Token;
 /**
  * @throws Exception
  */
-function validate_string_has_dot(App $object, $string='', $field='', $argument=''): bool
+function validate_string_has_dot(App $object, $string='', $field='', $options=''): bool
 {
-    $split = str_split($string);
-    $test = [];
-    foreach($split as $nr => $char){
-        if(
-            in_array(
-                $char,
-                [
-                    '.',
-                ],
-                true
-            )
-        ){
-            $test[] = $char;
-        }
+    d($field);
+    ddd($options);
+    $explode = explode('.', $string, 2);
+    if(count($explode) == 2){
+        return true;
     }
-    $length = count($test);
-    $argument = Token::tree('{if($argument ' . $argument . ')}{/if}');
-    $left = null;
-    $equation = null;
-    $right = null;
-    foreach($argument[1]['method']['attribute'][0] as $nr => $record){
-        if(empty($left)){
-            $left = $record;
-        }
-        elseif(empty($equation)){
-            $equation = $record['value'];            
-        }
-        elseif(empty($right)){
-            $right = $record['execute'];
-            break;
-        }
-    }
-    $result = false;
-    switch($equation){
-        case '>' :
-            $result = $length > $right;
-        break;
-        case '<' :
-            $result = $length < $right;
-        break;
-        case '>=' :
-            $result = $length >= $right;
-        break;
-        case '<=' :
-            $result = $length <= $right;
-        break;                
-        case '==' :
-            $result = $length == $right;
-        break;
-        case '!=' :
-            $result = $length != $right;
-        break;
-        case '===' :
-            $result = $length === $right;
-            break;
-        case '!==' :
-            $result = $length !== $right;
-            break;
-        default:
-            throw new Exception('Unknown equation');
-    }
-    return $result;    
+    return false;
 }
