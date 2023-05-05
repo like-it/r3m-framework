@@ -16,10 +16,14 @@ use R3m\Io\Module\Parse\Token;
  */
 function validate_string_has_dot(App $object, $string='', $field='', $options=''): bool
 {
-    d($field);
-    ddd($options);
     $explode = explode('.', $string, 2);
     if(count($explode) == 2){
+        if($options === 'inverse'){
+            return false;
+        }
+        return true;
+    }
+    if($options === 'inverse'){
         return true;
     }
     return false;
