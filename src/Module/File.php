@@ -85,14 +85,14 @@ class File {
 
     public static function link($source, $destination): bool
     {
-        $source = escapeshellarg($source);
-        $destination = escapeshellarg($destination);
         if(substr($source, -1, 1) === '/'){
             $source = substr($source, 0, -1);
         }
         if(substr($destination, -1, 1) === '/'){
             $destination = substr($destination, 0, -1);
         }
+        $source = escapeshellarg($source);
+        $destination = escapeshellarg($destination);
         system('ln -s ' . $source . ' ' . $destination);
         return true;
     }
