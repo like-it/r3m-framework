@@ -95,9 +95,6 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        $debug = debug_backtrace(true);
-        d($debug[0]['file'] . ':' . $debug[0]['line']);
-        d($options);
         $events = $object->get(App::EVENT)->select('event', [
             'action' => $action
         ]);
