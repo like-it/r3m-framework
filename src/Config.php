@@ -239,7 +239,7 @@ class Config extends Data {
      */
     public static function configure(App $object){
         $config = $object->data(App::CONFIG);
-        $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . Config::CONFIG;
+        $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . 'App' . $config->data('ds') . Config::CONFIG;
         if(File::exist($url)){
             $read = Core::object(File::read($url));
             $config->data(Core::object_merge($config->data(), $read));
