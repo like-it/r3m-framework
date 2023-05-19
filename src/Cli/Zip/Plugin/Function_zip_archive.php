@@ -32,6 +32,9 @@ function function_zip_archive(Parse $parse, Data $data){
         $dir = new Dir();
         $read = $dir->read($source, true);
         $host = [];
+        if(!is_array($read)){
+            return null;
+        }
         foreach($read as $file){
             $host[] = $file;
         }
