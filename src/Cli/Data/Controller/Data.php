@@ -8,7 +8,7 @@
  * @changeLog
  *  -    all
  */
-namespace R3m\Io\Cli\Init\Controller;
+namespace R3m\Io\Cli\Data\Controller;
 
 use R3m\Io\App;
 use R3m\Io\Exception\ObjectException;
@@ -23,7 +23,7 @@ use R3m\Io\Exception\UrlNotExistException;
 
 class Data extends Controller {
     const DIR = __DIR__;
-    const NAME = 'Init';
+    const NAME = 'Data';
     const INFO = '{{binary()}} data                           | Data options';
 
     /**
