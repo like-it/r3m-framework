@@ -99,11 +99,13 @@ class Data extends Controller {
                         $file->basename = File::basename($file->name, '.' . $file->extension);
                         if(empty($includes) && empty($excludes)){
                             if($file->extension === 'zip'){
-                                $command = Core::binary() . ' zip extract ' . $file->url . ' /';
                                 $dir_data = $object->config('project.dir.data') .
                                     File::basename($file->name, $object->config('extension.zip')) .
                                     $object->config('ds')
                                 ;
+                                Dir::create($dir_data, Dir::CHMOD);
+                                $command = Core::binary() . ' zip extract ' . $file->url . ' /';
+
                                 echo $command . PHP_EOL;
                                 exec($command);
                                 $command = 'chown www-data:www-data ' . $dir_data . ' -R';
@@ -122,6 +124,8 @@ class Data extends Controller {
                                             }
                                         }
                                     }
+                                    $command = 'chmod 777 ' . $dir_data;
+                                    exec($command);
                                 }
                             }
                         }
