@@ -22,6 +22,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Module\File;
 use R3m\Io\Module\Sort;
 
 class Data extends Controller {
@@ -54,8 +55,26 @@ class Data extends Controller {
         $dir = new Dir();
         $url = $object->config('project.dir.backup');
         $read = $dir->read($url);
+        $record = false;
         if(is_array($read)){
             $read = Sort::list($read)->with(['name' => 'desc'],[]);
+            foreach($read as $record){
+                break;
+            }
+        }
+        if($record){
+            $read = $dir->read($record->url);
+            if(is_array($read)){
+                foreach($read as $file){
+                    if($file->type === File::TYPE){
+                        $file->extension = File::extension($file->name);
+                        if($file->extension === 'zip'){
+                            $command = Core::binary() . ' zip extract ' . $file->url . ' /';
+                            exec($command);
+                        }
+                    }
+                }
+            }
         }
         ddd($read);
         return null;
