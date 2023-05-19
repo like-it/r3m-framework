@@ -48,6 +48,12 @@ class Config extends Data {
     const SOURCE = 'Source';
     const VALUE_SOURCE = 'src';
 
+    const MOUNT = 'Mount';
+    const VALUE_MOUNT = 'mount';
+
+    const BACKUP = 'Backup';
+    const VALUE_BACKUP = 'Backup';
+
     const BINARY = 'Binary';
     const VALUE_BINARY = 'Bin';
 
@@ -169,6 +175,8 @@ class Config extends Data {
     const DATA_PROJECT_DIR_BINARY =  Config::DATA_PROJECT_DIR . '.' . 'binary';
     const DATA_PROJECT_DIR_VENDOR =  Config::DATA_PROJECT_DIR . '.' . 'vendor';
     const DATA_PROJECT_DIR_SOURCE =  Config::DATA_PROJECT_DIR . '.' . 'source';
+    const DATA_PROJECT_DIR_MOUNT =  Config::DATA_PROJECT_DIR . '.' . 'mount';
+    const DATA_PROJECT_DIR_BACKUP =  Config::DATA_PROJECT_DIR . '.' . 'backup';
     const DATA_PROJECT_DIR_DATA =  Config::DATA_PROJECT_DIR . '.' . 'data';
     const DATA_PROJECT_DIR_CLI =  Config::DATA_PROJECT_DIR . '.' . 'cli';
     const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
@@ -357,6 +365,14 @@ class Config extends Data {
         $value = Config::VALUE_SOURCE;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::MOUNT;
+        $value = Config::VALUE_MOUNT;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::BACKUP;
+        $value = Config::VALUE_BACKUP;
+        $this->data($key, $value);
+
         $key = Config::DICTIONARY . '.' . Config::BINARY;
         $value = Config::VALUE_BINARY;
         $this->data($key, $value);
@@ -474,6 +490,22 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::SOURCE) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+
+        $key = Config::DATA_PROJECT_DIR_MOUNT;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::MOUNT) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+
+        $key = Config::DATA_PROJECT_DIR_BACKUP;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_MOUNT) .
+            $this->data(Config::DICTIONARY . '.' . Config::BACKUP) .
             $this->data(Config::DS)
         ;
         $this->data($key, $value);
