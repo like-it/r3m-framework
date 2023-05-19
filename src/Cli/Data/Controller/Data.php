@@ -53,6 +53,7 @@ class Data extends Controller {
     public static function backup(App $object){
         $flags = App::flags($object);
         $cwd = false;
+        $date = date('Y-m-d-H-i-s');
         $includes = [];
         $excludes = [];
         if(property_exists($flags, 'include')){
@@ -75,10 +76,12 @@ class Data extends Controller {
             if(is_array($read)){
                 foreach($read as $nr => $file){
                     if($file->type === Dir::TYPE){
-                        ddd($object->config());
-//                        $destination = $object->config('')
-
-
+                        $destination = $object->config('project.dir.backup') .
+                            $date .
+                            $object->config('ds') .
+                            $file->name .
+                            $object->config('extension.zip');
+                        ddd($destination);
                     }
                 }
             }
