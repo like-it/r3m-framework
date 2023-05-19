@@ -138,7 +138,6 @@ class Data extends Controller {
                                     File::basename($file->name, $object->config('extension.zip')) .
                                     $object->config('ds')
                                 ;
-                                echo $command . PHP_EOL;
                                 exec($command);
                                 $command = 'chown www-data:www-data ' . $dir_data . ' -R';
                                 exec($command);
