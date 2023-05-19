@@ -34,7 +34,7 @@ function function_route_resource(Parse $parse, Data $data, $resource='')
         ]);
         throw $exception;
     }
-    $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
+    $url = $object->config('app.route.url');
     $read = $object->data_read($url);
     $has_route = false;
     if (!$read) {

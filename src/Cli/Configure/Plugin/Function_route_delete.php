@@ -6,8 +6,6 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Event;
 
-use Exception;
-
 /**
  * @throws Exception
  */
@@ -32,7 +30,7 @@ function function_route_delete(Parse $parse, Data $data, $resource=''){
         ]);
         throw $exception;
     }
-    $url = $object->config('project.dir.data') . 'Route' . $object->config('extension.json');
+    $url = $object->config('app.route.url');
     $read = $object->data_read($url);
     $has_deleted = false;
     if($read){
