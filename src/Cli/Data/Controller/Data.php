@@ -22,6 +22,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Module\Sort;
 
 class Data extends Controller {
     const DIR = __DIR__;
@@ -38,6 +39,7 @@ class Data extends Controller {
                 return Data::backup($object);
             break;
             case 'restore':
+                return Data::restore($object);
             break;
             case 'download':
                 //rsync
@@ -46,6 +48,17 @@ class Data extends Controller {
                 //rsync
             break;
         }
+    }
+
+    public static function restore(App $object){
+        $dir = new Dir();
+        $url = $object->config('project.dir.backup');
+        $read = $dir->read($url);
+        if(is_array($read)){
+            $read = Sort::list($read)->with(['name' => 'asc'],[]);
+        }
+        ddd($read);
+        return null;
     }
 
     /**
@@ -169,5 +182,6 @@ class Data extends Controller {
         if($cwd){
             Dir::change($cwd);
         }
+        return null;
     }
 }
