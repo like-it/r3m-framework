@@ -13,6 +13,7 @@ namespace R3m\Io\Cli\Data\Controller;
 use R3m\Io\App;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\Event;
 
 use Exception;
@@ -30,11 +31,46 @@ class Data extends Controller {
      * @throws ObjectException
      */
     public static function run(App $object){
-        ddd('data');
-        Event::trigger($object, 'cli.init.run', [
-            'flags' => $object->flags($object),
-            'options' => $object->options($object)
-        ]);
-        return null;
+        $submodule = App::parameter($object, 'data', 1);
+        switch($submodule){
+            case 'backup':
+                return Data::backup($object);
+            break;
+            case 'restore':
+            break;
+            case 'download':
+                //rsync
+            break;
+            case 'upload':
+                //rsync
+            break;
+        }
+    }
+
+    public static function backup(App $object){
+        $flags = App::flags($object);
+        $includes = [];
+        $excludes = [];
+        if(property_exists($flags, 'include')){
+            $includes = explode(',', $flags->include);
+            foreach($includes as $nr => $include){
+                $includes[$nr] = trim($include);
+            }
+        }
+        if(property_exists($flags, 'exclude')){
+            $excludes = explode(',', $flags->exclude);
+            foreach($excludes as $nr => $exclude){
+                $excludes[$nr] = trim($exclude);
+            }
+        }
+        if(empty($includes) && empty($excludes)){
+            $dir = new Dir();
+            $url = $object->config('project.dir.data');
+            $read = $dir->read($url);
+            ddd($read);
+        }
+
+
+        d($flags);
     }
 }
