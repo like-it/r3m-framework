@@ -97,27 +97,141 @@ class Data extends Controller {
                     if($file->type === File::TYPE){
                         $file->extension = File::extension($file->name);
                         $file->basename = File::basename($file->name, '.' . $file->extension);
-                        ddd($file);
-                        if($file->extension === 'zip'){
-                            $command = Core::binary() . ' zip extract ' . $file->url . ' /';
-                            $dir_data = $object->config('project.dir.data') .
-                                File::basename($file->name, $object->config('extension.zip')) .
-                                $object->config('ds')
-                            ;
-                            exec($command);
-                            $command = 'chown www-data:www-data ' . $dir_data . ' -R';
-                            exec($command);
-                            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-                                $data = $dir->read($dir_data, true);
-                                if(is_array($data)){
-                                    foreach($data as $item){
-                                        if($item->type === Dir::TYPE){
-                                            $command = 'chmod 777 ' . $item->url;
-                                            exec($command);
+                        if(empty($includes) && empty($excludes)){
+                            if($file->extension === 'zip'){
+                                $command = Core::binary() . ' zip extract ' . $file->url . ' /';
+                                $dir_data = $object->config('project.dir.data') .
+                                    File::basename($file->name, $object->config('extension.zip')) .
+                                    $object->config('ds')
+                                ;
+                                exec($command);
+                                $command = 'chown www-data:www-data ' . $dir_data . ' -R';
+                                exec($command);
+                                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                    $data = $dir->read($dir_data, true);
+                                    if(is_array($data)){
+                                        foreach($data as $item){
+                                            if($item->type === Dir::TYPE){
+                                                $command = 'chmod 777 ' . $item->url;
+                                                exec($command);
+                                            }
+                                            elseif($item->type === File::TYPE){
+                                                $command = 'chmod 666 ' . $item->url;
+                                                exec($command);
+                                            }
                                         }
-                                        elseif($item->type === File::TYPE){
-                                            $command = 'chmod 666 ' . $item->url;
-                                            exec($command);
+                                    }
+                                }
+                            }
+                        }
+                        elseif(!empty($includes) && empty($excludes)){
+                            if(
+                                in_array(
+                                    $file->basename,
+                                    $includes,
+                                    true
+                                ) &&
+                                $file->extension === 'zip'
+                            ){
+                                $command = Core::binary() . ' zip extract ' . $file->url . ' /';
+                                $dir_data = $object->config('project.dir.data') .
+                                    File::basename($file->name, $object->config('extension.zip')) .
+                                    $object->config('ds')
+                                ;
+                                exec($command);
+                                $command = 'chown www-data:www-data ' . $dir_data . ' -R';
+                                exec($command);
+                                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                    $data = $dir->read($dir_data, true);
+                                    if(is_array($data)){
+                                        foreach($data as $item){
+                                            if($item->type === Dir::TYPE){
+                                                $command = 'chmod 777 ' . $item->url;
+                                                exec($command);
+                                            }
+                                            elseif($item->type === File::TYPE){
+                                                $command = 'chmod 666 ' . $item->url;
+                                                exec($command);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        elseif(empty($includes) && !empty($excludes)){
+                            if(
+                                in_array(
+                                    $file->basename,
+                                    $excludes,
+                                    true
+                                )
+                            ){
+                                continue;
+                            }
+                            if($file->extension === 'zip'){
+                                $command = Core::binary() . ' zip extract ' . $file->url . ' /';
+                                $dir_data = $object->config('project.dir.data') .
+                                    File::basename($file->name, $object->config('extension.zip')) .
+                                    $object->config('ds')
+                                ;
+                                exec($command);
+                                $command = 'chown www-data:www-data ' . $dir_data . ' -R';
+                                exec($command);
+                                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                    $data = $dir->read($dir_data, true);
+                                    if(is_array($data)){
+                                        foreach($data as $item){
+                                            if($item->type === Dir::TYPE){
+                                                $command = 'chmod 777 ' . $item->url;
+                                                exec($command);
+                                            }
+                                            elseif($item->type === File::TYPE){
+                                                $command = 'chmod 666 ' . $item->url;
+                                                exec($command);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        elseif(!empty($includes) && !empty($excludes)){
+                            if(
+                                in_array(
+                                    $file->basename,
+                                    $excludes,
+                                    true
+                                )
+                            ){
+                                continue;
+                            }
+                            if(
+                                in_array(
+                                    $file->basename,
+                                    $includes,
+                                    true
+                                ) &&
+                                $file->extension === 'zip'
+                            ){
+                                $command = Core::binary() . ' zip extract ' . $file->url . ' /';
+                                $dir_data = $object->config('project.dir.data') .
+                                    File::basename($file->name, $object->config('extension.zip')) .
+                                    $object->config('ds')
+                                ;
+                                exec($command);
+                                $command = 'chown www-data:www-data ' . $dir_data . ' -R';
+                                exec($command);
+                                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                    $data = $dir->read($dir_data, true);
+                                    if(is_array($data)){
+                                        foreach($data as $item){
+                                            if($item->type === Dir::TYPE){
+                                                $command = 'chmod 777 ' . $item->url;
+                                                exec($command);
+                                            }
+                                            elseif($item->type === File::TYPE){
+                                                $command = 'chmod 666 ' . $item->url;
+                                                exec($command);
+                                            }
                                         }
                                     }
                                 }
