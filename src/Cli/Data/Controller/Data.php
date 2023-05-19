@@ -85,7 +85,7 @@ class Data extends Controller {
                         if($file->extension === 'zip'){
                             $command = Core::binary() . ' zip extract ' . $file->url . ' /';
                             $dir_data = $object->config('project.dir.data') .
-                                $file->name .
+                                File::basename($file->name, $object->config('extension.zip')) .
                                 $object->config('ds')
                             ;
                             exec($command);
