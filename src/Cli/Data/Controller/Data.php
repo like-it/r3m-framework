@@ -47,6 +47,9 @@ class Data extends Controller {
         }
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function backup(App $object){
         $flags = App::flags($object);
         $includes = [];
