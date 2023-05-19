@@ -8,6 +8,7 @@
                 "parse",
                 "cache",
                 "cache:clear",
+                "data",
                 "init",
                 "install",
                 "license",
