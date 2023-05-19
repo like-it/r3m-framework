@@ -13,6 +13,7 @@ namespace R3m\Io\Cli\Data\Controller;
 use R3m\Io\App;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\Event;
 
@@ -80,7 +81,10 @@ class Data extends Controller {
                             $date .
                             $object->config('ds') .
                             $file->name .
-                            $object->config('extension.zip');
+                            $object->config('extension.zip')
+                        ;
+                        $command = Core::binary() . ' zip archive ' . $file->name . ' ' . $destination;
+                        d($command);
                         ddd($destination);
                     }
                 }
