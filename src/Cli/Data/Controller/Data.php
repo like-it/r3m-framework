@@ -96,7 +96,7 @@ class Data extends Controller {
                 foreach($read as $file){
                     if($file->type === File::TYPE){
                         $file->extension = File::extension($file->name);
-                        $file->basename = File::basename($file->name, $file->extension);
+                        $file->basename = File::basename($file->name, '.' . $file->extension);
                         ddd($file);
                         if($file->extension === 'zip'){
                             $command = Core::binary() . ' zip extract ' . $file->url . ' /';
