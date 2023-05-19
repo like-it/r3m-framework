@@ -55,7 +55,7 @@ class Data extends Controller {
         $url = $object->config('project.dir.backup');
         $read = $dir->read($url);
         if(is_array($read)){
-            $read = Sort::list($read)->with(['name' => 'asc'],[]);
+            $read = Sort::list($read)->with(['name' => 'desc'],[]);
         }
         ddd($read);
         return null;
