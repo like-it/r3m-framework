@@ -77,15 +77,16 @@ class Data extends Controller {
             if(is_array($read)){
                 foreach($read as $nr => $file){
                     if($file->type === Dir::TYPE){
-                        $destination = $object->config('project.dir.backup') .
+                        $destination_dir = $object->config('project.dir.backup') .
                             $date .
-                            $object->config('ds') .
+                            $object->config('ds')
+                        ;
+                        $destination_url = $destination_dir .
                             $file->name .
                             $object->config('extension.zip')
                         ;
-                        $command = Core::binary() . ' zip archive ' . $file->name . ' ' . $destination;
-                        d($command);
-                        ddd($destination);
+                        $command = Core::binary() . ' zip archive ' . $file->name . ' ' . $destination_url;
+                        exec($command);
                     }
                 }
             }
