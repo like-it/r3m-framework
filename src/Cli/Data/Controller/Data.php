@@ -75,7 +75,8 @@ class Data extends Controller {
             if(is_array($read)){
                 foreach($read as $nr => $file){
                     if($file->type === Dir::TYPE){
-
+                        ddd($object->config());
+//                        $destination = $object->config('')
 
 
                     }
