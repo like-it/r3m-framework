@@ -72,11 +72,7 @@ class Secret extends Controller {
                 return $exception;
             }
         }
-        $url =
-            $object->config('project.dir.data') .
-            'Secret' .
-            $object->config('extension.json')
-        ;
+        $url = $object->config('app.secret.url');
         $key_url =
             $object->config('project.dir.data') .
             'Defuse'.
@@ -215,8 +211,6 @@ class Secret extends Controller {
                     'has_username' => $data->has('secret.username')
                 ]);
             }
-
-
         }
         elseif($action === Secret::ACTION_HAS){
             $attribute = $object->parameter($object, $action, 1);
@@ -749,5 +743,6 @@ class Secret extends Controller {
                 }
             }
         }
+        return null;
     }
 }
