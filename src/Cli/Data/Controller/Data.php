@@ -11,6 +11,7 @@
 namespace R3m\Io\Cli\Data\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Config;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
 use R3m\Io\Module\Core;
@@ -74,7 +75,6 @@ class Data extends Controller {
                     break;
                 }
             }
-
         }
         if($record){
             $read = $dir->read($record->url);
@@ -84,7 +84,28 @@ class Data extends Controller {
                         $file->extension = File::extension($file->name);
                         if($file->extension === 'zip'){
                             $command = Core::binary() . ' zip extract ' . $file->url . ' /';
+                            $dir_data = $object->config('project.dir.data') .
+                                $file->name .
+                                $object->config('ds')
+                            ;
                             exec($command);
+                            $command = 'chown www-data:www-data ' . $dir_data . ' -R';
+                            exec($command);
+                            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                $data = $dir->read($dir_data, true);
+                                if(is_array($data)){
+                                    foreach($data as $item){
+                                        if($item->type === Dir::TYPE){
+                                            $command = 'chmod 777 ' . $item->url;
+                                            exec($command);
+                                        }
+                                        elseif($item->type === File::TYPE){
+                                            $command = 'chmod 666 ' . $item->url;
+                                            exec($command);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
