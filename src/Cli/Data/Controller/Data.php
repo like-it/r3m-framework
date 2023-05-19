@@ -76,12 +76,28 @@ class Data extends Controller {
                 }
             }
         }
+        $includes = [];
+        $excludes = [];
+        if(property_exists($flags, 'include')){
+            $includes = explode(',', $flags->include);
+            foreach($includes as $nr => $include){
+                $includes[$nr] = trim($include);
+            }
+        }
+        if(property_exists($flags, 'exclude')){
+            $excludes = explode(',', $flags->exclude);
+            foreach($excludes as $nr => $exclude){
+                $excludes[$nr] = trim($exclude);
+            }
+        }
         if($record){
             $read = $dir->read($record->url);
             if(is_array($read)){
                 foreach($read as $file){
                     if($file->type === File::TYPE){
                         $file->extension = File::extension($file->name);
+                        $file->basename = File::basename($file->name, $file->extension);
+                        ddd($file);
                         if($file->extension === 'zip'){
                             $command = Core::binary() . ' zip extract ' . $file->url . ' /';
                             $dir_data = $object->config('project.dir.data') .
