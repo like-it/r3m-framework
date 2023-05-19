@@ -78,8 +78,8 @@ class Route extends Data {
             if(in_array($url, $allowed_host)){
                 return $select;
             }
-            return false;
         }
+        return false;
     }
 
     /**
@@ -241,6 +241,7 @@ class Route extends Data {
             $route =  $object->data(App::ROUTE);
             return $route->current($request);
         }
+        return false;
     }
 
     private static function find_array($string=''){
@@ -653,6 +654,7 @@ class Route extends Data {
         ){
             return substr($string, 2, -1);
         }
+        return null;
     }
 
     private static function prepare($object, $route, $select){
@@ -1030,7 +1032,8 @@ class Route extends Data {
      */
     public static function configure(App $object){
         $config = $object->data(App::CONFIG);
-        $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
+        $url = $config->data('app.config.dir') .
+            $config->data(Config::DATA_PROJECT_ROUTE_FILENAME);
         if(empty($config->data(Config::DATA_PROJECT_ROUTE_URL))){
             $config->data(Config::DATA_PROJECT_ROUTE_URL, $url);
         }
@@ -1079,11 +1082,13 @@ class Route extends Data {
         }
     }
 
-    private static function cache_mtime($object, $cache){
+    private static function cache_mtime($object, $cache): ?bool
+    {
         $time = strtotime(date('Y-m-d H:i:00'));
         if(File::mtime($cache->cache_url()) != $time){
             return File::touch($cache->cache_url(), $time, $time);
         }
+        return null;
     }
 
     private static function cache_invalidate($object, $cache)
@@ -1141,7 +1146,8 @@ class Route extends Data {
     /**
      * @throws ObjectException
      */
-    private static function cache_read($object, $url, $cache_url){
+    private static function cache_read($object, $url, $cache_url): ?Route
+    {
         if(File::Exist($cache_url)){
             $read = File::read($cache_url);
             $data = new Route(Core::object($read));
@@ -1149,6 +1155,7 @@ class Route extends Data {
             $data->cache_url($cache_url);
             return $data;
         }
+        return null;
     }
 
     /**
