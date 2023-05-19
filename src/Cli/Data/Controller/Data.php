@@ -70,10 +70,12 @@ class Data extends Controller {
                         break;
                     }
                 }
+            } else {
+                foreach($read as $record){
+                    break;
+                }
             }
-            foreach($read as $record){
-                break;
-            }
+
         }
         if($record){
             $read = $dir->read($record->url);
