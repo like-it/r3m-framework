@@ -60,6 +60,7 @@ class Data extends Controller {
         $read = $dir->read($url);
         $record = false;
         $flags = App::flags($object);
+        ddd($flags);
         if(is_array($read)){
             $read = Sort::list($read)->with(['name' => 'desc']);
             if(property_exists($flags, 'date')){
