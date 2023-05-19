@@ -85,6 +85,7 @@ class Data extends Controller {
                             $file->name .
                             $object->config('extension.zip')
                         ;
+                        Dir::create($destination_dir, Dir::CHMOD);
                         $command = Core::binary() . ' zip archive ' . $file->name . ' ' . $destination_url;
                         exec($command);
                     }
