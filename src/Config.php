@@ -241,6 +241,7 @@ class Config extends Data {
         $config = $object->data(App::CONFIG);
         $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . 'App' . $config->data('ds') . Config::CONFIG;
         if(File::exist($url)){
+            $config->data('app.config.url', $url);
             $read = Core::object(File::read($url));
             $config->data(Core::object_merge($config->data(), $read));
         }

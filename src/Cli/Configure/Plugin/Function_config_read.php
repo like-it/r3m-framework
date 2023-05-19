@@ -11,7 +11,7 @@ use R3m\Io\Exception\ObjectException;
  */
 function function_config_read(Parse $parse, Data $data, $attribute=''){
     $object = $parse->object();
-    $url = $object->config('project.dir.data') . 'Config.json';
+    $url = $object->config('app.config.url');
     $read = $object->data_read($url);
     $response = null;
     if(!empty($read)){

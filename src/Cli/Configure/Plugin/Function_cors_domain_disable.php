@@ -39,11 +39,8 @@ function function_cors_domain_disable(Parse $parse, Data $data, $domain=''){
         throw $exception;
     }
     $object = $parse->object();
-    $dir = $object->config('project.dir.data');
-    $url = $dir .
-        'Config' .
-        $object->config('extension.json')
-    ;
+    $url = $object->config('app.config.url');
+    $dir = Dir::name($url);
     $config = $object->data_read($url);
     if(!$config){
         $config = new Data();

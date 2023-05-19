@@ -9,8 +9,6 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Event;
 
-use Exception;
-
 use R3m\Io\Exception\ObjectException;
 
 /**
@@ -48,8 +46,8 @@ function function_server_admin(Parse $parse, Data $data, $email=''){
         throw $exception;
     }
     $object = $parse->object();
-    $dir = $object->config('project.dir.data');
-    $url = $object->config('project.dir.data') . 'Config.json';
+    $url = $object->config('app.config.url');
+    $dir = Dir::name($url);
     $read = $object->data_read($url);
     if(empty($read)){
         $read = new Data();

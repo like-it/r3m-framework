@@ -52,6 +52,7 @@ class Data extends Controller {
      */
     public static function backup(App $object){
         $flags = App::flags($object);
+        $cwd = false;
         $includes = [];
         $excludes = [];
         if(property_exists($flags, 'include')){
@@ -70,7 +71,20 @@ class Data extends Controller {
             $dir = new Dir();
             $url = $object->config('project.dir.data');
             $read = $dir->read($url);
+            $cwd = Dir::change($url);
+            if(is_array($read)){
+                foreach($read as $nr => $file){
+                    if($file->type === Dir::TYPE){
+
+
+
+                    }
+                }
+            }
             ddd($read);
+        }
+        if($cwd){
+            Dir::change($cwd);
         }
 
 

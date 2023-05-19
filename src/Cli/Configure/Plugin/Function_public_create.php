@@ -9,7 +9,6 @@ use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Event;
 
-use Exception;
 use R3m\Io\Exception\ObjectException;
 
 /**
@@ -41,11 +40,8 @@ function function_public_create(Parse $parse, Data $data, $public_html=''){
     if(empty($public_html)){
         $public_html = $object->config('project.dir.public');
     }
-    $dir = $object->config('project.dir.data');
-    $url = $dir .
-        'Config' .
-        $object->config('extension.json')
-    ;
+    $url = $object->config('app.config.url');
+    $dir = Dir::name($url);
     $read = $object->data_read($url);
     if(empty($read)){
         $read = new Data();

@@ -7,8 +7,6 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Event;
 
-use Exception;
-
 /**
  * @throws Exception
  */
@@ -40,11 +38,8 @@ function function_cors_headers_expose(Parse $parse, Data $data, $headers=''){
         ]);
         throw $exception;
     }
-    $dir = $object->config('project.dir.data');
-    $url = $dir .
-        'Config' .
-        $object->config('extension.json')
-    ;
+    $url = $object->config('app.config.url');
+    $dir = Dir::name($url);
     $config = $object->data_read($url);
     if(!$config){
         $config = new Data();

@@ -7,8 +7,6 @@ use R3m\Io\Module\Event;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-use Exception;
-
 /**
  * @throws Exception
  */
@@ -35,11 +33,8 @@ function function_cors_domain_enable(Parse $parse, Data $data, $domain=''){
     if(empty($domain)){
         throw new Exception('Domain cannot be empty...');
     }
-    $dir = $object->config('project.dir.data');
-    $url = $dir .
-        'Config' .
-        $object->config('extension.json')
-    ;
+    $url = $object->config('app.config.url');
+    $dir = Dir::name($url);
     $config = $object->data_read($url);
     if(!$config){
         $config = new Data();

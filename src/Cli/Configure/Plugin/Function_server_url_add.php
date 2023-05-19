@@ -2,13 +2,12 @@
 
 use R3m\Io\Config;
 
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\Event;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Core;
-
-use Exception;
 
 use R3m\Io\Exception\ObjectException;
 
@@ -39,8 +38,8 @@ function function_server_url_add(Parse $parse, Data $data, stdClass $node){
         throw $exception;
     }
     $object = $parse->object();
-    $url = $object->config('project.dir.data') . 'Config.json';
-    $read = $object->data_read($url);
+    $url = $object->config('app.config.url');
+    $dir = Dir::name($url);
     if(empty($read)){
         $read = new Data();
     }

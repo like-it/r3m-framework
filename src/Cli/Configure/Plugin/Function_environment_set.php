@@ -9,8 +9,6 @@ use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 
-use Exception;
-
 /**
  * @throws Exception
  */
@@ -34,11 +32,8 @@ function function_environment_set(Parse $parse, Data $data, $environment=''){
         ]);
         throw $exception;
     }
-    $dir = $object->config('project.dir.data');
-    $url = $dir .
-        'Config' .
-        $object->config('extension.json')
-    ;
+    $url = $object->config('app.config.url');
+    $dir = Dir::name($url);
     $read = $object->data_read($url);
     if(empty($read)){
         $read = new Data();
