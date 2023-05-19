@@ -49,7 +49,7 @@ class Config extends Data {
     const VALUE_SOURCE = 'src';
 
     const MOUNT = 'Mount';
-    const VALUE_MOUNT = 'mount';
+    const VALUE_MOUNT = 'Mount';
 
     const BACKUP = 'Backup';
     const VALUE_BACKUP = 'Backup';
