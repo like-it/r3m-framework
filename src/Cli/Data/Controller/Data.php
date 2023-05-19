@@ -51,13 +51,25 @@ class Data extends Controller {
         }
     }
 
+    /**
+     * @throws ObjectException
+     */
     public static function restore(App $object){
         $dir = new Dir();
         $url = $object->config('project.dir.backup');
         $read = $dir->read($url);
         $record = false;
+        $flags = App::flags($object);
         if(is_array($read)){
-            $read = Sort::list($read)->with(['name' => 'desc'],[]);
+            $read = Sort::list($read)->with(['name' => 'desc']);
+            if(property_exists($flags, 'date')){
+                foreach($read as $nr => $file){
+                    if($file->name === $flags->date){
+                        $record = $file;
+                        break;
+                    }
+                }
+            }
             foreach($read as $record){
                 break;
             }
