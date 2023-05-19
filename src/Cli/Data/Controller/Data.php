@@ -69,13 +69,21 @@ class Data extends Controller {
                 $excludes[$nr] = trim($exclude);
             }
         }
-        if(empty($includes) && empty($excludes)){
-            $dir = new Dir();
-            $url = $object->config('project.dir.data');
-            $read = $dir->read($url);
-            $cwd = Dir::change($url);
-            if(is_array($read)){
-                foreach($read as $nr => $file){
+        $dir = new Dir();
+        $url = $object->config('project.dir.data');
+        $read = $dir->read($url);
+        $cwd = Dir::change($url);
+        if(is_array($read)){
+            foreach($read as $nr => $file){
+                if(
+                    !empty($includes) &&
+                    empty($excludes) &&
+                    in_array(
+                        strtolower($file->name),
+                        $includes,
+                        true
+                    )
+                ){
                     if($file->type === Dir::TYPE){
                         $destination_dir = $object->config('project.dir.backup') .
                             $date .
@@ -90,14 +98,76 @@ class Data extends Controller {
                         exec($command);
                     }
                 }
+                elseif(empty($includes) && !empty($excludes)){
+                    if(in_array(
+                        strtolower($file->name),
+                        $excludes,
+                        true
+                    )){
+                        continue;
+                    }
+                    if($file->type === Dir::TYPE){
+                        $destination_dir = $object->config('project.dir.backup') .
+                            $date .
+                            $object->config('ds')
+                        ;
+                        $destination_url = $destination_dir .
+                            $file->name .
+                            $object->config('extension.zip')
+                        ;
+                        Dir::create($destination_dir, Dir::CHMOD);
+                        $command = Core::binary() . ' zip archive ' . $file->url . ' ' . $destination_url;
+                        exec($command);
+                    }
+                }
+                elseif(!empty($includes) && !empty($excludes)){
+                    if(in_array(
+                        strtolower($file->name),
+                        $excludes,
+                        true
+                    )){
+                        continue;
+                    }
+                    if(in_array(
+                        strtolower($file->name),
+                        $includes,
+                        true
+                    )){
+                        if($file->type === Dir::TYPE){
+                            $destination_dir = $object->config('project.dir.backup') .
+                                $date .
+                                $object->config('ds')
+                            ;
+                            $destination_url = $destination_dir .
+                                $file->name .
+                                $object->config('extension.zip')
+                            ;
+                            Dir::create($destination_dir, Dir::CHMOD);
+                            $command = Core::binary() . ' zip archive ' . $file->url . ' ' . $destination_url;
+                            exec($command);
+                        }
+                    }
+                }
+                elseif(empty($includes) && empty($excludes)) {
+                    if($file->type === Dir::TYPE){
+                        $destination_dir = $object->config('project.dir.backup') .
+                            $date .
+                            $object->config('ds')
+                        ;
+                        $destination_url = $destination_dir .
+                            $file->name .
+                            $object->config('extension.zip')
+                        ;
+                        Dir::create($destination_dir, Dir::CHMOD);
+                        $command = Core::binary() . ' zip archive ' . $file->url . ' ' . $destination_url;
+                        exec($command);
+                    }
+                }
+
             }
-            ddd($read);
         }
         if($cwd){
             Dir::change($cwd);
         }
-
-
-        d($flags);
     }
 }
