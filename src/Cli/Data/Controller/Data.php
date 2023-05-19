@@ -65,6 +65,7 @@ class Data extends Controller {
             $read = Sort::list($read)->with(['name' => 'desc']);
             if(property_exists($flags, 'date')){
                 foreach($read as $nr => $file){
+                    d($file->name);
                     if($file->name === $flags->date){
                         $record = $file;
                         break;
