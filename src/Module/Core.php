@@ -800,7 +800,10 @@ class Core
                     }
 
                 } else {
-                        $object->{$key} = $value;
+                    if(is_array($object)){
+                        ddd($object);
+                    }
+                    $object->{$key} = $value;
                 }
             }
         }
