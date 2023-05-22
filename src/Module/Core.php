@@ -801,6 +801,10 @@ class Core
 
                 } else {
                     if(is_array($object)){
+                        $debug = debug_backtrace(true);
+                        d($debug[0]['file'].':'. $debug[0]['function'] . ':' . $debug[0]['line']);
+                        d($debug[1]['file'].':'. $debug[1]['function'] . ':' . $debug[1]['line']);
+                        d($debug[2]['file'].':'. $debug[2]['function'] . ':' . $debug[2]['line']);
                         ddd($object);
                     }
                     $object->{$key} = $value;
