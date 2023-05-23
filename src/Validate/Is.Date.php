@@ -35,7 +35,7 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
             if($explode[1] < 1 || $explode[1] > 12){
                 return false;
             }
-            $string = strtotime($string);
+            $string = strtotime($string . ' years and months');
             break;
         case 'y-m-d':
             $explode = explode('-', $string);
