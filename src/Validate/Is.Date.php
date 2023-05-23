@@ -108,9 +108,18 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
             }
             break;
     }
-    $string = strtotime($string);
-    d($string);
-    d($field);
-    ddd($argument);
-    return false;
+    if(property_exists($argument, 'range')){
+        $string = strtotime($string);
+        if(property_exists($argument->range, 'min')){
+            if($string < $argument->range->min){
+                return false;
+            }
+        }
+        if(property_exists($argument->range, 'max')){
+            if($string > $argument->range->max){
+                return false;
+            }
+        }
+    }
+    return true;
 }
