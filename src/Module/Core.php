@@ -485,6 +485,7 @@ class Core
                 if (substr($input, 0, 1) == '{' && substr($input, -1, 1) == '}') {
                     $json = json_decode($input);
                     if (json_last_error()) {
+                        d(json_last_error_msg());
                         throw new ObjectException(json_last_error_msg());
                     }
                     return $json;
