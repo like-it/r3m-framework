@@ -18,6 +18,26 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
         $format = 'Y-m-d';
     }
     switch($format){
+        case 'y':
+            $explode = explode('-', $string);
+            if(count($explode) !== 1){
+                return false;
+            }
+            $string = strtotime($string . ' years');
+            ddd($string);
+            break;
+        case 'y-m':
+            $explode = explode('-', $string);
+            if(count($explode) !== 2){
+                return false;
+            }
+            $explode[0] = $explode[0] + 0;
+            $explode[1] = $explode[1] + 0;
+            if($explode[1] < 1 || $explode[1] > 12){
+                return false;
+            }
+            $string = strtotime($string);
+            break;
         case 'y-m-d':
             $explode = explode('-', $string);
             if(count($explode) !== 3){
@@ -32,6 +52,7 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
             if($explode[2] < 1 || $explode[2] > 31){
                 return false;
             }
+            $string = strtotime($string);
             break;
         case 'y-m-d h':
             $explode_date = explode(' ', $string);
@@ -52,6 +73,7 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
             if($explode[2] < 1 || $explode[2] > 31){
                 return false;
             }
+            $string = strtotime($string);
             break;
         case 'y-m-d h:i':
             $explode_date = explode(' ', $string);
@@ -77,6 +99,7 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
             if($explode[2] < 1 || $explode[2] > 31){
                 return false;
             }
+            $string = strtotime($string);
             break;
         case 'y-m-d h:i:s':
             $explode_date = explode(' ', $string);
@@ -106,10 +129,10 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
             if($explode[2] < 1 || $explode[2] > 31){
                 return false;
             }
+            $string = strtotime($string);
             break;
     }
     if(property_exists($argument, 'range')){
-        $string = strtotime($string);
         if(property_exists($argument->range, 'min')){
             if($string < $argument->range->min){
                 return false;
