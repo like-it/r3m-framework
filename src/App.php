@@ -429,6 +429,7 @@ class App extends Data {
                 return $exception;
             }
         }
+        return null;
     }
 
     /**
@@ -504,6 +505,7 @@ class App extends Data {
         $output .= PHP_EOL;
         $output .= $class . PHP_EOL;
         $output .= PHP_EOL;
+        $output .= $exception->getMessage() . PHP_EOL;
         $output .= 'file: ' . $exception->getFile() . PHP_EOL;
         $output .= 'line: ' . $exception->getLine() . PHP_EOL;
         $output .= chr(27) . "[0m";
@@ -670,6 +672,7 @@ class App extends Data {
         if(array_key_exists($attribute, $_SERVER)){
             return $_SERVER[$attribute];
         }
+        return null;
     }
 
     /**
@@ -940,7 +943,7 @@ class App extends Data {
                             $is_require = true;
                         }
                         if($is_require === false && Autoload::ramdisk_exclude_load($this, $load)){
-
+                            //nothing to do...
                         }
                         elseif($is_require === false && Autoload::ramdisk_exclude_content($this, $read, $url)){
                             d($read);
