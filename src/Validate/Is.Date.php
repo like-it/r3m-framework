@@ -71,7 +71,7 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
             if($explode[2] < 1 || $explode[2] > 31){
                 return false;
             }
-            $string = strtotime($string);
+            $string = strtotime($string . ':00:00');
             break;
         case 'y-m-d h:i':
             $explode_date = explode(' ', $string);
@@ -97,7 +97,7 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
             if($explode[2] < 1 || $explode[2] > 31){
                 return false;
             }
-            $string = strtotime($string);
+            $string = strtotime($string . ':00');
             break;
         case 'y-m-d h:i:s':
             $explode_date = explode(' ', $string);
