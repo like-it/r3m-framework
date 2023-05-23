@@ -485,7 +485,10 @@ class Core
                 if (substr($input, 0, 1) == '{' && substr($input, -1, 1) == '}') {
                     $json = json_decode($input);
                     if (json_last_error()) {
-                        d(json_last_error_msg());
+                        $debug = debug_backtrace(true);
+                        d($debug[0]['file'] . ':' . $debug[0]['line'] . ':' . $debug[0]['function']);
+                        d($debug[1]['file'] . ':' . $debug[1]['line'] . ':' . $debug[1]['function']);
+                        d($debug[2]['file'] . ':' . $debug[2]['line'] . ':' . $debug[2]['function']);
                         throw new ObjectException(json_last_error_msg());
                     }
                     return $json;
