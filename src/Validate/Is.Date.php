@@ -36,8 +36,6 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
                 return false;
             }
             $string = strtotime($string . '-01');
-            ddd($string);
-            break;
         case 'y-m-d':
             $explode = explode('-', $string);
             if(count($explode) !== 3){
