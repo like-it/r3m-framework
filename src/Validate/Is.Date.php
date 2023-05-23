@@ -24,7 +24,6 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
                 return false;
             }
             $string = strtotime($string . ' years');
-            ddd($string);
             break;
         case 'y-m':
             $explode = explode('-', $string);
