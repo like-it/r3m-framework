@@ -12,6 +12,103 @@ use R3m\Io\App;
 
 function validate_is_date(App $object, $string='', $field='', $argument=''): bool
 {
+    if(is_object($argument) && property_exists($argument, 'format')){
+        $format = $argument->format;
+    } else {
+        $format = 'Y-m-d';
+    }
+    switch($format){
+        case 'y-m-d':
+            $explode = explode('-', $string);
+            if(count($explode) !== 3){
+                return false;
+            }
+            $explode[0] = $explode[0] + 0;
+            $explode[1] = $explode[1] + 0;
+            $explode[2] = $explode[2] + 0;
+            if($explode[1] < 1 || $explode[1] > 12){
+                return false;
+            }
+            if($explode[2] < 1 || $explode[2] > 31){
+                return false;
+            }
+            break;
+        case 'y-m-d h':
+            $explode_date = explode(' ', $string);
+            $explode_date[1] = $explode_date[1] + 0;
+            if($explode_date[1] < 0 || $explode_date[1] > 23){
+                return false;
+            }
+            $explode = explode('-', $explode_date[0]);
+            if(count($explode) !== 3){
+                return false;
+            }
+            $explode[0] = $explode[0] + 0;
+            $explode[1] = $explode[1] + 0;
+            $explode[2] = $explode[2] + 0;
+            if($explode[1] < 1 || $explode[1] > 12){
+                return false;
+            }
+            if($explode[2] < 1 || $explode[2] > 31){
+                return false;
+            }
+            break;
+        case 'y-m-d h:i':
+            $explode_date = explode(' ', $string);
+            $temp = explode(':', $explode_date[1]);
+            $temp[0] = $temp[0] + 0;
+            $temp[1] = $temp[1] + 0;
+            if($temp[0] < 0 || $temp[0] > 23){
+                return false;
+            }
+            if($temp[1] < 0 || $temp[1] > 59){
+                return false;
+            }
+            $explode = explode('-', $explode_date[0]);
+            if(count($explode) !== 3){
+                return false;
+            }
+            $explode[0] = $explode[0] + 0;
+            $explode[1] = $explode[1] + 0;
+            $explode[2] = $explode[2] + 0;
+            if($explode[1] < 1 || $explode[1] > 12){
+                return false;
+            }
+            if($explode[2] < 1 || $explode[2] > 31){
+                return false;
+            }
+            break;
+        case 'y-m-d h:i:s':
+            $explode_date = explode(' ', $string);
+            $temp = explode(':', $explode_date[1]);
+            $temp[0] = $temp[0] + 0;
+            $temp[1] = $temp[1] + 0;
+            $temp[2] = $temp[2] + 0;
+            if($temp[0] < 0 || $temp[0] > 23){
+                return false;
+            }
+            if($temp[1] < 0 || $temp[1] > 59){
+                return false;
+            }
+            if($temp[2] < 0 || $temp[2] > 59){
+                return false;
+            }
+            $explode = explode('-', $explode_date[0]);
+            if(count($explode) !== 3){
+                return false;
+            }
+            $explode[0] = $explode[0] + 0;
+            $explode[1] = $explode[1] + 0;
+            $explode[2] = $explode[2] + 0;
+            if($explode[1] < 1 || $explode[1] > 12){
+                return false;
+            }
+            if($explode[2] < 1 || $explode[2] > 31){
+                return false;
+            }
+            break;
+    }
+    $string = strtotime($string);
     d($string);
     d($field);
     ddd($argument);
