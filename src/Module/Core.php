@@ -468,6 +468,10 @@ class Core
         } elseif (is_object($input) && $output === Core::OBJECT_JSON) {
             $json = json_encode($input, JSON_PRETTY_PRINT);
             if (json_last_error()) {
+                $debug = debug_backtrace(true);
+                d($debug[0]['file'] . ':' . $debug[0]['line'] . ':' . $debug[0]['function']);
+                d($debug[1]['file'] . ':' . $debug[1]['line'] . ':' . $debug[1]['function']);
+                d($debug[2]['file'] . ':' . $debug[2]['line'] . ':' . $debug[2]['function']);
                 throw new ObjectException(json_last_error_msg());
             }
             return $json;
@@ -476,6 +480,10 @@ class Core
         } elseif (is_array($input) && $output === Core::OBJECT_JSON) {
             $json = json_encode($input, JSON_PRETTY_PRINT);
             if (json_last_error()) {
+                $debug = debug_backtrace(true);
+                d($debug[0]['file'] . ':' . $debug[0]['line'] . ':' . $debug[0]['function']);
+                d($debug[1]['file'] . ':' . $debug[1]['line'] . ':' . $debug[1]['function']);
+                d($debug[2]['file'] . ':' . $debug[2]['line'] . ':' . $debug[2]['function']);
                 throw new ObjectException(json_last_error_msg());
             }
             return $json;
@@ -495,6 +503,10 @@ class Core
                 } elseif (substr($input, 0, 1) == '[' && substr($input, -1, 1) == ']') {
                     $json = json_decode($input);
                     if (json_last_error()) {
+                        $debug = debug_backtrace(true);
+                        d($debug[0]['file'] . ':' . $debug[0]['line'] . ':' . $debug[0]['function']);
+                        d($debug[1]['file'] . ':' . $debug[1]['line'] . ':' . $debug[1]['function']);
+                        d($debug[2]['file'] . ':' . $debug[2]['line'] . ':' . $debug[2]['function']);
                         throw new ObjectException(json_last_error_msg());
                     }
                     return $json;
