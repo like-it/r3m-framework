@@ -17,7 +17,7 @@ function validate_is_date(App $object, $string='', $field='', $argument=''): boo
     } else {
         $format = 'Y-m-d';
     }
-    switch($format){
+    switch(strtolower($format)){
         case 'y':
             $explode = explode('-', $string);
             if(count($explode) !== 1){
