@@ -213,6 +213,21 @@ class Middleware extends Main {
         $middleware = new Middleware($object);
         $limit = $object->config('middleware.limit') ?? 4096;
         $page = 1;
+        $count = $middleware->count(
+            'Event',
+            $middleware->role_system(),
+            [
+                'sort' => [
+                    'action' => 'ASC',
+                    'options.priority' => 'ASC'
+                ],
+                'limit' => $limit,
+                'page' => $page
+            ]
+        );
+        ddd($count);
+
+
         while(true){
             $response = $middleware->list(
                 'Middleware',
