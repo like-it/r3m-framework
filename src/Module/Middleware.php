@@ -237,6 +237,7 @@ class Middleware extends Main {
             ]
         );
         $page_max = ceil($count / $limit);
+        d($page_max);
         for($page = 1; $page <= $page_max; $page++){
             $response = $middleware->list(
                 'Event',
