@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\FileWriteException;
 use stdClass;
 
 use R3m\Io\App;
@@ -30,6 +31,7 @@ class Middleware extends Main {
     use Role;
 
     const NAME = 'Middleware';
+    const CHUNK_SIZE = 4096;
 
     public function __construct(App $object){
         $this->object($object);
@@ -193,16 +195,17 @@ class Middleware extends Main {
 
     /**
      * @throws ObjectException
+     * @throws FileWriteException
      */
-    public static function configure(App $object){
+    public static function configure(App $object): void
+    {
         $middleware = new Middleware($object);
-        $limit = $object->config('middleware.limit') ?? 2;
+        $limit = $object->config('middleware.chunk_size') ?? Middleware::CHUNK_SIZE;
         $count = $middleware->count(
-            'Event',
+            Middleware::NAME,
             $middleware->role_system(),
             [
                 'sort' => [
-                    'action' => 'ASC',
                     'options.priority' => 'ASC'
                 ]
                 /*
@@ -219,10 +222,9 @@ class Middleware extends Main {
             ]
         );
         $page_max = ceil($count / $limit);
-        d($page_max);
         for($page = 1; $page <= $page_max; $page++){
             $response = $middleware->list(
-                'Event',
+                Middleware::NAME,
                 $middleware->role_system(),
                 [
                     'sort' => [
@@ -233,38 +235,15 @@ class Middleware extends Main {
                     'limit' => $limit
                 ]
             );
-            ddd($response);
-        }
-
-
-        ddd($count);
-
-
-
-        /*
-        $url = $object->config('project.dir.data') .
-            'Node' .
-            $object->config('ds') .
-            'Filter' .
-            $object->config('ds') .
-            'Data' .
-            $object->config('extension.json')
-        ;
-        $data = $object->data_read($url);
-        if(!$data){
-            return;
-        }
-        if($data->has(Middleware::NAME)){
-            foreach($data->get(Middleware::NAME) as $middleware){
-                if(
-                    property_exists($middleware, 'action') &&
-                    property_exists($middleware, 'options')
-                )
-                    $middleware = new Storage($middleware);
-                    Middleware::on($object, $middleware);
+            if(
+                $response &&
+                array_key_exists('list', $response)
+            ){
+                foreach($response['list'] as $record){
+                    $record = new Storage($record);
+                    Middleware::on($object, $record);
+                }
             }
         }
-        */
-
     }
 }
