@@ -194,24 +194,13 @@ class Data {
             return $find;
         }
         foreach($data as $value){
-            if(is_array($value)){
-                foreach($criteria as $option_key => $option_value){
-                    if(
-                        array_key_exists($option_key, $value) &&
-                        $value[$option_key] === $option_value
-                    ){
-                        $find[] = $value;
-                    }
+            $select = new Data($value);
+            foreach($criteria as $option_key => $option_value){
+                if($select->has($option_key) === false){
+                    continue;
                 }
-            }
-            elseif(is_object($value)) {
-                foreach($criteria as $option_key => $option_value){
-                    if(
-                        property_exists($value, $option_key) &&
-                        $value->{$option_key} === $option_value
-                    ){
-                        $find[] = $value;
-                    }
+                if($select->get($option_key) === $option_value){
+                    $find[] = $value;
                 }
             }
         }

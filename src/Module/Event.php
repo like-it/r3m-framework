@@ -10,32 +10,64 @@
  */
 namespace R3m\Io\Module;
 
-use R3m\Io\Exception\LocateException;
 use stdClass;
 
 use R3m\Io\App;
 
+use R3m\Io\Module\Data as Storage;
+use R3m\Io\Module\Template\Main;
+
+use R3m\Io\Node\Trait\Data;
+use R3m\Io\Node\Trait\Role;
+
 use Exception;
 
+use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\ObjectException;
 
-class Event {
-    const DIR = __DIR__ . DIRECTORY_SEPARATOR;
-    const NAME = 'Event';
+class Event extends Main {
 
-    public static function on(App $object, $action, $options=[]){
-        $list = $object->get(App::EVENT)->get('event');
+    use Data;
+    use Role;
+
+    const NAME = 'Event';
+    const CHUNK_SIZE = 4096;
+
+    const LIST = 'list';
+    const RECORD = 'record';
+
+    public function __construct(App $object){
+        $this->object($object);
+    }
+
+    public static function on(App $object, $record, $options=[]): void
+    {
+        if(!array_key_exists('type', $options)){
+            $type = Event::RECORD;
+        } else {
+            $type = $options['type'];
+        }
+        $list = $object->get(App::EVENT)->get(Event::NAME);
         if(empty($list)){
             $list = [];
         }
-        $list[] = [
-            'action' => $action,
-            'options' => $options
-        ];
-        $object->get(App::EVENT)->set('event', $list);
+        switch($type){
+            case Middleware::RECORD :
+                $list[] = $record;
+                break;
+            case Middleware::LIST :
+                foreach($record as $node){
+                    $list[] = $node;
+                }
+                break;
+        }
+        ddd($list);
+        $object->get(App::EVENT)->set(Event::NAME, $list);
     }
 
     public static function off(App $object, $action, $options=[]){
+        //reinplement this
+        /*
         $list = $object->get(App::EVENT)->get('event');
         if(empty($list)){
             return;
@@ -88,6 +120,7 @@ class Event {
             }
         }
         $object->get(App::EVENT)->set('event', $list);
+        */
     }
 
     /**
@@ -95,7 +128,7 @@ class Event {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        $events = $object->get(App::EVENT)->select('event', [
+        $events = $object->get(App::EVENT)->select(Event::NAME, [
             'action' => $action
         ]);
         if(empty($events)){
@@ -104,46 +137,7 @@ class Event {
         $events = Sort::list($events)->with(['options.priority' => 'DESC']);
         if(is_array($events)){
             foreach($events as $event){
-                if(is_array($event)){
-                    if(
-                        array_key_exists('options', $event) &&
-                        property_exists($event['options'], 'command') &&
-                        is_array($event['options']->command)
-                    ){
-                        foreach($event['options']->command as $command){
-                            $command = str_replace('{{binary()}}', Core::binary(), $command);
-                            Core::execute($object, $command, $output, $notification);
-                        }
-                    }
-                    if(
-                        array_key_exists('options', $event) &&
-                        property_exists($event['options'], 'controller') &&
-                        is_array($event['options']->controller)
-                    ){
-                        foreach($event['options']->controller as $controller){
-                            $route = new stdClass();
-                            $route->controller = $controller;
-                            $route = Route::controller($route);
-                            if(
-                                property_exists($route, 'controller') &&
-                                property_exists($route, 'function')
-                            ){
-                                $event = new Data($event);
-                                try {
-                                    $route->controller::{$route->function}($object, $event, $options);
-                                }
-                                catch (LocateException $exception){
-                                    if($object->config('project.log.error')){
-                                        $object->logger($object->config('project.log.error'))->error('LocateException', [ $route, (string) $exception ]);
-                                    }
-                                    elseif($object->config('project.log.name')){
-                                        $object->logger($object->config('project.log.name'))->error('LocateException', [ $route, (string) $exception ]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } elseif(is_object($event)) {
+                if(is_object($event)) {
                     if(
                         property_exists($event, 'options') &&
                         property_exists($event->options, 'command') &&
@@ -167,7 +161,7 @@ class Event {
                                 property_exists($route, 'controller') &&
                                 property_exists($route, 'function')
                             ){
-                                $event = new Data($event);
+                                $event = new Storage($event);
                                 try {
                                     $route->controller::{$route->function}($object, $event, $options);
                                 }
@@ -190,19 +184,42 @@ class Event {
     /**
      * @throws ObjectException
      */
-    public static function configure(App $object){
-        $url = $object->config('project.dir.data') . 'Events' . $object->config('extension.json');
-        $data = $object->data_read($url);
-        if(!$data){
-            return;
-        }
-        foreach($data->get('event') as $event){
+    public static function configure(App $object): void
+    {
+        $event = new Event($object);
+        $limit = $object->config('event.chunk_size') ?? Event::CHUNK_SIZE;
+        $count = $event->count(
+            Event::NAME,
+            $event->role_system(),
+            [
+                'sort' => [
+                    'action' => 'ASC',
+                    'options.priority' => 'ASC'
+                ]
+            ]
+        );
+        $page_max = ceil($count / $limit);
+        for($page = 1; $page <= $page_max; $page++){
+            $response = $event->list(
+                Event::NAME,
+                $event->role_system(),
+                [
+                    'sort' => [
+                        'action' => 'ASC',
+                        'options.priority' => 'ASC'
+                    ],
+                    'page' => $page,
+                    'limit' => $limit
+                ]
+            );
             if(
-                property_exists($event, 'action') &&
-                property_exists($event, 'options')
-            )
-            Event::on($object, $event->action, $event->options);
+                $response &&
+                array_key_exists('list', $response)
+            ){
+                Event::on($object, $response['list'], [
+                    'type' => Event::LIST
+                ]);
+            }
         }
-        Event::trigger($object, 'event.configure');
     }
 }
