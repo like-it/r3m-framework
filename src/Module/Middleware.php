@@ -33,25 +33,44 @@ class Middleware extends Main {
     const NAME = 'Middleware';
     const CHUNK_SIZE = 4096;
 
+    const LIST = 'list';
+    const RECORD = 'record';
+
     public function __construct(App $object){
         $this->object($object);
     }
 
 
-    public static function on(App $object, $filter){
-        $action = $filter->get('action');
-        $options = $filter->get('options');
+    public static function on(App $object, $record, $options=[]): void
+    {
+        if(!array_key_exists('type', $options)){
+            $type = Middleware::RECORD;
+        } else {
+            $type = $options['type'];
+        }
         $list = $object->get(App::MIDDLEWARE)->get(Middleware::NAME);
         if(empty($list)){
             $list = [];
         }
-        $list[] = $filter->data();
-        $object->get(App::FILTER)->set(Middleware::NAME, $list);
+        switch($type){
+            case Middleware::RECORD :
+                $list[] = $record;
+                break;
+            case Middleware::LIST :
+                foreach($record as $node){
+                    $list[] = $node;
+                }
+                break;
+        }
+        $object->get(App::MIDDLEWARE)->set(Middleware::NAME, $list);
     }
 
-    public static function off(App $object, $filter){
-        $action = $filter->get('action');
-        $options = $filter->get('options');
+    public static function off(App $object, $record, $options=[]): void
+    {
+        //need rewrite
+//        $action = $record->get('action');
+//        $options = $record->get('options');
+        /*
         $list = $object->get(App::MIDDLEWARE)->get(Middleware::NAME);
         if(empty($list)){
             return;
@@ -103,45 +122,39 @@ class Middleware extends Main {
                 }
             }
         }
-        $object->get(App::FILTER)->set(Middleware::NAME, $list);
+        */
+//        $object->get(App::MIDDLEWARE)->set(Middleware::NAME, $list);
     }
 
     /**
      * @throws ObjectException
      * @throws Exception
      */
-    public static function trigger(App $object, $action, $options=[]){
-        $filters = $object->get(App::MIDDLEWARE)->select(Middleware::NAME, [
-            'action' => $action
-        ]);
+    public static function trigger(App $object, $options=[]){
+        $middlewares = $object->get(App::MIDDLEWARE)->data();
         $response = null;
-        if(empty($filters)){
+        if(empty($middlewares)){
             if(
-                array_key_exists('type', $options) &&
-                $options['type'] === Middleware::OUTPUT &&
                 array_key_exists('response', $options)
-        ){
+            ){
                 return $options['response'];
             }
             elseif(
-                array_key_exists('type', $options) &&
-                $options['type'] === Middleware::INPUT &&
                 array_key_exists('route', $options)
             ){
                 return $options['route'];
             }
             return null;
         }
-        $filters = Sort::list($filters)->with(['options.priority' => 'DESC']);
-        if(is_array($filters) || is_object($filters)){
-            foreach($filters as $filter){
-                if(is_object($filter)) {
+        if(is_array($middlewares) || is_object($middlewares)){
+            foreach($middlewares as $middleware){
+                if(is_object($middleware)) {
                     if(
-                        property_exists($filter, 'options') &&
-                        property_exists($filter->options, 'controller') &&
-                        is_array($filter->options->controller)
+                        property_exists($middleware, 'options') &&
+                        property_exists($middleware->options, 'controller') &&
+                        is_array($middleware->options->controller)
                     ){
-                        foreach($filter->options->controller as $controller){
+                        foreach($middleware->options->controller as $controller){
                             $route = new stdClass();
                             $route->controller = $controller;
                             $route = Route::controller($route);
@@ -149,10 +162,10 @@ class Middleware extends Main {
                                 property_exists($route, 'controller') &&
                                 property_exists($route, 'function')
                             ){
-                                $filter = new Storage($filter);
+                                $middleware = new Storage($middleware);
                                 try {
-                                    $response = $route->controller::{$route->function}($object, $filter, $options);
-                                    if($filter->get('stopPropagation')){
+                                    $response = $route->controller::{$route->function}($object, $middleware, $options);
+                                    if($middleware->get('stopPropagation')){
                                         break 2;
                                     }
                                 }
@@ -170,25 +183,11 @@ class Middleware extends Main {
                 }
             }
         }
-        if(array_key_exists('type', $options)){
-            switch($options['type']){
-                case 'input' :
-                    if(array_key_exists('route', $options)){
-                        if($response){
-                            return $response;
-                        }
-                        return $options['route'];
-                    }
-                    break;
-                case 'output' :
-                    if(array_key_exists('response', $options)){
-                        if($response){
-                            return $response;
-                        }
-                        return $options['response'];
-                    }
-                    break;
-            }
+        if($response){
+            return $response;
+        }
+        if(array_key_exists('route', $options)){
+            return $options['route'];
         }
         return null;
     }
@@ -239,10 +238,9 @@ class Middleware extends Main {
                 $response &&
                 array_key_exists('list', $response)
             ){
-                foreach($response['list'] as $record){
-                    $record = new Storage($record);
-                    Middleware::on($object, $record);
-                }
+                Middleware::on($object, $response['list'], [
+                    'type' => Middleware::LIST
+                ]);
             }
         }
     }

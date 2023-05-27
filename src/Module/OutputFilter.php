@@ -33,26 +33,43 @@ class OutputFilter extends Main {
 
     const NAME = 'OutputFilter';
     const CHUNK_SIZE = 4096;
+    const LIST = 'list';
+    const RECORD = 'record';
 
     public function __construct(App $object){
         $this->object($object);
     }
 
-    public static function on(App $object, $filter){
-        $action = $filter->get('action');
-        $options = $filter->get('options');
-        $list = $object->get(App::FILTER)->get(OutputFilter::NAME);
+    public static function on(App $object, $record, $options=[]): void
+    {
+        if(!array_key_exists('type', $options)){
+            $type = OutputFilter::RECORD;
+        } else {
+            $type = $options['type'];
+        }
+        $list = $object->get(App::OUTPUTFILTER)->get(OutputFilter::NAME);
         if(empty($list)){
             $list = [];
         }
-        $list[] = $filter->data();
-        $object->get(App::FILTER)->set(OutputFilter::NAME, $list);
+        switch($type){
+            case OutputFilter::RECORD :
+                $list[] = $record;
+                break;
+            case OutputFilter::LIST :
+                foreach($record as $node){
+                    $list[] = $node;
+                }
+                break;
+        }
+        $object->get(App::OUTPUTFILTER)->set(OutputFilter::NAME, $list);
     }
 
-    public static function off(App $object, $filter){
-        $action = $filter->get('action');
-        $options = $filter->get('options');
-        $list = $object->get(App::FILTER)->get(OutputFilter::NAME);
+    public static function off(App $object, $record, $options=[]){
+        //needs rewrite
+        /*
+        $action = $record->get('action');
+        $options = $record->get('options');
+        $list = $object->get(App::OUTPUTFILTER)->get(OutputFilter::NAME);
         if(empty($list)){
             return;
         }
@@ -103,36 +120,30 @@ class OutputFilter extends Main {
                 }
             }
         }
-        $object->get(App::FILTER)->set(OutputFilter::NAME, $list);
+        $object->get(App::OUTPUTFILTER)->set(OutputFilter::NAME, $list);
+        */
     }
 
     /**
      * @throws ObjectException
      * @throws Exception
      */
-    public static function trigger(App $object, $action, $options=[]){
-        $filters = $object->get(App::FILTER)->select(OutputFilter::NAME, [
-            'action' => $action
-        ]);
+    public static function trigger(App $object, $options=[]){
+        $filters = $object->get(App::OUTPUTFILTER)->data();
         $response = null;
         if(empty($filters)){
             if(
-                array_key_exists('type', $options) &&
-                $options['type'] === OutputFilter::OUTPUT &&
                 array_key_exists('response', $options)
-        ){
+            ){
                 return $options['response'];
             }
             elseif(
-                array_key_exists('type', $options) &&
-                $options['type'] === OutputFilter::INPUT &&
                 array_key_exists('route', $options)
             ){
                 return $options['route'];
             }
             return null;
         }
-        $filters = Sort::list($filters)->with(['options.priority' => 'DESC']);
         if(is_array($filters) || is_object($filters)){
             foreach($filters as $filter){
                 if(is_object($filter)) {
@@ -170,25 +181,11 @@ class OutputFilter extends Main {
                 }
             }
         }
-        if(array_key_exists('type', $options)){
-            switch($options['type']){
-                case 'input' :
-                    if(array_key_exists('route', $options)){
-                        if($response){
-                            return $response;
-                        }
-                        return $options['route'];
-                    }
-                    break;
-                case 'output' :
-                    if(array_key_exists('response', $options)){
-                        if($response){
-                            return $response;
-                        }
-                        return $options['response'];
-                    }
-                    break;
-            }
+        if($response){
+            return $response;
+        }
+        if(array_key_exists('response', $options)){
+            return $options['response'];
         }
         return null;
     }
@@ -202,7 +199,7 @@ class OutputFilter extends Main {
         $outputFilter = new OutputFilter($object);
         $limit = $object->config('output.filter.chunk_size') ?? OutputFilter::CHUNK_SIZE;
         $count = $outputFilter->count(
-            Middleware::NAME,
+            OutputFilter::NAME,
             $outputFilter->role_system(),
             [
                 'sort' => [
@@ -228,10 +225,9 @@ class OutputFilter extends Main {
                 $response &&
                 array_key_exists('list', $response)
             ){
-                foreach($response['list'] as $record){
-                    $record = new Storage($record);
-                    OutputFilter::on($object, $record);
-                }
+                OutputFilter::on($object, $response['list'], [
+                    'type' => OutputFilter::LIST
+                ]);
             }
         }
     }
