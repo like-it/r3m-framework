@@ -31,6 +31,11 @@ class Middleware extends Main {
 
     const NAME = 'Middleware';
 
+    public function __construct(App $object){
+        $this->object($object);
+    }
+
+
     public static function on(App $object, $filter){
         $action = $filter->get('action');
         $options = $filter->get('options');
@@ -205,7 +210,7 @@ class Middleware extends Main {
          */
 
 
-        $middleware = new Middleware();
+        $middleware = new Middleware($object);
         $page = 1;
         while(true){
             $response = $middleware->list(
