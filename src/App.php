@@ -25,6 +25,8 @@ use R3m\Io\Module\Filter;
 use R3m\Io\Module\Handler;
 use R3m\Io\Module\Host;
 use R3m\Io\Module\Logger;
+use R3m\Io\Module\Middleware;
+use R3m\Io\Module\OutputFilter;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
@@ -63,6 +65,8 @@ class App extends Data {
     const ROUTE = App::NAMESPACE . '.' . Route::NAME;
     const CONFIG = App::NAMESPACE . '.' . Config::NAME;
     const EVENT = App::NAMESPACE . '.' . Event::NAME;
+    const MIDDLEWARE = App::NAMESPACE . '.' . Middleware::NAME;
+    const OUTPUTFILTER = App::NAMESPACE . '.' . OutputFilter::NAME;
     const FILTER = App::NAMESPACE . '.' . Filter::NAME;
     const FLAGS = App::NAMESPACE . '.' . Data::FLAGS;
     const OPTIONS = App::NAMESPACE . '.' . Data::OPTIONS;
@@ -82,14 +86,16 @@ class App extends Data {
         $this->data(App::AUTOLOAD_COMPOSER, $autoload);
         $this->data(App::CONFIG, $config);
         $this->data(App::EVENT, new Data());
-        $this->data(App::FILTER, new Filter());
+        $this->data(App::MIDDLEWARE, new Data());
+        $this->data(App::OUTPUTFILTER, new Data());
         App::is_cli();
         require_once 'Debug.php';
         require_once 'Error.php';
         Config::configure($this);
         Host::configure($this);
         Event::configure($this);
-        Filter::configure($this);
+        Middleware::configure($this);
+        OutputFilter::configure($this);
         Logger::configure($this);
         Autoload::configure($this);
         Autoload::ramdisk_configure($this);
@@ -602,6 +608,10 @@ class App extends Data {
 
     public function event($attribute=null, $value=null){
         return $this->data(App::EVENT)->data($attribute, $value);
+    }
+
+    public function middleware($attribute=null, $value=null){
+        return $this->data(App::MIDDLEWARE)->data($attribute, $value);
     }
 
     public function request($attribute=null, $value=null){

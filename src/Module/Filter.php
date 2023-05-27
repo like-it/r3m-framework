@@ -17,7 +17,7 @@ use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 
-class Filter extends Data{
+class Filter extends Data {
     const NAME = 'Filter';
     const INPUT = 'input';
     const OUTPUT = 'output';
@@ -657,6 +657,7 @@ class Filter extends Data{
         return $list;
     }
 
+    /*
     public static function on(App $object, $filter){
         $action = $filter->get('action');
         $options = $filter->get('options');
@@ -724,11 +725,13 @@ class Filter extends Data{
         }
         $object->get(App::FILTER)->set(Filter::NAME, $list);
     }
+    */
 
     /**
      * @throws ObjectException
      * @throws Exception
      */
+    /*
     public static function trigger(App $object, $action, $options=[]){
         $filters = $object->get(App::FILTER)->select(Filter::NAME, [
             'action' => $action
@@ -811,10 +814,12 @@ class Filter extends Data{
         }
         return null;
     }
+    */
 
     /**
      * @throws ObjectException
      */
+    /*
     public static function configure(App $object){
         $url = $object->config('project.dir.data') .
             'Node' .
@@ -840,4 +845,5 @@ class Filter extends Data{
         }
 
     }
+    */
 }

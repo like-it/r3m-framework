@@ -5,7 +5,7 @@
 	"keywords" : ["framework", "r3m", "library", "language", "template", "engine"],
 	"homepage": "https://r3m.io",
 	"require" : {
-		"php": ">=7.4",
+		"php": ">=8.0",
 		"ext-mbstring": "*",
 		"ext-json": "*",
 		"ext-posix": "*",
@@ -14,6 +14,7 @@
 		"ext-readline": "*",
 		"ext-pcntl": "*",
 		"ext-zip": "*",
+		"r3m-io/node": "dev-main",
 		"monolog/monolog" : "^2.2",
 		"defuse/php-encryption": "^2.3"
     },

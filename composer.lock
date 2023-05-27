@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6974218e35b9c3ae202d118d4ea84796",
+    "content-hash": "6cce1e12b7aada193c6ac0b3db9e7059",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -273,12 +273,62 @@
                 "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
             "time": "2021-05-03T11:20:27+00:00"
+        },
+        {
+            "name": "r3m-io/node",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/r3m-io/node.git",
+                "reference": "fe687248780ef603bd0c6834eca003445147e0e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/r3m-io/node/zipball/fe687248780ef603bd0c6834eca003445147e0e4",
+                "reference": "fe687248780ef603bd0c6834eca003445147e0e4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-posix": "*"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "R3m\\Io\\Node\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Remco van der Velde",
+                    "email": "remco@universeorange.com"
+                }
+            ],
+            "description": "R3m-io/node see https://r3m.io for detailed usage",
+            "homepage": "https://r3m.io",
+            "keywords": [
+                "framework",
+                "library",
+                "node",
+                "r3m"
+            ],
+            "support": {
+                "issues": "https://github.com/r3m-io/node/issues",
+                "source": "https://github.com/r3m-io/node/tree/main"
+            },
+            "time": "2023-05-27T09:49:50+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "r3m-io/node": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -289,7 +339,8 @@
         "ext-zend-opcache": "*",
         "ext-openssl": "*",
         "ext-readline": "*",
-        "ext-pcntl": "*"
+        "ext-pcntl": "*",
+        "ext-zip": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
