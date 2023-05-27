@@ -220,7 +220,7 @@ class Middleware extends Main {
                     'sort' => [
                         'options.priority' => 'ASC'
                     ],
-                    'limit' => (int) $object->config('middleware.limit'),
+                    'limit' => (int) $object->config('middleware.limit') ?? 255,
                     'page' => $page
                 ]
             );
