@@ -235,7 +235,7 @@ class Middleware extends Main {
             ]
         );
         $page_max = ceil($count / $limit);
-        d($page_max);
+        ddd($page_max);
         for($page = 1; $page <= $page_max; $page++){
             $response = $middleware->list(
                 'Event',
@@ -252,23 +252,6 @@ class Middleware extends Main {
 
 
         ddd($count);
-
-
-        while(true){
-            $response = $middleware->list(
-                'Middleware',
-                $middleware->role_system(),
-                [
-                    'sort' => [
-                        'options.priority' => 'ASC'
-                    ],
-                    'limit' => $limit,
-                    'page' => $page
-                ]
-            );
-            ddd($response);
-            $page++;
-        }
 
 
 
