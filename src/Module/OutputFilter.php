@@ -31,6 +31,7 @@ class OutputFilter {
     use Role;
 
     const NAME = 'OutputFilter';
+    const CHUNK_SIZE = 4096;
 
     public static function on(App $object, $filter){
         $action = $filter->get('action');
@@ -191,59 +192,42 @@ class OutputFilter {
      * @throws ObjectException
      * @throws FileWriteException
      */
-    public static function configure(App $object){
-        /**
-         {{$response = R3m.Io.Node:Data:list(
-        'Event',
-        R3m.Io.Node:Role:role.system(),
-        [
-        'sort' => [
-        'action' => 'ASC',
-        'options.priority' => 'ASC'
-        ],
-        'limit' => (int) $options.limit,
-        'page' => (int) $options.page
-        ])}}
-         */
-
-        $output_filter = new OutputFilter();
-        $response = $output_filter->list(
-            'OutputFilter',
-            $output_filter->role_system(),
+    public static function configure(App $object): void
+    {
+        $outputFilter = new OutputFilter($object);
+        $limit = $object->config('output.filter.chunk_size') ?? OutputFilter::CHUNK_SIZE;
+        $count = $outputFilter->count(
+            Middleware::NAME,
+            $outputFilter->role_system(),
             [
                 'sort' => [
-                    'route' => 'ASC',
                     'options.priority' => 'ASC'
-                ],
-                'limit' => (int) $object->config('project.limit'),
-                'page' => (int) $object->config('project.page')
+                ]
             ]
         );
-        ddd($response);
-
-
-        $url = $object->config('project.dir.data') .
-            'Node' .
-            $object->config('ds') .
-            'Filter' .
-            $object->config('ds') .
-            'Data' .
-            $object->config('extension.json')
-        ;
-        $data = $object->data_read($url);
-        if(!$data){
-            return;
-        }
-        if($data->has(OutputFilter::NAME)){
-            foreach($data->get(OutputFilter::NAME) as $middleware){
-                if(
-                    property_exists($middleware, 'action') &&
-                    property_exists($middleware, 'options')
-                )
-                    $middleware = new Storage($middleware);
-                    Output::on($object, $middleware);
+        $page_max = ceil($count / $limit);
+        for($page = 1; $page <= $page_max; $page++){
+            $response = $outputFilter->list(
+                OutputFilter::NAME,
+                $outputFilter->role_system(),
+                [
+                    'sort' => [
+                        'action' => 'ASC',
+                        'options.priority' => 'ASC'
+                    ],
+                    'page' => $page,
+                    'limit' => $limit
+                ]
+            );
+            if(
+                $response &&
+                array_key_exists('list', $response)
+            ){
+                foreach($response['list'] as $record){
+                    $record = new Storage($record);
+                    OutputFilter::on($object, $record);
+                }
             }
         }
-
     }
 }
