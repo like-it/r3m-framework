@@ -40,28 +40,19 @@ class Event extends Main {
         $this->object($object);
     }
 
-    public static function on(App $object, $record, $options=[]): void
+    public static function on(App $object, $data, $options=[]): void
     {
-        if(!array_key_exists('type', $options)){
-            $type = Event::RECORD;
-        } else {
-            $type = $options['type'];
-        }
         $list = $object->get(App::EVENT)->get(Event::NAME);
         if(empty($list)){
             $list = [];
         }
-        switch($type){
-            case Middleware::RECORD :
-                $list[] = $record;
-                break;
-            case Middleware::LIST :
-                foreach($record as $node){
-                    $list[] = $node;
-                }
-                break;
+        if(is_array($data)){
+            foreach($data as $node){
+                $list[] = $node;
+            }
+        } else {
+            $list[] = $data;
         }
-        ddd($list);
         $object->get(App::EVENT)->set(Event::NAME, $list);
     }
 
