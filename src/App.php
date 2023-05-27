@@ -94,8 +94,15 @@ class App extends Data {
         Config::configure($this);
         Host::configure($this);
         Event::configure($this);
+        $start = microtime(true);
         Middleware::configure($this);
         OutputFilter::configure($this);
+        $duration = microtime(true) - $start;
+        if($duration < 1) {
+            echo 'Duration: ' . round($duration * 1000, 2) . ' msec' . PHP_EOL;
+        } else {
+            echo 'Duration: ' . round($duration, 2) . ' sec' . PHP_EOL;
+        }
         Logger::configure($this);
         Autoload::configure($this);
         Autoload::ramdisk_configure($this);
