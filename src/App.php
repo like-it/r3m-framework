@@ -305,9 +305,9 @@ class App extends Data {
                     ]);
                     $duration = microtime(true) - $start;
                     if($duration < 1) {
-                        echo 'Duration: ' . round($duration * 1000, 2) . ' msec url: ' . $options['url'] . PHP_EOL;
+                        echo 'Duration: ' . round($duration * 1000, 2) . ' msec' . PHP_EOL;
                     } else {
-                        echo 'Duration: ' . round($duration, 2) . ' sec url:' . $options['url'] . PHP_EOL;
+                        echo 'Duration: ' . round($duration, 2) . ' sec' . PHP_EOL;
                     }
                     if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
@@ -336,9 +336,9 @@ class App extends Data {
                         ]);
                         $duration = microtime(true) - $start;
                         if($duration < 1) {
-                            echo 'Duration: ' . round($duration * 1000, 2) . ' msec url: ' . $options['url'] . PHP_EOL;
+                            echo 'Duration: ' . round($duration * 1000, 2) . ' msec ' . PHP_EOL;
                         } else {
-                            echo 'Duration: ' . round($duration, 2) . ' sec url:' . $options['url'] . PHP_EOL;
+                            echo 'Duration: ' . round($duration, 2) . ' sec'  . PHP_EOL;
                         }
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
