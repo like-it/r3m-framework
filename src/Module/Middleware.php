@@ -222,7 +222,16 @@ class Middleware extends Main {
                     'options.priority' => 'ASC'
                 ],
                 'limit' => $limit,
-                'page' => $page
+                'page' => $page,
+                'where' => [
+                    '(',
+                    [
+                        'attribute' => 'options.priority',
+                        'value' => 10,
+                        'operator' => '<='
+                    ],
+                    ')'
+                ]
             ]
         );
         ddd($count);
