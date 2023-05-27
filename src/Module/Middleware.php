@@ -211,6 +211,8 @@ class Middleware extends Main {
 
 
         $middleware = new Middleware($object);
+        $limit = $object->config('middleware.limit') ?? 255;
+        ddd($limit);
         $page = 1;
         while(true){
             $response = $middleware->list(
@@ -220,7 +222,7 @@ class Middleware extends Main {
                     'sort' => [
                         'options.priority' => 'ASC'
                     ],
-                    'limit' => (int) $object->config('middleware.limit') ?? 255,
+                    'limit' => $limit,
                     'page' => $page
                 ]
             );
