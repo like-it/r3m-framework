@@ -220,9 +220,7 @@ class Middleware extends Main {
                 'sort' => [
                     'action' => 'ASC',
                     'options.priority' => 'ASC'
-                ],
-                'limit' => $limit,
-                'page' => $page,
+                ]
                 /*
                 'where' => [
                     '(',
@@ -246,9 +244,7 @@ class Middleware extends Main {
                     'sort' => [
                         'action' => 'ASC',
                         'options.priority' => 'ASC'
-                    ],
-                    'limit' => $limit,
-                    'page' => $page,
+                    ]
                 ]
             );
             ddd($response);
