@@ -293,13 +293,14 @@ class App extends Data {
                         $functions[] = 'configure';
                         $route->controller::configure($object);
                     }
+                    // @deprecated since Middleware
                     if (in_array('before_run', $methods, true)) {
                         $functions[] = 'before_run';
                         $route->controller::before_run($object);
                     }
-                    $route = Filter::trigger($object,'filter.input', [
+                    $route = Middleware::trigger($object, [
                         'route' => $route,
-                        'type' => 'input'
+                        'methods' => $methods,
                     ]);
                     if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
@@ -320,9 +321,9 @@ class App extends Data {
                             'route' => $route,
                             'response' => $result
                         ]);
-                        $result = Filter::trigger($object, 'filter.output', [
+                        $result = OutputFilter::trigger($object, [
                             'route' => $route,
-                            'type' => 'output',
+                            'methods' => $methods,
                             'response' => $result
                         ]);
                     } else {
@@ -351,16 +352,19 @@ class App extends Data {
                         ]);
                         return Response::output($object, $response);
                     }
+                    // @deprecated since OutputFilter
                     if (in_array('after_run', $methods, true)) {
                         $functions[] = 'after_run';
                         $route->controller::after_run($object);
                     }
+                    // @deprecated since OutputFilter
                     if (in_array('before_result', $methods, true)) {
                         $functions[] = 'before_result';
                         $route->controller::before_result($object);
                     }
                     $functions[] = 'result';
                     $result = App::result($object, $result);
+                    // @deprecated since OutputFilter
                     if (in_array('after_result', $methods)) {
                         $functions[] = 'after_result';
                         $result = $route->controller::after_result($object, $result);
