@@ -228,7 +228,7 @@ class Middleware extends Main {
                     [
                         'attribute' => 'options.priority',
                         'value' => 10,
-                        'operator' => '<='
+                        'operator' => '>'
                     ],
                     ')'
                 ]
