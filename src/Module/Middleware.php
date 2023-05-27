@@ -228,7 +228,9 @@ class Middleware extends Main {
                     'sort' => [
                         'action' => 'ASC',
                         'options.priority' => 'ASC'
-                    ]
+                    ],
+                    'page' => $page,
+                    'limit' => $limit
                 ]
             );
             ddd($response);
