@@ -195,21 +195,6 @@ class Middleware extends Main {
      * @throws ObjectException
      */
     public static function configure(App $object){
-        /**
-         {{$response = R3m.Io.Node:Data:list(
-        'Event',
-        R3m.Io.Node:Role:role.system(),
-        [
-        'sort' => [
-        'action' => 'ASC',
-        'options.priority' => 'ASC'
-        ],
-        'limit' => (int) $options.limit,
-        'page' => (int) $options.page
-        ])}}
-         */
-
-
         $middleware = new Middleware($object);
         $limit = $object->config('middleware.limit') ?? 2;
         $page = 1;
