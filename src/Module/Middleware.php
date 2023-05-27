@@ -197,7 +197,6 @@ class Middleware extends Main {
     public static function configure(App $object){
         $middleware = new Middleware($object);
         $limit = $object->config('middleware.limit') ?? 2;
-        $page = 1;
         $count = $middleware->count(
             'Event',
             $middleware->role_system(),
@@ -220,7 +219,7 @@ class Middleware extends Main {
             ]
         );
         $page_max = ceil($count / $limit);
-        ddd($page_max);
+        d($page_max);
         for($page = 1; $page <= $page_max; $page++){
             $response = $middleware->list(
                 'Event',
