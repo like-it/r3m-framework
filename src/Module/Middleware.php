@@ -211,7 +211,7 @@ class Middleware extends Main {
 
 
         $middleware = new Middleware($object);
-        $limit = $object->config('middleware.limit') ?? 4096;
+        $limit = $object->config('middleware.limit') ?? 2;
         $page = 1;
         $count = $middleware->count(
             'Event',
@@ -223,6 +223,7 @@ class Middleware extends Main {
                 ],
                 'limit' => $limit,
                 'page' => $page,
+                /*
                 'where' => [
                     '(',
                     [
@@ -232,8 +233,27 @@ class Middleware extends Main {
                     ],
                     ')'
                 ]
+                */
             ]
         );
+        $page_max = ceil($count / $limit);
+        for($page = 1; $page <= $page_max; $page++){
+            $response = $middleware->list(
+                'Event',
+                $middleware->role_system(),
+                [
+                    'sort' => [
+                        'action' => 'ASC',
+                        'options.priority' => 'ASC'
+                    ],
+                    'limit' => $limit,
+                    'page' => $page,
+                ]
+            );
+            ddd($response);
+        }
+
+
         ddd($count);
 
 
