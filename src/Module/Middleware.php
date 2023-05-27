@@ -211,7 +211,7 @@ class Middleware extends Main {
 
 
         $middleware = new Middleware($object);
-        $limit = $object->config('middleware.limit') ?? 255;
+        $limit = $object->config('middleware.limit') ?? 4096;
         $page = 1;
         while(true){
             $response = $middleware->list(
