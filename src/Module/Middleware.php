@@ -15,6 +15,7 @@ use stdClass;
 use R3m\Io\App;
 
 use R3m\Io\Module\Data as Storage;
+use R3m\Io\Module\Template\Main;
 
 use R3m\Io\Node\Trait\Data;
 use R3m\Io\Node\Trait\Role;
@@ -23,7 +24,7 @@ use Exception;
 
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\ObjectException;
-class Middleware {
+class Middleware extends Main {
 
     use Data;
     use Role;
