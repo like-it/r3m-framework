@@ -199,7 +199,8 @@ class Event extends Main {
                         'options.priority' => 'ASC'
                     ],
                     'page' => $page,
-                    'limit' => $limit
+                    'limit' => $limit,
+                    'ramdisk' => true
                 ]
             );
             if(
