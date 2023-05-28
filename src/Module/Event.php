@@ -125,7 +125,7 @@ class Event extends Main {
         if(empty($events)){
             return null;
         }
-        $events = Sort::list($events)->with(['options.priority' => 'DESC']);
+        ddd($events);
         if(is_array($events)){
             foreach($events as $event){
                 if(is_object($event)) {
