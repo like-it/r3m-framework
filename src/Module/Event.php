@@ -153,6 +153,7 @@ class Event extends Main {
                                 property_exists($route, 'function')
                             ){
                                 $event = new Storage($event);
+                                ddd($event);
                                 try {
                                     $route->controller::{$route->function}($object, $event, $options);
                                 }
@@ -207,9 +208,7 @@ class Event extends Main {
                 $response &&
                 array_key_exists('list', $response)
             ){
-                Event::on($object, $response['list'], [
-                    'type' => Event::LIST
-                ]);
+                Event::on($object, $response['list']);
             }
         }
     }
