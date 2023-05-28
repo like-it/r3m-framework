@@ -200,7 +200,9 @@ class Event extends Main {
                     ],
                     'page' => $page,
                     'limit' => $limit,
-                    'ramdisk' => true
+                    'ramdisk' => [
+                        'class' => Event::NAME
+                    ]
                 ]
             );
             if(
