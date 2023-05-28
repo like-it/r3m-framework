@@ -153,6 +153,7 @@ class Event extends Main {
                             ){
                                 $event = new Storage($event);
                                 d($event);
+                                d($options);
                                 try {
                                     $route->controller::{$route->function}($object, $event, $options);
                                 }
