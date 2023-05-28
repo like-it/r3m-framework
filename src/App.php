@@ -97,9 +97,9 @@ class App extends Data {
         Event::configure($this);
         $duration = microtime(true) - $start;
         if($duration < 1) {
-            echo 'Duration: ' . round($duration * 1000, 2) . ' msec' . PHP_EOL;
+            echo 'Event Duration: ' . round($duration * 1000, 2) . ' msec' . PHP_EOL;
         } else {
-            echo 'Duration: ' . round($duration, 2) . ' sec' . PHP_EOL;
+            echo 'Event Duration: ' . round($duration, 2) . ' sec' . PHP_EOL;
         }
         Middleware::configure($this);
         OutputFilter::configure($this);
