@@ -125,7 +125,6 @@ class Event extends Main {
         if(empty($events)){
             return null;
         }
-        ddd($events);
         if(is_array($events)){
             foreach($events as $event){
                 if(is_object($event)) {
@@ -148,6 +147,7 @@ class Event extends Main {
                             $route = new stdClass();
                             $route->controller = $controller;
                             $route = Route::controller($route);
+                            d($route);
                             if(
                                 property_exists($route, 'controller') &&
                                 property_exists($route, 'function')
