@@ -147,13 +147,12 @@ class Event extends Main {
                             $route = new stdClass();
                             $route->controller = $controller;
                             $route = Route::controller($route);
-                            d($route);
                             if(
                                 property_exists($route, 'controller') &&
                                 property_exists($route, 'function')
                             ){
                                 $event = new Storage($event);
-                                ddd($event);
+                                d($event);
                                 try {
                                     $route->controller::{$route->function}($object, $event, $options);
                                 }
