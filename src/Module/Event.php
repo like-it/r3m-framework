@@ -201,7 +201,9 @@ class Event extends Main {
                     'page' => $page,
                     'limit' => $limit,
                     'ramdisk' => [
-                        'class' => Event::NAME
+                        'class' => Event::NAME,
+                        'page' => $page,
+                        'limit' => $limit
                     ]
                 ]
             );
