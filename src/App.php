@@ -93,14 +93,7 @@ class App extends Data {
         require_once 'Error.php';
         Config::configure($this);
         Host::configure($this);
-        $start = microtime(true);
         Event::configure($this);
-        $duration = microtime(true) - $start;
-        if($duration < 1) {
-            echo 'Event Duration: ' . round($duration * 1000, 2) . ' msec' . PHP_EOL;
-        } else {
-            echo 'Event Duration: ' . round($duration, 2) . ' sec' . PHP_EOL;
-        }
         Middleware::configure($this);
         OutputFilter::configure($this);
         Logger::configure($this);
