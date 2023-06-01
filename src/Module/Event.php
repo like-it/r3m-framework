@@ -177,7 +177,6 @@ class Event extends Main {
     public static function configure(App $object): void
     {
         $event = new Event($object);
-        ddd($event->role_system());
         $limit = $object->config('event.chunk_size') ?? Event::CHUNK_SIZE;
         $count = $event->count(
             Event::NAME,
