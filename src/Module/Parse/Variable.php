@@ -67,6 +67,8 @@ class Variable {
                             $add_quote = false;
                             $quote_add = false;
                             $attribute = '\'' . $variable['variable']['attribute'];
+                            d($attribute);
+                            d($execute);
                             foreach($execute as $part_nr => $part_record){
                                 if(substr($part_record, 0, 1) === '$'){
                                     if($part_nr === 0){
