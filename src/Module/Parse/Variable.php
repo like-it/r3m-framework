@@ -73,6 +73,7 @@ class Variable {
                                 if(substr($part_record, 0, 1) === '$'){
                                     if($part_nr === 0){
                                         $attribute .= '\' . ' . $part_record . ' . ';
+                                        d($attribute);
                                     } else {
                                         if($add_quote === true){
                                             $attribute .= '.\' . ' . $part_record . ' . ';
