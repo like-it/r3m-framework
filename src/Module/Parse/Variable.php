@@ -173,11 +173,11 @@ class Variable {
         ){
             $attribute = Variable::getArrayAttribute($build, $storage, $variable);
             d($attribute);
-            d($storage);
             $assign = '$this->storage()->set(';
             $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
             $assign .= $value . ')';
+            d($value);
             return $assign;
         } else {
             switch($variable['variable']['operator']){
