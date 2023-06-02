@@ -98,8 +98,10 @@ class Variable {
                             } else {
                                 $attribute .= '\'';
                             }
+                            d($attribute);
                             $exec = '$this->storage()->index(' . $attribute  . ')';
                         } else {
+                            d($variable['variable']['attribute']);
                             $exec = '$this->storage()->index(\'' . $variable['variable']['attribute']  . '\')';
                         }
                         $execute[] = $exec;
