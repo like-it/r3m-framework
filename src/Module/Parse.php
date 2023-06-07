@@ -438,6 +438,7 @@ class Parse {
                 }
                 $uuid = Core::uuid();
                 $storage->data('r3m.io.parse.compile.remove_newline', true);
+                $storage->data('r3m.io.parse.compile.row_mismatch', 1);
                 $string = str_replace(
                     [
                         '{',
@@ -447,7 +448,6 @@ class Parse {
                         '[$ldelim-' . $uuid . ']',
                         '[$rdelim-' . $uuid . ']',
                     ],
-                    "\n\n" .  //row mismatch (+1)
                     $explode[1]
                 );
                 $string = str_replace(
