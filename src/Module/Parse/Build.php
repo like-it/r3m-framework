@@ -214,7 +214,7 @@ class Build {
                     $trait[] = 'trait ' . $name . ' {';
                     $use[] = $this->indent(1) . 'use ' . $name . ';';
                     $explode = explode(PHP_EOL, $record['value']);
-                    foreach($explode as $nr => $line){
+                    foreach($explode as $line){
                         $trait[] = $this->indent(1) . $line;
                     }
                     $trait[] = '}';
@@ -237,7 +237,7 @@ class Build {
                     }
                     $use[] = $this->indent(1) . 'use \\' . $namespace . $name . ';';
                     $explode = explode(PHP_EOL, $record['value']);
-                    foreach($explode as $nr => $line){
+                    foreach($explode as $line){
                         $trait[] = $this->indent(1) . $line;
                     }
                     $trait[] = '}';
@@ -441,8 +441,8 @@ class Build {
                         $explode[0] = '';
                         $read = implode('function', $explode);
                         $read = explode(PHP_EOL, $read);
-                        foreach($read as $nr => $row){
-                            $read[$nr] = $this->indent($indent) . $row;
+                        foreach($read as $read_nr => $row){
+                            $read[$read_nr] = $this->indent($indent) . $row;
                         }
                         $read = implode(PHP_EOL, $read);
                         $read .= PHP_EOL;
@@ -639,7 +639,7 @@ class Build {
                         if($select['value'] == 'if'){
                             throw new Exception('if must be a method, use {if()} on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
                         } else {
-                            throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') . ' ' . $record['value']);
+                            throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url'));
                         }
                     case Token::TYPE_IS_MINUS_MINUS :
                     case Token::TYPE_IS_PLUS_PLUS :
@@ -749,8 +749,8 @@ class Build {
                         break;
                     case Build::TAG_CLOSE :
                         $multi_line = Build::getPluginMultiline($this->object());
-                        foreach($multi_line as $nr => $plugin){
-                            $multi_line[$nr] = '/' . $plugin;
+                        foreach($multi_line as $multi_line_nr => $plugin){
+                            $multi_line[$multi_line_nr] = '/' . $plugin;
                         }
                         if(
                             !in_array(
