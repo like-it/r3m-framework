@@ -197,6 +197,7 @@
     "parse": {
         "read": {
             "parser": "{{R3M}}",
+            "row_mismatch": 1,
             "object": {
                 "use_this": true,
                 "this": {

@@ -438,7 +438,6 @@ class Parse {
                 }
                 $uuid = Core::uuid();
                 $storage->data('r3m.io.parse.compile.remove_newline', true);
-                $object->config('r3m.io.parse.read.row_mismatch', 1);
                 $string = str_replace(
                     [
                         '{',

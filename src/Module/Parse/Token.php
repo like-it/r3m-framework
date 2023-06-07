@@ -434,6 +434,10 @@ class Token {
         $array = Token::split($string);
         $token = array();
         $row = 1;
+        if(array_key_exists('object', $options)){
+            $object = $options['object'];
+            $row += $object->config('r3m.io.parse.read.row_mismatch') ?? 0;
+        }
         $column = 1;
         $nr = -1;
         foreach($array as $nr => $char){
@@ -442,10 +446,6 @@ class Token {
             $record['value'] = $char;
             $record['type'] = $type;
             $record['column'] = $column;
-            if(array_key_exists('object', $options)){
-                $object = $options['object'];
-                ddd($object->config('r3m.io.parse.read.row_mismatch'));
-            }
             $record['row'] = $row;
             $record['is_operator'] = false;
             $token[$nr] = $record;
