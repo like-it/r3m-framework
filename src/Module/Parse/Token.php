@@ -434,7 +434,7 @@ class Token {
         $debug = debug_backtrace(true);
         $debug = $debug[0];
         d($debug);
-        ddd($options);
+        d($options);
         $array = Token::split($string);
         $token = array();
         $row = 1;
