@@ -447,6 +447,7 @@ class Parse {
                         '[$ldelim-' . $uuid . ']',
                         '[$rdelim-' . $uuid . ']',
                     ],
+                    "\n" .
                     $explode[1]
                 );
                 $string = str_replace(
