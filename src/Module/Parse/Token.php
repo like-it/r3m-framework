@@ -444,7 +444,7 @@ class Token {
             $record['column'] = $column;
             if(array_key_exists('object', $options)){
                 $object = $options['object'];
-
+                ddd($object->config('r3m.io.parse.read.row_mismatch'));
             }
             $record['row'] = $row;
             $record['is_operator'] = false;
