@@ -431,10 +431,6 @@ class Token {
      */
     public static function tree_prepare($string='', &$count=0, $options=[]): array
     {
-        $debug = debug_backtrace(true);
-        $debug = $debug[0];
-        d($debug);
-        d($options);
         $array = Token::split($string);
         $token = array();
         $row = 1;
@@ -446,6 +442,10 @@ class Token {
             $record['value'] = $char;
             $record['type'] = $type;
             $record['column'] = $column;
+            if(array_key_exists('object', $options)){
+                $object = $options['object'];
+
+            }
             $record['row'] = $row;
             $record['is_operator'] = false;
             $token[$nr] = $record;
