@@ -431,6 +431,9 @@ class Token {
      */
     public static function tree_prepare($string='', &$count=0, $options=[]): array
     {
+        $debug = debug_backtrace(true);
+        $debug = $debug[0];
+        d($debug);
         ddd($options);
         $array = Token::split($string);
         $token = array();
