@@ -51,7 +51,6 @@ class Variable {
     private static function getArrayAttribute($build, Data $storage, $variable=[]){
         $execute = [];
         if(array_key_exists('array', $variable['variable'])){
-            d($variable);
             foreach($variable['variable']['array'] as $nr => $list){
                 if(
                     is_null($list) &&
@@ -98,10 +97,8 @@ class Variable {
                             } else {
                                 $attribute .= '\'';
                             }
-                            d($attribute);
                             $exec = '$this->storage()->index(' . $attribute  . ')';
                         } else {
-                            d($variable['variable']['attribute']);
                             $exec = '$this->storage()->index(\'' . $variable['variable']['attribute']  . '\')';
                         }
                         $execute[] = $exec;
