@@ -436,6 +436,7 @@ class Token {
         $row = 1;
         if(array_key_exists('object', $options)){
             $object = $options['object'];
+            ddd($object->config('r3m.io.parse.read.row_mismatch'));
             $row += $object->config('r3m.io.parse.read.row_mismatch') ?? 0;
         }
         $column = 1;
