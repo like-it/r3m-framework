@@ -172,12 +172,10 @@ class Variable {
             array_key_exists('array', $variable['variable'])
         ){
             $attribute = Variable::getArrayAttribute($build, $storage, $variable);
-            d($attribute);
             $assign = '$this->storage()->set(';
             $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
             $assign .= $value . ')';
-            d($value);
             return $assign;
         } else {
             switch($variable['variable']['operator']){
