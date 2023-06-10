@@ -215,6 +215,5 @@ class Event extends Main {
             }
         }
         $duration = microtime(true) - $start;
-        echo 'Duration: ' . round($duration, 2) . ' msec object: ' . Event::OBJECT . PHP_EOL;
     }
 }
