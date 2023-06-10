@@ -32,6 +32,7 @@ class OutputFilter extends Main {
     use Role;
 
     const NAME = 'OutputFilter';
+    const OBJECT = 'App.OutputFilter';
     const CHUNK_SIZE = 4096;
     const LIST = 'list';
     const RECORD = 'record';
@@ -199,7 +200,7 @@ class OutputFilter extends Main {
         $outputFilter = new OutputFilter($object);
         $limit = $object->config('output.filter.chunk_size') ?? OutputFilter::CHUNK_SIZE;
         $count = $outputFilter->count(
-            OutputFilter::NAME,
+            OutputFilter::OBJECT,
             $outputFilter->role_system(),
             [
                 'sort' => [
@@ -210,7 +211,7 @@ class OutputFilter extends Main {
         $page_max = ceil($count / $limit);
         for($page = 1; $page <= $page_max; $page++){
             $response = $outputFilter->list(
-                OutputFilter::NAME,
+                OutputFilter::OBJECT,
                 $outputFilter->role_system(),
                 [
                     'sort' => [
@@ -218,7 +219,8 @@ class OutputFilter extends Main {
                         'options.priority' => 'ASC'
                     ],
                     'page' => $page,
-                    'limit' => $limit
+                    'limit' => $limit,
+                    'ramdisk' => true
                 ]
             );
             if(

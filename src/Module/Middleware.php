@@ -31,6 +31,7 @@ class Middleware extends Main {
     use Role;
 
     const NAME = 'Middleware';
+    const OBJECT = 'App.Middleware';
     const CHUNK_SIZE = 4096;
 
     const LIST = 'list';
@@ -201,7 +202,7 @@ class Middleware extends Main {
         $middleware = new Middleware($object);
         $limit = $object->config('middleware.chunk_size') ?? Middleware::CHUNK_SIZE;
         $count = $middleware->count(
-            Middleware::NAME,
+            Middleware::OBJECT,
             $middleware->role_system(),
             [
                 'sort' => [
@@ -223,7 +224,7 @@ class Middleware extends Main {
         $page_max = ceil($count / $limit);
         for($page = 1; $page <= $page_max; $page++){
             $response = $middleware->list(
-                Middleware::NAME,
+                Middleware::OBJECT,
                 $middleware->role_system(),
                 [
                     'sort' => [
@@ -231,7 +232,8 @@ class Middleware extends Main {
                         'options.priority' => 'ASC'
                     ],
                     'page' => $page,
-                    'limit' => $limit
+                    'limit' => $limit,
+                    'ramdisk' => true,
                 ]
             );
             if(
