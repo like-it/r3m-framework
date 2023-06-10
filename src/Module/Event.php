@@ -32,7 +32,7 @@ class Event extends Main {
     use Role;
 
     const NAME = 'Event';
-    const CLASS = 'App.Event';
+    const OBJECT = 'App.Event';
     const CHUNK_SIZE = 4096;
 
     const LIST = 'list';
@@ -121,7 +121,7 @@ class Event extends Main {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        $events = $object->get(App::EVENT)->select(Event::CLASS, [
+        $events = $object->get(App::EVENT)->select(Event::NAME, [
             'action' => $action
         ]);
         if(empty($events)){
@@ -182,7 +182,7 @@ class Event extends Main {
         $event = new Event($object);
         $limit = $object->config('event.chunk_size') ?? Event::CHUNK_SIZE;
         $count = $event->count(
-            Event::CLASS,
+            Event::OBJECT,
             $event->role_system(),
             [
                 'sort' => [
@@ -194,7 +194,7 @@ class Event extends Main {
         $page_max = ceil($count / $limit);
         for($page = 1; $page <= $page_max; $page++){
             $response = $event->list(
-                Event::CLASS,
+                Event::OBJECT,
                 $event->role_system(),
                 [
                     'sort' => [
