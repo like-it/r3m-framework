@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\FileWriteException;
 use stdClass;
 
 use R3m\Io\App;
@@ -31,6 +32,7 @@ class Event extends Main {
     use Role;
 
     const NAME = 'Event';
+    const CLASS = 'App.Event';
     const CHUNK_SIZE = 4096;
 
     const LIST = 'list';
@@ -119,7 +121,7 @@ class Event extends Main {
      * @throws Exception
      */
     public static function trigger(App $object, $action, $options=[]){
-        $events = $object->get(App::EVENT)->select(Event::NAME, [
+        $events = $object->get(App::EVENT)->select(Event::CLASS, [
             'action' => $action
         ]);
         if(empty($events)){
@@ -173,13 +175,14 @@ class Event extends Main {
 
     /**
      * @throws ObjectException
+     * @throws FileWriteException
      */
     public static function configure(App $object): void
     {
         $event = new Event($object);
         $limit = $object->config('event.chunk_size') ?? Event::CHUNK_SIZE;
         $count = $event->count(
-            Event::NAME,
+            Event::CLASS,
             $event->role_system(),
             [
                 'sort' => [
@@ -191,7 +194,7 @@ class Event extends Main {
         $page_max = ceil($count / $limit);
         for($page = 1; $page <= $page_max; $page++){
             $response = $event->list(
-                Event::NAME,
+                Event::CLASS,
                 $event->role_system(),
                 [
                     'sort' => [
