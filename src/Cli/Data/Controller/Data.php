@@ -301,6 +301,14 @@ class Data extends Controller {
                         Dir::create($destination_dir, Dir::CHMOD);
                         $command = Core::binary() . ' zip archive ' . $file->url . ' ' . $destination_url;
                         exec($command);
+                        if($object->config(Config::POSIX_ID) === 0) {
+                            $command = 'chown www-data:www-data ' . $destination_url;
+                            exec($command);
+                        }
+                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
+                            $command = 'chmod 666 ' . $destination_url;
+                            exec($command);
+                        }
                     }
                 }
                 elseif(empty($includes) && !empty($excludes)){
@@ -319,6 +327,14 @@ class Data extends Controller {
                         Dir::create($destination_dir, Dir::CHMOD);
                         $command = Core::binary() . ' zip archive ' . $file->url . ' ' . $destination_url;
                         exec($command);
+                        if($object->config(Config::POSIX_ID) === 0) {
+                            $command = 'chown www-data:www-data ' . $destination_url;
+                            exec($command);
+                        }
+                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
+                            $command = 'chmod 666 ' . $destination_url;
+                            exec($command);
+                        }
                     }
                 }
                 elseif(!empty($includes) && !empty($excludes)){
@@ -342,6 +358,14 @@ class Data extends Controller {
                             Dir::create($destination_dir, Dir::CHMOD);
                             $command = Core::binary() . ' zip archive ' . $file->url . ' ' . $destination_url;
                             exec($command);
+                            if($object->config(Config::POSIX_ID) === 0) {
+                                $command = 'chown www-data:www-data ' . $destination_url;
+                                exec($command);
+                            }
+                            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
+                                $command = 'chmod 666 ' . $destination_url;
+                                exec($command);
+                            }
                         }
                     }
                 }
@@ -354,6 +378,14 @@ class Data extends Controller {
                         Dir::create($destination_dir, Dir::CHMOD);
                         $command = Core::binary() . ' zip archive ' . $file->url . ' ' . $destination_url;
                         exec($command);
+                        if($object->config(Config::POSIX_ID) === 0) {
+                            $command = 'chown www-data:www-data ' . $destination_url;
+                            exec($command);
+                        }
+                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
+                            $command = 'chmod 666 ' . $destination_url;
+                            exec($command);
+                        }
                     }
                 }
             }
@@ -369,8 +401,6 @@ class Data extends Controller {
             exec($command);
         }
         if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-            $command = 'chmod 666 ' . $destination_url;
-            exec($command);
             $command = 'chmod 777 ' . $destination_dir;
             exec($command);
             $dir_up = Dir::name($destination_dir);
