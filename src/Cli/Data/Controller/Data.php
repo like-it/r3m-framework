@@ -34,14 +34,15 @@ class Data extends Controller {
     /**
      * @throws ObjectException
      */
-    public static function run(App $object){
+    public static function run(App $object): void
+    {
         $submodule = App::parameter($object, 'data', 1);
         switch($submodule){
             case 'backup':
-                return Data::backup($object);
+                Data::backup($object);
             break;
             case 'restore':
-                return Data::restore($object);
+                Data::restore($object);
             break;
             case 'download':
                 //rsync
@@ -55,9 +56,10 @@ class Data extends Controller {
     /**
      * @throws ObjectException
      */
-    public static function restore(App $object){
+    public static function restore(App $object): void
+    {
         $dir = new Dir();
-        $url = $object->config('project.dir.backup');
+        $url = $object->config('project.dir.backup') . 'Data' . $object->config('ds');
         $read = $dir->read($url);
         $record = false;
         $flags = App::flags($object);
@@ -246,16 +248,22 @@ class Data extends Controller {
                 }
             }
         }
-        return null;
     }
 
     /**
      * @throws ObjectException
      */
-    public static function backup(App $object){
+    public static function backup(App $object): void
+    {
         $flags = App::flags($object);
         $cwd = false;
         $date = date('Y-m-d-H-i-s');
+        $destination_dir = $object->config('project.dir.backup') .
+            'Data' .
+            $object->config('ds') .
+            $date .
+            $object->config('ds')
+        ;
         $includes = [];
         $excludes = [];
         if(property_exists($flags, 'include')){
@@ -286,10 +294,6 @@ class Data extends Controller {
                     )
                 ){
                     if($file->type === Dir::TYPE){
-                        $destination_dir = $object->config('project.dir.backup') .
-                            $date .
-                            $object->config('ds')
-                        ;
                         $destination_url = $destination_dir .
                             $file->name .
                             $object->config('extension.zip')
@@ -308,10 +312,6 @@ class Data extends Controller {
                         continue;
                     }
                     if($file->type === Dir::TYPE){
-                        $destination_dir = $object->config('project.dir.backup') .
-                            $date .
-                            $object->config('ds')
-                        ;
                         $destination_url = $destination_dir .
                             $file->name .
                             $object->config('extension.zip')
@@ -335,10 +335,6 @@ class Data extends Controller {
                         true
                     )){
                         if($file->type === Dir::TYPE){
-                            $destination_dir = $object->config('project.dir.backup') .
-                                $date .
-                                $object->config('ds')
-                            ;
                             $destination_url = $destination_dir .
                                 $file->name .
                                 $object->config('extension.zip')
@@ -351,10 +347,6 @@ class Data extends Controller {
                 }
                 elseif(empty($includes) && empty($excludes)) {
                     if($file->type === Dir::TYPE){
-                        $destination_dir = $object->config('project.dir.backup') .
-                            $date .
-                            $object->config('ds')
-                        ;
                         $destination_url = $destination_dir .
                             $file->name .
                             $object->config('extension.zip')
@@ -364,12 +356,10 @@ class Data extends Controller {
                         exec($command);
                     }
                 }
-
             }
         }
         if($cwd){
             Dir::change($cwd);
         }
-        return null;
     }
 }
