@@ -95,6 +95,7 @@
         "mp3": ".mp3",
         "ogg": ".ogg",
         "zip": ".zip",
+        "gz": ".gz",
         "rar": ".rar",
         "tpl": ".tpl",
         "conf": ".conf",
