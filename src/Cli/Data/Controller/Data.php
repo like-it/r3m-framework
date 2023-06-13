@@ -358,6 +358,28 @@ class Data extends Controller {
                 }
             }
         }
+        if($object->config(Config::POSIX_ID) === 0){
+            $command = 'chown www-data:www-data ' . $destination_dir;
+            exec($command);
+            $dir_up = Dir::name($destination_dir);
+            $command = 'chown www-data:www-data ' . $dir_up;
+            exec($command);
+            $dir_up = Dir::name($destination_dir);
+            $command = 'chown www-data:www-data ' . $dir_up;
+            exec($command);
+        }
+        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+            $command = 'chmod 666 ' . $destination_url;
+            exec($command);
+            $command = 'chmod 777 ' . $destination_dir;
+            exec($command);
+            $dir_up = Dir::name($destination_dir);
+            $command = 'chmod 777 ' . $dir_up;
+            exec($command);
+            $dir_up = Dir::name($destination_dir);
+            $command = 'chmod 777 ' . $dir_up;
+            exec($command);
+        }
         if($cwd){
             Dir::change($cwd);
         }
