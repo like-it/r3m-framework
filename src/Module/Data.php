@@ -168,6 +168,21 @@ class Data {
                 if(count($tmp) > 1){
                     $parameter = array_shift($tmp);
                     $value = implode('=', $tmp);
+                    if(is_numeric($value)){
+                        $value = $value + 0;
+                    } else {
+                        switch($value){
+                            case 'true':
+                                $value = true;
+                                break;
+                            case 'false':
+                                $value = false;
+                                break;
+                            case 'null':
+                                $value = null;
+                                break;
+                        }
+                    }
                 } else {
                     $value = true;
                 }
@@ -298,7 +313,7 @@ class Data {
                     }
                     Core::object_delete($attribute, $this->data()); //for sorting an object
                     Core::object_set($attribute, $value, $this->data());
-                    return;
+                    return null;
                 }
             } else {
                 if(is_int($attribute)){
