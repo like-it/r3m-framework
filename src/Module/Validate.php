@@ -48,6 +48,7 @@ class Validate {
     public static function validate(App $object, $validate){
         $extension = $object->config('extension.php');  
         $test = [];
+        d($validate);
         foreach($validate as $field => $list){
             $is_optional = false;
             if($field == 'test'){
