@@ -105,8 +105,6 @@ class Validate {
                             $url_list[] = $object->config('framework.dir.validate') . $name . $extension;
 
                             if(empty($test[$field][$function])){
-                                d($field);
-                                d($function);
                                 $test[$field][$function] = [];
                             }
                             $is_found = false;
@@ -127,7 +125,6 @@ class Validate {
             }
         }        
         if(property_exists($validate, 'test')){
-            d($test);
             $validate->test = array_merge($test, $validate->test);
         } else {
             $validate->test = $test;
@@ -148,7 +145,6 @@ class Validate {
             return $validate;
         } else {
             $validate->success = true;
-            d($test);
             foreach($test as $field => $list){
                 foreach($list as $key => $subList){
                     foreach($subList as $nr => $status){
