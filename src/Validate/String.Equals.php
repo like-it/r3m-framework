@@ -12,11 +12,7 @@ use R3m\Io\App;
 
 function validate_string_equals(App $object, $string='', $field='', $argument=''): bool
 {
-    $compare = $object->request('node.' . $argument);
-    if(empty($compare)){
-        $compare = $object->request($argument);
-    }
-    if($string === $compare){
+    if($string === $argument){
         return true;
     }
     return false;
