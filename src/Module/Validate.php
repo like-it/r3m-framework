@@ -48,7 +48,6 @@ class Validate {
     public static function validate(App $object, $validate){
         $extension = $object->config('extension.php');  
         $test = [];
-        d($validate);
         foreach($validate as $field => $list){
             $is_optional = false;
             if($field == 'test'){
@@ -130,7 +129,6 @@ class Validate {
         } else {
             $validate->test = $test;
         }
-        d($validate);
         foreach($validate as $field => $value) {
             if (
                 is_object($value) &&
@@ -147,6 +145,7 @@ class Validate {
             return $validate;
         } else {
             $validate->success = true;
+            d($test);
             foreach($test as $field => $list){
                 foreach($list as $key => $subList){
                     foreach($subList as $nr => $status){
