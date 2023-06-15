@@ -50,7 +50,11 @@ class Validate {
         $test = [];
         foreach($validate as $field => $list){
             $is_optional = false;
-            if($field === 'success'){
+            if($field === 'success' && is_array($list)){
+                ddd($validate);
+
+            }
+            if($field === 'success' && is_object($list)){
                 ddd($validate);
 
             }
