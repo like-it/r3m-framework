@@ -50,14 +50,6 @@ class Validate {
         $test = [];
         foreach($validate as $field => $list){
             $is_optional = false;
-            if($field === 'success' && is_array($list)){
-                ddd($validate);
-
-            }
-            if($field === 'success' && is_object($list)){
-                ddd($validate);
-
-            }
             if($field == 'test'){
                 continue;
             }
@@ -113,6 +105,8 @@ class Validate {
                             $url_list[] = $object->config('framework.dir.validate') . $name . $extension;
 
                             if(empty($test[$field][$function])){
+                                d($field);
+                                d($function);
                                 $test[$field][$function] = [];
                             }
                             $is_found = false;
