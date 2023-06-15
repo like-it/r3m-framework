@@ -129,6 +129,7 @@ class Validate {
         } else {
             $validate->test = $test;
         }
+        d($validate);
         foreach($validate as $field => $value) {
             if (
                 is_object($value) &&
