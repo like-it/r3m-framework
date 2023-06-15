@@ -124,7 +124,8 @@ class Validate {
                 }
             }
         }        
-        if(property_exists($validate, 'test')){            
+        if(property_exists($validate, 'test')){
+            d($test);
             $validate->test = array_merge($test, $validate->test);
         } else {
             $validate->test = $test;
@@ -140,7 +141,7 @@ class Validate {
         }
         if(
             property_exists($validate, 'success') &&
-            $validate->success===false
+            $validate->success === false
         ){
             return $validate;
         } else {
