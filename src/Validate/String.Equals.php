@@ -16,6 +16,7 @@ function validate_string_equals(App $object, $string='', $field='', $argument=''
     if(empty($compare)){
         $compare = $object->request($argument);
     }
+    ddd($object->request());
     d($string);
     d($compare);
     d($string === $compare);
