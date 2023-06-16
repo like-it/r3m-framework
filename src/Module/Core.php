@@ -641,6 +641,8 @@ class Core
                     }
                 }
             } else {
+                d($object);
+                d($attributeList);
                 if (array_key_exists($attributeList, $object)) {
                     return $object[$attributeList];
                 }
