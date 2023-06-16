@@ -68,22 +68,29 @@ class Core
     const FILE = 'file';
     const PROMPT = 'prompt';
 
-    public static function binary()
+    public static function binary(): string|null
     {
         if (array_key_exists('_', $_SERVER)) {
             $dirname = Dir::name($_SERVER['_']);
             return str_replace($dirname, '', $_SERVER['_']);
         }
+        return null;
     }
 
-    public static function detach(App $object, $command)
+    /**
+     * @throws ObjectException
+     */
+    public static function detach(App $object, $command): bool|array|int|null
     {
         $output = [];
         $error = [];
         return Core::execute($object, $command, $output, $error, Core::SHELL_DETACHED);
     }
 
-    public static function async(App $object, $command)
+    /**
+     * @throws ObjectException
+     */
+    public static function async(App $object, $command): bool|array|int|null
     {
         if (stristr($command, '&') === false) {
             $command .= ' &';
@@ -260,7 +267,7 @@ class Core
         }
     }
 
-    public static function output_mode($mode = null)
+    public static function output_mode($mode = null): void
     {
         if (!in_array($mode, Core::OUTPUT_MODE)) {
             $mode = Core::OUTPUT_MODE_DEFAULT;
@@ -284,12 +291,12 @@ class Core
         }
     }
 
-    public static function interactive()
+    public static function interactive(): void
     {
         Core::output_mode(Core::MODE_INTERACTIVE);
     }
 
-    public static function passive()
+    public static function passive(): void
     {
         Core::output_mode(Core::MODE_PASSIVE);
     }
@@ -297,7 +304,7 @@ class Core
     /**
      * @throws UrlEmptyException
      */
-    public static function redirect($url = '')
+    public static function redirect($url = ''): void
     {
         if (empty($url)) {
             throw new UrlEmptyException('url is empty...');
@@ -317,7 +324,8 @@ class Core
         return false;
     }
 
-    public static function array_bestmatch_list($array=[], $search='', $with_score=false){
+    public static function array_bestmatch_list($array=[], $search='', $with_score=false): bool|array
+    {
         if(empty($array)){
             return false;
         }
@@ -347,7 +355,8 @@ class Core
         return $array;
     }
 
-    public static function array_bestmatch_key($array=[], $search=''){
+    public static function array_bestmatch_key($array=[], $search=''): bool|int|string|null
+    {
         if(empty($array)){
             return false;
         }
@@ -545,7 +554,7 @@ class Core
         }
     }
 
-    public static function object_delete($attributeList = [], $object = '', $parent = '', $key = null)
+    public static function object_delete($attributeList = [], $object = '', $parent = '', $key = null): bool
     {
         if (is_scalar($attributeList)) {
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
@@ -566,6 +575,7 @@ class Core
             unset($parent->{$key});    //unset $object won't delete it from the first object (parent) given
             return true;
         }
+        return false;
     }
 
     public static function object_has($attributeList = [], $object = ''): bool
@@ -629,6 +639,10 @@ class Core
                     if (array_key_exists($key, $object)) {
                         return Core::object_get($attributeList->{$key}, $object[$key]);
                     }
+                }
+            } else {
+                if (array_key_exists($attributeList, $object)) {
+                    return $object[$attributeList];
                 }
             }
         }
@@ -762,7 +776,7 @@ class Core
             !is_object($object) &&
             !is_array($object)
         ) {
-            return;
+            return null;
         }
         if (is_string($return) && $return !== 'child') {
             if ($return === 'root') {
@@ -860,9 +874,8 @@ class Core
                 define('IS_CLI', true);
                 return true;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     public static function object_horizontal($verticalArray = [], $value = null, $return = 'object')
