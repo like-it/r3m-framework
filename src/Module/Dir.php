@@ -49,17 +49,25 @@ class Dir {
         if(File::exist($url) && Dir::is($url)){
             return true;
         } else {
-            $mkdir = false;
-            if(!File::exist($url)){
-                if(empty($chmod)){
-                    $mkdir = @mkdir($url, Dir::CHMOD, true);
-                } else {
-                    $mkdir = @mkdir($url, $chmod, true);
+            try {
+                $mkdir = false;
+                if(!File::exist($url)){
+                    if(empty($chmod)){
+                        $mkdir = @mkdir($url, Dir::CHMOD, true);
+                    } else {
+                        $mkdir = @mkdir($url, $chmod, true);
+                    }
                 }
+                return $mkdir;
             }
-            return $mkdir;
+            catch (Exception $exception){
+                d($url);
+                ddd($exception);
+            }
         }
+        return false;
     }
+
     public static function exist($url=''): bool
     {
         if($url !== Dir::SEPARATOR){
