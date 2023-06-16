@@ -774,8 +774,7 @@ class Build {
                         break;
                     default:
                         if($type !== null){
-                            var_dump($record);
-                            throw new Exception('type (' . $type . ') undefined in source: ' . $this->storage()->data('source'));
+                            throw new Exception('type (' . $type . ') undefined in source: ' . $this->storage()->data('source') . ' on line: ' . $record['line']);
                         }
                 }
                 $is_tag = false;
