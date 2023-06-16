@@ -675,9 +675,10 @@ class Core
                 ) ||
                 isset($object->{$attributeList})
             ){
-                echo '(1)' . $attributeList . PHP_EOL;
+                echo '(1) ' . $attributeList . PHP_EOL;
                 return $object->{$attributeList};
             } else {
+                echo '(2) ' . $attributeList . PHP_EOL;
                 $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
                 foreach ($attributeList as $nr => $attribute) {
                     if ($attribute === null || $attribute === '') {
