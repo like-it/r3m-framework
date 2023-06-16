@@ -668,7 +668,6 @@ class Core
             return null;
         }
         if (is_scalar($attributeList)) {
-            echo '(1)' . $attributeList . PHP_EOL;
             if(
                 (
                     $attributeList === '0' &&
@@ -676,6 +675,7 @@ class Core
                 ) ||
                 isset($object->{$attributeList})
             ){
+                echo '(1)' . $attributeList . PHP_EOL;
                 return $object->{$attributeList};
             } else {
                 $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
