@@ -675,8 +675,6 @@ class Core
                 }
             }
             elseif(is_string($attributeList)){
-                d($object);
-                d($attributeList);
                 if (array_key_exists($attributeList, $object)) {
                     return $object[$attributeList];
                 }
@@ -733,7 +731,6 @@ class Core
                     }
                 }
             }
-
         }
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
