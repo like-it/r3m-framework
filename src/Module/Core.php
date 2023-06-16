@@ -557,6 +557,21 @@ class Core
     public static function object_delete($attributeList = [], $object = '', $parent = '', $key = null): bool
     {
         if (is_scalar($attributeList)) {
+            $explode = explode('.', $attributeList, 3);
+            if(
+                array_key_exists(2, $explode) &&
+                is_object($object) &&
+                isset($object->{$explode[0]})
+            ){
+                return Core::object_delete($explode[1] . '.' . $explode[2], $object->{$explode[0]}, $object, $explode[0]);
+            }
+            elseif(
+                array_key_exists(1, $explode) &&
+                is_object($object) &&
+                isset($object->{$explode[0]})
+            ){
+                return Core::object_delete($explode[1], $object->{$explode[0]}, $object, $explode[0]);
+            }
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
         }
         if (is_array($attributeList)) {
@@ -564,15 +579,33 @@ class Core
         }
         if (!empty($attributeList) && is_object($attributeList)) {
             foreach ($attributeList as $key => $attribute) {
-                if (isset($object->{$key})) {
-                    return Core::object_delete($attribute, $object->{$key}, $object, $key);
-                } else {
-                    unset($object->{$key}); //to delete nulls
-                    return false;
+                if(is_object($object)){
+                    if (isset($object->{$key})) {
+                        return Core::object_delete($attribute, $object->{$key}, $object, $key);
+                    } else {
+                        unset($object->{$key}); //to delete nulls
+                        return false;
+                    }
+                } elseif(is_array($object)) {
+                    if (isset($object[$key])) {
+                        return Core::object_delete($attribute, $object[$key], $object, $key);
+                    } else {
+                        unset($object[$key]); //to delete nulls
+                        return false;
+                    }
                 }
+
             }
         } else {
-            unset($parent->{$key});    //unset $object won't delete it from the first object (parent) given
+            if(!empty($parent)){
+                if(is_object($parent)){
+                    unset($parent->{$key});    //unset $object won't delete it from the first object (parent) given
+                }
+                elseif(is_array($parent)){
+                    unset($parent[$key]);
+                }
+            }
+
             return true;
         }
         return false;
@@ -678,8 +711,15 @@ class Core
                 echo '(1) ' . $attributeList . PHP_EOL;
                 return $object->{$attributeList};
             } else {
-                $explode = explode('.', $attributeList, 2);
-                if(array_key_exists(1, $explode) &&
+                $explode = explode('.', $attributeList, 3);
+                if(
+                    array_key_exists(2, $explode) &&
+                    isset($object->{$explode[0]})
+                ){
+                    return Core::object_get($explode[1] . '.' . $explode[2], $object->{$explode[0]});
+                }
+                elseif(
+                    array_key_exists(1, $explode) &&
                     isset($object->{$explode[0]})
                 ){
                     return Core::object_get($explode[1], $object->{$explode[0]});
