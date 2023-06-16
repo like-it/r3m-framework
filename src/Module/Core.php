@@ -678,6 +678,12 @@ class Core
                 echo '(1) ' . $attributeList . PHP_EOL;
                 return $object->{$attributeList};
             } else {
+                $explode = explode('.', $attributeList, 2);
+                if(array_key_exists(1, $explode) &&
+                    isset($object->{$explode[0]})
+                ){
+                    return Core::object_get($explode[1], $object->{$explode[0]});
+                }
                 echo '(2) ' . $attributeList . PHP_EOL;
                 echo implode(', ', array_keys((array)$object)) . PHP_EOL;
                 $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
