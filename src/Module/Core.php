@@ -668,6 +668,7 @@ class Core
             return null;
         }
         if (is_scalar($attributeList)) {
+            echo '(1)' . $attributeList . PHP_EOL;
             if(
                 (
                     $attributeList === '0' &&
