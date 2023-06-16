@@ -774,6 +774,7 @@ class Build {
                         break;
                     default:
                         if($type !== null){
+                            d($record);
                             throw new Exception('type (' . $type . ') undefined in source: ' . $this->storage()->data('source'));
                         }
                 }
