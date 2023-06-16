@@ -640,7 +640,8 @@ class Core
                         return Core::object_get($attributeList->{$key}, $object[$key]);
                     }
                 }
-            } else {
+            }
+            elseif(is_string($attributeList)){
                 d($object);
                 d($attributeList);
                 if (array_key_exists($attributeList, $object)) {
