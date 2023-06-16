@@ -10,10 +10,12 @@
  */
 namespace R3m\Io\Module;
 
-use R3m\Io\Exception\FileMoveException;
 use stdClass;
 use Exception;
+
 use R3m\Io\Exception\ErrorException;
+use R3m\Io\Exception\DirectoryCreateException;
+use R3m\Io\Exception\FileMoveException;
 
 class Dir {
     const CHMOD = 0750;
@@ -38,6 +40,9 @@ class Dir {
         return getcwd();
     }
 
+    /**
+     * @throws DirectoryCreateException
+     */
     public static function create($url='', $chmod=''): bool
     {
         if($url !== Dir::SEPARATOR){
@@ -61,11 +66,9 @@ class Dir {
                 return $mkdir;
             }
             catch (Exception $exception){
-                d($url);
-                ddd($exception);
+                throw new DirectoryCreateException('Cannot create directory: ' . $url, 0, $exception);
             }
         }
-        return false;
     }
 
     public static function exist($url=''): bool
