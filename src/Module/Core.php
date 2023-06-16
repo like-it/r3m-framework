@@ -668,7 +668,13 @@ class Core
             return null;
         }
         if (is_scalar($attributeList)) {
-            if($attributeList === '0' && isset($object->{$attributeList})){
+            if(
+                (
+                    $attributeList === '0' &&
+                    isset($object->{$attributeList})
+                ) ||
+                isset($object->{$attributeList})
+            ){
                 return $object->{$attributeList};
             } else {
                 $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
