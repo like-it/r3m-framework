@@ -287,6 +287,7 @@ class Data {
                 }
             }
             elseif($attribute == 'get'){
+                echo $value . PHP_EOL;
                 return Core::object_get($value, $this->data());
             }
             elseif($attribute == 'has'){
@@ -320,6 +321,7 @@ class Data {
                     $attribute = (string) $attribute;
                 }
                 if(is_string($attribute)){
+                    echo $attribute . PHP_EOL;
                     return Core::object_get($attribute, $this->data());
                 }
                 elseif(is_object($attribute) && get_class($attribute) === Data::class){
