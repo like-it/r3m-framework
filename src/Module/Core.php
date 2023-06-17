@@ -570,7 +570,8 @@ class Core
                 is_object($object) &&
                 isset($object->{$explode[0]})
             ){
-                echo 'Object:Delete:1' . $explode[0] . '.' . $explode[1] . PHP_EOL;
+                echo 'Object:Delete:1: ' . $explode[0] . '.' . $explode[1] . PHP_EOL;
+                var_dump($object->{$explode[0]});
                 return Core::object_delete($explode[1], $object->{$explode[0]}, $object, $explode[0]);
             }
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
