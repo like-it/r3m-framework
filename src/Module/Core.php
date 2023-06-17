@@ -745,7 +745,6 @@ class Core
                 ){
                     return Core::object_get($explode[1], $object->{$explode[0]});
                 }
-                echo implode(', ', array_keys((array)$object)) . PHP_EOL;
                 $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
                 foreach ($attributeList as $nr => $attribute) {
                     if ($attribute === null || $attribute === '') {

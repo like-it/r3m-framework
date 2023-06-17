@@ -253,7 +253,6 @@ class Data {
         //add first & last
         $get = $this->get($attribute);
         $delete = $this->delete($attribute);
-        echo 'Delete: ' . $delete . PHP_EOL;
         return $get;
     }
 
