@@ -252,7 +252,8 @@ class Data {
     public function extract($attribute=''){
         //add first & last
         $get = $this->get($attribute);
-        $this->delete($attribute);
+        $delete = $this->delete($attribute);
+        echo 'Delete: ' . $delete . PHP_EOL;
         return $get;
     }
 
