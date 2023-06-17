@@ -262,5 +262,12 @@
             "R3m\\Io\\Exception\\UrlEmptyException",
             "R3m\\Io\\Exception\\UrlNotExistException"
         ]
+    },
+    "package": {
+        "r3m-io/node": {
+            "dir" : {
+                "validator": "{{config(project.dir.vendor)}}/r3m-io/node/src/Validator/"
+            }
+        }
     }
 }
