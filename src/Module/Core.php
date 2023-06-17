@@ -560,6 +560,12 @@ class Core
             $explode = explode('.', $attributeList, 3);
             if(is_object($object)){
                 if(
+                    property_exists($object, $attributeList)
+                ) {
+                    unset($object->{$attributeList});
+                    return true;
+                }
+                elseif(
                     array_key_exists(2, $explode) &&
                     isset($object->{$explode[0]})
                 ){
@@ -570,18 +576,17 @@ class Core
                     isset($object->{$explode[0]})
                 ){
                     echo 'Object:Delete:1: ' . $explode[0] . '.' . $explode[1] . PHP_EOL;
-                    if(
-                        property_exists($object, $attributeList)
-                    ){
-                        unset($object->{$attributeList});
-                        return true;
-                    } else {
-                        return Core::object_delete($explode[1], $object->{$explode[0]}, $object, $explode[0]);
-                    }
+                    return Core::object_delete($explode[1], $object->{$explode[0]}, $object, $explode[0]);
                 }
             }
             elseif(is_array($object)) {
                 if(
+                    array_key_exists($attributeList, $object)
+                ){
+                    unset($object[$attributeList]);
+                    return true;
+                }
+                elseif(
                     array_key_exists(2, $explode) &&
                     isset($object[$explode[0]])
                 ){
@@ -592,14 +597,7 @@ class Core
                     isset($object[$explode[0]])
                 ){
                     echo 'Array:Delete:1: ' . $explode[0] . '.' . $explode[1] . PHP_EOL;
-                    if(
-                        array_key_exists($attributeList, $object)
-                    ){
-                        unset($object[$attributeList]);
-                        return true;
-                    } else {
-                        return Core::object_delete($explode[1], $object[$explode[0]], $object, $explode[0]);
-                    }
+                    return Core::object_delete($explode[1], $object[$explode[0]], $object, $explode[0]);
                 }
             }
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
