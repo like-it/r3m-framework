@@ -575,7 +575,6 @@ class Core
                     array_key_exists(1, $explode) &&
                     isset($object->{$explode[0]})
                 ){
-                    echo 'Object:Delete:1: ' . $explode[0] . '.' . $explode[1] . PHP_EOL;
                     return Core::object_delete($explode[1], $object->{$explode[0]}, $object, $explode[0]);
                 }
             }
@@ -596,7 +595,6 @@ class Core
                     array_key_exists(1, $explode) &&
                     isset($object[$explode[0]])
                 ){
-                    echo 'Array:Delete:1: ' . $explode[0] . '.' . $explode[1] . PHP_EOL;
                     return Core::object_delete($explode[1], $object[$explode[0]], $object, $explode[0]);
                 }
             }
@@ -732,7 +730,6 @@ class Core
                 ) ||
                 isset($object->{$attributeList})
             ){
-                echo '(1) ' . $attributeList . PHP_EOL;
                 return $object->{$attributeList};
             } else {
                 $explode = explode('.', $attributeList, 3);
@@ -748,7 +745,6 @@ class Core
                 ){
                     return Core::object_get($explode[1], $object->{$explode[0]});
                 }
-                echo '(2) ' . $attributeList . PHP_EOL;
                 echo implode(', ', array_keys((array)$object)) . PHP_EOL;
                 $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
                 foreach ($attributeList as $nr => $attribute) {
