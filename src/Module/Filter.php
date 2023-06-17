@@ -138,7 +138,6 @@ class Filter extends Data {
                             }
                         }
                     }
-                    d($record);
                     if(
                         is_array($record) &&
                         array_key_exists('operator', $record) && 
@@ -432,6 +431,9 @@ class Filter extends Data {
                             break;
                             case Filter::OPERATOR_PARTIAL :
                                 $value = $data->get($attribute);
+                                d($attribute);
+                                d($record);
+                                d($value);
                                 if(
                                     is_string($record['value'])
                                 ){
