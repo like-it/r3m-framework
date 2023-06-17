@@ -431,22 +431,38 @@ class Filter extends Data {
                             break;
                             case Filter::OPERATOR_PARTIAL :
                                 $value = $data->get($attribute);
-                                d($attribute);
-                                d($record);
-                                d($value);
                                 if(
-                                    is_string($record['value'])
+                                    is_scalar($record['value'])
                                 ){
                                     if(is_array($value)){
                                         foreach($value  as $value_key => $value_value){
-                                            if(stristr($value_value, $record['value']) !== false) {
-                                                $skip = true;
-                                                break;
+                                            if(
+                                                is_string($value_value) &&
+                                                is_string($record['value'])
+                                            ){
+                                                if(stristr($value_value, $record['value']) !== false) {
+                                                    $skip = true;
+                                                    break;
+                                                }
+                                            }
+                                            elseif(is_scalar($value_value)){
+                                                if($value == $record['value']){
+                                                    $skip = true;
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
-                                    elseif(is_string($value)){
+                                    elseif(
+                                        is_string($value) &&
+                                        is_string($record['value'])
+                                    ){
                                         if(stristr($value, $record['value']) !== false) {
+                                            $skip = true;
+                                        }
+                                    }
+                                    elseif(is_scalar($value)){
+                                        if($value == $record['value']){
                                             $skip = true;
                                         }
                                     }
@@ -455,18 +471,33 @@ class Filter extends Data {
                             case Filter::OPERATOR_NOT_PARTIAL :
                                 $value = $data->get($attribute);
                                 if(
-                                    is_string($record['value'])
+                                    is_scalar($record['value'])
                                 ){
                                     if(is_array($value)){
                                         foreach($value  as $value_key => $value_value){
-                                            if(stristr($value_value, $record['value']) === false) {
-                                                $skip = true;
-                                                break;
+                                            if(is_string($value_value) && is_string($record['value'])){
+                                                if(stristr($value_value, $record['value']) === false) {
+                                                    $skip = true;
+                                                    break;
+                                                }
+                                            }
+                                            elseif(is_scalar($value_value)){
+                                                if($value != $record['value']){
+                                                    $skip = true;
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
-                                    elseif(is_string($value)){
+                                    elseif(
+                                        is_string($value) && is_string($record['value'])
+                                    ){
                                         if(stristr($value, $record['value']) === false) {
+                                            $skip = true;
+                                        }
+                                    }
+                                    elseif(is_scalar($value)){
+                                        if($value != $record['value']){
                                             $skip = true;
                                         }
                                     }
