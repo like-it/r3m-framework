@@ -176,9 +176,11 @@ class Event extends Main {
     /**
      * @throws ObjectException
      * @throws FileWriteException
+     * @throws Exception
      */
     public static function configure(App $object): void
     {
+        $start = microtime(true);
         $event = new Event($object);
         $limit = $object->config('event.chunk_size') ?? Event::CHUNK_SIZE;
         $count = $event->count(
@@ -212,6 +214,12 @@ class Event extends Main {
             ){
                 Event::on($object, $response['list']);
             }
+        }
+        $duration = microtime(true) - $start;
+        if($duration >= 1){
+            $object->logger($object->config('project.log.name'))->info('Event::configure (sec)', $duration);
+        } else {
+            $object->logger('project.log.name')->info('Event::configure (msec)', $duration);
         }
     }
 }
