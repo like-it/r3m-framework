@@ -616,6 +616,7 @@ class App extends Data {
         if(array_key_exists($name, $this->logger)){
             return $this->logger[$name];
         }
+        ddd($this->logger);
         throw new Exception('Logger with name: ' . $name . ' not initialised.');
 
     }
