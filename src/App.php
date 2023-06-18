@@ -93,10 +93,10 @@ class App extends Data {
         require_once 'Error.php';
         Config::configure($this);
         Host::configure($this);
+        Logger::configure($this);
         Event::configure($this);
         Middleware::configure($this);
         OutputFilter::configure($this);
-        Logger::configure($this);
         Autoload::configure($this);
         Autoload::ramdisk_configure($this);
     }
