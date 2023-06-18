@@ -22,7 +22,6 @@ class Logger {
      */
     public static function configure(App $object){
         $interface = $object->config('log');
-        ddd($interface);
         $is = null;
         if($interface){
             foreach($interface as $name => $record){
