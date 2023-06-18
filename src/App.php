@@ -619,6 +619,8 @@ class App extends Data {
         if($name === 'Project.log.name'){
             $debug = debug_backtrace(true);
             d($debug[0]['file'] . ' ' . $debug[0]['line']);
+            d($debug[1]['file'] . ' ' . $debug[1]['line']);
+            d($debug[2]['file'] . ' ' . $debug[2]['line']);
             throw new Exception('Please configure project.log.name');
         }
         d($name);
