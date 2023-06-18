@@ -240,6 +240,7 @@ class Config extends Data {
         }
         $id = posix_geteuid();
         $this->data(Config::POSIX_ID, $id);
+        ddd($this);
     }
 
     /**
