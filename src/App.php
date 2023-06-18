@@ -616,6 +616,11 @@ class App extends Data {
         if(array_key_exists($name, $this->logger)){
             return $this->logger[$name];
         }
+        if($name === 'Project.log.name'){
+            $debug = debug_backtrace(true);
+            d($debug[0]['file'] . ' ' . $debug[0]['line']);
+            throw new Exception('Please configure project.log.name');
+        }
         d($name);
         ddd($this->logger);
         throw new Exception('Logger with name: ' . $name . ' not initialised.');
