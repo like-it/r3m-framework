@@ -216,10 +216,11 @@ class Event extends Main {
             }
         }
         $duration = microtime(true) - $start;
+        ddd($object->config('project.log.name'));
         if($duration >= 1){
             $object->logger($object->config('project.log.name'))->info('Event::configure (sec)', $duration);
         } else {
-            $object->logger('project.log.name')->info('Event::configure (msec)', $duration);
+            $object->logger('project.log.name')->info('Event::configure (msec)', $duration * 1000);
         }
     }
 }
