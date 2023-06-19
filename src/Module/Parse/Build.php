@@ -564,10 +564,12 @@ class Build {
         $counter = 0;
         $storage = $this->storage();
         $is_debug = '';
+        /*
         if(stristr($this->object()->config('response.url'), 'List.Directory.tpl')){
             d($tree);
             die;
         }
+        */
         if(!empty($data->data('is.debug'))){
             $is_debug = $data->data('is.debug');
             $storage->data('is.debug', $data->data('is.debug'));
