@@ -661,6 +661,10 @@ class Build {
                         if($extra){
                             $run[] = $this->indent() . $extra . PHP_EOL;
                         }
+                        if($define === '$this->storage()->data(\'node.name}\');'){
+                            d($tree);
+                            ddd($selection);
+                        }
                         $run[] = $this->indent() . '$variable = ' . $define . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
                         $run[] = $this->indent() . 'elseif (is_array($variable)){ return $variable; }';
