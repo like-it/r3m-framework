@@ -1646,7 +1646,11 @@ class Token {
                     $token[$variable_nr]['variable']['name'] .= $record['value'];
                     $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                     $value .= $record['value'];                    
-                    $token[$variable_nr]['value'] = $value;                    
+                    $token[$variable_nr]['value'] = $value;
+                    if($value === '$node.name}'){
+                        d($token);
+                        ddd('found');
+                    }
                     unset($token[$nr]);
                     $previous_nr = $nr;
                     continue;
