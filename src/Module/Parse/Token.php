@@ -1659,10 +1659,7 @@ class Token {
                     $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                     $value .= $record['value'];                    
                     $token[$variable_nr]['value'] = $value;
-                    if($value === '$node.name}'){
-                        d($token);
-                        ddd('found');
-                    }
+
                     unset($token[$nr]);
                     $previous_nr = $nr;
                     continue;
@@ -1679,10 +1676,6 @@ class Token {
                 $token[$variable_nr]['variable']['is_assign'] = false;
                 $value = $record['value'];
                 $variable_array_value = '';
-                if($value === '$node.name}'){
-                    d($token);
-                    ddd('found');
-                }
                 continue;
             }
             elseif(
