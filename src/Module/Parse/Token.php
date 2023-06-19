@@ -1541,23 +1541,28 @@ class Token {
                         $previous_nr = $nr;
                         continue;
                     } else {
-                        if($record['type'] !== Token::TYPE_WHITESPACE){
+                        if(
+                            !in_array(
+                                $record['type'],
+                                [
+                                    Token::TYPE_WHITESPACE,
+                                    Token::TYPE_CURLY_CLOSE
+                                ],
+                            true
+                            )
+                        ){
                             $value .= $record['value'];
                             $token[$variable_nr]['variable']['name'] .= $record['value'];
                             $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                             $token[$variable_nr]['value'] = $value;
                         }
-                        if(stristr($value, 'node.name}') !== false){
-                            d($quote_double_toggle);
-                            d($record);
-                            d($token[$variable_nr]);
-                            die;
-                        }
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
                         $variable_array_level = 0;
                         $skip += 1;
-                        unset($token[$nr]);
+                        if($record['type'] !== Token::TYPE_CURLY_CLOSE){
+                            unset($token[$nr]);
+                        }
                         $previous_nr = $nr;
                         continue;
                     }
