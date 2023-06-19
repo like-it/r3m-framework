@@ -1637,7 +1637,7 @@ class Token {
                         $token[$variable_nr]['variable']['name'] .= $record['value'];
                         $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                         $token[$variable_nr]['value'] = $value;
-                        if(stristr($value. '$li.data.rename}') !== false){
+                        if(stristr($value, '$li.data.rename}') !== false){
                             d($quote_double_toggle);
                             d($record);
                             d($token[$variable_nr]);
