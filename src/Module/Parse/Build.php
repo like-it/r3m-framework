@@ -564,6 +564,10 @@ class Build {
         $counter = 0;
         $storage = $this->storage();
         $is_debug = '';
+        if(stristr($this->object()->config('response.url'), 'List.Directory.tpl')){
+            d($tree);
+            die;
+        }
         if(!empty($data->data('is.debug'))){
             $is_debug = $data->data('is.debug');
             $storage->data('is.debug', $data->data('is.debug'));
@@ -660,11 +664,6 @@ class Build {
                         $define = Variable::define($this, $storage, $selection, $extra);
                         if($extra){
                             $run[] = $this->indent() . $extra . PHP_EOL;
-                        }
-                        if(stristr($define, 'node.name}') !== false){
-                            d($tree);
-                            d($selection);
-                            die;
                         }
                         $run[] = $this->indent() . '$variable = ' . $define . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
