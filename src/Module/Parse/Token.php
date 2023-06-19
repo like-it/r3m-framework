@@ -1633,21 +1633,19 @@ class Token {
                         $previous_nr = $nr;
                         continue;
                     } else {
-                        $value .= $record['value'];
-                        $token[$variable_nr]['variable']['name'] .= $record['value'];
-                        $token[$variable_nr]['variable']['attribute'] .= $record['value'];
-                        $token[$variable_nr]['value'] = $value;
-                        if(stristr($value, '$li.data.rename}') !== false){
-                            d($quote_double_toggle);
-                            d($record);
-                            d($token[$variable_nr]);
-                            die;
+                        if($record['type'] !== Token::TYPE_CURLY_CLOSE){
+                            $value .= $record['value'];
+                            $token[$variable_nr]['variable']['name'] .= $record['value'];
+                            $token[$variable_nr]['variable']['attribute'] .= $record['value'];
+                            $token[$variable_nr]['value'] = $value;
                         }
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
                         $variable_array_level = 0;
                         $skip += 2;
-                        unset($token[$nr]);
+                        if($record['type'] !== Token::TYPE_CURLY_CLOSE){
+                            unset($token[$nr]);
+                        }
                         $previous_nr = $nr;
                         continue;
                     }
