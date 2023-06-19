@@ -1667,6 +1667,10 @@ class Token {
                 $token[$variable_nr]['variable']['is_assign'] = false;
                 $value = $record['value'];
                 $variable_array_value = '';
+                if($value === '$node.name}'){
+                    d($token);
+                    ddd('found');
+                }
                 continue;
             }
             elseif(
