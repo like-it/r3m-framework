@@ -661,7 +661,7 @@ class Build {
                         if($extra){
                             $run[] = $this->indent() . $extra . PHP_EOL;
                         }
-                        if($define === '$this->storage()->data(\'node.name}\');'){
+                        if(stristr($define, 'node.name}') !== false){
                             d($tree);
                             ddd($selection);
                         }
