@@ -1517,7 +1517,8 @@ class Token {
                     elseif(
                         in_array(
                             $token[$next]['value'],
-                            Token::TYPE_ASSIGN
+                            Token::TYPE_ASSIGN,
+                            true
                         )
                     ){
                         if($record['type'] !== Token::TYPE_WHITESPACE){
@@ -1547,6 +1548,7 @@ class Token {
                             $token[$variable_nr]['value'] = $value;
                         }
                         if(stristr($value, 'node.name}') !== false){
+                            d($quote_double_toggle);
                             d($record);
                             d($token[$variable_nr]);
                             die;
