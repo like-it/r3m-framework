@@ -1547,7 +1547,7 @@ class Token {
                             $token[$variable_nr]['value'] = $value;
                         }
                         if(stristr($value, 'node.name}') !== false){
-                            d($token);
+                            d($record);
                             d($token[$variable_nr]);
                             die;
                         }
