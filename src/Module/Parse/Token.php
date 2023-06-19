@@ -1546,6 +1546,10 @@ class Token {
                             $token[$variable_nr]['variable']['attribute'] .= $record['value'];
                             $token[$variable_nr]['value'] = $value;
                         }
+                        if(stristr($value, 'node.name}') !== false){
+                            d($token);
+                            d($token[$variable_nr]);
+                        }
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
                         $variable_array_level = 0;
