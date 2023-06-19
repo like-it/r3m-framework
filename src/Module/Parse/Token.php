@@ -1549,6 +1549,7 @@ class Token {
                         if(stristr($value, 'node.name}') !== false){
                             d($token);
                             d($token[$variable_nr]);
+                            die;
                         }
                         unset($token[$variable_nr]['variable']['has_modifier']);
                         $variable_nr = null;
