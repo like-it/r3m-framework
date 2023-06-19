@@ -663,7 +663,8 @@ class Build {
                         }
                         if(stristr($define, 'node.name}') !== false){
                             d($tree);
-                            ddd($selection);
+                            d($selection);
+                            die;
                         }
                         $run[] = $this->indent() . '$variable = ' . $define . ';';
                         $run[] = $this->indent() . 'if (is_object($variable)){ return $variable; }';
