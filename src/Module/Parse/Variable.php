@@ -465,6 +465,7 @@ d($set);
             elseif($is_collect === false){                                
                 $record = Method::get($build, $storage, $record);
                 $result .= Value::get($build, $storage, $record);
+                d($result);
                 if(
                     !in_array(
                         $record['type'],
