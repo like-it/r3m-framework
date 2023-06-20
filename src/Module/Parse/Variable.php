@@ -501,6 +501,7 @@ d($set);
                             $result .= ' ';
                         } else {
                             d($record);
+                            //maybe need next...
                             $result .= ' . ';
                         }
                     }
