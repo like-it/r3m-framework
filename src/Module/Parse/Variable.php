@@ -498,7 +498,7 @@ d($set);
                             $result .= ' ';
                         }
                         elseif($record['type'] === Token::TYPE_PARENTHESE_CLOSE) {
-                            $result = substr($result, 0, -3) . ' )';
+                            $result = substr($result, 0, -3) . ')';
                             ddd($result);
                         } else {
                             d($record);
