@@ -387,7 +387,6 @@ class Variable {
             if($set_counter > $set_max){
                 break;
             }
-d($set);
         }
         $operator = $token;
         while(Operator::has($operator)){            
@@ -499,9 +498,7 @@ d($set);
                         }
                         elseif($record['type'] === Token::TYPE_PARENTHESE_CLOSE) {
                             $result = substr($result, 0, -3) . ')';
-                            ddd($result);
                         } else {
-                            d($record);
                             //maybe need next...
                             $result .= ' . ';
                         }
