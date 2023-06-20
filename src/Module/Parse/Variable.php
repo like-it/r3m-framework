@@ -500,6 +500,7 @@ d($set);
                         elseif($record['type'] === Token::TYPE_PARENTHESE_CLOSE) {
                             $result .= ' ';
                         } else {
+                            d($record);
                             $result .= ' . ';
                         }
                     }
