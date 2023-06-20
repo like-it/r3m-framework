@@ -89,8 +89,8 @@ class App extends Data {
         $this->data(App::MIDDLEWARE, new Data());
         $this->data(App::OUTPUTFILTER, new Data());
         App::is_cli();
-        require_once 'Debug.php';
-        require_once 'Error.php';
+        require_once __DIR__ . '/Debug.php';
+        require_once __DIR__ . '/Error.php';
         Config::configure($this);
         Host::configure($this);
         Logger::configure($this);
