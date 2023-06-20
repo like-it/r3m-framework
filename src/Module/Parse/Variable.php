@@ -493,8 +493,13 @@ d($set);
                         }
                         elseif($in_array === true){
                             //nothing
+                        }
+                        elseif($record['type'] === Token::TYPE_PARENTHESE_OPEN) {
+                            $result .= ' ';
+                        }
+                        elseif($record['type'] === Token::TYPE_PARENTHESE_CLOSE) {
+                            $result .= ' ';
                         } else {
-                            d($record);
                             $result .= ' . ';
                         }
                     }
