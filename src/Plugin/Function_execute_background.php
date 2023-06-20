@@ -18,9 +18,9 @@ function function_execute_background(Parse $parse, Data $data, $command=''){
     $command = (string) $command;
     $command = escapeshellcmd($command);
     if(substr($command, 0, -1) !== '&'){
-        $command .= ' &';
+        $command .= '&';
     }
-    ddd($command);
+    d($command);
     exec($command, $output);
     return $output;
 }
