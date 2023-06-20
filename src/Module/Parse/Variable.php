@@ -499,6 +499,7 @@ d($set);
                         }
                         elseif($record['type'] === Token::TYPE_PARENTHESE_CLOSE) {
                             $result .= ' ';
+                            ddd($result);
                         } else {
                             d($record);
                             //maybe need next...
