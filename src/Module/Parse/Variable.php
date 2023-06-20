@@ -387,7 +387,7 @@ class Variable {
             if($set_counter > $set_max){
                 break;
             }
-
+d($set);
         }
         $operator = $token;
         while(Operator::has($operator)){            
