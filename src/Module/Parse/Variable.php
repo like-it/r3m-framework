@@ -183,6 +183,9 @@ class Variable {
                     $assign = '$this->storage()->set(\'';
                     $assign .= $variable['variable']['attribute'] . '\', ';
                     $value = Variable::getValue($build, $storage, $token, $is_result);
+                    if(stristr($value, '( .') !== false){
+                        ddd($value);
+                    }
                     $assign .= $value . ')';
                     return $assign;
                 case '+=' :
