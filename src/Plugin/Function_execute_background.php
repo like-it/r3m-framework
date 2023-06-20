@@ -10,7 +10,6 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Core;
 
 /**
  * @throws \R3m\Io\Exception\ObjectException
