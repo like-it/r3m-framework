@@ -20,6 +20,7 @@ function function_execute_background(Parse $parse, Data $data, $command=''){
     if(substr($command, 0, -1) !== '&'){
         $command .= ' &';
     }
+    ddd($command);
     exec($command, $output);
     return $output;
 }
