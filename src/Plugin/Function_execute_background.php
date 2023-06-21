@@ -22,6 +22,5 @@ function function_execute_background(Parse $parse, Data $data, $command=''){
         $command .= ' &';
     }
 //    Core::execute($parse->object(), $command, $output, $notification, Core::SHELL_PROCESS);
-    exec($command . ' ; bg');
-    return;
+    exec($command);
 }
