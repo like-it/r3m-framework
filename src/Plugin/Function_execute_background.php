@@ -19,10 +19,9 @@ function function_execute_background(Parse $parse, Data $data, $command=''){
     $command = (string) $command;
     $command = escapeshellcmd($command);
     if(substr($command, 0, -1) !== '&'){
-//        $command .= '&';
+        $command .= ' &';
     }
-    d($command);
-    Core::execute($parse->object(), $command, $output, $notification, Core::SHELL_PROCESS);
-//    exec($command, $output);
-    return $output;
+//    Core::execute($parse->object(), $command, $output, $notification, Core::SHELL_PROCESS);
+    exec($command . ' ; bg');
+    return;
 }
