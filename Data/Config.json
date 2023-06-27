@@ -114,7 +114,8 @@
         "pptx": ".pptx",
         "mov": ".mov",
         "wmv": ".wmv",
-        "xml": ".xml"
+        "xml": ".xml",
+        "lock": ".lock"
     },
     "error": {
         "extension": {
