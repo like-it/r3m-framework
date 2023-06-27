@@ -986,10 +986,6 @@ class Core
                 $deep = $deep->{$attribute};
             }
         }
-        var_dump(strlen($last));
-        var_dump($last);
-        var_dump(strlen(trim(($last))));
-
         if(strlen(trim($last)) === 0){
             $last = '\\' . $last;
         }
