@@ -989,6 +989,10 @@ class Core
         var_dump(strlen($last));
         var_dump($last);
         var_dump(strlen(trim(($last))));
+
+        if(strlen(trim($last)) === 0){
+            $last = '\\' . $last;
+        }
         if (!isset($deep)) {
             $object->$last = $value;
         } else {
