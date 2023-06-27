@@ -986,9 +986,9 @@ class Core
                 $deep = $deep->{$attribute};
             }
         }
-        d(strlen($last));
-        d($last);
-        d(strlen(trim(($last))));
+        var_dump(strlen($last));
+        var_dump($last);
+        var_dump(strlen(trim(($last))));
         if (!isset($deep)) {
             $object->$last = $value;
         } else {
