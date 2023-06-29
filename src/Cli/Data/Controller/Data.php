@@ -34,7 +34,7 @@ class Data extends Controller {
     /**
      * @throws ObjectException
      */
-    public static function run(App $object): void
+    public static function run(App $object)
     {
         $submodule = App::parameter($object, 'data', 1);
         switch($submodule){
@@ -50,6 +50,35 @@ class Data extends Controller {
             case 'upload':
                 //rsync
             break;
+            default:
+                return Data::info($object);
+
+        }
+    }
+
+    /**
+     * @throws ObjectException
+     */
+    private static function info(App $object)
+    {
+        $name = false;
+        $url = false;
+        try {
+            $name = Data::name(__FUNCTION__, Data::NAME);
+            $url = Data::locate($object, $name);
+            $result = Data::response($object, $url);
+            Event::trigger($object, 'cli.' . strtolower(Data::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $result;
+        } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
+            Event::trigger($object, 'cli.' . strtolower(Data::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
+            return $exception;
         }
     }
 
@@ -63,13 +92,27 @@ class Data extends Controller {
         $read = $dir->read($url);
         $record = false;
         $flags = App::flags($object);
+        $options = App::options($object);
         if(is_array($read)){
             $read = Sort::list($read)->with(['name' => 'desc']);
-            if(property_exists($flags, 'date')){
-                foreach($read as $nr => $file){
-                    if($file->name === $flags->date){
-                        $record = $file;
-                        break;
+            if(
+                property_exists($flags, 'date') ||
+                property_exists($options, 'date')
+            ){
+                if(property_exists($flags, 'date')){
+                    foreach($read as $nr => $file){
+                        if($file->name === $flags->date){
+                            $record = $file;
+                            break;
+                        }
+                    }
+                }
+                if(property_exists($options, 'date')){
+                    foreach($read as $nr => $file){
+                        if($file->name === $options->date){
+                            $record = $file;
+                            break;
+                        }
                     }
                 }
             } else {
@@ -86,8 +129,20 @@ class Data extends Controller {
                 $includes[$nr] = trim($include);
             }
         }
+        if(property_exists($options, 'include')){
+            $includes = explode(',', $options->include);
+            foreach($includes as $nr => $include){
+                $includes[$nr] = trim($include);
+            }
+        }
         if(property_exists($flags, 'exclude')){
             $excludes = explode(',', $flags->exclude);
+            foreach($excludes as $nr => $exclude){
+                $excludes[$nr] = trim($exclude);
+            }
+        }
+        if(property_exists($options, 'exclude')){
+            $excludes = explode(',', $options->exclude);
             foreach($excludes as $nr => $exclude){
                 $excludes[$nr] = trim($exclude);
             }
@@ -256,8 +311,15 @@ class Data extends Controller {
     public static function backup(App $object): void
     {
         $flags = App::flags($object);
+        $options = App::options($object);
         $cwd = false;
         $date = date('Y-m-d-H-i-s');
+        if(property_exists($flags, 'date')){
+            $date = $flags->date;
+        }
+        if(property_exists($options, 'date')){
+            $date = $options->date;
+        }
         $destination_dir = $object->config('project.dir.backup') .
             'Data' .
             $object->config('ds') .
@@ -267,15 +329,27 @@ class Data extends Controller {
         $includes = [];
         $excludes = [];
         if(property_exists($flags, 'include')){
-            $includes = explode(',', $flags->include);
-            foreach($includes as $nr => $include){
-                $includes[$nr] = trim($include);
+            $flags_includes = explode(',', $flags->include);
+            foreach($flags_includes as $nr => $include){
+                $includes[] = trim($include);
+            }
+        }
+        if(property_exists($options, 'include')){
+            $options_includes = explode(',', $options->include);
+            foreach($options_includes as $nr => $include){
+                $includes[] = trim($include);
             }
         }
         if(property_exists($flags, 'exclude')){
-            $excludes = explode(',', $flags->exclude);
-            foreach($excludes as $nr => $exclude){
-                $excludes[$nr] = trim($exclude);
+            $flags_excludes = explode(',', $flags->exclude);
+            foreach($flags_excludes as $nr => $exclude){
+                $excludes[] = trim($exclude);
+            }
+        }
+        if(property_exists($options, 'exclude')){
+            $options_excludes = explode(',', $options->exclude);
+            foreach($options_excludes as $nr => $exclude){
+                $excludes[] = trim($exclude);
             }
         }
         $dir = new Dir();
