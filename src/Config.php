@@ -33,6 +33,14 @@ class Config extends Data {
     const DATA = 'data';
     const VALUE_DATA = 'Data';
 
+    const MIDDLEWARE = 'middleware';
+    const VALUE_MIDDLEWARE = 'Middleware';
+
+    const EVENT = 'event';
+    const VALUE_EVENT = 'Event';
+    const OUTPUT_FILTER = 'output-filter';
+    const VALUE_OUTPUT_FILTER = 'OutputFilter';
+
     const PUBLIC = 'public';
     const VALUE_PUBLIC = 'Public';
 
@@ -178,6 +186,10 @@ class Config extends Data {
     const DATA_PROJECT_DIR_MOUNT =  Config::DATA_PROJECT_DIR . '.' . 'mount';
     const DATA_PROJECT_DIR_BACKUP =  Config::DATA_PROJECT_DIR . '.' . 'backup';
     const DATA_PROJECT_DIR_DATA =  Config::DATA_PROJECT_DIR . '.' . 'data';
+    const DATA_PROJECT_DIR_NODE =  Config::DATA_PROJECT_DIR . '.' . 'node';
+    const DATA_PROJECT_DIR_EVENT =  Config::DATA_PROJECT_DIR . '.' . 'event';
+    const DATA_PROJECT_DIR_MIDDLEWARE =  Config::DATA_PROJECT_DIR . '.' . 'middleware';
+    const DATA_PROJECT_DIR_OUTPUT_FILTER =  Config::DATA_PROJECT_DIR . '.' . 'output.filter';
     const DATA_PROJECT_DIR_CLI =  Config::DATA_PROJECT_DIR . '.' . 'cli';
     const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
     const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
@@ -522,6 +534,35 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::DATA) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+
+        $key = Config::DATA_PROJECT_DIR_NODE;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::NODE) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_PROJECT_DIR_EVENT;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::EVENT) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_PROJECT_DIR_MIDDLEWARE;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::MIDDLEWARE) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_PROJECT_DIR_OUTPUT_FILTER;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::OUTPUT_FILTER) .
             $this->data(Config::DS)
         ;
         $this->data($key, $value);
