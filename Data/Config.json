@@ -37,6 +37,7 @@
     "contentType": {
         "btree":"text\/plain",
         "lock":"text\/plain",
+        "connect":"text\/plain",
         "txt": "text\/plain",
         "log": "text\/plain",
         "html": "text\/html",
@@ -118,7 +119,8 @@
         "wmv": ".wmv",
         "xml": ".xml",
         "lock": ".lock",
-        "btree": ".btree"
+        "btree": ".btree",
+        "connect": ".connect"
     },
     "error": {
         "extension": {
