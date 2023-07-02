@@ -314,7 +314,8 @@ class File {
     }
 
 
-    public static function put($url, $data, $flags=LOCK_EX, $return='size'){
+    public static function put($url, $data, $flags=LOCK_EX, $return='size'): bool|int
+    {
         $size = file_put_contents($url, $data, $flags);
         switch($return){
             case 'size':
@@ -326,6 +327,7 @@ class File {
                 $explode = explode(PHP_EOL, $data);
                 return $size !== false ? count($explode) : false;
         }
+        return false;
     }
 
     /**
@@ -364,28 +366,57 @@ class File {
         }
     }
 
-    public static function read($url='') : string
+    public static function read($url='', $return='string') : string | array
     {
         if(strpos($url, File::SCHEME_HTTP) === 0){
             //check network connection first (@) added for that              //error
             try {
                 $file = @file($url);
-                if(empty($file)){
-                    return '';
+                switch($return){
+                    case 'array':
+                        if(empty($file)){
+                            return [];
+                        }
+                        return $file;
+                    default:
+                        if(empty($file)){
+                            return '';
+                        }
+                        return implode('', $file);
                 }
-                return implode('', $file);
+
             } catch (Exception $exception){
-                return '';
+                switch($return){
+                    case 'array':
+                        return [];
+                    default:
+                        return '';
+                }
             }
         }
         if(empty($url)){
-            return '';
+            switch($return){
+                case 'array':
+                    return [];
+                default:
+                    return '';
+            }
         }
         try {
-            $file = file_get_contents($url);
-            return $file;
+            switch($return){
+                case 'array':
+                    return file($url);
+                default:
+                    return file_get_contents($url);
+            }
+
         } catch (Exception $exception){
-            return '';
+            switch($return){
+                case 'array':
+                    return [];
+                default:
+                    return '';
+            }
         }
     }
 
@@ -415,7 +446,6 @@ class File {
         catch(\ErrorException $exception){
             throw new Exception ('Couldn\'t copy source (' . $source . ') to destination (' . $destination .').');
         }
-        return false;
     }
 
 
