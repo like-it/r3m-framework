@@ -15,7 +15,7 @@ use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 
-class Sort extends Data{
+class Sort extends Data {
 
     public static function list($list): Sort
     {
@@ -280,7 +280,7 @@ class Sort extends Data{
         return $list;
     }
 
-    public function uuid_compare_ascending($a, $b)
+    public function uuid_compare_ascending($a, $b): int
     {
         $object_a = reset($a);
         $object_b = reset($b);
@@ -318,9 +318,10 @@ class Sort extends Data{
                 return -1;
             }
         }
+        return 0;
     }
 
-    public function uuid_compare_descending($a, $b)
+    public function uuid_compare_descending($a, $b): int
     {
         $object_a = reset($a);
         $object_b = reset($b);
@@ -353,5 +354,6 @@ class Sort extends Data{
                 return -1;
             }
         }
+        return 0;
     }
 }
