@@ -25,6 +25,9 @@ class File {
 
     const USER_WWW = 'www-data';
 
+    const STRING = 'string';
+    const ARRAY = 'array';
+
     public static function is($url=''): bool
     {
         $url = rtrim($url, '/');
@@ -366,14 +369,14 @@ class File {
         }
     }
 
-    public static function read($url='', $return='string') : string | array
+    public static function read($url='', $return=File::STRING) : string | array
     {
         if(strpos($url, File::SCHEME_HTTP) === 0){
             //check network connection first (@) added for that              //error
             try {
                 $file = @file($url);
                 switch($return){
-                    case 'array':
+                    case File::ARRAY:
                         if(empty($file)){
                             return [];
                         }
@@ -387,7 +390,7 @@ class File {
 
             } catch (Exception $exception){
                 switch($return){
-                    case 'array':
+                    case File::ARRAY:
                         return [];
                     default:
                         return '';
@@ -396,7 +399,7 @@ class File {
         }
         if(empty($url)){
             switch($return){
-                case 'array':
+                case File::ARRAY:
                     return [];
                 default:
                     return '';
@@ -404,7 +407,7 @@ class File {
         }
         try {
             switch($return){
-                case 'array':
+                case File::ARRAY:
                     return file($url);
                 default:
                     return file_get_contents($url);
@@ -412,7 +415,7 @@ class File {
 
         } catch (Exception $exception){
             switch($return){
-                case 'array':
+                case File::ARRAY:
                     return [];
                 default:
                     return '';
