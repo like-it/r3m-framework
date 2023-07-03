@@ -858,7 +858,7 @@ class Core
                     echo '13 ';
                     var_dump($key_collect);
                     if(null === $keys_attribute_list[$nr]){
-                        return null;
+                        continue;
                     } else {
                         return Core::object_get_nested($keys_attribute_list[$nr], $object, $key_collect, $is_debug);
                     }
