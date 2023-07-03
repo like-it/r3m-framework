@@ -826,11 +826,14 @@ class Core
                 echo '6 ';
                 var_dump($key_attribute);
                 var_dump($key_collect);
+                var_dump($object);
                 if(array_key_exists($key_collect, $object)){
                     echo 'has';
+                    die;
                     return Core::object_get($attributeList->{$key_attribute}, $object[$key_collect], $is_debug);
                 } else {
                     echo 'has not';
+                    die;
                     return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect, $is_debug);
                 }
 
