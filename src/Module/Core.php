@@ -787,6 +787,13 @@ class Core
                 $debug = debug_backtrace(true);
                 var_dump($debug[0]['file'] . ' on line ' . $debug[0]['line']);
                 var_dump($debug[1]['file'] . ' on line ' . $debug[1]['line']);
+                if(null === $attributeList->{$key}){
+                    echo '3.2 ';
+                    var_dump($key);
+                    var_dump($attributeList);
+                    var_dump($object);
+                    die;
+                }
                 return Core::object_get($attributeList->{$key}, $object->{$key}, $is_debug);
             }
             elseif(is_array($object)){
