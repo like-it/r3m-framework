@@ -764,6 +764,10 @@ class Core
         }
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
+            if($is_debug){
+                var_dump($attributeList);
+                die;
+            }
         }
         if (empty($attributeList)) {
             return $object;
