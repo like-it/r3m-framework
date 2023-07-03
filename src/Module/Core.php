@@ -691,6 +691,12 @@ class Core
             echo '3 ';
         }
         elseif(is_object($object)){
+            $property = [];
+            while($attributeList){
+                $property[] = implode('.', $attributeList);
+                array_pop($attributeList);
+            }
+            var_dump($property);
             echo '2 ';
         } else {
             echo '1 ';
