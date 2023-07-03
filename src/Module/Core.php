@@ -765,10 +765,12 @@ class Core
         if (is_array($attributeList)) {
             $attributeList = Core::object_horizontal($attributeList);
             if($is_debug){
+                echo '1 ';
                 var_dump($attributeList);
             }
         }
         if (empty($attributeList)) {
+            echo '2 ';
             var_dump($object);
             return $object;
         }
@@ -777,6 +779,7 @@ class Core
                 continue;
             }
             if (isset($object->{$key})) {
+                echo '3 ';
                 var_dump($key);
                 var_dump($object->{$key});
                 var_dump($attributeList->{$key});
@@ -787,6 +790,7 @@ class Core
                     return Core::object_get($attributeList->{$key}, $object[$key]);
                 } else {
                     if($is_debug){
+                        echo '4 ';
                         var_dump($key);
 //                        var_dump($object);
                         var_dump($attributeList->{$key});
@@ -794,6 +798,7 @@ class Core
                     return Core::object_get_nested($attributeList->{$key}, $object, $key);
                 }
             } else {
+                echo '5 ';
                 var_dump($key);
 //                var_dump($object);
                 var_dump($attributeList->{$key});
