@@ -682,10 +682,14 @@ class Core
         return false;
     }
 
-    public static function object_get($attributeList = [], $object = '')
+    public static function object_get($attributeList = [], $object = '', $is_debug=false)
     {
-        var_dump($attributeList);
-        var_dump(gettype($object));
+        if($is_debug){
+            var_dump($attributeList);
+            var_dump(gettype($object));
+            die;
+        }
+
         if(
             is_array($object) &&
             $attributeList !== null

@@ -337,7 +337,7 @@ class Data {
                     if($this->is_debug === true){
                         d($attribute);
                     }
-                    return Core::object_get($attribute, $this->data());
+                    return Core::object_get($attribute, $this->data(), true);
                 }
                 elseif(is_object($attribute) && get_class($attribute) === Data::class){
                     $this->setData($attribute->data());
