@@ -261,7 +261,7 @@ class Data {
     }
 
     public function data($attribute=null, $value=null, $type=null){
-        if($this->is_debug()){
+        if($this->is_debug === true){
             d($attribute);
             d($value);
             ddd($type);
