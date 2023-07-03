@@ -321,7 +321,9 @@ class Data {
                 }
                 if(is_string($attribute)){
                     if($this->is_debug === true){
-                        return Core::object_get($attribute, $this->data(), true);
+                        $get = Core::object_get($attribute, $this->data(), true);
+                        ddd($get);
+                        return $get;
                     }
                     return Core::object_get($attribute, $this->data());
                 }
