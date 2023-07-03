@@ -686,9 +686,9 @@ class Core
     {
         if($is_debug){
             $debug = debug_backtrace(true);
-            d($debug[0]['file'] . ' on line ' . $debug[0]['line']);
-            d($debug[1]['file'] . ' on line ' . $debug[1]['line']);
-            d($is_debug);
+            var_dump($debug[0]['file'] . ' on line ' . $debug[0]['line']);
+            var_dump($debug[1]['file'] . ' on line ' . $debug[1]['line']);
+            var_dump($is_debug);
             var_dump($attributeList);
             var_dump(gettype($object));
             die;
