@@ -794,7 +794,6 @@ class Core
                         var_dump($key);
                         var_dump($object[$key]);
                         var_dump($attributeList->{$key});
-                        die;
                     }
                     return Core::object_get_nested($attributeList->{$key}, $object, $key);
                 }
