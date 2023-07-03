@@ -698,7 +698,7 @@ class Core
                     }
                 }
             }
-            elseif(is_string($attributeList)){
+            elseif(is_string($attributeList) || is_numeric($attributeList)){
                 if (array_key_exists($attributeList, $object)) {
                     return $object[$attributeList];
                 }
