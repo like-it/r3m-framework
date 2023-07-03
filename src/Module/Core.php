@@ -817,6 +817,8 @@ class Core
             return null;
         }
         $keys = [];
+        var_dump($attributeList);
+        die;
         foreach($attributeList as $key_attribute => $value_attribute) {
             $is_collect[] = $key_attribute;
             $key_collect = implode('.', $is_collect);
