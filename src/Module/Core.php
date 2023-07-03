@@ -685,6 +685,10 @@ class Core
     public static function object_get($attributeList = [], $object = '', $is_debug=false)
     {
         if($is_debug){
+            $debug = debug_backtrace(true);
+            d($debug[0]['file'] . ' on line ' . $debug[0]['line']);
+            d($debug[1]['file'] . ' on line ' . $debug[1]['line']);
+
             var_dump($attributeList);
             var_dump(gettype($object));
             die;
