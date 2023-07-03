@@ -833,7 +833,6 @@ class Core
                     return Core::object_get($attributeList->{$key_attribute}, $object[$key_collect], $is_debug);
                 } else {
                     echo 'has not';
-                    die;
                     return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect, $is_debug);
                 }
 
