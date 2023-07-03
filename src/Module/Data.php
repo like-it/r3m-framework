@@ -262,6 +262,15 @@ class Data {
 
     public function data($attribute=null, $value=null, $type=null){
         if($this->is_debug === true){
+            $debug = debug_backtrace(true);
+            d($debug[0]['file']);
+            d($debug[0]['line']);
+            d($debug[0]['function']);
+            d($debug[0]['class']);
+            d($debug[1]['file']);
+            d($debug[1]['line']);
+            d($debug[1]['function']);
+            d($debug[1]['class']);
             d($attribute);
             d($value);
             ddd($type);
