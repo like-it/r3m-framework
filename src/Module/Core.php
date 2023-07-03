@@ -691,16 +691,24 @@ class Core
             echo '3 ';
         }
         elseif(is_object($object)){
-            $property = [];
+            $properties = [];
             while($attributeList !== null){
-                $property[] = implode('.', $attributeList);
+                $properties[] = implode('.', $attributeList);
                 array_pop($attributeList);
                 if(empty($attributeList)){
                     break;
                 }
             }
-            var_dump($property);
+            foreach($properties as $nr => $property){
+                if(property_exists($object, $property)){
+                    $object = $object->{$property};
+                    unset($properties[$nr]);
+                }
+            }
+
+            var_dump($properties);
             echo '2 ';
+            return $object;
         } else {
             echo '1 ';
             var_dump($object);
