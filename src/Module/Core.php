@@ -816,9 +816,20 @@ class Core
         if(empty($attributeList)){
             return null;
         }
-        foreach($attributeList as $key_attribute => $value_attribute){
+        $keys = [];
+        foreach($attributeList as $key_attribute => $value_attribute) {
             $is_collect[] = $key_attribute;
             $key_collect = implode('.', $is_collect);
+            $keys[] = $key_collect;
+            $keys_attribute_list[] = $attributeList->{$key_attribute};
+        }
+        krsort($keys, SORT_NATURAL);
+        krsort($keys_attribute_list, SORT_NATURAL);
+        echo '11 ';
+        var_dump($keys);
+        var_dump($keys_attribute_list);
+        die;
+        foreach($keys as $key_collect){
             if (isset($object->{$key_collect})) {
                 return Core::object_get($attributeList->{$key_attribute}, $object->{$key_collect}, $is_debug);
             }
@@ -832,9 +843,8 @@ class Core
                     return Core::object_get($attributeList->{$key_attribute}, $object[$key_collect], $is_debug);
                 } else {
                     echo 'has not';
-                    return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect, $is_debug);
+//                    return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect, $is_debug);
                 }
-
             }
             else {
                 echo '7 ';
