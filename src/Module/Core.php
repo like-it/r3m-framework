@@ -684,11 +684,12 @@ class Core
 
     public static function object_get($attributeList = [], $object = '')
     {
+        var_dump($attributeList);
+        var_dump(gettype($object));
         if(
             is_array($object) &&
             $attributeList !== null
         ){
-            var_dump($attributeList);
             if(is_array($attributeList)){
                 foreach($attributeList as $key => $attribute){
                     if ($key === null || $key === '') {
