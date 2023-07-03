@@ -759,7 +759,6 @@ class Core
             if($is_debug){
                 echo '1 ';
                 var_dump($attributeList);
-                die;
             }
         }
         if (empty($attributeList)) {
