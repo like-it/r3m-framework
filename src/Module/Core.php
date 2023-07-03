@@ -820,16 +820,13 @@ class Core
             if (isset($object->{$key_collect})) {
                 return Core::object_get($attributeList->{$key_attribute}, $object->{$key_collect}, $is_debug);
             }
-            elseif(
-                is_array($object)
-            ){
+            elseif(is_array($object)){
                 echo '6 ';
                 var_dump($key_attribute);
                 var_dump($key_collect);
-                var_dump($object);
+//                var_dump($object);
                 if(array_key_exists($key_collect, $object)){
                     echo 'has';
-                    die;
                     return Core::object_get($attributeList->{$key_attribute}, $object[$key_collect], $is_debug);
                 } else {
                     echo 'has not';
