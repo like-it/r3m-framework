@@ -850,6 +850,10 @@ class Core
                     }
                 } else {
                     echo 'has not';
+                    echo '13 ';
+                    var_dump($key_collect);
+                    var_dump($keys_attribute_list[$nr]);
+                    var_dump($object);
                     return Core::object_get_nested($keys_attribute_list[$nr], $object, $key_collect, $is_debug);
                 }
             }
