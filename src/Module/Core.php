@@ -741,18 +741,12 @@ class Core
             ){
                 return $object->{$attributeList};
             } else {
-                $explode = explode('.', $attributeList, 3);
+                $explode = explode('.', $attributeList);
+                $shift = array_shift($explode);
                 if(
-                    array_key_exists(2, $explode) &&
-                    isset($object->{$explode[0]})
+                    isset($object->{$shift})
                 ){
-                    return Core::object_get($explode[1] . '.' . $explode[2], $object->{$explode[0]});
-                }
-                elseif(
-                    array_key_exists(1, $explode) &&
-                    isset($object->{$explode[0]})
-                ){
-                    return Core::object_get($explode[1], $object->{$explode[0]});
+                    return Core::object_get(implode('.', $explode), $object->{$shift});
                 }
                 $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
                 foreach ($attributeList as $nr => $attribute) {
