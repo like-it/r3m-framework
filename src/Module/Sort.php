@@ -81,6 +81,11 @@ class Sort extends Data {
                             $attr = substr($attr, 1);
                             $result[$attr][] = $node;
                         } else {
+                            d($uuid);
+                            d($attribute);
+                            d($value);
+                            d($node);
+                            ddd($record);
                             $result[''][] = $node;
                         }
                         $sortable_1 = $record;
