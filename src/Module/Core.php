@@ -817,8 +817,6 @@ class Core
             return null;
         }
         $keys = [];
-        var_dump($attributeList);
-        die;
         foreach($attributeList as $key_attribute => $value_attribute) {
             $is_collect[] = $key_attribute;
             $key_collect = implode('.', $is_collect);
@@ -830,6 +828,7 @@ class Core
         echo '11 ';
         var_dump($keys);
         var_dump($keys_attribute_list);
+        die;
         foreach($keys as $nr => $key_collect){
             if (isset($object->{$key_collect})) {
                 return Core::object_get($keys_attribute_list[$nr], $object->{$key_collect}, $is_debug);
