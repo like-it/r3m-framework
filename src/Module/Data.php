@@ -325,7 +325,6 @@ class Data {
                         echo '10 ' ;
                         var_dump($attribute);
                         var_dump($get);
-                        die;
                         return $get;
                     }
                     return Core::object_get($attribute, $this->data());
