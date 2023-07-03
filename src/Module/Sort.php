@@ -213,6 +213,8 @@ class Sort extends Data {
                                     $attr = substr($attr, 1);
                                     $result[$attr][] = $node;
                                 } else {
+                                    d($data->get($result_key));
+                                    d($list_key);
                                     d($result_key);
                                     d($attribute);
                                     d($value);
