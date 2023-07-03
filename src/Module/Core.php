@@ -818,7 +818,7 @@ class Core
             $is_collect[] = $key_attribute;
             $key_collect = implode('.', $is_collect);
             if (isset($object->{$key_collect})) {
-                return Core::object_get($attributeList->{$key_attribute}, $object->{$key_collect});
+                return Core::object_get($attributeList->{$key_attribute}, $object->{$key_collect}, $is_debug);
             }
             elseif(
                 is_array($object)
@@ -827,9 +827,9 @@ class Core
                 var_dump($key_attribute);
                 var_dump($key_collect);
                 if(array_key_exists($key_collect, $object)){
-                    return Core::object_get($attributeList->{$key_attribute}, $object[$key_collect]);
+                    return Core::object_get($attributeList->{$key_attribute}, $object[$key_collect], $is_debug);
                 } else {
-                    return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect);
+                    return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect, $is_debug);
                 }
 
             }
@@ -837,7 +837,7 @@ class Core
                 echo '7 ';
                 var_dump($key_attribute);
                 var_dump($key_collect);
-                return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect);
+                return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect, $is_debug);
             }
         }
         return null;
