@@ -787,7 +787,7 @@ class Core
                 } else {
                     if($is_debug){
                         var_dump($key);
-                        var_dump($object);
+//                        var_dump($object);
                         var_dump($attributeList->{$key});
                     }
                     return Core::object_get_nested($attributeList->{$key}, $object, $key);
