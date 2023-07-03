@@ -322,6 +322,8 @@ class Data {
                 if(is_string($attribute)){
                     if($this->is_debug === true){
                         $get = Core::object_get($attribute, $this->data(), true);
+                        echo '10 ' ;
+                        var_dump($attribute);
                         var_dump($get);
                         die;
                         return $get;
