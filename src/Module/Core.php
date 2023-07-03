@@ -766,6 +766,7 @@ class Core
             $attributeList = Core::object_horizontal($attributeList);
             if($is_debug){
                 var_dump($attributeList);
+                var_dump($object);
                 die;
             }
         }
