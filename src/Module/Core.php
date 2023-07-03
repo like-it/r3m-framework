@@ -780,6 +780,12 @@ class Core
                 is_array($object) &&
                 array_key_exists($key, $object)
             ){
+                if($is_debug){
+                    var_dump($key);
+                    var_dump($object[$key]);
+                    var_dump($attributeList->{$key});
+                    die;
+                }
                 return Core::object_get($attributeList->{$key}, $object[$key]);
             } else {
                 return Core::object_get_nested($attributeList->{$key}, $object, $key);
