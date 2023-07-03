@@ -824,6 +824,7 @@ class Core
             $key_collect = implode('.', $is_collect);
             $keys[] = $key_collect;
             $keys_attribute_list[] = $attributeList->{$key_attribute};
+            $attributeList = $value_attribute;
         }
         krsort($keys, SORT_NATURAL);
         krsort($keys_attribute_list, SORT_NATURAL);
