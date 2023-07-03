@@ -691,7 +691,6 @@ class Core
             var_dump($is_debug);
             var_dump($attributeList);
             var_dump(gettype($object));
-            die;
         }
 
         if(
