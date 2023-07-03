@@ -819,12 +819,14 @@ class Core
         $keys = [];
         echo '14 ';
         var_dump($attributeList);
-        foreach($attributeList as $key_attribute => $value_attribute) {
-            $is_collect[] = $key_attribute;
-            $key_collect = implode('.', $is_collect);
-            $keys[] = $key_collect;
-            $keys_attribute_list[] = $attributeList->{$key_attribute};
-            $attributeList = $value_attribute;
+        while($attributeList !== null){
+            foreach($attributeList as $key_attribute => $value_attribute) {
+                $is_collect[] = $key_attribute;
+                $key_collect = implode('.', $is_collect);
+                $keys[] = $key_collect;
+                $keys_attribute_list[] = $attributeList->{$key_attribute};
+                $attributeList = $value_attribute;
+            }
         }
         krsort($keys, SORT_NATURAL);
         krsort($keys_attribute_list, SORT_NATURAL);
