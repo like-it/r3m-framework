@@ -788,16 +788,15 @@ class Core
                 var_dump($debug[0]['file'] . ' on line ' . $debug[0]['line']);
                 var_dump($debug[1]['file'] . ' on line ' . $debug[1]['line']);
                 if(null === $attributeList->{$key}){
-                    echo '3.2 ';
-                    var_dump($key);
-                    var_dump($attributeList);
-                    var_dump($object);
-                    die;
+                    return $object->{$key};
                 }
                 return Core::object_get($attributeList->{$key}, $object->{$key}, $is_debug);
             }
             elseif(is_array($object)){
                 if(array_key_exists($key, $object)){
+                    if(null === $attributeList->{$key}){
+                        return $object[$key];
+                    }
                     return Core::object_get($attributeList->{$key}, $object[$key], $is_debug);
                 } else {
                     if($is_debug){
