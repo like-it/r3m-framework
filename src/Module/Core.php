@@ -688,6 +688,7 @@ class Core
             is_array($object) &&
             $attributeList !== null
         ){
+            var_dump($attributeList);
             if(is_array($attributeList)){
                 foreach($attributeList as $key => $attribute){
                     if ($key === null || $key === '') {
