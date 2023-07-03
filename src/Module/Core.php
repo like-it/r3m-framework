@@ -682,6 +682,24 @@ class Core
         return false;
     }
 
+    public static function object_get($attributeList = [], $object = '', $is_debug=false){
+        if(is_string($attributeList) || is_numeric($attributeList)) {
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
+        }
+        var_dump($attributeList);
+        if(is_array($object)){
+            echo '3 ';
+        }
+        elseif(is_object($object)){
+            echo '2 ';
+        } else {
+            echo '1 ';
+            var_dump($object);
+        }
+    }
+
+
+    /*
     public static function object_get($attributeList = [], $object = '', $is_debug=false)
     {
         if($is_debug){
@@ -766,49 +784,65 @@ class Core
             var_dump($object);
             return $object;
         }
-        foreach ($attributeList as $key => $attribute) {
-            if ($key === null || $key === '') {
-                continue;
+
+        while(true){
+            foreach($attributeList as $key => $attribute){
+                $attributeList = $attribute;
             }
-            if (isset($object->{$key})) {
-                echo '3 ';
-                var_dump($key);
-                var_dump($object->{$key});
-                echo '3.1 ';
-                var_dump($attributeList);
-                $debug = debug_backtrace(true);
-                var_dump($debug[0]['file'] . ' on line ' . $debug[0]['line']);
-                var_dump($debug[1]['file'] . ' on line ' . $debug[1]['line']);
-                if(null === $attributeList->{$key}){
-                    return $object->{$key};
+        }
+
+        while($attributeList !== null){
+            foreach ($attributeList as $key => $attribute) {
+                if ($key === null || $key === '') {
+                    continue;
                 }
-                return Core::object_get($attributeList->{$key}, $object->{$key}, $is_debug);
-            }
-            elseif(is_array($object)){
-                if(array_key_exists($key, $object)){
+                if (isset($object->{$key})) {
+                    echo '3 ';
+                    var_dump($key);
+                    var_dump($object->{$key});
+                    echo '3.1 ';
+                    var_dump($attributeList);
+                    $debug = debug_backtrace(true);
+                    var_dump($debug[0]['file'] . ' on line ' . $debug[0]['line']);
+                    var_dump($debug[1]['file'] . ' on line ' . $debug[1]['line']);
                     if(null === $attributeList->{$key}){
-                        return $object[$key];
+                        return $object->{$key};
                     }
-                    return Core::object_get($attributeList->{$key}, $object[$key], $is_debug);
-                } else {
-                    if($is_debug){
-                        echo '4 ';
-                        var_dump($key);
+                    return Core::object_get($attributeList->{$key}, $object->{$key}, $is_debug);
+                }
+                elseif(is_array($object)){
+                    if(array_key_exists($key, $object)){
+                        if(null === $attributeList->{$key}){
+                            return $object[$key];
+                        }
+                        return Core::object_get($attributeList->{$key}, $object[$key], $is_debug);
+                    } else {
+                        if($is_debug){
+                            echo '4 ';
+                            var_dump($key);
 //                        var_dump($object);
-                        var_dump($attributeList->{$key});
+                            var_dump($attributeList->{$key});
+                        }
+                        return Core::object_get_nested($attributeList->{$key}, $object, $key, $is_debug);
                     }
+                } else {
+                    echo '5 ';
+                    var_dump($key);
+//                var_dump($object);
+                    var_dump($attributeList->{$key});
                     return Core::object_get_nested($attributeList->{$key}, $object, $key, $is_debug);
                 }
-            } else {
-                echo '5 ';
-                var_dump($key);
-//                var_dump($object);
-                var_dump($attributeList->{$key});
-                return Core::object_get_nested($attributeList->{$key}, $object, $key, $is_debug);
             }
+            if(property_exists($attributeList, $key)){
+                $attributeList = $attribute->{$key};
+            } else {
+
+            }
+
         }
         return null;
     }
+    */
 
     private static function object_get_nested($attributeList, $object, $key='', $is_debug=false){
         $is_collect = [];
