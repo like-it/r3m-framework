@@ -783,7 +783,7 @@ class Core
                 var_dump($key);
                 var_dump($object->{$key});
                 echo '3.1 ';
-                var_dump($attributeList->{$key});
+                var_dump($attributeList);
                 return Core::object_get($attributeList->{$key}, $object->{$key}, $is_debug);
             }
             elseif(is_array($object)){
