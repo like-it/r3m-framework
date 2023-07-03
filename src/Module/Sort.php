@@ -190,6 +190,7 @@ class Sort extends Data {
                 }
                 unset($sort[$attribute]);
                 $data = new Data($result);
+                $data->is_debug(true);
                 $result = [];
                 if(!empty($sort)){
                     foreach($data->data() as $result_key => $list){

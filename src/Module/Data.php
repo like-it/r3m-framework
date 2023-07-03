@@ -261,6 +261,11 @@ class Data {
     }
 
     public function data($attribute=null, $value=null, $type=null){
+        if($this->is_debug()){
+            d($attribute);
+            d($value);
+            ddd($type);
+        }
         if(is_int($attribute)){
             $attribute = (string) $attribute;
         }
