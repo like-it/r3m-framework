@@ -692,7 +692,7 @@ class Core
         }
         elseif(is_object($object)){
             $property = [];
-            while($attributeList){
+            while($attributeList !== null){
                 $property[] = implode('.', $attributeList);
                 array_pop($attributeList);
             }
