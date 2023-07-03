@@ -783,11 +783,11 @@ class Core
                 var_dump($key);
                 var_dump($object->{$key});
                 var_dump($attributeList->{$key});
-                return Core::object_get($attributeList->{$key}, $object->{$key});
+                return Core::object_get($attributeList->{$key}, $object->{$key}, $is_debug);
             }
             elseif(is_array($object)){
                 if(array_key_exists($key, $object)){
-                    return Core::object_get($attributeList->{$key}, $object[$key]);
+                    return Core::object_get($attributeList->{$key}, $object[$key], $is_debug);
                 } else {
                     if($is_debug){
                         echo '4 ';
@@ -795,20 +795,20 @@ class Core
 //                        var_dump($object);
                         var_dump($attributeList->{$key});
                     }
-                    return Core::object_get_nested($attributeList->{$key}, $object, $key);
+                    return Core::object_get_nested($attributeList->{$key}, $object, $key, $is_debug);
                 }
             } else {
                 echo '5 ';
                 var_dump($key);
 //                var_dump($object);
                 var_dump($attributeList->{$key});
-                return Core::object_get_nested($attributeList->{$key}, $object, $key);
+                return Core::object_get_nested($attributeList->{$key}, $object, $key, $is_debug);
             }
         }
         return null;
     }
 
-    private static function object_get_nested($attributeList, $object, $key=''){
+    private static function object_get_nested($attributeList, $object, $key='', $is_debug=false){
         $is_collect = [];
         $is_collect[] = $key;
         if(empty($attributeList)){
@@ -821,12 +821,22 @@ class Core
                 return Core::object_get($attributeList->{$key_attribute}, $object->{$key_collect});
             }
             elseif(
-                is_array($object) &&
-                array_key_exists($key_collect, $object)
+                is_array($object)
             ){
-                return Core::object_get($attributeList->{$key_attribute}, $object[$key_collect]);
+                echo '6 ';
+                var_dump($key_attribute);
+                var_dump($key_collect);
+                if(array_key_exists($key_collect, $object)){
+                    return Core::object_get($attributeList->{$key_attribute}, $object[$key_collect]);
+                } else {
+                    return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect);
+                }
+
             }
             else {
+                echo '7 ';
+                var_dump($key_attribute);
+                var_dump($key_collect);
                 return Core::object_get_nested($attributeList->{$key_attribute}, $object, $key_collect);
             }
         }
