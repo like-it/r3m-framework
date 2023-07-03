@@ -334,6 +334,9 @@ class Data {
                     $attribute = (string) $attribute;
                 }
                 if(is_string($attribute)){
+                    if($this->is_debug === true){
+                        d($attribute);
+                    }
                     return Core::object_get($attribute, $this->data());
                 }
                 elseif(is_object($attribute) && get_class($attribute) === Data::class){
