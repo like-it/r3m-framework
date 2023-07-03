@@ -213,6 +213,11 @@ class Sort extends Data {
                                     $attr = substr($attr, 1);
                                     $result[$attr][] = $node;
                                 } else {
+                                    d($result_key);
+                                    d($attribute);
+                                    d($value);
+                                    d($node);
+                                    ddd($record);
                                     $result[$result_key][''][] = $node;
                                 }
                                 $sortable_2 = $record;
