@@ -828,10 +828,13 @@ class Core
         echo '11 ';
         var_dump($keys);
         var_dump($keys_attribute_list);
-        die;
         foreach($keys as $nr => $key_collect){
             if (isset($object->{$key_collect})) {
-                return Core::object_get($keys_attribute_list[$nr], $object->{$key_collect}, $is_debug);
+                if(null === $keys_attribute_list[$nr]){
+                    return $object->{$key_collect};
+                } else {
+                    return Core::object_get($keys_attribute_list[$nr], $object->{$key_collect}, $is_debug);
+                }
             }
             elseif(is_array($object)){
                 echo '6 ';
@@ -840,7 +843,11 @@ class Core
 //                var_dump($object);
                 if(array_key_exists($key_collect, $object)){
                     echo 'has';
-                    return Core::object_get($keys_attribute_list[$nr], $object[$key_collect], $is_debug);
+                    if(null === $keys_attribute_list[$nr]){
+                        return $object[$key_collect];
+                    } else {
+                        return Core::object_get($keys_attribute_list[$nr], $object[$key_collect], $is_debug);
+                    }
                 } else {
                     echo 'has not';
                     return Core::object_get_nested($keys_attribute_list[$nr], $object, $key_collect, $is_debug);
