@@ -777,7 +777,7 @@ class Core
             }
             if (isset($object->{$key})) {
                 var_dump($key);
-                var_dump($object[$key]);
+                var_dump($object->{$key});
                 var_dump($attributeList->{$key});
                 return Core::object_get($attributeList->{$key}, $object->{$key});
             }
