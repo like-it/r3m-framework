@@ -769,6 +769,7 @@ class Core
             }
         }
         if (empty($attributeList)) {
+            var_dump($object);
             return $object;
         }
         foreach ($attributeList as $key => $attribute) {
