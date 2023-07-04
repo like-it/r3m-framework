@@ -746,7 +746,10 @@ class Core
                     $attributeList = explode('.', $property);
                     if(array_key_exists(1, $attributeList)){
                         $shift = array_shift($attributeList);
-                        if(array_key_exists($shift, $object)){
+                        if(
+                            is_array($object) &&
+                            array_key_exists($shift, $object)
+                        ){
                             $object = $object[$shift];
                             $ready = false;
                             foreach($attributeList as $attributeList_nr => $attribute){
@@ -785,7 +788,10 @@ class Core
                                 $properties[$nr] = implode('.', $attributeList);
                             }
                         }
-                        elseif(property_exists($object, $shift)){
+                        elseif(
+                            is_object($object) &&
+                            property_exists($object, $shift)
+                        ){
                             $object = $object->{$shift};
                             $ready = false;
                             foreach($attributeList as $attributeList_nr => $attribute){
@@ -899,7 +905,10 @@ class Core
                     $attributeList = explode('.', $property);
                     if(array_key_exists(1, $attributeList)){
                         $shift = array_shift($attributeList);
-                        if(array_key_exists($shift, $object)){
+                        if(
+                            is_array($object) &&
+                            array_key_exists($shift, $object)
+                        ){
                             $object = $object[$shift];
                             $ready = false;
                             foreach($attributeList as $attributeList_nr => $attribute){
@@ -938,7 +947,10 @@ class Core
                                 $properties[$nr] = implode('.', $attributeList);
                             }
                         }
-                        elseif(property_exists($object, $shift)){
+                        elseif(
+                            is_object($object) &&
+                            property_exists($object, $shift)
+                        ){
                             $object = $object->{$shift};
                             $ready = false;
                             foreach($attributeList as $attributeList_nr => $attribute){
