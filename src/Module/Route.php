@@ -1033,6 +1033,8 @@ class Route extends Data {
     public static function configure(App $object){
         $config = $object->data(App::CONFIG);
         $url = $config->data('app.route.url');
+        d($url);
+        ddd($config);
         ddd($config->data(Config::DATA_PROJECT_ROUTE_URL));
         if(empty($config->data(Config::DATA_PROJECT_ROUTE_URL))){
             $config->data(Config::DATA_PROJECT_ROUTE_URL, $url);
