@@ -689,6 +689,109 @@ class Core
 //        var_dump($attributeList);
         if(is_array($object)){
             echo '3 ';
+            $properties = [];
+            if(
+                count($attributeList) === 1 &&
+                strpos($attributeList[0], '.') === false
+            ){
+                if(array_key_exists($attributeList[0], $object)){
+                    return $object[$attributeList[0]];
+                } else {
+                    return null;
+                }
+            }
+            while($attributeList !== null){
+                $properties[] = implode('.', $attributeList);
+                array_pop($attributeList);
+                if(empty($attributeList)){
+                    break;
+                }
+            }
+            $need_next_change = false;
+            $ready = false;
+            while(!empty($properties)){
+//                echo '3 ';
+//                var_dump($properties);
+                foreach($properties as $nr => $property){
+                    if(strpos($property, '.') !== false){
+                        if(array_key_exists($property, $object)){
+                            $object = $object[$property];
+                            if($need_next_change){
+                                $need_next_change = false;
+                            }
+                            unset($properties[$nr]);
+                        }
+                    }
+                }
+                if(
+                    count($properties) === 1 &&
+                    strpos($property, '.') === false
+                ){
+                    if(
+                        array_key_exists($property, $object) &&
+                        $ready
+                    ){
+                        return $object[$property];
+                    } else {
+                        return null;
+                    }
+                }
+                if(empty($properties)){
+                    if($ready){
+                        return $object;
+                    }
+                    return null;
+                }
+                foreach($properties as $nr => $property){
+                    $attributeList = explode('.', $property);
+                    if(array_key_exists(1, $attributeList)){
+                        $shift = array_shift($attributeList);
+                        if(array_key_exists($shift, $object)){
+                            $object = $object[$shift];
+                            $ready = false;
+                            foreach($attributeList as $attributeList_nr => $attribute){
+                                if(array_key_exists($attribute, $object)){
+                                    $object = $object[$attribute];
+                                    unset($attributeList[$attributeList_nr]);
+                                    $need_next_change = false;
+                                    $ready = true;
+                                }
+                                elseif($need_next_change === false){
+                                    $need_next_change = true;
+                                    $ready = false;
+                                }
+                                elseif($need_next_change === true){
+                                    return null;
+                                }
+                            }
+                            if(empty($attributeList)){
+                                unset($properties[$nr]);
+                                if($ready){
+                                    return $object;
+                                }
+                            } else {
+                                $properties[$nr] = implode('.', $attributeList);
+                            }
+                        } else {
+                            if(empty($attributeList)){
+                                unset($properties[$nr]);
+                            } else {
+                                $properties[$nr] = implode('.', $attributeList);
+                            }
+                        }
+                    } else {
+                        unset($properties[$nr]);
+                    }
+                }
+                if(empty($properties)){
+                    if($ready){
+                        return $object;
+                    }
+                    return null;
+                }
+            }
+            var_dump($properties);
+            return null;
         }
         elseif(is_object($object)){
             $properties = [];
@@ -750,7 +853,6 @@ class Core
                             $ready = false;
                             foreach($attributeList as $attributeList_nr => $attribute){
                                 if(property_exists($object, $attribute)){
-                                    echo $attribute . PHP_EOL;
                                     $object = $object->{$attribute};
                                     unset($attributeList[$attributeList_nr]);
                                     $need_next_change = false;
