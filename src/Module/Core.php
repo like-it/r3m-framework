@@ -722,7 +722,7 @@ class Core
 
                 }
                 if(empty($properties)){
-                    break;
+                    return $object;
                 }
                 foreach($properties as $nr => $property){
                     $attributeList = explode('.', $property);
@@ -741,7 +741,7 @@ class Core
             }
             var_dump($properties);
             echo '2 ';
-            return $object;
+            return null;
         } else {
             echo '1 ';
             var_dump($object);
