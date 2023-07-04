@@ -750,6 +750,7 @@ class Core
                             $ready = false;
                             foreach($attributeList as $attributeList_nr => $attribute){
                                 if(property_exists($object, $attribute)){
+                                    echo $attribute . PHP_EOL;
                                     $object = $object->{$attribute};
                                     unset($attributeList[$attributeList_nr]);
                                     $need_next_change = false;
