@@ -738,6 +738,9 @@ class Core
                         unset($properties[$nr]);
                     }
                 }
+                if(empty($properties)){
+                    return $object;
+                }
             }
             var_dump($properties);
             echo '2 ';
