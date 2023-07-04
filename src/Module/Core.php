@@ -752,7 +752,6 @@ class Core
                                 if(property_exists($object, $attribute)){
                                     echo $attribute . PHP_EOL;
                                     $object = $object->{$attribute};
-                                    var_dump($object) . PHP_EOL;
                                     unset($attributeList[$attributeList_nr]);
                                     $need_next_change = false;
                                     $ready = true;
@@ -767,6 +766,7 @@ class Core
                             }
                             if(empty($attributeList)){
                                 unset($properties[$nr]);
+                                echo '1: Ready: ' . $ready . PHP_EOL;
                             } else {
                                 $properties[$nr] = implode('.', $attributeList);
                             }
