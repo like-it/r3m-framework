@@ -1409,7 +1409,7 @@ class Core
             return false;
         }
         $get = Core::object_get($attributeList, $object);
-        if($get){
+        if($get !== null){
             return true;
         }
         return false;
