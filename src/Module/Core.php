@@ -686,7 +686,7 @@ class Core
         if(is_string($attributeList) || is_numeric($attributeList)) {
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
         }
-        var_dump($attributeList);
+//        var_dump($attributeList);
         if(is_array($object)){
             echo '3 ';
         }
@@ -711,8 +711,8 @@ class Core
             }
             $need_next_change = false;
             while(!empty($properties)){
-                echo '3 ';
-                var_dump($properties);
+//                echo '3 ';
+//                var_dump($properties);
                 foreach($properties as $nr => $property){
                     if(strpos($property, '.') !== false){
                         if(property_exists($object, $property)){
