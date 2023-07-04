@@ -198,6 +198,7 @@ class OutputFilter extends Main {
     public static function configure(App $object): void
     {
         $outputFilter = new OutputFilter($object);
+        ddd($object->config('output.filter.chunk_size'));
         $limit = $object->config('output.filter.chunk_size') ?? OutputFilter::CHUNK_SIZE;
         $count = $outputFilter->count(
             OutputFilter::OBJECT,
