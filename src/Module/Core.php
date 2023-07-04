@@ -730,7 +730,13 @@ class Core
                         $shift = array_shift($attributeList);
                         if(property_exists($object, $shift)){
                             $object = $object->{$shift};
-                            unset($properties[$nr]);
+                            foreach($attributeList as $attributeList_nr => $attribute){
+                                if(property_exists($object, $attribute)){
+                                    $object = $object->{$attribute};
+                                    unset($attributeList[$attributeList_nr]);
+                                }
+                            }
+                            $properties[$nr] = implode('.', $attributeList);
                         } else {
                             $properties[$nr] = implode('.', $attributeList);
                         }
