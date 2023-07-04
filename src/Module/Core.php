@@ -731,7 +731,7 @@ class Core
                     strpos($property, '.') === false
                 ){
                     if(property_exists($object, $property) && $ready){
-                        var_dump('here');
+                        echo 'here' . PHP_EOL;
                         return $object->{$property};
                     } else {
                         return null;
