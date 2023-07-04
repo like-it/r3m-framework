@@ -144,7 +144,7 @@ class FileRequest {
             $logger = $object->config('project.log.name');
         }
         $request = $object->data(App::REQUEST);
-        d($object->data(App::NAMESPACE . '.' . Handler::NAME_REQUEST));
+        d($object->data(App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.Input'));
         ddd($request);
         $input = $request->data('request');
         $dir = str_replace(['../', '..'], '', Dir::name($input));
