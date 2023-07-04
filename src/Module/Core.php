@@ -692,6 +692,16 @@ class Core
         }
         elseif(is_object($object)){
             $properties = [];
+            if(
+                count($attributeList) === 1 &&
+                strpos($attributeList[0], '.') === false
+            ){
+                if(property_exists($object, $attributeList[0])){
+                    return $object->{$attributeList[0]};
+                } else {
+                    return null;
+                }
+            }
             while($attributeList !== null){
                 $properties[] = implode('.', $attributeList);
                 array_pop($attributeList);
@@ -701,10 +711,15 @@ class Core
             }
             while(!empty($properties)){
                 foreach($properties as $nr => $property){
-                    if(property_exists($object, $property)){
-                        $object = $object->{$property};
-                        unset($properties[$nr]);
+                    if(strpos($property, '.') !== false){
+                        if(property_exists($object, $property)){
+                            $object = $object->{$property};
+                            unset($properties[$nr]);
+                        }
+                    } else {
+                        return null;
                     }
+
                 }
                 if(empty($properties)){
                     break;
