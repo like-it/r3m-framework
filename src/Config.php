@@ -493,6 +493,18 @@ class Config extends Data {
         $value = Config::VALUE_NODE;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::EVENT;
+        $value = Config::VALUE_EVENT;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::MIDDLEWARE;
+        $value = Config::VALUE_MIDDLEWARE;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::OUTPUT_FILTER;
+        $value = Config::VALUE_OUTPUT_FILTER;
+        $this->data($key, $value);
+
         $value = Config::VALUE_DS;
         $key = Config::DS;
         $this->data($key, $value);
@@ -546,8 +558,6 @@ class Config extends Data {
         ;
         $this->data($key, $value);
         $key = Config::DATA_PROJECT_DIR_EVENT;
-        var_dump($this->data(Config::DICTIONARY));
-        die;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::EVENT) .
