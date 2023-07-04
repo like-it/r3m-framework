@@ -752,6 +752,7 @@ class Core
                                 if(property_exists($object, $attribute)){
                                     echo $attribute . PHP_EOL;
                                     $object = $object->{$attribute};
+                                    var_dump($object) . PHP_EOL;
                                     unset($attributeList[$attributeList_nr]);
                                     $need_next_change = false;
                                     $ready = true;
