@@ -748,9 +748,17 @@ class Core
                                     unset($attributeList[$attributeList_nr]);
                                 }
                             }
-                            $properties[$nr] = implode('.', $attributeList);
+                            if(empty($attributeList)){
+                                unset($properties[$nr]);
+                            } else {
+                                $properties[$nr] = implode('.', $attributeList);
+                            }
                         } else {
-                            $properties[$nr] = implode('.', $attributeList);
+                            if(empty($attributeList)){
+                                unset($properties[$nr]);
+                            } else {
+                                $properties[$nr] = implode('.', $attributeList);
+                            }
                         }
                     } else {
                         unset($properties[$nr]);
