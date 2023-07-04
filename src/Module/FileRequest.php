@@ -144,6 +144,7 @@ class FileRequest {
             $logger = $object->config('project.log.name');
         }
         $request = $object->data(App::REQUEST);
+        ddd($request);
         $input = $request->data('request');
         $dir = str_replace(['../', '..'], '', Dir::name($input));
         $file = str_replace($dir, '', $input);
