@@ -199,6 +199,7 @@ class Middleware extends Main {
      */
     public static function configure(App $object): void
     {
+        return;
         $middleware = new Middleware($object);
         $limit = $object->config('middleware.chunk_size') ?? Middleware::CHUNK_SIZE;
         $count = $middleware->count(
