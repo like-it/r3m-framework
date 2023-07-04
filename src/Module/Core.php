@@ -710,6 +710,7 @@ class Core
                 }
             }
             $need_next_change = false;
+            $ready = false;
             while(!empty($properties)){
 //                echo '3 ';
 //                var_dump($properties);
@@ -717,6 +718,7 @@ class Core
                     if(strpos($property, '.') !== false){
                         if(property_exists($object, $property)){
                             $object = $object->{$property};
+                            $ready = true;
                             if($need_next_change){
                                 $need_next_change = false;
                             }
@@ -735,7 +737,10 @@ class Core
                     }
                 }
                 if(empty($properties)){
-                    return $object;
+                    if($ready){
+                        return $object;
+                    }
+                    return null;
                 }
                 foreach($properties as $nr => $property){
                     $attributeList = explode('.', $property);
@@ -743,11 +748,13 @@ class Core
                         $shift = array_shift($attributeList);
                         if(property_exists($object, $shift)){
                             $object = $object->{$shift};
+                            $ready = false;
                             foreach($attributeList as $attributeList_nr => $attribute){
                                 if(property_exists($object, $attribute)){
                                     $object = $object->{$attribute};
                                     unset($attributeList[$attributeList_nr]);
                                     $need_next_change = false;
+                                    $ready = true;
                                 }
                                 elseif($need_next_change === false){
                                     $need_next_change = true;
@@ -773,7 +780,10 @@ class Core
                     }
                 }
                 if(empty($properties)){
-                    return $object;
+                    if($ready){
+                        return $object;
+                    }
+                    return null;
                 }
             }
             var_dump($properties);
