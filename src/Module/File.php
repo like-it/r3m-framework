@@ -136,6 +136,12 @@ class File {
         if($url == '/'){
             return file_exists($url);
         } else {
+            if(is_object($url)){
+                $debug = debug_backtrace(true);
+                d($debug[0]['file'] . ':' . $debug[0]['line']);
+                d($debug[1]['file'] . ':' . $debug[1]['line']);
+                ddd($url);
+            }
             $url = rtrim($url, '/');
             return file_exists($url);
         }
