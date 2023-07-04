@@ -725,6 +725,9 @@ class Core
                     strpos($property, '.') === false
                 ){
                     if(property_exists($object, $property)){
+                        if($property === ''){
+                            ddd($object);
+                        }
                         return $object->{$property};
                     } else {
                         return null;
