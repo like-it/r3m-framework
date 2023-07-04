@@ -709,6 +709,8 @@ class Core
                     break;
                 }
             }
+            $is_find = false;
+            $need_next_change = false;
             while(!empty($properties)){
                 echo '3 ';
                 var_dump($properties);
@@ -716,6 +718,10 @@ class Core
                     if(strpos($property, '.') !== false){
                         if(property_exists($object, $property)){
                             $object = $object->{$property};
+                            if($need_next_change){
+                                $is_find = true;
+                                $need_next_change = false;
+                            }
                             unset($properties[$nr]);
                         }
                     }
@@ -725,6 +731,7 @@ class Core
                     strpos($property, '.') === false
                 ){
                     if(property_exists($object, $property)){
+                        $is_find = true;
                         return $object->{$property};
                     } else {
                         return null;
@@ -743,6 +750,12 @@ class Core
                                 if(property_exists($object, $attribute)){
                                     $object = $object->{$attribute};
                                     unset($attributeList[$attributeList_nr]);
+                                }
+                                elseif($need_next_change === false){
+                                    $need_next_change = true;
+                                }
+                                elseif($need_next_change === true){
+                                    return null;
                                 }
                             }
                             if(empty($attributeList)){
