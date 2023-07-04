@@ -710,7 +710,7 @@ class Core
                 }
             }
             $need_next_change = false;
-            $ready = true;
+            $ready = false;
             while(!empty($properties)){
 //                echo '3 ';
 //                var_dump($properties);
