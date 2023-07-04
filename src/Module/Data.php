@@ -241,12 +241,19 @@ class Data {
         return $this->data('set', $attribute, $value);
     }
 
-    public function delete($attribute=''){
+    public function delete($attribute=''): bool
+    {
         return $this->data('delete', $attribute);
     }
 
-    public function has($attribute=''){
+    public function has($attribute=''): bool
+    {
         return Core::object_has($attribute, $this->data());
+    }
+
+    public function has_property($attribute=''): bool
+    {
+        return Core::object_has_property($attribute, $this->data());
     }
 
     public function extract($attribute=''){
@@ -292,6 +299,12 @@ class Data {
             elseif($attribute == 'has'){
                 return Core::object_has($value, $this->data());
             }
+            elseif($attribute == 'has_property'){
+                return Core::object_has_property($value, $this->data());
+            }
+            elseif($attribute == 'has.property'){
+                return Core::object_has_property($value, $this->data());
+            }
             elseif($attribute === 'extract'){
                 return $this->extract($value);
             }
@@ -320,13 +333,6 @@ class Data {
                     $attribute = (string) $attribute;
                 }
                 if(is_string($attribute)){
-                    if($this->is_debug === true){
-                        $get = Core::object_get($attribute, $this->data(), true);
-                        echo '10 ' ;
-                        var_dump($attribute);
-                        var_dump($get);
-                        return $get;
-                    }
                     return Core::object_get($attribute, $this->data());
                 }
                 elseif(is_object($attribute) && get_class($attribute) === Data::class){
