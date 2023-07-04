@@ -717,7 +717,7 @@ class Core
                             unset($properties[$nr]);
                         }
                     } else {
-                        return null;
+                        continue 2;
                     }
 
                 }
