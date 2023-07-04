@@ -193,9 +193,6 @@ class Event extends Main {
                 ]
             ]
         );
-        $duration = microtime(true) - $start;
-        d(round($duration * 1000, 2));
-        ddd($count);
         $page_max = ceil($count / $limit);
         for($page = 1; $page <= $page_max; $page++){
             $response = $event->list(
