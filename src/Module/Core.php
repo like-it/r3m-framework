@@ -730,7 +730,7 @@ class Core
                     count($properties) === 1 &&
                     strpos($property, '.') === false
                 ){
-                    if(property_exists($object, $property)){
+                    if(property_exists($object, $property) && $ready){
                         return $object->{$property};
                     } else {
                         return null;
@@ -748,6 +748,7 @@ class Core
                         $shift = array_shift($attributeList);
                         if(property_exists($object, $shift)){
                             $object = $object->{$shift};
+                            echo 'shifted: ready:false';
                             $ready = false;
                             foreach($attributeList as $attributeList_nr => $attribute){
                                 if(property_exists($object, $attribute)){
