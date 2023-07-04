@@ -730,6 +730,7 @@ class Core
                         }
                         return $object->{$property};
                     } else {
+                        d($object);
                         return null;
                     }
                 }
