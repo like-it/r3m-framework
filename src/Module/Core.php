@@ -725,13 +725,8 @@ class Core
                     strpos($property, '.') === false
                 ){
                     if(property_exists($object, $property)){
-                        if($property === ''){
-                            var_dump($object);
-                            die;
-                        }
                         return $object->{$property};
                     } else {
-                        var_dump($object);
                         return null;
                     }
                 }
