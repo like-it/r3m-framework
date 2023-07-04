@@ -546,7 +546,8 @@ class Config extends Data {
         ;
         $this->data($key, $value);
         $key = Config::DATA_PROJECT_DIR_EVENT;
-        ddd($this->data(Config::DICTIONARY));
+        var_dump($this->data(Config::DICTIONARY));
+        die;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::EVENT) .
