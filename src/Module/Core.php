@@ -726,11 +726,12 @@ class Core
                 ){
                     if(property_exists($object, $property)){
                         if($property === ''){
-                            ddd($object);
+                            var_dump($object);
+                            die;
                         }
                         return $object->{$property};
                     } else {
-                        d($object);
+                        var_dump($object);
                         return null;
                     }
                 }
