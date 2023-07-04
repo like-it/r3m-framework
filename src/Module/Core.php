@@ -712,13 +712,22 @@ class Core
             while(!empty($properties)){
                 echo '3 ';
                 var_dump($properties);
-                $is_continue = false;
                 foreach($properties as $nr => $property){
                     if(strpos($property, '.') !== false){
                         if(property_exists($object, $property)){
                             $object = $object->{$property};
                             unset($properties[$nr]);
                         }
+                    }
+                }
+                if(
+                    count($properties) === 1 &&
+                    strpos($property, '.') === false
+                ){
+                    if(property_exists($object, $property)){
+                        return $object->{$property};
+                    } else {
+                        return null;
                     }
                 }
                 if(empty($properties)){
