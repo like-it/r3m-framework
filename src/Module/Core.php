@@ -718,7 +718,6 @@ class Core
                     if(strpos($property, '.') !== false){
                         if(property_exists($object, $property)){
                             $object = $object->{$property};
-                            $ready = true;
                             if($need_next_change){
                                 $need_next_change = false;
                             }
@@ -731,7 +730,6 @@ class Core
                     strpos($property, '.') === false
                 ){
                     if(property_exists($object, $property) && $ready){
-                        echo 'here' . PHP_EOL;
                         return $object->{$property};
                     } else {
                         return null;
@@ -759,6 +757,7 @@ class Core
                                 }
                                 elseif($need_next_change === false){
                                     $need_next_change = true;
+                                    $ready = false;
                                 }
                                 elseif($need_next_change === true){
                                     return null;
