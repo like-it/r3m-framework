@@ -731,6 +731,7 @@ class Core
                     strpos($property, '.') === false
                 ){
                     if(property_exists($object, $property) && $ready){
+                        var_dump('here');
                         return $object->{$property};
                     } else {
                         return null;
@@ -752,7 +753,6 @@ class Core
                             foreach($attributeList as $attributeList_nr => $attribute){
                                 if(property_exists($object, $attribute)){
                                     $object = $object->{$attribute};
-                                    var_dump($object);
                                     unset($attributeList[$attributeList_nr]);
                                     $need_next_change = false;
                                     $ready = true;
