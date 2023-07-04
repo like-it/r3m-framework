@@ -720,6 +720,9 @@ class Core
                                 $need_next_change = false;
                             }
                             unset($properties[$nr]);
+                            if(empty($properties)){
+                                $ready = true;
+                            }
                         }
                     }
                 }
@@ -774,6 +777,7 @@ class Core
                                 elseif($need_next_change === false){
                                     $need_next_change = true;
                                     $ready = false;
+                                    break;
                                 }
                                 elseif($need_next_change === true){
                                     return null;
@@ -816,6 +820,7 @@ class Core
                                 elseif($need_next_change === false){
                                     $need_next_change = true;
                                     $ready = false;
+                                    break;
                                 }
                                 elseif($need_next_change === true){
                                     return null;
@@ -882,6 +887,9 @@ class Core
                                 $need_next_change = false;
                             }
                             unset($properties[$nr]);
+                            if(empty($properties)){
+                                $ready = true;
+                            }
                         }
                     }
                 }
