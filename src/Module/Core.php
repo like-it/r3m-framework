@@ -699,13 +699,31 @@ class Core
                     break;
                 }
             }
-            foreach($properties as $nr => $property){
-                if(property_exists($object, $property)){
-                    $object = $object->{$property};
-                    unset($properties[$nr]);
+            while(!empty($properties)){
+                foreach($properties as $nr => $property){
+                    if(property_exists($object, $property)){
+                        $object = $object->{$property};
+                        unset($properties[$nr]);
+                    }
+                }
+                if(empty($properties)){
+                    break;
+                }
+                foreach($properties as $nr => $property){
+                    $attributeList = explode('.', $property);
+                    if(array_key_exists(1, $attributeList)){
+                        $shift = array_shift($attributeList);
+                        if(property_exists($object, $shift)){
+                            $object = $object->{$shift};
+                            unset($properties[$nr]);
+                        } else {
+                            $properties[$nr] = implode('.', $attributeList);
+                        }
+                    } else {
+                        unset($properties[$nr]);
+                    }
                 }
             }
-
             var_dump($properties);
             echo '2 ';
             return $object;
