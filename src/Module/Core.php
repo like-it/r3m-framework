@@ -766,7 +766,9 @@ class Core
                             }
                             if(empty($attributeList)){
                                 unset($properties[$nr]);
-                                echo '1: Ready: ' . $ready . PHP_EOL;
+                                if($ready){
+                                    return $object;
+                                }
                             } else {
                                 $properties[$nr] = implode('.', $attributeList);
                             }
