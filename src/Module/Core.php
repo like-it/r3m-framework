@@ -710,16 +710,16 @@ class Core
                 }
             }
             while(!empty($properties)){
+                echo '3 ';
+                var_dump($properties);
+                $is_continue = false;
                 foreach($properties as $nr => $property){
                     if(strpos($property, '.') !== false){
                         if(property_exists($object, $property)){
                             $object = $object->{$property};
                             unset($properties[$nr]);
                         }
-                    } else {
-                        continue 2;
                     }
-
                 }
                 if(empty($properties)){
                     return $object;
