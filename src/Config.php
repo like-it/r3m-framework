@@ -235,6 +235,8 @@ class Config extends Data {
         ){
             $this->data(Config::DATA_PROJECT_DIR_VENDOR, $config[Config::DATA_DIR_VENDOR]);
             echo '2 ';
+            var_dump(Config::DATA_PROJECT_DIR_VENDOR);
+            var_dump($config[Config::DATA_DIR_VENDOR]);
             var_dump($this->data(Config::DATA_PROJECT_DIR_VENDOR));
             die;
             $this->data(Config::DATA_PROJECT_DIR_ROOT, dirname($this->data(Config::DATA_PROJECT_DIR_VENDOR)) . '/');
