@@ -1611,6 +1611,11 @@ class Core
                             }
                             if(empty($properties)){
                                 $ready = true;
+                            } else {
+                                foreach($properties as $nr => $temp_property){
+                                    $properties[$nr] = str_replace($property . '.', '', $temp_property);
+                                }
+                                d($properties);
                             }
                         }
                         elseif(
