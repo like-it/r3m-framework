@@ -1344,7 +1344,7 @@ class Core
                     return false;
                 }
             }
-            while($attributeList !== null){
+            while(!empty($attributeList)){
                 $properties[] = implode('.', $attributeList);
                 array_pop($attributeList);
                 if(empty($attributeList)){
@@ -1572,7 +1572,7 @@ class Core
                     return null;
                 }
             }
-            while($attributeList !== null){
+            while(!empty($attributeList)){
                 $properties[] = implode('.', $attributeList);
                 array_pop($attributeList);
                 if(empty($attributeList)){
@@ -1772,7 +1772,7 @@ class Core
                     return null;
                 }
             }
-            while($attributeList !== null){
+            while(!empty($attributeList)){
                 $properties[] = implode('.', $attributeList);
                 array_pop($attributeList);
                 if(empty($attributeList)){
@@ -2112,7 +2112,7 @@ class Core
         $keys = [];
         echo '14 ';
         var_dump($attributeList);
-        while($attributeList !== null){
+        while(!empty($attributeList)){
             foreach($attributeList as $key_attribute => $value_attribute) {
                 $is_collect[] = $key_attribute;
                 $key_collect = implode('.', $is_collect);
