@@ -2000,7 +2000,7 @@ class Core
 
     public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child', $is_debug=false)
     {
-
+        $parent = $object;
         if (is_string($return) && $return !== 'child') {
             if ($return === 'root') {
                 $return = $object;
@@ -2047,6 +2047,9 @@ class Core
             }
         }
         $object = $value;
+        echo '4 ';
+        var_dump($object);
+        var_dump($parent);
         if ($return === 'child') {
             return $value;
         }
