@@ -217,7 +217,7 @@ class Sort extends Data {
                                     d($data);
                                     d($result_key);
                                     $data->is_debug(true);
-                                    d($data->data($result_key . '.' . $list_key));
+                                    ddd($data->data($result_key . '.' . $list_key));
                                     ddd($data->get($result_key));
                                     d($list_key);
                                     d($result_key);
