@@ -2000,11 +2000,10 @@ class Core
 
     public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child', $is_debug=false)
     {
+
         if (is_string($return) && $return !== 'child') {
             if ($return === 'root') {
                 $return = $object;
-            } else {
-                $return = Core::object_get($return, $object);
             }
         }
         if (
@@ -2024,8 +2023,10 @@ class Core
                 if (
                     array_key_exists($attribute, $object)
                 ) {
+                    //exist key
                     $object = $object[$attribute];
                 } else {
+                    //create key
                     $object[$attribute] = [];
                     $object = $object[$attribute];
                 }
