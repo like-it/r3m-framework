@@ -2055,10 +2055,6 @@ class Core
         } else {
             $parent->{$attribute} = $value;
         }
-
-        echo '4 ';
-        var_dump($object);
-        var_dump($parent);
         if ($return === 'child') {
             return $value;
         }
