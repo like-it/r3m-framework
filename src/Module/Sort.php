@@ -216,6 +216,7 @@ class Sort extends Data {
                                 } else {
                                     d($data);
                                     d($result_key);
+                                    $data->is_debug(true);
                                     ddd($data->get($result_key));
                                     d($list_key);
                                     d($result_key);

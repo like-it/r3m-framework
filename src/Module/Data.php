@@ -294,7 +294,7 @@ class Data {
                 }
             }
             elseif($attribute == 'get'){
-                return Core::object_get($value, $this->data());
+                return Core::object_get($value, $this->data(), $this->is_debug);
             }
             elseif($attribute == 'has'){
                 return Core::object_has($value, $this->data());
