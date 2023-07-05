@@ -602,6 +602,10 @@ class Core
                             if(empty($properties)){
                                 unset($object[$property]);
                                 $ready = true;
+                            } else {
+                                foreach($properties as $nr => $temp_property){
+                                    $properties[$nr] = str_replace($property . '.', '', $temp_property);
+                                }
                             }
                         }
                         elseif(
@@ -620,6 +624,10 @@ class Core
                             if(empty($properties)){
                                 unset($object->{$property});
                                 $ready = true;
+                            } else {
+                                foreach($properties as $nr => $temp_property){
+                                    $properties[$nr] = str_replace($property . '.', '', $temp_property);
+                                }
                             }
                         }
                     }
@@ -1175,6 +1183,10 @@ class Core
                             }
                             if(empty($properties)){
                                 $ready = true;
+                            } else {
+                                foreach($properties as $nr => $temp_property){
+                                    $properties[$nr] = str_replace($property . '.', '', $temp_property);
+                                }
                             }
                         }
                         elseif(
@@ -1191,6 +1203,10 @@ class Core
                             }
                             if(empty($properties)){
                                 $ready = true;
+                            } else {
+                                foreach($properties as $nr => $temp_property){
+                                    $properties[$nr] = str_replace($property . '.', '', $temp_property);
+                                }
                             }
                         }
                     }
@@ -1591,10 +1607,6 @@ class Core
                             is_array($object) &&
                             array_key_exists($property, $object)
                         ){
-                            if($is_debug){
-                                d('yes');
-                            }
-
                             $object = $object[$property];
                             if($need_next_change){
                                 $need_next_change = false;
@@ -1603,19 +1615,12 @@ class Core
                             for($i = $nr; $i < $property_count; $i++){
                                 unset($properties[$i]);
                             }
-                            if($is_debug) {
-                                d($object);
-                                d($nr);
-                                d($property_count);
-                                d($properties);
-                            }
                             if(empty($properties)){
                                 $ready = true;
                             } else {
                                 foreach($properties as $nr => $temp_property){
                                     $properties[$nr] = str_replace($property . '.', '', $temp_property);
                                 }
-                                d($properties);
                             }
                         }
                         elseif(
@@ -1631,6 +1636,10 @@ class Core
                             }
                             if(empty($properties)){
                                 $ready = true;
+                            } else {
+                                foreach($properties as $nr => $temp_property){
+                                    $properties[$nr] = str_replace($property . '.', '', $temp_property);
+                                }
                             }
                         }
                     }
