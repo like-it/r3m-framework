@@ -1588,7 +1588,8 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            for($i = $nr; $i < count($properties); $i++){
+                            $property_count = count($properties);
+                            for($i = $nr; $i < $property_count; $i++){
                                 unset($properties[$i]);
                             }
                             if(empty($properties)){
