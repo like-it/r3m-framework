@@ -180,6 +180,7 @@ class Event extends Main {
      */
     public static function configure(App $object): void
     {
+
         $start = microtime(true);
         $event = new Event($object);
         $limit = $object->config('event.chunk_size') ?? Event::CHUNK_SIZE;
@@ -193,6 +194,7 @@ class Event extends Main {
                 ]
             ]
         );
+        return;
         $page_max = ceil($count / $limit);
         for($page = 1; $page <= $page_max; $page++){
             $response = $event->list(
