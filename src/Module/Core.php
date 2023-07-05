@@ -554,7 +554,7 @@ class Core
         }
     }
 
-    public static function object_delete($attributeList = [], $object = ''): bool
+    public static function object_delete($attributeList = [], $object = '', $is_debug = false): bool
     {
         if(is_string($attributeList) || is_numeric($attributeList)) {
             $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
@@ -651,128 +651,134 @@ class Core
                     $attributeList = explode('.', $property);
                     if(array_key_exists(1, $attributeList)){
                         $shift = array_shift($attributeList);
-                        if(
-                            is_array($object) &&
-                            array_key_exists($shift, $object)
-                        ){
-                            $parent = $object;
-                            $object = $object[$shift];
-                            $ready = false;
-                            $attribute = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $parent = $object;
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $parent = $object;
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                    break;
-                                }
-                                elseif($need_next_change === true){
-                                    return false;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    if($attribute){
-                                        if(is_array($parent)){
-                                            unset($parent[$attribute]);
-                                        }
-                                        elseif(is_object($parent)){
-                                            unset($parent->{$attribute});
-                                        }
-                                    } else {
-                                        if(is_array($parent)){
-                                            unset($parent[$shift]);
-                                        }
-                                        elseif(is_object($parent)){
-                                            unset($parent->{$shift});
+                        if(is_array($object)){
+                            if(array_key_exists($shift, $object)){
+                                $parent = $object;
+                                $object = $object[$shift];
+                                $ready = false;
+                                $attribute = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(is_array($object)){
+                                        if(array_key_exists($attribute, $object)){
+                                            $parent = $object;
+                                            $object = $object[$attribute];
+                                            unset($attributeList[$attributeList_nr]);
+                                            $need_next_change = false;
+                                            $ready = true;
+                                        } else {
+                                            return false;
                                         }
                                     }
-                                    return true;
+                                    elseif(is_object($object)){
+                                        if(property_exists($object, $attribute)){
+                                            $parent = $object;
+                                            $object = $object->{$attribute};
+                                            unset($attributeList[$attributeList_nr]);
+                                            $need_next_change = false;
+                                            $ready = true;
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                        break;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return false;
+                                    }
+                                }
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        if($attribute){
+                                            if(is_array($parent)){
+                                                unset($parent[$attribute]);
+                                            }
+                                            elseif(is_object($parent)){
+                                                unset($parent->{$attribute});
+                                            }
+                                        } else {
+                                            if(is_array($parent)){
+                                                unset($parent[$shift]);
+                                            }
+                                            elseif(is_object($parent)){
+                                                unset($parent->{$shift});
+                                            }
+                                        }
+                                        return true;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return false;
                             }
                         }
                         elseif(
-                            is_object($object) &&
-                            property_exists($object, $shift)
+                            is_object($object)
                         ){
-                            $parent = $object;
-                            $object = $object->{$shift};
-                            $ready = false;
-                            $attribute = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $parent = $object;
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $parent = $object;
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                    break;
-                                }
-                                elseif($need_next_change === true){
-                                    return false;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    if($attribute){
-                                        if(is_array($parent)){
-                                            unset($parent[$attribute]);
-                                        }
-                                        elseif(is_object($parent)){
-                                            unset($parent->{$attribute});
-                                        }
-                                    } else {
-                                        if(is_array($parent)){
-                                            unset($parent[$shift]);
-                                        }
-                                        elseif(is_object($parent)){
-                                            unset($parent->{$shift});
-                                        }
+                            if(property_exists($object, $shift)){
+                                $parent = $object;
+                                $object = $object->{$shift};
+                                $ready = false;
+                                $attribute = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $parent = $object;
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
                                     }
-                                    return true;
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $parent = $object;
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                        break;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return false;
+                                    }
+                                }
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        if($attribute){
+                                            if(is_array($parent)){
+                                                unset($parent[$attribute]);
+                                            }
+                                            elseif(is_object($parent)){
+                                                unset($parent->{$attribute});
+                                            }
+                                        } else {
+                                            if(is_array($parent)){
+                                                unset($parent[$shift]);
+                                            }
+                                            elseif(is_object($parent)){
+                                                unset($parent->{$shift});
+                                            }
+                                        }
+                                        return true;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return false;
                             }
                         } else {
                             if(empty($attributeList)){
@@ -882,126 +888,129 @@ class Core
                     $attributeList = explode('.', $property);
                     if(array_key_exists(1, $attributeList)){
                         $shift = array_shift($attributeList);
-                        if(
-                            is_array($object) &&
-                            array_key_exists($shift, $object)
-                        ){
-                            $parent = $object;
-                            $object = $object[$shift];
-                            $ready = false;
-                            $attribute = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $parent = $object;
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $parent = $object;
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                }
-                                elseif($need_next_change === true){
-                                    return false;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    if($attribute){
-                                        if(is_array($parent)){
-                                            unset($parent[$attribute]);
-                                        }
-                                        elseif(is_object($parent)){
-                                            unset($parent->{$attribute});
-                                        }
-                                    } else {
-                                        if(is_array($parent)){
-                                            unset($parent[$shift]);
-                                        }
-                                        elseif(is_object($parent)){
-                                            unset($parent->{$shift});
-                                        }
+                        if(is_array($object)){
+                            if(array_key_exists($shift, $object)){
+                                $parent = $object;
+                                $object = $object[$shift];
+                                $ready = false;
+                                $attribute = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $parent = $object;
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
                                     }
-                                    return true;
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $parent = $object;
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return false;
+                                    }
+                                }
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        if($attribute){
+                                            if(is_array($parent)){
+                                                unset($parent[$attribute]);
+                                            }
+                                            elseif(is_object($parent)){
+                                                unset($parent->{$attribute});
+                                            }
+                                        } else {
+                                            if(is_array($parent)){
+                                                unset($parent[$shift]);
+                                            }
+                                            elseif(is_object($parent)){
+                                                unset($parent->{$shift});
+                                            }
+                                        }
+                                        return true;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return false;
                             }
+
                         }
-                        elseif(
-                            is_object($object) &&
-                            property_exists($object, $shift)
-                        ){
-                            $parent = $object;
-                            $object = $object->{$shift};
-                            $ready = false;
-                            $attribute = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $parent = $object;
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $parent = $object;
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                }
-                                elseif($need_next_change === true){
-                                    return false;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    if($attribute){
-                                        if(is_array($parent)){
-                                            unset($parent[$attribute]);
-                                        }
-                                        elseif(is_object($parent)){
-                                            unset($parent->{$attribute});
-                                        }
-                                    } else {
-                                        if(is_array($parent)){
-                                            unset($parent[$shift]);
-                                        }
-                                        elseif(is_object($parent)){
-                                            unset($parent->{$shift});
-                                        }
+                        elseif(is_object($object)){
+                            if(property_exists($object, $shift)){
+                                $parent = $object;
+                                $object = $object->{$shift};
+                                $ready = false;
+                                $attribute = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $parent = $object;
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
                                     }
-                                    return true;
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $parent = $object;
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return false;
+                                    }
+                                }
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        if($attribute){
+                                            if(is_array($parent)){
+                                                unset($parent[$attribute]);
+                                            }
+                                            elseif(is_object($parent)){
+                                                unset($parent->{$attribute});
+                                            }
+                                        } else {
+                                            if(is_array($parent)){
+                                                unset($parent[$shift]);
+                                            }
+                                            elseif(is_object($parent)){
+                                                unset($parent->{$shift});
+                                            }
+                                        }
+                                        return true;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return false;
                             }
                         } else {
                             if(empty($attributeList)){
@@ -1196,90 +1205,92 @@ class Core
                     $attributeList = explode('.', $property);
                     if(array_key_exists(1, $attributeList)){
                         $shift = array_shift($attributeList);
-                        if(
-                            is_array($object) &&
-                            array_key_exists($shift, $object)
-                        ){
-                            $object = $object[$shift];
-                            $ready = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
+                        if(is_array($object)){
+                            if(array_key_exists($shift, $object)){
+                                $object = $object[$shift];
+                                $ready = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                        break;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return false;
+                                    }
                                 }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                    break;
-                                }
-                                elseif($need_next_change === true){
-                                    return false;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    return true;
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        return true;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return false;
                             }
                         }
-                        elseif(
-                            is_object($object) &&
-                            property_exists($object, $shift)
-                        ){
-                            $object = $object->{$shift};
-                            $ready = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
+                        elseif(is_object($object)){
+                            if(property_exists($object, $shift)){
+                                $object = $object->{$shift};
+                                $ready = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                        break;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return false;
+                                    }
                                 }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                    break;
-                                }
-                                elseif($need_next_change === true){
-                                    return false;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    return true;
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        return true;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return false;
                             }
                         } else {
                             if(empty($attributeList)){
@@ -1384,88 +1395,90 @@ class Core
                     $attributeList = explode('.', $property);
                     if(array_key_exists(1, $attributeList)){
                         $shift = array_shift($attributeList);
-                        if(
-                            is_array($object) &&
-                            array_key_exists($shift, $object)
-                        ){
-                            $object = $object[$shift];
-                            $ready = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
+                        if(is_array($object)){
+                            if(array_key_exists($shift, $object)){
+                                $object = $object[$shift];
+                                $ready = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return false;
+                                    }
                                 }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                }
-                                elseif($need_next_change === true){
-                                    return false;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    return true;
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        return true;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return false;
                             }
                         }
-                        elseif(
-                            is_object($object) &&
-                            property_exists($object, $shift)
-                        ){
-                            $object = $object->{$shift};
-                            $ready = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
+                        elseif(is_object($object)){
+                            if(property_exists($object, $shift)){
+                                $object = $object->{$shift};
+                                $ready = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return false;
+                                    }
                                 }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                }
-                                elseif($need_next_change === true){
-                                    return false;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    return true;
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        return true;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return false;
                             }
                         } else {
                             if(empty($attributeList)){
@@ -1604,90 +1617,92 @@ class Core
                     $attributeList = explode('.', $property);
                     if(array_key_exists(1, $attributeList)){
                         $shift = array_shift($attributeList);
-                        if(
-                            is_array($object) &&
-                            array_key_exists($shift, $object)
-                        ){
-                            $object = $object[$shift];
-                            $ready = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
+                        if(is_array($object)){
+                            if(array_key_exists($shift, $object)){
+                                $object = $object[$shift];
+                                $ready = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                        break;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return null;
+                                    }
                                 }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                    break;
-                                }
-                                elseif($need_next_change === true){
-                                    return null;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    return $object;
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        return $object;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return null;
                             }
                         }
-                        elseif(
-                            is_object($object) &&
-                            property_exists($object, $shift)
-                        ){
-                            $object = $object->{$shift};
-                            $ready = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
+                        elseif(is_object($object)){
+                            if(property_exists($object, $shift)){
+                                $object = $object->{$shift};
+                                $ready = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                        break;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return null;
+                                    }
                                 }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                    break;
-                                }
-                                elseif($need_next_change === true){
-                                    return null;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    return $object;
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        return $object;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return null;
                             }
                         } else {
                             if(empty($attributeList)){
@@ -1792,88 +1807,90 @@ class Core
                     $attributeList = explode('.', $property);
                     if(array_key_exists(1, $attributeList)){
                         $shift = array_shift($attributeList);
-                        if(
-                            is_array($object) &&
-                            array_key_exists($shift, $object)
-                        ){
-                            $object = $object[$shift];
-                            $ready = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
+                        if(is_array($object)){
+                            if(array_key_exists($shift, $object)){
+                                $object = $object[$shift];
+                                $ready = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return null;
+                                    }
                                 }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                }
-                                elseif($need_next_change === true){
-                                    return null;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    return $object;
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        return $object;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return null;
                             }
                         }
-                        elseif(
-                            is_object($object) &&
-                            property_exists($object, $shift)
-                        ){
-                            $object = $object->{$shift};
-                            $ready = false;
-                            foreach($attributeList as $attributeList_nr => $attribute){
-                                if(
-                                    is_array($object) &&
-                                    array_key_exists($attribute, $object)
-                                ){
-                                    $object = $object[$attribute];
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
+                        elseif(is_object($object)){
+                            if(property_exists($object, $shift)){
+                                $object = $object->{$shift};
+                                $ready = false;
+                                foreach($attributeList as $attributeList_nr => $attribute){
+                                    if(
+                                        is_array($object) &&
+                                        array_key_exists($attribute, $object)
+                                    ){
+                                        $object = $object[$attribute];
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif(
+                                        is_object($object) &&
+                                        property_exists($object, $attribute)
+                                    ){
+                                        $object = $object->{$attribute};
+                                        unset($attributeList[$attributeList_nr]);
+                                        $need_next_change = false;
+                                        $ready = true;
+                                    }
+                                    elseif($need_next_change === false){
+                                        $need_next_change = true;
+                                        $ready = false;
+                                    }
+                                    elseif($need_next_change === true){
+                                        return null;
+                                    }
                                 }
-                                elseif(
-                                    is_object($object) &&
-                                    property_exists($object, $attribute)
-                                ){
-                                    $object = $object->{$attribute};
-                                    unset($attributeList[$attributeList_nr]);
-                                    $need_next_change = false;
-                                    $ready = true;
-                                }
-                                elseif($need_next_change === false){
-                                    $need_next_change = true;
-                                    $ready = false;
-                                }
-                                elseif($need_next_change === true){
-                                    return null;
-                                }
-                            }
-                            if(empty($attributeList)){
-                                unset($properties[$nr]);
-                                if($ready){
-                                    return $object;
+                                if(empty($attributeList)){
+                                    unset($properties[$nr]);
+                                    if($ready){
+                                        return $object;
+                                    }
+                                } else {
+                                    $properties[$nr] = implode('.', $attributeList);
                                 }
                             } else {
-                                $properties[$nr] = implode('.', $attributeList);
+                                return null;
                             }
                         } else {
                             if(empty($attributeList)){
