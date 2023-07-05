@@ -2024,10 +2024,12 @@ class Core
                     array_key_exists($attribute, $object)
                 ) {
                     //exist key
+                    $parent = $object;
                     $object = $object[$attribute];
                 } else {
                     //create key
                     $object[$attribute] = [];
+                    $parent = $object;
                     $object = $object[$attribute];
                 }
             }
@@ -2048,7 +2050,12 @@ class Core
                 return false;
             }
         }
-        $object = $value;
+        if(is_array($parent)){
+            $parent[$attribute] = $value;
+        } else {
+            $parent->{$attribute} = $value;
+        }
+
         echo '4 ';
         var_dump($object);
         var_dump($parent);
