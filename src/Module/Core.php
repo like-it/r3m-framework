@@ -1574,7 +1574,7 @@ class Core
             $need_next_change = false;
             $ready = false;
             if($is_debug){
-                ddd($properties);
+                d($properties);
             }
             while(!empty($properties)){
                 foreach($properties as $nr => $property){
