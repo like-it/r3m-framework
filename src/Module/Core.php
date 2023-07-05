@@ -595,7 +595,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 unset($object[$property]);
                                 $ready = true;
@@ -610,7 +612,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 unset($object->{$property});
                                 $ready = true;
@@ -835,8 +839,11 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
+                                unset($object->{$property});
                                 $ready = true;
                             }
                         }
@@ -848,8 +855,11 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
+                                unset($object[$property]);
                                 $ready = true;
                             }
                         }
@@ -1155,7 +1165,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 $ready = true;
                             }
@@ -1168,7 +1180,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 $ready = true;
                             }
@@ -1344,7 +1358,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 $ready = true;
                             }
@@ -1357,7 +1373,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 $ready = true;
                             }
@@ -1569,7 +1587,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 $ready = true;
                             }
@@ -1582,7 +1602,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 $ready = true;
                             }
@@ -1759,7 +1781,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 $ready = true;
                             }
@@ -1772,7 +1796,9 @@ class Core
                             if($need_next_change){
                                 $need_next_change = false;
                             }
-                            unset($properties[$nr]);
+                            for($i = $nr; $i < count($properties); $i++){
+                                unset($properties[$i]);
+                            }
                             if(empty($properties)){
                                 $ready = true;
                             }
