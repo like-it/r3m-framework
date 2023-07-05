@@ -1600,6 +1600,8 @@ class Core
                             for($i = $nr; $i < $property_count; $i++){
                                 unset($properties[$i]);
                             }
+                            d($i);
+                            d($property_count);
                             d($properties);
                             if(empty($properties)){
                                 $ready = true;
