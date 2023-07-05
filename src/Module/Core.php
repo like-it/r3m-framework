@@ -2036,10 +2036,12 @@ class Core
                     property_exists($object, $attribute)
                 ) {
                     //exists property
+                    $parent = $object;
                     $object = $object->{$attribute};
                 } else {
                     //create property
                     $object->{$attribute} = (object) [];
+                    $parent = $object;
                     $object = $object->{$attribute};
                 }
             } else {
