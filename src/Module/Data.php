@@ -288,7 +288,7 @@ class Data {
                         return $this->data->{$value};
                     } else {
                         Core::object_delete($value, $this->data()); //for sorting an object
-                        Core::object_set($value, $type, $this->data(), $is_debug);
+                        Core::object_set($value, $type, $this->data(), 'child', $is_debug);
                         return Core::object_get($value, $this->data());
                     }
                 }
