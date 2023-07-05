@@ -1591,7 +1591,10 @@ class Core
                             is_array($object) &&
                             array_key_exists($property, $object)
                         ){
-                            d('yes');
+                            if($is_debug){
+                                d('yes');
+                            }
+
                             $object = $object[$property];
                             if($need_next_change){
                                 $need_next_change = false;
@@ -1600,9 +1603,11 @@ class Core
                             for($i = $nr; $i < $property_count; $i++){
                                 unset($properties[$i]);
                             }
-                            d($nr);
-                            d($property_count);
-                            d($properties);
+                            if($is_debug) {
+                                d($nr);
+                                d($property_count);
+                                d($properties);
+                            }
                             if(empty($properties)){
                                 $ready = true;
                             }
