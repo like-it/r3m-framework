@@ -2000,6 +2000,62 @@ class Core
 
     public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child', $is_debug=false)
     {
+        if (is_string($return) && $return !== 'child') {
+            if ($return === 'root') {
+                $return = $object;
+            } else {
+                $return = Core::object_get($return, $object);
+            }
+        }
+        if (
+            !is_object($object) &&
+            !is_array($object)
+        ) {
+            return false;
+        }
+        if (is_scalar($attributeList)) {
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string)$attributeList);
+        }
+        foreach ($attributeList as $key => $attribute) {
+            if($attribute === null || $attribute === ''){
+                continue;
+            }
+            if(is_array($object)){
+                if (
+                    array_key_exists($attribute, $object)
+                ) {
+                    $object = $object[$attribute];
+                } else {
+                    $object[$attribute] = [];
+                    $object = $object[$attribute];
+                }
+            }
+            elseif(is_object($object)){
+                if (
+                    property_exists($object, $attribute)
+                ) {
+                    //exists property
+                    $object = $object->{$attribute};
+                } else {
+                    //create property
+                    $object->{$attribute} = (object) [];
+                    $object = $object->{$attribute};
+                }
+            } else {
+                return false;
+            }
+        }
+        $object = $value;
+        if ($return === 'child') {
+            return $value;
+        }
+        return $return;
+    }
+
+
+    /*
+    public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child', $is_debug=false)
+    {
         if (
             !is_object($object) &&
             !is_array($object)
@@ -2007,7 +2063,6 @@ class Core
             return null;
         }
         if($is_debug){
-            echo '3 ';
             d($attributeList);
             d($value);
             d($object);
@@ -2032,11 +2087,6 @@ class Core
                 if (isset($object->{$key}) && is_object($object->{$key})) {
                     if (empty($attribute) && $attribute !== '0' && is_object($value)) {
                         foreach ($value as $value_key => $value_value) {
-                            /*
-                            if(isset($object->$key->$value_key)){
-                                // unset($object->$key->$value_key);   //so sort will happen, @bug request will take forever and apache2 crashes needs reboot apache2
-                            }
-                            */
                             $object->{$key}->{$value_key} = $value_value;
                         }
                         return $object->{$key};
@@ -2082,6 +2132,7 @@ class Core
         }
         return $return;
     }
+    */
 
     public static function object_is_empty($object = null): bool
     {
