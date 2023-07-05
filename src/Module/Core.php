@@ -586,7 +586,10 @@ class Core
             while(!empty($properties)){
                 foreach($properties as $nr => $property){
                     if(strpos($property, '.') !== false){
-                        if(array_key_exists($property, $object)){
+                        if(
+                            is_array($object) &&
+                            array_key_exists($property, $object)
+                        ){
                             $parent = $object;
                             $object = $object[$property];
                             if($need_next_change){
@@ -598,6 +601,21 @@ class Core
                                 $ready = true;
                             }
                         }
+                        elseif(
+                            is_object($object) &&
+                            property_exists($object, $property)
+                        ){
+                            $parent = $object;
+                            $object = $object->{$property};
+                            if($need_next_change){
+                                $need_next_change = false;
+                            }
+                            unset($properties[$nr]);
+                            if(empty($properties)){
+                                unset($object->{$property});
+                                $ready = true;
+                            }
+                        }
                     }
                 }
                 if(
@@ -605,10 +623,19 @@ class Core
                     strpos($property, '.') === false
                 ){
                     if(
+                        is_array($object) &&
                         array_key_exists($property, $object) &&
                         $ready
                     ){
                         unset($object[$property]);
+                        return true;
+                    }
+                    elseif(
+                        is_object($object) &&
+                        property_exists($object, $property) &&
+                        $ready
+                    ) {
+                        unset($object->{$property});
                         return true;
                     } else {
                         return false;
@@ -794,8 +821,24 @@ class Core
             while(!empty($properties)){
                 foreach($properties as $nr => $property){
                     if(strpos($property, '.') !== false){
-                        if(property_exists($object, $property)){
+                        if(
+                            is_object($object) &&
+                            property_exists($object, $property)
+                        ){
                             $object = $object->{$property};
+                            if($need_next_change){
+                                $need_next_change = false;
+                            }
+                            unset($properties[$nr]);
+                            if(empty($properties)){
+                                $ready = true;
+                            }
+                        }
+                        elseif(
+                            is_array($object) &&
+                            array_key_exists($property, $object)
+                        ){
+                            $object = $object[$property];
                             if($need_next_change){
                                 $need_next_change = false;
                             }
