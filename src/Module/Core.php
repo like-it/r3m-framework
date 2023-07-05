@@ -1583,6 +1583,7 @@ class Core
                             is_array($object) &&
                             array_key_exists($property, $object)
                         ){
+                            d('yes');
                             $object = $object[$property];
                             if($need_next_change){
                                 $need_next_change = false;
