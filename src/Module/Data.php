@@ -333,7 +333,7 @@ class Data {
                     $attribute = (string) $attribute;
                 }
                 if(is_string($attribute)){
-                    return Core::object_get($attribute, $this->data());
+                    return Core::object_get($attribute, $this->data(),$this->is_debug);
                 }
                 elseif(is_object($attribute) && get_class($attribute) === Data::class){
                     $this->setData($attribute->data());
