@@ -1636,6 +1636,7 @@ class Core
                     }
                 }
                 if(empty($properties)){
+                    d($ready);
                     if($ready){
                         return $object;
                     }
