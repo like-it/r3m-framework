@@ -2008,10 +2008,10 @@ class Core
         }
         if($is_debug){
             echo '3 ';
-            var_dump($attributeList);
-            var_dump($value);
-            var_dump($object);
-            var_dump($return);
+            d($attributeList);
+            d($value);
+            d($object);
+            d($return);
             die;
         }
         if (is_string($return) && $return !== 'child') {
