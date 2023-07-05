@@ -227,7 +227,7 @@ class Data {
         return $this->data('get', $attribute);
     }
 
-    public function set($attribute='', $value=null){
+    public function set($attribute='', $value=null, $is_debug=false){
         $part_before = stristr($attribute, '[]', true);
         $part_after = stristr($attribute, '[]');
         if($part_before !== false){
@@ -238,7 +238,7 @@ class Data {
             ddd($part_after);
 //            $attribute .= '.'
         }
-        return $this->data('set', $attribute, $value);
+        return $this->data('set', $attribute, $value, $is_debug);
     }
 
     public function delete($attribute=''): bool
@@ -267,7 +267,7 @@ class Data {
         $this->is_debug = $is_debug;
     }
 
-    public function data($attribute=null, $value=null, $type=null){
+    public function data($attribute=null, $value=null, $type=null, $is_debug=false){
         if(is_int($attribute)){
             $attribute = (string) $attribute;
         }
@@ -288,7 +288,7 @@ class Data {
                         return $this->data->{$value};
                     } else {
                         Core::object_delete($value, $this->data()); //for sorting an object
-                        Core::object_set($value, $type, $this->data());
+                        Core::object_set($value, $type, $this->data(), $is_debug);
                         return Core::object_get($value, $this->data());
                     }
                 }

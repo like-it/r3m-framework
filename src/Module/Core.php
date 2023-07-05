@@ -2006,6 +2006,14 @@ class Core
         ) {
             return null;
         }
+        if($is_debug){
+            echo '3 ';
+            var_dump($attributeList);
+            var_dump($value);
+            var_dump($object);
+            var_dump($return);
+            die;
+        }
         if (is_string($return) && $return !== 'child') {
             if ($return === 'root') {
                 $return = $object;
