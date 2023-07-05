@@ -209,7 +209,6 @@ class Event extends Main {
                     'ramdisk' => true
                 ]
             );
-            ddd($response);
             if(
                 $response &&
                 array_key_exists('list', $response)
@@ -218,10 +217,20 @@ class Event extends Main {
             }
         }
         $duration = microtime(true) - $start;
-        if($duration >= 1){
-            $object->logger($object->config('project.log.name'))->info('Event::configure (sec)', [$duration]);
-        } else {
-            $object->logger($object->config('project.log.name'))->info('Event::configure (msec)', [$duration * 1000]);
+        if($object->config('project.log.node')){
+            if($duration >= 1){
+                $object->logger($object->config('project.log.node'))->info('Event::configure (sec)', [$duration]);
+            } else {
+                $object->logger($object->config('project.log.node'))->info('Event::configure (msec)', [$duration * 1000]);
+            }
         }
+        elseif($object->config('project.log.name')){
+            if($duration >= 1){
+                $object->logger($object->config('project.log.name'))->info('Event::configure (sec)', [$duration]);
+            } else {
+                $object->logger($object->config('project.log.name'))->info('Event::configure (msec)', [$duration * 1000]);
+            }
+        }
+
     }
 }
