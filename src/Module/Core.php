@@ -1604,6 +1604,7 @@ class Core
                                 unset($properties[$i]);
                             }
                             if($is_debug) {
+                                d($object);
                                 d($nr);
                                 d($property_count);
                                 d($properties);
