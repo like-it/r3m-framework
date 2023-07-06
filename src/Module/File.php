@@ -28,6 +28,12 @@ class File {
     const STRING = 'string';
     const ARRAY = 'array';
 
+    const SIZE = 'size';
+    const BYTE = 'byte';
+    const BYTES = 'bytes';
+    const LINE = 'line';
+    const LINES = 'lines';
+
     public static function is($url=''): bool
     {
         $url = rtrim($url, '/');
@@ -327,12 +333,12 @@ class File {
     {
         $size = file_put_contents($url, $data, $flags);
         switch($return){
-            case 'size':
-            case 'byte':
-            case 'bytes':
+            case File::SIZE:
+            case File::BYTE:
+            case File::BYTES:
                 return $size;
-            case 'line':
-            case 'lines':
+            case File::LINE:
+            case File::LINES:
                 $explode = explode(PHP_EOL, $data);
                 return $size !== false ? count($explode) : false;
         }
