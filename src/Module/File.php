@@ -344,7 +344,6 @@ class File {
             default:
                 return $size;
         }
-        return false;
     }
 
     /**
