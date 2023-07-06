@@ -341,6 +341,8 @@ class File {
             case File::LINES:
                 $explode = explode(PHP_EOL, $data);
                 return $size !== false ? count($explode) : false;
+            default:
+                return $size;
         }
         return false;
     }
