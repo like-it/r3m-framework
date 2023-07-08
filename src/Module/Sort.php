@@ -376,7 +376,7 @@ class Sort extends Data {
         if(is_array($object_b)){
             $b = $object_b['uuid'];
         }
-        elseif(is_object($object_b))
+        elseif(is_object($object_b)){
             $b = $object_b->uuid;
         }
         if($a === $b){
