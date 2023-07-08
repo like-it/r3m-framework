@@ -304,8 +304,18 @@ class Sort extends Data {
 
     public function uuid_compare_ascending($a, $b): int
     {
-        $object_a = reset($a);
-        $object_b = reset($b);
+        if(is_array($a)){
+            $object_a = reset($a);
+        }
+        elseif(is_string($a)){
+            $object_a = false;
+        }
+        if(is_array($b)){
+            $object_b = reset($b);
+        }
+        elseif(is_string($b)){
+            $object_b = false;
+        }
         if(is_array($object_a)){
             $a = $object_a['uuid'];
         }
@@ -345,16 +355,28 @@ class Sort extends Data {
 
     public function uuid_compare_descending($a, $b): int
     {
-        $object_a = reset($a);
-        $object_b = reset($b);
+        if(is_array($a)){
+            $object_a = reset($a);
+        }
+        elseif(is_string($a)){
+            $object_a = false;
+        }
+        if(is_array($a)){
+            $object_b = reset($b);
+        }
+        elseif(is_string($a)){
+            $object_b = false;
+        }
         if(is_array($object_a)){
             $a = $object_a['uuid'];
-        } else {
+        }
+        elseif(is_object($object_a)){
             $a = $object_a->uuid;
         }
         if(is_array($object_b)){
             $b = $object_b['uuid'];
-        } else {
+        }
+        elseif(is_object($object_b))
             $b = $object_b->uuid;
         }
         if($a === $b){
