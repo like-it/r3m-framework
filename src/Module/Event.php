@@ -209,7 +209,7 @@ class Event extends Main {
                     'ramdisk' => true
                 ]
             );
-            ddd($response);
+            d($response);
             if(
                 $response &&
                 array_key_exists('list', $response)
