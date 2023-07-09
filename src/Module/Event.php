@@ -180,7 +180,7 @@ class Event extends Main {
      */
     public static function configure(App $object): void
     {
-
+return;
         $start = microtime(true);
         $event = new Event($object);
         $limit = $object->config('event.chunk_size') ?? Event::CHUNK_SIZE;
@@ -209,7 +209,6 @@ class Event extends Main {
                     'ramdisk' => true
                 ]
             );
-            d($response);
             if(
                 $response &&
                 array_key_exists('list', $response)
