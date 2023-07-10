@@ -780,6 +780,7 @@ class Build {
                         break;
                     default:
                         if($type !== null){
+                            d($selection);
                             throw new Exception('type (' . $type . ') value (' . $select['value'] . ')undefined in source: ' . $this->storage()->data('source') . ' on line: ' . $record['row']);
                         }
                 }
