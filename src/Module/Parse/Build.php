@@ -780,7 +780,7 @@ class Build {
                         break;
                     default:
                         if($type !== null){
-                            throw new Exception('type (' . $type . ') undefined in source: ' . $this->storage()->data('source') . ' on line: ' . $record['row']);
+                            throw new Exception('type (' . $type . ') value (' . $record['value'] . ')undefined in source: ' . $this->storage()->data('source') . ' on line: ' . $record['row']);
                         }
                 }
                 $is_tag = false;
