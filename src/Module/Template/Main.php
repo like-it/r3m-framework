@@ -161,7 +161,9 @@ class Main {
         }
 	}
 
-	protected function value_minus($variable1=null, $variable2=null){		
+	protected function value_minus($variable1=null, $variable2=null){
+        d($variable1);
+        d($variable2);
 		$variable1 += 0;
 		$variable2 += 0;
 		return $variable1 - $variable2;        
