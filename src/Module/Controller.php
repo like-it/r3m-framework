@@ -634,7 +634,7 @@ class Controller {
     {
         $read = $object->parse_read($url, sha1($url));
         if($read){
-            $object->data($read->get());
+            $object->data($read->data());
         }
     }
 
