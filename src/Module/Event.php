@@ -124,7 +124,6 @@ class Event extends Main {
         $events = $object->get(App::EVENT)->select(Event::NAME, [
             'action' => $action
         ]);
-        ddd($events);
         if(empty($events)){
             return null;
         }
