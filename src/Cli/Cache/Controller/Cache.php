@@ -28,9 +28,11 @@ class Cache extends Controller {
 
     const COMMAND_INFO = 'info';
     const COMMAND_CLEAR = 'clear';
+    const COMMAND_GARBAGE = 'garbage';
     const COMMAND = [
         Cache::COMMAND_INFO,
-        Cache::COMMAND_CLEAR
+        Cache::COMMAND_CLEAR,
+        Cache::COMMAND_GARBAGE
     ];
 
     const DEFAULT_COMMAND = Cache::COMMAND_INFO;
@@ -108,6 +110,30 @@ class Cache extends Controller {
     private static function clear(App $object){
         $name = false;
         $url = false;
+        try {
+            $object->config('ramdisk.is.disabled', true);
+            $name = Cache::name(__FUNCTION__, Cache::NAME);
+            $url = Cache::locate($object, $name);
+            $response = Cache::response($object, $url);
+            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $response;
+        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
+            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
+            return $exception;
+        }
+    }
+
+    private static function garbage(App $object){
+        $name = false;
+        $url = false;
+        ddd('garbage');
         try {
             $object->config('ramdisk.is.disabled', true);
             $name = Cache::name(__FUNCTION__, Cache::NAME);
