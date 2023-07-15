@@ -155,7 +155,9 @@ class Cache extends Controller {
                                 foreach($read as $file){
                                     if($file->type === File::TYPE){
                                         $file->mtime = File::mtime($file->url);
-                                        d($file);
+                                        if($file->mtime < time() - (15 * 60)){
+                                            ddd($file);
+                                        }
                                     }
                                 }
                             }
