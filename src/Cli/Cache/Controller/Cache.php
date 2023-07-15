@@ -139,19 +139,21 @@ class Cache extends Controller {
         $command = $object->parameter($object, __FUNCTION__, 1);
         switch($command){
             case Cache::COMMAND_COLLECTOR :
-                $dir = new Dir();
-                $dir_cache = $object->config('ramdisk.url') .
-                    $object->config(Config::POSIX_ID) .
-                    $object->config('ds') .
-                    'Cache' .
-                    $object->config('ds')
-                ;
-                $read = $dir->read($dir_cache);
-                if(is_array($read)){
-                    foreach($read as $file){
-                        if($file->type === File::TYPE){
-                            $file->mtime = File::mtime($file->url);
-                            d($file);
+                if($object->config('ramdisk.url')){
+                    $dir = new Dir();
+                    $dir_cache = $object->config('ramdisk.url') .
+                        $object->config(Config::POSIX_ID) .
+                        $object->config('ds') .
+                        'Cache' .
+                        $object->config('ds')
+                    ;
+                    $read = $dir->read($dir_cache);
+                    if(is_array($read)){
+                        foreach($read as $file){
+                            if($file->type === File::TYPE){
+                                $file->mtime = File::mtime($file->url);
+                                d($file);
+                            }
                         }
                     }
                 }
