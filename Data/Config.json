@@ -38,6 +38,7 @@
         "btree":"text\/plain",
         "lock":"text\/plain",
         "connect":"text\/plain",
+        "response":"text\/plain",
         "txt": "text\/plain",
         "log": "text\/plain",
         "html": "text\/html",
@@ -120,7 +121,8 @@
         "xml": ".xml",
         "lock": ".lock",
         "btree": ".btree",
-        "connect": ".connect"
+        "connect": ".connect",
+        "response": ".response"
     },
     "error": {
         "extension": {

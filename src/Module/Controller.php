@@ -648,4 +648,53 @@ class Controller {
     public static function route(App $object, $name, $options=[]){
         return $object->route()::find($object, $name, $options);
     }
+
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public static function cache_key(App $object, $url=null): ?string
+    {
+        if($url === null){
+            return null;
+        }
+        $key = [
+            'url' => $url,
+            'object' => $object->data(),
+        ];
+        if($object->session('has')){
+            $key = [
+                'url' => $url,
+                'object' => $object->data(),
+                'session' => $object->session(),
+            ];
+        }
+        return sha1(Core::object($key, Core::OBJECT_JSON_LINE)) . '.' . File::basename($url);
+    }
+
+    public static function cache_read(App $object, $key=null, $duration=null){
+        return null;
+    }
+
+    /**
+     * @throws FileWriteException
+     */
+    public static function cache_write(App $object, $key=null, $data=null): ?int
+    {
+        if(!$data){
+            return null;
+        }
+        if($object->config('ramdisk.url')){
+            $dir_cache =
+                $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Cache' .
+                $object->config('ds')
+            ;
+            $url_cache = $dir_cache . $key . $object->config('extension.response');
+            return File::write($url_cache, $data);
+        }
+        return null;
+    }
 }
