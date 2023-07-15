@@ -133,6 +133,8 @@ class Cache extends Controller {
     private static function garbage(App $object){
         $name = false;
         $url = false;
+        $command = $object->parameter($object, __FUNCTION__, 1);
+        d($command);
         ddd('garbage');
         try {
             $object->config('ramdisk.is.disabled', true);
