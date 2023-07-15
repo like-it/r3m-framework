@@ -673,6 +673,26 @@ class Controller {
     }
 
     public static function cache_read(App $object, $key=null, $duration=null){
+        if($object->config('ramdisk.url')){
+            $dir_cache =
+                $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Cache' .
+                $object->config('ds')
+            ;
+            $url_cache = $dir_cache . $key . $object->config('extension.response');
+            if(File::exist($url_cache)){
+                if($duration){
+                    $mtime = File::mtime($url_cache);
+                    if($mtime + $duration > time()){
+                        return File::read($url_cache);
+                    }
+                } else {
+                    return File::read($url_cache);
+                }
+            }
+        }
         return null;
     }
 
