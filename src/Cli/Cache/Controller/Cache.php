@@ -141,9 +141,7 @@ class Cache extends Controller {
             case Cache::COMMAND_COLLECTOR :
                 if($object->config('ramdisk.url')){
                     $dir = new Dir();
-
                     $dir_user_id = $dir->read($object->config('ramdisk.url'));
-
                     if(is_array($dir_user_id)){
                         foreach($dir_user_id as $file){
                             $dir_cache = $file->url .
