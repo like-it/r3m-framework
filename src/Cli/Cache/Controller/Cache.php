@@ -144,25 +144,24 @@ class Cache extends Controller {
 
                     $dir_user_id = $dir->read($object->config('ramdisk.url'));
 
-                    ddd($dir_user_id);
-
-                    /*
-                    $dir_cache = $object->config('ramdisk.url') .
-                        $object->config(Config::POSIX_ID) .
-                        $object->config('ds') .
-                        'Cache' .
-                        $object->config('ds')
-                    ;
-                    $read = $dir->read($dir_cache);
-                    */
-                    if(is_array($read)){
-                        foreach($read as $file){
-                            if($file->type === File::TYPE){
-                                $file->mtime = File::mtime($file->url);
-                                d($file);
+                    if(is_array($dir_user_id)){
+                        foreach($dir_user_id as $file){
+                            $dir_cache = $file->url .
+                                'Cache' .
+                                $object->config('ds')
+                            ;
+                            $read = $dir->read($dir_cache);
+                            if(is_array($read)){
+                                foreach($read as $file){
+                                    if($file->type === File::TYPE){
+                                        $file->mtime = File::mtime($file->url);
+                                        d($file);
+                                    }
+                                }
                             }
                         }
                     }
+                    ddd($dir_user_id);
                 }
             break;
         }
