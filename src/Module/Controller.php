@@ -693,6 +693,7 @@ class Controller {
                 $object->config('ds')
             ;
             $url_cache = $dir_cache . $key . $object->config('extension.response');
+            Dir::create($dir_cache, Dir::CHMOD);
             return File::write($url_cache, $data);
         }
         return null;
