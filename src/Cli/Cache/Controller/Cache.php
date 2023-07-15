@@ -12,6 +12,7 @@ namespace R3m\Io\Cli\Cache\Controller;
 
 
 use R3m\Io\App;
+use R3m\Io\Config;
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
 use R3m\Io\Module\Event;
@@ -21,6 +22,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Module\File;
 
 class Cache extends Controller {
     const NAME = 'Cache';
@@ -29,6 +31,7 @@ class Cache extends Controller {
     const COMMAND_INFO = 'info';
     const COMMAND_CLEAR = 'clear';
     const COMMAND_GARBAGE = 'garbage';
+    const COMMAND_COLLECTOR = 'collector';
     const COMMAND = [
         Cache::COMMAND_INFO,
         Cache::COMMAND_CLEAR,
@@ -134,6 +137,26 @@ class Cache extends Controller {
         $name = false;
         $url = false;
         $command = $object->parameter($object, __FUNCTION__, 1);
+        switch($command){
+            case Cache::COMMAND_COLLECTOR :
+                $dir = new Dir();
+                $dir_cache = $object->config('ramdisk.url') .
+                    $object->config(Config::POSIX_ID) .
+                    $object->config('ds') .
+                    'Cache' .
+                    $object->config('ds')
+                ;
+                $read = $dir->read($dir_cache);
+                if(is_array($read)){
+                    foreach($read as $file){
+                        if($file->type === File::TYPE){
+                            $file->mtime = File::mtime($file->url);
+                            d($file);
+                        }
+                    }
+                }
+            break;
+        }
         d($command);
         ddd('garbage');
         try {
