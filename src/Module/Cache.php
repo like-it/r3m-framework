@@ -100,7 +100,7 @@ class Cache {
 
     const INF = 'INF'; //calling r3m.io cache:clear will remove all INF cache
 
-    public static function url(App $object, $options=[]){
+    public static function name(App $object, $options=[]){
         d($options);
         if(!array_key_exists('type', $options)){
             return null;
@@ -142,9 +142,9 @@ class Cache {
                         continue;
                     }
                 }
-                ddd($list);
+                return $current->name . '-' . implode('-', $list);
         }
-
+        return null;
     }
 
     /**
@@ -153,7 +153,7 @@ class Cache {
      */
     public static function key(App $object, $options=[]): ?string
     {
-        if(!array_key_exists('url', $options)){
+        if(!array_key_exists('name', $options)){
             return null;
         }
         if(!array_key_exists('ttl', $options)){
@@ -165,7 +165,7 @@ class Cache {
             $options['ttl']  = 'INF';   // will be removed with cache:clear command
         }
         $key = [
-            'url' => $options['url']
+            'name' => $options['name']
         ];
         if(
             array_key_exists('object', $options) &&
@@ -203,7 +203,7 @@ class Cache {
             $object->config('ds') .
             sha1(Core::object($key, Core::OBJECT_JSON_LINE)) .
             '.' .
-            File::basename($options['url'])
+            File::basename($options['name'])
         ;
     }
 
