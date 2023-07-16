@@ -100,6 +100,9 @@ class Cache {
 
     const INF = 'INF'; //calling r3m.io cache:clear will remove all INF cache
 
+    /**
+     * @throws Exception
+     */
     public static function name(App $object, $options=[]){
         if(!array_key_exists('type', $options)){
             return null;
