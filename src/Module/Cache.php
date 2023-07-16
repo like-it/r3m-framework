@@ -108,8 +108,9 @@ class Cache {
         switch($options['type']){
             case Cache::ROUTE:
                 $current = $object->route()->current();
-                ddd($current);
-//                $request = $current->request()->data();
+                d($current);
+                $request = $current->request();
+                ddd($request);
                 $list = [];
                 if(array_key_exists('expose', $options)){
                     foreach($options['expose'] as $expose){
