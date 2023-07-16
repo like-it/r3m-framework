@@ -199,12 +199,14 @@ class Cache {
             //add session
             $key['session'] = $object->session();
         }
-        return $options['ttl'] .
+        $key = $options['ttl'] .
             $object->config('ds') .
             sha1(Core::object($key, Core::OBJECT_JSON_LINE)) .
             '.' .
             File::basename($options['name'])
         ;
+        ddd($key);
+        return $key;
     }
 
     public static function read(App $object, $options=[]){
