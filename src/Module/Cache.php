@@ -109,7 +109,7 @@ class Cache {
             case Cache::ROUTE:
                 $current = $object->route()->current();
                 d($current);
-                $request = $current->request();
+                $request = $current->request;
                 ddd($request);
                 $list = [];
                 if(array_key_exists('expose', $options)){
