@@ -119,6 +119,29 @@ class Cache {
                         }
                     }
                 }
+                foreach($list as $nr => $item){
+                    if(is_scalar($item)){
+                        $list[$nr] = str_replace([
+                            '../',
+                            './',
+                            '/',
+                            '\\',
+                            ':',
+                            '?',
+                            '&',
+                            '=',
+                            '%',
+                            '#',
+
+                        ],'-', $item);
+                    }
+                    elseif(is_array($item)){
+                        continue;
+                    }
+                    elseif(is_object($item)){
+                        continue;
+                    }
+                }
                 ddd($list);
         }
 
