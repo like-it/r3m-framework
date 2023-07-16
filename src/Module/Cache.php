@@ -277,7 +277,7 @@ class Cache {
             $object->config('cache.controller.url.name_length'),
             $object->config('cache.controller.url.name_separator'),
             $object->config('cache.controller.url.name_pop_or_shift')
-        )
+        );
         d($key);
         ddd('die');
         return $key;
