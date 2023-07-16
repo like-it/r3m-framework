@@ -174,7 +174,7 @@
             "url": {
                 "name_length": 40,
                 "name_separator": "-",
-                "name_pop_or_shift": "pop"
+                "name_pop_or_shift": "shift"
             }
         },
         "controller": {
