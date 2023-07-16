@@ -653,23 +653,60 @@ class Controller {
      * @throws ObjectException
      * @throws Exception
      */
-    public static function cache_key(App $object, $url=null): ?string
+    public static function cache_key(App $object, $options=[]): ?string
     {
-        if($url === null){
+        if(!array_key_exists('url', $options)){
             return null;
         }
-        $key = [
-            'url' => $url,
-            'object' => $object->data(),
-        ];
-        if($object->session('has')){
-            $key = [
-                'url' => $url,
-                'object' => $object->data(),
-                'session' => $object->session(),
-            ];
+        if(!array_key_exists('ttl', $options)){
+            $options['ttl'] = $object->config('cache.controller.ttl') ?? 600;
         }
-        return sha1(Core::object($key, Core::OBJECT_JSON_LINE)) . '.' . File::basename($url);
+        if(is_numeric($options['ttl'] )){
+            $options['ttl']  += 0;
+        } else {
+            $options['ttl']  = 'INF';   // will be removed with cache:clear command
+        }
+        $key = [
+            'url' => $options['url']
+        ];
+        if(
+            array_key_exists('object', $options) &&
+            $options['object'] === true
+        ){
+            //per user cache
+            $key['object'] = $object->data();
+        }
+        if(
+            array_key_exists('request', $options) &&
+            $options['request'] === true
+        ){
+            //per request cache
+            $key['request'] = $object->request();
+        }
+        if(
+            array_key_exists('route', $options) &&
+            $options['route'] === true
+        ){
+            //per route cache
+            $key['route'] = $object->route()->current();
+        }
+        if($object->session('has')){
+            //add session
+            $key['session'] = $object->session();
+        }
+        elseif(
+            array_key_exists('session', $options) &&
+            $options['session'] === true
+        ){
+            //add session
+            $key['session'] = $object->session();
+        }
+        return $options['ttl'] .
+            $object->config('ds') .
+            sha1(Core::object($key, Core::OBJECT_JSON_LINE)) .
+            '.' .
+            File::basename($options['url'])
+        ;
     }
 
     public static function cache_read(App $object, $key=null, $duration=null){

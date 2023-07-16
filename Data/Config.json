@@ -175,7 +175,8 @@
                 "name_length": 175,
                 "name_separator": "_",
                 "name_pop_or_shift": "shift"
-            }
+            },
+            "ttl": 600
         },
         "parse": {
             "url": {

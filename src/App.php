@@ -298,19 +298,10 @@ class App extends Data {
                         $functions[] = 'before_run';
                         $route->controller::before_run($object);
                     }
-//                    $start = microtime(true);
                     $route = Middleware::trigger($object, [
                         'route' => $route,
                         'methods' => $methods,
                     ]);
-                    /*
-                    $duration = microtime(true) - $start;
-                    if($duration < 1) {
-                        echo 'Duration: ' . round($duration * 1000, 2) . ' msec' . PHP_EOL;
-                    } else {
-                        echo 'Duration: ' . round($duration, 2) . ' sec' . PHP_EOL;
-                    }
-                    */
                     if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
                         $object->config('controller.function', $route->function);
