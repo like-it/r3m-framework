@@ -101,16 +101,16 @@ class Cache {
     const INF = 'INF'; //calling r3m.io cache:clear will remove all INF cache
 
     public static function name(App $object, $options=[]){
-        d($options);
         if(!array_key_exists('type', $options)){
+            return null;
+        }
+        if(!array_key_exists('extension', $options)){
             return null;
         }
         switch($options['type']){
             case Cache::ROUTE:
                 $current = $object->route()->current();
-                d($current);
                 $request = $current->request->data();
-                d($request);
                 $list = [];
                 if(array_key_exists('expose', $options)){
                     foreach($options['expose'] as $expose){
@@ -136,13 +136,14 @@ class Cache {
                         ],'-', $item);
                     }
                     elseif(is_array($item)){
+                        //maybe implement it like this: sha1(Core::object($item, Core::OBJECT_JSON_LINE));
                         continue;
                     }
                     elseif(is_object($item)){
                         continue;
                     }
                 }
-                return $current->name . '-' . implode('-', $list);
+                return $current->name . '-' . implode('-', $list) . $options['extension'];
         }
         return null;
     }
@@ -179,14 +180,79 @@ class Cache {
             $options['request'] === true
         ){
             //per request cache
-            $key['request'] = $object->request();
+            $request = $object->request();
+            $list = [];
+            if(array_key_exists('expose', $options)){
+                foreach($options['expose'] as $expose){
+                    if(property_exists($request, $expose)){
+                        $list[] = $request->{$expose};
+                    }
+                }
+            }
+            foreach($list as $nr => $item){
+                if(is_scalar($item)){
+                    $list[$nr] = str_replace([
+                        '../',
+                        './',
+                        '/',
+                        '\\',
+                        ':',
+                        '?',
+                        '&',
+                        '=',
+                        '%',
+                        '#',
+
+                    ],'-', $item);
+                }
+                elseif(is_array($item)){
+                    $list[$nr] = sha1(Core::object($item, Core::OBJECT_JSON_LINE));
+                }
+                elseif(is_object($item)){
+                    $list[$nr] = sha1(Core::object($item, Core::OBJECT_JSON_LINE));
+                }
+            }
+            $key['request'] = $list;
         }
         if(
             array_key_exists('route', $options) &&
             $options['route'] === true
         ){
             //per route cache
-            $key['route'] = $object->route()->current();
+             $current = $object->route()->current();
+            $request = $current->request->data();
+            $list = [];
+            if(array_key_exists('expose', $options)){
+                foreach($options['expose'] as $expose){
+                    if(property_exists($request, $expose)){
+                        $list[] = $request->{$expose};
+                    }
+                }
+            }
+            foreach($list as $nr => $item){
+                if(is_scalar($item)){
+                    $list[$nr] = str_replace([
+                        '../',
+                        './',
+                        '/',
+                        '\\',
+                        ':',
+                        '?',
+                        '&',
+                        '=',
+                        '%',
+                        '#',
+
+                    ],'-', $item);
+                }
+                elseif(is_array($item)){
+                    $list[$nr] = sha1(Core::object($item, Core::OBJECT_JSON_LINE));
+                }
+                elseif(is_object($item)){
+                    $list[$nr] = sha1(Core::object($item, Core::OBJECT_JSON_LINE));
+                }
+            }
+            $key['route'] = $list;
         }
         if($object->session('has')){
             //add session
