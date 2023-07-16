@@ -517,10 +517,10 @@ class App extends Data {
     public static function exception_to_cli(App $object, Exception $exception): string
     {
         $class = get_class($exception);
-        $width = Cli::tput('width');
+        $width = (int) Cli::tput('width');
         $background = '200;0;0';
         $output = chr(27) . '[48;2;' . $background . 'm';
-        $output .= str_repeat(' ', $width);
+        $output .= str_repeat(' ', $width || 0);
         $output .= PHP_EOL;
         $output .= $class . PHP_EOL;
         $output .= PHP_EOL;
