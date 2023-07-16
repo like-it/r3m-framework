@@ -709,7 +709,18 @@ class Controller {
         ;
     }
 
-    public static function cache_read(App $object, $key=null, $duration=null){
+    public static function cache_read(App $object, $options=[]){
+        if(!array_key_exists('key', $options)){
+            return null;
+        }
+        if(!array_key_exists('ttl', $options)){
+            $options['ttl'] = $object->config('cache.controller.ttl') ?? 600;
+        }
+        if(is_numeric($options['ttl'] )){
+            $options['ttl']  += 0;
+        } else {
+            $options['ttl']  = 'INF';   // will be removed with cache:clear command
+        }
         if($object->config('ramdisk.url')){
             $dir_cache =
                 $object->config('ramdisk.url') .
@@ -718,11 +729,11 @@ class Controller {
                 'Cache' .
                 $object->config('ds')
             ;
-            $url_cache = $dir_cache . $key . $object->config('extension.response');
+            $url_cache = $dir_cache . $options['key'] . $object->config('extension.response');
             if(File::exist($url_cache)){
-                if($duration){
+                if(is_numeric($options['ttl'])){
                     $mtime = File::mtime($url_cache);
-                    if($mtime + $duration > time()){
+                    if($mtime + $options['ttl'] > time()){
                         return File::read($url_cache);
                     }
                 } else {
