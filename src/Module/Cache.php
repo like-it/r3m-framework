@@ -143,7 +143,14 @@ class Cache {
                         continue;
                     }
                 }
-                return $current->name . '-' . implode('-', $list) . $options['extension'];
+                return
+                    Autoload::name_reducer(
+                        $object,
+                        $current->name . '-' . implode('-', $list),
+                        $object->config('cache.cache.url.name_length'),
+                        $object->config('cache.cache.url.name_separator'),
+                        $object->config('cache.cache.url.name_pop_or_shift')
+                    ) .  $options['extension'];
         }
         return null;
     }
@@ -271,13 +278,6 @@ class Cache {
             '.' .
             File::basename($options['name'])
         ;
-        $key = Autoload::name_reducer(
-            $object,
-            $key,
-            $object->config('cache.cache.url.name_length'),
-            $object->config('cache.cache.url.name_separator'),
-            $object->config('cache.cache.url.name_pop_or_shift')
-        );
         d($key);
         ddd('die');
         return $key;
