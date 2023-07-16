@@ -747,9 +747,12 @@ class Controller {
     /**
      * @throws FileWriteException
      */
-    public static function cache_write(App $object, $key=null, $data=null): ?int
+    public static function cache_write(App $object, $options=[]): ?int
     {
-        if(!$data){
+        if(!array_key_exists('key', $options)){
+            return null;
+        }
+        if(!array_key_exists('data', $options)){
             return null;
         }
         if($object->config('ramdisk.url')){
@@ -760,9 +763,10 @@ class Controller {
                 'Cache' .
                 $object->config('ds')
             ;
-            $url_cache = $dir_cache . $key . $object->config('extension.response');
-            Dir::create($dir_cache, Dir::CHMOD);
-            return File::write($url_cache, $data);
+            $url_cache = $dir_cache . $options['key'] . $object->config('extension.response');
+            $dir_duration = Dir::name($url_cache);
+            Dir::create($dir_duration, Dir::CHMOD);
+            return File::write($url_cache, $options['data']);
         }
         return null;
     }
