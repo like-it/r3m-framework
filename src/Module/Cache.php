@@ -98,7 +98,7 @@ class Cache {
     const FOUR_YEARS = 126144000;
     const FIVE_YEARS = 157680000;
 
-    const INF = 'INF';
+    const INF = 'INF'; //calling r3m.io cache:clear will remove all INF cache
 
     public static function url($object, $type=Cache::REQUEST, $extension=null){
         switch($type){
