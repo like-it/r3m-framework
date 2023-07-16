@@ -170,6 +170,13 @@
                 "directory_pop_or_shift": "pop"
             }
         },
+        "cache": {
+            "url": {
+                "name_length": 175,
+                "name_separator": "-",
+                "name_pop_or_shift": "pop"
+            }
+        },
         "controller": {
             "url": {
                 "name_length": 175,
