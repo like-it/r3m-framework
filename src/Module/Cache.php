@@ -281,8 +281,6 @@ class Cache {
             '.' .
             File::basename($options['name'])
         ;
-        d($key);
-        ddd('die');
         return $key;
     }
 
