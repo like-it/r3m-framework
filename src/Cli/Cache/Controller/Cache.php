@@ -133,10 +133,17 @@ class Cache extends Controller {
         }
     }
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
     private static function garbage(App $object){
-        $name = false;
-        $url = false;
         $command = $object->parameter($object, __FUNCTION__, 1);
+        $options = App::options($object);
+        $flags = App::flags($object);
+        if(!property_exists($options, 'minute')){
+            $options->minute = 15;
+        }
         switch($command){
             case Cache::COMMAND_COLLECTOR :
                 if($object->config('ramdisk.url')){
@@ -149,41 +156,36 @@ class Cache extends Controller {
                                 $object->config('ds')
                             ;
                             $read = $dir->read($dir_cache);
+                            $size_freed = 0;
+                            $counter = 0;
                             if(is_array($read)){
                                 foreach($read as $file){
                                     if($file->type === File::TYPE){
                                         $file->mtime = File::mtime($file->url);
-                                        if($file->mtime < time() - (15 * 60)){
-                                            ddd($file);
+                                        if($file->mtime < time() - ($options->minute * 60)){
+                                            $size_freed += File::size($file->url);
+                                            File::delete($file->url);
+                                            $counter++;
                                         }
                                     }
                                 }
                             }
+                            echo 'Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL;
+                            if($object->config('project.log.name')){
+                                $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache ]);
+                            }
+                            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
+                                'command' => $command,
+                                'url' => $dir_cache,
+                                'options' => $options,
+                                'flags' => $flags,
+                                'amount' => $counter,
+                                'size' => $size_freed
+                            ]);
                         }
                     }
-                    ddd($dir_user_id);
                 }
             break;
-        }
-        d($command);
-        ddd('garbage');
-        try {
-            $object->config('ramdisk.is.disabled', true);
-            $name = Cache::name(__FUNCTION__, Cache::NAME);
-            $url = Cache::locate($object, $name);
-            $response = Cache::response($object, $url);
-            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
-                'name' => $name,
-                'url' => $url
-            ]);
-            return $response;
-        } catch(Exception | LocateException | UrlEmptyException | UrlNotExistException $exception){
-            Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
-                'name' => $name,
-                'url' => $url,
-                'exception' => $exception
-            ]);
-            return $exception;
         }
     }
 }
