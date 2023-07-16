@@ -100,7 +100,7 @@ class Cache {
 
     const INF = 'INF'; //calling r3m.io cache:clear will remove all INF cache
 
-    public static function url($object, $type=Cache::REQUEST, $extension=null){
+    public static function url(App $object, $type=Cache::REQUEST, $extension=null){
         switch($type){
             case Cache::ROUTE:
                 $current = $object->route()->current();
