@@ -100,12 +100,11 @@ class Cache {
 
     const INF = 'INF';
 
-    public static function url($object, $type=Cache::REQUEST){
+    public static function url($object, $type=Cache::REQUEST, $extension=null){
         switch($type){
             case Cache::ROUTE:
-                $class_call = constant(get_called_class() . '::class');
-                ddd($class_call);
-                $url = $object->route()->current();
+                $current = $object->route()->current();
+                ddd($current);
         }
 
     }
