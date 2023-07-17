@@ -146,10 +146,15 @@ class Cache {
                         continue;
                     }
                 }
+                if(!empty($list)){
+                    $name = $current->name . '-' . implode('-', $list);
+                } else {
+                    $name = $current->name;
+                }
                 return
                     Autoload::name_reducer(
                         $object,
-                        $current->name . '-' . implode('-', $list),
+                        $name,
                         $object->config('cache.cache.url.name_length'),
                         $object->config('cache.cache.url.name_separator'),
                         $object->config('cache.cache.url.name_pop_or_shift')
