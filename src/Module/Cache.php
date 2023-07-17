@@ -169,7 +169,6 @@ class Cache {
      */
     public static function key(App $object, $options=[]): ?string
     {
-        ddd($options);
         if(!array_key_exists('name', $options)){
             return null;
         }
