@@ -12,7 +12,9 @@ namespace R3m\Io\Module;
 
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\ObjectException;
+
 use stdClass;
+
 use Exception;
 
 class Data {
@@ -268,6 +270,9 @@ class Data {
         $this->is_debug = $is_debug;
     }
 
+    /**
+     * @throws Exception
+     */
     public function data($attribute=null, $value=null, $type=null, $is_debug=false){
         if(is_int($attribute)){
             $attribute = (string) $attribute;
@@ -288,8 +293,8 @@ class Data {
                         $this->data->{$value} = $type;
                         return $this->data->{$value};
                     } else {
-                        Core::object_delete($value, $this->data(), true); //for sorting an object
-                        Core::object_set($value, $type, $this->data(), 'child', $is_debug);
+                        Core::object_delete($value, $this->data()); //for sorting an object
+                        Core::object_set($value, $type, $this->data(), 'child');
                         return Core::object_get($value, $this->data());
                     }
                 }
@@ -379,7 +384,7 @@ class Data {
     protected function getData($attribute=null){
         if($attribute === null){
             if(is_null($this->data)){
-                $this->data = new stdClass();
+                $this->data = (object) [];
             }
             return $this->data;
         }
