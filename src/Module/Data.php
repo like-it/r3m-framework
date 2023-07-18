@@ -233,6 +233,7 @@ class Data {
         if($part_before !== false){
             $attribute = $part_before;
             $attribute .= '.' . $this->index($attribute);
+            d($attribute);
         }
         if(!empty($part_after)){
             ddd($part_after);
