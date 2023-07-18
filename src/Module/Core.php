@@ -375,7 +375,7 @@ class Core
 
     public static function array_object($array = []): stdClass
     {
-        $object = new stdClass();
+        $object = (object) [];
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 $object->{$key} = Core::array_object($value);
@@ -451,7 +451,7 @@ class Core
         }
         if (is_bool($input)) {
             if ($output == Core::OBJECT_OBJECT || $output == Core::OBJECT_JSON) {
-                $data = new stdClass();
+                $data = (object) [];
                 if (empty($input)) {
                     $data->false = false;
                 } else {
@@ -468,7 +468,7 @@ class Core
             }
         } elseif (is_null($input)) {
             if ($output == Core::OBJECT_OBJECT) {
-                return new stdClass();
+                return (object) [];
             } elseif ($output == Core::OBJECT_ARRAY) {
                 return array();
             } elseif ($output == Core::OBJECT_JSON) {
@@ -2194,7 +2194,7 @@ class Core
         $objects = func_get_args();
         $main = array_shift($objects);
         if (empty($main) && !is_array($main)) {
-            $main = new stdClass();
+            $main = (object) [];
         }
         foreach ($objects as $nr => $object) {
             if (is_array($object)) {
@@ -2229,12 +2229,139 @@ class Core
         return $main;
     }
 
+    /**
+     * @throws Exception
+     */
+    public static function object_set($attributeList=[], $value=null, $object='', $return='child'){
+        if(empty($object)){
+            return;
+        }
+        if(is_string($return) && $return !== 'child'){
+            if($return === 'root'){
+                $return = $object;
+            } else {
+                $return = Core::object_get($return, $object);
+            }
+        }
+        if(is_scalar($attributeList)){
+            $attributeList = Core::explode_multi(Core::ATTRIBUTE_EXPLODE, (string) $attributeList);
+        }
+        if(is_array($attributeList)){
+            $attributeList = Core::object_horizontal($attributeList);
+        }
+        if(!empty($attributeList)){
+            foreach($attributeList as $key => $attribute){
+                if(is_object($object)){
+                    if(
+                        isset($object->{$key}) &&
+                        is_object($object->{$key})
+                    ){
+                        if(
+                            empty($attribute) &&
+                            is_object($value)
+                        ){
+                            foreach($value as $value_key => $value_value){
+                                /*
+                                if(isset($object->$key->$value_key)){
+                                    // unset($object->$key->$value_key);   //so sort will happen, @bug request will take forever and apache2 crashes needs reboot apache2
+                                }
+                                */
+                                $object->{$key}->{$value_key} = $value_value;
+                            }
+                            return $object->{$key};
+                        }
+                        return Core::object_set($attribute, $value, $object->{$key}, $return);
+                    }
+                    elseif(is_object($attribute)){
+                        if(
+                            property_exists($object, $key) &&
+                            is_array($object->{$key})
+                        ){
+                            foreach($attribute as $index => $unused){
+                                $object->{$key}[$index] = $value;
+                            }
+                            return $object->{$key};
+                        } else {
+                            $object->{$key} = (object) [];
+                        }
+                        return Core::object_set($attribute, $value, $object->{$key}, $return);
+                    }
+                    else {
+                        $object->{$key} = $value;
+                    }
+                }
+                elseif(is_array($object)){
+                    if(
+                        array_key_exists($key, $object) &&
+                        is_object($object[$key])
+                    ){
+                        if(empty($attribute) && is_object($value)){
+                            foreach($value as $value_key => $value_value){
+                                /*
+                                if(isset($object->$key->$value_key)){
+                                    // unset($object->$key->$value_key);   //so sort will happen, @bug request will take forever and apache2 crashes needs reboot apache2
+                                }
+                                */
+                                $object[$key]->{$value_key} = $value_value;
+                            }
+                            return $object[$key];
+                        }
+                        return Core::object_set($attribute, $value, $object[$key], $return);
+                    }
+                    if(
+                        array_key_exists($key, $object) &&
+                        is_object($object[$key])
+                    ){
+                        if(empty($attribute) && is_object($value)){
+                            foreach($value as $value_key => $value_value){
+                                /*
+                                if(isset($object->$key->$value_key)){
+                                    // unset($object->$key->$value_key);   //so sort will happen, @bug request will take forever and apache2 crashes needs reboot apache2
+                                }
+                                */
+                                $object[$key]->{$value_key} = $value_value;
+                            }
+                            return $object[$key];
+                        }
+                        return Core::object_set($attribute, $value, $object[$key], $return);
+                    }
+                    elseif(is_object($attribute)){
+                        if(
+                            array_key_exists($key, $object) &&
+                            is_array($object[$key])
+                        ){
+                            foreach($attribute as $index => $unused){
+                                $object[$key][$index] = $value;
+                            }
+                            return $object[$key];
+                        } else {
+                            $object[$key] = (object) [];
+                        }
+                        return Core::object_set($attribute, $value, $object[$key], $return);
+                    }
+                    else {
+                        $object->{$key} = $value;
+                    }
+                } else {
+                    throw new Exception('Object::set only accepts objects and arrays.');
+                }
+            }
+        }
+        if($return == 'child'){
+            return $value;
+        }
+        return $return;
+    }
+
+    /*
     public static function object_set($attributeList = [], $value = null, $object = '', $return = 'child', $is_debug=false)
     {
         $parent = $object;
+        $root = false;
         if (is_string($return) && $return !== 'child') {
             if ($return === 'root') {
                 $return = $object;
+                $root = $object;
             }
         }
         if (
@@ -2292,6 +2419,7 @@ class Core
         }
         return $return;
     }
+    */
 
 
     /*
@@ -2411,7 +2539,7 @@ class Core
         if (empty($verticalArray)) {
             return false;
         }
-        $object = new stdClass();
+        $object = (object) [];
         if (is_object($verticalArray)) {
             $attributeList = get_object_vars($verticalArray);
             $list = array_keys($attributeList);
@@ -2431,10 +2559,10 @@ class Core
                 continue;
             }
             if (!isset($deep)) {
-                $object->{$attribute} = new stdClass();
+                $object->{$attribute} = (object) [];
                 $deep = $object->{$attribute};
             } else {
-                $deep->{$attribute} = new stdClass();
+                $deep->{$attribute} = (object) [];
                 $deep = $deep->{$attribute};
             }
         }
