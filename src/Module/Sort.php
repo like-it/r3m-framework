@@ -214,11 +214,12 @@ class Sort extends Data {
                                     $attr = substr($attr, 1);
                                     $result[$attr][] = $node;
                                 } else {
+                                    d($value);
                                     d($data);
                                     d($result_key);
                                     $data->is_debug(true);
-                                    ddd($data->data($result_key . '.' . $list_key));
-                                    ddd($data->get($result_key));
+                                    d($data->data($result_key . '.' . $list_key));
+                                    d($data->get($result_key));
                                     d($list_key);
                                     d($result_key);
                                     d($attribute);
