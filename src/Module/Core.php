@@ -2283,6 +2283,7 @@ class Core
         }
         if(is_array($parent)){
             $parent[$attribute] = $value;
+            d($parent);
         } else {
             $parent->{$attribute} = $value;
         }
