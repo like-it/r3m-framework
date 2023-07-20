@@ -194,7 +194,7 @@ class Cache extends Controller {
                                             } else {
                                                 $read = $dir->read($directory->url);
                                             }
-                                            foreach($read as $file){
+                                            foreach($read as $nr => $file){
                                                 if($file->type === File::TYPE){
                                                     if(!property_exists($file, 'mtime')){
                                                         $file->mtime = File::mtime($file->url);
@@ -202,6 +202,7 @@ class Cache extends Controller {
                                                     if($file->mtime < (time() - $seconds)){
                                                         $size_freed += File::size($file->url);
                                                         File::delete($file->url);
+                                                        unset($read[$nr]);
                                                         $counter++;
                                                     }
                                                 }
