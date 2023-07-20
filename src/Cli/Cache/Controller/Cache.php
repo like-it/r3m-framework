@@ -160,6 +160,11 @@ class Cache extends Controller {
                             $counter = 0;
                             if(is_array($read)){
                                 foreach($read as $file){
+                                    if($file->type === Dir::TYPE){
+                                        ddd($file);
+                                    }
+
+                                    /*
                                     if($file->type === File::TYPE){
                                         $file->mtime = File::mtime($file->url);
                                         if($file->mtime < time() - ($options->minute * 60)){
@@ -168,8 +173,10 @@ class Cache extends Controller {
                                             $counter++;
                                         }
                                     }
+                                    */
                                 }
                             }
+                            die('end test');
                             echo 'Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL;
                             if($object->config('project.log.name')){
                                 $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache ]);

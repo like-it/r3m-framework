@@ -214,22 +214,6 @@ class Sort extends Data {
                                     $attr = substr($attr, 1);
                                     $result[$attr][] = $node;
                                 } else {
-                                    $debug = debug_backtrace(true);
-                                    d($debug[0]['file'] . ' ' . $debug[0]['line']);
-                                    d($debug[1]['file'] . ' ' . $debug[1]['line']);
-                                    d($debug[2]['file'] . ' ' . $debug[2]['line']);
-                                    d($value);
-                                    d($data);
-                                    d($result_key);
-                                    $data->is_debug(true);
-                                    d($data->data($result_key . '.' . $list_key));
-                                    d($data->get($result_key));
-                                    d($list_key);
-                                    d($result_key);
-                                    d($attribute);
-                                    d($value);
-                                    d($node);
-                                    ddd($record);
                                     $result[$result_key][''][] = $node;
                                 }
                                 $sortable_2 = $record;
