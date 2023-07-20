@@ -206,6 +206,8 @@ class Cache extends Controller {
                                     }
                                 }
                             }
+
+
                             $duration = microtime(true) - $start;
                             if($seconds){
                                 echo 'Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes seconds: ' . $seconds . PHP_EOL;
