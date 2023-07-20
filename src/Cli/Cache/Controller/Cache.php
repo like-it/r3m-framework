@@ -158,6 +158,7 @@ class Cache extends Controller {
                             $read_dir = $dir->read($dir_cache);
                             $size_freed = 0;
                             $counter = 0;
+                            $seconds = false;
                             if(is_array($read_dir)){
                                 foreach($read_dir as $directory){
                                     if($directory->type === Dir::TYPE){
@@ -180,10 +181,19 @@ class Cache extends Controller {
                                     }
                                 }
                             }
-                            echo 'Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL;
-                            if($object->config('project.log.name')){
-                                $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache ]);
+                            if($seconds){
+                                echo 'Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes seconds: ' . $seconds . PHP_EOL;
+                                if($object->config('project.log.name')){
+                                    $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache, $seconds ]);
+                                }
+                            } else {
+                                echo 'Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL;
+                                if($object->config('project.log.name')){
+                                    $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache ]);
+                                }
                             }
+
+
                             Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
                                 'command' => $command,
                                 'url' => $dir_cache,
