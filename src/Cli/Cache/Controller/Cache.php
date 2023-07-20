@@ -165,7 +165,6 @@ class Cache extends Controller {
                                         if(is_numeric($directory->name)){
                                             $seconds = $directory->name + 0;
                                             $read = $dir->read($directory->url);
-                                            d($directory);
                                             foreach($read as $file){
                                                 if($file->type === File::TYPE){
                                                     $file->mtime = File::mtime($file->url);
