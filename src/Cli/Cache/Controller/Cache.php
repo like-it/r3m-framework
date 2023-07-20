@@ -181,10 +181,8 @@ class Cache extends Controller {
                                                     }
                                                 }
                                             }
-
                                             File::write($url_cache, Core::object($read, Core::OBJECT_JSON));
                                         }
-
                                     }
                                 }
                             }
