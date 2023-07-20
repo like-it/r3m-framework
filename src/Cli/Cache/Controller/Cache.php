@@ -166,7 +166,7 @@ class Cache extends Controller {
                                             $url_cache = $dir_cache . $directory->name . $object->config('extension.json');
                                             if(File::exist($url_cache)){
                                                 $cache_mtime = File::mtime($url_cache);
-                                                if($cache_time > (time() - (24 * 60 * 60))){ //cache files younger than 24 hours
+                                                if($cache_mtime > (time() - (24 * 60 * 60))){ //cache files younger than 24 hours
                                                     $read_cache = $object->data_read($url_cache);
                                                     $read = $dir->read($directory->url);
                                                     $result = [];
