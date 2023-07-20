@@ -13,6 +13,7 @@ namespace R3m\Io\Cli\Cache\Controller;
 use R3m\Io\App;
 use R3m\Io\Config;
 use R3m\Io\Module\Controller;
+use R3m\Io\Module\Core;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
@@ -162,10 +163,17 @@ class Cache extends Controller {
                                     if($directory->type === Dir::TYPE){
                                         if(is_numeric($directory->name)){
                                             $seconds = $directory->name + 0;
+                                            $url_cache = $dir_cache . $directory->name . $object->config('extension.json');
+                                            if(File::exist($url_cache)){
+                                                $read_cache = $object->data_read($url_cache);
+                                                ddd($read_cache);
+                                            }
                                             $read = $dir->read($directory->url);
                                             foreach($read as $file){
                                                 if($file->type === File::TYPE){
-                                                    $file->mtime = File::mtime($file->url);
+                                                    if(!property_exists($file, 'mtime')){
+                                                        $file->mtime = File::mtime($file->url);
+                                                    }
                                                     if($file->mtime < (time() - $seconds)){
                                                         $size_freed += File::size($file->url);
                                                         File::delete($file->url);
@@ -173,6 +181,8 @@ class Cache extends Controller {
                                                     }
                                                 }
                                             }
+
+                                            File::write($url_cache, Core::object($read, Core::OBJECT_JSON));
                                         }
 
                                     }
