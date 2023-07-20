@@ -165,27 +165,32 @@ class Cache extends Controller {
                                             $seconds = $directory->name + 0;
                                             $url_cache = $dir_cache . $directory->name . $object->config('extension.json');
                                             if(File::exist($url_cache)){
-                                                $read_cache = $object->data_read($url_cache);
-                                                $read = $dir->read($directory->url);
-                                                $result = [];
-                                                if(
-                                                    $read_cache &&
-                                                    is_array($read)
-                                                ){
-                                                    foreach($read_cache->data() as $value){
-                                                        $result[] = $value;
-                                                        foreach($read as $nr => $file){
-                                                            if($file->url === $value->url){
-                                                                unset($read[$nr]);
-                                                                break;
+                                                $cache_mtime = File::mtime($url_cache);
+                                                if($cache_time > (time() - (24 * 60 * 60))){ //cache files younger than 24 hours
+                                                    $read_cache = $object->data_read($url_cache);
+                                                    $read = $dir->read($directory->url);
+                                                    $result = [];
+                                                    if(
+                                                        $read_cache &&
+                                                        is_array($read)
+                                                    ){
+                                                        foreach($read_cache->data() as $value){
+                                                            $result[] = $value;
+                                                            foreach($read as $nr => $file){
+                                                                if($file->url === $value->url){
+                                                                    unset($read[$nr]);
+                                                                    break;
+                                                                }
                                                             }
                                                         }
+                                                        foreach($read as $file){
+                                                            $result[] = $file;
+                                                        }
                                                     }
-                                                    foreach($read as $file){
-                                                        $result[] = $file;
-                                                    }
+                                                    $read = $result;
+                                                } else {
+                                                    $read = $dir->read($directory->url);
                                                 }
-                                                $read = $result;
                                             } else {
                                                 $read = $dir->read($directory->url);
                                             }
