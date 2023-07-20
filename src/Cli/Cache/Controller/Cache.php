@@ -138,12 +138,10 @@ class Cache extends Controller {
      * @throws Exception
      */
     private static function garbage(App $object){
+        $start = microtime(true);
         $command = $object->parameter($object, __FUNCTION__, 1);
         $options = App::options($object);
         $flags = App::flags($object);
-        if(!property_exists($options, 'minute')){
-            $options->minute = 15;
-        }
         switch($command){
             case Cache::COMMAND_COLLECTOR :
                 if($object->config('ramdisk.url')){
@@ -180,19 +178,18 @@ class Cache extends Controller {
                                     }
                                 }
                             }
+                            $duration = microtime(true) - $start;
                             if($seconds){
                                 echo 'Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes seconds: ' . $seconds . PHP_EOL;
                                 if($object->config('project.log.name')){
-                                    $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache, $seconds ]);
+                                    $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache, $duration, $seconds ]);
                                 }
                             } else {
                                 echo 'Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL;
                                 if($object->config('project.log.name')){
-                                    $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache ]);
+                                    $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache, $duration ]);
                                 }
                             }
-
-
                             Event::trigger($object, 'cli.' . strtolower(Cache::NAME) . '.' . __FUNCTION__, [
                                 'command' => $command,
                                 'url' => $dir_cache,
