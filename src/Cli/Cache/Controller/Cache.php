@@ -155,28 +155,31 @@ class Cache extends Controller {
                                 'Cache' .
                                 $object->config('ds')
                             ;
-                            $read = $dir->read($dir_cache);
+                            $read_dir = $dir->read($dir_cache);
                             $size_freed = 0;
                             $counter = 0;
-                            if(is_array($read)){
-                                foreach($read as $file){
-                                    if($file->type === Dir::TYPE){
-                                        ddd($file);
-                                    }
-
-                                    /*
-                                    if($file->type === File::TYPE){
-                                        $file->mtime = File::mtime($file->url);
-                                        if($file->mtime < time() - ($options->minute * 60)){
-                                            $size_freed += File::size($file->url);
-                                            File::delete($file->url);
-                                            $counter++;
+                            if(is_array($read_dir)){
+                                foreach($read_dir as $dir){
+                                    if($dir->type === Dir::TYPE){
+                                        if(is_numeric($dir->name)){
+                                            $seconds = $dir->name + 0;
+                                            $read = $dir->read($dir->url);
+                                            d($dir);
+                                            foreach($read as $file){
+                                                if($file->type === File::TYPE){
+                                                    $file->mtime = File::mtime($file->url);
+                                                    if($file->mtime < (time() - $seconds)){
+                                                        $size_freed += File::size($file->url);
+                                                        File::delete($file->url);
+                                                        $counter++;
+                                                    }
+                                                }
+                                            }
                                         }
+
                                     }
-                                    */
                                 }
                             }
-                            die('end test');
                             echo 'Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL;
                             if($object->config('project.log.name')){
                                 $object->logger($object->config('project.log.name'))->info('Garbage Collector: amount freed: ' . $counter . ' size: ' . $size_freed . ' bytes' . PHP_EOL, [ $dir_cache ]);
