@@ -384,6 +384,8 @@ class Build {
                         $object->config('ramdisk.url') &&
                         !empty($object->config('ramdisk.is.disabled'))
                     ){
+                        $file_read = SharedMemory::read($object, $url);
+                        /*
                         if(
                             $object->config('cache.parse.plugin.url.directory_length') &&
                             $object->config('cache.parse.plugin.url.directory_separator') &&
@@ -435,9 +437,9 @@ class Build {
                             ){
                                 $is_ramdisk_url = true;
                                 $url = $ramdisk_url;
-                                $file_read = SharedMemory::read($object, $ramdisk_url);
                             }
                         }
+                        */
                     }
                     if(
                         $file_read === false &&
@@ -465,7 +467,7 @@ class Build {
                             $config_url &&
                             $config_mtime
                         ){
-                            SharedMemory::write($object, $ramdisk_url, $file_read);
+                            SharedMemory::write($object, $url, $file_read);
                             $config_mtime->set(sha1($ramdisk_url), $url);
                             $config_mtime->write($config_url);
                             exec('chmod 640 ' . $config_url);
