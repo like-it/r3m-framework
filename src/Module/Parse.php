@@ -311,7 +311,7 @@ class Parse {
                 }
             }
             $string_object = Core::deep_clone($string);
-            foreach($string as $key => $value){
+            foreach($string_object as $key => $value){
                 if(
                     $this->useThis() === true &&
                     in_array(
@@ -325,11 +325,11 @@ class Parse {
                 try {
                     $this->key = $key;
                     $attribute = $this->object()->config('parse.read.object.this.attribute');
-                    $string_object->{$attribute} = $key;
+                    $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     d($key);
                     d($value);
-                    $string_object->{$key} = $value;
+                    $string->{$key} = $value;
                 } catch (Exception | ParseError $exception){
                     Event::trigger($object, 'parse.compile.exception', [
                         'string' => $string,
@@ -340,7 +340,6 @@ class Parse {
                     ]);
                 }
             }
-            $string = $string_object;
             //must read into it, copy should be configurable
             $copy = $this->object()->config('parse.read.object.copy');
             if($copy && is_object($copy)){
