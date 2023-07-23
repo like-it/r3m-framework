@@ -373,6 +373,7 @@ class Parse {
                     $string = Parse::unset($string, $unset);
                 }
             }
+            d($string_object);
             ddd($string);
             return $string;
         }
