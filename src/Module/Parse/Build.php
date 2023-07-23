@@ -821,7 +821,7 @@ class Build {
                 $selection[$nr] = $record;
             }
             $duration = microtime(true) - $start;
-            $object->logger($object->config('project.log.error'))->info('duration: ' . $duration, [ $select['type'] ]);
+            $object->logger($object->config('project.log.error'))->info('duration: ' . $duration, [ $select['type'] ?? [] ]);
         }
         $storage->data('run', $run);
         return $document;
