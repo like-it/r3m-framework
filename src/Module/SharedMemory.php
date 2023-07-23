@@ -70,7 +70,7 @@ class SharedMemory {
         }
         catch (ErrorException $exception){
             //cache miss
-            ddd($exception);
+            d($exception);
             return null;
         }
     }
