@@ -271,7 +271,7 @@ class Parse {
         if($is_debug){
             $this->counter++;
         }
-        if($this->counter >= 10){
+        if($this->counter >= 100){
             d($depth);
             ddd($string);
         }
