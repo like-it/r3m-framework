@@ -827,7 +827,7 @@ class Build {
         }
         $storage->data('run', $run);
         $duration = microtime(true) - $time_start;
-        $object->logger($object->config('project.log.error'))->info('Document duration: ' . $duration);
+        $object->logger($object->config('project.log.error'))->info('Document duration: ' . $duration * 1000 . ' msec');
         return $document;
     }
 
