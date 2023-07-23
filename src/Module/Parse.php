@@ -268,13 +268,6 @@ class Parse {
      * @throws Exception
      */
     public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
-        if($is_debug){
-            $this->counter++;
-        }
-        if($this->counter >= 100){
-            d($depth);
-            ddd($string);
-        }
         $object = $this->object();
         if($storage === null){            
             $storage = $this->storage(new Data());
@@ -364,14 +357,8 @@ class Parse {
             return $string;
         }
         elseif(stristr($string, '{') === false){
-            d('no needle');
-            $debug = debug_backtrace(true);
-            d($debug[0]['file'] . ':' . $debug[0]['line']);
-            d($debug[1]['file'] . ':' . $debug[1]['line']);
-            d($debug[2]['file'] . ':' . $debug[2]['line']);
             return $string;
         } else {
-            d('string');
             $build = $this->build(new Build($this->object(), $this, $is_debug));
             $build->cache_dir($this->cache_dir());
             $build->limit($this->limit());
