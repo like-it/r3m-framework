@@ -558,18 +558,12 @@ class Build {
      */
     public function document(Data $data, $tree=[], $document=[]): array
     {
+        $object = $this->object();
         $is_tag = false;
         $tag = null;
         $this->indent(2);
         $counter = 0;
         $storage = $this->storage();
-        $is_debug = '';
-        /*
-        if(stristr($this->object()->config('response.url'), 'List.Directory.tpl')){
-            d($tree);
-            die;
-        }
-        */
         if(!empty($data->data('is.debug'))){
             $is_debug = $data->data('is.debug');
             $storage->data('is.debug', $data->data('is.debug'));
@@ -585,6 +579,7 @@ class Build {
         $is_control = false;
         $remove_newline = false;
         foreach($tree as $nr => $record){
+            $start = microtime();
             if(
                 $skip_nr !== null &&
                 $nr > $skip_nr
@@ -795,6 +790,8 @@ class Build {
                 }
                 $selection[$nr] = $record;
             }
+            $duration = microtime(true) - $start;
+            $object->logger($object->config('project.log.error'))->info('duration: ' . $duration);
         }
         $storage->data('run', $run);
         return $document;
