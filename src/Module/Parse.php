@@ -267,6 +267,11 @@ class Parse {
      */
     public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
         $object = $this->object();
+        if($is_debug === true){
+            d($string);
+            d($storage);
+            ddd($data);
+        }
         if($storage === null){            
             $storage = $this->storage(new Data());
         }

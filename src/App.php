@@ -827,7 +827,7 @@ class App extends Data {
                 $this->data('rdelim', '}');
                 $data = clone $this->data();
                 unset($data->{App::NAMESPACE});
-                $read = $parse->compile(Core::object($read), $data, $parse->storage());
+                $read = $parse->compile(Core::object($read), $data, $parse->storage(), true);
                 $data = new Data($read);
                 $readback = [
                     'script',
