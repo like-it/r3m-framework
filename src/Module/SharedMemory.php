@@ -26,16 +26,16 @@ class SharedMemory {
                 return null;
             }
             $shm_key = ftok($name, 'r');
-            $shmop = shmop_open(
+            $shmop = @shmop_open(
                 $shm_key,
                 'a',
                 0,
                 0
             );
             if($length > 0){
-                $data = shmop_read($shmop, $offset, $length);
+                $data = @shmop_read($shmop, $offset, $length);
             } else {
-                $data = shmop_read($shmop, $offset, shmop_size($shmop));
+                $data = @shmop_read($shmop, $offset, @shmop_size($shmop));
             }
             if(
                 substr($data, 0, 1) === '{' &&
