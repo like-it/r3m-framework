@@ -584,9 +584,7 @@ class Build {
      */
     public function document(Data $data, $tree=[], $document=[]): array
     {
-        $time_start = microtime(true);
         $object = $this->object();
-        $object->logger($object->config('project.log.error'))->info('--DOCUMENT-----------------------------------------');
         $is_tag = false;
         $tag = null;
         $this->indent(2);
@@ -697,10 +695,6 @@ class Build {
                         $remove_newline = true;
                         break;
                     case Build::METHOD :
-
-
-
-
                         $run[] = $this->indent() . '$method = ' . Method::create($this, $storage, $selection) . ';';
                         $run[] = $this->indent() . 'if (is_object($method)){ return $method; }';
                         $run[] = $this->indent() . 'elseif (is_array($method)){ return $method; }';
@@ -822,12 +816,8 @@ class Build {
                 }
                 $selection[$nr] = $record;
             }
-            $duration = microtime(true) - $start;
-            $object->logger($object->config('project.log.error'))->info('duration: ' . $duration, [ $select['type'] ?? [] ]);
         }
         $storage->data('run', $run);
-        $duration = microtime(true) - $time_start;
-        $object->logger($object->config('project.log.error'))->info('Document duration: ' . $duration * 1000 . ' msec');
         return $document;
     }
 
