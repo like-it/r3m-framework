@@ -98,6 +98,7 @@ class SharedMemory {
                 $id = 1000;
                 $connect[$id] = $url;
             } else {
+                d($connect);
                 $connect = Core::object($connect, Core::OBJECT_ARRAY);
                 $id = array_key_last($connect) + 1;
                 $connect[$id] = $url;
