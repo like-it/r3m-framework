@@ -26,7 +26,7 @@ class SharedMemory {
             if(File::exist($name) === false){
                 return null;
             }
-            $shm_key = ftok($name, 'r');
+            $shm_key = ftok($name, 'a');
             d($shm_key);
             $shmop = @shmop_open(
                 $shm_key,
@@ -83,7 +83,7 @@ class SharedMemory {
             if(File::exist($name) === false){
                 return false;
             }
-            $shm_key = ftok($name, 'r');
+            $shm_key = ftok($name, 'a');
             $shm_size = mb_strlen($data);
             $shmop = @shmop_open(
                 $shm_key,
