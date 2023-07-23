@@ -134,9 +134,9 @@ class SharedMemory {
             }
             $write = shmop_write($shmop, $data, 0);
             if($write > 0){
-                $data = Core::object($connect, Core::OBJECT_JSON);
-                $data .= "\0";
-                $shm_size = mb_strlen($data);
+                $connect = Core::object($connect, Core::OBJECT_JSON);
+                $connect .= "\0";
+                $shm_size = mb_strlen($connect);
                 $shmop = @shmop_open(
                     $id,
                     'c',
@@ -151,7 +151,7 @@ class SharedMemory {
                         $shm_size
                     );
                 }
-                $connect_write = shmop_write($shmop, $data, 0);
+                $connect_write = shmop_write($shmop, $connect, 0);
                 if($connect_write > 0){
                     return $write;
                 }
