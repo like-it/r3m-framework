@@ -342,6 +342,7 @@ class Parse {
                     $string->{$attribute} = $key;
                     d($key);
                     d($value);
+                    d($string);
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->{$key} = $value;
                 } catch (Exception | ParseError $exception){
