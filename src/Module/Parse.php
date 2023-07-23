@@ -327,6 +327,7 @@ class Parse {
             }
             $string_object = (object) [];
             d($string);
+            d($reserved_keys);
             foreach($string as $key => $value){
                 if(
                     $this->useThis() === true &&
