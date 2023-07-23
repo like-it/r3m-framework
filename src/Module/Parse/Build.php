@@ -338,7 +338,6 @@ class Build {
         $placeholder = $storage->data('placeholder.function');
         $url_list = [];
         $limit = $this->limit();
-        d($dir_plugin);
         foreach($data as $name => $record){
             $exist = false;
             $function_name = str_replace('function_', '', $name, $function_count);
@@ -385,6 +384,7 @@ class Build {
                         !empty($object->config('ramdisk.is.disabled'))
                     ){
                         $file_read = SharedMemory::read($object, $url);
+                        d($file_read);
                         /*
                         if(
                             $object->config('cache.parse.plugin.url.directory_length') &&
