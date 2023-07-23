@@ -343,12 +343,12 @@ class Parse {
                     $this->key = $key;
                     $attribute = $this->object()->config('parse.read.object.this.attribute');
                     $string_object->{$attribute} = $key;
-                    d($key);
+//                    d($key);
 //                    d($value);
 
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string_object->{$key} = $value;
-                    d($value);
+                    d($string_object);
                 } catch (Exception | ParseError $exception){
                     Event::trigger($object, 'parse.compile.exception', [
                         'string' => $string,
@@ -357,6 +357,7 @@ class Parse {
                         'depth' => $depth,
                         'exception' => $exception
                     ]);
+                    d($exception);
                 }
             }
             $string = $string_object;
