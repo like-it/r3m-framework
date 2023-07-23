@@ -361,8 +361,6 @@ class Parse {
             $object->logger($object->config('project.log.error'))->info('--Parse---------------------------------------');
             $start = microtime(true);
             $build = $this->build(new Build($this->object(), $this, $is_debug));
-            $temp_duration = microtime(true) - $start;
-            $object->logger($object->config('project.log.error'))->info('Parse new Build duration: ' . $temp_duration * 1000 . ' msec');
             $build->cache_dir($this->cache_dir());
             $build->limit($this->limit());
             $source = $storage->data('r3m.io.parse.view.source');
@@ -484,6 +482,8 @@ class Parse {
                 );
                 $string = ltrim($string, " \t\n\r\0\x0B");
             }
+            $temp_duration = microtime(true) - $start;
+            $object->logger($object->config('project.log.error'))->info('Parse new Build duration: ' . $temp_duration * 1000 . ' msec');
             $tree = Token::tree($string, [
                 'object' => $object,
                 'url' => $url,
