@@ -351,6 +351,7 @@ class Parse {
                     $string = Parse::unset($string, $unset);
                 }
             }
+            ddd($string);
             return $string;
         }
         elseif(stristr($string, '{') === false){
