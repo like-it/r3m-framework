@@ -89,13 +89,7 @@ class SharedMemory {
             if(!is_string($data)){
                 $data = (string) $data;
             }
-            /*
-            if(File::exist($name) === false){
-                return false;
-            }
-            $shm_key = ftok($name, 'a'); //seems problematic
-            */
-
+            //ftok goes wrong on linux with url
             $connect = SharedMemory::read($object, 'mapping');
             if($connect === null){
                 $connect = [];
@@ -104,7 +98,8 @@ class SharedMemory {
                 $id = 1000;
                 $connect[$id] = $url;
             } else {
-                ddd($connect);
+                $id = array_key_last($connect) + 1;
+                $connect[$id] = $url;
             }
             $shm_size = mb_strlen($data);
             $shmop = @shmop_open(
