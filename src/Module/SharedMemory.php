@@ -22,6 +22,7 @@ class SharedMemory {
      */
     public static function read(App $object, $url, $offset=0, $length=0){
         $data = null;
+        $collect = null;
         try {
             $shmop = @shmop_open(
                 1,
@@ -29,10 +30,10 @@ class SharedMemory {
                 0,
                 0
             );
-            $data = @shmop_read($shmop, 0, @shmop_size($shmop));
-            $data = explode("\0", $data, 2);
-            $data = $data[0];
-            ddd($data);
+            $collect = @shmop_read($shmop, 0, @shmop_size($shmop));
+            $collect = explode("\0", $collect, 2);
+            $collect = $collect[0];
+            ddd($collect);
         }
         catch (ErrorException $exception) {
             //no mapping
