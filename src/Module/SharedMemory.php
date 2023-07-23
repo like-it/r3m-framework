@@ -21,7 +21,6 @@ class SharedMemory {
      * @throws ObjectException
      */
     public static function read(App $object, $name, $offset=0, $length=0){
-        d($name);
         try {
             if(File::exist($name) === false){
                 return null;
@@ -62,14 +61,12 @@ class SharedMemory {
             elseif(is_numeric($data)){
                 $data = $data + 0;
             }
-            d($data);
             return $data;
         }
         catch (ErrorException $exception){
             //cache miss
             return null;
         }
-
     }
 
     public static function write(App $object, $name, $data='', $permission=File::CHMOD): int
@@ -85,16 +82,12 @@ class SharedMemory {
         }
         $shm_key = ftok($name, 'r');
         $shm_size = mb_strlen($data);
-        d($shm_size);
-        d($shm_key);
-        d($permission);
         $shmop = shmop_open(
             $shm_key,
             'c',
             $permission,
             $shm_size
         );
-        d($data);
         return shmop_write($shmop, $data, 0);
     }
 }
