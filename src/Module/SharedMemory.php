@@ -21,10 +21,8 @@ class SharedMemory {
      * @throws ObjectException
      */
     public static function read(App $object, $name, $offset=0, $length=0){
-        Core::interactive();
         try {
             if(File::exist($name) === false){
-                d('not found');
                 return null;
             }
             $shm_key = ftok($name, 'r');
@@ -63,8 +61,6 @@ class SharedMemory {
             elseif(is_numeric($data)){
                 $data = $data + 0;
             }
-
-            d($data);
             return $data;
         }
         catch (ErrorException $exception){
@@ -103,7 +99,7 @@ class SharedMemory {
             }
             return shmop_write($shmop, $data, 0);
         }
-        catch(ErrorException $exception){
+        catch(ErrorException | ObjectException $exception){
             return false;
         }
     }
