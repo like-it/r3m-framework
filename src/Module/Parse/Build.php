@@ -464,13 +464,19 @@ class Build {
                             $config_url &&
                             $config_mtime
                         ){
+                            SharedMemory::write($object, $ramdisk_url, $file_read);
+                            $config_mtime->set(sha1($ramdisk_url), $url);
+                            $config_mtime->write($config_url);
+                            exec('chmod 640 ' . $config_url);
+                            /*
                             Dir::create($ramdisk_dir);
-//                            File::put($ramdisk_url, $file_read);
-                            SharedMemory::write($ramdisk_url, $file_read);
+                            File::put($ramdisk_url, $file_read);
+
                             $config_mtime->set(sha1($ramdisk_url), $url);
                             $config_mtime->write($config_url);
                             exec('chmod 640 ' . $ramdisk_url);
                             exec('chmod 640 ' . $config_url);
+                            */
                         }
                         Event::trigger($object, 'parse.build.plugin.require', [
                             'url' => $url,
