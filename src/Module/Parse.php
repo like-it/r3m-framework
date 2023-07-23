@@ -368,6 +368,10 @@ class Parse {
         }
         elseif(stristr($string, '{') === false){
             d('no needle');
+            $debug = debug_backtrace(true);
+            d($debug[0]['file'] . ':' . $debug[0]['line']);
+            d($debug[1]['file'] . ':' . $debug[1]['line']);
+            d($debug[2]['file'] . ':' . $debug[2]['line']);
             return $string;
         } else {
             d('string');
