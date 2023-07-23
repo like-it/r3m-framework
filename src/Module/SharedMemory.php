@@ -32,7 +32,7 @@ class SharedMemory {
             $data = @shmop_read($shmop, 0, @shmop_size($shmop));
             $data = explode("\0", $data, 2);
             $data = $data[0];
-            d($data);
+            ddd($data);
         }
         catch (ErrorException $exception) {
             //no mapping
