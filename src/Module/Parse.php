@@ -266,12 +266,8 @@ class Parse {
      * @throws Exception
      */
     public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
+        Core::interactive();
         $object = $this->object();
-        if($is_debug === true){
-            d($string);
-            d($storage);
-            ddd($data);
-        }
         if($storage === null){            
             $storage = $this->storage(new Data());
         }
@@ -501,6 +497,7 @@ class Parse {
             $document = $build->create('use', $tree, $document);
             $document = $build->create('trait', $tree, $document);
             $write = $build->write($url, $document, $string);
+            d($url);
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
                 opcache_invalidate($url, true);
