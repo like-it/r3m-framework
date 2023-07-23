@@ -48,6 +48,8 @@ class Parse {
 
     private $key;
 
+    private $counter = 0;
+
     public function __construct($object, $storage=null){
         $this->object($object);
         $this->configure();
@@ -266,6 +268,13 @@ class Parse {
      * @throws Exception
      */
     public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
+        if($is_debug){
+            $this->counter++;
+        }
+        if($this->counter >= 10){
+            d($depth);
+            ddd($string);
+        }
         Core::interactive();
         $object = $this->object();
         if($storage === null){            
