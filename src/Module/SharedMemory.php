@@ -33,11 +33,11 @@ class SharedMemory {
             $collect = @shmop_read($shmop, 0, @shmop_size($shmop));
             $collect = explode("\0", $collect, 2);
             $collect = $collect[0];
-            ddd($collect);
         }
         catch (ErrorException $exception) {
             //no mapping
         }
+        ddd($collect);
         try {
             $id = 1000;
             $shmop = @shmop_open(
