@@ -28,7 +28,31 @@ class SharedMemory {
         } else {
             $data = shmop_read($shmop, $offset, shmop_size($shmop));
         }
-        ddd($data);
+        if(
+            substr($data, 0, 1) === '{' &&
+            substr($data, -1, 1) === '}'
+        ){
+            $data = Core::object($data, Core::OBJECT_OBJECT);
+        }
+        elseif(
+            substr($data, 0, 1) === '[' &&
+            substr($data, -1, 1) === ']'
+        ){
+            $data = Core::object($data, Core::OBJECT_ARRAY);
+        }
+        elseif($data === 'false'){
+            $data = false;
+        }
+        elseif($data === 'true'){
+            $data = true;
+        }
+        elseif($data === 'null'){
+            $data = null;
+        }
+        elseif(is_numeric($data)){
+            $data = $data + 0;
+        }
+        return $data;
     }
 
     public static function write(App $object, $name, $data='', $permission=File::CHMOD): int
