@@ -482,12 +482,12 @@ class Parse {
                 );
                 $string = ltrim($string, " \t\n\r\0\x0B");
             }
-            $temp_duration = microtime(true) - $start;
-            $object->logger($object->config('project.log.error'))->info('Parse new Build duration: ' . $temp_duration * 1000 . ' msec');
             $tree = Token::tree($string, [
                 'object' => $object,
                 'url' => $url,
             ]);
+            $temp_duration = microtime(true) - $start;
+            $object->logger($object->config('project.log.error'))->info('Parse tree duration: ' . $temp_duration * 1000 . ' msec');
 //            $object->logger($object->config('project.log.error'))->info('tree:', [ $tree ]);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
