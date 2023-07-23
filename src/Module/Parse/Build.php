@@ -382,7 +382,7 @@ class Build {
                     $is_shared_memory = false;
                     if(
                         $object->config('ramdisk.url') &&
-                        !empty($object->config('ramdisk.is.disabled'))
+                        empty($object->config('ramdisk.is.disabled'))
                     ){
                         $config_dir = $this->object()->config('ramdisk.url') .
                             $this->object()->config(Config::POSIX_ID) .
