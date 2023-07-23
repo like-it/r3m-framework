@@ -203,6 +203,7 @@ class Controller {
                 ],
                 $name
             );
+            ddd($object->config('controller.dir.view'));
             if(!empty($object->config('controller.dir.view'))){
                 $list[] = $object->config('controller.dir.view') .
                     str_replace('.', $object->config('ds'), $name) .
