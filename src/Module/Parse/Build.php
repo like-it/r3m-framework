@@ -484,8 +484,6 @@ class Build {
                             'name' => $name
                         ]);
                         break;
-                    } else {
-                        throw new Exception('Plugin not found: ' . $url);
                     }
                 }
                 if($exist === false){
