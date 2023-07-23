@@ -442,7 +442,7 @@ class Build {
                         */
                     }
                     if(
-                        $file_read === false &&
+                        empty($file_read) &&
                         File::exist($url)
                     ){
                         $file_read = File::read($url);
@@ -459,6 +459,8 @@ class Build {
                         $read .= PHP_EOL;
                         $document = str_replace($placeholder, $read . $placeholder, $document);
                         $exist = true;
+                        SharedMemory::write($object, $url, $file_read);
+                        /*
                         if(
                             $is_ramdisk_url === false &&
                             $ramdisk_dir &&
@@ -467,20 +469,16 @@ class Build {
                             $config_url &&
                             $config_mtime
                         ){
-                            SharedMemory::write($object, $url, $file_read);
-                            $config_mtime->set(sha1($ramdisk_url), $url);
-                            $config_mtime->write($config_url);
-                            exec('chmod 640 ' . $config_url);
-                            /*
+
                             Dir::create($ramdisk_dir);
                             File::put($ramdisk_url, $file_read);
-
                             $config_mtime->set(sha1($ramdisk_url), $url);
                             $config_mtime->write($config_url);
                             exec('chmod 640 ' . $ramdisk_url);
                             exec('chmod 640 ' . $config_url);
-                            */
+
                         }
+                        */
                         Event::trigger($object, 'parse.build.plugin.require', [
                             'url' => $url,
                             'name' => $name
