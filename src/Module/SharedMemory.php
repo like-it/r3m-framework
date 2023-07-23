@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use ErrorException;
 use Exception;
 use R3m\Io\App;
 use R3m\Io\Exception\ObjectException;
