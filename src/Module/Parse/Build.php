@@ -379,6 +379,7 @@ class Build {
                     $config_url = false;
                     $config_mtime = false;
                     $is_ramdisk_url = false;
+                    $is_shared_memory = false;
                     if(
                         $object->config('ramdisk.url') &&
                         !empty($object->config('ramdisk.is.disabled'))
@@ -441,11 +442,15 @@ class Build {
                         }
                         */
                     }
+                    $file_exist = File::exist($url);
                     if(
                         empty($file_read) &&
-                        File::exist($url)
+                        $file_exist
                     ){
                         $file_read = File::read($url);
+                    }
+                    elseif($file_exist){
+                        $is_shared_memory = true;
                     }
                     if(File::exist($url)){
                         $explode = explode('function', $file_read);
@@ -459,7 +464,13 @@ class Build {
                         $read .= PHP_EOL;
                         $document = str_replace($placeholder, $read . $placeholder, $document);
                         $exist = true;
-                        SharedMemory::write($object, $url, $file_read);
+                        if(
+                            $is_shared_memory === false &&
+                            $object->config('ramdisk.url') &&
+                            !empty($object->config('ramdisk.is.disabled'))
+                        ){
+                            SharedMemory::write($object, $url, $file_read);
+                        }
                         /*
                         if(
                             $is_ramdisk_url === false &&
