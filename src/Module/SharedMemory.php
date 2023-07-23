@@ -62,6 +62,7 @@ class SharedMemory {
             elseif(is_numeric($data)){
                 $data = $data + 0;
             }
+            d($data);
             return $data;
         }
         catch (ErrorException $exception){
