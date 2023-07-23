@@ -336,6 +336,8 @@ class Parse {
                     $this->key = $key;
                     $attribute = $this->object()->config('parse.read.object.this.attribute');
                     $string->{$attribute} = $key;
+                    d($key);
+                    d($value);
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string->{$key} = $value;
                 } catch (Exception | ParseError $exception){
