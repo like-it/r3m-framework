@@ -269,18 +269,12 @@ class Parse {
      */
     public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
         if($is_debug){
-            $debug = debug_backtrace(true);
-            d($debug[0]['file'] . ' ' . $debug[0]['line']);
-            d($debug[1]['file'] . ' ' . $debug[1]['line']);
-            d($debug[2]['file'] . ' ' . $debug[2]['line']);
             $this->counter++;
         }
         if($this->counter >= 100){
             d($depth);
             ddd($string);
         }
-        Core::interactive();
-        d($string);
         $object = $this->object();
         if($storage === null){            
             $storage = $this->storage(new Data());
@@ -291,14 +285,12 @@ class Parse {
             $storage->data($data);
         }
         if(is_array($string)){
-            d('is array');
             foreach($string as $key => $value){
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
             }
             return $string;
         }
         elseif(is_object($string)){
-            d('is object');
             $reserved_keys = [];
             if($this->useThis() === true){
                 $source = $storage->data('r3m.io.parse.view.source');
@@ -326,8 +318,6 @@ class Parse {
                 }
             }
             $string_object = (object) [];
-            d($string);
-            d($reserved_keys);
             foreach($string as $key => $value){
                 if(
                     $this->useThis() === true &&
@@ -343,12 +333,8 @@ class Parse {
                     $this->key = $key;
                     $attribute = $this->object()->config('parse.read.object.this.attribute');
                     $string_object->{$attribute} = $key;
-//                    d($key);
-//                    d($value);
-
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
                     $string_object->{$key} = $value;
-                    d($string_object);
                 } catch (Exception | ParseError $exception){
                     Event::trigger($object, 'parse.compile.exception', [
                         'string' => $string,
@@ -357,7 +343,6 @@ class Parse {
                         'depth' => $depth,
                         'exception' => $exception
                     ]);
-                    d($exception);
                 }
             }
             $string = $string_object;
@@ -376,8 +361,6 @@ class Parse {
                     $string = Parse::unset($string, $unset);
                 }
             }
-            d($string_object);
-            ddd($string);
             return $string;
         }
         elseif(stristr($string, '{') === false){
