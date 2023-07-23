@@ -13,6 +13,7 @@ namespace R3m\Io\Module\Parse;
 
 
 
+use R3m\Io\Module\SharedMemory;
 use stdClass;
 
 use R3m\Io\App;
@@ -371,6 +372,7 @@ class Build {
                     $url = $dir . $file;
                     $url_list[] = $url;
                     //add ramdisk
+                    $file_read = false;
                     $ramdisk_dir = false;
                     $ramdisk_url = false;
                     $config_dir = false;
@@ -432,11 +434,20 @@ class Build {
                             ){
                                 $is_ramdisk_url = true;
                                 $url = $ramdisk_url;
+                                $file_read = SharedMemory::read($object, $ramdisk_url);
                             }
                         }
                     }
-                    if(File::exist($url)){
+                    if(
+                        $file_read === false &&
+                        File::exist($url)
+                    ){
                         $file_read = File::read($url);
+                    }
+                    elseif($file_read === false) {
+                        throw new Exception('File not found: ' . $url);
+                    }
+                    if(File::exist($url)){
                         $explode = explode('function', $file_read);
                         $explode[0] = '';
                         $read = implode('function', $explode);
@@ -457,7 +468,8 @@ class Build {
                             $config_mtime
                         ){
                             Dir::create($ramdisk_dir);
-                            File::put($ramdisk_url, $file_read);
+//                            File::put($ramdisk_url, $file_read);
+                            SharedMemory::write($ramdisk_url, $file_read);
                             $config_mtime->set(sha1($ramdisk_url), $url);
                             $config_mtime->write($config_url);
                             exec('chmod 640 ' . $ramdisk_url);
