@@ -276,6 +276,7 @@ class Parse {
             ddd($string);
         }
         Core::interactive();
+        d($string);
         $object = $this->object();
         if($storage === null){            
             $storage = $this->storage(new Data());
