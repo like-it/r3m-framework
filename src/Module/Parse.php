@@ -482,7 +482,7 @@ class Parse {
                 'object' => $object,
                 'url' => $url,
             ]);
-            d($tree);
+            $object->logger($object->config('project.log.error'))->info('tree:', [ $tree ]);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();
@@ -499,7 +499,7 @@ class Parse {
             $document = $build->create('use', $tree, $document);
             $document = $build->create('trait', $tree, $document);
             $write = $build->write($url, $document, $string);
-            d($url);
+            $object->logger($object->config('project.log.error'))->info('url:', [ $url ]);
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
                 opcache_invalidate($url, true);
