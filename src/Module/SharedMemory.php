@@ -37,7 +37,7 @@ class SharedMemory {
         catch (ErrorException $exception) {
             //no mapping
         }
-        ddd($collect);
+        d($collect);
         try {
             $id = 1000;
             $shmop = @shmop_open(
@@ -77,6 +77,7 @@ class SharedMemory {
             elseif(is_numeric($data)){
                 $data = $data + 0;
             }
+            d($data);
             return $data;
         }
         catch (ErrorException $exception){
