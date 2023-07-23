@@ -30,7 +30,9 @@ class SharedMemory {
                 0
             );
             $data = @shmop_read($shmop, 0, @shmop_size($shmop));
-
+            $data = explode("\0", $data, 2);
+            $data = $data[0];
+            d($data);
         }
         catch (ErrorException $exception) {
             //no mapping
@@ -48,6 +50,8 @@ class SharedMemory {
             } else {
                 $data = @shmop_read($shmop, $offset, @shmop_size($shmop));
             }
+            $data = explode("\0", $data, 2);
+            $data = $data[0];
             if(
                 substr($data, 0, 1) === '{' &&
                 substr($data, -1, 1) === '}'
@@ -110,6 +114,7 @@ class SharedMemory {
                     $connect[$id] = $url;
                 }
             }
+            $data .= "\0";
             $shm_size = mb_strlen($data);
             $shmop = @shmop_open(
                 $id,
@@ -128,6 +133,7 @@ class SharedMemory {
             $write = shmop_write($shmop, $data, 0);
             if($write > 0){
                 $data = Core::object($connect, Core::OBJECT_JSON);
+                $data .= "\0";
                 $shm_size = mb_strlen($data);
                 $shmop = @shmop_open(
                     $id,
