@@ -385,7 +385,6 @@ class Build {
                         !empty($object->config('ramdisk.is.disabled'))
                     ){
                         $file_read = SharedMemory::read($object, $url);
-                        d($file_read);
                         /*
                         if(
                             $object->config('cache.parse.plugin.url.directory_length') &&
