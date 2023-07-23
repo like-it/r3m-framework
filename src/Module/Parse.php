@@ -358,6 +358,8 @@ class Parse {
         elseif(stristr($string, '{') === false){
             return $string;
         } else {
+            $object->logger($object->config('project.log.error'))->info('--Parse---------------------------------------');
+            $start = microtime(true);
             $build = $this->build(new Build($this->object(), $this, $is_debug));
             $build->cache_dir($this->cache_dir());
             $build->limit($this->limit());
@@ -561,6 +563,8 @@ class Parse {
         elseif(is_numeric($string)){
             return $string + 0;
         }
+        $duration = microtime(true) - $start;
+        $object->logger($object->config('project.log.error'))->info('Parse duration: ' . $duration * 1000 . ' msec');
         return $string;
     }
 
