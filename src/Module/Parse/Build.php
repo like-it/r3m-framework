@@ -472,7 +472,10 @@ class Build {
                     elseif($file_exist){
                         $is_shared_memory = true;
                     }
-                    if(File::exist($url)){
+                    if(
+                        File::exist($url) &&
+                        is_scalar($file_read)
+                    ){
                         $explode = explode('function', $file_read);
                         $explode[0] = '';
                         $read = implode('function', $explode);
