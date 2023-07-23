@@ -830,6 +830,7 @@ class App extends Data {
                 unset($data->{App::NAMESPACE});
                 $read = $parse->compile(Core::object($read), $data, $parse->storage(), null, true);
                 $data = new Data($read);
+                ddd($data);
                 $readback = [
                     'script',
                     'link'
