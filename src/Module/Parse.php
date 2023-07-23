@@ -268,7 +268,6 @@ class Parse {
      * @throws Exception
      */
     public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
-        d($string);
         $object = $this->object();
         if($storage === null){            
             $storage = $this->storage(new Data());
