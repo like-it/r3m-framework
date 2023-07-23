@@ -488,7 +488,7 @@ class Build {
                         if(
                             $is_shared_memory === false &&
                             $object->config('ramdisk.url') &&
-                            !empty($object->config('ramdisk.is.disabled'))
+                            empty($object->config('ramdisk.is.disabled'))
                         ){
                             SharedMemory::write($object, $url, $file_read);
                             $config_mtime->set(sha1($url), File::mtime($url));
