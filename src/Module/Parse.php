@@ -325,6 +325,7 @@ class Parse {
                     $reserved_keys[] = $value;
                 }
             }
+            $string_object = (object) [];
             foreach($string as $key => $value){
                 if(
                     $this->useThis() === true &&
@@ -339,12 +340,12 @@ class Parse {
                 try {
                     $this->key = $key;
                     $attribute = $this->object()->config('parse.read.object.this.attribute');
-                    $string->{$attribute} = $key;
+                    $string_object->{$attribute} = $key;
                     d($key);
 //                    d($value);
 
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
-                    $string->{$key} = $value;
+                    $string_object->{$key} = $value;
                     d($string);
                 } catch (Exception | ParseError $exception){
                     Event::trigger($object, 'parse.compile.exception', [
@@ -356,6 +357,7 @@ class Parse {
                     ]);
                 }
             }
+            $string = $string_object;
             //must read into it, copy should be configurable
             $copy = $this->object()->config('parse.read.object.copy');
             if($copy && is_object($copy)){
