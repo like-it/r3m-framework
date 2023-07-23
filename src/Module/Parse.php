@@ -482,7 +482,7 @@ class Parse {
                 'object' => $object,
                 'url' => $url,
             ]);
-            ddd($tree);
+            d($tree);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();
