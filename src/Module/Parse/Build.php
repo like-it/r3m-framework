@@ -403,9 +403,8 @@ class Build {
                             $config_mtime->has(sha1($url)) &&
                             $config_mtime->get(sha1($url)) === File::mtime($url)
                         ) {
-                            d($url);
                             $file_read = SharedMemory::read($object, $url);
-                            d($file_read);
+                            ddd($file_read);
                         }
                         /*
                         if(
