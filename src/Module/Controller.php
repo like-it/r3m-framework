@@ -357,6 +357,10 @@ class Controller {
         } else {
             $dir = rtrim(get_called_class()::DIR, $config->data(Config::DS)) . $config->data(Config::DS);
         }
+        $debug = debug_backtrace(true);
+        d($debug[0]['file'] . ':' . $debug[0]['line']);
+        d($debug[1]['file'] . ':' . $debug[1]['line']);
+        d($debug[2]['file'] . ':' . $debug[2]['line']);
         d($dir);
         $config->data(Config::DATA_CONTROLLER_DIR_SOURCE, $dir);
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT, Dir::name($dir));
