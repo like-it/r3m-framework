@@ -21,46 +21,53 @@ class SharedMemory {
      */
     public static function read(App $object, $name, $offset=0, $length=0){
         d($name);
-        if(File::exist($name) === false){
+        try {
+            if(File::exist($name) === false){
+                return null;
+            }
+            $shm_key = ftok($name, 'r');
+            $shmop = shmop_open(
+                $shm_key,
+                'a',
+                0,
+                0
+            );
+            if($length > 0){
+                $data = shmop_read($shmop, $offset, $length);
+            } else {
+                $data = shmop_read($shmop, $offset, shmop_size($shmop));
+            }
+            if(
+                substr($data, 0, 1) === '{' &&
+                substr($data, -1, 1) === '}'
+            ){
+                $data = Core::object($data, Core::OBJECT_OBJECT);
+            }
+            elseif(
+                substr($data, 0, 1) === '[' &&
+                substr($data, -1, 1) === ']'
+            ){
+                $data = Core::object($data, Core::OBJECT_ARRAY);
+            }
+            elseif($data === 'false'){
+                $data = false;
+            }
+            elseif($data === 'true'){
+                $data = true;
+            }
+            elseif($data === 'null'){
+                $data = null;
+            }
+            elseif(is_numeric($data)){
+                $data = $data + 0;
+            }
+            return $data;
+        }
+        catch (ErrorException $exception){
+            //cache miss
             return null;
         }
-        $shm_key = ftok($name, 'r');
-        $shmop = shmop_open(
-            $shm_key,
-            'a',
-            0,
-            0
-        );
-        if($length > 0){
-            $data = shmop_read($shmop, $offset, $length);
-        } else {
-            $data = shmop_read($shmop, $offset, shmop_size($shmop));
-        }
-        if(
-            substr($data, 0, 1) === '{' &&
-            substr($data, -1, 1) === '}'
-        ){
-            $data = Core::object($data, Core::OBJECT_OBJECT);
-        }
-        elseif(
-            substr($data, 0, 1) === '[' &&
-            substr($data, -1, 1) === ']'
-        ){
-            $data = Core::object($data, Core::OBJECT_ARRAY);
-        }
-        elseif($data === 'false'){
-            $data = false;
-        }
-        elseif($data === 'true'){
-            $data = true;
-        }
-        elseif($data === 'null'){
-            $data = null;
-        }
-        elseif(is_numeric($data)){
-            $data = $data + 0;
-        }
-        return $data;
+
     }
 
     public static function write(App $object, $name, $data='', $permission=File::CHMOD): int
