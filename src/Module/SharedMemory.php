@@ -20,6 +20,10 @@ class SharedMemory {
      * @throws ObjectException
      */
     public static function read(App $object, $name, $offset=0, $length=0){
+        d($name);
+        if(File::exist($name) === false){
+            return null;
+        }
         $shm_key = ftok($name, 'r');
         $shmop = shmop_open(
             $shm_key,
