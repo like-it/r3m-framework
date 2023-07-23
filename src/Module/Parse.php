@@ -310,7 +310,7 @@ class Parse {
                     $reserved_keys[] = $value;
                 }
             }
-            $string_object = Core::object_clone($string);
+            $string_object = Core::deep_clone($string);
             foreach($string as $key => $value){
                 if(
                     $this->useThis() === true &&
