@@ -87,7 +87,7 @@ class SharedMemory {
         $shm_size = mb_strlen($data);
         $shmop = shmop_open(
             $shm_key,
-            'w',
+            'c',
             $permission,
             $shm_size
         );
