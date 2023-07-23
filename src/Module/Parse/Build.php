@@ -444,9 +444,6 @@ class Build {
                     ){
                         $file_read = File::read($url);
                     }
-                    elseif($file_read === false) {
-                        throw new Exception('File not found: ' . $url);
-                    }
                     if(File::exist($url)){
                         $explode = explode('function', $file_read);
                         $explode[0] = '';
@@ -480,6 +477,8 @@ class Build {
                             'name' => $name
                         ]);
                         break;
+                    } else {
+                        throw new Exception('Plugin not found: ' . $url);
                     }
                 }
                 if($exist === false){
