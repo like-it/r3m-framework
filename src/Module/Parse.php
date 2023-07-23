@@ -498,13 +498,13 @@ class Parse {
             $document = $build->create('class', $tree, $document);
             $build->indent(2);
             $document = $build->document($storage, $tree, $document);
-            $temp_duration = microtime(true) - $start;
-            $object->logger($object->config('project.log.error'))->info('Parse build document duration: ' . $temp_duration * 1000 . ' msec');
             $document = $build->create('run', $tree, $document);
             $document = $build->create('require', $tree, $document);
             $document = $build->create('use', $tree, $document);
             $document = $build->create('trait', $tree, $document);
             $write = $build->write($url, $document, $string);
+            $temp_duration = microtime(true) - $start;
+            $object->logger($object->config('project.log.error'))->info('Parse build document duration: ' . $temp_duration * 1000 . ' msec');
 //            $object->logger($object->config('project.log.error'))->info('url:', [ $url ]);
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
