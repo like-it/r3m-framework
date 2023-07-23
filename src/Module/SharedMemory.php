@@ -85,6 +85,8 @@ class SharedMemory {
         }
         $shm_key = ftok($name, 'r');
         $shm_size = mb_strlen($data);
+        d($shm_size);
+        d($shm_key);
         $shmop = shmop_open(
             $shm_key,
             'c',
