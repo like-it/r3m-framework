@@ -808,6 +808,7 @@ class App extends Data {
     /**
      * @throws ObjectException
      * @throws FileWriteException
+     * @throws Exception
      */
     public function parse_read($url, $attribute=null){
         if($attribute !== null){
