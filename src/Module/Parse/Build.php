@@ -495,7 +495,7 @@ class Build {
                             $config_is_write = $config_mtime->write($config_url);
                             d($url);
                             d($config_mtime);
-                            ddd($config_is_write);
+                            d($config_is_write);
                             exec('chmod 640 ' . $config_url);
                         }
                         /*
