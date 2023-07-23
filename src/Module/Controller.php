@@ -203,8 +203,7 @@ class Controller {
                 ],
                 $name
             );
-            d($object->route()->current());
-            ddd($object->config('controller.dir.view'));
+            d($object->config('controller.dir.view'));
             if(!empty($object->config('controller.dir.view'))){
                 $list[] = $object->config('controller.dir.view') .
                     str_replace('.', $object->config('ds'), $name) .
