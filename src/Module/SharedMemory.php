@@ -12,9 +12,13 @@ namespace R3m\Io\Module;
 
 use Exception;
 use R3m\Io\App;
+use R3m\Io\Exception\ObjectException;
 
 class SharedMemory {
 
+    /**
+     * @throws ObjectException
+     */
     public static function read(App $object, $name, $offset=0, $length=0){
         $shm_key = ftok($name, 'r');
         $shmop = shmop_open(

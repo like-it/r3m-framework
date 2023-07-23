@@ -17,7 +17,7 @@
 		"ext-shmop": "*",
 		"r3m-io/node": "dev-main",
 		"monolog/monolog" : "^2.2",
-		"defuse/php-encryption": "^2.3",
+		"defuse/php-encryption": "^2.3"
     },
 	"license" : "MIT",
 	"authors" : [{
