@@ -358,8 +358,7 @@ class Parse {
         elseif(stristr($string, '{') === false){
             return $string;
         } else {
-            $object->logger($object->config('project.log.error'))->info('--Parse---------------------------------------');
-            $start = microtime(true);
+            //this section takes at least 5 msec per document: file:put 2msec, memcache::put 2msec, rest 1msec
             $build = $this->build(new Build($this->object(), $this, $is_debug));
             $build->cache_dir($this->cache_dir());
             $build->limit($this->limit());
@@ -401,7 +400,6 @@ class Parse {
             if($file_exist){
                 $file_mtime = File::mtime($url);
             }
-            $file_mtime = false; //remove this line to enable cache
             if($file_exist && $file_mtime == $mtime){
                 //cache file                   
                 $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
@@ -486,7 +484,6 @@ class Parse {
                 'object' => $object,
                 'url' => $url,
             ]);
-//            $object->logger($object->config('project.log.error'))->info('tree:', [ $tree ]);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();
@@ -503,9 +500,6 @@ class Parse {
             $document = $build->create('use', $tree, $document);
             $document = $build->create('trait', $tree, $document);
             $write = $build->write($url, $document, $string);
-            $temp_duration = microtime(true) - $start;
-            $object->logger($object->config('project.log.error'))->info('Parse build document duration: ' . $temp_duration * 1000 . ' msec');
-//            $object->logger($object->config('project.log.error'))->info('url:', [ $url ]);
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
                 opcache_invalidate($url, true);
@@ -565,8 +559,6 @@ class Parse {
         elseif(is_numeric($string)){
             return $string + 0;
         }
-        $duration = microtime(true) - $start;
-        $object->logger($object->config('project.log.error'))->info('Parse duration: ' . $duration * 1000 . ' msec');
         return $string;
     }
 
