@@ -370,6 +370,7 @@ class Build {
                 foreach($dir_plugin as $nr => $dir){
                     $file = ucfirst($name) . $config->data('extension.php');
                     $url = $dir . $file;
+                    $object->logger($object->config('project.log.error'))->info('Parse: ' . $url);
                     $url_list[] = $url;
                     //add ramdisk
                     $file_read = false;
