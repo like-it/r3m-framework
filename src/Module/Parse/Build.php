@@ -485,9 +485,6 @@ class Build {
                         $read .= PHP_EOL;
                         $document = str_replace($placeholder, $read . $placeholder, $document);
                         $exist = true;
-                        d($is_shared_memory);
-                        d($object->config('ramdisk.url'));
-                        d($object->config('ramdisk.is.disabled'));
                         if(
                             $is_shared_memory === false &&
                             $object->config('ramdisk.url') &&
@@ -496,9 +493,6 @@ class Build {
                             SharedMemory::write($object, $url, $file_read);
                             $config_mtime->set(sha1($url), File::mtime($url));
                             $config_is_write = $config_mtime->write($config_url);
-                            d($url);
-                            d($config_mtime);
-                            d($config_is_write);
                             exec('chmod 640 ' . $config_url);
                         }
                         /*
