@@ -98,10 +98,17 @@ class SharedMemory {
                 $id = 1000;
                 $connect[$id] = $url;
             } else {
-                d($connect);
                 $connect = Core::object($connect, Core::OBJECT_ARRAY);
-                $id = array_key_last($connect) + 1;
-                $connect[$id] = $url;
+                if(!is_array($connect)){
+                    $connect = [];
+                    $id = 1;
+                    $connect[$id] = 'mapping';
+                    $id = 1000;
+                    $connect[$id] = $url;
+                } else {
+                    $id = array_key_last($connect) + 1;
+                    $connect[$id] = $url;
+                }
             }
             $shm_size = mb_strlen($data);
             $shmop = @shmop_open(
