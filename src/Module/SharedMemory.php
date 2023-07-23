@@ -65,11 +65,15 @@ class SharedMemory {
 
     public static function write(App $object, $name, $data='', $permission=File::CHMOD): int
     {
+        d($name);
         if(is_array($data) || is_object($data)){
             $data = Core::object($data, Core::OBJECT_JSON_LINE);
         }
         if(!is_string($data)){
             $data = (string) $data;
+        }
+        if(File::exist($name) === false){
+            return false;
         }
         $shm_key = ftok($name, 'r');
         $shm_size = mb_strlen($data);
