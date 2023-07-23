@@ -21,6 +21,7 @@ class SharedMemory {
      * @throws ObjectException
      */
     public static function read(App $object, $url, $offset=0, $length=0){
+        $data = null;
         try {
             $shmop = @shmop_open(
                 1,
@@ -28,10 +29,13 @@ class SharedMemory {
                 0,
                 0
             );
-            d($shmop);
             $data = @shmop_read($shmop, 0, @shmop_size($shmop));
-            d('here');
-            ddd($data);
+
+        }
+        catch (ErrorException $exception) {
+            //no mapping
+        }
+        try {
             $id = 1000;
             $shmop = @shmop_open(
                 $id,
@@ -72,7 +76,6 @@ class SharedMemory {
         }
         catch (ErrorException $exception){
             //cache miss
-            d($exception);
             return null;
         }
     }
