@@ -90,7 +90,7 @@ class SharedMemory {
             $shm_key = ftok($name, 'a'); //seems problematic
             */
 
-            $connect = SharedMemory::read($object, 1);
+            $connect = SharedMemory::read($object, 'mapping');
             if($connect === null){
                 $connect = [];
                 $id = 1;
@@ -134,8 +134,6 @@ class SharedMemory {
                     );
                 }
                 $connect_write = shmop_write($shmop, $data, 0);
-                d($data);
-                ddd($connect_write);
                 if($connect_write > 0){
                     return $write;
                 }
