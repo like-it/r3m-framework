@@ -74,7 +74,6 @@ class SharedMemory {
 
     public static function write(App $object, $name, $data='', $permission=File::CHMOD): int
     {
-        d($name);
         if(is_array($data) || is_object($data)){
             $data = Core::object($data, Core::OBJECT_JSON_LINE);
         }
@@ -92,6 +91,7 @@ class SharedMemory {
             $permission,
             $shm_size
         );
+        d($data);
         return shmop_write($shmop, $data, 0);
     }
 }
