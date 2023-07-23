@@ -287,12 +287,14 @@ class Parse {
             $storage->data($data);
         }
         if(is_array($string)){
+            d('is array');
             foreach($string as $key => $value){
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
             }
             return $string;
         }
         elseif(is_object($string)){
+            d('is object');
             $reserved_keys = [];
             if($this->useThis() === true){
                 $source = $storage->data('r3m.io.parse.view.source');
@@ -365,8 +367,10 @@ class Parse {
             return $string;
         }
         elseif(stristr($string, '{') === false){
+            d('no needle');
             return $string;
         } else {
+            d('string');
             $build = $this->build(new Build($this->object(), $this, $is_debug));
             $build->cache_dir($this->cache_dir());
             $build->limit($this->limit());
