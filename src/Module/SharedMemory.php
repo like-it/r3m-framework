@@ -71,23 +71,36 @@ class SharedMemory {
 
     public static function write(App $object, $name, $data='', $permission=File::CHMOD): int
     {
-        if(is_array($data) || is_object($data)){
-            $data = Core::object($data, Core::OBJECT_JSON_LINE);
+        try {
+            if(is_array($data) || is_object($data)){
+                $data = Core::object($data, Core::OBJECT_JSON_LINE);
+            }
+            if(!is_string($data)){
+                $data = (string) $data;
+            }
+            if(File::exist($name) === false){
+                return false;
+            }
+            $shm_key = ftok($name, 'r');
+            $shm_size = mb_strlen($data);
+            $shmop = @shmop_open(
+                $shm_key,
+                'c',
+                $permission,
+                $shm_size
+            );
+            if($shmop === false){
+                $shmop = @shmop_open(
+                    $shm_key,
+                    'w',
+                    $permission,
+                    $shm_size
+                );
+            }
+            return shmop_write($shmop, $data, 0);
         }
-        if(!is_string($data)){
-            $data = (string) $data;
-        }
-        if(File::exist($name) === false){
+        catch(ErrorException $exception){
             return false;
         }
-        $shm_key = ftok($name, 'r');
-        $shm_size = mb_strlen($data);
-        $shmop = shmop_open(
-            $shm_key,
-            'c',
-            $permission,
-            $shm_size
-        );
-        return shmop_write($shmop, $data, 0);
     }
 }
