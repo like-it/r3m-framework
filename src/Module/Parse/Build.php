@@ -482,6 +482,9 @@ class Build {
                         $read .= PHP_EOL;
                         $document = str_replace($placeholder, $read . $placeholder, $document);
                         $exist = true;
+                        d($is_shared_memory);
+                        d($object->config('ramdisk.url'));
+                        d($object->config('ramdisk.is.disabled'));
                         if(
                             $is_shared_memory === false &&
                             $object->config('ramdisk.url') &&
