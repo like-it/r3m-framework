@@ -259,7 +259,7 @@ class Controller {
                 $explode[] = $config->data('dictionary.view');
             }
         }
-        ddd($list);
+        d($list);
         $url = false;
         $view_url = false;
         $read = false;
