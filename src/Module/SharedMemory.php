@@ -22,12 +22,10 @@ class SharedMemory {
      */
     public static function read(App $object, $name, $offset=0, $length=0){
         try {
-            d($name);
             if(File::exist($name) === false){
                 return null;
             }
             $shm_key = ftok($name, 'a');
-            d($shm_key);
             $shmop = @shmop_open(
                 $shm_key,
                 'a',
