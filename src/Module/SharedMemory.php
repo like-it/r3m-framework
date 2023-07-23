@@ -28,6 +28,7 @@ class SharedMemory {
                 0,
                 0
             );
+            d($shmop);
             $data = @shmop_read($shmop, 0, @shmop_size($shmop));
             ddd($data);
             $id = 1000;
