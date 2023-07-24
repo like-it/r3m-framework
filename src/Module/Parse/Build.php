@@ -469,7 +469,7 @@ class Build {
                     ){
                         $file_read = File::read($url);
                     }
-                    elseif($file_exist){
+                    elseif($file_exist && is_scalar($file_read)){
                         $is_shared_memory = true;
                     }
                     if(
