@@ -22,22 +22,22 @@ class SharedMemory {
      */
     public static function read(App $object, $url, $offset=0, $length=0){
         $data = null;
-        $collect = null;
+        $connect = null;
         try {
-            $shmop = @shmop_open(
+            $connect_shmop = @shmop_open(
                 1,
                 'a',
                 0,
                 0
             );
-            $collect = @shmop_read($shmop, 0, @shmop_size($shmop));
-            $collect = explode("\0", $collect, 2);
-            $collect = $collect[0];
+            $connect = @shmop_read($connect_shmop, 0, @shmop_size($connect_shmop));
+            $connect = explode("\0", $connect, 2);
+            $connect = $connect[0];
         }
         catch (ErrorException $exception) {
             //no mapping
         }
-        d($collect);
+        d($connect);
         try {
             $id = 1000;
             $shmop = @shmop_open(
@@ -137,21 +137,21 @@ class SharedMemory {
                 $connect = Core::object($connect, Core::OBJECT_JSON);
                 $connect .= "\0";
                 $shm_size = mb_strlen($connect);
-                $shmop = @shmop_open(
+                $connect_shmop = @shmop_open(
                     $id,
                     'c',
                     $permission,
                     $shm_size
                 );
-                if($shmop === false){
-                    $shmop = @shmop_open(
+                if($connect_shmop === false){
+                    $connect_shmop = @shmop_open(
                         $id,
                         'w',
                         $permission,
                         $shm_size
                     );
                 }
-                $connect_write = shmop_write($shmop, $connect, 0);
+                $connect_write = shmop_write($connect_shmop, $connect, 0);
                 if($connect_write > 0){
                     return $write;
                 }
