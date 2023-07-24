@@ -37,9 +37,16 @@ class SharedMemory {
         catch (ErrorException $exception) {
             //no mapping
         }
-        d($connect);
+        if(is_array($connect)){
+            //make binary search ?
+            foreach($connect as $nr => $record){
+                if($record === $url){
+                    $id = $nr;
+                    break;
+                }
+            }
+        }
         try {
-            $id = 1001;
             $shmop = @shmop_open(
                 $id,
                 'a',
