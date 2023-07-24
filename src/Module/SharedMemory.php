@@ -39,7 +39,7 @@ class SharedMemory {
         }
         d($connect);
         try {
-            $id = 1000;
+            $id = 1001;
             $shmop = @shmop_open(
                 $id,
                 'a',
