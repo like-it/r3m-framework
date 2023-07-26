@@ -532,6 +532,7 @@ class App extends Data {
         if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
             $output .= (string) $exception;
         }
+        d($output);
         return $output;
     }
 
