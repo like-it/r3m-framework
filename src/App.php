@@ -520,7 +520,7 @@ class App extends Data {
         $width = Cli::tput('width') + 0;
         $background = '200;0;0';
         $output = chr(27) . '[48;2;' . $background . 'm';
-        $output .= str_repeat(' ', $width || 0);
+        $output .= str_repeat(' ', $width);
         $output .= PHP_EOL;
         $output .= $class . PHP_EOL;
         $output .= PHP_EOL;
