@@ -179,6 +179,20 @@ class Cli {
         ob_start();
         $result = system('tput ' . $tput);
         ob_end_clean();
+        switch(strtolower($tput)){
+            case 'rows':
+            case 'row':
+            case 'height':
+            case 'lines' :
+                $result = (int) $result;
+                break;
+            case 'width':
+            case 'columns':
+            case 'column' :
+            case 'cols' :
+                $result = (int) $result;
+                break;
+        }
         return $result;
     }
 
