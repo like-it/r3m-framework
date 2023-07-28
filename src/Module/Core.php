@@ -567,6 +567,7 @@ class Core
             ){
                 if(array_key_exists($attributeList[0], $object)){
                     unset($object[$attributeList[0]]);
+                    d('yes');
                     return true;
                 } else {
                     return false;

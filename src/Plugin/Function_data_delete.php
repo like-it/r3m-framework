@@ -12,6 +12,5 @@ use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
 function function_data_delete(Parse $parse, Data $data, $attribute){
-    d($attribute);
     $data->delete($attribute);
 }
