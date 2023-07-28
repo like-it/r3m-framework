@@ -642,12 +642,12 @@ class Build {
             elseif($skip_nr !== null){
                 continue;
             }
-            if($is_tag === false){
-                d($record['type']);
-            }
             if(
                 $is_tag === false &&
-                $record['type'] == Token::TYPE_STRING
+                !in_array(
+                    $record['type'],
+                    Token::NOT_TYPE_ECHO
+                )
             ){
                 if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
                     $explode = explode("\n", $record['value'], 2);

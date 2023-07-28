@@ -124,6 +124,13 @@ class Token {
 
     const MODIFIER_DIRECTION = 'direction';
 
+    const NOT_TYPE_ECHO = [
+        Token::TYPE_CURLY_OPEN,
+        Token::TYPE_CURLY_CLOSE,
+        Token::TYPE_QUOTE_DOUBLE_STRING,
+        Token::TYPE_DOC_COMMENT,
+    ];
+
     const TYPE_SINGLE = [
         Token::TYPE_PARENTHESE_OPEN,
         Token::TYPE_PARENTHESE_CLOSE,
