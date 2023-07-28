@@ -71,7 +71,7 @@ class Sort extends Data {
                                 $result[$value][] = $node;
                             }
                         }
-                        else if (is_array($value)){
+                        elseif (is_array($value)){
                             $attr = '';
                             foreach($value as $node_attribute){
                                 if(is_scalar($node_attribute)){
@@ -80,7 +80,18 @@ class Sort extends Data {
                             }
                             $attr = substr($attr, 1);
                             $result[$attr][] = $node;
-                        } else {
+                        }
+                        elseif(is_object($value)){
+                            $attr = '';
+                            foreach($value as $node_attribute){
+                                if(is_scalar($node_attribute)){
+                                    $attr .= '.' . $node_attribute;
+                                }
+                            }
+                            $attr = substr($attr, 1);
+                            $result[$attr][] = $node;
+                        }
+                        else {
                             d($uuid);
                             d($attribute);
                             d($value);
@@ -166,7 +177,7 @@ class Sort extends Data {
                                 $result[$value][] = $node;
                             }
                         }
-                        else if (is_array($value)){
+                        elseif(is_array($value)){
                             $attr = '';
                             foreach($value as $node_attribute){
                                 if(is_scalar($node_attribute)){
@@ -175,7 +186,18 @@ class Sort extends Data {
                             }
                             $attr = substr($attr, 1);
                             $result[$attr][] = $node;
-                        } else {
+                        }
+                        elseif(is_object($value)){
+                            $attr = '';
+                            foreach($value as $node_attribute){
+                                if(is_scalar($node_attribute)){
+                                    $attr .= '.' . $node_attribute;
+                                }
+                            }
+                            $attr = substr($attr, 1);
+                            $result[$attr][] = $node;
+                        }
+                        else {
                             d($uuid);
                             d($attribute);
                             d($value);
