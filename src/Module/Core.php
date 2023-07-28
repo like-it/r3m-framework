@@ -554,6 +554,7 @@ class Core
         }
     }
 
+    /*
     public static function object_delete($attributeList = [], $object = '', $is_debug = false): bool
     {
         if(is_string($attributeList) || is_numeric($attributeList)) {
@@ -1057,8 +1058,8 @@ class Core
         }
         return false;
     }
+    */
 
-    /*
     public static function object_delete($attributeList = [], $object = '', $parent = '', $key = null): bool
     {
         if (is_scalar($attributeList)) {
@@ -1139,7 +1140,6 @@ class Core
         }
         return false;
     }
-    */
 
     public static function object_has_property($attributeList = [], $object = ''): bool
     {
