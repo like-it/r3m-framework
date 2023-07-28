@@ -411,13 +411,9 @@ class Autoload {
             $data[] = $this->read->autoload->{$caller}->{$item['load']};
         }
         $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['file'] . '.' . Autoload::EXT_PHP;
-        $data[] = '[---]';
         $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_PHP;
-        $data[] = '[---]';
         $data[] = $item['directory'] . $item['file'] . '.' . Autoload::EXT_PHP;
-        $data[] = '[---]';
         $data[] = $item['directory'] . $item['baseName'] . '.' . Autoload::EXT_PHP;
-        $data[] = '[---]';
         $this->fileList[$item['baseName']][] = $data;
         $result = array();
         foreach($data as $nr => $file){
