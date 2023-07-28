@@ -642,6 +642,9 @@ class Build {
             elseif($skip_nr !== null){
                 continue;
             }
+            if($is_tag === false){
+                d($record['type']);
+            }
             if(
                 $is_tag === false &&
                 $record['type'] == Token::TYPE_STRING

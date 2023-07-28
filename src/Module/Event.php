@@ -32,7 +32,7 @@ class Event extends Main {
     use Role;
 
     const NAME = 'Event';
-    const OBJECT = 'App.Event';
+    const OBJECT = 'Server.Event';
     const CHUNK_SIZE = 4096;
 
     const LIST = 'list';
