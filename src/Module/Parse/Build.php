@@ -631,6 +631,7 @@ class Build {
         $skip_nr = null;
         $is_control = false;
         $remove_newline = false;
+        d($tree);
         foreach($tree as $nr => $record){
             $start = microtime(true);
             if(
