@@ -129,6 +129,7 @@ class Token {
         Token::TYPE_CURLY_CLOSE,
         Token::TYPE_QUOTE_DOUBLE_STRING,
         Token::TYPE_DOC_COMMENT,
+        Token::TYPE_COMMENT,
     ];
 
     const TYPE_SINGLE = [
