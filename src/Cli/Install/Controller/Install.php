@@ -133,6 +133,8 @@ class Install extends Controller {
                     property_exists($copy, 'recursive') &&
                     $copy->recursive === true
                 ){
+                    $parse = new Parse($object, $object->data());
+                    $copy->to = $parse->compile($copy->to, $object->data());
                     ddd($copy);
                     if(File::exist($copy->from)){
                         $command = 'cp -R ' . $copy->from . ' ' . $copy->to;
@@ -144,6 +146,9 @@ class Install extends Controller {
                     property_exists($copy, 'from') &&
                     property_exists($copy, 'to')
                 ){
+                    $parse = new Parse($object, $object->data());
+                    $copy->to = $parse->compile($copy->to, $object->data());
+                    ddd($copy);
                     if(File::exist($copy->from)){
                         $command = 'cp ' . $copy->from . ' ' . $copy->to;
                         exec($command);
