@@ -135,8 +135,8 @@ class Install extends Controller {
                 ){
                     $parse = new Parse($object, $object->data());
                     $copy->to = $parse->compile($copy->to, $object->data());
-                    d($copy);
                     if(File::exist($copy->from)){
+                        Dir::create($copy->to, Dir::CHMOD);
                         $command = 'cp -R ' . $copy->from . ' ' . $copy->to;
                         exec($command);
                     }
@@ -149,6 +149,7 @@ class Install extends Controller {
                     $parse = new Parse($object, $object->data());
                     $copy->to = $parse->compile($copy->to, $object->data());
                     if(File::exist($copy->from)){
+                        Dir::create($copy->to, Dir::CHMOD);
                         $command = 'cp ' . $copy->from . ' ' . $copy->to;
                         exec($command);
                     }
