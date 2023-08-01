@@ -135,6 +135,7 @@ class Install extends Controller {
                 ){
                     $parse = new Parse($object, $object->data());
                     $copy->to = $parse->compile($copy->to, $object->data());
+                    d($copy);
                     if(File::exist($copy->from)){
                         $command = 'cp -R ' . $copy->from . ' ' . $copy->to;
                         exec($command);
