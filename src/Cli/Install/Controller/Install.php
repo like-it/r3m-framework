@@ -136,22 +136,23 @@ class Install extends Controller {
                     $parse = new Parse($object, $object->data());
                     $copy->to = $parse->compile($copy->to, $object->data());
                     if(File::exist($copy->from)){
-                        Dir::create($copy->to, Dir::CHMOD);
-                        $dir = new Dir();
-                        $read = $dir->read($copy->from, true);
-                        foreach($read as $file){
-                            if($file->type === Dir::TYPE){
-                                Dir::create($file->url, Dir::CHMOD);
+                        if(Dir::is($copy->from)){
+                            Dir::create($copy->to, Dir::CHMOD);
+                            $dir = new Dir();
+                            $read = $dir->read($copy->from, true);
+                            foreach($read as $file){
+                                if($file->type === Dir::TYPE){
+                                    Dir::create($file->url, Dir::CHMOD);
+                                }
                             }
-                        }
-                        foreach($read as $file){
-                            if($file->type === File::TYPE){
-                                $to = str_replace($copy->from, $copy->to, $file->url);
-                                File::copy($file->url, $to);
+                            foreach($read as $file){
+                                if($file->type === File::TYPE){
+                                    $to = str_replace($copy->from, $copy->to, $file->url);
+                                    File::copy($file->url, $to);
+                                }
                             }
                         }
                     }
-
                 }
                 elseif(
                     property_exists($copy, 'from') &&
@@ -160,18 +161,20 @@ class Install extends Controller {
                     $parse = new Parse($object, $object->data());
                     $copy->to = $parse->compile($copy->to, $object->data());
                     if(File::exist($copy->from)){
-                        Dir::create($copy->to, Dir::CHMOD);
-                        $dir = new Dir();
-                        $read = $dir->read($copy->from, true);
-                        foreach($read as $file){
-                            if($file->type === Dir::TYPE){
-                                Dir::create($file->url, Dir::CHMOD);
+                        if(Dir::is($copy->from)){
+                            Dir::create($copy->to, Dir::CHMOD);
+                            $dir = new Dir();
+                            $read = $dir->read($copy->from, true);
+                            foreach($read as $file){
+                                if($file->type === Dir::TYPE){
+                                    Dir::create($file->url, Dir::CHMOD);
+                                }
                             }
-                        }
-                        foreach($read as $file){
-                            if($file->type === File::TYPE){
-                                $to = str_replace($copy->from, $copy->to, $file->url);
-                                File::copy($file->url, $to);
+                            foreach($read as $file){
+                                if($file->type === File::TYPE){
+                                    $to = str_replace($copy->from, $copy->to, $file->url);
+                                    File::copy($file->url, $to);
+                                }
                             }
                         }
                     }
