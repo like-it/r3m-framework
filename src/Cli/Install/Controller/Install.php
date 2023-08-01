@@ -137,6 +137,12 @@ class Install extends Controller {
                     $copy->to = $parse->compile($copy->to, $object->data());
                     if(File::exist($copy->from)){
                         Dir::create($copy->to, Dir::CHMOD);
+                        $dir = new Dir();
+                        $read = $dir->read($copy->from, true);
+                        ddd($read);
+
+
+
                         $command = 'cp -R ' . $copy->from . ' ' . $copy->to;
                         exec($command);
                     }
