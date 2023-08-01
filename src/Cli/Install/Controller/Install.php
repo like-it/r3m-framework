@@ -146,6 +146,7 @@ class Install extends Controller {
                                 $command = 'chmod 777 ' . $copy->to;
                                 exec($command);
                             }
+                            ddd('endtest');
                             $dir = new Dir();
                             $read = $dir->read($copy->from, true);
                             foreach($read as $file){
