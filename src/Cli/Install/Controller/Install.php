@@ -139,12 +139,17 @@ class Install extends Controller {
                         Dir::create($copy->to, Dir::CHMOD);
                         $dir = new Dir();
                         $read = $dir->read($copy->from, true);
-                        ddd($read);
-
-
-
-                        $command = 'cp -R ' . $copy->from . ' ' . $copy->to;
-                        exec($command);
+                        foreach($read as $file){
+                            if($file->type === Dir::TYPE){
+                                Dir::create($file->url, Dir::CHMOD);
+                            }
+                        }
+                        foreach($read as $file){
+                            if($file->type === File::TYPE){
+                                $to = str_replace($copy->from, $copy->to, $file->url);
+                                File::copy($copy->from, $to);
+                            }
+                        }
                     }
 
                 }
@@ -156,8 +161,19 @@ class Install extends Controller {
                     $copy->to = $parse->compile($copy->to, $object->data());
                     if(File::exist($copy->from)){
                         Dir::create($copy->to, Dir::CHMOD);
-                        $command = 'cp ' . $copy->from . ' ' . $copy->to;
-                        exec($command);
+                        $dir = new Dir();
+                        $read = $dir->read($copy->from, true);
+                        foreach($read as $file){
+                            if($file->type === Dir::TYPE){
+                                Dir::create($file->url, Dir::CHMOD);
+                            }
+                        }
+                        foreach($read as $file){
+                            if($file->type === File::TYPE){
+                                $to = str_replace($copy->from, $copy->to, $file->url);
+                                File::copy($copy->from, $to);
+                            }
+                        }
                     }
                 }
             }
