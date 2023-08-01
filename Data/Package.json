@@ -9,7 +9,7 @@
       "copy" : [
         {
           "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/",
-          "to" : "{{config('project.dir.root')}}Package/{{dir.uppercase.first($this.#parentNode.#key)}}/",
+          "to" : "{{config('project.dir.root')}}Package/{{dir.uppercase.first($this.#parentNode.#key)}}",
           "recursive": true
         }
       ],
