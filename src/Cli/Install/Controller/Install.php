@@ -138,6 +138,14 @@ class Install extends Controller {
                     if(File::exist($copy->from)){
                         if(Dir::is($copy->from)){
                             Dir::create($copy->to, Dir::CHMOD);
+                            if($object->config(Config::POSIX_ID) === 0){
+                                $command = 'chown www-data:www-data ' . $copy->to;
+                                exec($command);
+                            }
+                            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                $command = 'chmod 777 ' . $copy->to;
+                                exec($command);
+                            }
                             $dir = new Dir();
                             $read = $dir->read($copy->from, true);
                             foreach($read as $file){
