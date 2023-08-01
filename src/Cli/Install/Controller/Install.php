@@ -142,7 +142,8 @@ class Install extends Controller {
                             $read = $dir->read($copy->from, true);
                             foreach($read as $file){
                                 if($file->type === Dir::TYPE){
-                                    Dir::create($file->url, Dir::CHMOD);
+                                    $create = str_replace($copy->from, $copy->to, $file->url);
+                                    Dir::create($create, Dir::CHMOD);
                                 }
                             }
                             foreach($read as $file){
