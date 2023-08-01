@@ -11,7 +11,9 @@
 
 namespace R3m\Io\Module\Parse;
 
-use R3m\Io\Module\Server;
+
+
+use R3m\Io\Module\SharedMemory;
 use stdClass;
 
 use R3m\Io\App;
@@ -23,9 +25,12 @@ use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
-
+use R3m\Io\Module\Event;
+use R3m\Io\Module\Server;
 
 use Exception;
+
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\PluginNotFoundException;
 use R3m\Io\Exception\PluginNotAllowedException;
 use R3m\Io\Exception\FileWriteException;
@@ -129,9 +134,16 @@ class Build {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function indent($indent=null): string
     {
         if($indent !== null){
+            if($indent < 0){
+                $indent = 1;
+//                throw new Exception('Indentation error: ' . $indent);
+            }
             $this->indent = $indent;
         }
         return str_repeat("\t", $this->indent);
@@ -203,7 +215,7 @@ class Build {
                     $trait[] = 'trait ' . $name . ' {';
                     $use[] = $this->indent(1) . 'use ' . $name . ';';
                     $explode = explode(PHP_EOL, $record['value']);
-                    foreach($explode as $nr => $line){
+                    foreach($explode as $line){
                         $trait[] = $this->indent(1) . $line;
                     }
                     $trait[] = '}';
@@ -226,7 +238,7 @@ class Build {
                     }
                     $use[] = $this->indent(1) . 'use \\' . $namespace . $name . ';';
                     $explode = explode(PHP_EOL, $record['value']);
-                    foreach($explode as $nr => $line){
+                    foreach($explode as $line){
                         $trait[] = $this->indent(1) . $line;
                     }
                     $trait[] = '}';
@@ -311,7 +323,9 @@ class Build {
      */
     private function createRequireContent($type='', $document=[]): array
     {
-        $config = $this->object()->data(App::CONFIG);
+        $object = $this->object();
+        $url = false;
+        $config = $object->data(App::CONFIG);
         $storage = $this->storage();
         $dir_plugin = $config->get('parse.dir.plugin');
         if(empty($dir_plugin)){
@@ -352,36 +366,183 @@ class Build {
                     $modifier_count >= 1
                 )
             ){
+                $indent = $this->indent - 1;
                 foreach($dir_plugin as $nr => $dir){
                     $file = ucfirst($name) . $config->data('extension.php');
                     $url = $dir . $file;
+                    $object->logger($object->config('project.log.error'))->info('Parse: ' . $url);
                     $url_list[] = $url;
-                    if(File::exist($url)){
-                        $read = File::read($url);
-                        $explode = explode('function', $read);
+                    //add ramdisk
+                    $file_read = false;
+                    $ramdisk_dir = false;
+                    $ramdisk_url = false;
+                    $config_dir = false;
+                    $config_url = false;
+                    $config_mtime = false;
+                    $is_ramdisk_url = false;
+                    $is_shared_memory = false;
+                    if(
+                        $object->config('ramdisk.url') &&
+                        empty($object->config('ramdisk.is.disabled'))
+                    ){
+                        $config_dir = $this->object()->config('ramdisk.url') .
+                            $this->object()->config(Config::POSIX_ID) .
+                            $this->object()->config('ds') .
+                            'Plugin' .
+                            $this->object()->config('ds')
+                        ;
+                        $config_url = $config_dir .
+                            'File.Mtime' .
+                            $this->object()->config('extension.json')
+                        ;
+                        $config_mtime = $this->object()->data_read($config_url, sha1($config_url));
+                        if(!$config_mtime){
+                            $config_mtime = new Data();
+                        }
+                        if(
+                            $config_mtime->has(sha1($url)) &&
+                            $config_mtime->get(sha1($url)) === File::mtime($url)
+                        ) {
+                            $file_read = SharedMemory::read($object, $url);
+//                            d($file_read);
+                        }
+                        /*
+                        if(
+                            $object->config('cache.parse.plugin.url.directory_length') &&
+                            $object->config('cache.parse.plugin.url.directory_separator') &&
+                            $object->config('cache.parse.plugin.url.directory_pop_or_shift') &&
+                            $object->config('cache.parse.plugin.url.name_length') &&
+                            $object->config('cache.parse.plugin.url.name_separator') &&
+                            $object->config('cache.parse.plugin.url.name_pop_or_shift')
+                        ){
+                            $ramdisk_dir = $this->object()->config('ramdisk.url') .
+                                $this->object()->config(Config::POSIX_ID) .
+                                $this->object()->config('ds') .
+                                'Plugin' .
+                                $this->object()->config('ds')
+                            ;
+                            $ramdisk_file =
+                                Autoload::name_reducer(
+                                    $this->object(),
+                                    str_replace('/', '_', $dir),
+                                    $this->object()->config('cache.parse.plugin.url.directory_length'),
+                                    $this->object()->config('cache.parse.plugin.url.directory_separator'),
+                                    $this->object()->config('cache.parse.plugin.url.directory_pop_or_shift')
+                                ) .
+                                '_' .
+                                Autoload::name_reducer(
+                                    $this->object(),
+                                    $file,
+                                    $this->object()->config('cache.parse.plugin.url.name_length'),
+                                    $this->object()->config('cache.parse.plugin.url.name_separator'),
+                                    $this->object()->config('cache.parse.plugin.url.name_pop_or_shift')
+                                );
+                            $ramdisk_url = $ramdisk_dir . $ramdisk_file;
+                            $config_dir = $this->object()->config('ramdisk.url') .
+                                $this->object()->config(Config::POSIX_ID) .
+                                $this->object()->config('ds') .
+                                'Plugin' .
+                                $this->object()->config('ds')
+                            ;
+                            $config_url = $config_dir .
+                                'File.Mtime' .
+                                $this->object()->config('extension.json')
+                            ;
+                            $config_mtime = $this->object()->data_read($config_url, sha1($config_url));
+                            if(!$config_mtime){
+                                $config_mtime = new Data();
+                            }
+                            elseif(
+                                $config_mtime->has(sha1($ramdisk_url)) &&
+                                File::mtime($config_mtime->get(sha1($ramdisk_url))) && File::mtime($ramdisk_url)
+                            ){
+                                $is_ramdisk_url = true;
+                                $url = $ramdisk_url;
+                            }
+                        }
+                        */
+                    }
+                    $file_exist = File::exist($url);
+                    if(
+                        empty($file_read) &&
+                        $file_exist
+                    ){
+                        $file_read = File::read($url);
+                    }
+                    elseif($file_exist && is_scalar($file_read)){
+                        $is_shared_memory = true;
+                    }
+                    if(
+                        File::exist($url) &&
+                        is_scalar($file_read)
+                    ){
+                        $explode = explode('function', $file_read);
                         $explode[0] = '';
                         $read = implode('function', $explode);
-                        $indent = $this->indent - 1;
-                        $read = explode("\n", $read);
-                        foreach($read as $nr => $row){
-                            $read[$nr] = $this->indent($indent) . $row;
+                        $read = explode(PHP_EOL, $read);
+                        foreach($read as $read_nr => $row){
+                            $read[$read_nr] = $this->indent($indent) . $row;
                         }
-                        $read = implode("\n", $read);
-                        $read .= "\n";
-                        $this->indent = $this->indent + 1;
+                        $read = implode(PHP_EOL, $read);
+                        $read .= PHP_EOL;
                         $document = str_replace($placeholder, $read . $placeholder, $document);
                         $exist = true;
+                        if(
+                            $is_shared_memory === false &&
+                            $object->config('ramdisk.url') &&
+                            empty($object->config('ramdisk.is.disabled'))
+                        ){
+                            SharedMemory::write($object, $url, File::read($url));
+                            $config_mtime->set(sha1($url), File::mtime($url));
+                            $config_is_write = $config_mtime->write($config_url);
+                            exec('chmod 640 ' . $config_url);
+                        }
+                        /*
+                        if(
+                            $is_ramdisk_url === false &&
+                            $ramdisk_dir &&
+                            $ramdisk_url &&
+                            $config_dir &&
+                            $config_url &&
+                            $config_mtime
+                        ){
+
+                            Dir::create($ramdisk_dir);
+                            File::put($ramdisk_url, $file_read);
+                            $config_mtime->set(sha1($ramdisk_url), $url);
+                            $config_mtime->write($config_url);
+                            exec('chmod 640 ' . $ramdisk_url);
+                            exec('chmod 640 ' . $config_url);
+
+                        }
+                        */
+                        Event::trigger($object, 'parse.build.plugin.require', [
+                            'url' => $url,
+                            'name' => $name
+                        ]);
                         break;
                     }
                 }
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
-                    throw new PluginNotFoundException('Function not found: ' . $text, $dir_plugin);
+                    $exception = new PluginNotFoundException('Function not found: ' . $text, $dir_plugin);
+                    Event::trigger($object, 'parse.build.plugin.not_found', [
+                        'url' => $url,
+                        'name' => $name,
+                        'exception' => $exception
+                    ]);
+                    throw $exception;
                 }
             } elseif(array_key_exists('function', $limit)) {
-                throw new PluginNotAllowedException('Function (' . $name . ') not allowed, allowed: ' . implode(',', $limit['function']));
+                $exception = new PluginNotAllowedException('Function (' . $name . ') not allowed, allowed: ' . implode(',', $limit['function']));
+                Event::trigger($object, 'parse.build.plugin.not_allowed', [
+                    'url' => $url,
+                    'name' => $name,
+                    'exception' => $exception,
+                    'allowed' => $limit['function']
+                ]);
+                throw $exception;
             }
-
         }
         return $document;
     }
@@ -420,26 +581,24 @@ class Build {
      * @throws FileWriteException
      * @throws FileAppendException
      * @throws FileMoveException
+     * @throws ObjectException
      */
-    public function write($url, $document=[]): string
+    public function write($url, $document=[], $string=''): string
     {
         $write = implode("\n", $document);
         $this->storage()->data('time.end', microtime(true));
         $this->storage()->data('time.duration', $this->storage()->data('time.end') - $this->storage()->data('time.start'));
         $write = str_replace($this->storage()->data('placeholder.generation.time'), round($this->storage()->data('time.duration') * 1000, 2). ' msec', $write);
-        $dir = Dir::name($url);
+        $dir = Dir::name($url, Dir::CHMOD);
         Dir::create($dir);
         File::put($url, $write);
-//        $write =  File::write($url, $write);    //maybe use a different method (to check where the bug is coming from)
-        $command = 'php -l ' . escapeshellcmd($url);
-        Core::execute($command, $output, $error);
-        if($error){
-            $url_write_error = $this->object()->config('dictionary.cache') . 'parse/error/' . File::basename($url);
-            $this->object()->logger()->error($error, [ $url_write_error ]);
-            $dir = Dir::name($url_write_error);
-            Dir::create($dir);
-            File::move($url, $url_write_error, true);
-        }
+        exec('chmod 640 ' . $url);
+        $object = $this->object();
+        Event::trigger($object, 'parse.build.write', [
+            'url' => $url,
+            'string' => $string,
+            'storage' => $this->storage(),
+        ]);
         return $write;
     }
 
@@ -452,12 +611,12 @@ class Build {
      */
     public function document(Data $data, $tree=[], $document=[]): array
     {
+        $object = $this->object();
         $is_tag = false;
         $tag = null;
         $this->indent(2);
         $counter = 0;
         $storage = $this->storage();
-        $is_debug = '';
         if(!empty($data->data('is.debug'))){
             $is_debug = $data->data('is.debug');
             $storage->data('is.debug', $data->data('is.debug'));
@@ -473,6 +632,7 @@ class Build {
         $is_control = false;
         $remove_newline = false;
         foreach($tree as $nr => $record){
+            $start = microtime(true);
             if(
                 $skip_nr !== null &&
                 $nr > $skip_nr
@@ -484,7 +644,10 @@ class Build {
             }
             if(
                 $is_tag === false &&
-                $record['type'] == Token::TYPE_STRING
+                !in_array(
+                    $record['type'],
+                    Token::NOT_TYPE_ECHO
+                )
             ){
                 if($remove_newline && $data->data('r3m.io.parse.compile.remove_newline') !== false){
                     $explode = explode("\n", $record['value'], 2);
@@ -533,8 +696,7 @@ class Build {
                         if($select['value'] == 'if'){
                             throw new Exception('if must be a method, use {if()} on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') );
                         } else {
-                            d($select);
-                            throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url') . ' ' . $record['value']);
+                            throw new Exception('Possible variable sign or method missing (), on line: ' . $select['row'] . ', column: ' .  $select['column']  . ' in: ' .  $data->data('r3m.io.parse.view.url'));
                         }
                     case Token::TYPE_IS_MINUS_MINUS :
                     case Token::TYPE_IS_PLUS_PLUS :
@@ -644,8 +806,8 @@ class Build {
                         break;
                     case Build::TAG_CLOSE :
                         $multi_line = Build::getPluginMultiline($this->object());
-                        foreach($multi_line as $nr => $plugin){
-                            $multi_line[$nr] = '/' . $plugin;
+                        foreach($multi_line as $multi_line_nr => $plugin){
+                            $multi_line[$multi_line_nr] = '/' . $plugin;
                         }
                         if(
                             !in_array(
@@ -670,7 +832,7 @@ class Build {
                     default:
                         if($type !== null){
                             d($selection);
-                            throw new Exception('type (' . $type . ') undefined in source: ' . $this->storage()->data('source'));
+                            throw new Exception('type (' . $type . ') value (' . $select['value'] . ')undefined in source: ' . $this->storage()->data('source') . ' on line: ' . $record['row']);
                         }
                 }
                 $is_tag = false;
@@ -750,8 +912,9 @@ class Build {
                 return Token::TYPE_IS_MINUS_MINUS;
             case Token::TYPE_DOC_COMMENT :
                 return Token::TYPE_DOC_COMMENT;
+            case Token::TYPE_HEX :
+                return Token::TYPE_HEX;
             default:
-                d($record);
                 throw new Exception('Undefined type (' . $record['type'] . ')');
         }
     }
@@ -902,17 +1065,16 @@ class Build {
      */
     public function url($string=null, $options=[]): string
     {
+        $object = $this->object();
         $storage = $this->storage();
         $url = $storage->data('url');
         if($string !== null && $url === null){
             $key = sha1($string);
             $config = $this->object()->data(App::CONFIG);
             $dir = $this->cache_dir();
-            $uuid = posix_geteuid();
             if(empty($dir)){
                 throw new Exception('Cache dir empty in Build');
             }
-            $dir .= $uuid . $config->data('ds');
             $autoload = $this->object()->data(App::NAMESPACE . '.' . Autoload::NAME . '.' . App::R3M);
             if($autoload) {
                 $prefixList = $autoload->getPrefixList();
@@ -933,8 +1095,6 @@ class Build {
                         $autoload->addPrefix($record['prefix'],  $record['directory']);
                     }
                 }
-//            $autoload->addPrefix('Host',  $config->data('project.dir.host'));
-//            $autoload->addPrefix('Source',  $config->data('project.dir.source'));
                 $autoload->register();
             }
             $name = '';
@@ -964,6 +1124,19 @@ class Build {
                         basename($options['source'])) . '_';
             }
             $name = str_replace('_tpl', '', $name);
+            if(
+                $object->config('cache.parse.url.name_length') &&
+                $object->config('cache.parse.url.name_separator') &&
+                $object->config('cache.parse.url.name_pop_or_shift')
+            ){
+                $name = Autoload::name_reducer(
+                    $this->object(),
+                    $name,
+                    $object->config('cache.parse.url.name_length'),
+                    $object->config('cache.parse.url.name_separator'),
+                    $object->config('cache.parse.url.name_pop_or_shift')
+                );
+            }
             $url =
                 $dir .
                 $config->data('dictionary.template') .

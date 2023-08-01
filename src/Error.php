@@ -15,7 +15,8 @@ function exceptions_error_handler($severity, $message, $filename, $lineNumber) {
             [
                 E_DEPRECATED,
                 E_USER_DEPRECATED
-            ]
+            ],
+            true
         )
     ){
         return;

@@ -22,11 +22,17 @@ function function___(Parse $parse, Data $data, $attribute=null){
         return '{{import.translation()}} missing or corrupted translation file...' . PHP_EOL;
     }
     $translation = $object->data('translation.' . $language);
-    if(property_exists($translation, $attribute)){
+    if(
+        is_object($translation) &&
+        property_exists($translation, $attribute)
+    ){
         return $translation->{$attribute};
     } else {
         $translation = $object->data('translation.' . $object->config('framework.default.language'));
-        if(property_exists($translation, $attribute)){
+        if(
+            is_object($translation) &&
+            property_exists($translation, $attribute)
+        ){
             return $translation->{$attribute};
         } else {
             return $attribute;

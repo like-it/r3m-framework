@@ -25,6 +25,15 @@ class File {
 
     const USER_WWW = 'www-data';
 
+    const STRING = 'string';
+    const ARRAY = 'array';
+
+    const SIZE = 'size';
+    const BYTE = 'byte';
+    const BYTES = 'bytes';
+    const LINE = 'line';
+    const LINES = 'lines';
+
     public static function is($url=''): bool
     {
         $url = rtrim($url, '/');
@@ -85,6 +94,12 @@ class File {
 
     public static function link($source, $destination): bool
     {
+        if(substr($source, -1, 1) === '/'){
+            $source = substr($source, 0, -1);
+        }
+        if(substr($destination, -1, 1) === '/'){
+            $destination = substr($destination, 0, -1);
+        }
         $source = escapeshellarg($source);
         $destination = escapeshellarg($destination);
         system('ln -s ' . $source . ' ' . $destination);
@@ -127,6 +142,12 @@ class File {
         if($url == '/'){
             return file_exists($url);
         } else {
+            if(is_object($url)){
+                $debug = debug_backtrace(true);
+                d($debug[0]['file'] . ':' . $debug[0]['line']);
+                d($debug[1]['file'] . ':' . $debug[1]['line']);
+                ddd($url);
+            }
             $url = rtrim($url, '/');
             return file_exists($url);
         }
@@ -308,35 +329,31 @@ class File {
     }
 
 
-    public static function put($url, $data, $flags=LOCK_EX){
-        return file_put_contents($url, $data, $flags);
+    public static function put($url, $data, $flags=LOCK_EX, $return='size'): bool|int
+    {
+        $size = file_put_contents($url, $data, $flags);
+        switch($return){
+            case File::SIZE:
+            case File::BYTE:
+            case File::BYTES:
+                return $size;
+            case File::LINE:
+            case File::LINES:
+                $explode = explode(PHP_EOL, $data);
+                return $size !== false ? count($explode) : false;
+            default:
+                return $size;
+        }
     }
 
     /**
      * @throws FileWriteException
      * @bug may write wrong files in Parse:Build:write in a multithreading situation . solution use file::put
      */
-    public static function write($url='', $data=''){
+    public static function write($url='', $data='', $return='size'){
         $url = (string) $url;
         $data = (string) $data;
-        $resource = @fopen($url, 'w');
-        if($resource === false){
-            return $resource;
-        }        
-        flock($resource, LOCK_EX);
-        for ($written = 0; $written < strlen($data); $written += $fwrite) {
-            $fwrite = fwrite($resource, substr($data, $written));
-            if ($fwrite === false) {
-                break;
-            }
-        }
-        flock($resource, LOCK_UN);
-        fclose($resource);
-        if($written !== strlen($data)){
-            throw new FileWriteException('File.write failed, written != strlen data....');
-        } else {
-            return $written;
-        }
+        return File::put($url, $data, LOCK_EX, $return);
     }
 
     /**
@@ -365,28 +382,57 @@ class File {
         }
     }
 
-    public static function read($url='') : string
+    public static function read($url='', $return=File::STRING) : string | array
     {
         if(strpos($url, File::SCHEME_HTTP) === 0){
             //check network connection first (@) added for that              //error
             try {
                 $file = @file($url);
-                if(empty($file)){
-                    return '';
+                switch($return){
+                    case File::ARRAY:
+                        if(empty($file)){
+                            return [];
+                        }
+                        return $file;
+                    default:
+                        if(empty($file)){
+                            return '';
+                        }
+                        return implode('', $file);
                 }
-                return implode('', $file);
+
             } catch (Exception $exception){
-                return '';
+                switch($return){
+                    case File::ARRAY:
+                        return [];
+                    default:
+                        return '';
+                }
             }
         }
         if(empty($url)){
-            return '';
+            switch($return){
+                case File::ARRAY:
+                    return [];
+                default:
+                    return '';
+            }
         }
         try {
-            $file = file_get_contents($url);
-            return $file;
+            switch($return){
+                case File::ARRAY:
+                    return file($url);
+                default:
+                    return file_get_contents($url);
+            }
+
         } catch (Exception $exception){
-            return '';
+            switch($return){
+                case File::ARRAY:
+                    return [];
+                default:
+                    return '';
+            }
         }
     }
 
@@ -405,9 +451,17 @@ class File {
         return '';
     }
 
+    /**
+     * @throws Exception
+     */
     public static function copy($source='', $destination=''): bool
     {
-        return copy($source, $destination);
+        try {
+            return copy($source, $destination);
+        }
+        catch(\ErrorException $exception){
+            throw new Exception ('Couldn\'t copy source (' . $source . ') to destination (' . $destination .').');
+        }
     }
 
 
@@ -452,6 +506,17 @@ class File {
         $filename = basename($url);
         $explode = explode('?', $filename, 2);
         $filename = $explode[0];
+        $filename = str_replace(
+            [
+                ':',
+                '='
+            ],
+            [
+                '.',
+                '-'
+            ],
+            $filename
+        );
         $filename = basename($filename, $extension);
         return $filename;
     }

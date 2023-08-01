@@ -8,14 +8,78 @@
  * @changeLog
  *     -            all
  */
-use R3m\Io\Module\Core;
+use R3m\Io\Config;
+use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Dir;
 use R3m\Io\Module\File;
 
+/**
+ * @throws \R3m\Io\Exception\ObjectException
+ * @throws \R3m\Io\Exception\FileWriteException
+ * @throws Exception
+ */
 function function_require(Parse $parse, Data $data, $url='', $storage=[]){
+    $object = $parse->object();
+    $cache_url = false;
+    $cache_dir = false;
+    $is_cache_url = false;
+    if($object->config('ramdisk.url')){
+        $is_plugin = false;
+        $plugin_list = $object->config('cache.parse.plugin.list');
+        foreach($plugin_list as $plugin){
+            if(
+                property_exists($plugin, 'name') &&
+                $plugin->name === 'require'
+            ){
+                $is_plugin = $plugin;
+                break;
+            }
+        }
+        if(
+            $is_plugin &&
+            property_exists($is_plugin, 'name_length') &&
+            property_exists($is_plugin, 'name_separator') &&
+            property_exists($is_plugin, 'name_pop_or_shift')
+        ){
+            $cache_url = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                $object->config('dictionary.view') .
+                $object->config('ds') .
+                Autoload::name_reducer(
+                    $object,
+                    str_replace('/', '_', $url),
+                    $is_plugin->name_length,
+                    $is_plugin->name_separator,
+                    $is_plugin->name_pop_or_shift
+                );
+            ;
+            $cache_dir = Dir::name($cache_url);
+            if(
+                File::exist($cache_url) &&
+                File::mtime($cache_url) === File::mtime($url)
+            ){
+                $url = $cache_url;
+                $is_cache_url = true;
+            }
+        }
+    }
     if(File::exist($url)){
         $read = File::read($url);
+        if(
+            $is_cache_url === false &&
+            $object->config('ramdisk.url') &&
+            $cache_dir !== false &&
+            $cache_url !== false
+        ){
+            //copy to ramdisk
+            Dir::create($cache_dir);
+            File::copy($url, $cache_url);
+            File::touch($cache_url, File::mtime($url));
+            exec('chmod 640 ' . $cache_url);
+        }
         $mtime = File::mtime($url);
         if(!empty($storage)){
             $data_data = new Data();
@@ -33,7 +97,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             }
             elseif(!empty($data_script && !empty($script))){
                 foreach($script as $nr => $value){
-                    if(in_array($value, $data_script)){
+                    if(in_array($value, $data_script, true)){
                         unset($script[$nr]);
                     }
                 }
@@ -46,7 +110,7 @@ function function_require(Parse $parse, Data $data, $url='', $storage=[]){
             }
             elseif(!empty($data_link && !empty($link))){
                 foreach($link as $nr => $value){
-                    if(in_array($value, $data_link)){
+                    if(in_array($value, $data_link, true)){
                         unset($link[$nr]);
                     }
                 }

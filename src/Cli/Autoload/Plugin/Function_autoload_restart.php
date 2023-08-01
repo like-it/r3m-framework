@@ -7,16 +7,23 @@ use R3m\Io\Module\Parse;
 
 function function_autoload_restart(Parse $parse, Data $data){
     $object = $parse->object();
-    $autoload = $object->data(\R3m\Io\App::AUTOLOAD_R3M);
-    $cache_dir = $autoload->cache_dir();
-    $url = Dir::name($cache_dir);
-    if(File::exist($url)){
-        $dir = new Dir();
-        $read = $dir->read($url, true);
-        if($read){
-            foreach($read as $nr => $file){
-                if($file->type === File::TYPE){
-                    File::delete($file->url);
+    $object->config('ramdisk.is.disabled', true);
+    $temp_dir = $object->config('framework.dir.temp');
+    $dir = new Dir();
+    $read = $dir->read($temp_dir, true);
+    if($read){
+        foreach($read as $file){
+            if($file->type === Dir::TYPE){
+                if(
+                    (
+                        stristr($file->url, strtolower(\R3m\Io\Module\Autoload::NAME)) !== false ||
+                        stristr($file->url, strtolower(\R3m\Io\App::NAME)) !== false
+                    )
+                    &&
+                    file_exists($file->url)
+                ){
+                    Dir::remove($file->url);
+                    echo 'Removed: ' . $file->url . PHP_EOL;
                 }
             }
         }

@@ -6,6 +6,7 @@
 </Files>
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteOptions AllowAnyURI
 
     #
     # Authorization header for JWT backend
@@ -28,5 +29,5 @@
     RewriteCond %{HTTPS} on
     RewriteRule .* - [E=REQUEST_SCHEME:https]
 
-    RewriteRule ^/?(.*)$ /index.php?request=$1 [L,QSA]
+    RewriteRule ^/?(.*)$ /index.php?request=- [L,QSA]
 </IfModule>

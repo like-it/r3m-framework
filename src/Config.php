@@ -19,6 +19,9 @@ use R3m\Io\Module\Parse\Token;
 
 use Exception;
 
+use R3m\Io\Exception\ObjectException;
+use R3m\Io\Exception\FileWriteException;
+
 class Config extends Data {
     const DIR = __DIR__ . '/';
     const NAME = 'Config';
@@ -30,17 +33,34 @@ class Config extends Data {
     const DATA = 'data';
     const VALUE_DATA = 'Data';
 
+    const MIDDLEWARE = 'middleware';
+    const VALUE_MIDDLEWARE = 'Middleware';
+
+    const EVENT = 'event';
+    const VALUE_EVENT = 'Event';
+    const OUTPUT_FILTER = 'output.filter';
+    const VALUE_OUTPUT_FILTER = 'OutputFilter';
+
     const PUBLIC = 'public';
     const VALUE_PUBLIC = 'Public';
 
     const HOST = 'host';
     const VALUE_HOST = 'Host';
 
+    const TEMP = 'temp';
+    const VALUE_TEMP = '/tmp/r3m/io/';
+
     const CACHE = 'cache';
-    const VALUE_CACHE = '/tmp/r3m/io/';
+    const VALUE_CACHE = 'Cache';
 
     const SOURCE = 'Source';
     const VALUE_SOURCE = 'src';
+
+    const MOUNT = 'Mount';
+    const VALUE_MOUNT = 'Mount';
+
+    const BACKUP = 'Backup';
+    const VALUE_BACKUP = 'Backup';
 
     const BINARY = 'Binary';
     const VALUE_BINARY = 'Bin';
@@ -81,6 +101,12 @@ class Config extends Data {
     const COMPONENT = 'component';
     const VALUE_COMPONENT = 'Component';
 
+    const PACKAGE = 'package';
+    const VALUE_PACKAGE = 'Package';
+
+    const INSTALLATION = 'installation';
+    const VALUE_INSTALLATION = 'Installation';
+
     const ENTITY = 'entity';
     const VALUE_ENTITY = 'Entity';
 
@@ -107,6 +133,9 @@ class Config extends Data {
     const EXECUTE = 'execute';
     const VALUE_EXECUTE = 'Execute';
 
+    const VALIDATOR = 'validator';
+    const VALUE_VALIDATOR = 'Validator';
+
     const ROUTE = 'Route.json';
     const CONFIG = 'Config.json';
 
@@ -118,13 +147,14 @@ class Config extends Data {
     const DATA_FRAMEWORK_VERSION = 'framework.version';
     const DATA_FRAMEWORK_BUILT = 'framework.built';
     const DATA_FRAMEWORK_DIR = 'framework.dir';
-    const DATA_FRAMEWORK_DIR_ROOT = Config::DATA_FRAMEWORK_DIR . '.' .'root';
-    const DATA_FRAMEWORK_DIR_VENDOR = Config::DATA_FRAMEWORK_DIR . '.' .'vendor';
-    const DATA_FRAMEWORK_DIR_SOURCE = Config::DATA_FRAMEWORK_DIR . '.' .'source';
-    const DATA_FRAMEWORK_DIR_DATA = Config::DATA_FRAMEWORK_DIR . '.' .'data';
-    const DATA_FRAMEWORK_DIR_CLI = Config::DATA_FRAMEWORK_DIR . '.' .'cli';
-    const DATA_FRAMEWORK_DIR_CACHE = Config::DATA_FRAMEWORK_DIR . '.' .'cache';
-    const DATA_FRAMEWORK_DIR_MODULE = Config::DATA_FRAMEWORK_DIR . '.' .'module';
+    const DATA_FRAMEWORK_DIR_ROOT = Config::DATA_FRAMEWORK_DIR . '.' . 'root';
+    const DATA_FRAMEWORK_DIR_VENDOR = Config::DATA_FRAMEWORK_DIR . '.' . 'vendor';
+    const DATA_FRAMEWORK_DIR_SOURCE = Config::DATA_FRAMEWORK_DIR . '.' . 'source';
+    const DATA_FRAMEWORK_DIR_DATA = Config::DATA_FRAMEWORK_DIR . '.' . 'data';
+    const DATA_FRAMEWORK_DIR_CLI = Config::DATA_FRAMEWORK_DIR . '.' . 'cli';
+    const DATA_FRAMEWORK_DIR_CACHE = Config::DATA_FRAMEWORK_DIR . '.' . 'cache';
+    const DATA_FRAMEWORK_DIR_TEMP = Config::DATA_FRAMEWORK_DIR . '.' . 'temp';
+    const DATA_FRAMEWORK_DIR_MODULE = Config::DATA_FRAMEWORK_DIR . '.' . 'module';
     const DATA_FRAMEWORK_DIR_PLUGIN =  Config::DATA_FRAMEWORK_DIR . '.' . 'plugin';
     const DATA_FRAMEWORK_DIR_FUNCTION =  Config::DATA_FRAMEWORK_DIR . '.' . 'function';
     const DATA_FRAMEWORK_DIR_VALIDATE =  Config::DATA_FRAMEWORK_DIR . '.' . 'validate';
@@ -153,7 +183,13 @@ class Config extends Data {
     const DATA_PROJECT_DIR_BINARY =  Config::DATA_PROJECT_DIR . '.' . 'binary';
     const DATA_PROJECT_DIR_VENDOR =  Config::DATA_PROJECT_DIR . '.' . 'vendor';
     const DATA_PROJECT_DIR_SOURCE =  Config::DATA_PROJECT_DIR . '.' . 'source';
+    const DATA_PROJECT_DIR_MOUNT =  Config::DATA_PROJECT_DIR . '.' . 'mount';
+    const DATA_PROJECT_DIR_BACKUP =  Config::DATA_PROJECT_DIR . '.' . 'backup';
     const DATA_PROJECT_DIR_DATA =  Config::DATA_PROJECT_DIR . '.' . 'data';
+    const DATA_PROJECT_DIR_NODE =  Config::DATA_PROJECT_DIR . '.' . 'node';
+    const DATA_PROJECT_DIR_EVENT =  Config::DATA_PROJECT_DIR . '.' . 'event';
+    const DATA_PROJECT_DIR_MIDDLEWARE =  Config::DATA_PROJECT_DIR . '.' . 'middleware';
+    const DATA_PROJECT_DIR_OUTPUT_FILTER =  Config::DATA_PROJECT_DIR . '.' . 'output.filter';
     const DATA_PROJECT_DIR_CLI =  Config::DATA_PROJECT_DIR . '.' . 'cli';
     const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
     const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
@@ -161,6 +197,8 @@ class Config extends Data {
     const DATA_PROJECT_DIR_FUNCTION =  Config::DATA_PROJECT_DIR . '.' . 'function';
     const DATA_PROJECT_DIR_LOG =  Config::DATA_PROJECT_DIR . '.' . 'log';
     const DATA_PROJECT_DIR_EXECUTE =  Config::DATA_PROJECT_DIR . '.' . 'execute';
+    const DATA_PROJECT_DIR_COMPONENT =  Config::DATA_PROJECT_DIR . '.' . 'component';
+    const DATA_PROJECT_DIR_VALIDATOR =  Config::DATA_PROJECT_DIR . '.' . 'validator';
 
     const DATA_CONTROLLER = 'controller';
     const DATA_CONTROLLER_CLASS = 'controller.class';
@@ -176,6 +214,7 @@ class Config extends Data {
     const DATA_CONTROLLER_DIR_ENTITY = Config::DATA_CONTROLLER_DIR . '.' .'entity';
     const DATA_CONTROLLER_DIR_REPOSITORY = Config::DATA_CONTROLLER_DIR . '.' .'repository';
     const DATA_CONTROLLER_DIR_EXECUTE = Config::DATA_CONTROLLER_DIR . '.' .'execute';
+    const DATA_CONTROLLER_DIR_VALIDATOR = Config::DATA_CONTROLLER_DIR . '.' .'validator';
     const DATA_CONTROLLER_DIR_SERVICE = Config::DATA_CONTROLLER_DIR . '.' .'service';
     const DATA_CONTROLLER_DIR_NODE = Config::DATA_CONTROLLER_DIR . '.' .'node';
     const DATA_CONTROLLER_DIR_VIEW = Config::DATA_CONTROLLER_DIR . '.' .'view';
@@ -185,31 +224,47 @@ class Config extends Data {
     const DATA_ROUTE = 'route';
     const DATA_ROUTE_PREFIX = Config::DATA_ROUTE . '.' . 'prefix';
 
+    const POSIX_ID = 'posix.id';
+    /**
+     * @throws ObjectException
+     */
     public function __construct($config=[]){
-        if(array_key_exists(Config::DATA_DIR_VENDOR, $config)){
+        if(
+            is_array($config) &&
+            array_key_exists(Config::DATA_DIR_VENDOR, $config)
+        ){
             $this->data(Config::DATA_PROJECT_DIR_VENDOR, $config[Config::DATA_DIR_VENDOR]);
             $this->data(Config::DATA_PROJECT_DIR_ROOT, dirname($this->data(Config::DATA_PROJECT_DIR_VENDOR)) . '/');
             unset($config[Config::DATA_DIR_VENDOR]);
         }
-        $this->default();
-        $url = $this->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
-        if(File::exist($url)){
-            $read = Core::object(File::read($url));
-            $this->data(Core::object_merge($this->data(), $read));
+        if(is_object($config)){
+            $this->data($config);
+        } else {
+            $this->default();
+            $url = $this->data(Config::DATA_FRAMEWORK_DIR_DATA) . Config::CONFIG;
+            if(File::exist($url)){
+                $read = Core::object(File::read($url));
+                $this->data(Core::object_merge($this->data(), $read));
+            }
+            foreach($config as $attribute => $value){
+                $this->data($attribute, $value);
+            }
         }
-        foreach($config as $attribute => $value){
-            $this->data($attribute, $value);
-        }
+        $id = posix_geteuid();
+        $this->data(Config::POSIX_ID, $id);
     }
 
     /**
-     * @throws Exception\ObjectException
-     * @throws Exception\FileWriteException
+     * @throws ObjectException
      */
     public static function configure(App $object){
         $config = $object->data(App::CONFIG);
-        $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . Config::CONFIG;
+        $url = $config->data(Config::DATA_PROJECT_DIR_DATA) . 'App' . $config->data('ds') . Config::CONFIG;
         if(File::exist($url)){
+            $config->data('app.config.url', $url);
+            $config->data('app.config.dir', Dir::name($url));
+            $config->data('app.route.url', $config->data('app.config.dir') . 'Route' . $config->data('extension.json'));
+            $config->data('app.secret.url', $config->data('app.config.dir') . 'Secret' . $config->data('extension.json'));
             $read = Core::object(File::read($url));
             $config->data(Core::object_merge($config->data(), $read));
         }
@@ -226,6 +281,43 @@ class Config extends Data {
         if(!is_array($parameters)){
             return [];
         }
+        $uuid = Core::uuid();
+        foreach($parameters as $nr => $parameter){
+            $parameter = str_replace(
+                [
+                    '{',
+                    '}',
+                ],
+                [
+                    '[$ldelim-' . $uuid . ']',
+                    '[$rdelim-' . $uuid . ']',
+                ],
+                $parameter
+            );
+            $parameter = str_replace(
+                [
+                    '[$ldelim-' . $uuid . ']',
+                    '[$rdelim-' . $uuid . ']',
+                ],
+                [
+                    '{$ldelim}',
+                    '{$rdelim}',
+                ],
+                $parameter
+            );
+            $parameter = str_replace(
+                [
+                    '{$ldelim}{$ldelim}',
+                    '{$rdelim}{$rdelim}',
+                ],
+                [
+                    '{',
+                    '}',
+                ],
+                $parameter
+            );
+            $parameters[$nr] = $parameter;
+        }
         foreach($parameters as $key => $parameter){
             $tree = Parse\Token::tree($parameter);
             if(
@@ -241,15 +333,36 @@ class Config extends Data {
                     ){
                         foreach($record['method']['attribute'] as $attribute_nr => $attribute_list){
                             foreach($attribute_list as $attribute){
-                                $parameters[$key] .= $object->config($attribute['execute']);
+                                $value = $object->config($attribute['execute']);
+                                if(
+                                    is_object($value) ||
+                                    is_array($value)
+                                ){
+                                    if(empty($parameters[$key])){
+                                        $parameters[$key] = [];
+                                    }
+                                    $parameters[$key][] = $object->config($attribute['execute']);
+                                } else {
+                                    $parameters[$key] .= $object->config($attribute['execute']);
+                                }
+
                             }
                         }
                     }
-                    if($record['type'] === Token::TYPE_STRING){
+                    elseif($record['type'] === Token::TYPE_STRING){
                         $parameters[$key] .= $record['value'];
                     }
                 }
-            } else {
+            }
+        }
+        foreach($parameters as $key => $sublist){
+            if(is_array($sublist)){
+                $count = count($sublist);
+                if($count === 1){
+                    $parameters[$key] = reset($sublist);
+                } else {
+                    ddd($parameters);
+                }
             }
         }
         return $parameters;
@@ -264,8 +377,20 @@ class Config extends Data {
         $value = Config::VALUE_SOURCE;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::MOUNT;
+        $value = Config::VALUE_MOUNT;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::BACKUP;
+        $value = Config::VALUE_BACKUP;
+        $this->data($key, $value);
+
         $key = Config::DICTIONARY . '.' . Config::BINARY;
         $value = Config::VALUE_BINARY;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::TEMP;
+        $value = Config::VALUE_TEMP;
         $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::CACHE;
@@ -298,6 +423,14 @@ class Config extends Data {
 
         $key = Config::DICTIONARY . '.' . Config::COMPONENT;
         $value = Config::VALUE_COMPONENT;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::PACKAGE;
+        $value = Config::VALUE_PACKAGE;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::INSTALLATION;
+        $value = Config::VALUE_INSTALLATION;
         $this->data($key, $value);
 
         $key = Config::DICTIONARY . '.' . Config::SERVICE;
@@ -344,6 +477,10 @@ class Config extends Data {
         $value = Config::VALUE_VALIDATE;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::VALIDATOR;
+        $value = Config::VALUE_VALIDATOR;
+        $this->data($key, $value);
+
         $key = Config::DICTIONARY . '.' . Config::DS;
         $value = Config::VALUE_DS;
         $this->data($key, $value);
@@ -356,6 +493,18 @@ class Config extends Data {
         $value = Config::VALUE_NODE;
         $this->data($key, $value);
 
+        $key = Config::DICTIONARY . '.' . Config::EVENT;
+        $value = Config::VALUE_EVENT;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::MIDDLEWARE;
+        $value = Config::VALUE_MIDDLEWARE;
+        $this->data($key, $value);
+
+        $key = Config::DICTIONARY . '.' . Config::OUTPUT_FILTER;
+        $value = Config::VALUE_OUTPUT_FILTER;
+        $this->data($key, $value);
+
         $value = Config::VALUE_DS;
         $key = Config::DS;
         $this->data($key, $value);
@@ -365,56 +514,122 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::SOURCE) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+
+        $key = Config::DATA_PROJECT_DIR_MOUNT;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::MOUNT) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+
+        $key = Config::DATA_PROJECT_DIR_BACKUP;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_MOUNT) .
+            $this->data(Config::DICTIONARY . '.' . Config::BACKUP) .
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_PROJECT_DIR_BINARY;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::BINARY) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_PROJECT_DIR_DATA;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::DATA) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+
+        $key = Config::DATA_PROJECT_DIR_NODE;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::NODE) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_PROJECT_DIR_EVENT;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::EVENT) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_PROJECT_DIR_MIDDLEWARE;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::MIDDLEWARE) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_PROJECT_DIR_OUTPUT_FILTER;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::OUTPUT_FILTER) .
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_PROJECT_DIR_CLI;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::CLI) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_PROJECT_DIR_PUBLIC;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::PUBLIC) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_PROJECT_DIR_HOST;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::HOST) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_PROJECT_DIR_LOG;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::LOG) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_PROJECT_DIR_EXECUTE;
         $value =
             $this->data(Config::DATA_PROJECT_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::EXECUTE) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
+        $key = Config::DATA_PROJECT_DIR_COMPONENT;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::COMPONENT) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_PROJECT_DIR_VALIDATOR;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::VALIDATOR) .
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_PROJECT_ROUTE_FILENAME;
@@ -432,49 +647,62 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::SOURCE) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_FRAMEWORK_DIR_DATA;
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_ROOT) .
             $this->data(Config::DICTIONARY . '.' . Config::DATA) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+
+        $key = Config::DATA_FRAMEWORK_DIR_TEMP;
+        $value =
+            $this->data(Config::DICTIONARY . '.' . Config::TEMP)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_FRAMEWORK_DIR_CACHE;
         $value =
+            $this->data(Config::DICTIONARY . '.' . Config::TEMP) .
             $this->data(Config::DICTIONARY . '.' . Config::CACHE) .
-            $this->data(Config::DICTIONARY . '.' . Config::FRAMEWORK) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_FRAMEWORK_DIR_MODULE;
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $this->data(Config::DICTIONARY . '.' . Config::MODULE) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_FRAMEWORK_DIR_CLI;
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $this->data(Config::DICTIONARY . '.' . Config::CLI) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_FRAMEWORK_DIR_VALIDATE;
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $this->data(Config::DICTIONARY . '.' . Config::VALIDATE) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
 
         $key = Config::DATA_FRAMEWORK_DIR_VIEW;
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $this->data(Config::DICTIONARY . '.' . Config::VIEW) .
-            $this->data(Config::DS);
+            $this->data(Config::DS)
+        ;
         $this->data($key, $value);
         $key = Config::DATA_FRAMEWORK_ENVIRONMENT;
         $value = $this->data(Config::DICTIONARY . '.' . Config::ENVIRONMENT);
@@ -482,8 +710,8 @@ class Config extends Data {
     }
 
     /**
-     * @throws Exception\ObjectException
-     * @throws Exception\FileWriteException
+     * @throws ObjectException
+     * @throws FileWriteException
      */
     public static function contentType(App $object){
         $contentType = $object->config('contentType');

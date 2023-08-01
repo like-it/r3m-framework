@@ -1,23 +1,29 @@
 {
-	"name" : "r3m-io/framework",
+	"name" : "r3m_io/framework",
 	"description" : "R3M framework see https://r3m.io for detailed usage",
 	"type" : "library",
-	"keywords" : ["framework", "r3m", "library", "language", "template", "engine"],
+	"keywords" : ["framework", "r3m", "r3m.io", "library", "language", "template", "engine"],
 	"homepage": "https://r3m.io",
 	"require" : {
-		"php": ">=7.4",
+		"php": ">=8.0",
 		"ext-mbstring": "*",
 		"ext-json": "*",
 		"ext-posix": "*",
 		"ext-zend-opcache": "*",
 		"ext-openssl": "*",
+		"ext-readline": "*",
+		"ext-pcntl": "*",
+		"ext-zip": "*",
+		"ext-shmop": "*",
+		"r3m_io/event": "dev-main",
+		"r3m_io/node": "dev-main",
 		"monolog/monolog" : "^2.2",
 		"defuse/php-encryption": "^2.3"
-	},
+    },
 	"license" : "MIT",
 	"authors" : [{
-			"name" : "Remco van der Velde",
-			"email" : "remco@universeorange.com"
+			"name" : "Universe Orange",
+			"email" : "development@universeorange.com"
 		}
 	],
 	"autoload" : {

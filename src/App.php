@@ -10,18 +10,23 @@
  */
 namespace R3m\Io;
 
-use R3m\Io\Exception\AuthorizationException;
+use stdClass;
+
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Cli;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Database;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\FileRequest;
+use R3m\Io\Module\Filter;
 use R3m\Io\Module\Handler;
 use R3m\Io\Module\Host;
 use R3m\Io\Module\Logger;
+use R3m\Io\Module\Middleware;
+use R3m\Io\Module\OutputFilter;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Response;
 use R3m\Io\Module\Route;
@@ -30,10 +35,10 @@ use R3m\Io\Module\Server;
 use Psr\Log\LoggerInterface;
 
 use Exception;
+
 use R3m\Io\Exception\ObjectException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\LocateException;
-
 
 class App extends Data {
     const NAMESPACE = __NAMESPACE__;
@@ -59,6 +64,12 @@ class App extends Data {
 
     const ROUTE = App::NAMESPACE . '.' . Route::NAME;
     const CONFIG = App::NAMESPACE . '.' . Config::NAME;
+    const EVENT = App::NAMESPACE . '.' . Event::NAME;
+    const MIDDLEWARE = App::NAMESPACE . '.' . Middleware::NAME;
+    const OUTPUTFILTER = App::NAMESPACE . '.' . OutputFilter::NAME;
+    const FILTER = App::NAMESPACE . '.' . Filter::NAME;
+    const FLAGS = App::NAMESPACE . '.' . Data::FLAGS;
+    const OPTIONS = App::NAMESPACE . '.' . Data::OPTIONS;
     const REQUEST = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_INPUT;
     const DATABASE = App::NAMESPACE . '.' . Database::NAME;
     const REQUEST_HEADER = App::NAMESPACE . '.' . Handler::NAME_REQUEST . '.' . Handler::NAME_HEADER;
@@ -74,13 +85,20 @@ class App extends Data {
     public function __construct($autoload, $config){
         $this->data(App::AUTOLOAD_COMPOSER, $autoload);
         $this->data(App::CONFIG, $config);
+        $this->data(App::EVENT, new Data());
+        $this->data(App::MIDDLEWARE, new Data());
+        $this->data(App::OUTPUTFILTER, new Data());
         App::is_cli();
-        require_once 'Debug.php';
-        require_once 'Error.php';
+        require_once __DIR__ . '/Debug.php';
+        require_once __DIR__ . '/Error.php';
         Config::configure($this);
         Host::configure($this);
         Logger::configure($this);
+        Event::configure($this);
+        Middleware::configure($this);
+        OutputFilter::configure($this);
         Autoload::configure($this);
+        Autoload::ramdisk_configure($this);
     }
 
     /**
@@ -112,9 +130,13 @@ class App extends Data {
             property_exists($options, 'domain') &&
             $options->domain === true
         ){
-            $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());
-            if(!$options->domain){
-                $options->domain = Host::domain() . '.' . Host::extension();
+            if(App::is_cli()){
+                unset($options->domain);
+            } else {
+                $options->domain = Server::url($object,Host::domain() . '.' . Host::extension());
+                if(!$options->domain){
+                    $options->domain = Host::domain() . '.' . Host::extension();
+                }
             }
             $options->secure = null;
             if(Host::scheme() === Host::SCHEME_HTTPS){
@@ -133,6 +155,7 @@ class App extends Data {
         Handler::request_configure($object);
         App::configure($object);
         Route::configure($object);
+        $route = false;
         $logger = $object->config('project.log.name');
         try {
             $file = FileRequest::get($object);
@@ -143,13 +166,18 @@ class App extends Data {
                         if($logger){
                             $object->logger($logger)->error('Couldn\'t determine route (' . $object->request('request') . ')...');
                         }
+                        $exception = new Exception(
+                            'Couldn\'t determine route (' . $object->request('request') . ')...'
+                        );
                         $response = new Response(
-                            App::exception_to_json(new Exception(
-                                'Couldn\'t determine route (' . $object->request('request') . ')...'
-                            )),
+                            App::exception_to_json($exception),
                             Response::TYPE_JSON,
                             Response::STATUS_ERROR
                         );
+                        Event::trigger($object, 'app.run.route.error', [
+                            'route' => false,
+                            'exception' => $exception
+                        ]);
                         return Response::output($object, $response);
                     } else {
                         $route = Route::wildcard($object);
@@ -161,6 +189,10 @@ class App extends Data {
                                 "Website is not configured...",
                                 Response::TYPE_HTML
                             );
+                            Event::trigger($object, 'app.run.route.wildcard.error', [
+                                'route' => false,
+                                'is_not_configured' => true
+                            ]);
                             return Response::output($object, $response);
                         }
                     }
@@ -170,12 +202,16 @@ class App extends Data {
                     property_exists($route, 'method') &&
                     in_array(
                         Handler::method(),
-                        $route->method
+                        $route->method,
+                        true
                     )
                 ) {
                     if($logger){
                         $object->logger($logger)->info('Request (' . $object->request('request') . ') Redirect: ' . $route->redirect . ' Method: ' . implode(', ', $route->method));
                     }
+                    Event::trigger($object, 'app.run.route.redirect', [
+                        'route' => $route,
+                    ]);
                     Core::redirect($route->redirect);
                 } elseif (
                     property_exists($route, 'redirect') &&
@@ -184,6 +220,9 @@ class App extends Data {
                     if($logger){
                         $object->logger($logger)->info('Redirect: ' . $route->redirect);
                     }
+                    Event::trigger($object, 'app.run.route.redirect', [
+                        'route' => $route,
+                    ]);
                     Core::redirect($route->redirect);
                 } elseif (
                     property_exists($route, 'url')
@@ -195,6 +234,11 @@ class App extends Data {
                             File::read($route->url),
                             Response::TYPE_JSON,
                         );
+                        Event::trigger($object, 'app.run.route.file', [
+                            'route' => $route,
+                            'extension' => $object->config('extension.json'),
+                            'content_type' => $object->config('contentType.' . strtolower($object->config('extension.json')))
+                        ]);
                         return Response::output($object, $response);
                     } else {
                         $extension = File::extension($route->url);
@@ -208,6 +252,11 @@ class App extends Data {
                             $response->header([
                                 'Content-Type: ' . $contentType
                             ]);
+                            Event::trigger($object, 'app.run.route.file', [
+                                'route' => $route,
+                                'extension' => $extension,
+                                'content_type' => $contentType
+                            ]);
                             return Response::output($object, $response);
                         }
                         throw new Exception('Extension (' . $extension . ') not supported...');
@@ -220,30 +269,40 @@ class App extends Data {
                         if($logger){
                             $object->logger($logger)->error('Couldn\'t determine controller (' . $route->controller . ') with request (' . $object->request('request') . ')');
                         }
+                        $exception = new Exception(
+                            'Couldn\'t determine controller (' . $route->controller . ')'
+                        );
                         $response = new Response(
-                            App::exception_to_json(new Exception(
-                                'Couldn\'t determine controller (' . $route->controller . ')'
-                            )),
+                            App::exception_to_json($exception),
                             Response::TYPE_JSON,
                             Response::STATUS_ERROR
                         );
+                        Event::trigger($object, 'app.run.route.file', [
+                            'route' => $route,
+                            'exception' => $exception
+                        ]);
                         return Response::output($object, $response);
                     }
                     Config::contentType($object);
                     $functions = [];
-                    if (in_array('controller', $methods)) {
+                    if (in_array('controller', $methods, true)) {
                         $functions[] = 'controller';
                         $route->controller::controller($object);
                     }
-                    if (in_array('configure', $methods)) {
+                    if (in_array('configure', $methods, true)) {
                         $functions[] = 'configure';
                         $route->controller::configure($object);
                     }
-                    if (in_array('before_run', $methods)) {
+                    // @deprecated since Middleware
+                    if (in_array('before_run', $methods, true)) {
                         $functions[] = 'before_run';
                         $route->controller::before_run($object);
                     }
-                    if (in_array($route->function, $methods)) {
+                    $route = Middleware::trigger($object, [
+                        'route' => $route,
+                        'methods' => $methods,
+                    ]);
+                    if (in_array($route->function, $methods, true)) {
                         $functions[] = $route->function;
                         $object->config('controller.function', $route->function);
                         $request = Core::deep_clone(
@@ -258,6 +317,24 @@ class App extends Data {
                             $request
                         );
                         $result = $route->controller::{$route->function}($object);
+                        Event::trigger($object, 'app.run.route.controller', [
+                            'route' => $route,
+                            'response' => $result
+                        ]);
+//                        $start = microtime(true);
+                        $result = OutputFilter::trigger($object, [
+                            'route' => $route,
+                            'methods' => $methods,
+                            'response' => $result
+                        ]);
+                        /*
+                        $duration = microtime(true) - $start;
+                        if($duration < 1) {
+                            echo 'Duration: ' . round($duration * 1000, 2) . ' msec ' . PHP_EOL;
+                        } else {
+                            echo 'Duration: ' . round($duration, 2) . ' sec'  . PHP_EOL;
+                        }
+                        */
                     } else {
                         $object->logger(App::LOGGER_NAME)->error(
                             'Controller (' .
@@ -266,29 +343,37 @@ class App extends Data {
                             $route->function .
                             ') does not exist.'
                         );
+                        $exception = new Exception(
+                            'Controller (' .
+                            $route->controller .
+                            ') function (' .
+                            $route->function .
+                            ') does not exist.'
+                        );
                         $response = new Response(
-                            App::exception_to_json(new Exception(
-                                'Controller (' .
-                                $route->controller .
-                                ') function (' .
-                                $route->function .
-                                ') does not exist.'
-                            )),
+                            App::exception_to_json($exception),
                             Response::TYPE_JSON,
                             Response::STATUS_ERROR
                         );
+                        Event::trigger($object, 'app.run.route.controller', [
+                            'route' => $route,
+                            'exception' => $exception
+                        ]);
                         return Response::output($object, $response);
                     }
-                    if (in_array('after_run', $methods)) {
+                    // @deprecated since OutputFilter
+                    if (in_array('after_run', $methods, true)) {
                         $functions[] = 'after_run';
                         $route->controller::after_run($object);
                     }
-                    if (in_array('before_result', $methods)) {
+                    // @deprecated since OutputFilter
+                    if (in_array('before_result', $methods, true)) {
                         $functions[] = 'before_result';
                         $route->controller::before_result($object);
                     }
                     $functions[] = 'result';
                     $result = App::result($object, $result);
+                    // @deprecated since OutputFilter
                     if (in_array('after_result', $methods)) {
                         $functions[] = 'after_result';
                         $result = $route->controller::after_result($object, $result);
@@ -302,6 +387,7 @@ class App extends Data {
                 if($logger){
                     $object->logger($logger)->info('File request: ' . $object->request('request') . ' called...');
                 }
+                Event::trigger($object, 'app.run.file.request', []);
                 return $file;
             }
         }
@@ -315,12 +401,20 @@ class App extends Data {
                     if($logger){
                         $object->logger($logger)->error($exception->getMessage());
                     }
+                    Event::trigger($object, 'app.route.exception', [
+                        'route' => $route,
+                        'exception' => $exception
+                    ]);
                     return App::exception_to_json($exception);
                 }
                 elseif($object->data(App::CONTENT_TYPE) === App::CONTENT_TYPE_CLI){
                     if($logger){
                         $object->logger($logger)->error($exception->getMessage());
                     }
+                    Event::trigger($object, 'app.route.exception', [
+                        'route' => $route,
+                        'exception' => $exception
+                    ]);
                     fwrite(STDERR, App::exception_to_cli($object, $exception));
                     return '';
                 } else {
@@ -336,8 +430,17 @@ class App extends Data {
                         $data = [];
                         $data['exception'] = Core::object_array($exception);
                         $data['exception']['className'] = get_class($exception);
+                        Event::trigger($object, 'app.route.exception', [
+                            'route' => $route,
+                            'url' => $url,
+                            'exception' => $exception
+                        ]);
                         return $parse->compile($read, $data);
                     } else {
+                        Event::trigger($object, 'app.route.exception', [
+                            'route' => $route,
+                            'exception' => $exception
+                        ]);
                         echo $exception;
                     }
                 }
@@ -345,6 +448,7 @@ class App extends Data {
                 return $exception;
             }
         }
+        return null;
     }
 
     /**
@@ -410,7 +514,8 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public static function exception_to_cli(App $object, Exception $exception){
+    public static function exception_to_cli(App $object, Exception $exception): string
+    {
         $class = get_class($exception);
         $width = Cli::tput('width');
         $background = '200;0;0';
@@ -419,14 +524,13 @@ class App extends Data {
         $output .= PHP_EOL;
         $output .= $class . PHP_EOL;
         $output .= PHP_EOL;
+        $output .= $exception->getMessage() . PHP_EOL;
         $output .= 'file: ' . $exception->getFile() . PHP_EOL;
         $output .= 'line: ' . $exception->getLine() . PHP_EOL;
         $output .= chr(27) . "[0m";
         $output .= PHP_EOL;
-        $output .= (string) $exception . PHP_EOL;
-        $output .= PHP_EOL;
         if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-            $output .= App::exception_to_json($exception);
+            $output .= (string) $exception;
         }
         return $output;
     }
@@ -474,6 +578,9 @@ class App extends Data {
         return $this->getLogger($name);
     }
 
+    /**
+     * @throws Exception
+     */
     private function setLogger($name='', LoggerInterface $logger=null){
         if(empty($name)){
             $name = $this->config('project.log.name');
@@ -500,6 +607,15 @@ class App extends Data {
         if(array_key_exists($name, $this->logger)){
             return $this->logger[$name];
         }
+        if($name === 'Project.log.name'){
+            $debug = debug_backtrace(true);
+            d($debug[0]['file'] . ' ' . $debug[0]['line']);
+            d($debug[1]['file'] . ' ' . $debug[1]['line']);
+            d($debug[2]['file'] . ' ' . $debug[2]['line']);
+            throw new Exception('Please configure project.log.name');
+        }
+        d($name);
+        ddd($this->logger);
         throw new Exception('Logger with name: ' . $name . ' not initialised.');
 
     }
@@ -512,7 +628,15 @@ class App extends Data {
         return $this->data(App::CONFIG)->data($attribute, $value);
     }
 
-    public function request($attribute=null, $value=null){                
+    public function event($attribute=null, $value=null){
+        return $this->data(App::EVENT)->data($attribute, $value);
+    }
+
+    public function middleware($attribute=null, $value=null){
+        return $this->data(App::MIDDLEWARE)->data($attribute, $value);
+    }
+
+    public function request($attribute=null, $value=null){
         return $this->data(App::REQUEST)->data($attribute, $value);        
     }
 
@@ -520,14 +644,24 @@ class App extends Data {
         return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
-    public static function flags($object): array
+    public static function flags($object): stdClass
     {
-        return parent::flags($object->data(App::REQUEST)->data());
+        $flags = $object->data(App::FLAGS);
+        if(empty($flags)){
+            $flags = parent::flags($object->data(App::REQUEST)->data());
+            $object->data(App::FLAGS, $flags);
+        }
+        return $flags;
     }
 
-    public static function options($object): array
+    public static function options($object): stdClass
     {
-        return parent::options($object->data(App::REQUEST)->data());
+        $options = $object->data(App::OPTIONS);
+        if(empty($options)){
+            $options = parent::options($object->data(App::REQUEST)->data());
+            $object->data(App::OPTIONS, $options);
+        }
+        return $options;
     }
 
     /**
@@ -570,6 +704,71 @@ class App extends Data {
         if(array_key_exists($attribute, $_SERVER)){
             return $_SERVER[$attribute];
         }
+        return null;
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
+    public function data_select($url, $select=null): Data
+    {
+        $parse = new Parse($this);
+        $data = new Data();
+        $data->data($this->data());
+        $node = new Data();
+        $node->data(
+            Core::object_select(
+                $parse,
+                $data,
+                $url,
+                $select,
+                false,
+            )
+        );
+        return $node;
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
+    public function parse_select($url, $select=null, $scope='scope:object'): Data
+    {
+        $parse = new Parse($this);
+        $data = new Data();
+        $data->data($this->data());
+        $node = new Data();
+        $node->data(
+            Core::object_select(
+                $parse,
+                $data,
+                $url,
+                $select,
+                true,
+                $scope
+            )
+        );
+        return $node;
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws FileWriteException
+     */
+    public function object_select($url, $select=null, $compile=false, $scope='scope:object')
+    {
+        $parse = new Parse($this);
+        $data = new Data();
+        $data->data($this->data());
+        return Core::object_select(
+            $parse,
+            $data,
+            $url,
+            $select,
+            $compile,
+            $scope
+        );
     }
 
     /**
@@ -585,9 +784,14 @@ class App extends Data {
         if(File::exist($url)){
             $read = File::read($url);
             if($read){
-                $data = new Data();
-                $data->do_not_nest_key($do_not_nest_key);
-                $data->data(Core::object($read, Core::OBJECT_OBJECT))   ;
+                try {
+                    $data = new Data();
+                    $data->do_not_nest_key($do_not_nest_key);
+                    $data->data(Core::object($read, Core::OBJECT_OBJECT));
+                }
+                catch(ObjectException $exception){
+                    throw new ObjectException('Syntax error in ' . $url);
+                }
             } else {
                 $data = new Data();
                 $data->do_not_nest_key($do_not_nest_key);
@@ -604,6 +808,7 @@ class App extends Data {
     /**
      * @throws ObjectException
      * @throws FileWriteException
+     * @throws Exception
      */
     public function parse_read($url, $attribute=null){
         if($attribute !== null){
@@ -623,7 +828,7 @@ class App extends Data {
                 $this->data('rdelim', '}');
                 $data = clone $this->data();
                 unset($data->{App::NAMESPACE});
-                $read = $parse->compile(Core::object($read), $data, $parse->storage());
+                $read = $parse->compile(Core::object($read), $data, $parse->storage(), null, true);
                 $data = new Data($read);
                 $readback = [
                     'script',
@@ -674,5 +879,128 @@ class App extends Data {
             ...$configuration
         ]);
         return new App($autoload, $config);
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public function ramdisk_load($load=''){
+        $prefixes = $this->config('ramdisk.autoload.prefix');
+        if(
+            !empty($prefixes) &&
+            is_array($prefixes)
+        ){
+            foreach($prefixes as $prefix){
+                $is_not = false;
+                if(substr($prefix, 0, 1) === '!'){
+                    $prefix = substr($prefix, 1);
+                    $is_not = true;
+                }
+                $load_part = substr($load, 0, strlen($prefix));
+                if($is_not && $load_part === $prefix){
+                    return false;
+                }
+                if($load_part !== $prefix){
+                    continue;
+                }
+                $part = str_replace('R3m\\Io\\', '', $load);
+                $part = str_replace('\\', '/', $part);
+                $url = $this->config('framework.dir.source') . $part . $this->config('extension.php');
+                $ramdisk_dir = false;
+                $ramdisk_url = false;
+                if(
+                    $this->config('ramdisk.url') &&
+                    empty($this->config('ramdisk.is.disabled'))
+                ){
+                    $ramdisk_dir = $this->config('ramdisk.url') .
+                        $this->config(Config::POSIX_ID) .
+                        $this->config('ds') .
+                        App::NAME .
+                        $this->config('ds')
+                    ;
+                    $ramdisk_url = $ramdisk_dir .
+                        str_replace('/', '_', $part) .
+                        $this->config('extension.php')
+                    ;
+                }
+                $config_dir = $this->config('ramdisk.url') .
+                    $this->config(Config::POSIX_ID) .
+                    $this->config('ds') .
+                    App::NAME .
+                    $this->config('ds')
+                ;
+                $config_url = $config_dir .
+                    'File.Mtime' .
+                    $this->config('extension.json')
+                ;
+                $mtime = $this->get(sha1($config_url));
+                if(empty($mtime)){
+                    $mtime = [];
+                    if(file_exists($config_url)){
+                        $mtime = file_get_contents($config_url);
+                        if($mtime){
+                            $mtime = json_decode($mtime, true);
+                            $this->set(sha1($config_url), $mtime);
+                        }
+                    }
+                }
+                if(
+                    file_exists($ramdisk_url) &&
+                    array_key_exists(sha1($ramdisk_url), $mtime) &&
+                    filemtime($ramdisk_url) === filemtime($mtime[sha1($ramdisk_url)])
+                ){
+                    require_once $ramdisk_url;
+                }
+                elseif(file_exists($url)){
+                    require_once $url;
+                    if(
+                        $ramdisk_dir &&
+                        $ramdisk_url &&
+                        $config_dir &&
+                        $config_url
+                    ){
+                        //copy to ramdisk
+                        //save filemtime
+                        if(!is_dir($ramdisk_dir)){
+                            mkdir($ramdisk_dir, 0750, true);
+                        }
+                        $read = file_get_contents($url);
+                        $require = $this->config('ramdisk.autoload.require');
+                        $is_require = false;
+                        if(
+                            !empty($require) &&
+                            is_array($require) &&
+                            in_array($load, $require, true)
+                        ) {
+                            $is_require = true;
+                        }
+                        if($is_require === false && Autoload::ramdisk_exclude_load($this, $load)){
+                            //nothing to do...
+                        }
+                        elseif($is_require === false && Autoload::ramdisk_exclude_content($this, $read, $url)){
+                            d($read);
+                            d($load);
+                            d($url);
+                            //files with content __DIR__, __FILE__ cannot be cached
+                            //save to /tmp/r3m/io/.../Autoload/Disable.Cache.json
+                            ddd('exclude_content');
+                        } else {
+                            file_put_contents($ramdisk_url, $read);
+                            touch($ramdisk_url, filemtime($url));
+                            $mtime[sha1($ramdisk_url)] = $url;
+                            if(!is_dir($config_dir)){
+                                mkdir($config_dir, 0750, true);
+                            }
+                            file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
+                            $this->set(sha1($config_url), $mtime);
+                            exec('chmod 640 ' . $ramdisk_url);
+                            exec('chmod 640 ' . $config_url);
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

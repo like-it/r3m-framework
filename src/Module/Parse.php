@@ -29,6 +29,13 @@ class Parse {
     const TEMPLATE = 'Template';
     const COMPILE = 'Compile';
 
+    const THIS_RESERVED_WORDS = [
+        '#parentNode',
+        '#rootNode',
+        '#key',
+        '#attribute'
+    ];
+
     private $object;
     private $storage;
     private $build;
@@ -39,6 +46,10 @@ class Parse {
     private $halt_literal;
     private $use_this;
 
+    private $key;
+
+    private $counter = 0;
+
     public function __construct($object, $storage=null){
         $this->object($object);
         $this->configure();
@@ -47,9 +58,15 @@ class Parse {
         } else {
             $this->storage($storage);
         }
+        $priority = 10;
+        Event::off($object, 'parse.build.plugin.require', ['priority' => $priority]);
     }
 
+    /**
+     * @throws ObjectException
+     */
     private function configure(){
+        $id = posix_geteuid();
         $config = $this->object()->data(App::NAMESPACE . '.' . Config::NAME);
         $dir_plugin = $config->data('project.dir.plugin');
         if(empty($dir_plugin)){
@@ -75,7 +92,27 @@ class Parse {
         if(empty($template)){
             $config->data('dictionary.template', Parse::TEMPLATE);
         }
-        $cache_dir = $config->data('project.dir.data') . $config->data('dictionary.compile') . $config->data('ds');
+        if(
+            $config->data('ramdisk.url') &&
+            empty($config->data('ramdisk.is.disabled'))
+        ){
+            $cache_dir =
+                $config->data('ramdisk.url') .
+                $config->data(Config::POSIX_ID) .
+                $config->data('ds') .
+                $config->data('dictionary.compile') .
+                $config->data('ds')
+            ;
+            Dir::create($cache_dir);
+        } else {
+            $cache_dir =
+                $config->data('framework.dir.temp') .
+                $config->data(Config::POSIX_ID) .
+                $config->data('ds') .
+                $config->data('dictionary.compile') .
+                $config->data('ds');
+            Dir::create($cache_dir);
+        }
         $this->cache_dir($cache_dir);
         $use_this = $config->data('parse.read.object.use_this');
         if(is_bool($use_this)){
@@ -212,12 +249,26 @@ class Parse {
         return $string;
     }
 
+    public static function unset(stdClass $object, stdClass $unset): stdClass
+    {
+        foreach($object as $key => $value){
+            if(is_object($value)){
+                Parse::unset($value, $unset);
+            }
+        }
+        foreach($unset as $unset_key => $unset_value){
+            unset($object->{$unset_value});
+        }
+        return $object;
+    }
+
     /**
      * @throws ObjectException
      * @throws FileWriteException
      * @throws Exception
      */
     public function compile($string='', $data=[], $storage=null, $depth=null, $is_debug=false){
+        $object = $this->object();
         if($storage === null){            
             $storage = $this->storage(new Data());
         }
@@ -230,42 +281,84 @@ class Parse {
             foreach($string as $key => $value){
                 $string[$key] = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
             }
+            return $string;
         }
         elseif(is_object($string)){
+            $reserved_keys = [];
             if($this->useThis() === true){
+                $source = $storage->data('r3m.io.parse.view.source');
+                if(empty($source)){
+                    $file = $storage->data('r3m.io.parse.view.url');
+                } else {
+                    $file = $storage->data('r3m.io.parse.view.source.url');
+                }
+                if($this->key){
+                    $key = $this->object()->config('parse.read.object.this.key');
+                    $string->{$key} = $this->key;
+//                    $storage->data($key, $this->key);
+                }
                 if($depth === null){
                     $depth = 0;
+                    $key = $this->object()->config('parse.read.object.this.url');
+                    $string->{$key} = $file;
                     $this->local($depth, $string);
                 } else {
                     $depth++;
                     $this->local($depth, $string);
                 }
+                foreach($this->object()->config('parse.read.object.this') as $key => $value){
+                    $reserved_keys[] = $value;
+                }
             }
-            foreach($string as $key => $value){
+            $string_object = Core::deep_clone($string);
+            foreach($string_object as $key => $value){
                 if(
                     $this->useThis() === true &&
                     in_array(
                         $key,
-                        [
-                            'parentNode',
-                            'rootNode'
-                        ]
+                        $reserved_keys,
+                        true
                     )
                 ){
                     continue;
                 }
                 try {
+                    $this->key = $key;
+                    $attribute = $this->object()->config('parse.read.object.this.attribute');
+                    $string->{$attribute} = $key;
                     $value = $this->compile($value, $storage->data(), $storage, $depth, $is_debug);
-                    $string->$key = $value;
+                    $string->{$key} = $value;
                 } catch (Exception | ParseError $exception){
-                    ddd($exception);
+                    Event::trigger($object, 'parse.compile.exception', [
+                        'string' => $string,
+                        'data' => $data,
+                        'storage' => $storage,
+                        'depth' => $depth,
+                        'exception' => $exception
+                    ]);
                 }
-            }            
+            }
+            //must read into it, copy should be configurable
+            $copy = $this->object()->config('parse.read.object.copy');
+            if($copy && is_object($copy)){
+                foreach($copy as $key => $value){
+                    if(property_exists($string, $key)){
+                        $string->$value = $string->$key;
+                    }
+                }
+            }
+            if($depth === 0){
+                $unset = $this->object()->config('parse.read.object.this');
+                if($unset && is_object($unset)) {
+                    $string = Parse::unset($string, $unset);
+                }
+            }
             return $string;
         }
         elseif(stristr($string, '{') === false){
             return $string;
         } else {
+            //this section takes at least 5 msec per document: file:put 2msec, memcache::put 2msec, rest 1msec
             $build = $this->build(new Build($this->object(), $this, $is_debug));
             $build->cache_dir($this->cache_dir());
             $build->limit($this->limit());
@@ -292,16 +385,22 @@ class Parse {
                 $storage->data('this', $this->local($depth));
                 $rootNode = $this->local(0);
                 if($rootNode && is_object($rootNode)){
-                    $storage->data('this.rootNode', $rootNode);
+                    $attribute = 'this.' . $this->object()->config('parse.read.object.this.rootNode');
+                    $storage->data($attribute, $rootNode);
                     $key = 'this';
                     for($index = $depth - 1; $index >= 0; $index--){
-                        $key .= '.parentNode';
+                        $key .= '.' . $this->object()->config('parse.read.object.this.parentNode');
                         $storage->data($key, $this->local($index));
                     }
                 }
             }
-            $mtime = $storage->data('r3m.io.parse.view.mtime');            
-            if(File::exist($url) && File::mtime($url) == $mtime){
+            $mtime = $storage->data('r3m.io.parse.view.mtime');
+            $file_exist = File::exist($url);
+            $file_mtime = false;
+            if($file_exist){
+                $file_mtime = File::mtime($url);
+            }
+            if($file_exist && $file_mtime == $mtime){
                 //cache file                   
                 $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
                 $template = new $class(new Parse($this->object()), $storage);
@@ -312,11 +411,22 @@ class Parse {
                 if(empty($this->halt_literal())){
                     $string = Literal::restore($storage, $string);
                 }
-                
                 $storage->data('delete', 'this');
+                if($this->object()->config('project.log.name')){
+                    $this->object->logger($this->object()->config('project.log.name'))->info('cache file: ' . $url . ' mtime: ' . $mtime);
+                }
                 return $string;
             }
             elseif(File::exist($url) && File::mtime($url) != $mtime){
+                Event::trigger($object, 'parse.compile.opcache.invalidate', [
+                    'string' => $string,
+                    'data' => $data,
+                    'storage' => $storage,
+                    'depth' => $depth,
+                    'url' => $url,
+                    'url_mtime' => $file_mtime,
+                    'mtime' => $mtime
+                ]);
                 opcache_invalidate($url, true);
             }
             if(empty($this->halt_literal())){
@@ -370,7 +480,10 @@ class Parse {
                 );
                 $string = ltrim($string, " \t\n\r\0\x0B");
             }
-            $tree = Token::tree($string, $is_debug);
+            $tree = Token::tree($string, [
+                'object' => $object,
+                'url' => $url,
+            ]);
             $tree = $build->require('function', $tree);
             $tree = $build->require('modifier', $tree);
             $build_storage = $build->storage();
@@ -386,7 +499,7 @@ class Parse {
             $document = $build->create('require', $tree, $document);
             $document = $build->create('use', $tree, $document);
             $document = $build->create('trait', $tree, $document);
-            $write = $build->write($url, $document);
+            $write = $build->write($url, $document, $string);
             if($mtime !== null){
                 $touch = File::touch($url, $mtime);
                 opcache_invalidate($url, true);
@@ -394,10 +507,19 @@ class Parse {
                     $status = opcache_get_status(true);
                     if($status !== false){
                         opcache_compile_file($url);
+                        Event::trigger($object, 'parse.compile.opcache.file', [
+                            'string' => $string,
+                            'data' => $data,
+                            'storage' => $storage,
+                            'depth' => $depth,
+                            'url' => $url,
+                            'url_mtime' => $file_mtime,
+                            'mtime' => $mtime
+                        ]);
                     }
                 }
             }
-            $id = posix_geteuid();
+            $id = $object->config(Config::POSIX_ID);
             $class = $build->storage()->data('namespace') . '\\' . $build->storage()->data('class');
             $exists = class_exists($class);
             if($exists){
@@ -410,11 +532,18 @@ class Parse {
                     $storage->data('delete', 'this');
                 }
             } else {
-                d($write);
-                d($string);
-                d($build);
-                //add phpstan error report on class in /tmp/r3m/io/parse/error/...
-                throw new Exception('Class ('. $class .') doesn\'t exist');
+                $exception = new Exception('Class ('. $class .') doesn\'t exist');
+                Event::trigger($object, 'parse.compile.exception', [
+                    'string' => $string,
+                    'data' => $data,
+                    'storage' => $storage,
+                    'depth' => $depth,
+                    'url' => $url,
+                    'url_mtime' => $file_mtime,
+                    'mtime' => $mtime,
+                    'exception' => $exception
+                ]);
+                throw $exception;
 
             }
         }

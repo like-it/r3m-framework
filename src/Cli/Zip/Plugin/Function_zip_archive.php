@@ -1,10 +1,8 @@
 <?php
 
-use Host\Subdomain\Host\Extension\Service\Export;
 use R3m\Io\Module\Dir;
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
-use R3m\Io\Module\Core;
 use R3m\Io\Module\File;
 use R3m\Io\App;
 
@@ -32,6 +30,9 @@ function function_zip_archive(Parse $parse, Data $data){
         $dir = new Dir();
         $read = $dir->read($source, true);
         $host = [];
+        if(!is_array($read)){
+            return null;
+        }
         foreach($read as $file){
             $host[] = $file;
         }
@@ -43,9 +44,13 @@ function function_zip_archive(Parse $parse, Data $data){
         $dir = Dir::name($target);
         if(
             $dir &&
-            !in_array($dir, [
-                $object->config('ds')
-            ])
+            !in_array(
+                $dir,
+                [
+                    $object->config('ds')
+                ],
+                true
+            )
         ){
             Dir::create($dir);
         }
@@ -69,9 +74,13 @@ function function_zip_archive(Parse $parse, Data $data){
         $dir = Dir::name($target);
         if(
             $dir &&
-            !in_array($dir, [
-                $object->config('ds')
-            ])
+            !in_array(
+                $dir,
+                [
+                    $object->config('ds')
+                ],
+                true
+            )
         ){
             Dir::create($dir);
         }

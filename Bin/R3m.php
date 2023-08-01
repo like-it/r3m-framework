@@ -13,6 +13,7 @@ use R3m\Io\Config;
 
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\ObjectException;
+use R3m\Io\Module\Core;
 
 $dir = __DIR__;
 $dir_vendor =
@@ -23,15 +24,25 @@ $dir_vendor =
 
 $autoload = $dir_vendor . 'autoload.php';
 $autoload = require $autoload;
-$config = new Config(
-    [
-        'dir.vendor' => $dir_vendor
-    ]
-);
-// $config->data('framework.environment', R3m\Io\Config::MODE_DEVELOPMENT);
-$app = new App($autoload, $config);
+
 try {
-    echo App::run($app);
+    $config = new Config(
+        [
+            'dir.vendor' => $dir_vendor
+        ]
+    );
+    $app = new App($autoload, $config);
+    $result = App::run($app);
+    if(is_scalar($result)){
+        echo $result;
+    }
+    elseif(is_array($result)){
+        if(Core::is_array_nested($result)){
+            echo Core::object($result, Core::OBJECT_JSON);
+        } else {
+            echo implode(PHP_EOL, $result);
+        }
+    }
 } catch (Exception | LocateException | ObjectException $e) {
     echo $e;
 }

@@ -1,12 +1,16 @@
 <?php
 
+use R3m\Io\Config;
+
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Parse;
 
 use Exception;
+
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\ObjectException;
 
@@ -16,21 +20,30 @@ use R3m\Io\Exception\ObjectException;
  * @throws Exception
  */
 function function_domain_add(Parse $parse, Data $data, $domain=''){
-    $id = posix_geteuid();
+    $object = $parse->object();
+    $id = $object->config(Config::POSIX_ID);
     if(
         !in_array(
             $id,
             [
                 0,
                 33
-            ]
+            ],
+            true
         )
     ){
-        throw new Exception('Only root & www-data can configure domain add...');
+        $exception = new Exception('Only root & www-data can configure domain add...');
+        Event::trigger($object, 'cli.configure.domain.add', [
+            'domain' => $domain,
+            'exception' => $exception
+        ]);
+        throw $exception;
     }
-    $object = $parse->object();
-    $domain = strtolower($domain);
-    $explode = explode('.', $domain);
+    $domain_add = strtolower($domain);
+    $explode = explode('.', $domain_add);
+    $domain = false;
+    $subdomain = false;
+    $extension = false;
     switch(count($explode)){
         case 3:
             $subdomain = $explode[0];
@@ -43,7 +56,15 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             $extension = $explode[1];
             break;
         default:
-            throw new Exception('Invalid domain');
+            $exception = new Exception('Invalid domain');
+            Event::trigger($object, 'cli.configure.domain.add', [
+                'subdomain' => $subdomain,
+                'domain' => $domain,
+                'extension' => $extension,
+                'input_domain' => $domain_add,
+                'exception' => $exception
+            ]);
+            throw $exception;
     }
     if(empty($subdomain)){
         $host_dir_root = $object->config('project.dir.host') .
@@ -60,26 +81,34 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $host_dir_view = $host_dir_root .
             $object->config('dictionary.view') .
             $object->config('ds');
-        Dir::create($host_dir_data);
-        Dir::create($host_dir_controller);
-        Dir::create($host_dir_view);
-        Dir::create($host_dir_view . 'Index');
-        Dir::create($host_dir_view . 'Index/Public/Css');
-        Dir::create($host_dir_view . 'Index/Public/Image');
-        Dir::create($host_dir_view . 'Main');
-
+        Dir::create($host_dir_data, Dir::CHMOD);
+        Dir::create($host_dir_controller, Dir::CHMOD);
+        Dir::create($host_dir_view, Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index/Public/Css', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index/Public/Image', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Main', Dir::CHMOD);
+        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+            exec('chmod 777 ' . $host_dir_data);
+            exec('chmod 777 ' . $host_dir_controller);
+            exec('chmod 777 ' . $host_dir_view);
+            exec('chmod 777 ' . $host_dir_view . 'Index');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/Css');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/Image');
+            exec('chmod 777 ' . $host_dir_view . 'Main');
+        }
         $dir = $object->config('project.dir.host') .
             ucfirst($domain) .
             $object->config('ds');
         $cwd = Dir::change($dir);
         $exec = 'ln -s ' . ucfirst($extension) . ' Local';
         $output = [];
-        Core::execute($exec, $output);
+        Core::execute($object, $exec, $output);
         $url = $dir . '.gitignore';
         $write = 'Local/' . PHP_EOL;
         File::write($url, $write);
         Dir::change($cwd);
-
         $route = new Data();
         $route->data($domain . '-' . $extension . '-index.path', '/');
         $route->data($domain . '-' . $extension . '-index.host', [ $domain . '.' .  $extension]);
@@ -92,13 +121,24 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             'overview'
         );
         $route->data($domain . '-' . $extension . '-index.method', [ 'GET' , 'POST']);
-
         try {
             $url = $host_dir_data . 'Route' . $object->config('extension.json');
             if(!File::exist($url)){
                 File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                    exec('chmod 666 ' . $url);
+                } else {
+                    exec('chmod 640 ' . $url);
+                }
             }
         } catch (Exception | FileWriteException | ObjectException $exception){
+            Event::trigger($object, 'cli.configure.domain.add', [
+                'subdomain' => $subdomain,
+                'domain' => $domain,
+                'extension' => $extension,
+                'input_domain' => $domain_add,
+                'exception' => $exception
+            ]);
             return $exception;
         }
         $url = $object->config('controller.dir.data') . 'Controller/Index.tpl';
@@ -114,43 +154,88 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             $url = $host_dir_controller . 'Index' . $object->config('extension.php');
             if(!File::exist($url)){
                 File::write($url, $write);
+                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                    exec('chmod 666 ' . $url);
+                } else {
+                    exec('chmod 640 ' . $url);
+                }
             }
         } catch (Exception | FileWriteException $exception){
+            Event::trigger($object, 'cli.configure.domain.add', [
+                'subdomain' => $subdomain,
+                'domain' => $domain,
+                'extension' => $extension,
+                'input_domain' => $domain_add,
+                'exception' => $exception
+            ]);
             return $exception;
         }
         $source = $object->config('controller.dir.data') . 'View/Index/Overview.tpl';
         $destination = $host_dir_view . 'Index/Overview.tpl';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Main/Main.json';
         $destination = $host_dir_data . 'Main.json';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Main/Main.tpl';
         $destination = $host_dir_view . 'Main/Main.tpl';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Public/Css/Main.css';
         $destination = $host_dir_view . 'Index/Public/Css/Main.css';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Public/Image/Details-close.png';
         $destination = $host_dir_view . 'Index/Public/Image/Details-close.png';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Public/Image/Details-open.png';
         $destination = $host_dir_view . 'Index/Public/Image/Details-open.png';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $project_dir_data = $object->config('project.dir.data');
         if(!File::exist($project_dir_data)){
-            Dir::create($project_dir_data);
+            Dir::create($project_dir_data, Dir::CHMOD);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 777 ' . $project_dir_data);
+            }
         }
         $url = $project_dir_data . 'Route' . $object->config('extension.json');
         if(!File::exist($url)){
@@ -181,28 +266,24 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                 $route->data(Core::uuid() . '.resource', $resource);
                 try {
                     File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                        exec('chmod 666 ' . $url);
+                    } else {
+                        exec('chmod 640 ' . $url);
+                    }
                 } catch (Exception|FileWriteException|ObjectException $exception) {
+                    Event::trigger($object, 'cli.configure.domain.add', [
+                        'subdomain' => $subdomain,
+                        'domain' => $domain,
+                        'extension' => $extension,
+                        'exception' => $exception
+                    ]);
                     return $exception;
                 }
             }
-            $id = posix_geteuid();
             if ($id === 0) {
-                File::chmod($url, 0666);
-                Core::execute('chown www-data:www-data -R ' . $object->config('project.dir.host'));
-                Core::execute('chmod 777 -R ' . $object->config('project.dir.host'));
-                Core::execute('chown www-data:www-data -R ' . $project_dir_data);
-                if (File::exist($project_dir_data . 'Cache/0/')) {
-                    Core::execute('chown root:root -R ' . $project_dir_data . 'Cache/0/');
-                }
-                if (File::exist($project_dir_data . 'Compile/0/')) {
-                    Core::execute('chown root:root -R ' . $project_dir_data . 'Compile/0/');
-                }
-                if (File::exist($project_dir_data . 'Cache/1000/')) {
-                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
-                }
-                if (File::exist($project_dir_data . 'Compile/1000/')) {
-                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
-                }
+                Core::execute($object, 'chown www-data:www-data -R ' . $object->config('project.dir.host'));
+                Core::execute($object, 'chown www-data:www-data -R ' . $project_dir_data);
             }
         }
     } else {
@@ -222,14 +303,24 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $host_dir_view = $host_dir_root .
             $object->config('dictionary.view') .
             $object->config('ds');
-        Dir::create($host_dir_data);
-        Dir::create($host_dir_controller);
-        Dir::create($host_dir_view);
-        Dir::create($host_dir_view . 'Index');
-        Dir::create($host_dir_view . 'Index/Public/Css');
-        Dir::create($host_dir_view . 'Index/Public/Image');
-        Dir::create($host_dir_view . 'Main');
 
+        Dir::create($host_dir_data, Dir::CHMOD);
+        Dir::create($host_dir_controller, Dir::CHMOD);
+        Dir::create($host_dir_view, Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index/Public/Css', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Index/Public/Image', Dir::CHMOD);
+        Dir::create($host_dir_view . 'Main', Dir::CHMOD);
+        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+            exec('chmod 777 ' . $host_dir_data);
+            exec('chmod 777 ' . $host_dir_controller);
+            exec('chmod 777 ' . $host_dir_view);
+            exec('chmod 777 ' . $host_dir_view . 'Index');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/Css');
+            exec('chmod 777 ' . $host_dir_view . 'Index/Public/Image');
+            exec('chmod 777 ' . $host_dir_view . 'Main');
+        }
         $dir = $object->config('project.dir.host') .
             ucfirst($subdomain) .
             $object->config('ds') .
@@ -238,7 +329,7 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $cwd = Dir::change($dir);
         $exec = 'ln -s ' . ucfirst($extension) . ' Local';
         $output = [];
-        Core::execute($exec, $output);
+        Core::execute($object, $exec, $output);
         $dir = $object->config('project.dir.host') .
             ucfirst($subdomain) .
             $object->config('ds') .
@@ -265,8 +356,19 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
             $url = $host_dir_data . 'Route' . $object->config('extension.json');
             if(!File::exist($url)){
                 File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                    exec('chmod 666 ' . $url);
+                } else {
+                    exec('chmod 640 ' . $url);
+                }
             }
         } catch (Exception | FileWriteException | ObjectException $exception){
+            Event::trigger($object, 'cli.configure.domain.add', [
+                'subdomain' => $subdomain,
+                'domain' => $domain,
+                'extension' => $extension,
+                'exception' => $exception
+            ]);
             return $exception;
         }
         $url = $object->config('controller.dir.data') . 'Controller/Index.tpl';
@@ -277,48 +379,91 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
         $controller_data->data('extension', ucfirst($extension));
         $controller_parse = new Parse($object);
         $write = $controller_parse->compile($controller_read, $controller_data->data());
-
         try {
             $url = $host_dir_controller . 'Index' . $object->config('extension.php');
             if(!File::exist($url)){
                 File::write($url, $write);
+                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                    exec('chmod 666 ' . $url);
+                } else {
+                    exec('chmod 640 ' . $url);
+                }
             }
         } catch (Exception | FileWriteException $exception){
+            Event::trigger($object, 'cli.configure.domain.add', [
+                'subdomain' => $subdomain,
+                'domain' => $domain,
+                'extension' => $extension,
+                'exception' => $exception
+            ]);
             return $exception;
         }
         $source = $object->config('controller.dir.data') . 'View/Main/Main.json';
         $destination = $host_dir_data . 'Main.json';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Main/Main.tpl';
         $destination = $host_dir_view . 'Main/Main.tpl';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Index/Overview.tpl';
         $destination = $host_dir_view . 'Index/Overview.tpl';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Public/Css/Main.css';
         $destination = $host_dir_view . 'Index/Public/Css/Main.css';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Public/Image/Details-close.png';
         $destination = $host_dir_view . 'Index/Public/Image/Details-close.png';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $source = $object->config('controller.dir.data') . 'View/Public/Image/Details-open.png';
         $destination = $host_dir_view . 'Index/Public/Image/Details-open.png';
         if(!File::exist($destination)){
             File::copy($source, $destination);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 666 ' . $destination);
+            } else {
+                exec('chmod 640 ' . $destination);
+            }
         }
         $project_dir_data = $object->config('project.dir.data');
         if(!File::exist($project_dir_data)){
-            Dir::create($project_dir_data);
+            Dir::create($project_dir_data, Dir::CHMOD);
+            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                exec('chmod 777 ' . $project_dir_data);
+            }
         }
         $url = $project_dir_data . 'Route' . $object->config('extension.json');
         if(!File::exist($url)){
@@ -350,30 +495,67 @@ function function_domain_add(Parse $parse, Data $data, $domain=''){
                 $route->data(Core::uuid() . '.resource', $resource);
                 try {
                     File::write($url, Core::object($route->data(), Core::OBJECT_JSON));
+                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                        exec('chmod 666 ' . $url);
+                    } else {
+                        exec('chmod 640 ' . $url);
+                    }
                 } catch (Exception|FileWriteException|ObjectException $exception) {
+                    Event::trigger($object, 'cli.configure.domain.add', [
+                        'subdomain' => $subdomain,
+                        'domain' => $domain,
+                        'extension' => $extension,
+                        'exception' => $exception
+                    ]);
                     return $exception;
                 }
             }
-            $id = posix_geteuid();
-            if($id === 0){
-                File::chmod($url, 0666);
-                Core::execute('chown www-data:www-data -R ' . $object->config('project.dir.host'));
-                Core::execute('chmod 777 -R ' . $object->config('project.dir.host'));
-                Core::execute('chown www-data:www-data -R ' . $project_dir_data);
-                if(File::exist($project_dir_data . 'Cache/0/')){
-                    Core::execute('chown root:root -R ' . $project_dir_data . 'Cache/0/');
-                }
-                if(File::exist($project_dir_data . 'Compile/0/')){
-                    Core::execute('chown root:root -R ' . $project_dir_data . 'Compile/0/');
-                }
-                if(File::exist($project_dir_data . 'Cache/1000/')){
-                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Cache/1000/');
-                }
-                if(File::exist($project_dir_data . 'Compile/1000/')){
-                    Core::execute('chown 1000:1000 -R ' . $project_dir_data . 'Compile/1000/');
-                }
+            if(empty($id)){
+                Core::execute($object, 'chown www-data:www-data -R ' . $object->config('project.dir.host'));
+                Core::execute($object, 'chown www-data:www-data -R ' . $project_dir_data);
             }
         }
     }
+    $dir = $object->config('project.dir.data');
+    $url = $dir .
+        'Hosts' .
+        $object->config('extension.json')
+    ;
+    $read = $object->data_read($url);
+    if(!$read){
+        $read = new Data();
+        Dir::create($dir, Dir::CHMOD);
+        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+            exec('chmod 777 ' . $dir);
+        }
+        if(empty($id)){
+            Core::execute($object, 'chown www-data:www-data ' . $dir);
+        }
+    }
+    if($read){
+        if($subdomain){
+            $read->set('host.' . $subdomain . '-' . $domain . '-' . $extension . '.subdomain', $subdomain);
+            $read->set('host.' . $subdomain . '-' . $domain . '-' . $extension . '.domain', $domain);
+            $read->set('host.' . $subdomain . '-' . $domain . '-' . $extension . '.extension', $extension);
+        } else {
+            $read->set('host.' . $domain . '-' . $extension . '.subdomain', false);
+            $read->set('host.' . $domain . '-' . $extension . '.domain', $domain);
+            $read->set('host.' . $domain . '-' . $extension . '.extension', $extension);
+        }
+        $read->write($url);
+        if(empty($id)){
+            Core::execute($object, 'chown www-data:www-data ' . $url);
+        }
+        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+            exec('chmod 666 ' . $url);
+        } else {
+            exec('chmod 640 ' . $url);
+        }
+    }
+    Event::trigger($object, 'cli.configure.domain.add', [
+        'subdomain' => $subdomain,
+        'domain' => $domain,
+        'extension' => $extension
+    ]);
 }
 

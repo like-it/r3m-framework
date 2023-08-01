@@ -150,8 +150,9 @@ class Method {
                     }
                     $attribute .= $value . ', ';
                 }                
-            } else {                
+            } else {
                 foreach($record['method']['attribute'] as $nr => $token){
+                    $token = $build->require('modifier', $token);
                     $token = $build->require('function', $token);
                     $value = Variable::getValue($build, $storage, $token);
                     $attribute .= $value . ', ';
@@ -270,14 +271,23 @@ class Method {
             } else {
                 if(empty($record['method']['trait'])){
                     if(empty($attribute)){
-                        $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                        if($attribute === 0 || $attribute === '0'){
+                            $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), 0)';
+                        } else {
+                            $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage())';
+                        }
+
                     } else {
                         $result = '$this->' . $record['method']['php_name'] . '($this->parse(), $this->storage(), ' . $attribute . ')';
                     }
                 } else {
                     $trait_name = str_replace('function_', '', $record['method']['php_name']);
                     if(empty($attribute)){
-                        $result = '$this->' . $trait_name . '()';
+                        if($attribute === 0 || $attribute === '0'){
+                            $result = '$this->' . $trait_name . '(0)';
+                        } else {
+                            $result = '$this->' . $trait_name . '()';
+                        }
                     } else {
                         $result = '$this->' . $trait_name . '(' . $attribute . ')';
                     }

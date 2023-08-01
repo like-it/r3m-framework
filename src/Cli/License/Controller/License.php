@@ -11,6 +11,7 @@
 namespace R3m\Io\Cli\License\Controller;
 
 use R3m\Io\App;
+use R3m\Io\Exception\ObjectException;
 use R3m\Io\Module\Controller;
 
 use Exception;
@@ -18,6 +19,7 @@ use Exception;
 use R3m\Io\Exception\LocateException;
 use R3m\Io\Exception\UrlEmptyException;
 use R3m\Io\Exception\UrlNotExistException;
+use R3m\Io\Module\Event;
 
 class License extends Controller {
     const NAME = 'License';
@@ -43,24 +45,48 @@ class License extends Controller {
         if($command === null){
             $command = License::DEFAULT_COMMAND;
         }
-        if(!in_array($command, License::COMMAND)){
+        if(!in_array($command, License::COMMAND, true)){
             $exception = str_replace(
                 License::EXCEPTION_COMMAND_PARAMETER,
                 $command,
                 License::EXCEPTION_COMMAND
             );
-            throw new Exception($exception);
+            $exception = new Exception($exception);
+            Event::trigger($object, 'cli.' . strtolower(License::NAME) . '.' . __FUNCTION__, [
+                'command' => $command,
+                'exception' => $exception
+            ]);
+            throw $exception;
         }
-        return License::{$command}($object);
+        $response = License::{$command}($object);
+        Event::trigger($object, 'cli.' . strtolower(License::NAME) . '.' . __FUNCTION__, [
+            'command' => $command
+        ]);
+        return $response;
     }
 
+    /**
+     * @throws ObjectException
+     */
     private static function info(App $object)
     {
+        $name = false;
+        $url = false;
         try {
             $name = License::name(__FUNCTION__, License::NAME);
             $url = License::locate($object, $name);
-            return License::response($object, $url);
+            $result = License::response($object, $url);
+            Event::trigger($object, 'cli.' . strtolower(License::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url
+            ]);
+            return $result;
         } catch (Exception | LocateException | UrlEmptyException | UrlNotExistException $exception) {
+            Event::trigger($object, 'cli.' . strtolower(License::NAME) . '.' . __FUNCTION__, [
+                'name' => $name,
+                'url' => $url,
+                'exception' => $exception
+            ]);
             return $exception;
         }
     }

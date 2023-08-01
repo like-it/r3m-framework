@@ -11,7 +11,7 @@
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
 
-function function_property_exist(Parse $parse, Data $data, $object='', $key=''){
-    $result = property_exists($object, $key);
+function function_property_exist(Parse $parse, Data $data, $object='', $property=''){
+    $result = property_exists($object, $property);
     return $result;
 }

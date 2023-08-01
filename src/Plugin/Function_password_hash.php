@@ -22,14 +22,20 @@ function function_password_hash(Parse $parse, Data $data, $password='', $cost=13
                 'cost' => $cost
             ]);
         } catch (Exception | ErrorException $exception){
-            return $exception->getMessage() . "\n";
+            return $exception;
         }
     } else {
         if(is_string($cost)){
             $algorithm = constant($cost);
             if(is_array($options)){
                 $result = password_hash($password, $algorithm, $options);
-            } else {
+            }
+            elseif(is_int($options)){
+                $result = password_hash($password, $algorithm, [
+                    'cost' => $options
+                ]);
+            }
+            else {
                 $result = password_hash($password, $algorithm);
             }
         }

@@ -15,14 +15,34 @@ use Exception;
 use R3m\Io\App;
 use R3m\Io\Config;
 
-class Sort extends Data{
+class Sort extends Data {
 
     public static function list($list): Sort
     {
         return new Sort($list);
     }
 
-    public function with($sort=[], $key_reset=false){
+    public function with($sort=[], $options=[]){
+        if(array_key_exists('output', $options)){
+            $output = $options['output'];
+        } else {
+            $output = false;
+        }
+        if(array_key_exists('key', $options)){
+            $key = $options['key'];
+        } else {
+            $key = false;
+        }
+        if(array_key_exists('key_reset', $options)){
+            $key_reset = $options['key_reset'];
+        } else {
+            $key_reset = false;
+        }
+        if(array_key_exists('flags', $options)){
+            $flags = $options['flags'];
+        } else {
+            $flags = SORT_NATURAL;
+        }
         $list = $this->data();
         if(
             is_array($list) || 
@@ -40,48 +60,100 @@ class Sort extends Data{
                 $attribute = false;
                 $sortable_1 = 'ASC';
                 foreach($list as $uuid => $node){
-                    foreach($sort as $attribute => $record){                    
-                        if(property_exists($node, $attribute)){
-                            if(is_scalar($node->$attribute)){
-                                $result[$node->$attribute][] = $node;
-                            } else if (is_array($node->$attribute)){
-                                $attr = '';
-                                foreach($node->$attribute as $node_attribute){
-                                    if(is_scalar($node_attribute)){
-                                        $attr .= '.' . $node_attribute;
-                                    }
-                                }
-                                $attr = substr($attr, 1);
-                                $result[$attr][] = $node;
+                    foreach($sort as $attribute => $record){
+                        $value = $this->data($uuid . '.' . $attribute);
+                        if(is_scalar($value)) {
+                            if(is_array($node)){
+                                $result[$value][] = $node;
                             }
-                        } else {
-                            $result[''][] = $node;                            
+                            elseif(is_object($node)){
+
+                                $result[$value][] = $node;
+                            }
                         }
-                        $sortable_1 = $sort[$attribute];                    
+                        elseif (is_array($value)){
+                            $attr = '';
+                            foreach($value as $node_attribute){
+                                if(is_scalar($node_attribute)){
+                                    $attr .= '.' . $node_attribute;
+                                }
+                            }
+                            $attr = substr($attr, 1);
+                            $result[$attr][] = $node;
+                        }
+                        elseif(is_object($value)){
+                            $attr = '';
+                            foreach($value as $node_attribute){
+                                if(is_scalar($node_attribute)){
+                                    $attr .= '.' . $node_attribute;
+                                }
+                            }
+                            $attr = substr($attr, 1);
+                            $result[$attr][] = $node;
+                        }
+                        else {
+                            d($uuid);
+                            d($attribute);
+                            d($value);
+                            d($node);
+                            ddd($record);
+                            $result[''][] = $node;
+                        }
+                        $sortable_1 = $record;
                         break;
-                    }                
+                    }
                 }
                 unset($sort[$attribute]);                
                 if(strtolower($sortable_1) == 'asc'){
-                    ksort($result, SORT_NATURAL);
+                    if($attribute === 'uuid'){
+                        usort($result, array($this,"uuid_compare_ascending"));
+                    } else {
+                        ksort($result, $flags);
+                    }
+
                 } else {
-                    krsort($result, SORT_NATURAL);
-                } 
+                    if($attribute === 'uuid'){
+                        usort($result, array($this,"uuid_compare_descending"));
+                    } else {
+                        krsort($result, $flags);
+                    }
+                }
+                if($output === 'raw'){
+                    return $result;
+                }
                 $list = [];                
                 foreach($result as $attribute => $subList){
                     foreach($subList as $nr => $record){
-                        if(property_exists($record, 'uuid')){
-                            $list[$record->uuid] = $record;
-                        } else {
-                            while(true){
-                                $uuid = Core::uuid();
-                                if(!array_key_exists($uuid, $list)){
-                                    $record->uuid = $uuid;
-                                    break;
+                        if(is_array($record)){
+                            if(array_key_exists('uuid', $record)){
+                                $list[$record['uuid']] = $record;
+                            } else {
+                                while(true){
+                                    $uuid = Core::uuid();
+                                    if(!array_key_exists($uuid, $list)){
+                                        $record['uuid'] = $uuid;
+                                        break;
+                                    }
                                 }
+                                $list[$uuid] = $record;
                             }
-                            $list[$uuid] = $record;
-                        }                        
+                        } else {
+                            if(property_exists($record, 'uuid')){
+                                $list[$record->uuid] = $record;
+                            } else {
+                                while(true){
+                                    $uuid = Core::uuid();
+                                    if(
+                                        !array_key_exists($uuid, $list) &&
+                                        is_object($record)
+                                    ){
+                                        $record->uuid = $uuid;
+                                        break;
+                                    }
+                                }
+                                $list[$uuid] = $record;
+                            }
+                        }
                     }
                 }                                
             }
@@ -95,75 +167,135 @@ class Sort extends Data{
                 $sortable_1 = 'ASC';
                 $sortable_2 = 'ASC';
                 foreach($list as $uuid => $node){
-                    foreach($sort as $attribute => $record){                    
-                        if(property_exists($node, $attribute)){
-                            if(is_scalar($node->$attribute)){
-                                $result[$node->$attribute][] = $node;
-                            } else if (is_array($node->$attribute)){
-                                $attr = '';
-                                foreach($node->$attribute as $node_attribute){
-                                    if(is_scalar($node_attribute)){
-                                        $attr .= '.' . $node_attribute;
+                    foreach($sort as $attribute => $record){
+                        $value = $this->data($uuid . '.' . $attribute);
+                        if(is_scalar($value)){
+                            if(is_array($node)){
+                                $result[$value][] = $node;
+                            }
+                            elseif(is_object($node)){
+                                $result[$value][] = $node;
+                            }
+                        }
+                        elseif(is_array($value)){
+                            $attr = '';
+                            foreach($value as $node_attribute){
+                                if(is_scalar($node_attribute)){
+                                    $attr .= '.' . $node_attribute;
+                                }
+                            }
+                            $attr = substr($attr, 1);
+                            $result[$attr][] = $node;
+                        }
+                        elseif(is_object($value)){
+                            $attr = '';
+                            foreach($value as $node_attribute){
+                                if(is_scalar($node_attribute)){
+                                    $attr .= '.' . $node_attribute;
+                                }
+                            }
+                            $attr = substr($attr, 1);
+                            $result[$attr][] = $node;
+                        }
+                        else {
+                            d($uuid);
+                            d($attribute);
+                            d($value);
+                            d($node);
+                            ddd($record);
+                            $result[''][] = $node;
+                        }
+
+                        $sortable_1 = $record;
+                        break;
+                    }
+                }
+                unset($sort[$attribute]);
+                $data = new Data($result);
+                $result = [];
+                if(!empty($sort)){
+                    foreach($data->data() as $result_key => $list){
+                        foreach($list as $list_key => $node) {
+                            foreach ($sort as $attribute => $record) {
+                                $data->is_debug(true);
+                                $value = $data->data($result_key . '.' . $list_key . '.' . $attribute);
+                                if(is_scalar($value)){
+                                    if (is_array($node)) {
+                                        $result[$result_key][$value][] = $node;
+                                    } elseif (is_object($node)) {
+                                        $result[$result_key][$value][] = $node;
                                     }
                                 }
-                                $attr = substr($attr, 1);
-                                $result[$attr][] = $node;
-                            }
-                        } else {
-                            $result[''][] = $node;                            
-                        }
-                        $sortable_1 = $sort[$attribute];                    
-                        break;
-                    }                
-                }                    
-                unset($sort[$attribute]);                                
-                if(!empty($sort) && is_array($result)){                
-                    $list = [];                
-                    foreach($result as $key => $subList){
-                        foreach($subList as $nr => $node){
-                            foreach($sort as $attribute => $record){                            
-                                if(property_exists($node, $attribute)){
-                                    $list[$key][$node->$attribute][] = $node;
+                                else if (is_array($value)){
+                                    $attr = '';
+                                    foreach($value as $node_attribute){
+                                        if(is_scalar($node_attribute)){
+                                            $attr .= '.' . $node_attribute;
+                                        }
+                                    }
+                                    $attr = substr($attr, 1);
+                                    $result[$attr][] = $node;
                                 } else {
-                                    $list[$key][''][] = $node;                                    
+                                    $result[$result_key][''][] = $node;
                                 }
-                                $sortable_2 = $sort[$attribute];                            
+                                $sortable_2 = $record;
                                 break;
                             }
                         }
                     }
                     unset($sort[$attribute]);
-                    $result = $list;                
                     if(strtolower($sortable_1) == 'asc'){
-                        ksort($result, SORT_NATURAL);
+                        ksort($result, $flags);
                     } else {
-                        krsort($result, SORT_NATURAL);
+                        krsort($result, $flags);
                     }                
                     foreach($result as $key => $list){
                         if(strtolower($sortable_2) == 'asc'){
-                            ksort($list, SORT_NATURAL);                            
+                            ksort($list, $flags);
                         } else {
-                            krsort($list, SORT_NATURAL);
+                            krsort($list, $flags);
                         }
                         $result[$key] = $list;                                                
-                    }                                        
+                    }
+                    if($output === 'raw'){
+                        return $result;
+                    }
                     $list = [];          
-                    $has_uuid = false;      
-                    foreach($result as $key => $subList){
+                    $has_uuid = false;
+                    foreach($result as $result_key => $subList){
                         foreach($subList as $attribute => $subSubList){
                             foreach($subSubList as $nr => $node){
-                                if(property_exists($node, 'uuid')){
-                                    $has_uuid = true;
-                                    $list[$node->uuid] = $node;
-                                } else {
-                                    while(true){
-                                        $uuid = Core::uuid();
-                                        if(!array_key_exists($uuid, $list)){
-                                            $node->uuid = $uuid;
-                                            break;
+                                if(is_array($node)){
+                                    if(array_key_exists('uuid', $node)){
+                                        $has_uuid = true;
+                                        $list[$node['uuid']] = $node;
+                                    } else {
+                                        while(true){
+                                            $uuid = Core::uuid();
+                                            if(!array_key_exists($uuid, $list)){
+                                                $node['uuid'] = $uuid;
+                                                break;
+                                            }
                                         }
+                                        $list[$uuid] = $node;
                                     }
-                                    $list[$uuid] = $node;
+                                } else {
+                                    if(property_exists($node, 'uuid')){
+                                        $has_uuid = true;
+                                        $list[$node->uuid] = $node;
+                                    } else {
+                                        while(true){
+                                            $uuid = Core::uuid();
+                                            if(
+                                                !array_key_exists($uuid, $list) &&
+                                                is_object($node)
+                                            ){
+                                                $node->uuid = $uuid;
+                                                break;
+                                            }
+                                        }
+                                        $list[$uuid] = $node;
+                                    }
                                 }
                             }
                         }
@@ -179,5 +311,104 @@ class Sort extends Data{
             return $result;
         }
         return $list;
+    }
+
+    public function uuid_compare_ascending($a, $b): int
+    {
+        if(is_array($a)){
+            $object_a = reset($a);
+        }
+        elseif(is_string($a)){
+            $object_a = false;
+        }
+        if(is_array($b)){
+            $object_b = reset($b);
+        }
+        elseif(is_string($b)){
+            $object_b = false;
+        }
+        if(is_array($object_a)){
+            $a = $object_a['uuid'];
+        }
+        elseif(is_object($object_a)) {
+            $a = $object_a->uuid;
+        }
+        if(is_array($object_b)){
+            $b = $object_b['uuid'];
+        }
+        elseif(is_object($object_b)){
+            $b = $object_b->uuid;
+        }
+        if($a === $b){
+            return 0;
+        }
+        if(is_array($a) || is_array($b)){
+            return 0;
+        }
+        $explode_a = explode('-', $a);
+        $explode_b = explode('-', $b);
+
+        foreach($explode_a as $nr => $part){
+            $hex = hexdec($part);
+            $match = hexdec($explode_b[$nr]);
+            if($hex === $match){
+                continue;
+            }
+            if($hex > $match){
+                return 1;
+            }
+            elseif($hex < $match){
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    public function uuid_compare_descending($a, $b): int
+    {
+        if(is_array($a)){
+            $object_a = reset($a);
+        }
+        elseif(is_string($a)){
+            $object_a = false;
+        }
+        if(is_array($a)){
+            $object_b = reset($b);
+        }
+        elseif(is_string($a)){
+            $object_b = false;
+        }
+        if(is_array($object_a)){
+            $a = $object_a['uuid'];
+        }
+        elseif(is_object($object_a)){
+            $a = $object_a->uuid;
+        }
+        if(is_array($object_b)){
+            $b = $object_b['uuid'];
+        }
+        elseif(is_object($object_b)){
+            $b = $object_b->uuid;
+        }
+        if($a === $b){
+            return 0;
+        }
+        $explode_a = explode('-', $a);
+        $explode_b = explode('-', $b);
+
+        foreach($explode_a as $nr => $part){
+            $hex = hexdec($part);
+            $match = hexdec($explode_b[$nr]);
+            if($hex === $match){
+                continue;
+            }
+            if($hex > $match){
+                return 1;
+            }
+            elseif($hex < $match){
+                return -1;
+            }
+        }
+        return 0;
     }
 }

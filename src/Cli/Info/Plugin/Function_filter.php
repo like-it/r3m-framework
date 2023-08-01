@@ -12,7 +12,7 @@ function function_filter(Parse $parse, Data $data, $list, $options){
                     property_exists($record, $key) &&
                     !empty($record->{$key}) &&
                     is_array($record->{$key}) &&
-                    in_array($value, $record->{$key})
+                    in_array($value, $record->{$key}, true)
                 ){
                     $result[] = $record;
                 }

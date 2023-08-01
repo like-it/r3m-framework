@@ -11,9 +11,13 @@
 namespace R3m\Io\Module;
 
 use stdClass;
-use Exception;
+
 use R3m\Io\App;
 use R3m\Io\Config;
+
+use Exception;
+
+use R3m\Io\Exception\LocateException;
 
 class Validate {
 
@@ -87,34 +91,40 @@ class Validate {
                 } else {
                     foreach($list as $nr => $record){
                         foreach($record as $key => $argument){
+                            if(substr($key, 0, 1) === '#'){
+                                continue;
+                            }
+                            $name = Controller::name($key);
                             $key = 'validate' . '.' . $key;
-                            $url = $object->config('framework.dir.validate') . ucfirst(str_replace('.', '_', $key) . $extension);
-                            if(File::exist($url)){
-                                require_once $url;
-                                $function = str_replace('.', '_', $key);
-                                if(empty($test[$field][$function])){
-                                    $test[$field][$function] = [];
-                                }
-                                $test[$field][$function][] = $function($object, $value, $field, $argument);
-                            } else {
-                                $url_2 = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . ucfirst(str_replace('.', '_', $key) . $extension);
-                                if(File::exist($url_2)){
-                                    require_once $url_2;
-                                    $function = str_replace('.', '_', $key);
-                                    if(empty($test[$field][$function])){
-                                        $test[$field][$function] = [];
-                                    }
+                            $function = str_replace('.', '_', $key);
+                            $url_list = [];
+                            $url_list[] = $object->config('controller.dir.validator') . $name . $extension;
+                            $url_list[] = $object->config('project.dir.validator') . $name . $extension;
+                            $url_list[] = $object->config('package.r3m-io/node.dir.validator') . $name . $extension;
+                            $url_list[] = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . $name . $extension;
+                            $url_list[] = $object->config('framework.dir.validate') . $name . $extension;
+                            $url_list = Config::parameters($object, $url_list);
+                            if(empty($test[$field][$function])){
+                                $test[$field][$function] = [];
+                            }
+                            $is_found = false;
+                            foreach($url_list as $url){
+                                if(File::exist($url)){
+                                    require_once $url;
                                     $test[$field][$function][] = $function($object, $value, $field, $argument);
-                                } else {
-                                    throw new Exception('validator (' . $url .  ',' . $url_2 . ') not found');
+                                    $is_found = true;
+                                    break;
                                 }
+                            }
+                            if($is_found === false){
+                                throw new LocateException('validator (' . $function . ') not found.', $url_list);
                             }
                         }
                     }
                 }
             }
         }        
-        if(property_exists($validate, 'test')){            
+        if(property_exists($validate, 'test')){
             $validate->test = array_merge($test, $validate->test);
         } else {
             $validate->test = $test;
@@ -130,7 +140,7 @@ class Validate {
         }
         if(
             property_exists($validate, 'success') &&
-            $validate->success===false
+            $validate->success === false
         ){
             return $validate;
         } else {

@@ -13,9 +13,9 @@ use R3m\Io\Module\Data;
 
 function function_string_split(Parse $parse, Data $data, $string='', $length=null){
     if(empty($length)){
-        $result = str_split($string);
+        $result = mb_str_split($string);
     } else {
-        $result = str_split($string, $length);
+        $result = mb_str_split($string, $length);
     }
     return $result;
 }

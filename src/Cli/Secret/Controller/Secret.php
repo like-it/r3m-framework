@@ -14,10 +14,13 @@ use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 
 use R3m\Io\App;
+use R3m\Io\Config;
+
 use R3m\Io\Module\Cli;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Dir;
+use R3m\Io\Module\Event;
 use R3m\Io\Module\File;
 use R3m\Io\Module\Controller;
 
@@ -69,11 +72,7 @@ class Secret extends Controller {
                 return $exception;
             }
         }
-        $url =
-            $object->config('project.dir.data') .
-            'Secret' .
-            $object->config('extension.json')
-        ;
+        $url = $object->config('app.secret.url');
         $key_url =
             $object->config('project.dir.data') .
             'Defuse'.
@@ -106,11 +105,18 @@ class Secret extends Controller {
                                     !empty($session['unlock']['since'])
                                 ){
                                     echo Crypto::decrypt($get, $key) . PHP_EOL;
+                                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                                        'attribute' => $attribute,
+                                    ]);
                                     return null;
                                 }
                             }
                         }
                     }
+                    Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                        'attribute' => $attribute,
+                        'has_username' => $data->has('secret.username'),
+                    ]);
                     if($data->has('secret.username')){
                         echo "Secret is locked, unlock first..." . PHP_EOL;
                         return null;
@@ -139,8 +145,12 @@ class Secret extends Controller {
                 $dir = Dir::name($key_url);
                 Dir::create($dir, Dir::CHMOD);
                 File::write($key_url, $string);
-                $command = 'chown www-data:www-data ' . $dir . ' -R';
-                Core::execute($command);
+                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                    exec('chmod 666 ' . $key_url);
+                    exec('chmod 777 ' . $dir);
+                } else {
+                    exec('chmod 640 ' . $key_url);
+                }
             }
             $string = File::read($key_url);
             $key = Key::loadFromAsciiSafeString($string);
@@ -165,9 +175,16 @@ class Secret extends Controller {
                                 $dir = Dir::name($url);
                                 Dir::create($dir, Dir::CHMOD);
                                 $data->write($url);
-                                $command = 'chown www-data:www-data ' . $url;
-                                Core::execute($command);
+                                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                    exec('chmod 666 ' . $url);
+                                    exec('chmod 777 ' . $dir);
+                                } else {
+                                    exec('chmod 640 ' . $url);
+                                }
                                 echo $attribute . PHP_EOL;
+                                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                                    'attribute' => $attribute,
+                                ]);
                                 return null;
                             }
                         }
@@ -181,13 +198,19 @@ class Secret extends Controller {
                     $dir = Dir::name($url);
                     Dir::create($dir, Dir::CHMOD);
                     $data->write($url);
-                    $command = 'chown www-data:www-data ' . $url;
-                    Core::execute($command);
+                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                        exec('chmod 666 ' . $url);
+                        exec('chmod 777 ' . $dir);
+                    } else {
+                        exec('chmod 640 ' . $url);
+                    }
                     echo $attribute . PHP_EOL;
                 }
+                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                    'attribute' => $attribute,
+                    'has_username' => $data->has('secret.username')
+                ]);
             }
-
-
         }
         elseif($action === Secret::ACTION_HAS){
             $attribute = $object->parameter($object, $action, 1);
@@ -200,6 +223,12 @@ class Secret extends Controller {
                 $data->has('secret.password') &&
                 !$data->has('secret.uuid')
             ){
+                Event::trigger($object, 'secret.' . $action, [
+                    'attribute' => $attribute,
+                    'has_username' => $data->has('secret.username'),
+                    'has_password' => $data->has('secret.password'),
+                    'has_uuid' => $data->has('secret.uuid')
+                ]);
                 echo "Secret is locked, unlock first..." . PHP_EOL;
                 return null;
             }
@@ -224,6 +253,13 @@ class Secret extends Controller {
                         }
                     }
                 }
+                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                    'attribute' => $attribute,
+                    'has_username' => $data->has('secret.username'),
+                    'has_password' => $data->has('secret.password'),
+                    'has_uuid' => $data->has('secret.uuid')
+                ]);
+                return null;
             }
         }
         elseif($action === Secret::ACTION_DELETE) {
@@ -238,6 +274,12 @@ class Secret extends Controller {
                     $data->has('secret.password') &&
                     !$data->has('secret.uuid')
                 ){
+                    Event::trigger($object, 'secret.' . $action, [
+                        'attribute' => $attribute,
+                        'has_username' => $data->has('secret.username'),
+                        'has_password' => $data->has('secret.password'),
+                        'has_uuid' => $data->has('secret.uuid')
+                    ]);
                     echo "Secret is locked, unlock first..." . PHP_EOL;
                     return null;
                 }
@@ -255,16 +297,34 @@ class Secret extends Controller {
                                 !empty($session['unlock']['since'])
                             ){
                                 $data->delete($attribute);
+                                $dir = Dir::name($url);
+                                Dir::create($dir, Dir::CHMOD);
                                 $data->write($url);
-                                $command = 'chown www-data:www-data ' . $url;
-                                Core::execute($command);
+                                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                    exec('chmod 777 ' . $dir);
+                                    exec('chmod 666 ' . $url);
+                                } else {
+                                    exec('chmod 640 ' . $url);
+                                }
                                 echo 'Secret delete: ' . $attribute . PHP_EOL;
+                                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                                    'attribute' => $attribute,
+                                    'has_username' => $data->has('secret.username'),
+                                    'has_password' => $data->has('secret.password'),
+                                    'has_uuid' => $data->has('secret.uuid')
+                                ]);
                                 return null;
                             }
                         }
                     }
                 }
                 echo 'Secret is locked...' . PHP_EOL;
+                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                    'attribute' => $attribute,
+                    'has_username' => $data->has('secret.username'),
+                    'has_password' => $data->has('secret.password'),
+                    'has_uuid' => $data->has('secret.uuid')
+                ]);
                 return null;
             }
         }
@@ -317,9 +377,18 @@ class Secret extends Controller {
                         $dir = Dir::name($url);
                         Dir::create($dir, Dir::CHMOD);
                         $write = $data->write($url);
-                        $command = 'chown www-data:www-data ' . $url;
-                        Core::execute($command);
+                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                            exec('chmod 777 ' . $dir);
+                            exec('chmod 666 ' . $url);
+                        } else {
+                            exec('chmod 640 ' . $url);
+                        }
                         echo "Successfully locked with new username & password..." . PHP_EOL;
+                        Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                            'has_username' => $data->has('secret.username'),
+                            'has_password' => $data->has('secret.password'),
+                            'has_uuid' => $data->has('secret.uuid')
+                        ]);
                         return null;
                     }
                     if(File::exist($key_url)){
@@ -331,8 +400,12 @@ class Secret extends Controller {
                         $dir = Dir::name($key_url);
                         Dir::create($dir, Dir::CHMOD);
                         File::write($key_url, $string);
-                        $command = 'chown www-data:www-data ' . $dir . ' -R';
-                        Core::execute($command);
+                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                            exec('chmod 777 ' . $dir);
+                            exec('chmod 666 ' . $key_url);
+                        } else {
+                            exec('chmod 640 ' . $key_url);
+                        }
                     }
                     $uuid = Crypto::decrypt($data->get('secret.uuid'), $key);
                     $data->delete('secret.uuid');
@@ -340,9 +413,18 @@ class Secret extends Controller {
                     $dir = Dir::name($url);
                     Dir::create($dir, Dir::CHMOD);
                     $write = $data->write($url);
-                    $command = 'chown www-data:www-data ' . $url;
-                    Core::execute($command);
+                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                        exec('chmod 777 ' . $dir);
+                        exec('chmod 666 ' . $url);
+                    } else {
+                        exec('chmod 640 ' . $url);
+                    }
                     echo "Successfully locked..." . PHP_EOL;
+                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                        'has_username' => $data->has('secret.username'),
+                        'has_password' => $data->has('secret.password'),
+                        'has_uuid' => $data->has('secret.uuid')
+                    ]);
                     return null;
                 } else {
                     if(
@@ -361,8 +443,12 @@ class Secret extends Controller {
                                 $dir = Dir::name($key_url);
                                 Dir::create($dir, Dir::CHMOD);
                                 File::write($key_url, $string);
-                                $command = 'chown www-data:www-data ' . $dir . ' -R';
-                                Core::execute($command);
+                                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                    exec('chmod 777 ' . $dir);
+                                    exec('chmod 666 ' . $key_url);
+                                } else {
+                                    exec('chmod 640 ' . $key_url);
+                                }
                             }
                             $username = Crypto::encrypt((string)$username, $key);
                             $data->set($attribute, $username);
@@ -390,9 +476,18 @@ class Secret extends Controller {
                             $dir = Dir::name($url);
                             Dir::create($dir, Dir::CHMOD);
                             $write = $data->write($url);
-                            $command = 'chown www-data:www-data ' . $url;
-                            Core::execute($command);
+                            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                exec('chmod 777 ' . $dir);
+                                exec('chmod 666 ' . $url);
+                            } else {
+                                exec('chmod 640 ' . $url);
+                            }
                             echo "Successfully locked..." . PHP_EOL;
+                            Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                                'has_username' => $data->has('secret.username'),
+                                'has_password' => $data->has('secret.password'),
+                                'has_uuid' => $data->has('secret.uuid')
+                            ]);
                             return null;
                         }
                     }
@@ -415,8 +510,12 @@ class Secret extends Controller {
                         $dir = Dir::name($key_url);
                         Dir::create($dir, Dir::CHMOD);
                         File::write($key_url, $string);
-                        $command = 'chown www-data:www-data ' . $dir . ' -R';
-                        Core::execute($command);
+                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                            exec('chmod 777 ' . $dir);
+                            exec('chmod 666 ' . $key_url);
+                        } else {
+                            exec('chmod 640 ' . $key_url);
+                        }
                     }
                     $username = Crypto::encrypt((string) $username, $key);
                     $data->set($attribute, $username);
@@ -444,9 +543,18 @@ class Secret extends Controller {
                     $dir = Dir::name($url);
                     Dir::create($dir, Dir::CHMOD);
                     $write = $data->write($url);
-                    $command = 'chown www-data:www-data ' . $url;
-                    Core::execute($command);
+                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                        exec('chmod 777 ' . $dir);
+                        exec('chmod 666 ' . $url);
+                    } else {
+                        exec('chmod 640 ' . $url);
+                    }
                     echo "Successfully locked..." . PHP_EOL;
+                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                        'has_username' => $data->has('secret.username'),
+                        'has_password' => $data->has('secret.password'),
+                        'has_uuid' => $data->has('secret.uuid')
+                    ]);
                 } else if (
                     $get &&
                     File::exist($url)
@@ -459,6 +567,11 @@ class Secret extends Controller {
                         !$data->has('secret.uuid')
                     ){
                         echo "Secret is locked, unlock first..." . PHP_EOL;
+                        Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                            'has_username' => $data->has('secret.username'),
+                            'has_password' => $data->has('secret.password'),
+                            'has_uuid' => $data->has('secret.uuid')
+                        ]);
                         return null;
                     }
                     if($data->has('secret.uuid')){
@@ -492,10 +605,19 @@ class Secret extends Controller {
                     $dir = Dir::name($url);
                     Dir::create($dir, Dir::CHMOD);
                     $write = $data->write($url);
+                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                        'has_username' => $data->has('secret.username'),
+                        'has_password' => $data->has('secret.password'),
+                        'has_uuid' => $data->has('secret.uuid')
+                    ]);
+                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                        exec('chmod 777 ' . $dir);
+                        exec('chmod 666 ' . $url);
+                    } else {
+                        exec('chmod 640 ' . $url);
+                    }
                     echo $url . PHP_EOL;
                     echo $write . PHP_EOL;
-                    $command = 'chown www-data:www-data ' . $url;
-                    Core::execute($command);
                     echo "Successfully locked..." . PHP_EOL;
                 }
             }
@@ -514,6 +636,11 @@ class Secret extends Controller {
             if ($data) {
                 if($data->get('secret.uuid')){
                     echo "Already unlocked..." . PHP_EOL;
+                    Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                        'has_username' => !!$username,
+                        'has_password' => !!$password,
+                        'has_uuid' => $data->has('secret.uuid')
+                    ]);
                     return null;
                 }
                 $attribute = 'secret.username';
@@ -544,9 +671,18 @@ class Secret extends Controller {
                             $dir = Dir::name($url);
                             Dir::create($dir, Dir::CHMOD);
                             $data->write($url);
-                            $command = 'chown www-data:www-data ' . $url;
-                            Core::execute($command);
+                            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                exec('chmod 777 ' . $dir);
+                                exec('chmod 666 ' . $url);
+                            } else {
+                                exec('chmod 640 ' . $url);
+                            }
                             echo "Successfully unlocked..." . PHP_EOL;
+                            Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                                'has_username' => $data->has('secret.username'),
+                                'has_password' => $data->has('secret.password'),
+                                'has_uuid' => $data->has('secret.uuid')
+                            ]);
                             return null;
                         }
                     }
@@ -554,6 +690,12 @@ class Secret extends Controller {
                 //add 5 attempts and 15 minute break
                 sleep(Secret::SLEEP);
                 echo "Invalid username and / or password..." . PHP_EOL;
+                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                    'has_username' => $data->has('secret.username'),
+                    'has_password' => $data->has('secret.password'),
+                    'has_uuid' => $data->has('secret.uuid'),
+                    'invalid_credentials' => true
+                ]);
             }
         }
         elseif($action === Secret::ACTION_STATUS) {
@@ -573,6 +715,9 @@ class Secret extends Controller {
                                 !empty($session['unlock']['since'])
                             ) {
                                 echo 'Session unlocked since: ' . date('Y-m-d H:i:s', $session['unlock']['since']) . '+00:00' . PHP_EOL;
+                                Event::trigger($object, 'cli.' . strtolower(Secret::NAME) . '.' . $action, [
+                                    'has_uuid' => $data->has('secret.uuid')
+                                ]);
                                 return null;
                             }
                         }
@@ -580,11 +725,24 @@ class Secret extends Controller {
                 } else {
                     if($data->get('secret.username')){
                         echo 'Session locked...' . PHP_EOL;
+                        Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                            'has_username' => $data->has('secret.username'),
+                            'has_password' => $data->has('secret.password'),
+                            'has_uuid' => $data->has('secret.uuid'),
+                            'is_locked' => true
+                        ]);
                     } else {
                         echo 'Session unlocked...' . PHP_EOL;
+                        Event::trigger($object, strtolower(Secret::NAME) . '.' . $action, [
+                            'has_username' => $data->has('secret.username'),
+                            'has_password' => $data->has('secret.password'),
+                            'has_uuid' => $data->has('secret.uuid'),
+                            'is_locked' => false
+                        ]);
                     }
                 }
             }
         }
+        return null;
     }
 }

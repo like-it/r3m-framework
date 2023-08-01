@@ -10,13 +10,15 @@
  */
 namespace R3m\Io\Module;
 
-use R3m\Io\Exception\FileMoveException;
 use stdClass;
 use Exception;
+
 use R3m\Io\Exception\ErrorException;
+use R3m\Io\Exception\DirectoryCreateException;
+use R3m\Io\Exception\FileMoveException;
 
 class Dir {
-    const CHMOD = 0740;
+    const CHMOD = 0750;
     const TYPE = 'Dir';
     const SEPARATOR = DIRECTORY_SEPARATOR;
     const FORMAT_FLAT = 'flat';
@@ -38,6 +40,9 @@ class Dir {
         return getcwd();
     }
 
+    /**
+     * @throws DirectoryCreateException
+     */
     public static function create($url='', $chmod=''): bool
     {
         if($url !== Dir::SEPARATOR){
@@ -49,17 +54,23 @@ class Dir {
         if(File::exist($url) && Dir::is($url)){
             return true;
         } else {
-            $mkdir = false;
-            if(!File::exist($url)){
-                if(empty($chmod)){
-                    $mkdir = @mkdir($url, Dir::CHMOD, true);
-                } else {
-                    $mkdir = @mkdir($url, $chmod, true);
+            try {
+                $mkdir = false;
+                if(!File::exist($url)){
+                    if(empty($chmod)){
+                        $mkdir = @mkdir($url, Dir::CHMOD, true);
+                    } else {
+                        $mkdir = @mkdir($url, $chmod, true);
+                    }
                 }
+                return $mkdir;
             }
-            return $mkdir;
+            catch (Exception $exception){
+                throw new DirectoryCreateException('Cannot create directory: ' . $url, 0, $exception);
+            }
         }
     }
+
     public static function exist($url=''): bool
     {
         if($url !== Dir::SEPARATOR){
@@ -263,6 +274,9 @@ class Dir {
     {
         if(Dir::is($dir) === false){
             return true;
+        }
+        if($dir === '/'){
+            return false;
         }
         $dir = escapeshellarg($dir);
         exec('rm -rf ' . $dir);

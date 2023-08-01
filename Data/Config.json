@@ -8,6 +8,8 @@
                 "parse",
                 "cache",
                 "cache:clear",
+                "data",
+                "init",
                 "install",
                 "license",
                 "linefeed",
@@ -16,6 +18,7 @@
                 "uuid",
                 "password",
                 "route",
+                "ramdisk",
                 "bin",
                 "configure",
                 "doctrine",
@@ -32,9 +35,14 @@
         "built": "2023-01-03 21:49:00"
     },
     "contentType": {
+        "btree":"text\/plain",
+        "lock":"text\/plain",
+        "connect":"text\/plain",
+        "response":"text\/plain",
         "txt": "text\/plain",
         "log": "text\/plain",
         "html": "text\/html",
+        "tpl": "text\/html",
         "css": "text\/css",
         "js": "application\/javascript",
         "map": "application\/json",
@@ -54,21 +62,21 @@
         "zip": "application\/zip",
         "rar": "application\/vnd.rar",
         "pdf": "application\/pdf",
-        "webp" : "image\/webp",
-        "mp4" : "video\/mp4",
-        "avi" : "video\/x-msvideo",
-        "wmv" : "video\/x-ms-wmv",
-        "mov" : "video\/quicktime",
-        "webm" : "video\/webm",
-        "csv" : "text\/csv",
-        "php" : "text\/html",
-        "xls" : "application\/vnd.ms-excel",
-        "doc" : "application\/msword",
-        "ppt" : "application\/vnd.ms-powerpoint",
-        "xlsx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "docx" : "application\/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "pptx" : "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "xml": "application/xml"
+        "webp": "image\/webp",
+        "mp4": "video\/mp4",
+        "avi": "video\/x-msvideo",
+        "wmv": "video\/x-ms-wmv",
+        "mov": "video\/quicktime",
+        "webm": "video\/webm",
+        "csv": "text\/csv",
+        "php": "text\/html",
+        "xls": "application\/vnd.ms-excel",
+        "doc": "application\/msword",
+        "ppt": "application\/vnd.ms-powerpoint",
+        "xlsx": "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "docx": "application\/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "pptx": "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "xml": "application\/xml"
     },
     "extension": {
         "txt": ".txt",
@@ -91,29 +99,34 @@
         "mp3": ".mp3",
         "ogg": ".ogg",
         "zip": ".zip",
+        "gz": ".gz",
         "rar": ".rar",
         "tpl": ".tpl",
         "conf": ".conf",
         "pdf": ".pdf",
         "php": ".php",
-        "webp" : ".webp",
-        "mp4" : ".mp4",
-        "avi" : ".avi",
-        "webm" : ".webm",
-        "xls" : ".xls",
-        "ppt" : ".ppt",
-        "doc" : ".doc",
-        "csv" : ".csv",
-        "xlsx" : ".xlsx",
-        "docx" : ".docx",
-        "pptx" : ".pptx",
-        "mov" :  ".mov",
-        "wmv" : ".wmv",
-        "xml": ".xml"
+        "webp": ".webp",
+        "mp4": ".mp4",
+        "avi": ".avi",
+        "webm": ".webm",
+        "xls": ".xls",
+        "ppt": ".ppt",
+        "doc": ".doc",
+        "csv": ".csv",
+        "xlsx": ".xlsx",
+        "docx": ".docx",
+        "pptx": ".pptx",
+        "mov": ".mov",
+        "wmv": ".wmv",
+        "xml": ".xml",
+        "lock": ".lock",
+        "btree": ".btree",
+        "connect": ".connect",
+        "response": ".response"
     },
-    "error" : {
-        "extension" : {
-            "tpl" : [
+    "error": {
+        "extension": {
+            "tpl": [
                 "htm",
                 "html",
                 "php",
@@ -122,25 +135,98 @@
                 "aspx",
                 "pdf"
             ],
-            "text" : [
+            "text": [
                 "env",
                 "txt",
                 "log",
                 "cgi"
             ],
-            "js" : [
+            "js": [
                 "js"
             ],
-            "json" : [
+            "json": [
                 "json"
             ]
         }
     },
+    "cache" : {
+        "autoload": {
+            "url": {
+                "name_length": 100,
+                "name_separator": "_",
+                "name_pop_or_shift": "shift",
+                "directory_length": 75,
+                "directory_separator": "/",
+                "directory_pop_or_shift": "pop"
+            }
+        },
+        "fileRequest": {
+            "url" : {
+                "name_length": 100,
+                "name_separator": "_",
+                "name_pop_or_shift": "shift",
+                "directory_length": 75,
+                "directory_separator": "_",
+                "directory_pop_or_shift": "pop"
+            }
+        },
+        "cache": {
+            "url": {
+                "name_length": 80,
+                "name_separator": "-",
+                "name_pop_or_shift": "shift"
+            }
+        },
+        "controller": {
+            "url": {
+                "name_length": 175,
+                "name_separator": "_",
+                "name_pop_or_shift": "shift"
+            },
+            "ttl": 600
+        },
+        "parse": {
+            "url": {
+                "name_length": 175,
+                "name_separator": "_",
+                "name_pop_or_shift": "shift"
+            },
+            "plugin": {
+                "url" : {
+                    "name_length": 100,
+                    "name_separator": "_",
+                    "name_pop_or_shift": "shift",
+                    "directory_length": 75,
+                    "directory_separator": "_",
+                    "directory_pop_or_shift": "pop"
+                },
+                "list" : [
+                    {
+                        "name": "require",
+                        "name_length": 175,
+                        "name_separator": "_",
+                        "name_pop_or_shift": "shift"
+                    }
+                ]
+            }
+        }
+    },
     "parse": {
-        "read" : {
-            "parser" : "{{R3M}}",
-            "object" : {
-                "use_this" : true
+        "read": {
+            "parser": "{{R3M}}",
+            "row_mismatch": 1,
+            "object": {
+                "use_this": true,
+                "this": {
+                    "parentNode": "#parentNode",
+                    "rootNode": "#rootNode",
+                    "attribute": "#attribute",
+                    "key": "#key",
+                    "url": "#url"
+                },
+                "#copy": {
+                    "#key": "name"
+                }
             }
         },
         "plugin": {
@@ -154,14 +240,17 @@
                 "trait"
             ]
         },
-        "use" : [
+        "use": [
             "stdClass",
             "R3m\\Io\\App",
             "R3m\\Io\\Config",
+            "R3m\\Io\\Module\\Autoload",
             "R3m\\Io\\Module\\Cli",
+            "R3m\\Io\\Module\\Controller",
             "R3m\\Io\\Module\\Core",
             "R3m\\Io\\Module\\Data",
             "R3m\\Io\\Module\\Dir",
+            "R3m\\Io\\Module\\Event",
             "R3m\\Io\\Module\\File",
             "R3m\\Io\\Module\\Filter",
             "R3m\\Io\\Module\\Handler",
@@ -172,7 +261,6 @@
             "R3m\\Io\\Module\\Route",
             "R3m\\Io\\Module\\Sort",
             "R3m\\Io\\Module\\Validate",
-            "R3m\\Io\\Module\\View",
             "R3m\\Io\\Module\\Template\\Main",
             "Exception",
             "R3m\\Io\\Exception\\AuthenticationException",
@@ -186,8 +274,16 @@
             "R3m\\Io\\Exception\\ObjectException",
             "R3m\\Io\\Exception\\PluginNotAllowedException",
             "R3m\\Io\\Exception\\PluginNotFoundException",
+            "R3m\\Io\\Exception\\RouteExistException",
             "R3m\\Io\\Exception\\UrlEmptyException",
             "R3m\\Io\\Exception\\UrlNotExistException"
         ]
+    },
+    "package": {
+        "r3m-io/node": {
+            "dir" : {
+                "validator": "{{config('project.dir.vendor')}}/r3m-io/node/src/Validator/"
+            }
+        }
     }
 }

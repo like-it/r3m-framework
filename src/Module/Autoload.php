@@ -11,6 +11,7 @@
 namespace R3m\Io\Module;
 
 
+use R3m\Io\Exception\LocateException;
 use stdClass;
 
 use R3m\Io\App;
@@ -36,6 +37,8 @@ class Autoload {
     protected $fileList;
     protected $cache_dir;
 
+    protected $object;
+
     public $prefixList = array();
     public $environment = 'production';
 
@@ -45,6 +48,7 @@ class Autoload {
      */
     public static function configure(App $object){
         $autoload = new Autoload();
+        $autoload->object($object);
         $prefix = $object->config('autoload.prefix');
         if(
             !empty($prefix) &&
@@ -52,43 +56,6 @@ class Autoload {
         ){
             foreach($prefix as $record){
                 $parameters = Core::object($record, 'array');
-                $uuid = Core::uuid();
-                foreach($parameters as $nr => $parameter){
-                    $parameter = str_replace(
-                        [
-                            '{',
-                            '}',
-                        ],
-                        [
-                            '[$ldelim-' . $uuid . ']',
-                            '[$rdelim-' . $uuid . ']',
-                        ],
-                        $parameter
-                    );
-                    $parameter = str_replace(
-                        [
-                            '[$ldelim-' . $uuid . ']',
-                            '[$rdelim-' . $uuid . ']',
-                        ],
-                        [
-                            '{$ldelim}',
-                            '{$rdelim}',
-                        ],
-                        $parameter
-                    );
-                    $parameter = str_replace(
-                        [
-                            '{$ldelim}{$ldelim}',
-                            '{$rdelim}{$rdelim}',
-                        ],
-                        [
-                            '{',
-                            '}',
-                        ],
-                        $parameter
-                    );
-                    $parameters[$nr] = $parameter;
-                }
                 $parameters = Config::parameters($object, $parameters);
                 if(
                     array_key_exists('prefix', $parameters) &&
@@ -108,55 +75,59 @@ class Autoload {
             $autoload->addPrefix('Host',  $object->config(Config::DATA_PROJECT_DIR_HOST));
             $autoload->addPrefix('Source',  $object->config(Config::DATA_PROJECT_DIR_SOURCE));
         }
-        $cache_dir = $object->config('autoload.cache.dir');
+        if(
+            empty($object->config('ramdisk.is.disabled')) &&
+            $object->config('ramdisk.url')
+        ){
+            $cache_dir = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                Autoload::NAME .
+                $object->config('ds')
+            ;
+            if($cache_dir){
+                $class_dir = $object->config('ramdisk.url') .
+                    $object->config(Config::POSIX_ID) .
+                    $object->config('ds') .
+                    'Class' .
+                    $object->config('ds')
+                ;
+                $object->config('autoload.cache.class', $class_dir);
+                $compile_dir = $object->config('ramdisk.url') .
+                    $object->config(Config::POSIX_ID) .
+                    $object->config('ds') .
+                    'Compile' .
+                    $object->config('ds')
+                ;
+                $object->config('autoload.cache.compile', $compile_dir);
+                if(!is_dir($object->config('ramdisk.url'))){
+                    mkdir($object->config('ramdisk.url'), 0750, true);
+                    if(empty($object->config(Config::POSIX_ID))){
+                        exec('chown www-data:www-data ' . $object->config('ramdisk.url'));
+                    }
+                }
+                if(!is_dir($class_dir)){
+                    mkdir($class_dir,0750, true);
+                }
+            }
+        }
+        if(empty($cache_dir)){
+            $cache_dir = $object->config('autoload.cache.directory');
+            if($cache_dir){
+                $parameters = [];
+                $parameters['cache'] = $cache_dir;
+                $parameters = Config::parameters($object, $parameters);
+                $cache_dir = $parameters['cache'];
+            }
+        }
         if(empty($cache_dir)){
             $cache_dir =
-                $object->config(Config::DATA_FRAMEWORK_DIR_CACHE) .
+                $object->config(Config::DATA_FRAMEWORK_DIR_TEMP) .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
                 Autoload::NAME .
                 $object->config(Config::DS)
             ;
-        } else {
-            $parameters = [];
-            $parameters['cache'] = $cache_dir;
-            $uuid = Core::uuid();
-            foreach($parameters as $nr => $parameter){
-                $parameter = str_replace(
-                    [
-                        '{',
-                        '}',
-                    ],
-                    [
-                        '[$ldelim-' . $uuid . ']',
-                        '[$rdelim-' . $uuid . ']',
-                    ],
-                    $parameter
-                );
-                $parameter = str_replace(
-                    [
-                        '[$ldelim-' . $uuid . ']',
-                        '[$rdelim-' . $uuid . ']',
-                    ],
-                    [
-                        '{$ldelim}',
-                        '{$rdelim}',
-                    ],
-                    $parameter
-                );
-                $parameter = str_replace(
-                    [
-                        '{$ldelim}{$ldelim}',
-                        '{$rdelim}{$rdelim}',
-                    ],
-                    [
-                        '{',
-                        '}',
-                    ],
-                    $parameter
-                );
-                $parameters[$nr] = $parameter;
-            }
-            $parameters = Config::parameters($object, $parameters);
-            $cache_dir = $parameters['cache'];
         }
         $autoload->cache_dir($cache_dir);
         $autoload->register();
@@ -190,6 +161,21 @@ class Autoload {
                 spl_autoload_register($function, false, true); //prepend (prioritize)
             }
         }
+    }
+
+    public function object(App $object=null){
+        if($object !== null){
+            $this->setObject($object);
+        }
+        return $this->getObject();
+    }
+
+    private function setObject(App $object){
+        $this->object = $object;
+    }
+
+    private function getObject(){
+        return $this->object;
     }
 
     private function setEnvironment($environment='production'){
@@ -328,73 +314,136 @@ class Autoload {
         return false;
     }
 
-    public function fileList($item=array(), $url=''){
+    /**
+     * @throws Exception
+     */
+    public static function name_reducer(App $object, $name='', $length=100, $separator='_', $pop_or_shift='pop'){
+        $name_length = strlen($name);
+        if($name_length >= $length){
+            $explode = explode($separator, $name);
+            $explode = array_unique($explode);
+            $tmp = implode('_', $explode);
+            if(strlen($tmp) < $length){
+                $name = $tmp;
+            } else {
+                while(strlen($tmp) >= $length){
+                    $count = count($explode);
+                    if($count === 1){
+                        break;
+                    }
+                    switch($pop_or_shift){
+                        case 'pop':
+                            array_pop($explode);
+                        break;
+                        case 'shift':
+                            array_shift($explode);
+                        break;
+                        default:
+                            throw new Exception('cannot reduce name with: ' . $pop_or_shift);
+                    }
+                    $tmp = implode('_', $explode);
+                }
+                $name = $tmp;
+            }
+        }
+        return str_replace($separator, '_', $name);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function fileList($item=array(), $url=''): array
+    {
         if(empty($item)){
-            return array();
+            return [];
         }
         if(empty($this->read)){
             $this->read = $this->read($url);
         }
-        $data = array();
+        $data = [];
         $caller = get_called_class();
+        $object = $this->object();
         if(
-            isset($this->read->autoload) &&
-            isset($this->read->autoload->{$caller}) &&
-            isset($this->read->autoload->{$caller}->{$item['load']})
-            ){
-                $data[] = $this->read->autoload->{$caller}->{$item['load']};
+            $object &&
+            empty($object->config('ramdisk.is.disabled')) &&
+            $object->config('autoload.cache.class') &&
+            $object->config('cache.autoload.url.name_length') &&
+            $object->config('cache.autoload.url.name_separator') &&
+            $object->config('cache.autoload.url.name_pop_or_shift') &&
+            $object->config('cache.autoload.url.directory_length') &&
+            $object->config('cache.autoload.url.directory_separator') &&
+            $object->config('cache.autoload.url.directory_pop_or_shift')
+        ){
+            $load = $item['directory'] . $item['file'];
+            $load_directory = dirname($load);
+            $load = basename($load) . '.' . Autoload::EXT_PHP;
+            $load_compile = Autoload::name_reducer(
+                $object,
+                $load,
+                $object->config('cache.parse.url.name_length'),
+                $object->config('cache.parse.url.name_separator'),
+                $object->config('cache.parse.url.name_pop_or_shift')
+            );
+            $data[] = $object->config('autoload.cache.compile') . $load_compile;
+            $load = Autoload::name_reducer(
+                $object,
+                $load,
+                $object->config('cache.autoload.url.name_length'),
+                $object->config('cache.autoload.url.name_separator'),
+                $object->config('cache.autoload.url.name_pop_or_shift')
+            );
+            $load_directory = Autoload::name_reducer(
+                $object,
+                $load_directory,
+                $object->config('cache.autoload.url.directory_length'),
+                $object->config('cache.autoload.url.directory_separator'),
+                $object->config('cache.autoload.url.directory_pop_or_shift')
+            );
+            $load_url = $object->config('autoload.cache.class') . $load_directory . '_' . $load;
+            $data[] = $load_url;
+            $object->config('autoload.cache.file.name', $load_url);
+        }
+        if(
+            property_exists($this->read, 'autoload') &&
+            property_exists($this->read->autoload, $caller) &&
+            property_exists($this->read->autoload->{$caller}, $item['load'])
+        ){
+            $data[] = $this->read->autoload->{$caller}->{$item['load']};
+        }
+        $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['file'] . '.' . Autoload::EXT_PHP;
+        $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_PHP;
+        $data[] = $item['directory'] . $item['file'] . '.' . Autoload::EXT_PHP;
+        $data[] = $item['directory'] . $item['baseName'] . '.' . Autoload::EXT_PHP;
+        $this->fileList[$item['baseName']][] = $data;
+        $result = array();
+        foreach($data as $nr => $file){
+            if($file === '[---]'){
+                $file = $file . $nr;
             }
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . 'Class' . DIRECTORY_SEPARATOR . $item['file'] . '.' . Autoload::EXT_CLASS_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . 'Class' . DIRECTORY_SEPARATOR . $item['file'] . '.' . Autoload::EXT_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . 'Trait' . DIRECTORY_SEPARATOR . $item['file'] . '.' . Autoload::EXT_TRAIT_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . 'Trait' . DIRECTORY_SEPARATOR . $item['file'] . '.' . Autoload::EXT_PHP;
-            $data[] = '[---]';
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . 'Class' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_CLASS_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . 'Class' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . 'Trait' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_TRAIT_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . 'Trait' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_PHP;
-            $data[] = '[---]';
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['file'] . '.' . Autoload::EXT_CLASS_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['file'] . '.' . Autoload::EXT_TRAIT_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['file'] . '.' . Autoload::EXT_PHP;
-            $data[] = '[---]';
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_CLASS_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_TRAIT_PHP;
-            $data[] = $item['directory'] . $item['file'] . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_PHP;
-            $data[] = '[---]';
-            if(empty($item['dirName'])){
-                $data[] = $item['directory'] . 'Class' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_CLASS_PHP;
-                $data[] = $item['directory'] . 'Trait' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_TRAIT_PHP;
-                $data[] = $item['directory'] . 'Class' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_PHP;
-                $data[] = $item['directory'] . 'Trait' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_PHP;
-                $data[] =  '[---]';
-            } else {
-                $data[] = $item['directory'] . $item['dirName'] . DIRECTORY_SEPARATOR . 'Class' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_CLASS_PHP;
-                $data[] = $item['directory'] . $item['dirName'] . DIRECTORY_SEPARATOR . 'Trait' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_TRAIT_PHP;
-                $data[] = $item['directory'] . $item['dirName'] . DIRECTORY_SEPARATOR . 'Class' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_PHP;
-                $data[] = $item['directory'] . $item['dirName'] . DIRECTORY_SEPARATOR . 'Trait' . DIRECTORY_SEPARATOR . $item['baseName'] . '.' . Autoload::EXT_PHP;
-                $data[] =  '[---]';
-            }
-            $data[] = $item['directory'] . $item['file'] . '.' . Autoload::EXT_CLASS_PHP;
-            $data[] = $item['directory'] . $item['file'] . '.' . Autoload::EXT_TRAIT_PHP;
-            $data[] = $item['directory'] . $item['file'] . '.' . Autoload::EXT_PHP;
-            $data[] = '[---]';
-            $data[] = $item['directory'] . $item['baseName'] . '.' . Autoload::EXT_CLASS_PHP;
-            $data[] = $item['directory'] . $item['baseName'] . '.' . Autoload::EXT_TRAIT_PHP;
-            $data[] = $item['directory'] . $item['baseName'] . '.' . Autoload::EXT_PHP;
-            $data[] = '[---]';
-            $this->fileList[$item['baseName']][] = $data;
-            $result = array();
-            foreach($data as $nr => $file){
-                if($file === '[---]'){
-                    $file = $file . $nr;
-                }
-                $result[$file] = $file;
-            }
+            $result[$file] = $file;
+        }
+        /*
+        $data = json_encode($result, JSON_PRETTY_PRINT) . PHP_EOL;
+        $url = '/Application/Log/Autoload.log';
+        $resource = @fopen($url, 'a');
+        if($resource === false){
             return $result;
+        }
+        flock($resource, LOCK_EX);
+        for ($written = 0; $written < strlen($data); $written += $fwrite) {
+            $fwrite = fwrite($resource, substr($data, $written));
+            if ($fwrite === false) {
+                break;
+            }
+        }
+        flock($resource, LOCK_UN);
+        fclose($resource);
+        */
+        return $result;
     }
 
     /**
+     * @throws LocateException
      * @throws Exception
      */
     public function locate($load=null, $is_data=false){
@@ -403,8 +452,9 @@ class Autoload {
         $load = ltrim($load, '\\');
         $prefixList = $this->getPrefixList();
         $fileList = [];
+        $object = $this->object();
         if(!empty($prefixList)){
-            foreach($prefixList as $item){
+            foreach($prefixList as $nr => $item){
                 if(empty($item['prefix'])){
                     continue;
                 }
@@ -446,13 +496,78 @@ class Autoload {
                     if($item['dirName'] == '.'){
                         unset($item['dirName']);
                     }
-                    $fileList = $this->fileList($item, $url);
-                    if(is_array($fileList) && empty($this->expose())){
-                        foreach($fileList as $file){
+                    $fileList[$nr] = $this->fileList($item, $url);
+                    if(is_array($fileList[$nr]) && empty($this->expose())){
+                        foreach($fileList[$nr] as $file){
                             if(substr($file, 0, 5) == '[---]'){
                                 continue;
                             }
                             if(file_exists($file)){
+                                if(
+                                    empty($object->config('ramdisk.is.disabled')) &&
+                                    $object->config('autoload.cache.file.name')
+                                ){
+                                    $config_dir = $object->config('ramdisk.url') .
+                                        $object->config(Config::POSIX_ID) .
+                                        $object->config('ds') .
+                                        Autoload::NAME .
+                                        $object->config('ds')
+                                    ;
+                                    $config_url = $config_dir .
+                                        'File.Mtime' .
+                                        $object->config('extension.json')
+                                    ;
+                                    $mtime = $object->get(sha1($config_url));
+                                    if(empty($mtime)){
+                                        $mtime = [];
+                                        if(file_exists($config_url)){
+                                            $mtime = file_get_contents($config_url);
+                                            if($mtime){
+                                                $mtime = json_decode($mtime, true);
+                                            }
+                                        }
+                                    }
+                                    if(
+                                        $mtime &&
+                                        $file === $object->config('autoload.cache.file.name') &&
+                                        array_key_exists(sha1($file), $mtime) &&
+                                        file_exists($mtime[sha1($file)]) &&
+                                        filemtime($file) === filemtime($mtime[sha1($file)])
+                                    ){
+                                        //from ramdisk
+                                        $this->cache($file, $load);
+                                        return $file;
+                                    } else {
+                                        if(Autoload::ramdisk_exclude_load($object, $load)){
+                                            //controllers cannot be cached
+                                        } else {
+                                            //from disk
+                                            //copy to ramdisk
+                                            $dirname = dirname($object->config('autoload.cache.file.name'));
+                                            if(!is_dir($dirname)){
+                                                mkdir($dirname, 0750, true);
+                                            }
+                                            $read = file_get_contents($file);
+                                            if(Autoload::ramdisk_exclude_content($object, $read, $file)){
+                                                //save tp file
+                                                //files with content __DIR__, __FILE__ cannot be cached
+                                            } else {
+                                                file_put_contents($object->config('autoload.cache.file.name'), $read);
+                                                touch($object->config('autoload.cache.file.name'), filemtime($file));
+
+                                                //save file reference for filemtime comparison
+                                                $mtime[sha1($object->config('autoload.cache.file.name'))] = $file;
+                                                if(!is_dir($config_dir)){
+                                                    mkdir($config_dir, 0750, true);
+                                                }
+                                                file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
+                                                $object->set(sha1($config_url), $mtime);
+                                                exec('chmod 640 ' . $object->config('autoload.cache.file.name'));
+                                                exec('chmod 640 ' . $config_url);
+                                            }
+                                        }
+                                    }
+                                }
                                 $this->cache($file, $load);
                                 return $file;
                             }
@@ -463,16 +578,17 @@ class Autoload {
         }
         if($is_data === true){
             if($this->environment() == 'development'){
-                d($fileList);
+                throw new LocateException('Could not find data file (' . $load . ')', Autoload::exception_filelist($fileList));
+            } else {
+                throw new LocateException('Could not find data file (' . $load . ')');
             }
-            throw new Exception('Could not find data file');
+
         }
-        //$this->environment('development'); //needed, should be gone @ home
         if($this->environment() == 'development' || !empty($this->expose())){
             if(empty($this->expose())){
                 Logger::debug('Autoload prefixList: ', [ $prefixList ]);
                 Logger::debug('Autoload error: ', [ $fileList ]);
-                throw new Exception('Autoload error, cannot load (' . $load .') class.');
+                throw new LocateException('Autoload error, cannot load (' . $load .') class.', Autoload::exception_filelist($fileList));
             }
             $object = new stdClass();
             $object->load = $load;
@@ -515,8 +631,13 @@ class Autoload {
     public function __destruct(){
         if(!empty($this->read)){
             $dir = $this->cache_dir();
-            $url = $dir . Autoload::FILE;
-            $this->write($url, $this->read);
+            if($dir){
+                $url = $dir . Autoload::FILE;
+                $this->write($url, $this->read);
+                if(file_exists($url)) {
+                    exec('chmod 640 ' . $url);
+                }
+            }
         }
     }
 
@@ -555,11 +676,10 @@ class Autoload {
         $dir = dirname($url);
         if(is_dir($dir) === false){
             try {
-                @mkdir($dir, 0777, true);
+                @mkdir($dir, 0750, true);
             } catch(Exception $exception){
                 return false;
             }
-
         }
         if(is_dir($dir) === false){
             return false;
@@ -609,10 +729,112 @@ class Autoload {
         return $filename;
     }
 
-    public function expose($expose=null){
+    public function expose($expose=null)
+    {
         if(!empty($expose) || $expose === false){
             $this->expose = (bool) $expose;
         }
         return $this->expose;
+    }
+
+    private static function exception_filelist($filelist=[]): array
+    {
+        $result = [];
+        foreach($filelist as  $list){
+            foreach($list as $record){
+                if(substr($record, 0, 5) === '[---]'){
+                    $result[] = '[---]';
+                } else {
+                    $result[] = $record;
+                }
+            }
+        }
+        return $result;
+    }
+
+    public static function ramdisk_exclude_load(App $object, $load=''): bool
+    {
+        $is_exclude = false;
+        $exclude_load = $object->config('ramdisk.autoload.exclude.load');
+        if(
+            !empty($exclude_load) &&
+            is_array($exclude_load)
+        ){
+            foreach($exclude_load as $needle){
+                if(stristr($load, $needle) !== false){
+                    $is_exclude = true;
+                    break;
+                }
+            }
+        }
+        return $is_exclude;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function ramdisk_exclude_content(App $object, $content='', $file=''): bool
+    {
+        $exclude_content = $object->config('ramdisk.autoload.exclude.content');
+        $is_exclude = false;
+        $exclude = [];
+        $exclude_dir = false;
+        $exclude_url = false;
+        if($object->config('ramdisk.url')){
+            $exclude_dir = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                Autoload::NAME .
+                $object->config('ds')
+            ;
+            $exclude_url = $exclude_dir .
+                'Exclude' .
+                $object->config('extension.json')
+            ;
+            if(file_exists($exclude_url)){
+                $read = file_get_contents($exclude_url);
+                if($read){
+                    $exclude = json_decode($read, true);
+                    if(
+                        array_key_exists(sha1($file), $exclude) &&
+                        file_exists($file) &&
+                        filemtime($file) === $exclude[sha1($file)]
+                    ){
+                        return true;
+                    }
+                }
+            }
+        }
+        if(
+            !empty($exclude_content) &&
+            is_array($exclude_content)
+        ){
+            foreach ($exclude_content as $needle){
+                if(stristr($content, $needle) !== false){
+                    $is_exclude = true;
+                    break;
+                }
+            }
+        }
+        if(
+            $is_exclude &&
+            $exclude_dir &&
+            $exclude_url &&
+            file_exists($file)
+        ){
+            $exclude[sha1($file)] = filemtime($file);
+            $write = json_encode($exclude, JSON_PRETTY_PRINT);
+            if(!file_exists($exclude_dir)){
+                mkdir($exclude_dir, 0750, true);
+            }
+            file_put_contents($exclude_url, $write);
+            exec('chmod 640 ' . $exclude_url);
+        }
+        return $is_exclude;
+    }
+
+    public static function ramdisk_configure(App $object){
+        $function ='ramdisk_load';
+        spl_autoload_register(array($object, $function), true, true);
     }
 }

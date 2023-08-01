@@ -13,5 +13,5 @@ use R3m\Io\Module\Data;
 
 function function_options(Parse $parse, Data $data){
     $object = $parse->object();
-    return $object->options();
+    return $object->options($object);
 }

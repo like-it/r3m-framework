@@ -10,23 +10,22 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Cli;
 
+use R3m\Io\Exception\ObjectException;
+
+/**
+ * @throws ObjectException
+ */
 function function_terminal_readline(Parse $parse, Data $data, $text='', $type=null){
-    if($type == 'hidden'){
-        echo $text;
-        ob_flush();
-        system('stty -echo');
-        $input = trim(fgets(STDIN));
-        system('stty echo');
-        echo PHP_EOL;
-        return $input;
-    } else {
-        echo $text;
-        if(ob_get_length() > 0){
-            ob_flush();
-        }
-        $input = trim(fgets(STDIN));
-        return $input;
+    if(
+        $text === Cli::STREAM &&
+        $type === null
+    ){
+        return Cli::read($text);
     }
-
+    if($type === null){
+        $type = Cli::INPUT;
+    }
+    return Cli::read($type, $text);
 }

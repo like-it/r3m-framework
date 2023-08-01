@@ -48,16 +48,20 @@ class Variable {
     /**
      * @throws Exception
      */
-    private static function getArrayAttribute($variable=[], $build, Data $storage, &$extra=''){
+    private static function getArrayAttribute($build, Data $storage, $variable=[]){
         $execute = [];
         if(array_key_exists('array', $variable['variable'])){
             foreach($variable['variable']['array'] as $nr => $list){
-                foreach ($list as $record){
-                    if(
-                        array_key_exists('execute', $record) &&
-                        $record['execute'] === null
-                    ){
-                        $extra = [];
+                if(
+                    is_null($list) &&
+                    array_key_exists('attribute', $variable['variable'])
+                ) {
+                    $execute[] = '[]';
+                } else {
+                    $list = $build->require('modifier', $list);
+                    $list = $build->require('function', $list);
+                    $value = Variable::getValue($build, $storage, $list);
+                    if($value === 'null'){
                         if(!empty($execute)){
                             $add_quote = false;
                             $quote_add = false;
@@ -65,7 +69,7 @@ class Variable {
                             foreach($execute as $part_nr => $part_record){
                                 if(substr($part_record, 0, 1) === '$'){
                                     if($part_nr === 0){
-                                        $attribute .= '\' . ' . $part_record . ' . ';
+                                        $attribute .= '\' . \'.\' . ' . $part_record . ' . ';
                                     } else {
                                         if($add_quote === true){
                                             $attribute .= '.\' . ' . $part_record . ' . ';
@@ -93,48 +97,20 @@ class Variable {
                             } else {
                                 $attribute .= '\'';
                             }
-                            $extra[] = '$index = $this->storage()->index(' . $attribute  . ');';
+                            $exec = '$this->storage()->index(' . $attribute  . ')';
                         } else {
-                            $extra[] = '$index = $this->storage()->index(\'' . $variable['variable']['attribute']  . '\');';
+                            $exec = '$this->storage()->index(\'' . $variable['variable']['attribute']  . '\')';
                         }
-                        /*
-                        $extra[] = 'if(is_array($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'))){';
-                        $extra[] = $build->indent() . '$count = count($this->storage()->get(\'' . $variable['variable']['attribute']  . '\'));';
-                        $extra[] = $build->indent() . '} else {';
-                        $extra[] = $build->indent() . '$count = 0;';
-                        $extra[] = $build->indent() . '}';
-                        */
-                        $extra = implode(PHP_EOL, $extra);
-//                        $result = '\'' . $variable['variable']['attribute'] . '.\' . $index';
-                        $execute[] = '$index';
-                    }
-                    elseif(array_key_exists('execute', $record)){
-                        $execute[] = $record['execute'];
-                    }
-                    else {
+                        $execute[] = $exec;
+                    } else {
                         if(
-                            array_key_exists('type', $record) &&
-                            $record['type'] === Token::TYPE_VARIABLE &&
-                            array_key_exists('variable', $record) &&
-                            array_key_exists('attribute', $record['variable'])
+                            substr($value, 0, 1) === '\'' &&
+                            substr($value, -1, 1) === '\''
                         ){
-                            $tree = [];
-                            $tree[]= $record;
-                            $tree = $build->require('modifier', $tree);
-                            $tree = $build->require('function', $tree);
-                            $execute[] = Value::get($build, $storage, reset($tree));
+                            $value = substr($value, 1, -1);
                         }
-                        elseif(
-                            array_key_exists('type', $record) &&
-                            $record['type'] === Token::TYPE_METHOD &&
-                            array_key_exists('method', $record)
-                        ){
-                            $tree = [];
-                            $tree[]= $record;
-                            $tree = $build->require('modifier', $tree);
-                            $tree = $build->require('function', $tree);
-                            $execute[] = Value::get($build, $storage, reset($tree));
-                        }
+                        //add compile on "
+                        $execute[] = $value;
                     }
                 }
             }
@@ -143,15 +119,18 @@ class Variable {
         $quote_add = false;
         $add_quote = false;
         foreach($execute as $nr => $record){
-            if(substr($record, 0, 1) === '$'){
+            if(substr($record, 0, 2) === '[]'){
+                $result .= substr($record, 0, 2);
+            }
+            elseif(substr($record, 0, 1) === '$'){
                 if($nr === 0){
-                    $result .= '\' . ' . $record . ' . ';
+                    $result .= '\' . \'.\' . ' . $record . ' . ';
                 } else {
                     if($add_quote === true){
                         $result .= '.\' . ' . $record . ' . ';
                         $add_quote = false;
                     } else {
-                        $result .= ' \'.\' . ' . $record . ' . ';
+                        $result .= '\'.\' . ' . $record . ' . ';
                     }
                 }
                 $quote_add = true;
@@ -192,15 +171,8 @@ class Variable {
             $variable['variable']['operator'] === '=' &&
             array_key_exists('array', $variable['variable'])
         ){
-            $attribute = Variable::getArrayAttribute($variable, $build, $storage, $extra);
-            if($extra){
-                $assign = $extra;
-                $assign .= PHP_EOL;
-                $assign .= $build->indent();
-                $assign .= '$this->storage()->set(';
-            } else {
-                $assign = '$this->storage()->set(';
-            }
+            $attribute = Variable::getArrayAttribute($build, $storage, $variable);
+            $assign = '$this->storage()->set(';
             $assign .= $attribute . ', ';
             $value = Variable::getValue($build, $storage, $token, $is_result);
             $assign .= $value . ')';
@@ -211,6 +183,11 @@ class Variable {
                     $assign = '$this->storage()->set(\'';
                     $assign .= $variable['variable']['attribute'] . '\', ';
                     $value = Variable::getValue($build, $storage, $token, $is_result);
+                    if(stristr($value, '( . ') !== false){
+                        $value = str_replace('( . ', '( ', $value);
+                        $value = str_replace(' . )', ' )', $value);
+                        d($value);
+                    }
                     $assign .= $value . ')';
                     return $assign;
                 case '+=' :
@@ -302,75 +279,36 @@ class Variable {
             $variable['variable']['is_array'] === true
         ){
             $variable['variable']['attribute'] .= '.\'';
-            foreach($variable['variable']['array'] as $nr => $array){
-                $variable['variable']['attribute'] .= ' . ';
-                foreach($array as $array_nr => $record){
-                    switch($record['type']){
-                        case Token::TYPE_METHOD :
-                            $tree = [];
-                            $tree[]= $record;
-                            $tree = $build->require('modifier', $tree);
-                            $tree = $build->require('function', $tree);
-                            $array[$array_nr] = Value::get($build, $storage, reset($tree));
-                            break;
-                        case Token::TYPE_VARIABLE:
-                            $temp = [];
-                            $temp[] = $record;
-                            $array[$array_nr] = Variable::define($build, $storage, $temp);
-                            break;
-                        default :
-                            $array[$array_nr] = Value::get($build, $storage, $record);
-                    }
+            foreach($variable['variable']['array'] as $nr => $list) {
+                $is_variable = false;
+                $list = $build->require('modifier', $list);
+                $list = $build->require('function', $list);
+                $value = Variable::getValue($build, $storage, $list);
+                if(
+                    is_string($value) &&
+                    substr($value, 0,1) === '\'' &&
+                    substr($value, -1,1) === '\''
+                ){
+                    $variable['variable']['attribute'] .= ' . ' . substr($value, 0, -1) . '.\'';
                 }
-                $extra = '';
-                foreach($array as $array_nr => $record){
-                    if($array_nr === 0) {
-                        if(substr($record, 0, 1) === '$'){
-                            $variable['variable']['attribute'] .= $record;
-                        }
-                        elseif(
-                            in_array(
-                                $record,
-                                Token::TYPE_AS_OPERATOR
-                            )
-                        ){
-                            $variable['variable']['attribute'] .= $record;
-                        }
-                        elseif(is_numeric($record)) {
-                            $variable['variable']['attribute'] .= $record;
-                        } else {
-                            $variable['variable']['attribute'] .= '\'' . $record . '\'';
-                        }
+                elseif(is_string($value)){
+                    if(substr($value, 0, 1) === '$'){
+                        $variable['variable']['attribute'] .= ' . ' . $value . ' . \'.\'';
+                        $is_variable = true;
                     } else {
-                        if(substr($record, 0, 1) === '$'){
-                            $extra .= $record;
-                        }
-                        elseif(
-                            in_array(
-                                $record,
-                                Token::TYPE_AS_OPERATOR
-                            )
-                        ){
-                            $extra .= $record . ' ';
-                        }
-                        elseif(is_numeric($record)) {
-                            $extra .= $record;
-                        } else {
-                            $extra .= '\'' . $record . '\'';
-                        }
+                        $variable['variable']['attribute'] .= ' . ' . '\'' . $value . '.\'';
                     }
 
+                } else {
+                    ddd($value);
                 }
-                $variable['variable']['attribute'] .= ' . \'.\'';
             }
-            $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
-            if($extra){
-//                $extra = '$attribute = ' . $extra . ';';
-//                $define = '$this->storage()->data($attribute)'; //no more extra, too complicated to realise
-                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
+            if($is_variable){
+                $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -6);
             } else {
-                $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
+                $variable['variable']['attribute'] = substr($variable['variable']['attribute'], 0, -2) . '\'';
             }
+            $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . ')';
         } else {
             $define = '$this->storage()->data(\'' . $variable['variable']['attribute'] . '\')';
         }
@@ -417,13 +355,12 @@ class Variable {
     /**
      * @throws Exception
      */
-    public static function getValue($build, Data $storage, $token=[], $is_result=false): string
+    public static function getValue($build, Data $storage, $token=[], $is_result=false)
     {
         $set_max = 1024;
         $set_counter = 0;
         $operator_max = 1024;
         $operator_counter = 0;
-        $set = null;
         while(Set::has($token)){
             $set = Set::get($token);
             while(Operator::has($set)){
@@ -450,16 +387,10 @@ class Variable {
             if($set_counter > $set_max){
                 break;
             }
-
         }
         $operator = $token;
         while(Operator::has($operator)){            
             $statement = Operator::get($operator);
-            if($statement === false){
-                $debug = debug_backtrace(true);
-                ddd($debug);
-                ddd($operator);
-            }
             $operator = Operator::remove($operator, $statement);
             $statement = Operator::create($build, $storage, $statement);
             if(empty($statement)){
@@ -481,7 +412,6 @@ class Variable {
         $in_array = false;
         $is_collect = false;
         $type = null;
-        $count = 0;
         $selection = [];
         while(count($operator) >= 1){
             $record = array_shift($operator);
@@ -493,38 +423,46 @@ class Variable {
             }
             if(
                 $is_collect === true &&
-                $record['type'] != Token::TYPE_CURLY_CLOSE
+                $record['type'] !== Token::TYPE_CURLY_CLOSE
             ){
                 if($type === null){
                     $type = Build::getType($build->object(), $record);
                 }
                 $selection[] = $record;
             }
-            if($record['type'] == Token::TYPE_CURLY_OPEN){
+            if($record['type'] === Token::TYPE_CURLY_OPEN){
                 $selection = [];
                 $is_collect = true;
                 continue;
             }
-            elseif($record['type'] == Token::TYPE_CURLY_CLOSE){
+            elseif($record['type'] === Token::TYPE_CURLY_CLOSE){
                 $result .= Code::result($build, $storage, $type, $selection);
                 $result .= ' . ';
                 $is_collect = false;
                 $type = null;
                 $selection = [];
             }
-            elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_OPEN){
+            elseif($record['type'] === Token::TYPE_BRACKET_SQUARE_OPEN){
                 $in_array = true;
                 if(substr($result, -3, 3) === ' . '){
                     $result = substr($result, 0, -3);
                 }
                 $result .= '[';
             }
-            elseif($record['type'] == Token::TYPE_BRACKET_SQUARE_CLOSE){
-                $in_array = false;
+            elseif(
+                $record['type'] === Token::TYPE_BRACKET_SQUARE_CLOSE &&
+                $in_array === true
+            ){
                 $result .= ']';
+                if(
+                    array_key_exists('array_depth', $record) &&
+                    $record['array_depth'] === 0
+                ){
+                    $in_array = false;
+                }
             }
             elseif($is_collect === false){                                
-                $record = Method::get($build, $storage, $record);            
+                $record = Method::get($build, $storage, $record);
                 $result .= Value::get($build, $storage, $record);
                 if(
                     !in_array(
@@ -532,7 +470,8 @@ class Variable {
                         [
                             Token::TYPE_EXCLAMATION,
                             Token::TYPE_CAST
-                        ]
+                        ],
+                        true
                     )
                 ){
                     if(
@@ -544,12 +483,23 @@ class Variable {
                                 $record['type'],
                                 [
                                     Token::TYPE_CODE
-                                ]
+                                ],
+                                true
                             ) &&
                             substr($record['value'], -1, 1) == '!'
                         ){
-
+                            //nothing
+                        }
+                        elseif($in_array === true){
+                            //nothing
+                        }
+                        elseif($record['type'] === Token::TYPE_PARENTHESE_OPEN) {
+                            $result .= ' ';
+                        }
+                        elseif($record['type'] === Token::TYPE_PARENTHESE_CLOSE) {
+                            $result = substr($result, 0, -3) . ')';
                         } else {
+                            //maybe need next...
                             $result .= ' . ';
                         }
                     }
@@ -560,7 +510,7 @@ class Variable {
                 }
             }
         }
-        if(substr($result, -3) == ' . '){
+        if(substr($result, -3) === ' . '){
             $result = substr($result,0, -3);
         }
         return $result;

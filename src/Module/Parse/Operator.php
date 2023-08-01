@@ -194,8 +194,23 @@ class Operator {
                 unset($token[$nr]);
             }
         } else {
-            $debug = debug_backtrace(true);
-            ddd($debug);
+            $is_variable = false;
+            $is_object_operator = false;
+            foreach($token as $nr => $record){
+                if($record['type'] === Token::TYPE_VARIABLE){
+                    $is_variable = $record;
+                }
+                if($record['type'] === Token::TYPE_IS_OBJECT_OPERATOR){
+                    $is_object_operator = $record;
+                }
+            }
+            if(
+                $is_variable !== false &&
+                $is_object_operator !== false
+            ){
+                throw new exception('Possible "." exprected at "->" line: '.$is_object_operator['row'].' column: '.$is_object_operator['column']);
+            }
+            d($token);
             d($statement);
             throw new exception('Statement must be an array in Operator::remove');
         }
@@ -231,7 +246,8 @@ class Operator {
                 [
                     '++',
                     '--'
-                ]
+                ],
+                true
             ) && 
             $operator !== null
         ){            
@@ -253,7 +269,8 @@ class Operator {
                     [
                         '++',
                         '--'
-                    ]
+                    ],
+                    true
                 )
             ){
                 switch($operator['value']){

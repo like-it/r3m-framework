@@ -12,7 +12,11 @@ namespace R3m\Io\Module;
 
 use R3m\Io\App;
 use R3m\Io\Config;
+
+use R3m\Io\Module\Parse\Token;
+
 use Exception;
+
 use R3m\Io\Exception\LocateException;
 
 class FileRequest {
@@ -171,7 +175,14 @@ class FileRequest {
         } else {
             $config_mtime = false;
             $config_url = $object->config('project.dir.data') . 'Config' . $object->config('extension.json');
-            $cache_url = $object->config('framework.dir.cache') . 'FileRequest' . $object->config('extension.json');
+            $cache_dir = $object->config('framework.dir.temp') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds')
+            ;
+            $cache_url = $cache_dir .
+                'FileRequest' .
+                $object->config('extension.json')
+            ;
             if(File::exist($config_url)){
                 $config_mtime = File::mtime($config_url);
             }
@@ -192,6 +203,7 @@ class FileRequest {
                 //write cache_url
                 $parse = new Parse($object);
                 $fileRequest = $parse->compile($fileRequest, $object->data());
+                Dir::create($cache_dir, Dir::CHMOD);
                 $data = new Data($fileRequest);
                 $data->write($cache_url);
                 File::touch($cache_url, $config_mtime);
@@ -209,12 +221,89 @@ class FileRequest {
                 $location = FileRequest::location($object, $dir);
             }
         }
+        $ram_dir = false;
+        $ram_url = false;
+        $ram_maxsize = false;
+        $file_mtime = false;
+        $file_mtime_url = false;
+        $file_mtime_dir = false;
+        if(
+            $object->config('ramdisk.url') &&
+            empty($object->config('ramdisk.is.disabled'))
+        ){
+            $file_mtime_dir = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'File' .
+                $object->config('ds')
+            ;
+            $file_mtime_url = $file_mtime_dir .
+                'File.Mtime' .
+                $object->config('extension.json')
+            ;
+            $file_mtime = $object->data_read($file_mtime_url, sha1($file_mtime_url));
+            if(empty($file_mtime)){
+                $file_mtime = new Data();
+            }
+            $ram_dir = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'File' .
+                $object->config('ds')
+            ;
+            $ram_url = $ram_dir;
+            if($subdomain){
+                $ram_url .= $subdomain . '_';
+            }
+            if(
+                $object->config('cache.fileRequest.url.directory_length') &&
+                $object->config('cache.fileRequest.url.directory_separator') &&
+                $object->config('cache.fileRequest.url.directory_pop_or_shift') &&
+                $object->config('cache.fileRequest.url.name_length') &&
+                $object->config('cache.fileRequest.url.name_separator') &&
+                $object->config('cache.fileRequest.url.name_pop_or_shift')
+            ){
+                $ram_url .= $domain .
+                    '_' .
+                    $extension .
+                    '_' .
+                    Autoload::name_reducer(
+                        $object,
+                        str_replace('/', '_', $dir),
+                        $object->config('cache.fileRequest.url.directory_length'),
+                        $object->config('cache.fileRequest.url.directory_separator'),
+                        $object->config('cache.fileRequest.url.directory_pop_or_shift')
+                    ) .
+                    '_' .
+                    Autoload::name_reducer(
+                        $object,
+                        $file,
+                        $object->config('cache.fileRequest.url.name_length'),
+                        $object->config('cache.fileRequest.url.name_separator'),
+                        $object->config('cache.fileRequest.url.name_pop_or_shift')
+                    )
+                ;
+            }
+        }
+        $is_ram_url = false;
         foreach($location as $url){
             if(substr($url, -1, 1) !== $object->config('ds')){
                 $url .= $object->config('ds');
             }
             $url .= $file;
-            if(File::exist($url)){
+            if(
+                $is_ram_url === false &&
+                $ram_url !== false &&
+                File::exist($ram_url) &&
+                File::mtime($file_mtime->get(sha1($ram_url))) === File::mtime($ram_url)
+            ){
+                $is_ram_url = $ram_url;
+                $url = $ram_url;
+            }
+            if(
+                $is_ram_url ||
+                File::exist($url)
+            ){
                 $etag = sha1($url);
                 $mtime = File::mtime($url);
                 $contentType = $object->config('contentType.' . $file_extension);
@@ -277,7 +366,99 @@ class FileRequest {
                 if($logger){
                     $object->logger($logger)->info('Url:', [ $url ]);
                 }
+                $to_ramdisk = false;
                 $read = File::read($url);
+                if($is_ram_url){
+                    return $read;
+                }
+                $size = File::size($url);
+                $ram_maxsize = $object->config('ramdisk.file.size.max');
+                if(
+                    !empty($ram_maxsize) &&
+                    $size > $ram_maxsize
+                ){
+                    return $read;
+                }
+                $file_extension_allow = $object->config('ramdisk.file.extension.allow');
+                $file_extension_deny = $object->config('ramdisk.file.extension.deny');
+                if(
+                    empty($file_extension_allow) &&
+                    empty($file_extension_deny)
+                ){
+                    $to_ramdisk = true;
+                }
+                elseif(
+                    empty($file_extension_allow) &&
+                    !empty($file_extension_deny) &&
+                    is_array($file_extension_deny)
+                ){
+                    if(in_array('*', $file_extension_deny, true)){
+                        return $read;
+                    }
+                    elseif(in_array($file_extension, $file_extension_deny, true)){
+                        return $read;
+                    } else {
+                        $to_ramdisk = true;
+                    }
+                }
+                elseif(
+                    !empty($file_extension_allow) &&
+                    empty($file_extension_deny) &&
+                    is_array($file_extension_allow)
+                ){
+                    if(in_array('*', $file_extension_allow, true)){
+                        $to_ramdisk = true;
+                    }
+                    elseif(in_array($file_extension, $file_extension_allow, true)){
+                        $to_ramdisk = true;
+                    } else {
+                        return $read;
+                    }
+                }
+                elseif(
+                    !empty($file_extension_allow) &&
+                    !empty($file_extension_deny) &&
+                    is_array($file_extension_allow) &&
+                    is_array($file_extension_deny)
+                ){
+                    if(in_array('*', $file_extension_deny, true)){
+                        return $read;
+                    }
+                    elseif(in_array($file_extension, $file_extension_deny, true)){
+                        return $read;
+                    } else {
+                        if(in_array('*', $file_extension_allow, true)){
+                            $to_ramdisk = true;
+                        }
+                        elseif(in_array($file_extension, $file_extension_allow, true)){
+                            $to_ramdisk = true;
+                        } else {
+                            return $read;
+                        }
+                    }
+                }
+                if(
+                    $to_ramdisk &&
+                    $is_ram_url === false &&
+                    $ram_dir &&
+                    $ram_url
+                ){
+                    //copy to ramdisk
+                    Dir::create($ram_dir);
+                    if(File::exist($ram_url)){
+                        File::remove($ram_url);
+                    }
+                    File::copy($url, $ram_url);
+                    File::touch($ram_url, filemtime($url));
+                    if($file_mtime && $file_mtime_url){
+                        $file_mtime->set(sha1($ram_url), $url);
+                        $file_mtime->write($file_mtime_url);
+                    }
+                    $command = 'chmod 640 ' . $ram_url;
+                    exec($command);
+                    $command = 'chmod 640 ' . $file_mtime_url;
+                    exec($command);
+                }
                 return $read;
             }
         }
@@ -291,7 +472,7 @@ class FileRequest {
                     $location[$key] .= $file;
                 }
             }
-            throw new LocateException('Cannot find location for file:' . "<br>\n" . implode("<br>\n", $location), $location);
+            throw new LocateException('Cannot find location for file...', $location);
         } else {
             if(
                 in_array(

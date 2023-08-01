@@ -13,5 +13,5 @@ use R3m\Io\Module\Data;
 
 function function_flags(Parse $parse, Data $data){
     $object = $parse->object();
-    return $object->flags();
+    return $object->flags($object);
 }

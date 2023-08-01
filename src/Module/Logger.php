@@ -22,6 +22,7 @@ class Logger {
      */
     public static function configure(App $object){
         $interface = $object->config('log');
+        $is = null;
         if($interface){
             foreach($interface as $name => $record){
                 $name = ucfirst($name);
@@ -30,6 +31,12 @@ class Logger {
                     !empty($record->default)
                 ){
                     $object->config('project.log.name', $name);
+                }
+                if(
+                    property_exists($record, 'is') &&
+                    !empty($record->is)
+                ){
+                    $is = $record->is;
                 }
                 if(
                     property_exists($record, 'class') &&
@@ -141,7 +148,11 @@ class Logger {
                             }
                         }
                     }
+                    $logName = lcfirst($logger->getName());
                     $object->logger($logger->getName(), $logger);
+                    if($logName !== 'name'){
+                        $object->config('project.log.' . $logName, $logger->getName());
+                    }
                     if(
                         property_exists($record, 'channel') &&
                         !empty($record->channel) &&
@@ -162,10 +173,18 @@ class Logger {
             }
         }
         $uuid = posix_geteuid();
-        if(empty($uuid)){
+
+        $is_chown =false;
+        if(
+            $is &&
+            is_object($is) &&
+            property_exists($is, 'chown')){
+            $is_chown = $is->chown;
+        }
+        if(empty($uuid) && $is_chown === false){
             $dir = $object->config('project.dir.log');
             $command = 'chown www-data:www-data ' . $dir . ' -R';
-            Core::execute($command);
+            Core::execute($object, $command);
         }
     }
 
@@ -191,7 +210,7 @@ class Logger {
     public static function critical($message=null, $context=[], $channel=''){
         $object = App::instance();
         if(empty($channel)){
-            $channel = $object->config('project.log.name');
+            $channel = $object->config('project.log.error');
         } else {
             $channel = ucfirst($channel);
         }
@@ -222,7 +241,7 @@ class Logger {
     public static function emergency($message=null, $context=[], $channel=''){
         $object = App::instance();
         if(empty($channel)){
-            $channel = $object->config('project.log.name');
+            $channel = $object->config('project.log.error');
         } else {
             $channel = ucfirst($channel);
         }
@@ -237,7 +256,7 @@ class Logger {
     public static function error($message=null, $context=[], $channel=''){
         $object = App::instance();
         if(empty($name)){
-            $channel = $object->config('project.log.name');
+            $channel = $object->config('project.log.error');
         } else {
             $channel = ucfirst($channel);
         }

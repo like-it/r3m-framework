@@ -36,6 +36,36 @@ class Controller {
     const PROPERTY_VIEW_URL = 'r3m.io.parse.view.url';
     const PROPERTY_VIEW_MTIME = 'r3m.io.parse.view.mtime';
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public static function autoload(App $object, Data $read=null){
+        $autoload = $object->data(App::AUTOLOAD_R3M);
+        if($read === null){
+            $url = $object->config('controller.dir.data') . 'Config' . $object->config('extension.json');
+            $read = $object->data_read($url);
+        }
+        if($read){
+            $list = $read->get('autoload');
+            if($list && is_array($list)){
+                foreach($list as $record){
+                    if(
+                        property_exists($record, 'prefix') &&
+                        property_exists($record, 'directory')
+                    ){
+                        $addPrefix  = Core::object($record, Core::OBJECT_ARRAY);
+                        $addPrefix = Config::parameters($object, $addPrefix);
+                        $autoload->addPrefix($addPrefix['prefix'], $addPrefix['directory']);
+                        if($object->config('project.log.name')){
+                            $object->logger($object->config('project.log.name'))->info('New namespace: ' . $addPrefix['prefix'], [ $addPrefix ]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public static function name($name='', $before=null, $delimiter='.'): string
     {
         if(
@@ -44,6 +74,7 @@ class Controller {
         ){
             $before = File::basename($before);
         }
+        $name = str_replace(':','.', $name);
         $name = Core::ucfirst_sentence(str_replace('_','.', $name));
         if($before !== null){
             return $before . $delimiter . $name;
@@ -62,6 +93,7 @@ class Controller {
         $temp = $object->data('template');
         $called = '';
         $url = false;
+        $list = [];
         if(
             !empty($template) &&
             is_object($template) &&
@@ -123,7 +155,6 @@ class Controller {
         }
         $config = $object->data(App::CONFIG);
         if($url){
-            $list = [];
             $list[] = $url;
         } else {
             if(substr($dir, -1) != $config->data('ds')){
@@ -137,7 +168,6 @@ class Controller {
             array_pop($explode);
             $explode[] = $config->data('dictionary.view');
             $max = count($explode);
-            $list = [];
             $temp = explode('\\', $called);
             if(empty($name)){
                 $name = array_pop($temp);
@@ -160,15 +190,49 @@ class Controller {
                 }
             }
             $basename = File::basename($name);
+            $name = str_replace(
+                [
+                    '\\',
+                    ':',
+                    '='
+                ],
+                [
+                    '/',
+                    '.',
+                    '-'
+                ],
+                $name
+            );
             if(!empty($object->config('controller.dir.view'))){
-                $list[] = $object->config('controller.dir.view') . str_replace('.', $object->config('ds'), $name) . $object->config('ds') . $basename . $config->data('extension.tpl');
-                $list[] = $object->config('controller.dir.view') . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl');
-                $list[] = $object->config('controller.dir.view') . $name . $config->data('extension.tpl');
+                $list[] = $object->config('controller.dir.view') .
+                    str_replace('.', $object->config('ds'), $name) .
+                    $object->config('ds') .
+                    $basename . $config->data('extension.tpl')
+                ;
+                $list[] = $object->config('controller.dir.view') .
+                    str_replace('.', $object->config('ds'), $name) .
+                    $config->data('extension.tpl')
+                ;
+                $list[] = $object->config('controller.dir.view') .
+                    $name .
+                    $config->data('extension.tpl')
+                ;
             }
             elseif(!empty($object->config('host.dir.view'))){
-                $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name) . $object->config('ds') . $basename . $config->data('extension.tpl');
-                $list[] = $object->config('host.dir.view') . str_replace('.', $object->config('ds'), $name) . $config->data('extension.tpl');
-                $list[] = $object->config('host.dir.view') . $name . $config->data('extension.tpl');
+                $list[] = $object->config('host.dir.view') .
+                    str_replace('.', $object->config('ds'), $name) .
+                    $object->config('ds') .
+                    $basename .
+                    $config->data('extension.tpl')
+                ;
+                $list[] = $object->config('host.dir.view') .
+                    str_replace('.', $object->config('ds'), $name) .
+                    $config->data('extension.tpl')
+                ;
+                $list[] = $object->config('host.dir.view') .
+                    $name .
+                    $config->data('extension.tpl')
+                ;
             }
             for($i = $max; $i > $minimum; $i--){
                 $url = implode($config->data('ds'), $explode) . $config->data('ds');
@@ -195,8 +259,67 @@ class Controller {
             }
         }
         $url = false;
+        $view_url = false;
+        $read = false;
+        if(
+            $object->config('ramdisk.url') &&
+            empty($object->config('ramdisk.is.disabled'))
+        ){
+            $first = reset($list);
+            $view_url = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                $object->config('dictionary.view') .
+                $object->config('ds') .
+                Autoload::name_reducer(
+                    $object,
+                    str_replace('/', '_', $first),
+                    $object->config('cache.controller.url.name_length'),
+                    $object->config('cache.controller.url.name_separator'),
+                    $object->config('cache.controller.url.name_pop_or_shift')
+                )
+            ;
+            $config_dir = $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                $object->config('dictionary.view') .
+                $object->config('ds')
+            ;
+            $config_url = $config_dir .
+                $object->config('dictionary.view') .
+                $object->config('extension.json')
+            ;
+            $read = $object->data_read($config_url, sha1($config_url));
+            if(!$read){
+                $read = new Data();
+            }
+            if(
+                File::exist($view_url) &&
+                $read->has(sha1($view_url) . '.url') &&
+                File::mtime($view_url) === File::mtime($read->get(sha1($view_url) . '.url'))
+            ){
+                return $view_url;
+            }
+        }
         foreach($list as $file){
             if(File::exist($file)){
+                if(
+                    $object->config('ramdisk.url') &&
+                    !empty($object->config('ramdisk.is.disabled')) &&
+                    $view_url &&
+                    $read
+                ){
+                    //copy to ramdisk
+                    $view_dir = Dir::name($view_url);
+                    Dir::create($view_dir);
+                    File::copy($file, $view_url);
+                    File::touch($view_url, filemtime($file));
+                    $read->set(sha1($view_url) . '.url', $file);
+                    $read->write($config_url);
+
+                    exec('chmod 640 ' . $view_url);
+                    exec('chmod 640 ' . $config_url);
+                }
                 $url = $file;
                 break;
             }
@@ -211,7 +334,7 @@ class Controller {
         return $url;
     }
 
-    public static function configure(App $object){
+    public static function configure(App $object, $caller=null){
         $config = $object->data(App::CONFIG);
         $key = Config::DATA_PARSE_DIR_TEMPLATE;
         $value = $config->data(Config::DATA_HOST_DIR_CACHE) . Controller::PARSE . $config->data('ds') . Controller::TEMPLATE . $config->data('ds');
@@ -226,7 +349,11 @@ class Controller {
         $config->data($key, $value);
         $key = Config::DATA_PARSE_DIR_PLUGIN;
         $value = [];
-        $dir = rtrim(get_called_class()::DIR,$config->data(Config::DS)) . $config->data(Config::DS);
+        if($caller !== null){
+            $dir = rtrim($caller::DIR, $config->data('ds')) . $config->data('ds');
+        } else {
+            $dir = rtrim(get_called_class()::DIR, $config->data(Config::DS)) . $config->data(Config::DS);
+        }
         $config->data(Config::DATA_CONTROLLER_DIR_SOURCE, $dir);
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT, Dir::name($dir));
         $config->data(Config::DATA_CONTROLLER_DIR_DATA,
@@ -311,7 +438,7 @@ class Controller {
             $config->data(Config::DS)
         );
         $config->data(Config::DATA_CONTROLLER_DIR_EXECUTE,
-            $config->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
             $config->data(
                 Config::DICTIONARY .
                 '.' .
@@ -325,6 +452,15 @@ class Controller {
                 Config::DICTIONARY .
                 '.' .
                 Config::SERVICE
+            ) .
+            $config->data(Config::DS)
+        );
+        $config->data(Config::DATA_CONTROLLER_DIR_VALIDATOR,
+            $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
+            $config->data(
+                Config::DICTIONARY .
+                '.' .
+                Config::VALIDATOR
             ) .
             $config->data(Config::DS)
         );
@@ -386,7 +522,11 @@ class Controller {
         ;
         $config->data($key, $value);
 
-        $config->data(Config::DATA_CONTROLLER_CLASS, get_called_class());
+        if($caller !== null){
+            $config->data(Config::DATA_CONTROLLER_CLASS, $caller);
+        } else {
+            $config->data(Config::DATA_CONTROLLER_CLASS, get_called_class());
+        }
         $config->data(Config::DATA_CONTROLLER_NAME, strtolower(File::basename($config->data(Config::DATA_CONTROLLER_CLASS))));
         $config->data(Config::DATA_CONTROLLER_TITLE, File::basename($config->data(Config::DATA_CONTROLLER_CLASS)));
 
@@ -441,7 +581,7 @@ class Controller {
      * @throws UrlNotExistException
      * @throws FileWriteException
      */
-    public static function response(App $object, $url, $data=null): string
+    public static function response(App $object, $url, $data=null)
     {
         if(empty($url)){
             throw new UrlEmptyException('Url is empty');
@@ -479,12 +619,10 @@ class Controller {
                 $data->rdelim = Controller::RDELIM;
             }
         }
+        $original = $read;
         $read = $parse->compile($read, $data, $parse->storage());
         Parse::readback($object, $parse, App::SCRIPT);
         Parse::readback($object, $parse, App::LINK);
-        if(is_array($read)){
-            ddd($read);
-        }
         return $read;
     }
 
@@ -496,7 +634,7 @@ class Controller {
     {
         $read = $object->parse_read($url, sha1($url));
         if($read){
-            $object->data($read->get());
+            $object->data($read->data());
         }
     }
 

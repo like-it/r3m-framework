@@ -1,9 +1,9 @@
 {{R3M}}
 {{if(config('silence') === true)}}
-R3m.io silence mode... {{terminal.color('green')}}{{config('framework.version')}}{{terminal.reset()}}
+R3m.io silence mode... {{terminal.color('green')}}{{config('framework.version')}}{{terminal.color('reset')}}
 
 {{else}}
-Welcome to R3m.io {{terminal.color('green')}}{{config('framework.version')}}{{terminal.reset()}}
+Welcome to R3m.io {{terminal.color('green')}}{{config('framework.version')}}{{terminal.color('reset')}}
 
 
 {{binary()}} bin                            | Creates binary
