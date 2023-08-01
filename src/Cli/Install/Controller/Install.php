@@ -142,6 +142,7 @@ class Install extends Controller {
                                 $command = 'chown www-data:www-data ' . $copy->to;
                                 exec($command);
                                 $dir_package = Dir::name($copy->to);
+                                ddd($dir_package);
                                 $command = 'chown www-data:www-data ' . $dir_package;
                                 exec($command);
                             }
@@ -149,6 +150,7 @@ class Install extends Controller {
                                 $command = 'chmod 777 ' . $copy->to;
                                 exec($command);
                                 $dir_package = Dir::name($copy->to);
+                                ddd($dir_package);
                                 $command = 'chmod 777 ' . $dir_package;
                                 exec($command);
                             }
