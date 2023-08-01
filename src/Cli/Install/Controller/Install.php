@@ -131,8 +131,9 @@ class Install extends Controller {
                     property_exists($copy, 'from') &&
                     property_exists($copy, 'to') &&
                     property_exists($copy, 'recursive') &&
-                    $copy->recursive == true
+                    $copy->recursive === true
                 ){
+                    ddd($copy);
                     if(File::exist($copy->from)){
                         $command = 'cp -R ' . $copy->from . ' ' . $copy->to;
                         exec($command);
