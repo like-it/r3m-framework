@@ -1,6 +1,6 @@
 {
   "package" : {
-    "r3m-io/event" : {
+    "r3m_io/event" : {
       "composer" : "composer require {{$this.#key}}",
       "route" : [
         "{{config('project.dir.vendor')}}{{$this.#key}}/Data/Route.json}}"
@@ -15,7 +15,7 @@
         ]
       }
     },
-    "r3m-io/node" : {
+    "r3m_io/node" : {
       "composer" : "composer require {{$this.#key}}",
       "route" : [
         "{{config('project.dir.vendor')}}{{$this.#key}}/Data/Route.json}}"
@@ -30,7 +30,7 @@
         ]
       }
     },
-    "r3m-io/priya" : {
+    "r3m_io/priya" : {
         "composer" : "composer require {{$this.#key}}",
         "route" : [
           "{{config('project.dir.vendor')}}{{$this.#key}}/Data/Route.json'}}"
