@@ -8,8 +8,8 @@
       "installation" : "{{config('project.dir.data')}}{{config('dictionary.package')}}{{config('ds')}}{{$this.#key}}{{config('ds')}}{{config('dictionary.installation')}}{{config('extension.json')}}",
       "copy" : [
         {
-          "from" : "{{config('project.dir.vendor')}}{{$this.#parent.#key}}/src/",
-          "to" : "{{config('project.dir.root')}}Package/{{$this.#parent.#key}}/",
+          "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/",
+          "to" : "{{config('project.dir.root')}}Package/{{$this.#parentNode.#key}}/",
           "recursive": true
         }
       ],
