@@ -1,5 +1,5 @@
 {
-	"name" : "r3m-io/framework",
+	"name" : "r3m_io/framework",
 	"description" : "R3M framework see https://r3m.io for detailed usage",
 	"type" : "library",
 	"keywords" : ["framework", "r3m", "library", "language", "template", "engine"],
