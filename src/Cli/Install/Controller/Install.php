@@ -141,9 +141,15 @@ class Install extends Controller {
                             if($object->config(Config::POSIX_ID) === 0){
                                 $command = 'chown www-data:www-data ' . $copy->to;
                                 exec($command);
+                                $dir_package = Dir::name($copy->to);
+                                $command = 'chown www-data:www-data ' . $dir_package;
+                                exec($command);
                             }
                             if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
                                 $command = 'chmod 777 ' . $copy->to;
+                                exec($command);
+                                $dir_package = Dir::name($copy->to);
+                                $command = 'chmod 777 ' . $dir_package;
                                 exec($command);
                             }
                             ddd('endtest');
