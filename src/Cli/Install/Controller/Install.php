@@ -108,7 +108,7 @@ class Install extends Controller {
             is_string($package->get('route'))
         ){
             if(File::exist($package->get('route'))){
-                $command = '{{binary()}} configure route resource "' . $package->route . '"';
+                $command = '{{binary()}} configure route resource "' . $package->get('route') . '"';
                 $parse = new Parse($object, $object->data());
                 $command = $parse->compile($command, $object->data());
                 Core::execute($object, $command, $output, $error);
@@ -118,6 +118,34 @@ class Install extends Controller {
                 if($error){
                     if(stristr($error, RouteExistException::MESSAGE) === false) {
                         echo $error;
+                    }
+                }
+            }
+        }
+        if(
+            $package->has('copy') &&
+            is_array($package->get('copy'))
+        ){
+            foreach($package->get('copy') as $copy){
+                if(
+                    property_exists($copy, 'from') &&
+                    property_exists($copy, 'to') &&
+                    property_exists($copy, 'recursive') &&
+                    $copy->recursive == true
+                ){
+                    if(File::exist($copy->from)){
+                        $command = 'cp -R ' . $copy->from . ' ' . $copy->to;
+                        exec($command);
+                    }
+
+                }
+                elseif(
+                    property_exists($copy, 'from') &&
+                    property_exists($copy, 'to')
+                ){
+                    if(File::exist($copy->from)){
+                        $command = 'cp ' . $copy->from . ' ' . $copy->to;
+                        exec($command);
                     }
                 }
             }
