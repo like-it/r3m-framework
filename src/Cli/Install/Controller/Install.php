@@ -142,7 +142,6 @@ class Install extends Controller {
                                 $command = 'chown www-data:www-data ' . $copy->to;
                                 exec($command);
                                 $dir_package = Dir::name($copy->to);
-                                ddd($dir_package);
                                 $command = 'chown www-data:www-data ' . $dir_package;
                                 exec($command);
                             }
@@ -150,11 +149,9 @@ class Install extends Controller {
                                 $command = 'chmod 777 ' . $copy->to;
                                 exec($command);
                                 $dir_package = Dir::name($copy->to);
-                                ddd($dir_package);
                                 $command = 'chmod 777 ' . $dir_package;
                                 exec($command);
                             }
-                            ddd('endtest');
                             $dir = new Dir();
                             $read = $dir->read($copy->from, true);
                             foreach($read as $file){
@@ -197,6 +194,20 @@ class Install extends Controller {
                     if(File::exist($copy->from)){
                         if(Dir::is($copy->from)){
                             Dir::create($copy->to, Dir::CHMOD);
+                            if($object->config(Config::POSIX_ID) === 0){
+                                $command = 'chown www-data:www-data ' . $copy->to;
+                                exec($command);
+                                $dir_package = Dir::name($copy->to);
+                                $command = 'chown www-data:www-data ' . $dir_package;
+                                exec($command);
+                            }
+                            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                $command = 'chmod 777 ' . $copy->to;
+                                exec($command);
+                                $dir_package = Dir::name($copy->to);
+                                $command = 'chmod 777 ' . $dir_package;
+                                exec($command);
+                            }
                             $dir = new Dir();
                             $read = $dir->read($copy->from, true);
                             foreach($read as $file){
