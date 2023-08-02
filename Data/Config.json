@@ -280,9 +280,9 @@
         ]
     },
     "package": {
-        "r3m-io/node": {
+        "r3m_io/node": {
             "dir" : {
-                "validator": "{{config('project.dir.vendor')}}/r3m-io/node/src/Validator/"
+                "validator": "{{config('project.dir.vendor')}}/r3m_io/node/src/Validator/"
             }
         }
     }
