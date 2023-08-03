@@ -180,6 +180,7 @@ class Install extends Controller {
                                             File::delete($to);
                                             d('delete: ' . $to);
                                         }
+                                        d($file->url);
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
                                             $command = 'chown www-data:www-data ' . $to;
@@ -244,6 +245,7 @@ class Install extends Controller {
                                             File::delete($to);
                                             d('delete: ' . $to);
                                         }
+                                        d($file->url);
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
                                             $command = 'chown www-data:www-data ' . $to;
