@@ -84,13 +84,15 @@ class Controller {
     }
 
     public static function plugin(App $object, $dir=''){
-        ddd($object->config());
-        $plugin = $object->config('parse.plugin.dir');
+        $plugin = $object->config('parse.dir.plugin');
         if(empty($plugin)){
             $plugin = [];
         }
-        $plugin[] = $dir;
-        $object->config('parse.plugin.dir', $plugin);
+        $plugin = [
+            $dir,
+            ...$plugin
+        ];
+        $object->config('parse.dir.plugin', $plugin);
     }
 
     /**
