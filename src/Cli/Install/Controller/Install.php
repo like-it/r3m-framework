@@ -176,6 +176,7 @@ class Install extends Controller {
                                         !File::exist($to) ||
                                         property_exists($options, 'force')
                                     ){
+                                        d('copy: ' . $to);
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
                                             $command = 'chown www-data:www-data ' . $to;
@@ -236,6 +237,7 @@ class Install extends Controller {
                                         !File::exist($to) ||
                                         property_exists($options, 'force')
                                     ){
+                                        d('copy: ' . $to);
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
                                             $command = 'chown www-data:www-data ' . $to;
