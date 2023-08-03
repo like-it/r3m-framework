@@ -64,7 +64,7 @@ class Install extends Controller {
             $url,
             'package.' . $key
         );
-        ddd($package);
+        d($package);
         if(empty($package)){
             $exception = new Exception('Package: ' . $key . PHP_EOL);
             Event::trigger($object, 'cli.install', [
@@ -139,6 +139,7 @@ class Install extends Controller {
                     if(File::exist($copy->from)){
                         if(Dir::is($copy->from)){
                             Dir::create($copy->to, Dir::CHMOD);
+                            ddd($copy);
                             if($object->config(Config::POSIX_ID) === 0){
                                 $command = 'chown www-data:www-data ' . $copy->to;
                                 exec($command);
