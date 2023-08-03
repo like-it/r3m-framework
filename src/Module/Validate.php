@@ -113,7 +113,10 @@ class Validate {
                                 $name .
                                 $extension
                             ;
-//                            $url_list[] = $object->config('package.r3m_io/node.dir.validator') . $name . $extension;
+                            $url_list[] = $object->config('package.r3m_io/node.dir.validator') .
+                                $name .
+                                $extension
+                            ;
                             $url_list[] = $object->config('project.dir.source') .
                                 'Validator' .
                                 $object->config('ds') .
