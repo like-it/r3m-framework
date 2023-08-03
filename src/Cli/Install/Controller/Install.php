@@ -178,6 +178,7 @@ class Install extends Controller {
                                     ){
                                         if(property_exists($options, 'force')){
                                             File::delete($to);
+                                            d('delete: ' . $to);
                                         }
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
@@ -241,6 +242,7 @@ class Install extends Controller {
                                     ){
                                         if(property_exists($options, 'force')){
                                             File::delete($to);
+                                            d('delete: ' . $to);
                                         }
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
