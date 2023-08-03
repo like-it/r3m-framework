@@ -36,6 +36,10 @@ class Controller {
     const PROPERTY_VIEW_URL = 'r3m.io.parse.view.url';
     const PROPERTY_VIEW_MTIME = 'r3m.io.parse.view.mtime';
 
+    const PREPEND = 'prepend';
+    const APPEND = 'append';
+
+
     /**
      * @throws ObjectException
      * @throws Exception
@@ -83,7 +87,7 @@ class Controller {
         }
     }
 
-    public static function plugin(App $object, $dir='', $type='prepend'): void
+    public static function plugin(App $object, $dir='', $type=Controller::PREPEND): void
     {
         $plugin = $object->config('parse.dir.plugin');
         if(empty($plugin)){
@@ -91,13 +95,13 @@ class Controller {
         }
         if(File::exist($dir)){
             switch($type){
-                case 'prepend':
+                case Controller::PREPEND:
                     $plugin = [
                         $dir,
                         ...$plugin
                     ];
                 break;
-                case 'append':
+                case Controller::APPEND:
                     $plugin[] = $dir;
                 break;
             }
@@ -105,7 +109,7 @@ class Controller {
         $object->config('parse.dir.plugin', $plugin);
     }
 
-    public static function validator(App $object, $dir='', $type='prepend'): void
+    public static function validator(App $object, $dir='', $type=Controller::PREPEND): void
     {
         $validator = $object->config('validate.dir.validator');
         if(empty($validator)){
@@ -113,13 +117,13 @@ class Controller {
         }
         if(File::exist($dir)){
             switch($type){
-                case 'prepend':
+                case Controller::PREPEND:
                     $validator = [
                         $dir,
                         ...$validator
                     ];
                     break;
-                case 'append':
+                case Controller::APPEND:
                     $validator[] = $dir;
                     break;
             }
