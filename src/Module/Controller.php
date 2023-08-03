@@ -491,6 +491,8 @@ class Controller {
         	) .
         	$config->data(Config::DS)
         );
+        ddd($config);
+        //get plugin directories
         $value[] =
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
         $config->data(
