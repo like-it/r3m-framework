@@ -139,7 +139,6 @@ class Install extends Controller {
                     if(File::exist($copy->from)){
                         if(Dir::is($copy->from)){
                             Dir::create($copy->to, Dir::CHMOD);
-                            ddd($copy);
                             if($object->config(Config::POSIX_ID) === 0){
                                 $command = 'chown www-data:www-data ' . $copy->to;
                                 exec($command);
@@ -156,6 +155,7 @@ class Install extends Controller {
                             }
                             $dir = new Dir();
                             $read = $dir->read($copy->from, true);
+                            ddd($read);
                             foreach($read as $file){
                                 if($file->type === Dir::TYPE){
                                     $create = str_replace($copy->from, $copy->to, $file->url);
