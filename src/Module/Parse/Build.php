@@ -100,6 +100,7 @@ class Build {
         $debug_url = $this->object()->data('controller.dir.data') . 'Debug.info';
         $this->storage()->data('debug.url', $debug_url);
         $dir_plugin = $config->data(Config::DATA_PARSE_DIR_PLUGIN);
+        /*
         ddd($dir_plugin);
         $dir_plugin = [];
         if(empty($dir_plugin)){
@@ -110,6 +111,7 @@ class Build {
             $dir_plugin[] = $config->data('project.dir.plugin');
             $dir_plugin[] = $config->data('framework.dir.plugin');
         }
+        */
         $this->storage()->data('plugin', $dir_plugin);
     }
 
