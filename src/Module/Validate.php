@@ -101,12 +101,25 @@ class Validate {
                             if(empty($url_list)){
                                 $url_list = [];
                             }
-                            $url_list[] = $object->config('controller.dir.validator') . $name . $extension;
-                            $url_list[] = $object->config('project.dir.validator') . $name . $extension;
+                            $url_list[] = $object->config('controller.dir.validator') .
+                                $name .
+                                $extension
+                            ;
+                            $url_list[] = $object->config('project.dir.validator') .
+                                $name .
+                                $extension
+                            ;
 //                            $url_list[] = $object->config('package.r3m_io/node.dir.validator') . $name . $extension;
-                            $url_list[] = $object->config('project.dir.source') . 'Validate' . $object->config('ds') . $name . $extension;
-                            $url_list[] = $object->config('framework.dir.validate') . $name . $extension;
-                            $url_list[] = $object->config('framework.dir.validator') . $name . $extension;
+                            $url_list[] = $object->config('project.dir.source') .
+                                'Validator' .
+                                $object->config('ds') .
+                                $name .
+                                $extension
+                            ;
+                            $url_list[] = $object->config('framework.dir.validator') .
+                                $name .
+                                $extension
+                            ;
                             $url_list = Config::parameters($object, $url_list);
                             if(empty($test[$field][$function])){
                                 $test[$field][$function] = [];
