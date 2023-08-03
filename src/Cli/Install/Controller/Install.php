@@ -171,14 +171,16 @@ class Install extends Controller {
                             foreach($read as $file){
                                 if($file->type === File::TYPE){
                                     $to = str_replace($copy->from, $copy->to, $file->url);
-                                    File::copy($file->url, $to);
-                                    if($object->config(Config::POSIX_ID) === 0){
-                                        $command = 'chown www-data:www-data ' . $to;
-                                        exec($command);
-                                    }
-                                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-                                        $command = 'chmod 666 ' . $to;
-                                        exec($command);
+                                    if(!File::exist($to)){
+                                        File::copy($file->url, $to);
+                                        if($object->config(Config::POSIX_ID) === 0){
+                                            $command = 'chown www-data:www-data ' . $to;
+                                            exec($command);
+                                        }
+                                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                            $command = 'chmod 666 ' . $to;
+                                            exec($command);
+                                        }
                                     }
                                 }
                             }
@@ -226,15 +228,18 @@ class Install extends Controller {
                             foreach($read as $file){
                                 if($file->type === File::TYPE){
                                     $to = str_replace($copy->from, $copy->to, $file->url);
-                                    File::copy($file->url, $to);
-                                    if($object->config(Config::POSIX_ID) === 0){
-                                        $command = 'chown www-data:www-data ' . $to;
-                                        exec($command);
+                                    if(!File::exist($to)){
+                                        File::copy($file->url, $to);
+                                        if($object->config(Config::POSIX_ID) === 0){
+                                            $command = 'chown www-data:www-data ' . $to;
+                                            exec($command);
+                                        }
+                                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                            $command = 'chmod 666 ' . $to;
+                                            exec($command);
+                                        }
                                     }
-                                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-                                        $command = 'chmod 666 ' . $to;
-                                        exec($command);
-                                    }
+
                                 }
                             }
                         }

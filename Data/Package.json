@@ -8,8 +8,13 @@
       "installation" : "{{config('project.dir.data')}}{{config('dictionary.package')}}{{config('ds')}}{{$this.#key}}{{config('ds')}}{{config('dictionary.installation')}}{{config('extension.json')}}",
       "copy" : [
         {
-          "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/",
+          "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/Package/",
           "to" : "{{config('project.dir.root')}}Package/{{dir.uppercase.first($this.#parentNode.#key)}}",
+          "recursive": true
+        },
+        {
+          "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/Data/Node/",
+          "to" : "{{config('project.dir.data')}}Node/",
           "recursive": true
         }
       ],
@@ -28,6 +33,18 @@
         "{{config('project.dir.vendor')}}{{$this.#key}}/Data/Route.json}}"
       ],
       "installation" : "{{config('project.dir.data')}}{{config('dictionary.package')}}{{config('ds')}}{{$this.#key}}{{config('ds')}}{{config('dictionary.installation')}}{{config('extension.json')}}",
+      "copy" : [
+        {
+          "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/Package/",
+          "to" : "{{config('project.dir.root')}}Package/{{dir.uppercase.first($this.#parentNode.#key)}}",
+          "recursive": true
+        },
+        {
+          "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/Data/Node/",
+          "to" : "{{config('project.dir.data')}}Node/",
+          "recursive": true
+        }
+      ],
       "command" : [
         "{{binary()}} {{$this.#key}} setup"
       ],
