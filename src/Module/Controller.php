@@ -84,6 +84,7 @@ class Controller {
     }
 
     public static function plugin(App $object, $dir=''){
+        ddd($object->config());
         $plugin = $object->config('parse.plugin.dir');
         if(empty($plugin)){
             $plugin = [];
@@ -500,8 +501,6 @@ class Controller {
         	) .
         	$config->data(Config::DS)
         );
-        ddd($config->data('parse.plugin.dir'));
-        //get plugin directories
         $value[] =
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
         $config->data(
@@ -540,7 +539,6 @@ class Controller {
         }
         $config->data(Config::DATA_CONTROLLER_NAME, strtolower(File::basename($config->data(Config::DATA_CONTROLLER_CLASS))));
         $config->data(Config::DATA_CONTROLLER_TITLE, File::basename($config->data(Config::DATA_CONTROLLER_CLASS)));
-
         $host_dir_public = $config->data(Config::DATA_HOST_DIR_PUBLIC);
         $explode = explode($config->data('ds'), $host_dir_public);
         $slash = array_pop($explode);
