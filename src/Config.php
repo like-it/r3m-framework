@@ -158,6 +158,7 @@ class Config extends Data {
     const DATA_FRAMEWORK_DIR_PLUGIN =  Config::DATA_FRAMEWORK_DIR . '.' . 'plugin';
     const DATA_FRAMEWORK_DIR_FUNCTION =  Config::DATA_FRAMEWORK_DIR . '.' . 'function';
     const DATA_FRAMEWORK_DIR_VALIDATE =  Config::DATA_FRAMEWORK_DIR . '.' . 'validate';
+    const DATA_FRAMEWORK_DIR_VALIDATOR =  Config::DATA_FRAMEWORK_DIR . '.' . 'validator';
     const DATA_FRAMEWORK_DIR_VIEW =  Config::DATA_FRAMEWORK_DIR . '.' . 'view';
 
     const DATA_FRAMEWORK_ENVIRONMENT = 'framework.environment';
@@ -701,6 +702,13 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $this->data(Config::DICTIONARY . '.' . Config::VALIDATE) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_FRAMEWORK_DIR_VALIDATOR;
+        $value =
+            $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
+            $this->data(Config::DICTIONARY . '.' . Config::VALIDATOR) .
             $this->data(Config::DS)
         ;
         $this->data($key, $value);
