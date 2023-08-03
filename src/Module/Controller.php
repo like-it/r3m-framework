@@ -83,16 +83,48 @@ class Controller {
         }
     }
 
-    public static function plugin(App $object, $dir=''){
+    public static function plugin(App $object, $dir='', $type='prepend'): void
+    {
         $plugin = $object->config('parse.dir.plugin');
         if(empty($plugin)){
             $plugin = [];
         }
-        $plugin = [
-            $dir,
-            ...$plugin
-        ];
+        if(File::exist($dir)){
+            switch($type){
+                case 'prepend':
+                    $plugin = [
+                        $dir,
+                        ...$plugin
+                    ];
+                break;
+                case 'append':
+                    $plugin[] = $dir;
+                break;
+            }
+        }
         $object->config('parse.dir.plugin', $plugin);
+    }
+
+    public static function validator(App $object, $dir='', $type='prepend'): void
+    {
+        $validator = $object->config('validate.dir.validator');
+        if(empty($validator)){
+            $validator = [];
+        }
+        if(File::exist($dir)){
+            switch($type){
+                case 'prepend':
+                    $validator = [
+                        $dir,
+                        ...$validator
+                    ];
+                    break;
+                case 'append':
+                    $validator[] = $dir;
+                    break;
+            }
+        }
+        $object->config('validate.dir.validator', $validator);
     }
 
     /**
