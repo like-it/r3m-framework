@@ -83,6 +83,15 @@ class Controller {
         }
     }
 
+    public static function plugin(App $object, $dir=''){
+        $plugin = $object->config('parse.plugin.dir');
+        if(empty($plugin)){
+            $plugin = [];
+        }
+        $plugin[] = $dir;
+        $object->config('parse.plugin.dir', $plugin);
+    }
+
     /**
      * @throws LocateException
      * @throws FileWriteException
@@ -491,7 +500,7 @@ class Controller {
         	) .
         	$config->data(Config::DS)
         );
-        ddd($config);
+        ddd($config->data('parse.plugin.dir'));
         //get plugin directories
         $value[] =
         $config->data(Config::DATA_CONTROLLER_DIR_ROOT) .
