@@ -37,6 +37,7 @@ class Install extends Controller {
      */
     public static function run(App $object){
         $id = $object->config(Config::POSIX_ID);
+        $options = App::options($object);
         $key = App::parameter($object, 'install', 1);
         if(
             !in_array(
@@ -64,7 +65,6 @@ class Install extends Controller {
             $url,
             'package.' . $key
         );
-        d($package);
         if(empty($package)){
             $exception = new Exception('Package: ' . $key . PHP_EOL);
             Event::trigger($object, 'cli.install', [
@@ -172,7 +172,10 @@ class Install extends Controller {
                             foreach($read as $file){
                                 if($file->type === File::TYPE){
                                     $to = str_replace($copy->from, $copy->to, $file->url);
-                                    if(!File::exist($to)){
+                                    if(
+                                        !File::exist($to) ||
+                                        property_exists($options, 'force')
+                                    ){
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
                                             $command = 'chown www-data:www-data ' . $to;
@@ -229,7 +232,10 @@ class Install extends Controller {
                             foreach($read as $file){
                                 if($file->type === File::TYPE){
                                     $to = str_replace($copy->from, $copy->to, $file->url);
-                                    if(!File::exist($to)){
+                                    if(
+                                        !File::exist($to) ||
+                                        property_exists($options, 'force')
+                                    ){
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
                                             $command = 'chown www-data:www-data ' . $to;
