@@ -155,7 +155,6 @@ class Install extends Controller {
                             }
                             $dir = new Dir();
                             $read = $dir->read($copy->from, true);
-                            ddd($read);
                             foreach($read as $file){
                                 if($file->type === Dir::TYPE){
                                     $create = str_replace($copy->from, $copy->to, $file->url);
@@ -173,6 +172,7 @@ class Install extends Controller {
                             foreach($read as $file){
                                 if($file->type === File::TYPE){
                                     $to = str_replace($copy->from, $copy->to, $file->url);
+                                    d($to);
                                     if(!File::exist($to)){
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
