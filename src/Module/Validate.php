@@ -97,10 +97,14 @@ class Validate {
                             $name = Controller::name($key);
                             $key = 'validate' . '.' . $key;
                             $function = str_replace('.', '_', $key);
-                            $url_list = $object->config('validate.dir.validator');
+                            $url_list = (array) $object->config('validate.dir.validator');
                             d($url_list);
                             if(empty($url_list)){
                                 $url_list = [];
+                            } else {
+                                foreach($url_list as $url_nr => $url_value){
+                                    $url_list[$url_nr] .= $name . $extension;
+                                }
                             }
                             $url_list[] = $object->config('controller.dir.validator') .
                                 $name .
