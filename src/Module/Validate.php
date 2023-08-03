@@ -98,6 +98,7 @@ class Validate {
                             $key = 'validate' . '.' . $key;
                             $function = str_replace('.', '_', $key);
                             $url_list = $object->config('validate.dir.validator');
+                            d($url_list);
                             if(empty($url_list)){
                                 $url_list = [];
                             }
