@@ -178,9 +178,7 @@ class Install extends Controller {
                                     ){
                                         if(property_exists($options, 'force')){
                                             File::delete($to);
-                                            d('delete: ' . $to);
                                         }
-                                        d($file->url);
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
                                             $command = 'chown www-data:www-data ' . $to;
@@ -243,9 +241,7 @@ class Install extends Controller {
                                     ){
                                         if(property_exists($options, 'force')){
                                             File::delete($to);
-                                            d('delete: ' . $to);
                                         }
-                                        d($file->url);
                                         File::copy($file->url, $to);
                                         if($object->config(Config::POSIX_ID) === 0){
                                             $command = 'chown www-data:www-data ' . $to;
@@ -256,7 +252,6 @@ class Install extends Controller {
                                             exec($command);
                                         }
                                     }
-
                                 }
                             }
                         }
