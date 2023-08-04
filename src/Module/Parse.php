@@ -311,6 +311,7 @@ class Parse {
                 }
             }
             $string_object = Core::deep_clone($string);
+            $parentKey = $this->key;
             foreach($string_object as $key => $value){
                 if(
                     $this->useThis() === true &&
@@ -338,6 +339,7 @@ class Parse {
                     ]);
                 }
             }
+            $this->key = $parentKey;
             //must read into it, copy should be configurable
             $copy = $this->object()->config('parse.read.object.copy');
             if($copy && is_object($copy)){
