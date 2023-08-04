@@ -123,6 +123,7 @@ class Install extends Controller {
                 }
             }
         }
+        ddd($package);
         if(
             $package->has('copy') &&
             is_array($package->get('copy'))
@@ -134,8 +135,8 @@ class Install extends Controller {
                     property_exists($copy, 'recursive') &&
                     $copy->recursive === true
                 ){
-                    $parse = new Parse($object, $object->data());
-                    $copy->to = $parse->compile($copy->to, $object->data());
+//                    $parse = new Parse($object, $object->data());
+//                    $copy->to = $parse->compile($copy->to, $object->data());
                     if(File::exist($copy->from)){
                         if(Dir::is($copy->from)){
                             Dir::create($copy->to, Dir::CHMOD);
@@ -198,8 +199,8 @@ class Install extends Controller {
                     property_exists($copy, 'from') &&
                     property_exists($copy, 'to')
                 ){
-                    $parse = new Parse($object, $object->data());
-                    $copy->to = $parse->compile($copy->to, $object->data());
+//                    $parse = new Parse($object, $object->data());
+//                    $copy->to = $parse->compile($copy->to, $object->data());
                     if(File::exist($copy->from)){
                         if(Dir::is($copy->from)){
                             Dir::create($copy->to, Dir::CHMOD);
