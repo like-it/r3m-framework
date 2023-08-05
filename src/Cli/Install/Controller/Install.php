@@ -123,7 +123,6 @@ class Install extends Controller {
                 }
             }
         }
-        ddd($package);
         if(
             $package->has('copy') &&
             is_array($package->get('copy'))
