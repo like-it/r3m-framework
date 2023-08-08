@@ -16,7 +16,7 @@
 		"ext-zip": "*",
 		"ext-shmop": "*",
 		"r3m_io/event": "dev-main",
-		"r3m_io/node": "dev-main",
+		"r3m_io/node": "*",
 		"monolog/monolog" : "^2.2",
 		"defuse/php-encryption": "^2.3"
     },
