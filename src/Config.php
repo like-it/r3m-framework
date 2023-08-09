@@ -158,6 +158,7 @@ class Config extends Data {
     const DATA_FRAMEWORK_DIR_PLUGIN =  Config::DATA_FRAMEWORK_DIR . '.' . 'plugin';
     const DATA_FRAMEWORK_DIR_FUNCTION =  Config::DATA_FRAMEWORK_DIR . '.' . 'function';
     const DATA_FRAMEWORK_DIR_VALIDATE =  Config::DATA_FRAMEWORK_DIR . '.' . 'validate';
+    const DATA_FRAMEWORK_DIR_VALIDATOR =  Config::DATA_FRAMEWORK_DIR . '.' . 'validator';
     const DATA_FRAMEWORK_DIR_VIEW =  Config::DATA_FRAMEWORK_DIR . '.' . 'view';
 
     const DATA_FRAMEWORK_ENVIRONMENT = 'framework.environment';
@@ -190,6 +191,7 @@ class Config extends Data {
     const DATA_PROJECT_DIR_EVENT =  Config::DATA_PROJECT_DIR . '.' . 'event';
     const DATA_PROJECT_DIR_MIDDLEWARE =  Config::DATA_PROJECT_DIR . '.' . 'middleware';
     const DATA_PROJECT_DIR_OUTPUT_FILTER =  Config::DATA_PROJECT_DIR . '.' . 'output.filter';
+    const DATA_PROJECT_DIR_PACKAGE =  Config::DATA_PROJECT_DIR . '.' . 'package';
     const DATA_PROJECT_DIR_CLI =  Config::DATA_PROJECT_DIR . '.' . 'cli';
     const DATA_PROJECT_DIR_PUBLIC =  Config::DATA_PROJECT_DIR . '.' . 'public';
     const DATA_PROJECT_DIR_HOST =  Config::DATA_PROJECT_DIR . '.' . 'host';
@@ -578,6 +580,13 @@ class Config extends Data {
             $this->data(Config::DS)
         ;
         $this->data($key, $value);
+        $key = Config::DATA_PROJECT_DIR_PACKAGE;
+        $value =
+            $this->data(Config::DATA_PROJECT_DIR_ROOT) .
+            $this->data(Config::DICTIONARY . '.' . Config::PACKAGE) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
 
         $key = Config::DATA_PROJECT_DIR_CLI;
         $value =
@@ -693,6 +702,13 @@ class Config extends Data {
         $value =
             $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
             $this->data(Config::DICTIONARY . '.' . Config::VALIDATE) .
+            $this->data(Config::DS)
+        ;
+        $this->data($key, $value);
+        $key = Config::DATA_FRAMEWORK_DIR_VALIDATOR;
+        $value =
+            $this->data(Config::DATA_FRAMEWORK_DIR_SOURCE) .
+            $this->data(Config::DICTIONARY . '.' . Config::VALIDATOR) .
             $this->data(Config::DS)
         ;
         $this->data($key, $value);

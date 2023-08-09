@@ -2679,6 +2679,7 @@ class Core
     /**
      * @throws ObjectException
      * @throws FileWriteException
+     * @throws Exception
      */
     public static function object_select(Parse $parse, Data $data, $url='', $select=null, $compile=false, $scope='scope:object')
     {

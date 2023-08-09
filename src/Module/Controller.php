@@ -36,6 +36,10 @@ class Controller {
     const PROPERTY_VIEW_URL = 'r3m.io.parse.view.url';
     const PROPERTY_VIEW_MTIME = 'r3m.io.parse.view.mtime';
 
+    const PREPEND = 'prepend';
+    const APPEND = 'append';
+
+
     /**
      * @throws ObjectException
      * @throws Exception
@@ -81,6 +85,50 @@ class Controller {
         } else {
             return $name;
         }
+    }
+
+    public static function plugin(App $object, $dir='', $type=Controller::PREPEND): void
+    {
+        $plugin = $object->config('parse.dir.plugin');
+        if(empty($plugin)){
+            $plugin = [];
+        }
+        if(File::exist($dir)){
+            switch($type){
+                case Controller::PREPEND:
+                    $plugin = [
+                        $dir,
+                        ...$plugin
+                    ];
+                break;
+                case Controller::APPEND:
+                    $plugin[] = $dir;
+                break;
+            }
+        }
+        $object->config('parse.dir.plugin', $plugin);
+    }
+
+    public static function validator(App $object, $dir='', $type=Controller::PREPEND): void
+    {
+        $validator = $object->config('validate.dir.validator');
+        if(empty($validator)){
+            $validator = [];
+        }
+        if(File::exist($dir)){
+            switch($type){
+                case Controller::PREPEND:
+                    $validator = [
+                        $dir,
+                        ...$validator
+                    ];
+                    break;
+                case Controller::APPEND:
+                    $validator[] = $dir;
+                    break;
+            }
+        }
+        $object->config('validate.dir.validator', $validator);
     }
 
     /**
@@ -529,7 +577,6 @@ class Controller {
         }
         $config->data(Config::DATA_CONTROLLER_NAME, strtolower(File::basename($config->data(Config::DATA_CONTROLLER_CLASS))));
         $config->data(Config::DATA_CONTROLLER_TITLE, File::basename($config->data(Config::DATA_CONTROLLER_CLASS)));
-
         $host_dir_public = $config->data(Config::DATA_HOST_DIR_PUBLIC);
         $explode = explode($config->data('ds'), $host_dir_public);
         $slash = array_pop($explode);
