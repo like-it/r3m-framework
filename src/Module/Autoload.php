@@ -521,9 +521,9 @@ class Autoload {
                                     if(empty($mtime)){
                                         $mtime = [];
                                         if(file_exists($config_url)){
-                                            $mtime = file_get_contents($config_url);
-                                            if($mtime){
-                                                $mtime = json_decode($mtime, true);
+                                            $content = file_get_contents($config_url);
+                                            if($content){
+                                                $mtime = json_decode($content, true);
                                             }
                                         }
                                     }
@@ -560,8 +560,8 @@ class Autoload {
                                                 if(!is_dir($config_dir)){
                                                     mkdir($config_dir, 0750, true);
                                                 }
-                                                var_dump($config_url);
-                                                file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
+                                                $write = json_encode($mtime, JSON_PRETTY_PRINT);
+                                                file_put_contents($config_url, $write);
                                                 $object->set(sha1($config_url), $mtime);
                                                 exec('chmod 640 ' . $object->config('autoload.cache.file.name'));
                                                 exec('chmod 640 ' . $config_url);
