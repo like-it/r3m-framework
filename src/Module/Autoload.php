@@ -560,6 +560,8 @@ class Autoload {
                                                 if(!is_dir($config_dir)){
                                                     mkdir($config_dir, 0750, true);
                                                 }
+                                                var_dump($config_url);
+                                                var_dump($mtime);
                                                 file_put_contents($config_url, json_encode($mtime, JSON_PRETTY_PRINT));
                                                 $object->set(sha1($config_url), $mtime);
                                                 exec('chmod 640 ' . $object->config('autoload.cache.file.name'));
