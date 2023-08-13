@@ -2234,6 +2234,7 @@ class Core
      * @throws Exception
      */
     public static function object_set($attributeList=[], $value=null, $object='', $return='child'){
+        Core::interactive();
         if(empty($object)){
             return;
         }
