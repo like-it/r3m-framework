@@ -193,11 +193,10 @@ class Event extends Main {
                 ]
             ]
         );
+        if($count === 0 || $limit === 0){
+            return;
+        }
         $page_max = ceil($count / $limit);
-        d($page_max);
-        d($count);
-        ddd($limit);
-        exit(1);
         for($page = 1; $page <= $page_max; $page++){
             $response = $event->list(
                 Event::OBJECT,
@@ -212,12 +211,10 @@ class Event extends Main {
                     'ramdisk' => true
                 ]
             );
-            ddd($response);
             if(
                 $response &&
                 array_key_exists('list', $response)
             ){
-                d($response);
                 Event::on($object, $response['list']);
             }
         }
@@ -236,6 +233,5 @@ class Event extends Main {
                 $object->logger($object->config('project.log.name'))->info('Event::configure (msec)', [$duration * 1000]);
             }
         }
-
     }
 }
