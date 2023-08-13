@@ -197,6 +197,7 @@ class Event extends Main {
         d($page_max);
         d($count);
         ddd($limit);
+        exit(1);
         for($page = 1; $page <= $page_max; $page++){
             $response = $event->list(
                 Event::OBJECT,
