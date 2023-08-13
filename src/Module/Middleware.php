@@ -31,7 +31,7 @@ class Middleware extends Main {
     use Role;
 
     const NAME = 'Middleware';
-    const OBJECT = 'App.Middleware';
+    const OBJECT = 'Middleware';
     const CHUNK_SIZE = 4096;
 
     const LIST = 'list';
