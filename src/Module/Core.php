@@ -2290,6 +2290,7 @@ class Core
                         return Core::object_set($attribute, $value, $object->{$key}, $return);
                     }
                     else {
+                        var_dump($attribute);
                         $object->{$key} = $value;
                     }
                 }
