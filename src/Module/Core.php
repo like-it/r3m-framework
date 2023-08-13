@@ -2278,6 +2278,8 @@ class Core
                             property_exists($object, $key) &&
                             is_array($object->{$key})
                         ){
+                            var_dump($attribute);
+                            var_dump($key);
                             foreach($attribute as $index => $unused){
                                 $object->{$key}[$index] = $value;
                             }
