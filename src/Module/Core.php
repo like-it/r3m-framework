@@ -2251,7 +2251,6 @@ class Core
         if(is_array($attributeList)){
             $attributeList = Core::object_horizontal($attributeList);
         }
-        var_dump($attributeList);
         if(!empty($attributeList)){
             foreach($attributeList as $key => $attribute){
                 if(is_object($object)){
@@ -2271,6 +2270,9 @@ class Core
                                 */
                                 $object->{$key}->{$value_key} = $value_value;
                             }
+                            echo '--------1------------';
+                            var_dump($value);
+                            var_dump($key);
                             return $object->{$key};
                         }
                         return Core::object_set($attribute, $value, $object->{$key}, $return);
@@ -2280,6 +2282,7 @@ class Core
                             property_exists($object, $key) &&
                             is_array($object->{$key})
                         ){
+                            echo '--------2------------';
                             var_dump($attribute);
                             var_dump($key);
                             foreach($attribute as $index => $unused){
@@ -2292,7 +2295,10 @@ class Core
                         return Core::object_set($attribute, $value, $object->{$key}, $return);
                     }
                     else {
+                        echo '--------3------------';
                         var_dump($attribute);
+                        var_dump($key);
+                        var_dump($value);
                         $object->{$key} = $value;
                     }
                 }
@@ -2310,6 +2316,10 @@ class Core
                                 */
                                 $object[$key]->{$value_key} = $value_value;
                             }
+                            echo '--------4------------';
+                            var_dump($attribute);
+                            var_dump($key);
+                            var_dump($value);
                             return $object[$key];
                         }
                         return Core::object_set($attribute, $value, $object[$key], $return);
@@ -2327,6 +2337,10 @@ class Core
                                 */
                                 $object[$key]->{$value_key} = $value_value;
                             }
+                            echo '--------5------------';
+                            var_dump($attribute);
+                            var_dump($key);
+                            var_dump($value);
                             return $object[$key];
                         }
                         return Core::object_set($attribute, $value, $object[$key], $return);
@@ -2339,6 +2353,10 @@ class Core
                             foreach($attribute as $index => $unused){
                                 $object[$key][$index] = $value;
                             }
+                            echo '--------6------------';
+                            var_dump($attribute);
+                            var_dump($key);
+                            var_dump($value);
                             return $object[$key];
                         } else {
                             $object[$key] = (object) [];
@@ -2346,6 +2364,10 @@ class Core
                         return Core::object_set($attribute, $value, $object[$key], $return);
                     }
                     else {
+                        echo '--------7------------';
+                        var_dump($attribute);
+                        var_dump($key);
+                        var_dump($value);
                         $object->{$key} = $value;
                     }
                 } else {
