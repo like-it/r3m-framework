@@ -193,7 +193,6 @@ class Event extends Main {
                 ]
             ]
         );
-        ddd($count);
         $page_max = ceil($count / $limit);
         for($page = 1; $page <= $page_max; $page++){
             $response = $event->list(
@@ -213,6 +212,7 @@ class Event extends Main {
                 $response &&
                 array_key_exists('list', $response)
             ){
+                d($response);
                 Event::on($object, $response['list']);
             }
         }
