@@ -2285,6 +2285,7 @@ class Core
                             echo '--------2------------';
                             var_dump($attribute);
                             var_dump($key);
+                            var_dump($value);
                             foreach($attribute as $index => $unused){
                                 $object->{$key}[$index] = $value;
                             }
