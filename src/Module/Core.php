@@ -2234,7 +2234,7 @@ class Core
      * @throws Exception
      */
     public static function object_set($attributeList=[], $value=null, $object='', $return='child'){
-        Core::interactive();
+//        Core::interactive(); //maybe dangerous in template generation, it flushes directly and doesn't return parse.
         if(empty($object)){
             return;
         }
