@@ -194,6 +194,9 @@ class Event extends Main {
             ]
         );
         $page_max = ceil($count / $limit);
+        d($page_max);
+        d($count);
+        d($limit);
         for($page = 1; $page <= $page_max; $page++){
             $response = $event->list(
                 Event::OBJECT,
