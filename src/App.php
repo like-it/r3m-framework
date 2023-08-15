@@ -104,7 +104,8 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public static function configure(App $object){
+    public static function configure(App $object): void
+    {
         $info = 'Logger: App initialised.';
         if(App::is_cli() === false){
             $domains = $object->config('server.cors.domains');
@@ -151,7 +152,8 @@ class App extends Data {
      * @throws ObjectException
      * @throws LocateException
      */
-    public static function run(App $object){
+    public static function run(App $object): mixed
+    {
         Handler::request_configure($object);
         App::configure($object);
         Route::configure($object);
@@ -454,7 +456,8 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public static function controller(App $object, $route){
+    public static function controller(App $object, $route): void
+    {
         if(property_exists($route, 'controller')){
             $check = class_exists($route->controller);
             if(empty($check)){
@@ -468,7 +471,8 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public static function contentType(App $object){
+    public static function contentType(App $object): string
+    {
         $contentType = $object->data(App::CONTENT_TYPE);
         if(empty($contentType)){
             $contentType = App::CONTENT_TYPE_HTML;
@@ -490,7 +494,8 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public static function exception_to_json(Exception $exception){
+    public static function exception_to_json(Exception $exception): string
+    {
         $class = get_class($exception);
         $array = [];
         $array['class'] = $class;
@@ -535,7 +540,11 @@ class App extends Data {
         return $output;
     }
 
-    public static function response_output(App $object, $output=App::CONTENT_TYPE_HTML){
+    /**
+     * @throws Exception
+     */
+    public static function response_output(App $object, $output=App::CONTENT_TYPE_HTML): void
+    {
         $object->config('response.output', $output);
     }
 
@@ -543,7 +552,8 @@ class App extends Data {
      * @throws ObjectException
      * @throws Exception
      */
-    private static function result(App $object, $output){
+    private static function result(App $object, $output): string
+    {
         if($output instanceof Exception){
             if(App::is_cli()){
                 $logger = $object->config('project.log.name');
@@ -581,7 +591,8 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    private function setLogger($name='', LoggerInterface $logger=null){
+    private function setLogger($name='', LoggerInterface $logger=null): void
+    {
         if(empty($name)){
             $name = $this->config('project.log.name');
         }
@@ -621,43 +632,53 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public function route(){
+    public function route(): mixed
+    {
         return $this->data(App::ROUTE);
     }
 
     /**
      * @throws Exception
      */
-    public function config($attribute=null, $value=null){
+    public function config($attribute=null, $value=null): mixed
+    {
         return $this->data(App::CONFIG)->data($attribute, $value);
     }
 
     /**
      * @throws Exception
      */
-    public function event($attribute=null, $value=null){
+    public function event($attribute=null, $value=null): mixed
+    {
         return $this->data(App::EVENT)->data($attribute, $value);
     }
 
     /**
      * @throws Exception
      */
-    public function middleware($attribute=null, $value=null){
+    public function middleware($attribute=null, $value=null): mixed
+    {
         return $this->data(App::MIDDLEWARE)->data($attribute, $value);
     }
 
     /**
      * @throws Exception
      */
-    public function request($attribute=null, $value=null){
+    public function request($attribute=null, $value=null): mixed
+    {
         return $this->data(App::REQUEST)->data($attribute, $value);        
     }
 
-    public static function parameter($object, $parameter='', $offset=0){
+    public static function parameter($object, $parameter='', $offset=0): mixed
+    {
         return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
-    private static function flags_options($object){
+    /**
+     * @throws Exception
+     */
+    private static function flags_options($object): void
+    {
         $data = $object->data(App::REQUEST)->data();
         $options = (object) [];
         $flags = (object) [];
@@ -698,11 +719,27 @@ class App extends Data {
                             case 'null':
                                 $value = null;
                             break;
+                            case 'false':
                             case '[]':
                                 $value = [];
                             break;
                             case '{}':
                                 $value = (object) [];
+                            break;
+                            case '\true':
+                                $value = 'true';
+                                break;
+                            case '\false':
+                                $value = 'false';
+                                break;
+                            case '\null':
+                                $value = 'null';
+                            break;
+                            case '\[]':
+                                $value = '[]';
+                            break;
+                            case '\{}':
+                                $value = '{}';
                             break;
                         }
                     }
@@ -740,6 +777,9 @@ class App extends Data {
         $object->data(App::OPTIONS, $options);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function flags($object): stdClass
     {
         $flags = $object->data(App::FLAGS);
@@ -750,6 +790,9 @@ class App extends Data {
         return $flags;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function options($object): stdClass
     {
         $options = $object->data(App::OPTIONS);
@@ -763,11 +806,13 @@ class App extends Data {
     /**
      * @throws Exception
      */
-    public function session($attribute=null, $value=null){
+    public function session($attribute=null, $value=null): mixed
+    {
         return Handler::session($attribute, $value);
     }
 
-    public function cookie($attribute=null, $value=null, $duration=null){
+    public function cookie($attribute=null, $value=null, $duration=null): mixed
+    {
         if($attribute === 'http'){
             $cookie = $this->server('HTTP_COOKIE');
             return explode('; ', $cookie);
@@ -793,7 +838,8 @@ class App extends Data {
         }
     }
 
-    public function server($attribute){
+    public function server($attribute): mixed
+    {
         if($attribute===null){
             return $_SERVER;
         }
@@ -851,8 +897,9 @@ class App extends Data {
     /**
      * @throws ObjectException
      * @throws FileWriteException
+     * @throws Exception
      */
-    public function object_select($url, $select=null, $compile=false, $scope='scope:object')
+    public function object_select($url, $select=null, $compile=false, $scope='scope:object'): mixed
     {
         $parse = new Parse($this);
         $data = new Data();
@@ -870,7 +917,8 @@ class App extends Data {
     /**
      * @throws ObjectException
      */
-    public function data_read($url, $attribute=null, $do_not_nest_key=false){
+    public function data_read($url, $attribute=null, $do_not_nest_key=false): mixed
+    {
         if($attribute !== null){
             $data = $this->data($attribute);
             if(!empty($data)){
@@ -906,7 +954,8 @@ class App extends Data {
      * @throws FileWriteException
      * @throws Exception
      */
-    public function parse_read($url, $attribute=null){
+    public function parse_read($url, $attribute=null): mixed
+    {
         if($attribute !== null){
             $data = $this->data($attribute);
             if(!empty($data)){
@@ -981,7 +1030,8 @@ class App extends Data {
      * @throws ObjectException
      * @throws Exception
      */
-    public function ramdisk_load($load=''){
+    public function ramdisk_load($load=''): mixed
+    {
         $prefixes = $this->config('ramdisk.autoload.prefix');
         if(
             !empty($prefixes) &&
