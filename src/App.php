@@ -485,8 +485,8 @@ class App extends Data {
             if(empty($contentType)){
                 throw new Exception('Couldn\'t determine contentType');
             }
-            d($contentType);
-            return $object->data(App::CONTENT_TYPE, $contentType);
+            $object->data(App::CONTENT_TYPE, $contentType);
+            return $contentType;
         } else {
             return $contentType;
         }
