@@ -486,4 +486,50 @@ class Data {
         Dir::create($dir);
         return File::write($url, Core::object($this->data(), Core::OBJECT_JSON), $return);
     }
+
+    public function remove_null($data = null){
+        if($data = null){
+            $data = $this->data();
+        }
+        if(is_array($data)){
+            foreach($data as $key => $value){
+                if($value === null){
+                    unset($data[$key]);
+                }
+                elseif(is_object($value)){
+                    $this->remove_null($value);
+                }
+                elseif(is_array($value)){
+                    foreach($value as $nr => $value_value){
+                        if($value_value === null){
+                            unset($value[$nr]);
+                        }
+                        elseif(is_object($value_value)){
+                            $this->remove_null($value_value);
+                        }
+                    }
+                }
+            }
+        }
+        elseif(is_object($data)){
+            foreach($data as $key => $value){
+                if($value === null){
+                    unset($data->{$key});
+                }
+                elseif(is_object($value)){
+                    $this->remove_null($value);
+                }
+                elseif(is_array($value)){
+                    foreach($value as $nr => $value_value){
+                        if($value_value === null){
+                            unset($value[$nr]);
+                        }
+                        elseif(is_object($value_value)){
+                            $this->remove_null($value_value);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
