@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\DirectoryCreateException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\ObjectException;
 
@@ -44,7 +45,8 @@ class Data {
      * @param number $offset
      * @return NULL|boolean|string
      */
-    public static function parameter($data, $parameter, $offset=0){
+    public static function parameter($data, $parameter, $offset=0): mixed
+    {
         $result = null;
         $value = null;
         if(is_string($parameter) && stristr($parameter, '\\')){
@@ -238,56 +240,78 @@ class Data {
         return $find;
     }
 
-
-    public function get($attribute=''){
+    /**
+     * @throws Exception
+     */
+    public function get($attribute=''): mixed
+    {
         return $this->data('get', $attribute);
     }
 
-    public function set($attribute='', $value=null, $is_debug=false){
+    /**
+     * @throws Exception
+     */
+    public function set($attribute='', $value=null, $is_debug=false): mixed
+    {
         $part_before = stristr($attribute, '[]', true);
         $part_after = stristr($attribute, '[]');
         if($part_before !== false){
             $attribute = $part_before;
             $attribute .= '.' . $this->index($attribute);
-            d($attribute);
+//            d($attribute);
         }
         if(!empty($part_after)){
-            ddd($part_after);
+//            ddd($part_after);
 //            $attribute .= '.'
         }
         return $this->data('set', $attribute, $value, $is_debug);
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete($attribute=''): bool
     {
         return $this->data('delete', $attribute);
     }
 
+    /**
+     * @throws Exception
+     */
     public function has($attribute=''): bool
     {
         return Core::object_has($attribute, $this->data());
     }
 
+    /**
+     * @throws Exception
+     */
     public function has_property($attribute=''): bool
     {
         return Core::object_has_property($attribute, $this->data());
     }
 
-    public function extract($attribute=''){
+    /**
+     * @throws Exception
+     */
+    public function extract($attribute=''): mixed
+    {
         //add first & last
         $get = $this->get($attribute);
         $delete = $this->delete($attribute);
         return $get;
     }
 
-    public function is_debug($is_debug=false){
+    public function is_debug($is_debug=false): void
+    {
         $this->is_debug = $is_debug;
     }
 
     /**
      * @throws Exception
      */
-    public function data($attribute=null, $value=null, $type=null, $is_debug=false){
+    public function data($attribute=null, $value=null, $type=null, $is_debug=false): mixed
+    {
         if(is_int($attribute)){
             $attribute = (string) $attribute;
         }
@@ -368,7 +392,8 @@ class Data {
         return $this->getData();
     }
 
-    private function setData($attribute='', $value=null){
+    private function setData($attribute='', $value=null): void
+    {
         if(is_array($attribute) || is_object($attribute)){
             if(is_object($this->data)){
                 foreach($attribute as $key => $value){
@@ -395,7 +420,8 @@ class Data {
         }
     }
 
-    protected function getData($attribute=null){
+    protected function getData($attribute=null): mixed
+    {
         if($attribute === null){
             if(is_null($this->data)){
                 $this->data = (object) [];
@@ -409,11 +435,16 @@ class Data {
         }
     }
 
-    private function deleteData($attribute=null){
+    /**
+     * @throws Exception
+     */
+    private function deleteData($attribute=null): bool
+    {
         return Core::object_delete($attribute, $this->data());
     }
 
-    public function is_empty(){
+    public function is_empty(): bool
+    {
         $data = $this->data();
         if(Core::object_is_empty($data)){
             return true;
@@ -421,7 +452,8 @@ class Data {
         return false;
     }
 
-    public function clear(){
+    public function clear(): void
+    {
         $data = $this->data();
         foreach($data as $key => $unused){
             $this->data('delete', $key);
@@ -431,7 +463,8 @@ class Data {
     /**
      * @throws Exception
      */
-    public function copy(){
+    public function copy(): void
+    {
         $data = $this->data();
         if(is_array($data)){
             $this->copy = $data;
@@ -440,7 +473,11 @@ class Data {
         }
     }
 
-    public function reset($to_empty=false){
+    /**
+     * @throws Exception
+     */
+    public function reset($to_empty=false): void
+    {
         $this->clear();
         if(
             $to_empty === false &&
@@ -470,7 +507,8 @@ class Data {
     }
 
 
-    public function do_not_nest_key($do_not_nest_key=null){
+    public function do_not_nest_key($do_not_nest_key=null): ?bool
+    {
         if($do_not_nest_key !== null){
             $this->do_not_nest_key = $do_not_nest_key;
         }
@@ -480,14 +518,21 @@ class Data {
     /**
      * @throws ObjectException
      * @throws FileWriteException
+     * @throws Exception
+     * @throws DirectoryCreateException
      */
-    public function write($url='', $return='size'){
+    public function write($url='', $return=File::SIZE): bool|int
+    {
         $dir = Dir::name($url);
         Dir::create($dir);
         return File::write($url, Core::object($this->data(), Core::OBJECT_JSON), $return);
     }
 
-    public function remove_null($data = null){
+    /**
+     * @throws Exception
+     */
+    public function remove_null($data = null): void
+    {
         if($data = null){
             $data = $this->data();
         }
