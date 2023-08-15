@@ -187,6 +187,7 @@ class Data {
                     $parameter = $tmp[0];
                     $value = $tmp[1];
                     d($value);
+                    d($flags);
                     if(is_numeric($value)){
                         $value = $value + 0;
                     } else {
