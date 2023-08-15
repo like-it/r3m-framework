@@ -171,7 +171,7 @@ class Data {
     /**
      * @throws ObjectException
      */
-    public static function options($data, $flags=null): stdClass
+    public static function options($data): stdClass
     {
         $options = (object) [];
         foreach($data as $nr => $parameter){
@@ -186,8 +186,6 @@ class Data {
                 if(array_key_exists(1, $tmp)){
                     $parameter = $tmp[0];
                     $value = $tmp[1];
-                    d($value);
-                    d($flags);
                     if(is_numeric($value)){
                         $value = $value + 0;
                     } else {

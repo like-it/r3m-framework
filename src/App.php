@@ -657,28 +657,99 @@ class App extends Data {
         return parent::parameter($object->data(App::REQUEST)->data(), $parameter, $offset);
     }
 
+    private static function flags_options($object){
+        $data = $object->data(App::REQUEST)->data();
+        $options = (object) [];
+        $flags = (object) [];
+        foreach($data as $nr => $parameter){
+            $is_flag = false;
+            $is_option = false;
+            $is_array = false;
+            if(
+                is_string($parameter)
+            ){
+                if(substr($parameter, 0, 2) === '--'){
+                    $parameter = substr($parameter, 2);
+                    $is_flag = true;
+                }
+                elseif(substr($parameter, 0, 1) === '-'){
+                    $parameter = substr($parameter, 1);
+                    $is_option = true;
+                }
+                $value = true;
+                $tmp = explode('=', $parameter, 2);
+                if(array_key_exists(1, $tmp)){
+                    $parameter = $tmp[0];
+                    if(substr($parameter, -2, 2) === '[]'){
+                        $parameter = substr($parameter, 0, -2);
+                        $is_array = true;
+                    }
+                    $value = $tmp[1];
+                    if(is_numeric($value)){
+                        $value = $value + 0;
+                    } else {
+                        switch($value){
+                            case 'true':
+                                $value = true;
+                                break;
+                            case 'false':
+                                $value = false;
+                                break;
+                            case 'null':
+                                $value = null;
+                                break;
+                        }
+                    }
+                } elseif(substr($parameter, -2, 2) === '[]'){
+                    $parameter = substr($parameter, 0, -2);
+                    $is_array = true;
+                }
+                if($is_option){
+                    if($is_array){
+                        $get = Core::object_get($parameter, $options);
+                        if(!is_array($get)){
+                            $get = [];
+                        }
+                        $get[] = $value;
+                        Core::object_set($parameter, $get, $options, 'child');
+                    } else {
+                        Core::object_set($parameter, $value, $options, 'child');
+                    }
+                }
+                elseif($is_flag){
+                    if($is_array){
+                        $get = Core::object_get($parameter, $options);
+                        if(!is_array($get)){
+                            $get = [];
+                        }
+                        $get[] = $value;
+                        Core::object_set($parameter, $get, $flags, 'child');
+                    } else {
+                        Core::object_set($parameter, $value, $flags, 'child');
+                    }
+                }
+            }
+        }
+        d($flags);
+        ddd($options);
+    }
+
     public static function flags($object): stdClass
     {
         $flags = $object->data(App::FLAGS);
         if(empty($flags)){
-            $flags = parent::flags($object->data(App::REQUEST)->data());
-            $object->data(App::FLAGS, $flags);
+            App::flags_options($object);
+            $flags = $object->data(App::FLAGS);
         }
         return $flags;
     }
 
-    public static function options($object, $flags=null): stdClass
+    public static function options($object): stdClass
     {
         $options = $object->data(App::OPTIONS);
         if(empty($options)){
-            if(empty($flags)){
-                $flags = $object->data(App::FLAGS);
-            }
-            if(empty($flags)){
-                $flags = App::flags($object);
-            }
-            $options = parent::options($object->data(App::REQUEST)->data(), $flags);
-            $object->data(App::OPTIONS, $options);
+            App::flags_options($object);
+            $options = $object->data(App::OPTIONS);
         }
         return $options;
     }
