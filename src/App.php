@@ -691,13 +691,19 @@ class App extends Data {
                         switch($value){
                             case 'true':
                                 $value = true;
-                                break;
+                            break;
                             case 'false':
                                 $value = false;
-                                break;
+                            break;
                             case 'null':
                                 $value = null;
-                                break;
+                            break;
+                            case '[]':
+                                $value = [];
+                            break;
+                            case '{}':
+                                $value = (object) [];
+                            break;
                         }
                     }
                 } elseif(substr($parameter, -2, 2) === '[]'){
