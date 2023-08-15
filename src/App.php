@@ -730,8 +730,8 @@ class App extends Data {
                 }
             }
         }
-        d($flags);
-        ddd($options);
+        $object->data(App::FLAGS, $flags);
+        $object->data(App::OPTIONS, $options);
     }
 
     public static function flags($object): stdClass
