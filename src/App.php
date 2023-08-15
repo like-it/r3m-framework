@@ -671,7 +671,11 @@ class App extends Data {
     {
         $options = $object->data(App::OPTIONS);
         if(empty($options)){
-            $options = parent::options($object->data(App::REQUEST)->data());
+            $flags = $object->data(App::FLAGS);
+            if(empty($flags)){
+                $flags = App::flags($object);
+            }
+            $options = parent::options($object->data(App::REQUEST)->data(), $flags);
             $object->data(App::OPTIONS, $options);
         }
         return $options;
