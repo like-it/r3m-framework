@@ -667,7 +667,7 @@ class App extends Data {
         return $flags;
     }
 
-    public static function options($object): stdClass
+    public static function options($object, $flags=null): stdClass
     {
         $options = $object->data(App::OPTIONS);
         if(empty($options)){
