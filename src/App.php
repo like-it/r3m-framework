@@ -614,28 +614,41 @@ class App extends Data {
             d($debug[2]['file'] . ' ' . $debug[2]['line']);
             throw new Exception('Please configure project.log.name');
         }
-        d($name);
-        ddd($this->logger);
         throw new Exception('Logger with name: ' . $name . ' not initialised.');
 
     }
 
+    /**
+     * @throws Exception
+     */
     public function route(){
         return $this->data(App::ROUTE);
     }
 
+    /**
+     * @throws Exception
+     */
     public function config($attribute=null, $value=null){
         return $this->data(App::CONFIG)->data($attribute, $value);
     }
 
+    /**
+     * @throws Exception
+     */
     public function event($attribute=null, $value=null){
         return $this->data(App::EVENT)->data($attribute, $value);
     }
 
+    /**
+     * @throws Exception
+     */
     public function middleware($attribute=null, $value=null){
         return $this->data(App::MIDDLEWARE)->data($attribute, $value);
     }
 
+    /**
+     * @throws Exception
+     */
     public function request($attribute=null, $value=null){
         return $this->data(App::REQUEST)->data($attribute, $value);        
     }

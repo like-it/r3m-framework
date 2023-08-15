@@ -130,46 +130,22 @@ class Data {
 
     /**
      * @throws ObjectException
+     * @throws Exception
      */
     public static function flags($data): stdClass
     {
-        $flags = [];
+        $flags = (object) [];
         foreach($data as $nr => $parameter){
             if(
                 is_string($parameter) &&
                 substr($parameter, 0, 2) === '--'
             ){
                 $parameter = substr($parameter, 2);
-                $tmp = explode('=', $parameter);
-                if(count($tmp) > 1){
-                    $parameter = array_shift($tmp);
-                    $value = implode('=', $tmp);
-                } else {
-                    $value = true;
-                }
-                $flags[$parameter] = $value;
-            }
-        }
-        return Core::object($flags);
-    }
-
-    /**
-     * @throws ObjectException
-     */
-    public static function options($data): stdClass
-    {
-        $options = [];
-        foreach($data as $nr => $parameter){
-            if(
-                is_string($parameter) &&
-                substr($parameter, 0, 2) !== '--' &&
-                substr($parameter, 0, 1) === '-'
-            ){
-                $parameter = substr($parameter, 1);
-                $tmp = explode('=', $parameter);
-                if(count($tmp) > 1){
-                    $parameter = array_shift($tmp);
-                    $value = implode('=', $tmp);
+                $value = true;
+                $tmp = explode('=', $parameter, 2);
+                if(array_key_exists(1, $tmp)){
+                    $parameter = $tmp[0];
+                    $value = $tmp[1];
                     if(is_numeric($value)){
                         $value = $value + 0;
                     } else {
@@ -185,13 +161,51 @@ class Data {
                                 break;
                         }
                     }
-                } else {
-                    $value = true;
                 }
-                $options[$parameter] = $value;
+                Core::object_set($parameter, $value, $flags, 'child');
             }
         }
-        return Core::object($options);
+        return $flags;
+    }
+
+    /**
+     * @throws ObjectException
+     */
+    public static function options($data): stdClass
+    {
+        $options = (object) [];
+        foreach($data as $nr => $parameter){
+            if(
+                is_string($parameter) &&
+                substr($parameter, 0, 2) !== '--' &&
+                substr($parameter, 0, 1) === '-'
+            ){
+                $parameter = substr($parameter, 1);
+                $value = true;
+                $tmp = explode('=', $parameter, 2);
+                if(array_key_exists(1, $tmp)){
+                    $parameter = $tmp[0];
+                    $value = $tmp[1];
+                    if(is_numeric($value)){
+                        $value = $value + 0;
+                    } else {
+                        switch($value){
+                            case 'true':
+                                $value = true;
+                                break;
+                            case 'false':
+                                $value = false;
+                                break;
+                            case 'null':
+                                $value = null;
+                                break;
+                        }
+                    }
+                }
+                Core::object_set($parameter, $value, $options, 'child');
+            }
+        }
+        return $options;
     }
 
     public function select($attribute='', $criteria=[]): array
