@@ -671,7 +671,9 @@ class App extends Data {
     {
         $options = $object->data(App::OPTIONS);
         if(empty($options)){
-            $flags = $object->data(App::FLAGS);
+            if(empty($flags)){
+                $flags = $object->data(App::FLAGS);
+            }
             if(empty($flags)){
                 $flags = App::flags($object);
             }
