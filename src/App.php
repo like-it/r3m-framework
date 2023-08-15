@@ -553,7 +553,7 @@ class App extends Data {
      * @throws ObjectException
      * @throws Exception
      */
-    private static function result(App $object, $output): string
+    private static function result(App $object, $output): ?string
     {
         if($output instanceof Exception){
             if(App::is_cli()){
