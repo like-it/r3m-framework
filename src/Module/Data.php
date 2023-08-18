@@ -515,18 +515,44 @@ class Data {
         return $this->do_not_nest_key;
     }
 
-    public function patch_nested_key($data=null){
+    /**
+     * @throws Exception
+     */
+    public function patch_nested_key($data=null, $result=null, $prefix=''){
+        if($result === null){
+            $result = new Data();
+            $result->do_not_nest_key($this->do_not_nest_key());
+        }
         if($data === null){
             $data = $this->data();
         }
         foreach($data as $key => $value){
-            if(is_array($value)){
-                ddd($value);
+            if(
+                is_array($value) ||
+                is_object($value)
+            ){
+                foreach($value as $value_key => $value_value){
+                    if(
+                        is_array($value_value) ||
+                        is_object($value_key)
+                    ){
+                        $this->patch_nested_key($value_value, $result, $key . '.' . $value_key);
+                    }
+                    elseif($prefix !== '') {
+                        $result->set($prefix . '.' . $key . '.' . $value_key, $value_value);
+                    } else {
+                        $result->set($key . '.' . $value_key, $value_value);
+                    }
+                }
             }
-            elseif(is_object($value)){
-                ddd($value);
+            elseif($prefix !== '') {
+                $result->set($prefix . '.' . $key, $value);
+            }
+            else {
+                $result->set($key, $value);
             }
         }
+        return $result->data();
     }
 
     /**
