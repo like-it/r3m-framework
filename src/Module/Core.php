@@ -2130,8 +2130,8 @@ class Core
             return null;
         }
         $keys = [];
-        echo '14 ';
-        var_dump($attributeList);
+//        echo '14 ';
+//        var_dump($attributeList);
         while(!empty($attributeList)){
             foreach($attributeList as $key_attribute => $value_attribute) {
                 $is_collect[] = $key_attribute;
@@ -2143,9 +2143,9 @@ class Core
         }
         krsort($keys, SORT_NATURAL);
         krsort($keys_attribute_list, SORT_NATURAL);
-        echo '11 ';
-        var_dump($keys);
-        var_dump($keys_attribute_list);
+//        echo '11 ';
+//        var_dump($keys);
+//        var_dump($keys_attribute_list);
         foreach($keys as $nr => $key_collect){
             if (isset($object->{$key_collect})) {
                 if(null === $keys_attribute_list[$nr]){
@@ -2155,21 +2155,21 @@ class Core
                 }
             }
             elseif(is_array($object)){
-                echo '6 ';
-                var_dump($key_attribute);
-                var_dump($key_collect);
+//                echo '6 ';
+//                var_dump($key_attribute);
+//                var_dump($key_collect);
 //                var_dump($object);
                 if(array_key_exists($key_collect, $object)){
-                    echo 'has';
+//                    echo 'has';
                     if(null === $keys_attribute_list[$nr]){
                         return $object[$key_collect];
                     } else {
                         return Core::object_get($keys_attribute_list[$nr], $object[$key_collect], $is_debug);
                     }
                 } else {
-                    echo 'has not';
-                    echo '13 ';
-                    var_dump($key_collect);
+//                    echo 'has not';
+//                    echo '13 ';
+//                    var_dump($key_collect);
                     if(null === $keys_attribute_list[$nr]){
                         continue;
                     } else {
@@ -2178,9 +2178,9 @@ class Core
                 }
             }
             else {
-                echo '7 ';
-                var_dump($key_attribute);
-                var_dump($key_collect);
+//                echo '7 ';
+//                var_dump($key_attribute);
+//                var_dump($key_collect);
                 return Core::object_get_nested($keys_attribute_list[$nr], $object, $key_collect, $is_debug);
             }
         }
@@ -2234,6 +2234,7 @@ class Core
      * @throws Exception
      */
     public static function object_set($attributeList=[], $value=null, $object='', $return='child'){
+//        Core::interactive(); //maybe dangerous in template generation, it flushes directly and doesn't return parse.
         if(empty($object)){
             return;
         }
@@ -2269,6 +2270,9 @@ class Core
                                 */
                                 $object->{$key}->{$value_key} = $value_value;
                             }
+//                            echo '--------1------------';
+//                            var_dump($value);
+//                            var_dump($key);
                             return $object->{$key};
                         }
                         return Core::object_set($attribute, $value, $object->{$key}, $return);
@@ -2278,6 +2282,11 @@ class Core
                             property_exists($object, $key) &&
                             is_array($object->{$key})
                         ){
+//                            echo '--------2------------';
+//                            var_dump($attribute);
+//                            var_dump($key);
+//                            var_dump($value);
+//                            var_dump($object->{$key});
                             foreach($attribute as $index => $unused){
                                 $object->{$key}[$index] = $value;
                             }
@@ -2288,6 +2297,10 @@ class Core
                         return Core::object_set($attribute, $value, $object->{$key}, $return);
                     }
                     else {
+//                        echo '--------3------------';
+//                        var_dump($attribute);
+//                        var_dump($key);
+//                        var_dump($value);
                         $object->{$key} = $value;
                     }
                 }
@@ -2305,6 +2318,10 @@ class Core
                                 */
                                 $object[$key]->{$value_key} = $value_value;
                             }
+//                            echo '--------4------------';
+//                            var_dump($attribute);
+//                            var_dump($key);
+//                            var_dump($value);
                             return $object[$key];
                         }
                         return Core::object_set($attribute, $value, $object[$key], $return);
@@ -2322,6 +2339,10 @@ class Core
                                 */
                                 $object[$key]->{$value_key} = $value_value;
                             }
+//                            echo '--------5------------';
+//                            var_dump($attribute);
+//                            var_dump($key);
+//                            var_dump($value);
                             return $object[$key];
                         }
                         return Core::object_set($attribute, $value, $object[$key], $return);
@@ -2334,6 +2355,10 @@ class Core
                             foreach($attribute as $index => $unused){
                                 $object[$key][$index] = $value;
                             }
+//                            echo '--------6------------';
+//                            var_dump($attribute);
+//                            var_dump($key);
+//                            var_dump($value);
                             return $object[$key];
                         } else {
                             $object[$key] = (object) [];
@@ -2341,6 +2366,10 @@ class Core
                         return Core::object_set($attribute, $value, $object[$key], $return);
                     }
                     else {
+//                        echo '--------7------------';
+//                        var_dump($attribute);
+//                        var_dump($key);
+//                        var_dump($value);
                         $object->{$key} = $value;
                     }
                 } else {

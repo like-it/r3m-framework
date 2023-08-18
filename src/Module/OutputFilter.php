@@ -32,7 +32,7 @@ class OutputFilter extends Main {
     use Role;
 
     const NAME = 'OutputFilter';
-    const OBJECT = 'App.OutputFilter';
+    const OBJECT = 'OutputFilter';
     const CHUNK_SIZE = 4096;
     const LIST = 'list';
     const RECORD = 'record';

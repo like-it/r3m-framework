@@ -10,6 +10,7 @@
  */
 namespace R3m\Io\Module;
 
+use R3m\Io\Exception\DirectoryCreateException;
 use R3m\Io\Exception\FileWriteException;
 use R3m\Io\Exception\ObjectException;
 
@@ -44,7 +45,8 @@ class Data {
      * @param number $offset
      * @return NULL|boolean|string
      */
-    public static function parameter($data, $parameter, $offset=0){
+    public static function parameter($data, $parameter, $offset=0): mixed
+    {
         $result = null;
         $value = null;
         if(is_string($parameter) && stristr($parameter, '\\')){
@@ -130,46 +132,22 @@ class Data {
 
     /**
      * @throws ObjectException
+     * @throws Exception
      */
     public static function flags($data): stdClass
     {
-        $flags = [];
+        $flags = (object) [];
         foreach($data as $nr => $parameter){
             if(
                 is_string($parameter) &&
                 substr($parameter, 0, 2) === '--'
             ){
                 $parameter = substr($parameter, 2);
-                $tmp = explode('=', $parameter);
-                if(count($tmp) > 1){
-                    $parameter = array_shift($tmp);
-                    $value = implode('=', $tmp);
-                } else {
-                    $value = true;
-                }
-                $flags[$parameter] = $value;
-            }
-        }
-        return Core::object($flags);
-    }
-
-    /**
-     * @throws ObjectException
-     */
-    public static function options($data): stdClass
-    {
-        $options = [];
-        foreach($data as $nr => $parameter){
-            if(
-                is_string($parameter) &&
-                substr($parameter, 0, 2) !== '--' &&
-                substr($parameter, 0, 1) === '-'
-            ){
-                $parameter = substr($parameter, 1);
-                $tmp = explode('=', $parameter);
-                if(count($tmp) > 1){
-                    $parameter = array_shift($tmp);
-                    $value = implode('=', $tmp);
+                $value = true;
+                $tmp = explode('=', $parameter, 2);
+                if(array_key_exists(1, $tmp)){
+                    $parameter = $tmp[0];
+                    $value = $tmp[1];
                     if(is_numeric($value)){
                         $value = $value + 0;
                     } else {
@@ -185,13 +163,51 @@ class Data {
                                 break;
                         }
                     }
-                } else {
-                    $value = true;
                 }
-                $options[$parameter] = $value;
+                Core::object_set($parameter, $value, $flags, 'child');
             }
         }
-        return Core::object($options);
+        return $flags;
+    }
+
+    /**
+     * @throws ObjectException
+     */
+    public static function options($data): stdClass
+    {
+        $options = (object) [];
+        foreach($data as $nr => $parameter){
+            if(
+                is_string($parameter) &&
+                substr($parameter, 0, 2) !== '--' &&
+                substr($parameter, 0, 1) === '-'
+            ){
+                $parameter = substr($parameter, 1);
+                $value = true;
+                $tmp = explode('=', $parameter, 2);
+                if(array_key_exists(1, $tmp)){
+                    $parameter = $tmp[0];
+                    $value = $tmp[1];
+                    if(is_numeric($value)){
+                        $value = $value + 0;
+                    } else {
+                        switch($value){
+                            case 'true':
+                                $value = true;
+                                break;
+                            case 'false':
+                                $value = false;
+                                break;
+                            case 'null':
+                                $value = null;
+                                break;
+                        }
+                    }
+                }
+                Core::object_set($parameter, $value, $options, 'child');
+            }
+        }
+        return $options;
     }
 
     public function select($attribute='', $criteria=[]): array
@@ -224,56 +240,78 @@ class Data {
         return $find;
     }
 
-
-    public function get($attribute=''){
+    /**
+     * @throws Exception
+     */
+    public function get($attribute=''): mixed
+    {
         return $this->data('get', $attribute);
     }
 
-    public function set($attribute='', $value=null, $is_debug=false){
+    /**
+     * @throws Exception
+     */
+    public function set($attribute='', $value=null, $is_debug=false): mixed
+    {
         $part_before = stristr($attribute, '[]', true);
         $part_after = stristr($attribute, '[]');
         if($part_before !== false){
             $attribute = $part_before;
             $attribute .= '.' . $this->index($attribute);
-            d($attribute);
+//            d($attribute);
         }
         if(!empty($part_after)){
-            ddd($part_after);
+//            ddd($part_after);
 //            $attribute .= '.'
         }
         return $this->data('set', $attribute, $value, $is_debug);
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete($attribute=''): bool
     {
         return $this->data('delete', $attribute);
     }
 
+    /**
+     * @throws Exception
+     */
     public function has($attribute=''): bool
     {
         return Core::object_has($attribute, $this->data());
     }
 
+    /**
+     * @throws Exception
+     */
     public function has_property($attribute=''): bool
     {
         return Core::object_has_property($attribute, $this->data());
     }
 
-    public function extract($attribute=''){
+    /**
+     * @throws Exception
+     */
+    public function extract($attribute=''): mixed
+    {
         //add first & last
         $get = $this->get($attribute);
         $delete = $this->delete($attribute);
         return $get;
     }
 
-    public function is_debug($is_debug=false){
+    public function is_debug($is_debug=false): void
+    {
         $this->is_debug = $is_debug;
     }
 
     /**
      * @throws Exception
      */
-    public function data($attribute=null, $value=null, $type=null, $is_debug=false){
+    public function data($attribute=null, $value=null, $type=null, $is_debug=false): mixed
+    {
         if(is_int($attribute)){
             $attribute = (string) $attribute;
         }
@@ -354,7 +392,8 @@ class Data {
         return $this->getData();
     }
 
-    private function setData($attribute='', $value=null){
+    private function setData($attribute='', $value=null): void
+    {
         if(is_array($attribute) || is_object($attribute)){
             if(is_object($this->data)){
                 foreach($attribute as $key => $value){
@@ -381,7 +420,8 @@ class Data {
         }
     }
 
-    protected function getData($attribute=null){
+    protected function getData($attribute=null): mixed
+    {
         if($attribute === null){
             if(is_null($this->data)){
                 $this->data = (object) [];
@@ -395,11 +435,16 @@ class Data {
         }
     }
 
-    private function deleteData($attribute=null){
+    /**
+     * @throws Exception
+     */
+    private function deleteData($attribute=null): bool
+    {
         return Core::object_delete($attribute, $this->data());
     }
 
-    public function is_empty(){
+    public function is_empty(): bool
+    {
         $data = $this->data();
         if(Core::object_is_empty($data)){
             return true;
@@ -407,7 +452,8 @@ class Data {
         return false;
     }
 
-    public function clear(){
+    public function clear(): void
+    {
         $data = $this->data();
         foreach($data as $key => $unused){
             $this->data('delete', $key);
@@ -417,7 +463,8 @@ class Data {
     /**
      * @throws Exception
      */
-    public function copy(){
+    public function copy(): void
+    {
         $data = $this->data();
         if(is_array($data)){
             $this->copy = $data;
@@ -426,7 +473,11 @@ class Data {
         }
     }
 
-    public function reset($to_empty=false){
+    /**
+     * @throws Exception
+     */
+    public function reset($to_empty=false): void
+    {
         $this->clear();
         if(
             $to_empty === false &&
@@ -456,7 +507,8 @@ class Data {
     }
 
 
-    public function do_not_nest_key($do_not_nest_key=null){
+    public function do_not_nest_key($do_not_nest_key=null): ?bool
+    {
         if($do_not_nest_key !== null){
             $this->do_not_nest_key = $do_not_nest_key;
         }
@@ -464,12 +516,105 @@ class Data {
     }
 
     /**
+     * @throws Exception
+     */
+    public function patch_nested_key($data=null, $result=null, $prefix=''){
+        if($result === null){
+            $result = new Data();
+            $result->do_not_nest_key($this->do_not_nest_key());
+        }
+        if($data === null){
+            $data = $this->data();
+        }
+        foreach($data as $key => $value){
+            if(
+                is_array($value) ||
+                is_object($value)
+            ){
+                foreach($value as $value_key => $value_value){
+                    if(
+                        is_array($value_value) ||
+                        is_object($value_key)
+                    ){
+                        $this->patch_nested_key($value_value, $result, $key . '.' . $value_key);
+                    }
+                    elseif($prefix !== '') {
+                        $result->set($prefix . '.' . $key . '.' . $value_key, $value_value);
+                    } else {
+                        $result->set($key . '.' . $value_key, $value_value);
+                    }
+                }
+            }
+            elseif($prefix !== '') {
+                $result->set($prefix . '.' . $key, $value);
+            }
+            else {
+                $result->set($key, $value);
+            }
+        }
+        return $result->data();
+    }
+
+    /**
      * @throws ObjectException
      * @throws FileWriteException
+     * @throws Exception
+     * @throws DirectoryCreateException
      */
-    public function write($url='', $return='size'){
+    public function write($url='', $return=File::SIZE): bool|int
+    {
         $dir = Dir::name($url);
         Dir::create($dir);
         return File::write($url, Core::object($this->data(), Core::OBJECT_JSON), $return);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function remove_null($data = null): void
+    {
+        if($data = null){
+            $data = $this->data();
+        }
+        if(is_array($data)){
+            foreach($data as $key => $value){
+                if($value === null){
+                    unset($data[$key]);
+                }
+                elseif(is_object($value)){
+                    $this->remove_null($value);
+                }
+                elseif(is_array($value)){
+                    foreach($value as $nr => $value_value){
+                        if($value_value === null){
+                            unset($value[$nr]);
+                        }
+                        elseif(is_object($value_value)){
+                            $this->remove_null($value_value);
+                        }
+                    }
+                }
+            }
+        }
+        elseif(is_object($data)){
+            foreach($data as $key => $value){
+                if($value === null){
+                    unset($data->{$key});
+                }
+                elseif(is_object($value)){
+                    $this->remove_null($value);
+                }
+                elseif(is_array($value)){
+                    foreach($value as $nr => $value_value){
+                        if($value_value === null){
+                            unset($value[$nr]);
+                        }
+                        elseif(is_object($value_value)){
+                            $this->remove_null($value_value);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

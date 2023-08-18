@@ -32,7 +32,7 @@ class Event extends Main {
     use Role;
 
     const NAME = 'Event';
-    const OBJECT = 'Server.Event';
+    const OBJECT = 'Event';
     const CHUNK_SIZE = 4096;
 
     const LIST = 'list';
@@ -193,6 +193,9 @@ class Event extends Main {
                 ]
             ]
         );
+        if($count === 0 || $limit === 0){
+            return;
+        }
         $page_max = ceil($count / $limit);
         for($page = 1; $page <= $page_max; $page++){
             $response = $event->list(
@@ -230,6 +233,5 @@ class Event extends Main {
                 $object->logger($object->config('project.log.name'))->info('Event::configure (msec)', [$duration * 1000]);
             }
         }
-
     }
 }
