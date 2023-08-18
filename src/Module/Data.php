@@ -515,6 +515,20 @@ class Data {
         return $this->do_not_nest_key;
     }
 
+    public function patch_nested_key($data=null){
+        if($data === null){
+            $data = $this->data();
+        }
+        foreach($data as $key => $value){
+            if(is_array($value)){
+                ddd($value);
+            }
+            elseif(is_object($value)){
+                ddd($value);
+            }
+        }
+    }
+
     /**
      * @throws ObjectException
      * @throws FileWriteException
