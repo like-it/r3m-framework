@@ -48,16 +48,18 @@ class Validate {
     public static function validate(App $object, $validate){
         $extension = $object->config('extension.php');  
         $test = [];
-        ddd($validate);
+        d($validate);
         foreach($validate as $field => $list){
             $is_optional = false;
             if($field == 'test'){
                 continue;
             }
+
             if(substr($field, 0, 1) === '?'){
                 $field = substr($field, 1);
                 $is_optional = true;
             }
+            d($field);
             $test[$field] = [];
             if(is_object($list)){
                 $validate->{$field} = Validate::validate($object, $list);
