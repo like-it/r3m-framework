@@ -60,6 +60,7 @@ class Validate {
                 $is_optional = true;
             }
             d($field);
+            d($object->request());
             $test[$field] = [];
             if(is_object($list)){
                 $validate->{$field} = Validate::validate($object, $list);
