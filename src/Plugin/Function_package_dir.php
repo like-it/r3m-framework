@@ -13,5 +13,9 @@ use R3m\Io\Module\Data;
 
 function function_package_dir(Parse $parse, Data $data, $package=''){
     $explode = explode('_', $package);
-    ddd($explode);
+    foreach($explode as $nr => $value){
+        $explode[$nr] = ucfirst($value);
+    }
+    $package = implode('/', $explode);
+    ddd($package);
 }
