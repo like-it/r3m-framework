@@ -9,7 +9,7 @@
       "copy" : [
         {
           "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/Package/",
-          "to" : "{{config('project.dir.root')}}Package/{{dir.uppercase.first($this.#parentNode.#key)}}",
+          "to" : "{{config('project.dir.root')}}Package/{{package.dir($this.#parentNode.#key)}}",
           "recursive": true
         },
         {
@@ -36,7 +36,7 @@
       "copy" : [
         {
           "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/Package/",
-          "to" : "{{config('project.dir.root')}}Package/{{dir.uppercase.first($this.#parentNode.#key)}}",
+          "to" : "{{config('project.dir.root')}}Package/{{package.dir($this.#parentNode.#key)}}",
           "recursive": true
         },
         {
@@ -63,7 +63,7 @@
       "copy" : [
         {
           "from" : "{{config('project.dir.vendor')}}{{$this.#parentNode.#key}}/src/Package/",
-          "to" : "{{config('project.dir.root')}}Package/{{dir.uppercase.first($this.#parentNode.#key)}}",
+          "to" : "{{config('project.dir.root')}}Package/{{package.dir($this.#parentNode.#key)}}",
           "recursive": true
         },
         {
