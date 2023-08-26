@@ -2650,27 +2650,26 @@ class Core
     {
         //format: %s%s-%s-%s-%s-%s%s%s
         $explode = explode('-', $string);
-        $result = false;
         if(strlen($string) !== 36){
-            return $result;
+            return false;
         }
         if(count($explode) !== 5){
-            return $result;
+            return false;
         }
         if(strlen($explode[0]) !== 8){
-            return $result;
+            return false;
         }
         if(strlen($explode[1]) !== 4){
-            return $result;
+            return false;
         }
         if(strlen($explode[2]) !== 4){
-            return $result;
+            return false;
         }
         if(strlen($explode[3]) !== 4){
-            return $result;
+            return false;
         }
         if(strlen($explode[4]) !== 12){
-            return $result;
+            return false;
         }
         return true;
     }
