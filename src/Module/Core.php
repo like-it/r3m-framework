@@ -2646,14 +2646,11 @@ class Core
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
-    public is_uuid($string=''): bool
+    public static function is_uuid($string=''): bool
     {
         //format: %s%s-%s-%s-%s-%s%s%s
         $explode = explode('-', $string);
         $result = false;
-        if($argument === false){
-            $result = true;
-        }
         if(strlen($string) !== 36){
             return $result;
         }
@@ -2675,11 +2672,7 @@ class Core
         if(strlen($explode[4]) !== 12){
             return $result;
         }
-        if($argument === false){
-            return $argument;
-        }
-        $result = true;
-        return $result;
+        return true;
     }
 
     public static function uuid_variable(): string
