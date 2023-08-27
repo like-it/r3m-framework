@@ -164,10 +164,9 @@ class Install extends Controller {
                                             exec($command);
                                         }
                                         $counter++;
-                                        if($counter > 10){
+                                        if($counter > 255){
                                             break;
                                         }
-                                        d($dir);
                                     }
                                 }
                             }
@@ -246,10 +245,9 @@ class Install extends Controller {
                                             exec($command);
                                         }
                                         $counter++;
-                                        if($counter > 10){
+                                        if($counter > 255){
                                             break;
                                         }
-                                        d($dir);
                                     }
                                 }
                             }
