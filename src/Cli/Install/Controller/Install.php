@@ -142,18 +142,34 @@ class Install extends Controller {
                             if($object->config(Config::POSIX_ID) === 0){
                                 $command = 'chown www-data:www-data ' . $copy->to;
                                 exec($command);
-                                $dir_package = Dir::name($copy->to);
-                                d($copy);
-                                ddd($dir_package);
-                                $command = 'chown www-data:www-data ' . $dir_package;
-                                exec($command);
-                            }
-                            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-                                $command = 'chmod 777 ' . $copy->to;
-                                exec($command);
-                                $dir_package = Dir::name($copy->to);
-                                $command = 'chmod 777 ' . $dir_package;
-                                exec($command);
+                                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                    $command = 'chmod 777 ' . $copy->to;
+                                    exec($command);
+                                }
+                                $counter = 0;
+                                if(substr($copy->to,0, 13) === '/Application/'){
+                                    $dir = Dir::name($copy->to);
+                                    $command = 'chown www-data:www-data ' . $dir;
+                                    exec($command);
+                                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
+                                        $command = 'chmod 777 ' . $dir;
+                                        exec($command);
+                                    }
+                                    while($dir !== '/Application/'){
+                                        $dir = Dir::name($dir);
+                                        $command = 'chown www-data:www-data ' . $dir;
+                                        exec($command);
+                                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
+                                            $command = 'chmod 777 ' . $dir;
+                                            exec($command);
+                                        }
+                                        $counter++;
+                                        if($counter > 10){
+                                            break;
+                                        }
+                                        d($dir);
+                                    }
+                                }
                             }
                             $dir = new Dir();
                             $read = $dir->read($copy->from, true);
@@ -208,16 +224,34 @@ class Install extends Controller {
                             if($object->config(Config::POSIX_ID) === 0){
                                 $command = 'chown www-data:www-data ' . $copy->to;
                                 exec($command);
-                                $dir_package = Dir::name($copy->to);
-                                $command = 'chown www-data:www-data ' . $dir_package;
-                                exec($command);
-                            }
-                            if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
-                                $command = 'chmod 777 ' . $copy->to;
-                                exec($command);
-                                $dir_package = Dir::name($copy->to);
-                                $command = 'chmod 777 ' . $dir_package;
-                                exec($command);
+                                if($object->config('framework.environment') === Config::MODE_DEVELOPMENT){
+                                    $command = 'chmod 777 ' . $copy->to;
+                                    exec($command);
+                                }
+                                $counter = 0;
+                                if(substr($copy->to,0, 13) === '/Application/'){
+                                    $dir = Dir::name($copy->to);
+                                    $command = 'chown www-data:www-data ' . $dir;
+                                    exec($command);
+                                    if($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
+                                        $command = 'chmod 777 ' . $dir;
+                                        exec($command);
+                                    }
+                                    while($dir !== '/Application/'){
+                                        $dir = Dir::name($dir);
+                                        $command = 'chown www-data:www-data ' . $dir;
+                                        exec($command);
+                                        if($object->config('framework.environment') === Config::MODE_DEVELOPMENT) {
+                                            $command = 'chmod 777 ' . $dir;
+                                            exec($command);
+                                        }
+                                        $counter++;
+                                        if($counter > 10){
+                                            break;
+                                        }
+                                        d($dir);
+                                    }
+                                }
                             }
                             $dir = new Dir();
                             $read = $dir->read($copy->from, true);
