@@ -143,6 +143,8 @@ class Install extends Controller {
                                 $command = 'chown www-data:www-data ' . $copy->to;
                                 exec($command);
                                 $dir_package = Dir::name($copy->to);
+                                d($copy);
+                                ddd($dir_package);
                                 $command = 'chown www-data:www-data ' . $dir_package;
                                 exec($command);
                             }
