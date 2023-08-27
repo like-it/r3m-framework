@@ -10,6 +10,7 @@
  */
 use R3m\Io\Module\Parse;
 use R3m\Io\Module\Data;
+use R3m\Io\Module\Dir;
 
 function function_package_dir(Parse $parse, Data $data, $package=''){
     $explode = explode('_', $package);
@@ -17,5 +18,5 @@ function function_package_dir(Parse $parse, Data $data, $package=''){
         $explode[$nr] = ucfirst($value);
     }
     $package = implode('/', $explode);
-    ddd($package);
+    return Dir::ucfirst($package);
 }
