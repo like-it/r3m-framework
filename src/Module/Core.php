@@ -254,6 +254,12 @@ class Core
                     return proc_close($process);
                 case Core::PROMPT :
                 default :
+                    if(!defined('STDIN')){
+                        define('STDIN', fopen('php://stdin', 'r'));
+                    }
+                    if(!defined('STDOUT')){
+                        define('STDOUT', fopen('php://stdout', 'w'));
+                    }
                     $descriptorspec = array(
                         0 => STDIN,  // stdin
                         1 => STDOUT,  // stdout
