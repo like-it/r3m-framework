@@ -48,7 +48,6 @@ class Validate {
     public static function validate(App $object, $validate){
         $extension = $object->config('extension.php');  
         $test = [];
-        d($validate);
         foreach($validate as $field => $list){
             $is_optional = false;
             if($field == 'test'){
@@ -59,8 +58,6 @@ class Validate {
                 $field = substr($field, 1);
                 $is_optional = true;
             }
-            d($field);
-            d($object->request());
             $test[$field] = [];
             if(is_object($list)){
                 $validate->{$field} = Validate::validate($object, $list);
@@ -79,8 +76,6 @@ class Validate {
                 else {
                     $value = $object->request($field_request);
                 }
-                d($value);
-                d($is_optional);
                 if(
                     is_string($value) &&
                     substr($value, 0, 1) === '[' &&
