@@ -246,6 +246,10 @@ class Handler {
         return $result;
     }
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
     private static function request_input(): Data
     {
         $data = new Data();
@@ -257,7 +261,7 @@ class Handler {
             $request = Core::array_object($request);
             foreach($request as $key => $value){
                 $key = str_replace(['-', '_'], ['.', '.'], $key);
-                $data->data($key, trim($value));
+                $data->set($key, trim($value));
             }
         } else {
             $request = Handler::request_key_group($_REQUEST);
@@ -272,7 +276,22 @@ class Handler {
                 }                
             }
             foreach($request as $attribute => $value){
-                $data->data($attribute, $value);
+                if(is_numeric($value)){
+                    $value = $value + 0;
+                } else {
+                    switch($value){
+                        case 'true':
+                            $value = true;
+                            break;
+                        case 'false':
+                            $value = false;
+                            break;
+                        case 'null':
+                            $value = null;
+                            break;
+                    }
+                }
+                $data->set($attribute, $value);
             }
             /* --backend-disabled
             $input =
@@ -302,13 +321,43 @@ class Handler {
                             $record->name != 'request'
                         ){
                             if($record->value !== null){
+                                if(is_numeric($record->value)){
+                                    $record->value = $record->value + 0;
+                                } else {
+                                    switch($record->value){
+                                        case 'true':
+                                            $record->value = true;
+                                            break;
+                                        case 'false':
+                                            $record->value = false;
+                                            break;
+                                        case 'null':
+                                            $record->value = null;
+                                            break;
+                                    }
+                                }
                                 //$record->name = str_replace(['-', '_'], ['.', '.'], $record->name);
-                                $data->data($record->name, $record->value);
+                                $data->set($record->name, $record->value);
                             }
                         } else {
                             if($record !== null){
+                                if(is_numeric($record)){
+                                    $record = $record + 0;
+                                } else {
+                                    switch($record){
+                                        case 'true':
+                                            $record = true;
+                                            break;
+                                        case 'false':
+                                            $record = false;
+                                            break;
+                                        case 'null':
+                                            $record = null;
+                                            break;
+                                    }
+                                }
                                 //$key = str_replace(['-', '_'],  ['.', '.'], $key);
-                                $data->data($key, $record);
+                                $data->set($key, $record);
                             }
                         }
                     }
