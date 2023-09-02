@@ -46,7 +46,7 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         $config->set('ramdisk.name', $name);
         $config->write($config_url);
         $dir = new Dir();
-        $read = $dir->read($url, true);
+        $read = $dir->read($object->config('framework.dir.temp'), true);
         ddd($read);
     }
     $command = 'mount | tail -n 1';
