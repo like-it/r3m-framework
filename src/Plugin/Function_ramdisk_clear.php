@@ -55,6 +55,7 @@ function function_ramdisk_clear(Parse $parse, Data $data){
                     Core::is_uuid($file->name)
                 ){
                     Dir::remove($file->url);
+                    echo 'Removed: ' . $file->url . PHP_EOL;
                 }
             }
         }
