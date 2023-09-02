@@ -58,6 +58,11 @@ class FileRequest {
         $type = array_pop($explode);
         array_push($explode, '');
         $dir_type = implode('/', $explode);
+        $dir_swap = array_pop($explode);
+        if(!empty($explode)){
+            $dir_type_swap = implode('/', $explode);
+        }
+        $type_swap = $dir_swap . '/' . $type;
         if ($type) {
             $location[] = $object->config('host.dir.root') .
                 $dir_type .
@@ -80,6 +85,19 @@ class FileRequest {
                 'Public' .
                 $object->config('ds') .
                 $type .
+                $object->config('ds');
+        }
+        if(
+            $dir_type_swap &&
+            $type_swap
+        ){
+            $location[] = $object->config('host.dir.root') .
+                'View' .
+                $object->config('ds') .
+                $dir_type_swap .
+                'Public' .
+                $object->config('ds') .
+                $type_swap .
                 $object->config('ds');
         }
         $location[] = $object->config('host.dir.public') .
