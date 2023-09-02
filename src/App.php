@@ -14,6 +14,7 @@ use stdClass;
 
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Cli;
+use R3m\Io\Module\Controller;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Database;
@@ -420,6 +421,7 @@ class App extends Data {
                     fwrite(STDERR, App::exception_to_cli($object, $exception));
                     return '';
                 } else {
+                    Controller::configure($object);
                     d($exception);
                     $debug = debug_backtrace(true);
                     d($debug[0]['file'] . ':' . $debug[0]['line'] . $debug[0]['function']);
