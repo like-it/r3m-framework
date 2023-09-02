@@ -62,9 +62,11 @@ class FileRequest {
         $type = array_pop($explode);
         array_push($explode, '');
         $dir_type = implode('/', $explode);
+        array_pop($explode);
         $dir_swap = array_pop($explode);
         $dir_type_swap = false;
         if(!empty($explode)){
+            array_push($explode, '');
             $dir_type_swap = implode('/', $explode);
         }
         $type_swap = $dir_swap . '/' . $type;
@@ -103,7 +105,6 @@ class FileRequest {
                 'View' .
                 $object->config('ds') .
                 $dir_type_swap .
-                $object->config('ds') .
                 'Public' .
                 $object->config('ds') .
                 $type_swap .
