@@ -82,8 +82,6 @@ class App extends Data {
 
     private $logger = [];
 
-
-
     /**
      * @throws Exception
      */
