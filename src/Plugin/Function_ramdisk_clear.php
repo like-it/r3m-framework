@@ -45,8 +45,12 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         $config->set('ramdisk.url', $url);
         $config->set('ramdisk.name', $name);
         $config->write($config_url);
+        $dir = new Dir();
+        $read = $dir->read($url, true);
+        ddd($read);
     }
     $command = 'mount | tail -n 1';
     Core::execute($object, $command, $output);
     echo $output . PHP_EOL;
+
 }
