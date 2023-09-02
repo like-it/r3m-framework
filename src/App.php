@@ -420,6 +420,10 @@ class App extends Data {
                     fwrite(STDERR, App::exception_to_cli($object, $exception));
                     return '';
                 } else {
+                    $debug = debug_backtrace(true);
+                    d($debug[0]['file'] . ':' . $debug[0]['line'] . $debug[0]['function']);
+                    d($debug[1]['file'] . ':' . $debug[1]['line'] . $debug[1]['function']);
+                    d($debug[2]['file'] . ':' . $debug[2]['line'] . $debug[2]['function']);
                     ddd($object->config(Config::DATA_PARSE_DIR_PLUGIN));
                     $parse = new Module\Parse($object, $object->data());
                     d($parse);
