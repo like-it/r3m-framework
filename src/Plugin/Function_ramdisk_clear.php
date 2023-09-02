@@ -33,10 +33,11 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         Core::execute($object, $command);
         Dir::remove($url);
         $name = Core::uuid();
-        dd($object->config('framework.dir.temp'));
         $url = $object->config('framework.dir.temp') . $name . $object->config('ds');
         Dir::create($url, Dir::CHMOD);
         $command = 'mount -t tmpfs -o size=' . $size . ' ' . $name .' ' . $url;
+        Core::execute($object, $command);
+        $command = 'chown www-data:www-data ' . $object->config('framework.dir.temp');
         Core::execute($object, $command);
         $command = 'chown www-data:www-data ' . $url;
         Core::execute($object, $command);
