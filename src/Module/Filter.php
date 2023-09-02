@@ -26,6 +26,8 @@ class Filter extends Data {
     const OPERATOR_NOT_STRICTLY_EXACT = 'not-strictly-exact';
     const OPERATOR_EXACT = 'exact';
     const OPERATOR_NOT_EXACT = 'not-exact';
+    const OPERATOR_IN = 'in';
+    const OPERATOR_NOT_IN = 'not-in';
     const OPERATOR_GT = 'gt';
     const OPERATOR_GTE = 'gte';
     const OPERATOR_LT = 'lt';
@@ -48,6 +50,8 @@ class Filter extends Data {
         Filter::OPERATOR_NOT_STRICTLY_EXACT,
         Filter::OPERATOR_EXACT,
         Filter::OPERATOR_NOT_EXACT,
+        Filter::OPERATOR_IN,
+        Filter::OPERATOR_NOT_IN,
         Filter::OPERATOR_GT,
         Filter::OPERATOR_GTE,
         Filter::OPERATOR_LT,
@@ -198,6 +202,62 @@ class Filter extends Data {
                                 elseif(is_array($value)){
                                     if(!in_array($record['value'], $value, true)){
                                         $skip = true;
+                                    }
+                                }
+                            break;
+                            case Filter::OPERATOR_IN :
+                                $value = $data->get($attribute);
+                                if(is_array($record['value'])){
+                                    if(is_scalar($value)){
+                                        if(
+                                            in_array(
+                                                $value,
+                                                $record['value'],
+                                                true)
+                                        ){
+                                            $skip = true;
+                                        }
+                                    }
+                                    elseif(is_array($value)){
+                                        foreach($value as $value_key => $value_value){
+                                            if(
+                                                in_array(
+                                                    $value_value,
+                                                    $record['value'],
+                                                    true)
+                                            ){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            break;
+                            case Filter::OPERATOR_NOT_IN :
+                                $value = $data->get($attribute);
+                                if(is_array($record['value'])){
+                                    if(is_scalar($value)){
+                                        if(
+                                            !in_array(
+                                                $value,
+                                                $record['value'],
+                                                true)
+                                        ){
+                                            $skip = true;
+                                        }
+                                    }
+                                    elseif(is_array($value)){
+                                        foreach($value as $value_key => $value_value){
+                                            if(
+                                                !in_array(
+                                                    $value_value,
+                                                    $record['value'],
+                                                    true)
+                                            ){
+                                                $skip = true;
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
                             break;
