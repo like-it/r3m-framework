@@ -46,8 +46,18 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         $config->set('ramdisk.name', $name);
         $config->write($config_url);
         $dir = new Dir();
-        $read = $dir->read($object->config('framework.dir.temp'), true);
-        ddd($read);
+        $read = $dir->read($object->config('framework.dir.temp'));
+        if(is_array($read)){
+            foreach ($read as $file){
+                if(
+                    $file->type === Dir::TYPE &&
+                    $file->name !== $name &&
+                    Core::is_uuid($file->name)
+                ){
+                    Dir::remove($file->url);
+                }
+            }
+        }
     }
     $command = 'mount | tail -n 1';
     Core::execute($object, $command, $output);
