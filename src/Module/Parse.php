@@ -253,6 +253,8 @@ class Parse {
     {
         foreach($object as $key => $value){
             if(is_object($value)){
+                d($value);
+                d($unset);
                 Parse::unset($value, $unset);
             }
         }
