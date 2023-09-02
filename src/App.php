@@ -421,6 +421,8 @@ class App extends Data {
                     return '';
                 } else {
                     $parse = new Module\Parse($object, $object->data());
+                    d($parse);
+                    ddd($object);
                     $url = $object->config('server.http.error.500');
                     $url = $parse->compile($url, $object->data());
                     if(!headers_sent()){
