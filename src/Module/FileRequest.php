@@ -102,6 +102,13 @@ class FileRequest {
             $type_swap
         ){
             $location[] = $object->config('host.dir.root') .
+                $dir_type_swap .
+                'Public' .
+                $object->config('ds') .
+                $type_swap .
+                $object->config('ds')
+            ;
+            $location[] = $object->config('host.dir.root') .
                 'View' .
                 $object->config('ds') .
                 $dir_type_swap .
