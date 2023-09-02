@@ -420,6 +420,7 @@ class App extends Data {
                     fwrite(STDERR, App::exception_to_cli($object, $exception));
                     return '';
                 } else {
+                    ddd($object->config(Config::DATA_PARSE_DIR_PLUGIN));
                     $parse = new Module\Parse($object, $object->data());
                     d($parse);
                     ddd($object);
