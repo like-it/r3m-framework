@@ -59,6 +59,7 @@ class FileRequest {
         array_push($explode, '');
         $dir_type = implode('/', $explode);
         $dir_swap = array_pop($explode);
+        $dir_type_swap = false;
         if(!empty($explode)){
             $dir_type_swap = implode('/', $explode);
         }
