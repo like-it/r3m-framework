@@ -78,7 +78,11 @@ class App extends Data {
     const AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
     const AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;
 
+    const DIR = __DIR__ . DIRECTORY_SEPARATOR;
+
     private $logger = [];
+
+
 
     /**
      * @throws Exception
