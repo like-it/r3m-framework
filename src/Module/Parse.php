@@ -252,9 +252,7 @@ class Parse {
     public static function unset(stdClass $object, stdClass $unset): stdClass
     {
         foreach($object as $key => $value){
-            if(is_object($value)){
-                d($value);
-                d($unset);
+            if(is_object($value) && get_class($value) === stdClass::class){
                 Parse::unset($value, $unset);
             }
         }
