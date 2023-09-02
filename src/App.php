@@ -423,7 +423,7 @@ class App extends Data {
                     fwrite(STDERR, App::exception_to_cli($object, $exception));
                     return '';
                 } else {
-                    Controller::configure($object);
+                    Controller::configure($object, __CLASS__);
                     d($exception);
                     $debug = debug_backtrace(true);
                     d($debug[0]['file'] . ':' . $debug[0]['line'] . $debug[0]['function']);
