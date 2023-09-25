@@ -91,6 +91,7 @@
         "ico": ".ico",
         "png": ".png",
         "jpg": ".jpg",
+        "JPG": ".JPG",
         "bmp": ".bmp",
         "gif": ".gif",
         "svg": ".svg",
