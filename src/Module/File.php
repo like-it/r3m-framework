@@ -173,7 +173,7 @@ class File {
         }
     }
 
-    public static function info(stdClass $node): stdClass
+    public static function info(App $object, stdClass $node): stdClass
     {
         $rev = strrev($node->name);
         $explode = explode('.', $rev, 2);
@@ -181,6 +181,7 @@ class File {
             $ext = strrev($explode[0]);
             $node->extension = $ext;
             $node->filetype = ucfirst($ext) . ' ' . strtolower(File::TYPE);
+            $node->contentType = $object->config('contentType.' . $ext);
         } else {
             $node->extension = '';
             if($node->type === Dir::TYPE){
