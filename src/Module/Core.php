@@ -254,6 +254,12 @@ class Core
                     return proc_close($process);
                 case Core::PROMPT :
                 default :
+                    if(!defined('STDIN')){
+                        define('STDIN', fopen('php://stdin', 'r'));
+                    }
+                    if(!defined('STDOUT')){
+                        define('STDOUT', fopen('php://stdout', 'w'));
+                    }
                     $descriptorspec = array(
                         0 => STDIN,  // stdin
                         1 => STDOUT,  // stdout
@@ -2644,6 +2650,34 @@ class Core
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
 
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+
+    public static function is_uuid($string=''): bool
+    {
+        //format: %s%s-%s-%s-%s-%s%s%s
+        $explode = explode('-', $string);
+        if(strlen($string) !== 36){
+            return false;
+        }
+        if(count($explode) !== 5){
+            return false;
+        }
+        if(strlen($explode[0]) !== 8){
+            return false;
+        }
+        if(strlen($explode[1]) !== 4){
+            return false;
+        }
+        if(strlen($explode[2]) !== 4){
+            return false;
+        }
+        if(strlen($explode[3]) !== 4){
+            return false;
+        }
+        if(strlen($explode[4]) !== 12){
+            return false;
+        }
+        return true;
     }
 
     public static function uuid_variable(): string

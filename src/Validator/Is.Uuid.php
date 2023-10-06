@@ -10,38 +10,14 @@
  */
 use R3m\Io\App;
 
+use R3m\Io\Module\Core;
+
 function validate_is_uuid(App $object, $string='', $field='', $argument=''): bool
 {
-    //format: %s%s-%s-%s-%s-%s%s%s
-    $explode = explode('-', $string);
-    $result = false;
+    $is_uuid = Core::is_uuid($string);
     if($argument === false){
-        $result = true;
+        return !$is_uuid;
+    } else {
+        return $is_uuid;
     }
-    if(strlen($string) !== 36){
-        return $result;
-    }
-    if(count($explode) !== 5){
-        return $result;
-    }
-    if(strlen($explode[0]) !== 8){
-        return $result;
-    }
-    if(strlen($explode[1]) !== 4){
-        return $result;
-    }
-    if(strlen($explode[2]) !== 4){
-        return $result;
-    }
-    if(strlen($explode[3]) !== 4){
-        return $result;
-    }
-    if(strlen($explode[4]) !== 12){
-        return $result;
-    }
-    if($argument === false){
-        return $argument;
-    }
-    $result = true;
-    return $result;
 }

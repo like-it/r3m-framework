@@ -37,14 +37,31 @@ function function_ramdisk_clear(Parse $parse, Data $data){
         Dir::create($url, Dir::CHMOD);
         $command = 'mount -t tmpfs -o size=' . $size . ' ' . $name .' ' . $url;
         Core::execute($object, $command);
+        $command = 'chown www-data:www-data ' . $object->config('framework.dir.temp');
+        Core::execute($object, $command);
         $command = 'chown www-data:www-data ' . $url;
         Core::execute($object, $command);
         $config->set('ramdisk.size', $size);
         $config->set('ramdisk.url', $url);
         $config->set('ramdisk.name', $name);
         $config->write($config_url);
+        $dir = new Dir();
+        $read = $dir->read($object->config('framework.dir.temp'));
+        if(is_array($read)){
+            foreach ($read as $file){
+                if(
+                    $file->type === Dir::TYPE &&
+                    $file->name !== $name &&
+                    Core::is_uuid($file->name)
+                ){
+                    Dir::remove($file->url);
+                    echo 'Removed: ' . $file->url . PHP_EOL;
+                }
+            }
+        }
     }
     $command = 'mount | tail -n 1';
     Core::execute($object, $command, $output);
     echo $output . PHP_EOL;
+
 }

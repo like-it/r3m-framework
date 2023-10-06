@@ -58,6 +58,7 @@
         "ttf": "font\/ttf",
         "wav": "audio\/wav",
         "mp3": "audio\/mp3",
+        "wma": "audio\/x-ms-wma",
         "ogg": "audio\/ogg",
         "zip": "application\/zip",
         "rar": "application\/vnd.rar",
@@ -76,7 +77,9 @@
         "xlsx": "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "docx": "application\/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "pptx": "application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "xml": "application\/xml"
+        "xml": "application\/xml",
+        "vob": "video\/vob",
+        "WMV": "video\/x-ms-wmv"
     },
     "extension": {
         "txt": ".txt",
@@ -89,6 +92,7 @@
         "ico": ".ico",
         "png": ".png",
         "jpg": ".jpg",
+        "JPG": ".JPG",
         "bmp": ".bmp",
         "gif": ".gif",
         "svg": ".svg",
@@ -97,6 +101,7 @@
         "ttf": ".ttf",
         "wav": ".wav",
         "mp3": ".mp3",
+        "wma": ".wma",
         "ogg": ".ogg",
         "zip": ".zip",
         "gz": ".gz",
@@ -119,6 +124,8 @@
         "mov": ".mov",
         "wmv": ".wmv",
         "xml": ".xml",
+        "vob": ".vob",
+        "WMV": ".wmv",
         "lock": ".lock",
         "btree": ".btree",
         "connect": ".connect",

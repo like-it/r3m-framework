@@ -129,6 +129,7 @@ class Autoload {
                 $object->config(Config::DS)
             ;
         }
+        ddd($autoload);
         $autoload->cache_dir($cache_dir);
         $autoload->register();
         $autoload->environment($object->config('framework.environment'));
@@ -306,6 +307,7 @@ class Autoload {
      */
     public function load($load): bool
     {
+        Logger::debug('Autoload loader: ', [ $load ]);
         $file = $this->locate($load);
         if (!empty($file)) {
             require_once $file;
@@ -447,6 +449,7 @@ class Autoload {
      * @throws Exception
      */
     public function locate($load=null, $is_data=false){
+
         $dir = $this->cache_dir();
         $url = $dir . Autoload::FILE;
         $load = ltrim($load, '\\');

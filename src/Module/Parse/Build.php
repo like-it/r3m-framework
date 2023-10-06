@@ -330,7 +330,7 @@ class Build {
         $url = false;
         $config = $object->data(App::CONFIG);
         $storage = $this->storage();
-        $dir_plugin = $config->get('parse.dir.plugin');
+        $dir_plugin = $config->get(Config::DATA_PARSE_DIR_PLUGIN);
         if(empty($dir_plugin)){
             $dir_plugin = $storage->data('plugin');
         }
@@ -370,77 +370,25 @@ class Build {
                 )
             ){
                 $indent = $this->indent - 1;
-                foreach($dir_plugin as $nr => $dir){
-                    $file = ucfirst($name) . $config->data('extension.php');
-                    $url = $dir . $file;
-                    $object->logger($object->config('project.log.error'))->info('Parse: ' . $url);
-                    $url_list[] = $url;
-                    //add ramdisk
-                    $file_read = false;
-                    $ramdisk_dir = false;
-                    $ramdisk_url = false;
-                    $config_dir = false;
-                    $config_url = false;
-                    $config_mtime = false;
-                    $is_ramdisk_url = false;
-                    $is_shared_memory = false;
-                    if(
-                        $object->config('ramdisk.url') &&
-                        empty($object->config('ramdisk.is.disabled'))
-                    ){
-                        $config_dir = $this->object()->config('ramdisk.url') .
-                            $this->object()->config(Config::POSIX_ID) .
-                            $this->object()->config('ds') .
-                            'Plugin' .
-                            $this->object()->config('ds')
-                        ;
-                        $config_url = $config_dir .
-                            'File.Mtime' .
-                            $this->object()->config('extension.json')
-                        ;
-                        $config_mtime = $this->object()->data_read($config_url, sha1($config_url));
-                        if(!$config_mtime){
-                            $config_mtime = new Data();
-                        }
+                if(is_array($dir_plugin)){
+                    foreach($dir_plugin as $nr => $dir){
+                        $file = ucfirst($name) . $config->data('extension.php');
+                        $url = $dir . $file;
+                        $object->logger($object->config('project.log.error'))->info('Parse: ' . $url);
+                        $url_list[] = $url;
+                        //add ramdisk
+                        $file_read = false;
+                        $ramdisk_dir = false;
+                        $ramdisk_url = false;
+                        $config_dir = false;
+                        $config_url = false;
+                        $config_mtime = false;
+                        $is_ramdisk_url = false;
+                        $is_shared_memory = false;
                         if(
-                            $config_mtime->has(sha1($url)) &&
-                            $config_mtime->get(sha1($url)) === File::mtime($url)
-                        ) {
-                            $file_read = SharedMemory::read($object, $url);
-//                            d($file_read);
-                        }
-                        /*
-                        if(
-                            $object->config('cache.parse.plugin.url.directory_length') &&
-                            $object->config('cache.parse.plugin.url.directory_separator') &&
-                            $object->config('cache.parse.plugin.url.directory_pop_or_shift') &&
-                            $object->config('cache.parse.plugin.url.name_length') &&
-                            $object->config('cache.parse.plugin.url.name_separator') &&
-                            $object->config('cache.parse.plugin.url.name_pop_or_shift')
+                            $object->config('ramdisk.url') &&
+                            empty($object->config('ramdisk.is.disabled'))
                         ){
-                            $ramdisk_dir = $this->object()->config('ramdisk.url') .
-                                $this->object()->config(Config::POSIX_ID) .
-                                $this->object()->config('ds') .
-                                'Plugin' .
-                                $this->object()->config('ds')
-                            ;
-                            $ramdisk_file =
-                                Autoload::name_reducer(
-                                    $this->object(),
-                                    str_replace('/', '_', $dir),
-                                    $this->object()->config('cache.parse.plugin.url.directory_length'),
-                                    $this->object()->config('cache.parse.plugin.url.directory_separator'),
-                                    $this->object()->config('cache.parse.plugin.url.directory_pop_or_shift')
-                                ) .
-                                '_' .
-                                Autoload::name_reducer(
-                                    $this->object(),
-                                    $file,
-                                    $this->object()->config('cache.parse.plugin.url.name_length'),
-                                    $this->object()->config('cache.parse.plugin.url.name_separator'),
-                                    $this->object()->config('cache.parse.plugin.url.name_pop_or_shift')
-                                );
-                            $ramdisk_url = $ramdisk_dir . $ramdisk_file;
                             $config_dir = $this->object()->config('ramdisk.url') .
                                 $this->object()->config(Config::POSIX_ID) .
                                 $this->object()->config('ds') .
@@ -455,75 +403,129 @@ class Build {
                             if(!$config_mtime){
                                 $config_mtime = new Data();
                             }
-                            elseif(
-                                $config_mtime->has(sha1($ramdisk_url)) &&
-                                File::mtime($config_mtime->get(sha1($ramdisk_url))) && File::mtime($ramdisk_url)
-                            ){
-                                $is_ramdisk_url = true;
-                                $url = $ramdisk_url;
+                            if(
+                                $config_mtime->has(sha1($url)) &&
+                                $config_mtime->get(sha1($url)) === File::mtime($url)
+                            ) {
+                                $file_read = SharedMemory::read($object, $url);
+//                            d($file_read);
                             }
+                            /*
+                            if(
+                                $object->config('cache.parse.plugin.url.directory_length') &&
+                                $object->config('cache.parse.plugin.url.directory_separator') &&
+                                $object->config('cache.parse.plugin.url.directory_pop_or_shift') &&
+                                $object->config('cache.parse.plugin.url.name_length') &&
+                                $object->config('cache.parse.plugin.url.name_separator') &&
+                                $object->config('cache.parse.plugin.url.name_pop_or_shift')
+                            ){
+                                $ramdisk_dir = $this->object()->config('ramdisk.url') .
+                                    $this->object()->config(Config::POSIX_ID) .
+                                    $this->object()->config('ds') .
+                                    'Plugin' .
+                                    $this->object()->config('ds')
+                                ;
+                                $ramdisk_file =
+                                    Autoload::name_reducer(
+                                        $this->object(),
+                                        str_replace('/', '_', $dir),
+                                        $this->object()->config('cache.parse.plugin.url.directory_length'),
+                                        $this->object()->config('cache.parse.plugin.url.directory_separator'),
+                                        $this->object()->config('cache.parse.plugin.url.directory_pop_or_shift')
+                                    ) .
+                                    '_' .
+                                    Autoload::name_reducer(
+                                        $this->object(),
+                                        $file,
+                                        $this->object()->config('cache.parse.plugin.url.name_length'),
+                                        $this->object()->config('cache.parse.plugin.url.name_separator'),
+                                        $this->object()->config('cache.parse.plugin.url.name_pop_or_shift')
+                                    );
+                                $ramdisk_url = $ramdisk_dir . $ramdisk_file;
+                                $config_dir = $this->object()->config('ramdisk.url') .
+                                    $this->object()->config(Config::POSIX_ID) .
+                                    $this->object()->config('ds') .
+                                    'Plugin' .
+                                    $this->object()->config('ds')
+                                ;
+                                $config_url = $config_dir .
+                                    'File.Mtime' .
+                                    $this->object()->config('extension.json')
+                                ;
+                                $config_mtime = $this->object()->data_read($config_url, sha1($config_url));
+                                if(!$config_mtime){
+                                    $config_mtime = new Data();
+                                }
+                                elseif(
+                                    $config_mtime->has(sha1($ramdisk_url)) &&
+                                    File::mtime($config_mtime->get(sha1($ramdisk_url))) && File::mtime($ramdisk_url)
+                                ){
+                                    $is_ramdisk_url = true;
+                                    $url = $ramdisk_url;
+                                }
+                            }
+                            */
                         }
-                        */
-                    }
-                    $file_exist = File::exist($url);
-                    if(
-                        empty($file_read) &&
-                        $file_exist
-                    ){
-                        $file_read = File::read($url);
-                    }
-                    elseif($file_exist && is_scalar($file_read)){
-                        $is_shared_memory = true;
-                    }
-                    if(
-                        File::exist($url) &&
-                        is_scalar($file_read)
-                    ){
-                        $explode = explode('function', $file_read);
-                        $explode[0] = '';
-                        $read = implode('function', $explode);
-                        $read = explode(PHP_EOL, $read);
-                        foreach($read as $read_nr => $row){
-                            $read[$read_nr] = $this->indent($indent) . $row;
-                        }
-                        $read = implode(PHP_EOL, $read);
-                        $read .= PHP_EOL;
-                        $document = str_replace($placeholder, $read . $placeholder, $document);
-                        $exist = true;
+                        $file_exist = File::exist($url);
                         if(
-                            $is_shared_memory === false &&
-                            $object->config('ramdisk.url') &&
-                            empty($object->config('ramdisk.is.disabled'))
+                            empty($file_read) &&
+                            $file_exist
                         ){
-                            SharedMemory::write($object, $url, File::read($url));
-                            $config_mtime->set(sha1($url), File::mtime($url));
-                            $config_is_write = $config_mtime->write($config_url);
-                            exec('chmod 640 ' . $config_url);
+                            $file_read = File::read($url);
                         }
-                        /*
+                        elseif($file_exist && is_scalar($file_read)){
+                            $is_shared_memory = true;
+                        }
                         if(
-                            $is_ramdisk_url === false &&
-                            $ramdisk_dir &&
-                            $ramdisk_url &&
-                            $config_dir &&
-                            $config_url &&
-                            $config_mtime
+                            File::exist($url) &&
+                            is_scalar($file_read)
                         ){
+                            $explode = explode('function', $file_read);
+                            $explode[0] = '';
+                            $read = implode('function', $explode);
+                            $read = explode(PHP_EOL, $read);
+                            foreach($read as $read_nr => $row){
+                                $read[$read_nr] = $this->indent($indent) . $row;
+                            }
+                            $read = implode(PHP_EOL, $read);
+                            $read .= PHP_EOL;
+                            $document = str_replace($placeholder, $read . $placeholder, $document);
+                            $exist = true;
+                            if(
+                                $is_shared_memory === false &&
+                                $object->config('ramdisk.url') &&
+                                empty($object->config('ramdisk.is.disabled'))
+                            ){
+                                SharedMemory::write($object, $url, File::read($url));
+                                $config_mtime->set(sha1($url), File::mtime($url));
+                                $config_is_write = $config_mtime->write($config_url);
+                                exec('chmod 640 ' . $config_url);
+                            }
+                            /*
+                            if(
+                                $is_ramdisk_url === false &&
+                                $ramdisk_dir &&
+                                $ramdisk_url &&
+                                $config_dir &&
+                                $config_url &&
+                                $config_mtime
+                            ){
 
-                            Dir::create($ramdisk_dir);
-                            File::put($ramdisk_url, $file_read);
-                            $config_mtime->set(sha1($ramdisk_url), $url);
-                            $config_mtime->write($config_url);
-                            exec('chmod 640 ' . $ramdisk_url);
-                            exec('chmod 640 ' . $config_url);
+                                Dir::create($ramdisk_dir);
+                                File::put($ramdisk_url, $file_read);
+                                $config_mtime->set(sha1($ramdisk_url), $url);
+                                $config_mtime->write($config_url);
+                                exec('chmod 640 ' . $ramdisk_url);
+                                exec('chmod 640 ' . $config_url);
 
+                            }
+                            */
+                            Event::trigger($object, 'parse.build.plugin.require', [
+                                'url' => $url,
+                                'name' => $name
+                            ]);
+                            break;
                         }
-                        */
-                        Event::trigger($object, 'parse.build.plugin.require', [
-                            'url' => $url,
-                            'name' => $name
-                        ]);
-                        break;
                     }
                 }
                 if($exist === false){

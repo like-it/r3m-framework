@@ -536,7 +536,11 @@ class Data {
                         is_array($value_value) ||
                         is_object($value_key)
                     ){
-                        $this->patch_nested_key($value_value, $result, $key . '.' . $value_key);
+                        if($prefix !== ''){
+                            $this->patch_nested_key($value_value, $result, $prefix . '.' . $key . '.' . $value_key);
+                        } else {
+                            $this->patch_nested_key($value_value, $result, $key . '.' . $value_key);
+                        }
                     }
                     elseif($prefix !== '') {
                         $result->set($prefix . '.' . $key . '.' . $value_key, $value_value);

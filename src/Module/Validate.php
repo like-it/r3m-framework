@@ -53,6 +53,7 @@ class Validate {
             if($field == 'test'){
                 continue;
             }
+
             if(substr($field, 0, 1) === '?'){
                 $field = substr($field, 1);
                 $is_optional = true;

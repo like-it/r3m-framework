@@ -14,6 +14,7 @@ use stdClass;
 
 use R3m\Io\Module\Autoload;
 use R3m\Io\Module\Cli;
+use R3m\Io\Module\Controller;
 use R3m\Io\Module\Core;
 use R3m\Io\Module\Data;
 use R3m\Io\Module\Database;
@@ -77,6 +78,8 @@ class App extends Data {
     const AUTOLOAD_COMPOSER = App::NAMESPACE . '.' . 'Autoload' . '.' . 'Composer';
     const AUTOLOAD_R3M = App::NAMESPACE . '.' . 'Autoload' . '.' . App::R3M;
 
+    const DIR = __DIR__ . DIRECTORY_SEPARATOR;
+
     private $logger = [];
 
     /**
@@ -97,6 +100,7 @@ class App extends Data {
         Event::configure($this);
         Middleware::configure($this);
         OutputFilter::configure($this);
+        ddd('here');
         Autoload::configure($this);
         Autoload::ramdisk_configure($this);
     }
@@ -420,6 +424,7 @@ class App extends Data {
                     fwrite(STDERR, App::exception_to_cli($object, $exception));
                     return '';
                 } else {
+                    Controller::configure($object, __CLASS__); //initialize plugin directories
                     $parse = new Module\Parse($object, $object->data());
                     $url = $object->config('server.http.error.500');
                     $url = $parse->compile($url, $object->data());
