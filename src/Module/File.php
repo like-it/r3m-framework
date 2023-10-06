@@ -10,10 +10,13 @@
  */
 namespace R3m\Io\Module;
 
-use R3m\Io\Exception\ErrorException;
+
 use stdClass;
 
+use R3m\Io\App;
+
 use Exception;
+use R3m\Io\Exception\ErrorException;
 use R3m\Io\Exception\FileAppendException;
 use R3m\Io\Exception\FileMoveException;
 use R3m\Io\Exception\FileWriteException;
