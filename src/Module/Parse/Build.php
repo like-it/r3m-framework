@@ -370,6 +370,7 @@ class Build {
                 )
             ){
                 $indent = $this->indent - 1;
+                ddd($dir_plugin);
                 if(is_array($dir_plugin)){
                     foreach($dir_plugin as $nr => $dir){
                         $file = ucfirst($name) . $config->data('extension.php');
