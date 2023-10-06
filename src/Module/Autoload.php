@@ -129,7 +129,6 @@ class Autoload {
                 $object->config(Config::DS)
             ;
         }
-        ddd($autoload);
         $autoload->cache_dir($cache_dir);
         $autoload->register();
         $autoload->environment($object->config('framework.environment'));
