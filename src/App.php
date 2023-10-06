@@ -100,6 +100,7 @@ class App extends Data {
         Event::configure($this);
         Middleware::configure($this);
         OutputFilter::configure($this);
+        ddd('here');
         Autoload::configure($this);
         Autoload::ramdisk_configure($this);
     }
