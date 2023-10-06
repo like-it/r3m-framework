@@ -370,7 +370,6 @@ class Build {
                 )
             ){
                 $indent = $this->indent - 1;
-                ddd($dir_plugin);
                 if(is_array($dir_plugin)){
                     foreach($dir_plugin as $nr => $dir){
                         $file = ucfirst($name) . $config->data('extension.php');
@@ -528,6 +527,8 @@ class Build {
                             break;
                         }
                     }
+                } else {
+                    throw new Exception('Configure parse.dir.plugin');
                 }
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');
