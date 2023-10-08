@@ -183,7 +183,8 @@ class File {
         d($debug[0]['file'] . ':' . $debug[0]['line']);
         d($debug[1]['file'] . ':' . $debug[1]['line']);
 
-        return;
+        $object = (object) [];
+        return $object;
         $rev = strrev($node->name);
         $explode = explode('.', $rev, 2);
         if(count($explode) == 2){
