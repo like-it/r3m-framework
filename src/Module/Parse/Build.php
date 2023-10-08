@@ -527,6 +527,8 @@ class Build {
                             break;
                         }
                     }
+                } else {
+                    throw new Exception('Configure parse.dir.plugin');
                 }
                 if($exist === false){
                     $text = $name . ' near ' . $record['value'] . ' on line: ' . $record['row'] . ' column: ' . $record['column'] . ' in: ' . $storage->data('source');

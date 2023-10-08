@@ -100,7 +100,6 @@ class App extends Data {
         Event::configure($this);
         Middleware::configure($this);
         OutputFilter::configure($this);
-        ddd('here');
         Autoload::configure($this);
         Autoload::ramdisk_configure($this);
     }
@@ -887,6 +886,7 @@ class App extends Data {
         $data = new Data();
         $data->data($this->data());
         $node = new Data();
+        $this->logger($this->config('project.log.name'))->info(' parse_select: ' . $url, [$select ,$scope]);
         $node->data(
             Core::object_select(
                 $parse,

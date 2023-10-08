@@ -129,7 +129,6 @@ class Autoload {
                 $object->config(Config::DS)
             ;
         }
-        ddd($autoload);
         $autoload->cache_dir($cache_dir);
         $autoload->register();
         $autoload->environment($object->config('framework.environment'));
@@ -137,6 +136,8 @@ class Autoload {
     }
 
     public function register($method='load', $prepend=false){
+        $object = $this->object();
+        $object->logger($object->config('project.log.name'))->info('Registering autoloader', [$method, $prepend]);
         $functions = spl_autoload_functions();
         if(is_array($functions)){
             foreach($functions as $function){
