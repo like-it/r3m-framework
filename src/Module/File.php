@@ -176,7 +176,7 @@ class File {
         }
     }
 
-    public static function info(stdClass $node): stdClass
+    public static function info($node): stdClass
     {
         $debug = debug_backtrace(true);
         d($debug[0]['file'] . ':' . $debug[0]['line']);
