@@ -176,8 +176,12 @@ class File {
         }
     }
 
-    public static function info(App $object, stdClass $node): stdClass
+    public static function info($object, stdClass $node): stdClass
     {
+        $debug = debug_backtrace(true);
+        d($debug[0]['file'] . ':' . $debug[0]['line']);
+        d($debug[1]['file'] . ':' . $debug[1]['line']);
+
         $rev = strrev($node->name);
         $explode = explode('.', $rev, 2);
         if(count($explode) == 2){
