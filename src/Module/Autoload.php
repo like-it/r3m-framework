@@ -564,7 +564,7 @@ class Autoload {
                                                 if(!is_dir($config_dir)){
                                                     mkdir($config_dir, 0750, true);
                                                 }
-                                                $write = json_encode($mtime, JSON_PRETTY_PRINT);
+                                                $write = json_encode($mtime, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION);
                                                 file_put_contents($config_url, $write);
                                                 $object->set(sha1($config_url), $mtime);
                                                 exec('chmod 640 ' . $object->config('autoload.cache.file.name'));
