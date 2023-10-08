@@ -183,6 +183,13 @@ class File {
         d($debug[0]['file'] . ':' . $debug[0]['line']);
         d($debug[1]['file'] . ':' . $debug[1]['line']);
 
+        if(array_key_exists(2, $debug)){
+            d($debug[2]['file'] . ':' . $debug[2]['line']);
+        }
+        if(array_key_exists(3, $debug)){
+            d($debug[3]['file'] . ':' . $debug[3]['line']);
+        }
+
         $object = (object) [];
         return $object;
         $rev = strrev($node->name);
