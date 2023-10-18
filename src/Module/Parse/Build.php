@@ -528,6 +528,8 @@ class Build {
                         }
                     }
                 } else {
+                    $debug = debug_backtrace(true);
+                    ddd($debug);
                     throw new Exception('Configure parse.dir.plugin');
                 }
                 if($exist === false){
